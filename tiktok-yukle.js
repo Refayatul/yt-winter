@@ -36,19 +36,54 @@ function videoYolu(slug) {
   return l.length ? path.join(vd, l.pop()) : null;
 }
 
-// TikTok aciklamasi: YouTube aciklamasindan farkli (orada baglantilar ve
-// kaynakca var; TikTok'ta kisa metin ve az etiket daha iyi calisir).
+// TikTok aciklamasi — YouTube'unkinden AYRI. Akista yalnizca ilk satir gorunur, gerisi
+// "more" arkasinda kalir; o yuzden sira: kanca -> sebep -> yorum sorusu -> etiketler.
+// Etiketler her videoda ayni iskelette: #FailureReconstructed (marka, birikimi bulunur
+// kilar) + #engineering, sonra kumeye ozel iki tane. #fyp / #foryou gibi doldurma
+// etiketi KULLANILMAZ: erisim getirmiyor ve spam sinyali veriyor.
+const KUME_ETIKET = {
+  "spaceflight-disasters": ["#space", "#nasa"], "aviation-failures": ["#aviation", "#planecrash"],
+  "maritime-disasters": ["#ships", "#maritime"], "bridge-failures": ["#bridges", "#civilengineering"],
+  "structural-failures": ["#architecture", "#civilengineering"], "nuclear-accidents": ["#nuclear", "#coldwar"],
+  "fire-and-explosions": ["#fire", "#safety"], "industrial-disasters": ["#industrial", "#safety"],
+  "infrastructure-failures": ["#infrastructure", "#civilengineering"], "materials-failures": ["#materials", "#science"],
+  "natural-hazards": ["#nature", "#science"],
+};
+
+// Ilk cumleyi al ve TikTok'a uygun kisaliga indir.
+function kisaCumle(t, sinir = 120) {
+  const c = String(t || "").trim().replace(/\s+/g, " ");
+  if (!c) return "";
+  const ilk = (c.match(/^[^.!?]*[.!?]/) || [c])[0].trim();
+  return ilk.length <= sinir ? ilk : ilk.slice(0, sinir - 1).replace(/\s+\S*$/, "") + "…";
+}
+
+// Tartisma metninden SORUYU cikar (yorum getiren kisim odur; genelde son cumle).
+// Soru yoksa ilk cumleye duser.
+function soruCumlesi(t, sinir = 150) {
+  const c = String(t || "").trim().replace(/\s+/g, " ");
+  if (!c) return "";
+  const sorular = c.match(/[^.!?]*\?/g);
+  const sec = sorular && sorular.length ? sorular[sorular.length - 1].trim() : null;
+  if (!sec) return kisaCumle(c, sinir);
+  return sec.length <= sinir ? sec : sec.slice(0, sinir - 1).replace(/\s+\S*$/, "") + "…";
+}
+
 function aciklama(slug) {
   const K = require("./lib/kutuphane");
   const konu = K.uretimKonusu(slug) || {};
   const v = konu.vaka || {};
   const t = jsonOku(K.paketYolu(slug, "titles.json"), null);
-  const baslik = (t && t.secilen) || konu.baslik || slug;
-  const etiketler = ["#engineering", "#disaster", v.kume === "spaceflight-disasters" ? "#space"
-    : v.kume === "aviation-failures" ? "#aviation" : v.kume === "maritime-disasters" ? "#ships" : "#history"];
-  return [baslik, v.ders ? "What changed: " + v.ders + "." : "",
-    "Narration uses a synthetic voice; footage is real archival film.",
-    [...new Set(etiketler)].join(" ")].filter(Boolean).join("\n\n").slice(0, 2100);
+  const baslik = String((t && t.secilen) || konu.baslik || slug).trim();
+  const kume = v.kume || K.kumeBul(konu);
+  const sebep = v.mekanizma ? "The cause: " + kisaCumle(v.mekanizma, 110).replace(/[.…]$/, "") + "."
+    : kisaCumle(konu.aciklama, 110);
+  // Tartisma sorusu yorum getirir; yoksa videodaki ekran sorusu kullanilir.
+  const soru = v.tartisma ? soruCumlesi(v.tartisma, 150) : String(konu.soru || "").trim();
+  return [baslik, sebep, soru,
+    "Synthetic narration. Footage is real archival film or licensed stock.",
+    [...new Set(["#FailureReconstructed", "#engineering", ...(KUME_ETIKET[kume] || ["#history", "#science"])])].join(" "),
+  ].filter(Boolean).join("\n\n").slice(0, 2100);
 }
 
 async function main() {

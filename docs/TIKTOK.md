@@ -101,6 +101,44 @@ değişikliğini commit et (sağlık kontrolü bu tarihi okuyup süre bitmeden u
 Sağlık kontrolü TikTok'u da izler; jeton bozulursa ya da bitmesine 30 gün kalırsa
 GitHub bildirimi gelir. TikTok sorunu YouTube yayınını **durdurmaz**.
 
+## Açıklama ve etiketler
+
+`tiktok-yukle.js` her video için TikTok'a uygun bir metin üretir. YouTube açıklamasından
+ayrıdır: bağlantı yok, kaynakça yok, kısa.
+
+```
+<Başlık — akışta görünen tek satır>
+
+The cause: <mekanizma, tek cümle>
+
+<Tartışma sorusu — yorum getiren kısım>
+
+Synthetic narration. Footage is real archival film or licensed stock.
+
+#FailureReconstructed #engineering #<küme> #<küme>
+```
+
+- **`#FailureReconstructed` her videoda var:** aramada ve profilde birikim oluşturur.
+- **Küme etiketleri** `KUME_ETIKET` tablosundan gelir (uzay → `#space #nasa`, havacılık →
+  `#aviation #planecrash` gibi). Toplam 4 etiket; TikTok'ta fazlası fayda etmiyor.
+- **`#fyp` / `#foryou` kullanılmaz:** erişim getirmiyor ve spam sinyali veriyor.
+- **Konum etiketi eklenmez:** içerik yerele bağlı değil, faydası yok.
+- Metin, video gelen kutusuna düştüğünde GitHub bildiriminde **kopyalanmaya hazır** olarak
+  gelir; telefondan kopyalayıp yapıştırırsın.
+
+## Tam otomatik yayın (Direct Post) — şartları
+
+Şu an video taslak olarak düşüyor, yayınlamak için bir dokunuş gerekiyor. Bunu kaldırmak
+için TikTok'un `video.publish` kapsamı ve **uygulama onayı** gerekir:
+
+1. Production tarafında eksik alanlar doldurulur (App icon 1024×1024 dahil).
+2. Çalışan entegrasyonun demo videosu çekilir (artık elimizde var).
+3. **Submit for review** → TikTok inceler.
+4. Onaylanırsa `video.publish` açılır ve kod Direct Post'a çevrilir.
+
+Onay gelmeden Direct Post açılırsa gönderiler **yalnızca gizli** olur — yani kimse görmez.
+Bu yüzden onay gelene kadar gelen kutusu yolu daha iyidir.
+
 ## Bilmen gerekenler
 
 - **TikTok açıklaması YouTube'unkinden farklı:** kısa, bağlantısız, en fazla 4 etiket.
