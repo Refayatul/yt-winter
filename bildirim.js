@@ -106,10 +106,21 @@ function videoMesaji(b) {
     `- Video: https://youtu.be/${b.videoId}`,
     `- Studio: https://studio.youtube.com/video/${b.videoId}/edit`,
     `- Kalite raporu: https://github.com/${REPO}/blob/main/icerik/paket/${b.slug}/quality-gate.md`, "",
+    ...tiktokBolumu(b.slug),
     "Bu issue videonun tüm yolculuğunu takip eder: yayına girince ve 24 saat / 3 gün / 7 gün sonuçları geldikçe buraya yorum düşer.",
     zaman ? "_İstemezsen: yayın saatinden önce Studio → Visibility → Schedule'ı kaldır._" : "",
   ].join("\n");
   return { baslik, govde, etiket: inceleme ? ["yeni-video", "review"] : ["yeni-video"] };
+}
+
+// TikTok gelen kutusuna da gonderildiyse: telefonda kopyalanacak hazir aciklama.
+// Video henuz gonderilmediyse bolum hic cikmaz.
+function tiktokBolumu(slug) {
+  const k = jsonOku(path.join(KOK, "icerik", "tiktok.json"), []).find((x) => x.slug === slug);
+  if (!k || k.durum !== "SEND_TO_USER_INBOX") return [];
+  return ["**📱 TikTok — gelen kutusunda, yayınlamak için:**",
+    "TikTok uygulaması → Inbox → bildirime dokun. Açıklamayı aşağıdan kopyala, **AI-generated content** anahtarını aç, Post.", "",
+    "```", k.aciklama || "(açıklama kaydı yok)", "```", ""];
 }
 
 function hataMesaji(h) {
