@@ -1,0 +1,25 @@
+<!doctype html><html lang="en"><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Privacy Policy — Failure Reconstructed uploader</title>
+<link rel="stylesheet" href="ortak.css">
+<main>
+<h1>Privacy Policy — Failure Reconstructed uploader</h1>
+<p class="alt"><em>Last updated: 26 September 2026</em></p>
+<h2>Summary</h2>
+<p>This application has one user: its author. It collects no personal data from anyone else, has no analytics, no tracking, no advertising, and no third-party data sharing.</p>
+<p>Source code: <a href="https://github.com/eyazan/youtube-otomasyon">https://github.com/eyazan/youtube-otomasyon</a></p>
+<h2>What data is handled</h2>
+<table><tr><th>Data</th><th>Why</th><th>Where it is kept</th></tr><tr><td>TikTok OAuth access and refresh tokens for the author's own account</td><td>To upload the author's own videos to their own TikTok inbox</td><td>Encrypted GitHub Actions secrets and a local <code>.env</code> file. Never committed to the repository.</td></tr><tr><td>The <code>publish_id</code> returned by TikTok for each upload, plus the upload date</td><td>So the same video is never uploaded twice</td><td><code>icerik/tiktok.json</code> in the repository</td></tr><tr><td>Video files produced by the author</td><td>To be uploaded</td><td>The author's own machine and GitHub Actions runners</td></tr></table>
+<p>No TikTok user profile data, follower data, viewer data, comments or messages are requested, read or stored. The only scope requested is <code>video.upload</code>.</p>
+<h2>Data from other people</h2>
+<p>None is collected. The application does not authenticate any user other than its author, and offers no interface through which another person could submit data.</p>
+<h2>Retention and deletion</h2>
+<p>Upload records are kept in the public repository's history. Tokens can be revoked at any time by the author from TikTok's settings, which immediately ends the application's access. Deleting the repository removes all stored records.</p>
+<h2>Children</h2>
+<p>The application is not directed at children and collects no data from anyone.</p>
+<h2>Changes</h2>
+<p>This policy may be updated by editing this file in the repository above. The revision history is public.</p>
+<h2>Contact</h2>
+<p>erdmyzn@gmail.com</p>
+<footer><a href="index.html">← Failure Reconstructed</a> · Contact: erdmyzn@gmail.com</footer>
+</main></html>
