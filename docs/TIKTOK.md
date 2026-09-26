@@ -37,11 +37,18 @@ Hesap açmayı ve şartları kabul etmeyi ben yapamam — bu adımlar sende.
 
    | Alan | Değer |
    |---|---|
-   | Terms of Service URL | `https://github.com/eyazan/youtube-otomasyon/blob/main/docs/TERMS.md` |
-   | Privacy Policy URL | `https://github.com/eyazan/youtube-otomasyon/blob/main/docs/PRIVACY.md` |
-   | Website / App URL | `https://github.com/eyazan/youtube-otomasyon` |
+   | Terms of Service URL | `https://eyazan.github.io/youtube-otomasyon/terms.html` |
+   | Privacy Policy URL | `https://eyazan.github.io/youtube-otomasyon/privacy.html` |
+   | Website / App URL | `https://eyazan.github.io/youtube-otomasyon/` |
    | Platform | Web (Desktop/Mobile app değil) |
    | Category | Tools / Productivity (ya da en yakını) |
+
+   TikTok bu adreslerin **sahipliğini doğrulatır** ("This URL is not verified" uyarısı).
+   `github.com` doğrulanamaz — bu yüzden sayfalar GitHub Pages ile yayınlandı:
+   `gh-pages` dalı → https://eyazan.github.io/youtube-otomasyon/ (kaynak: bu deponun
+   `gh-pages` dalı; uygulama kodu `main`'de kalır). Doğrulama için **Verify URL
+   properties** → **URL prefix** seç, `https://eyazan.github.io/youtube-otomasyon/`
+   gir, verdiği imza dosyasını indir ve `gh-pages` dalının köküne ekleyip gönder.
 
    Ayrıca *Content Posting API* kartında **Direct Post kapalı** kalmalı ve
    *Verify domains* adımı **atlanır** — o yalnızca `pull_by_url` içindir, biz dosyayı
