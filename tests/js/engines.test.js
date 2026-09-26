@@ -358,3 +358,19 @@ test("tiktok aciklamasi: kanca, sebep, SORU, beyan, tutarli etiketler", () => {
   // kumeye gore etiket
   assert.match(a, /#space/); assert.match(b, /#aviation/);
 });
+
+test("tiktok gecmis kuyrugu: gonderilmemisler, eskiden yeniye", () => {
+  const T = require("../../tiktok-yukle");
+  const k = T.gecmisKuyrugu();
+  assert.ok(Array.isArray(k));
+  // Gonderilmis olanlar kuyrukta olmamali
+  const fs = require("fs"), path = require("path");
+  const { KOK, jsonOku } = require("../../lib/ortak");
+  const gonderilmis = new Set(jsonOku(path.join(KOK, "icerik", "tiktok.json"), []).map((x) => x.slug));
+  for (const y of k) assert.ok(!gonderilmis.has(y.slug), y.slug + " zaten gonderilmis");
+  // Eskiden yeniye sirali
+  const t = k.map((y) => String(y.publishAt || y.tarih));
+  assert.deepEqual(t, [...t].sort(), "kuyruk eskiden yeniye sirali olmali");
+  // Her konusu okunabilir olmali (silinen konu kuyruga girmez)
+  for (const y of k) assert.ok(K.konuOku(y.slug), y.slug);
+});

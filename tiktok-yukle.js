@@ -12,6 +12,8 @@
 // Kullanim:
 //   node tiktok-yukle.js <slug>              # gelen kutusuna gonder
 //   node tiktok-yukle.js <slug> --dogrula    # KURU CALISMA: hicbir sey gonderilmez
+//   node tiktok-yukle.js --gecmis            # YouTube'da olup TikTok'ta olmayan EN ESKI
+//                                            # videoyu uretip gonderir (arayi kapatma)
 "use strict";
 const fs = require("fs");
 const path = require("path");
@@ -88,9 +90,21 @@ function aciklama(slug) {
 
 async function main() {
   const argv = process.argv.slice(2);
-  const slug = argv.find((a) => !a.startsWith("--"));
   const kuru = argv.includes("--dogrula");
-  if (!slug) { console.error("Kullanim: node tiktok-yukle.js <slug> [--dogrula]"); process.exit(1); }
+  let slug = argv.find((a) => !a.startsWith("--"));
+  if (!slug && argv.includes("--gecmis")) {
+    const kuyruk = gecmisKuyrugu();
+    if (!kuyruk.length) { console.log("TikTok arasi kapali — gonderilecek eski video yok."); return; }
+    slug = kuyruk[0].slug;
+    console.log(`Gecmis: ${kuyruk.length} video eksik, sirada "${slug}" (${kuyruk.slice(1, 4).map((x) => x.slug).join(", ") || "son"})`);
+    // Video yerelde yoksa uret (Actions'ta uretim klasoru her calismada bostur)
+    if (!videoYolu(slug)) {
+      console.log("  yerelde video yok — uretiliyor...");
+      const r = require("child_process").spawnSync("node", ["shorts-sira.js", slug], { cwd: KOK, stdio: "inherit" });
+      if (r.status !== 0 || !videoYolu(slug)) { console.error("  uretilemedi — bu calismada atlandi"); return; }
+    }
+  }
+  if (!slug) { console.error("Kullanim: node tiktok-yukle.js <slug> | --gecmis [--dogrula]"); process.exit(1); }
   if (!slugGecerli(slug)) { console.error("Gecersiz slug: " + slug); process.exit(1); }
 
   const dosya = videoYolu(slug);
@@ -128,6 +142,16 @@ async function main() {
   if (!basarili && d.status === "FAILED") process.exit(1);
 }
 
-module.exports = { aciklama, kayitBul, videoYolu };
+// YouTube'da yayinda olup TikTok'a hic gonderilmemis videolar, eskiden yeniye.
+// TikTok sonradan baslatildigi icin arada fark olusur; gunluk is bunu birer birer kapatir.
+function gecmisKuyrugu() {
+  const K = require("./lib/kutuphane");
+  const gonderilmis = new Set(kayitlar().map((x) => x.slug));
+  return K.yayinlananlar()
+    .filter((y) => y.slug && !gonderilmis.has(y.slug) && K.konuOku(y.slug))
+    .sort((a, b) => String(a.publishAt || a.tarih).localeCompare(String(b.publishAt || b.tarih)));
+}
+
+module.exports = { aciklama, kayitBul, videoYolu, gecmisKuyrugu };
 
 if (require.main === module) main().catch((e) => { console.error("Hata: " + e.message); process.exit(1); });

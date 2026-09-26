@@ -153,6 +153,13 @@ jobs:
           node e2e-kontrol.js "$SLUG"
           node bildirim.js --kuru
 
+      # TikTok arasini kapat: YouTube'da olup TikTok'ta olmayan en eski videoyu
+      # uretip gonderir (gunde bir). Kimlik yoksa ya da ara kapaliysa sessizce gecer.
+      # Basarisizlik gunu bozmaz — YouTube yayini zaten tamam.
+      - name: TikTok gecmisini kapat (gunde 1 eski video)
+        if: always() && github.event.inputs.kuru != 'true'
+        run: node tiktok-yukle.js --gecmis || echo "TikTok gecmis adimi atlandi"
+
       - name: Bildirim (her adim -> GitHub issue/yorum)
         if: always() && github.event.inputs.kuru != 'true'
         env:
