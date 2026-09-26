@@ -53,6 +53,21 @@ Hesap açmayı ve şartları kabul etmeyi ben yapamam — bu adımlar sende.
    Sayfanın var olması gerekmiyor; 404 verse de olur, tarayıcının adres çubuğu yeterli.
 7. Uygulamadan **Client key** ve **Client secret** değerlerini al.
 
+## Uygulama onaylanana kadar: test kullanıcısı şart
+
+TikTok uygulaması onaylanmadan önce **geliştirme modundadır** ve OAuth ekranı yalnızca
+*test kullanıcısı* olarak eklenmiş hesapları kabul eder. Kanal hesabı listede yoksa
+yetki ekranı `client_key` hatası verir ("Something went wrong").
+
+Portalda uygulamanın sayfasında **Sandbox → Add account** ya da **Test Users → Add Test
+User** bölümünü bul ve kanal hesabını ekle (TikTok o hesaba giriş yaptırıp Developer
+Terms'i onaylatır). TikTok "sonuçlar bir saat içinde görünür" diyor; hemen çalışmazsa
+biraz bekle. En fazla 10 hesap eklenebilir.
+
+Uygulama incelemeden geçip **Live** moda alınırsa bu adım gereksizleşir; ama inceleme
+çalışan bir entegrasyonun demo videosunu istediği için önce test kullanıcısıyla
+çalıştırmak gerekir.
+
 ## Sonra (bunu birlikte yaparız)
 
 `.env` dosyasına üç satır ekle:
