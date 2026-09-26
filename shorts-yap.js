@@ -161,6 +161,19 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
     if (h === "drift") return `scale=2160:3840,zoompan=z='1.04':x='(iw-iw/zoom)*(0.5+0.35*(on/${n}-0.5))':y='ih/2-(ih/zoom/2)':d=1:s=1080x1920:fps=30`;
     return "";
   };
+  // ARSIV FOTOGRAFI destegi: kamu mali felaket FILMI sinirli, ama FOTOGRAF bol
+  // (Titanic, Texas City, Hartford sirk yangini...). Fotograf hareketsiz oldugu
+  // icin Shorts'ta olu durur; bu yuzden her cekimde yavas zoom + hafif kaydirma
+  // ("Ken Burns") uygulanir. Yon cekim sirasina gore degisir, art arda gelen iki
+  // fotograf ayni hareketi yapmaz.
+  const FOTO = /\.(jpe?g|png|webp)$/i;
+  const fotoHareket = (j, n) => {
+    const iceri = j % 2 === 0;                       // sirayla yakinlas / uzaklas
+    const z = iceri ? `1+0.12*on/${n}` : `1.12-0.12*on/${n}`;
+    const yon = [["0.5", "0.5"], ["0.35", "0.5"], ["0.65", "0.45"], ["0.5", "0.6"]][j % 4];
+    return `scale=2160:-2,zoompan=z='${z}':x='(iw-iw/zoom)*${yon[0]}':y='(ih-ih/zoom)*${yon[1]}':d=1:s=1080x1920:fps=30`;
+  };
+
   const kaynakSure = {};
   const klipler = [];
   const zamanlar = [];
@@ -170,7 +183,8 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
     const s = sahneler[i], p = planlar[i];
     const kaynak = path.join(BASE, s.kaynak);
     if (!fs.existsSync(kaynak)) throw new Error("Kaynak klip yok: " + s.kaynak + " (once: node arsiv-bul.js " + IS + ")");
-    if (kaynakSure[s.kaynak] == null) kaynakSure[s.kaynak] = sure(kaynak) || 0;
+    const foto = FOTO.test(s.kaynak);
+    if (kaynakSure[s.kaynak] == null) kaynakSure[s.kaynak] = foto ? Infinity : (sure(kaynak) || 0);
     // Kare hassasiyetli sinirlar: yuvarlama hatasi sahneler boyunca birikmesin (ses senkronu)
     const f0 = Math.round(s.start * FPS), f1 = Math.round((s.start + s.dur) * FPS);
     const kareler = Math.max(1, f1 - f0);
@@ -182,14 +196,16 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
     zamanlar.push({ sahne: i, bas: f0 / FPS, son: f1 / FPS, rol: p.rol, tempo: p.tempo, cekim: k, hareket: p.hareket });
     for (let j = 0; j < k; j++) {
       const out = path.join(TMP, "s" + String(n++).padStart(3, "0") + ".mp4");
-      const hf = hareketFiltre(p.hareket, j, bol[j]);
+      // Fotograf: hareket zorunlu (durgun kare Shorts'ta olu durur); video: plandaki hareket.
+      const hf = foto ? fotoHareket(j, bol[j]) : hareketFiltre(p.hareket, j, bol[j]);
       const vf = taban + (hf ? "[v0];[v0]" + hf + ",format=yuv420p[v]" : "[v]");
-      const ss = Math.max(0, Math.min(t, kaynakSure[s.kaynak] - bol[j] / FPS - 0.05));
-      run(["-hide_banner", "-loglevel", "error", "-ss", ss.toFixed(3), "-i", kaynak, "-filter_complex", vf, "-map", "[v]",
+      const girdi = foto ? ["-loop", "1", "-framerate", String(FPS), "-i", kaynak]
+        : ["-ss", Math.max(0, Math.min(t, kaynakSure[s.kaynak] - bol[j] / FPS - 0.05)).toFixed(3), "-i", kaynak];
+      run(["-hide_banner", "-loglevel", "error", ...girdi, "-filter_complex", vf, "-map", "[v]",
         "-frames:v", String(bol[j]), "-r", String(FPS),
         "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p", "-an", "-y", out]);
       klipler.push(out);
-      t = ss + bol[j] / FPS + atla;
+      if (!foto) t = Math.max(0, Math.min(t, kaynakSure[s.kaynak] - bol[j] / FPS - 0.05)) + bol[j] / FPS + atla;
     }
     process.stdout.write(`\r  sahne ${i + 1}/${sahneler.length} (${p.rol}, ${k} cekim)   `);
   }
