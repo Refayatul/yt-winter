@@ -99,8 +99,12 @@ async function main() {
     console.log(`Gecmis: ${kuyruk.length} video eksik, sirada "${slug}" (${kuyruk.slice(1, 4).map((x) => x.slug).join(", ") || "son"})`);
     // Video yerelde yoksa uret (Actions'ta uretim klasoru her calismada bostur)
     if (!videoYolu(slug)) {
-      console.log("  yerelde video yok — uretiliyor...");
-      const r = require("child_process").spawnSync("node", ["shorts-sira.js", slug], { cwd: KOK, stdio: "inherit" });
+      console.log("  yerelde video yok — uretiliyor (YouTube'a YUKLEME YOK)...");
+      // PUBLISH=0 SART: bu video YouTube'da ZATEN yayinda; shorts-sira PUBLISH=1 ile
+      // calisirsa ayni videoyu YouTube'a ikinci kez yuklemeye kalkar. Burada yalnizca
+      // TikTok icin dosya uretiyoruz.
+      const r = require("child_process").spawnSync("node", ["shorts-sira.js", slug],
+        { cwd: KOK, stdio: "inherit", env: { ...process.env, PUBLISH: "0" } });
       if (r.status !== 0 || !videoYolu(slug)) { console.error("  uretilemedi — bu calismada atlandi"); return; }
     }
   }
