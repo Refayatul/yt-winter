@@ -32,11 +32,26 @@ Hesap açmayı ve şartları kabul etmeyi ben yapamam — bu adımlar sende.
    `Failure Reconstructed uploader`.
 4. Uygulamada **Content Posting API** ürününü ekle ve **Upload to inbox** (scope
    `video.upload`) iznini seç. *Direct Post'u işaretleme.*
-5. **Redirect URI** olarak sahibi olduğun bir HTTPS adresi gir. TikTok `http://localhost`
+5. TikTok **Login Kit**'i de otomatik ekler (OAuth izni için gerekli). Doldurulması
+   zorunlu alanlar şunlarla doldurulur:
+
+   | Alan | Değer |
+   |---|---|
+   | Terms of Service URL | `https://github.com/eyazan/youtube-otomasyon/blob/main/docs/TERMS.md` |
+   | Privacy Policy URL | `https://github.com/eyazan/youtube-otomasyon/blob/main/docs/PRIVACY.md` |
+   | Website / App URL | `https://github.com/eyazan/youtube-otomasyon` |
+   | Platform | Web (Desktop/Mobile app değil) |
+   | Category | Tools / Productivity (ya da en yakını) |
+
+   Ayrıca *Content Posting API* kartında **Direct Post kapalı** kalmalı ve
+   *Verify domains* adımı **atlanır** — o yalnızca `pull_by_url` içindir, biz dosyayı
+   doğrudan gönderiyoruz (`push_by_file`).
+
+6. **Redirect URI** olarak sahibi olduğun bir HTTPS adresi gir. TikTok `http://localhost`
    kabul etmez. Elinde bir şey yoksa şunu kullan:
    `https://eyazan.github.io/youtube-otomasyon/`
    Sayfanın var olması gerekmiyor; 404 verse de olur, tarayıcının adres çubuğu yeterli.
-6. Uygulamadan **Client key** ve **Client secret** değerlerini al.
+7. Uygulamadan **Client key** ve **Client secret** değerlerini al.
 
 ## Sonra (bunu birlikte yaparız)
 
