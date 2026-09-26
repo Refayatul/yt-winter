@@ -412,3 +412,26 @@ test("shorts-yap: fotograf kaynagi hareketli islenir (durgun kare yok)", () => {
   assert.match(src, /foto \? \["-loop", "1"/, "fotograf -loop 1 ile beslenmeli");
   assert.match(src, /zoompan/, "Ken Burns hareketi yok");
 });
+
+test("aday-gorsel: lisans/cozunurluk/aci teshiri elemesi", () => {
+  const A = require("../../aday-gorsel");
+  const g = (o) => ({ baslik: "x.jpg", aciklama: "", lisans: "Public domain", en: 1200, boy: 900, ...o });
+  assert.equal(A.ele(g()), null, "temiz gorsel gecmeli");
+  // Lisans: arsiv-bul ile AYNI kural
+  for (const l of ["CC BY-SA 4.0", "CC BY-NC 2.0", "CC BY-ND 4.0", "?", "Fair use", ""])
+    assert.ok(A.ele(g({ lisans: l })), "reddedilmeli: " + l);
+  for (const l of ["Public domain", "PD-USGov", "CC0", "CC BY 4.0"])
+    assert.equal(A.ele(g({ lisans: l })), null, "kabul edilmeli: " + l);
+  // Cozunurluk
+  assert.ok(A.ele(g({ en: 500 })));
+  // Aci teshiri ve olay disi gorseller
+  for (const b of ["Eleanor Cook post mortem.jpg", "Removing victims from the building.jpg",
+    "Flood Historical Marker.jpg", "Map of the harbour.jpg", "1947 Events Collage.jpg"])
+    assert.ok(A.ele(g({ baslik: b })), "elenmeli: " + b);
+  // Lisans kurali arsiv-bul.js ile ayni kalmali (iki yerde ayrisirsa koruma delinir)
+  const fs = require("fs"), path = require("path");
+  const ab = fs.readFileSync(path.join(require("../../lib/ortak").KOK, "arsiv-bul.js"), "utf8");
+  const re = ab.match(/const lisansUygun = \(l\) => (.*);/);
+  assert.ok(re, "arsiv-bul lisansUygun bulunamadi");
+  assert.equal(re[1], String(A.lisansUygun).replace(/^\(?l\)? => /, ""), "lisans kurallari ayrismis");
+});

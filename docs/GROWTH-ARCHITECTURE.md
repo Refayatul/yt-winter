@@ -141,6 +141,16 @@ The licence guard is identical to film, and the retention rule that demands an e
 opening timestamp does not apply to stills (they have none). This is how the library scales
 without falling back on generic stock footage. Example: `boston-molasses-1919`.
 
+**Finding candidates at scale (`aday-gorsel.js`):** the bottleneck in growing the library
+was research — searching Commons per case, opening each file to read its licence, checking
+resolution. This script does that mechanical part and prints a verdict per event
+(`node aday-gorsel.js --liste olaylar.txt`). It rejects anything that is not Public
+domain / CC0 / CC BY (the same rule as `arsiv-bul.js`, asserted identical by a test),
+anything under 800 px, and anything that is not the event itself: memorials, markers, maps,
+collages, portraits — and images of the dead or injured, which this channel does not show.
+Editorial judgement stays human: whether the case suits the channel, and which frame opens it.
+A scan of 40 historical failures found 31 with six or more usable public-domain images.
+
 **Licence guard:** `arsiv-bul.js` only accepts Public domain / CC0 / CC BY. It rejects SA, NC, ND and unknown licences. With `"kalite": "480p"` on a source, it downloads Commons' ready-made transcoded copy instead of a multi-hundred-MB original. Check the size first, because a transcoded copy can be larger than a low-resolution original.
 
 **Tags:** tags never contain `,`, `<` or `>`, since a comma would make YouTube reject the upload; a test covers every topic.
