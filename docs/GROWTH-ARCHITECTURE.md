@@ -151,6 +151,13 @@ collages, portraits — and images of the dead or injured, which this channel do
 Editorial judgement stays human: whether the case suits the channel, and which frame opens it.
 A scan of 40 historical failures found 31 with six or more usable public-domain images.
 
+**Stereographs:** most 1900s photographs in the Library of Congress are stereo cards — two
+near-identical frames side by side on a grey mount with a white scan border. Dropped into a
+vertical Short they look like two small pictures. `arsiv-bul.js` compares the two halves with
+SSIM (measured: a card scores 0.45-0.55, a single photograph 0.17) and, above 0.35, crops out
+the left photograph. Set `"stereo": false` on a source to skip it. This matters because the
+LoC holds thousands of usable public-domain disaster stereographs.
+
 **Licence guard:** `arsiv-bul.js` only accepts Public domain / CC0 / CC BY. It rejects SA, NC, ND and unknown licences. With `"kalite": "480p"` on a source, it downloads Commons' ready-made transcoded copy instead of a multi-hundred-MB original. Check the size first, because a transcoded copy can be larger than a low-resolution original.
 
 **Tags:** tags never contain `,`, `<` or `>`, since a comma would make YouTube reject the upload; a test covers every topic.
