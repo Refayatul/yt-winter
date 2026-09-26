@@ -27,11 +27,17 @@ const lisansUygun = (l) => /^(public domain|pd\b|pd-|cc0|cc by(?!-?(sa|nc|nd))\b
 
 // Olay anini gostermeyen ya da gosterilmemesi gereken gorseller
 const ELE = [
-  [/post.?mortem|autopsy|corpse|dead body|bodies of|grave of|funeral|coffin|burial/i, "aci teshiri"],
+  [/post.?mortem|autopsy|corpse|dead bod(y|ies)|\bbodies\b|\bthe dead\b|for bodies|grave of|funeral|coffin|burial|death certificate|morgue|identifying (the )?(dead|victims)/i, "aci teshiri"],
   [/removing (the )?(victim|casualt|bod)|carrying (the )?(victim|injured|wounded)|stretcher|injured (man|woman|child|person)|wounded (man|woman|child)|mourner/i, "yarali/kurban"],
   [/historical marker|memorial|plaque|monument|cemetery|statue/i, "anma/plaket"],
   [/\bmap\b|\bchart\b|diagram|collage|coat of arms|logo|stamp|banknote|flag of/i, "olay ani degil"],
   [/\bportrait\b|headshot/i, "portre"],
+  // Tablo/cizim/karikatur: olayin FOTOGRAFI degil. Tarihi bir eser olabilir ama
+  // gercek goruntu gibi gosterilemez (kanalin beyani: "real archival film").
+  // Titanic gibi fotografi olmayan olaylarda liste bunlarla dolar — ayrica isaretlenir.
+  [/painting|painted by|drawing|illustration|engraving|lithograph|woodcut|cartoon|sketch|artist'?s? impression|depicting|representation|puck magazine|punch magazine|harper'?s weekly|poster|\\bart by\\b/i, "tablo/cizim"],
+  // Belge taramasi (kurban listesi, gazete kupuru, mektup) — okunmaz ve olay ani degil
+  [/fatality list|casualty list|list of (the )?(dead|victims|missing)|newspaper (clipping|page)|telegram|letter from|affidavit|testimony|report cover|title page/i, "belge"],
 ];
 
 function getJSON(url) {
@@ -76,8 +82,25 @@ function ele(g) {
   if (!lisansUygun(g.lisans)) return "lisans: " + g.lisans;
   if (!g.en || g.en < 800) return `cozunurluk ${g.en}x${g.boy}`;
   const metin = g.baslik + " " + g.aciklama;
-  for (const [re, neden] of ELE) if (re.test(metin)) return neden;
+  // Commons dosya adlari sik sik bitisik yazilir ("PuckMagazine1912.jpg"); ayiraclari
+  // bosluga cevirip bir de oyle bakilir, yoksa desen kacar.
+  const bosluklu = metin.replace(/[-_]+/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2");
+  for (const [re, neden] of ELE) if (re.test(metin) || re.test(bosluklu)) return neden;
   return null;
+}
+
+// Ayni gorselin farkli surumleri (ayni baslik govdesi ya da ayni boyut+oran) tek sayilir;
+// aksi halde "6 gorsel var" derken aslinda 2 gorselin kopyalari olabilir.
+function tekilles(l) {
+  const gorulen = new Set(), out = [];
+  for (const g of l) {
+    const ad = g.baslik.replace(/\.(jpe?g|png|webp|tiff?)$/i, "").replace(/[-_ ]+(\d+|v\d|copy|crop|edit|restored|small|large)$/i, "")
+      .replace(/\s*-\s*DPLA\s*-\s*[0-9a-f]+$/i, "").replace(/\s*LCCN\s*\d+$/i, "").toLowerCase().trim();
+    const imza = ad + "|" + g.en + "x" + g.boy;
+    if (gorulen.has(ad) || gorulen.has(imza)) continue;
+    gorulen.add(ad); gorulen.add(imza); out.push(g);
+  }
+  return out;
 }
 
 async function tara(olay) {
@@ -87,7 +110,8 @@ async function tara(olay) {
   const uygun = [], elenen = [];
   for (const g of hepsi) { const n = ele(g); if (n) elenen.push({ ...g, neden: n }); else uygun.push(g); }
   uygun.sort((a, b) => b.en * b.boy - a.en * a.boy);
-  return { olay, uygun, elenen, toplam: hepsi.length };
+  const tek = tekilles(uygun);
+  return { olay, uygun: tek, kopya: uygun.length - tek.length, elenen, toplam: hepsi.length };
 }
 
 function yazdir(r, json) {
@@ -100,10 +124,12 @@ function yazdir(r, json) {
   for (const g of r.uygun.slice(0, 8)) console.log(`   ${String(g.en).padStart(5)}x${String(g.boy).padEnd(5)} ${g.lisans.padEnd(14)} ${g.baslik.slice(0, 60)}`);
   const nedenler = {};
   for (const g of r.elenen) nedenler[g.neden.split(":")[0]] = (nedenler[g.neden.split(":")[0]] || 0) + 1;
+  if (r.kopya) console.log(`   ${r.kopya} kopya birlestirildi`);
   if (r.elenen.length) console.log(`   elenen: ${Object.entries(nedenler).map(([k, v]) => `${k} ${v}`).join(", ")}`);
+  console.log("   ⚠ Gorsellerin olayla ilgili oldugunu GOZLE dogrula — arama metin eslesmesi yapar");
 }
 
-module.exports = { lisansUygun, ele, tara, ELE };
+module.exports = { lisansUygun, ele, tara, tekilles, ELE };
 
 if (require.main === module) {
   (async () => {

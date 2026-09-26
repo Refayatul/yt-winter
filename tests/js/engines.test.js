@@ -435,3 +435,32 @@ test("aday-gorsel: lisans/cozunurluk/aci teshiri elemesi", () => {
   assert.ok(re, "arsiv-bul lisansUygun bulunamadi");
   assert.equal(re[1], String(A.lisansUygun).replace(/^\(?l\)? => /, ""), "lisans kurallari ayrismis");
 });
+
+test("aday-gorsel: ceset/cizim/belge elemesi ve kopya birlestirme", () => {
+  const A = require("../../aday-gorsel");
+  const g = (b) => ({ baslik: b, aciklama: "", lisans: "Public domain", en: 1200, boy: 900 });
+  // Gercek olay fotografi gecmeli
+  for (const b of ["Among the oil barrels where fire started.jpg", "Panorama of the theatre after the fire.jpg"])
+    assert.equal(A.ele(g(b)), null, b);
+  // Aci teshiri — kanal bunlari GOSTERMEZ
+  for (const b of ["Diver going down for bodies in upper saloon.jpg", "bodies on the beach showing in the background.jpg",
+    "Gustav Scholer signing death certificate.jpg", "Victims of the fire, identifying the dead.jpg"])
+    assert.equal(A.ele(g(b)), "aci teshiri", b);
+  // Tablo/cizim — olayin fotografi degil (bitisik yazim dahil)
+  for (const b of ["Titanic sinking, painting by Willy Stower.jpg", "LuxuriesVersusLifeboatsPuckMagazine1912.jpg",
+    "Drawing depicting women jumping.jpg"])
+    assert.equal(A.ele(g(b)), "tablo/cizim", b);
+  // Belge taramasi
+  assert.equal(A.ele(g("Partial fatality list for the Iroquois Theatre fire (1903).jpg")), "belge");
+  // Ayni gorselin .jpg/.tif ve LCCN surumleri tek sayilir
+  assert.equal(A.tekilles([g("X LCCN2009632219.jpg"), g("X LCCN2009632219.tif"), g("Y.jpg")]).length, 2);
+});
+
+test("arsiv-bul: stereo kart tespiti ve kirpmasi kodda duruyor", () => {
+  const fs = require("fs"), path = require("path");
+  const src = fs.readFileSync(path.join(require("../../lib/ortak").KOK, "arsiv-bul.js"), "utf8");
+  assert.match(src, /function stereoMu/, "stereo tespiti yok");
+  assert.match(src, /ssim/, "SSIM karsilastirmasi yok");
+  assert.match(src, /function stereoKirp/, "stereo kirpma yok");
+  assert.match(src, /k\.stereo !== false/, "spec'ten kapatma secenegi yok");
+});

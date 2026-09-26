@@ -24,6 +24,7 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const cp = require("child_process");
 
 const KOK = __dirname;
 const IS = process.argv.find((a, i) => i >= 2 && !a.startsWith("--"));
@@ -81,6 +82,36 @@ async function archiveUrl(idVeyaYol) {
   return "https://archive.org/download/" + idVeyaYol + "/" + encodeURIComponent(vids[0].name);
 }
 
+// STEREOGRAF: Library of Congress gibi arsivlerde 1900'lerin fotograflarinin cogu
+// "stereo kart" — yan yana IKI ayni kare, gri karton ve beyaz tarama kenariyla.
+// Dikey Shorts'ta iki kucuk resim gibi durur. Iki yariyi SSIM ile karsilastirip
+// kart oldugunu anlar ve SOL fotografi kesip kaydeder.
+const FOTO_UZ = /\.(jpe?g|png|webp)$/i;
+function stereoMu(dosya) {
+  try {
+    const FF = require("./ff-yol.js");
+    const r = cp.spawnSync(FF.ffmpeg, ["-hide_banner", "-loglevel", "error", "-i", dosya, "-filter_complex",
+      "[0:v]crop=iw/2:ih:0:0,scale=320:240,format=gray[l];[0:v]crop=iw/2:ih:iw/2:0,scale=320:240,format=gray[r];[l][r]ssim=stats_file=-",
+      "-f", "null", "-"], { encoding: "utf8", maxBuffer: 1 << 22 });
+    const m = String(r.stdout || "").match(/All:([\d.]+)/);
+    return m ? +m[1] >= 0.35 : false;     // olculen: kart 0.45-0.55, tek fotograf 0.17
+  } catch (e) { return false; }
+}
+function stereoKirp(dosya) {
+  try {
+    const FF = require("./ff-yol.js");
+    const gecici = dosya.replace(FOTO_UZ, ".kirp$&");
+    // Olculen oranlar: kartin sol fotografi, yuvarlak kenarlarin icinden
+    const r = cp.spawnSync(FF.ffmpeg, ["-hide_banner", "-loglevel", "error", "-i", dosya,
+      "-vf", "crop=iw*0.375:ih*0.50:iw*0.105:ih*0.235", "-q:v", "2", "-y", gecici], { encoding: "utf8" });
+    if (r.status === 0 && fs.existsSync(gecici) && fs.statSync(gecici).size > 10000) {
+      fs.renameSync(gecici, dosya); return true;
+    }
+    try { fs.unlinkSync(gecici); } catch (e) {}
+  } catch (e) {}
+  return false;
+}
+
 const lisansUygun = (l) => /^(public domain|pd\b|pd-|cc0|cc by(?!-?(sa|nc|nd))\b)/i.test(String(l).trim()) && !/\b(sa|nc|nd)\b/i.test(String(l));
 // kalite ("480p" gibi) verilirse Commons'un hazir donusturulmus kopyasi indirilir:
 // yuzlerce MB'lik 1080p belgeseller her gunluk calismada tam boyutuyla inmesin
@@ -132,8 +163,11 @@ async function wikimediaUrl(baslik, kalite) {
         await new Promise(r => setTimeout(r, bekle));
       }
     }
+    // Stereo kart ise tek fotografa indir (konu spec'inde "stereo": false ile kapatilabilir)
+    let not = "";
+    if (FOTO_UZ.test(k.ad) && k.stereo !== false && stereoMu(hedef) && stereoKirp(hedef)) not = "  [stereo kart -> tek fotograf]";
     const mb = (fs.statSync(hedef).size / 1e6).toFixed(1);
-    console.log(mb + " MB  [lisans: " + lisans + "]");
+    console.log(mb + " MB  [lisans: " + lisans + "]" + not);
     kayit.push({ ad: k.ad, kaynak: k.wikimedia || k.archive || url, lisans });
   }
   // Sahne basina kaynak metadatasi + kanal kaynak defteri (ozgunluk/atif icin)
