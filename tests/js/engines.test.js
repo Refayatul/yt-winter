@@ -392,3 +392,23 @@ test("TikTok gecmis adimi YouTube'a IKINCI KEZ yuklemez", () => {
   const yuk = fs.readFileSync(require("path").join(require("../../lib/ortak").KOK, "youtube-yukle.js"), "utf8");
   assert.match(yuk, /kanaldaVarMi/, "cift yukleme korumasi kaldirilmis");
 });
+
+test("arsiv fotografi: acilis ani kurali fotografta gecmez, filmde gecer", () => {
+  const T = require("../../lib/tutunma");
+  const sahne = (kaynak) => ({ sahneler: [{ metin: "A tank burst and killed twenty one people.", kaynak },
+    { metin: "It crushed buildings in seconds.", kaynak }] });
+  // Film: baslangic sart
+  assert.equal(T.denetle(sahne("Footage/x.ogv")).filter((b) => b.kural === "arsiv-acilis").length, 1);
+  // Fotograf: zaman damgasi yok, kural gecmez
+  for (const u of ["Footage/f1.jpg", "Footage/f1.JPEG", "Footage/f1.png", "Footage/f1.webp"])
+    assert.equal(T.denetle(sahne(u)).filter((b) => b.kural === "arsiv-acilis").length, 0, u);
+});
+
+test("shorts-yap: fotograf kaynagi hareketli islenir (durgun kare yok)", () => {
+  const fs = require("fs"), path = require("path");
+  const src = fs.readFileSync(path.join(require("../../lib/ortak").KOK, "shorts-yap.js"), "utf8");
+  assert.match(src, /const FOTO = /, "fotograf tanima yok");
+  assert.match(src, /fotoHareket/, "fotografa hareket uygulanmiyor");
+  assert.match(src, /foto \? \["-loop", "1"/, "fotograf -loop 1 ile beslenmeli");
+  assert.match(src, /zoompan/, "Ken Burns hareketi yok");
+});

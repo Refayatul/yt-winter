@@ -11,6 +11,10 @@
 //   "kaynaklar": [
 //     { "ad": "tacoma.ogv", "wikimedia": "Tacoma Narrows Bridge destruction.ogv" },
 //     { "ad": "b.webm", "wikimedia": "Buyuk belgesel.webm", "kalite": "480p" },   // hazir 480p kopya
+//     { "ad": "f1.jpg",  "wikimedia": "Texas City Disaster.jpg" }                  // ARSIV FOTOGRAFI
+//   ]
+// Fotograf: kamu mali felaket FILMI sinirli, FOTOGRAF bol. shorts-yap.js fotografa
+// yavas zoom/kaydirma uygular. Lisans denetimi filmle AYNI (yalnizca PD/CC0/CC BY).
 //     { "ad": "b.mp4", "url": "https://.../public-domain.mp4" },
 //     { "ad": "c.mp4", "archive": "identifier/filename.mp4" }
 //   ]

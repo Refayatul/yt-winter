@@ -132,6 +132,15 @@ Any critical finding (text still overflowing, A/V mismatch, >1.5 s of black) mak
 
 **Upload validation:** `metaDogrula` checks YouTube's limits before sending (title ≤ 100, description ≤ 5000 bytes, tags ≤ 500, no `<>`, `publishAt` only on private and in the future).
 
+**Archival photographs:** public-domain disaster *film* is scarce (roughly 30-40 events),
+but *photographs* are plentiful — Titanic, Texas City, the Hartford circus fire, the Empire
+State Building B-25 crash. A source whose filename ends in `.jpg/.jpeg/.png/.webp` is treated
+as a still: `shorts-yap.js` feeds it with `-loop 1` and applies a slow zoom plus a small pan
+(Ken Burns), alternating direction per shot so consecutive stills never move the same way.
+The licence guard is identical to film, and the retention rule that demands an explicit
+opening timestamp does not apply to stills (they have none). This is how the library scales
+without falling back on generic stock footage. Example: `boston-molasses-1919`.
+
 **Licence guard:** `arsiv-bul.js` only accepts Public domain / CC0 / CC BY. It rejects SA, NC, ND and unknown licences. With `"kalite": "480p"` on a source, it downloads Commons' ready-made transcoded copy instead of a multi-hundred-MB original. Check the size first, because a transcoded copy can be larger than a low-resolution original.
 
 **Tags:** tags never contain `,`, `<` or `>`, since a comma would make YouTube reject the upload; a test covers every topic.
