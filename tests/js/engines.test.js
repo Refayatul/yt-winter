@@ -374,3 +374,21 @@ test("tiktok gecmis kuyrugu: gonderilmemisler, eskiden yeniye", () => {
   // Her konusu okunabilir olmali (silinen konu kuyruga girmez)
   for (const y of k) assert.ok(K.konuOku(y.slug), y.slug);
 });
+
+test("TikTok gecmis adimi YouTube'a IKINCI KEZ yuklemez", () => {
+  const fs = require("fs");
+  const kaynak = fs.readFileSync(require("path").join(require("../../lib/ortak").KOK, "tiktok-yukle.js"), "utf8");
+  // Gecmis videosu uretilirken shorts-sira PUBLISH=0 ile cagrilmali; aksi halde
+  // YouTube'da zaten yayinda olan video ikinci kez yuklenmeye calisilir.
+  const cagri = kaynak.match(/spawnSync\("node",\s*\["shorts-sira\.js",\s*slug\][\s\S]{0,220}?\)/);
+  assert.ok(cagri, "shorts-sira cagrisi bulunamadi");
+  assert.match(cagri[0], /PUBLISH:\s*"0"/, "gecmis uretimi PUBLISH=0 ile calismali:\n" + cagri[0]);
+
+  // Ikinci savunma: shorts-sira yalnizca PUBLISH=1 iken yukler
+  const sira = fs.readFileSync(require("path").join(require("../../lib/ortak").KOK, "shorts-sira.js"), "utf8");
+  assert.match(sira, /const publish = process\.env\.PUBLISH === "1";/);
+
+  // Ucuncu savunma: yukleyicide ayni baslik kanalda varsa yukleme yapilmaz
+  const yuk = fs.readFileSync(require("path").join(require("../../lib/ortak").KOK, "youtube-yukle.js"), "utf8");
+  assert.match(yuk, /kanaldaVarMi/, "cift yukleme korumasi kaldirilmis");
+});
