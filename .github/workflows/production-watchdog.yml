@@ -1,0 +1,130 @@
+name: Production SLA watchdog and automatic recovery
+
+# The schedule below is a secondary GitHub-native check. The independent path
+# is a Cloudflare Worker Cron Trigger, which sends repository_dispatch with the
+# production-sla-watchdog event after the deadline. Both paths are idempotent.
+on:
+  schedule:
+    - cron: '7 17 * * *'
+  repository_dispatch:
+    types: [production-sla-watchdog]
+  workflow_dispatch:
+    inputs:
+      simulate_missing:
+        description: 'Simulate a missed scheduler and start a no-upload recovery production'
+        type: boolean
+        default: false
+
+concurrency:
+  group: portfolio-production
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  sla:
+    runs-on: ubuntu-latest
+    outputs:
+      healthy: ${{ steps.check.outputs.healthy }}
+      production_ready: ${{ steps.check.outputs.production_ready }}
+      slug: ${{ steps.check.outputs.slug }}
+    env:
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+      FR_YT_CLIENT_ID: ${{ secrets.FR_YT_CLIENT_ID }}
+      FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
+      FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
+      FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
+      PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - id: check
+        name: Check today's production SLA
+        run: |
+          EXTRA=""
+          if [ "${{ inputs.simulate_missing || false }}" = "true" ]; then EXTRA="--simulate-missing"; fi
+          node production-sla-check.js --channel failure-reconstructed --verify-youtube --github-output --output="${{ runner.temp }}/sla-before.json" $EXTRA || true
+      - name: SLA before recovery
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-sla-before
+          path: ${{ runner.temp }}/sla-before.json
+          if-no-files-found: error
+          retention-days: 30
+
+  recovery:
+    needs: sla
+    if: ${{ needs.sla.outputs.production_ready != 'true' }}
+    uses: ./.github/workflows/uretim-is.yml
+    secrets: inherit
+    with:
+      hepsi: false
+      kuru: ${{ inputs.simulate_missing || false }}
+      slug: ${{ inputs.simulate_missing && 'why-ships-sink' || '' }}
+      force: true
+
+  verify:
+    needs: [sla, recovery]
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    env:
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+      FR_YT_CLIENT_ID: ${{ secrets.FR_YT_CLIENT_ID }}
+      FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
+      FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
+      FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
+      PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Repair a missing normal notification
+        if: ${{ inputs.simulate_missing != true }}
+        run: node bildirim.js --channel failure-reconstructed || true
+      - id: final
+        name: Verify SLA after recovery
+        run: |
+          if [ "${{ inputs.simulate_missing || false }}" = "true" ]; then
+            node -e 'const fs=require("fs");fs.writeFileSync(process.argv[1],JSON.stringify({schedulerFailureSimulated:true,automaticRecoveryStarted:true,recoveryJob:process.argv[2],dryRun:true,healthy:process.argv[2]==="success"},null,2)+"\n")' "${{ runner.temp }}/sla-after.json" "${{ needs.recovery.result }}"
+            test "${{ needs.recovery.result }}" = "success"
+          else
+            node production-sla-check.js --channel failure-reconstructed --verify-youtube --recovery-started --github-output --output="${{ runner.temp }}/sla-after.json" || true
+          fi
+      - name: Notify human only after automatic recovery failed
+        if: ${{ inputs.simulate_missing != true && steps.final.outputs.healthy != 'true' }}
+        run: node bildirim.js --channel failure-reconstructed --sla-failure "${{ runner.temp }}/sla-after.json"
+      - name: Save notification state
+        if: ${{ inputs.simulate_missing != true }}
+        run: |
+          git config user.name "production-watchdog"
+          git config user.email "actions@users.noreply.github.com"
+          git add icerik/bildirim-durum.json
+          if git diff --cached --quiet; then echo "Notification state unchanged."; exit 0; fi
+          git commit -m "chore: record production SLA notification"
+          BRANCH="$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+      - name: SLA/recovery evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: production-sla-after
+          path: ${{ runner.temp }}/sla-after.json
+          if-no-files-found: error
+          retention-days: 30

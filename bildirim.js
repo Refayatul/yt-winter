@@ -185,6 +185,20 @@ function bosGunMesaji(v) {
   ].join("\n") };
 }
 
+function slaHataMesaji(v) {
+  return { baslik: kanalBaslik(`🚨 Otomatik kurtarma başarısız — ${v.date || bugun()}`), etiket: ["hata"], govde: [
+    `@${SAHIP} günlük üretim SLA kontrolü başarısız oldu ve otomatik kurtarma çalıştıktan sonra da video hazır değil.`, "",
+    `- Üretildi: **${v.produced ? "evet" : "hayır"}**`,
+    `- YouTube'a yüklendi: **${v.uploaded ? "evet" : "hayır"}**`,
+    `- publishAt ayarlandı: **${v.scheduled ? "evet" : "hayır"}**`,
+    `- videoId doğrulandı: **${v.videoIdExists ? "evet" : "hayır"}**`,
+    `- Kalite kapısı: **${v.quality || "yok"}**`,
+    `- Normal bildirim: **${v.notificationExists ? "var" : "yok"}**`, "",
+    `Çalışma kaydı: ${process.env.GITHUB_SERVER_URL || "https://github.com"}/${REPO}/actions/runs/${process.env.GITHUB_RUN_ID || ""}`,
+    "Bu bildirim yalnızca otomatik kurtarma da başarısız olduğunda oluşturulur.",
+  ].join("\n") };
+}
+
 function haftalikMesaj(v) {
   const fark = (a, b) => (a != null && b != null ? (a - b >= 0 ? "+" : "") + (a - b) : "?");
   return { baslik: kanalBaslik(`📊 Haftalık özet — ${v.tarih}`), etiket: ["haftalik"], govde: [
@@ -354,6 +368,17 @@ async function haftalik(d) {
 
 async function main() {
   const d = durumOku();
+  const slaIndex = process.argv.indexOf("--sla-failure");
+  if (slaIndex > 0) {
+    const report = jsonOku(path.resolve(process.argv[slaIndex + 1] || ""), { date: bugun() });
+    const key = "sla-failure:" + (report.date || bugun());
+    if (!d.gonderilen[key]) {
+      await issueAc(slaHataMesaji(report));
+      isaretle(d, key);
+      if (TOKEN) jsonYaz(DURUM, d);
+    }
+    return;
+  }
   const i = process.argv.indexOf("--is-hatasi");
   if (i > 0) {
     await issueAc({ baslik: kanalBaslik(`🚨 Otomasyon hata verdi — ${bugun()}`), etiket: ["hata"],
@@ -374,6 +399,6 @@ async function main() {
   }
 }
 
-module.exports = { videoMesaji, hataMesaji, saglikMesaji, checkpointYorumu, yayindaYorumu, haftalikMesaj, bosGunMesaji, dususNoktasi, TESHIS_TR };
+module.exports = { videoMesaji, hataMesaji, saglikMesaji, checkpointYorumu, yayindaYorumu, haftalikMesaj, bosGunMesaji, slaHataMesaji, dususNoktasi, TESHIS_TR };
 
 if (require.main === module) main().catch((e) => { console.error("Hata: " + e.message); process.exit(0); });

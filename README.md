@@ -16,11 +16,12 @@ node post-publish-analyzer.js --channel impossible-brief --due
 node channel-plan.js --channel impossible-brief
 node portfolio-scheduler.js
 node portfolio-dashboard.js
+node production-sla-check.js --channel failure-reconstructed
 node e2e-impossible-brief.js --render       # yerel kuru çalışma; upload yok
 node simulate-portfolio.js                  # 30 gün + enjekte hatalar
 ```
 
-YouTube sırları kanal bazında `FR_YT_*` ve `IB_YT_*` adlarıyla tutulur. Her yüklemeden önce OAuth ile doğrulanan kanal kimliği, `FR_YT_CHANNEL_ID` veya `IB_YT_CHANNEL_ID` ile birebir karşılaştırılır; eksik ya da farklıysa yükleme başlamadan bloklanır. Ayrıntılar: [multi-channel architecture](docs/MULTI-CHANNEL-ARCHITECTURE.md), [ImpossibleBrief](docs/IMPOSSIBLE-BRIEF.md), [adding a channel](docs/ADDING-NEW-CHANNEL.md).
+YouTube sırları kanal bazında `FR_YT_*` ve `IB_YT_*` adlarıyla tutulur. Her yüklemeden önce OAuth ile doğrulanan kanal kimliği, `FR_YT_CHANNEL_ID` veya `IB_YT_CHANNEL_ID` ile birebir karşılaştırılır; eksik ya da farklıysa yükleme başlamadan bloklanır. Günlük üretim SLA'sı GitHub cron'una ek olarak bağımsız Cloudflare Cron → `repository_dispatch` watchdog'u ile korunur; eksik video bulunursa üretim otomatik başlar. Ayrıntılar: [multi-channel architecture](docs/MULTI-CHANNEL-ARCHITECTURE.md), [production reliability](docs/PRODUCTION-RELIABILITY.md), [ImpossibleBrief](docs/IMPOSSIBLE-BRIEF.md), [adding a channel](docs/ADDING-NEW-CHANNEL.md).
 
 ## Failure Reconstructed — Forensic Engineering Documentaries
 

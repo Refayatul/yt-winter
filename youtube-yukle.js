@@ -326,8 +326,11 @@ async function main() {
     const varOlan = await kanaldaVarMi(token, snippet.title);
     if (varOlan) {
       console.log("✓ Bu baslikta video kanalda zaten var (" + varOlan + ") — tekrar YUKLENMEDI, kayit tamamlandi.");
-      require("./lib/kutuphane").yayinKaydet({ channel: CHANNEL.slug, slug: IS, videoId: varOlan, baslik: snippet.title, tarih: new Date().toISOString(),
-        format: videoFormat, kaynak: "duplicate-guard" });
+      const library = require("./lib/kutuphane");
+      const previous = library.yayinBul(IS) || {};
+      library.yayinKaydet({ ...previous, channel: CHANNEL.slug, slug: IS, videoId: varOlan, baslik: snippet.title,
+        tarih: previous.tarih || new Date().toISOString(), format: videoFormat,
+        publishAt: previous.publishAt || publishAt, kalite: previous.kalite || kapiKarari, kaynak: "duplicate-guard" });
       return;
     }
   } catch (e) { console.log("  (cift yukleme kontrolu yapilamadi: " + e.message + ")"); }

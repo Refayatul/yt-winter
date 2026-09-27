@@ -1,4 +1,4 @@
-name: Legacy Failure Reconstructed production (manual)
+name: Failure Reconstructed production
 
 # Gunluk Shorts uretimi. Isin kendisi uretim-is.yml'de (yayin-kontrol.yml de ayni
 # isi cagirabiliyor, boylece tek bir zamanlamaya bagimli kalmiyoruz).
@@ -9,8 +9,17 @@ name: Legacy Failure Reconstructed production (manual)
 # acilir (bildirim.js). Elle de tetiklenebilir (Run workflow).
 
 on:
+  schedule:
+    # Primary daily scheduler. The independent Cloudflare watchdog dispatches
+    # production-watchdog.yml after the configurable SLA deadline.
+    - cron: '53 14 * * *'
   workflow_dispatch:
     inputs:
+      operation:
+        description: 'Operation'
+        type: choice
+        options: [produce, sla-check, watchdog-simulation, tiktok-from-artifact]
+        default: produce
       hepsi:
         description: 'Tum uretilmemis konulari uret (yoksa sadece sonraki)'
         type: boolean
@@ -23,6 +32,18 @@ on:
         description: 'Belirli konu (bos = siradaki)'
         type: string
         default: ''
+      artifact_run_id:
+        description: 'TikTok recovery: successful YouTube workflow run ID'
+        type: string
+        default: ''
+      today_slug:
+        description: 'TikTok recovery: exact successful YouTube slug'
+        type: string
+        default: ''
+      today_sha256:
+        description: 'TikTok recovery: exact YouTube artifact MP4 SHA-256'
+        type: string
+        default: ''
 
 # Ayni anda tek uretim; yayin-kontrol.yml de ayni grubu kullanir.
 concurrency:
@@ -32,12 +53,131 @@ concurrency:
 permissions:
   contents: write
   issues: write
+  actions: read
 
 jobs:
   uret:
+    if: ${{ github.event_name == 'schedule' || inputs.operation == 'produce' }}
     uses: ./.github/workflows/uretim-is.yml
     secrets: inherit
     with:
       hepsi: ${{ inputs.hepsi || false }}
       kuru: ${{ inputs.kuru || false }}
       slug: ${{ inputs.slug || '' }}
+      force: false
+
+  sla-check:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'sla-check' }}
+    runs-on: ubuntu-latest
+    env:
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+      FR_YT_CLIENT_ID: ${{ secrets.FR_YT_CLIENT_ID }}
+      FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
+      FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
+      FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Production SLA (YouTube API verified)
+        run: node production-sla-check.js --channel failure-reconstructed --verify-youtube
+
+  simulated_sla:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'watchdog-simulation' }}
+    runs-on: ubuntu-latest
+    outputs:
+      production_ready: ${{ steps.sla.outputs.production_ready }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - id: sla
+        name: Simulate a missed scheduler deadline
+        continue-on-error: true
+        run: node production-sla-check.js --channel failure-reconstructed --simulate-missing --github-output
+
+  simulated_recovery:
+    needs: simulated_sla
+    if: ${{ needs.simulated_sla.outputs.production_ready != 'true' }}
+    uses: ./.github/workflows/uretim-is.yml
+    secrets: inherit
+    with:
+      kuru: true
+      slug: why-ships-sink
+      force: true
+
+  simulation_proof:
+    needs: [simulated_sla, simulated_recovery]
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.operation == 'watchdog-simulation' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prove the missed deadline started production recovery
+        env:
+          PRODUCTION_READY: ${{ needs.simulated_sla.outputs.production_ready }}
+          RECOVERY_RESULT: ${{ needs.simulated_recovery.result }}
+        run: |
+          test "$PRODUCTION_READY" = "false"
+          test "$RECOVERY_RESULT" = "success"
+          printf '{"simulatedSchedulerFailure":true,"productionReady":false,"automaticRecoveryStarted":true,"recoveryResult":"success","runId":"%s"}\n' "$GITHUB_RUN_ID" > recovery-simulation.json
+          cat recovery-simulation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: recovery-simulation-proof
+          path: recovery-simulation.json
+          retention-days: 30
+
+  tiktok-from-artifact:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'tiktok-from-artifact' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
+      TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
+      TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate recovery inputs
+        run: |
+          test -n "${{ inputs.artifact_run_id }}" || { echo "artifact_run_id is required"; exit 2; }
+          test -n "${{ inputs.today_slug }}" || { echo "today_slug is required"; exit 2; }
+          echo "${{ inputs.today_sha256 }}" | grep -Eq '^[0-9a-f]{64}$' || { echo "today_sha256 must be 64 lowercase hex characters"; exit 2; }
+      - name: Download the original YouTube production artifact
+        run: gh run download "${{ inputs.artifact_run_id }}" --repo "$GITHUB_REPOSITORY" --name shorts-video --dir uretim
+      - name: Verify TikTok credentials and video.upload scope
+        run: node tiktok-yukle.js --yetki-kontrol
+      - name: Send today's exact YouTube MP4 to TikTok inbox
+        run: node tiktok-yukle.js "${{ inputs.today_slug }}" --expected-sha256="${{ inputs.today_sha256 }}" --result-file="${{ runner.temp }}/tiktok-today.json"
+      - name: Send one oldest historical backlog MP4 to TikTok inbox
+        run: node tiktok-yukle.js --gecmis --result-file="${{ runner.temp }}/tiktok-backlog.json"
+      - name: Save duplicate-protection registry
+        if: ${{ always() }}
+        run: |
+          git config user.name "production-watchdog"
+          git config user.email "actions@users.noreply.github.com"
+          git add icerik/tiktok.json
+          if git diff --cached --quiet; then echo "TikTok registry unchanged."; exit 0; fi
+          git commit -m "chore: record TikTok inbox deliveries"
+          BRANCH="$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+      - name: TikTok delivery evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tiktok-delivery-results
+          path: ${{ runner.temp }}/tiktok-*.json
+          if-no-files-found: ignore
+          retention-days: 30
