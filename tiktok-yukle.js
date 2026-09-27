@@ -185,6 +185,7 @@ async function main() {
   const sourceSha256 = exact ? exact.sha256 : sha256(dosya);
   const expectedSha = argValue(argv, "--expected-sha256");
   if (expectedSha && sourceSha256 !== expectedSha) throw new Error(`MP4_SHA256_MISMATCH: ${slug} source does not match the expected YouTube artifact`);
+  const source = exact ? "today-youtube-production-result" : expectedSha ? "today-youtube-artifact" : "historical-backlog";
 
   console.log("Dosya    : " + path.relative(KOK, dosya) + "  (" + (boyut / 1e6).toFixed(1) + " MB)");
   console.log("SHA-256  : " + sourceSha256);
@@ -205,7 +206,7 @@ async function main() {
   // Persist the publishId before polling. If the runner dies after upload, a
   // later run sees this durable id and cannot create a duplicate inbox item.
   kaydet({ slug, publishId, durum: "PROCESSING_UPLOAD", tarih: new Date().toISOString(), boyut,
-    sourceSha256, source: exact ? "today-youtube-production-result" : "historical-backlog",
+    sourceSha256, source,
     aciklama: aciklama(slug), hata: null });
   const d = await TT.durumBekle(tok.erisim, publishId);
   const basarili = d.status === "SEND_TO_USER_INBOX";
@@ -213,7 +214,7 @@ async function main() {
     : "\n⚠ TikTok durumu: " + (d.status || "?") + (d.fail_reason ? " (" + d.fail_reason + ")" : ""));
 
   const result = { slug, publishId, status: d.status || "?", duplicatePrevented: false,
-    sourceSha256, source: exact ? "today-youtube-production-result" : "historical-backlog" };
+    sourceSha256, source };
   kaydet({ slug, publishId, durum: result.status, tarih: new Date().toISOString(), boyut,
     sourceSha256, source: result.source, aciklama: aciklama(slug), hata: d.fail_reason || null });
   console.log(JSON.stringify(result));

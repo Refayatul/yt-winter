@@ -18,7 +18,7 @@ on:
       operation:
         description: 'Operation'
         type: choice
-        options: [produce, sla-check, tiktok-from-artifact]
+        options: [produce, sla-check, watchdog-simulation, tiktok-from-artifact]
         default: produce
       hepsi:
         description: 'Tum uretilmemis konulari uret (yoksa sadece sonraki)'
@@ -84,6 +84,50 @@ jobs:
           node-version: '20'
       - name: Production SLA (YouTube API verified)
         run: node production-sla-check.js --channel failure-reconstructed --verify-youtube
+
+  simulated_sla:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'watchdog-simulation' }}
+    runs-on: ubuntu-latest
+    outputs:
+      production_ready: ${{ steps.sla.outputs.production_ready }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - id: sla
+        name: Simulate a missed scheduler deadline
+        run: node production-sla-check.js --channel failure-reconstructed --simulate-missing --github-output
+
+  simulated_recovery:
+    needs: simulated_sla
+    if: ${{ needs.simulated_sla.outputs.production_ready != 'true' }}
+    uses: ./.github/workflows/uretim-is.yml
+    secrets: inherit
+    with:
+      kuru: true
+      slug: why-ships-sink
+      force: true
+
+  simulation_proof:
+    needs: [simulated_sla, simulated_recovery]
+    if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.operation == 'watchdog-simulation' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Prove the missed deadline started production recovery
+        env:
+          PRODUCTION_READY: ${{ needs.simulated_sla.outputs.production_ready }}
+          RECOVERY_RESULT: ${{ needs.simulated_recovery.result }}
+        run: |
+          test "$PRODUCTION_READY" = "false"
+          test "$RECOVERY_RESULT" = "success"
+          printf '{"simulatedSchedulerFailure":true,"productionReady":false,"automaticRecoveryStarted":true,"recoveryResult":"success","runId":"%s"}\n' "$GITHUB_RUN_ID" > recovery-simulation.json
+          cat recovery-simulation.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: recovery-simulation-proof
+          path: recovery-simulation.json
+          retention-days: 30
 
   tiktok-from-artifact:
     if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'tiktok-from-artifact' }}
