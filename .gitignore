@@ -74,3 +74,17 @@ trend/
 __pycache__/
 *.py[cod]
 shortslab/output/
+# Local ImpossibleBrief dry-run media (JSON reports remain tracked)
+channels/*/reports/dry-runs/**/*.mp4
+channels/*/reports/dry-runs/**/*.m4a
+channels/*/reports/dry-runs/**/*.mp3
+channels/*/reports/dry-runs/**/*.aiff
+channels/*/state/production/
+
+# The three small ImpossibleBrief launch fixtures are reviewed acceptance
+# evidence, not routine production output. Keep their media with the reports.
+!channels/impossible-brief/reports/dry-runs/**/*.mp4
+!channels/impossible-brief/reports/dry-runs/**/*.m4a
+!channels/impossible-brief/reports/dry-runs/**/*.srt
+!channels/impossible-brief/reports/dry-runs/**/*.jpg
+!channels/*/reports/packages/*/onizleme.jpg

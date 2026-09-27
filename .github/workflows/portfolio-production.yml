@@ -1,0 +1,124 @@
+name: Multi-channel portfolio production
+
+# Both channels run in one job so maxConcurrentRenders/maxConcurrentUploads=1
+# is physically enforced. Each channel step is failure-isolated: a failed FR
+# step cannot prevent IB from running, and vice versa.
+on:
+  schedule:
+    - cron: '23 7 * * *'
+    - cron: '23 8 * * *'
+    - cron: '23 9 * * *'
+    - cron: '23 10 * * *'
+    - cron: '23 11 * * *'
+    - cron: '23 12 * * *'
+    - cron: '23 13 * * *'
+    - cron: '23 14 * * *'
+    - cron: '23 15 * * *'
+    - cron: '23 16 * * *'
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Channel to run
+        type: choice
+        options: [both, failure-reconstructed, impossible-brief]
+        default: both
+      dry_run:
+        description: Render and validate without upload
+        type: boolean
+        default: true
+
+concurrency:
+  group: portfolio-production
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  issues: write
+
+jobs:
+  portfolio:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      FR_YT_CLIENT_ID: ${{ secrets.FR_YT_CLIENT_ID }}
+      FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
+      FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
+      FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
+      IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
+      IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
+      IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
+      IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
+      PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
+      SHORTS_FONT: DejaVu Sans
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
+          npm install --no-audit --no-fund
+      - name: Portfolio plan
+        run: node portfolio-scheduler.js --enqueue
+
+      - name: Failure Reconstructed Short
+        if: github.event_name == 'schedule' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed'
+        continue-on-error: true
+        env:
+          PUBLISH: ${{ vars.FR_PUBLISH }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
+          node saglik.js --channel failure-reconstructed || true
+          node shorts-sira.js --channel failure-reconstructed
+
+      - name: ImpossibleBrief Short
+        if: always() && (github.event_name == 'schedule' || inputs.channel == 'both' || inputs.channel == 'impossible-brief')
+        continue-on-error: true
+        env:
+          PUBLISH: ${{ vars.IB_PUBLISH }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
+          node saglik.js --channel impossible-brief || true
+          node shorts-sira.js --channel impossible-brief
+
+      - name: Channel-scoped analytics, plans, health and notifications
+        if: always()
+        run: |
+          for CHANNEL in failure-reconstructed impossible-brief; do
+            node post-publish-analyzer.js --channel "$CHANNEL" --due || true
+            node channel-plan.js --channel "$CHANNEL" || true
+            node library-health.js --channel "$CHANNEL" || true
+            node bildirim.js --channel "$CHANNEL" || true
+          done
+          node portfolio-dashboard.js --write
+
+      - name: Preview artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: portfolio-preview
+          path: |
+            uretim/*/Videos/*.mp4
+            channels/*/state/production/*/Videos/*.mp4
+            channels/*/state/production/*/quality-gate.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Commit isolated state
+        if: always() && inputs.dry_run != 'true'
+        run: |
+          git config user.name "portfolio-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add icerik channel analysis analytics experiments migration channels || true
+          if git diff --cached --quiet; then echo "No state changes."; exit 0; fi
+          git commit -m "chore: channel-scoped production state"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin main && git push && exit 0
+            sleep $((i * 5))
+          done
+          exit 1

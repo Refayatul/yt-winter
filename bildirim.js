@@ -24,13 +24,18 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 const { KOK, jsonOku, jsonYaz, bugun } = require("./lib/ortak");
+const SELECTED = require("./core/channel-context").selectFromArgv(process.argv.slice(2));
+const CHANNEL = SELECTED.channel;
 const { trSaat } = require("./lib/zamanlama");
 
 const KURU = process.argv.includes("--kuru");
 const TOKEN = KURU ? "" : process.env.GITHUB_TOKEN || "";
 const REPO = process.env.GITHUB_REPOSITORY || "eyazan/youtube-otomasyon";
 const SAHIP = process.env.GITHUB_REPOSITORY_OWNER || REPO.split("/")[0];
-const DURUM = path.join(KOK, "icerik", "bildirim-durum.json");
+const DURUM = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "bildirim-durum.json" : "notification-state.json");
+const kanalBaslik = (title) => `[${CHANNEL.name}] ${title}`;
+const paketRepoYolu = path.relative(KOK, CHANNEL.paths.packages).split(path.sep).join("/");
+const kaliteRaporu = CHANNEL.config.pathMode === "legacy-adapter" ? "quality-gate.md" : "quality-gate.json";
 
 function gh(yontem, yol, govde) {
   return new Promise((coz) => {
@@ -77,7 +82,7 @@ function dususNoktasi(tutma, sureSn) {
 }
 
 function denetimOzeti(slug) {
-  const d = jsonOku(path.join(KOK, "icerik", "paket", slug, "denetim.json"), null);
+  const d = jsonOku(path.join(CHANNEL.paths.packages, slug, "denetim.json"), null);
   if (!d) return ["- ⚠️ Görsel denetim verisi yok"];
   const t = d.yaziTasmasi;
   return [
@@ -93,7 +98,7 @@ function denetimOzeti(slug) {
 function videoMesaji(b) {
   const zaman = b.publishAt ? trSaat(new Date(b.publishAt)) : null;
   const inceleme = b.kalite === "REVIEW";
-  const baslik = zaman ? `🎬 ${b.baslik} — ${zaman} yayında` : `🎬 ${b.baslik} — private (elle yayınla)`;
+  const baslik = kanalBaslik(zaman ? `🎬 ${b.baslik} — ${zaman} yayında` : `🎬 ${b.baslik} — private (elle yayınla)`);
   const govde = [
     `<!-- video:${b.videoId} -->`,
     `@${SAHIP} yeni Short hazır ve YouTube'a yüklendi.`, "",
@@ -102,10 +107,10 @@ function videoMesaji(b) {
       : "🔒 Private yüklendi — otomatik yayın planlanmadı. Studio'dan Public yap.",
     `🧪 Kalite kapısı: **${b.kalite || "?"}**` + (inceleme ? " (yayınlanır; rapor aşağıda)" : ""), "",
     "**Yayın öncesi otomatik kontrol:**", ...denetimOzeti(b.slug), "",
-    `![önizleme](https://raw.githubusercontent.com/${REPO}/main/icerik/paket/${b.slug}/onizleme.jpg)`, "",
+    `![önizleme](https://raw.githubusercontent.com/${REPO}/main/${paketRepoYolu}/${b.slug}/onizleme.jpg)`, "",
     `- Video: https://youtu.be/${b.videoId}`,
     `- Studio: https://studio.youtube.com/video/${b.videoId}/edit`,
-    `- Kalite raporu: https://github.com/${REPO}/blob/main/icerik/paket/${b.slug}/quality-gate.md`, "",
+    `- Kalite raporu: https://github.com/${REPO}/blob/main/${paketRepoYolu}/${b.slug}/${kaliteRaporu}`, "",
     ...tiktokBolumu(b.slug),
     "Bu issue videonun tüm yolculuğunu takip eder: yayına girince ve 24 saat / 3 gün / 7 gün sonuçları geldikçe buraya yorum düşer.",
     zaman ? "_İstemezsen: yayın saatinden önce Studio → Visibility → Schedule'ı kaldır._" : "",
@@ -116,7 +121,7 @@ function videoMesaji(b) {
 // TikTok gelen kutusuna da gonderildiyse: telefonda kopyalanacak hazir aciklama.
 // Video henuz gonderilmediyse bolum hic cikmaz.
 function tiktokBolumu(slug) {
-  const k = jsonOku(path.join(KOK, "icerik", "tiktok.json"), []).find((x) => x.slug === slug);
+  const k = jsonOku(path.join(CHANNEL.paths.state, "tiktok.json"), []).find((x) => x.slug === slug);
   if (!k || k.durum !== "SEND_TO_USER_INBOX") return [];
   return ["**📱 TikTok — gelen kutusunda, yayınlamak için:**",
     "TikTok uygulaması → Inbox → bildirime dokun. Açıklamayı aşağıdan kopyala, **AI-generated content** anahtarını aç, Post.", "",
@@ -126,13 +131,13 @@ function tiktokBolumu(slug) {
 function hataMesaji(h) {
   const adimlar = h.yetki ? [
     "**Çözüm (2 dakika):**",
-    "1. Bilgisayarda proje klasöründe: `node youtube-yetki.js`",
+    `1. Bilgisayarda proje klasöründe: \`node youtube-yetki.js --channel ${CHANNEL.slug}\``,
     "2. Açılan tarayıcıda kanal hesabıyla giriş yap → izin ver",
-    "3. `.env` dosyasındaki yeni `YT_REFRESH_TOKEN` değerini GitHub → Settings → Secrets → Actions → `YT_REFRESH_TOKEN`'a yapıştır",
-    "4. Actions → *Shorts uretim* → Run workflow (ya da bir sonraki otomatik çalışmayı bekle)", "",
+    `3. \`.env\` dosyasındaki yeni \`${CHANNEL.prefix}_YT_REFRESH_TOKEN\` değerini aynı adlı GitHub Actions secret'ına yapıştır`,
+    "4. Actions → *Multi-channel portfolio production* → Run workflow (ya da bir sonraki otomatik çalışmayı bekle)", "",
     "Kalıcı çözüm: Google Cloud → OAuth consent screen → **Publish app** (Production). Test modunda yetki 7 günde biter.",
   ] : ["Otomasyon bir sonraki çalışmada tekrar deneyecek. Tekrarlarsa bu issue'ya bak."];
-  return { baslik: `❌ Yükleme başarısız: ${h.slug}`, etiket: ["hata"], govde: [
+  return { baslik: kanalBaslik(`❌ Yükleme başarısız: ${h.slug}`), etiket: ["hata"], govde: [
     `@${SAHIP} video üretildi ama YouTube'a **yüklenemedi**. Konu harcanmadı; kuyrukta bekliyor.`, "",
     "Neden: `" + String(h.neden).replace(/`/g, "'").slice(0, 400) + "`", "", ...adimlar].join("\n") };
 }
@@ -141,7 +146,7 @@ function saglikMesaji(s) {
   const sorun = (s.bulgular || []).filter((b) => b.durum !== "ok");
   if (!sorun.length) return null;
   const ikon = { uyari: "⚠️", kritik: "❌" };
-  return { baslik: sorun.some((b) => b.durum === "kritik") ? "🩺 Sistem uyarısı — müdahale gerekiyor" : "🩺 Sistem uyarısı",
+  return { baslik: kanalBaslik(sorun.some((b) => b.durum === "kritik") ? "🩺 Sistem uyarısı — müdahale gerekiyor" : "🩺 Sistem uyarısı"),
     etiket: ["saglik"], ozet: sorun.map((b) => b.ad + ":" + b.durum + ":" + b.mesaj).join("|"),
     govde: [`@${SAHIP} otomatik sağlık kontrolü (${trSaat(new Date(s.tarih))}):`, "",
       ...(s.bulgular || []).map((b) => `- ${ikon[b.durum] || "✅"} **${b.ad}** — ${b.mesaj}` + (b.cozum ? `\n  - Yapılacak: ${b.cozum}` : "")), "",
@@ -171,18 +176,18 @@ function yayindaYorumu(v) {
 // amac GitHub'in gunun TUM zamanlanmis denemelerini atladigi durumu yakalamak.
 function bosGunMesaji(v) {
   if (v.bugunVar || !v.kalanKonu) return null;
-  return { baslik: `🚨 Bugün video üretilmedi — ${v.tarih}`, etiket: ["hata"], govde: [
+  return { baslik: kanalBaslik(`🚨 Bugün video üretilmedi — ${v.tarih}`), etiket: ["hata"], govde: [
     `@${SAHIP} bugün (${v.tarih}) hiç video üretilmedi ve kuyrukta ${v.kalanKonu} konu bekliyor.`, "",
     "Bunun tek bilinen nedeni: GitHub günün **tüm** zamanlanmış denemelerini atlamış olması (07:23–16:23 UTC arası 10 deneme).", "",
-    "**Yapılacak:** Actions → *Shorts uretim* → **Run workflow**. Video üretilir ve bir sonraki 21:00 (TR) yayınına planlanır.",
-    `${v.sunucu}/${REPO}/actions/workflows/uretim.yml`, "",
+    "**Yapılacak:** Actions → *Multi-channel portfolio production* → **Run workflow**. İlgili kanalı seçip çalıştır.",
+    `${v.sunucu}/${REPO}/actions/workflows/portfolio-production.yml`, "",
     "Yarınki otomatik çalışma bundan etkilenmez.",
   ].join("\n") };
 }
 
 function haftalikMesaj(v) {
   const fark = (a, b) => (a != null && b != null ? (a - b >= 0 ? "+" : "") + (a - b) : "?");
-  return { baslik: `📊 Haftalık özet — ${v.tarih}`, etiket: ["haftalik"], govde: [
+  return { baslik: kanalBaslik(`📊 Haftalık özet — ${v.tarih}`), etiket: ["haftalik"], govde: [
     `@${SAHIP} geçen haftanın özeti:`, "",
     `- Abone: **${v.simdi?.subscribers ?? "?"}** (${fark(v.simdi?.subscribers, v.once?.subscribers)} bu hafta)`,
     `- Toplam izlenme: **${v.simdi?.views ?? "?"}** (${fark(v.simdi?.views, v.once?.views)} bu hafta)`, "",
@@ -211,7 +216,12 @@ async function yorumYaz(no, metin) {
 async function etiketliIssuelar(etiket, durum = "open") {
   if (!TOKEN) return [];
   const r = await gh("GET", `/repos/${REPO}/issues?state=${durum}&labels=${etiket}&per_page=100`);
-  return Array.isArray(r.j) ? r.j : [];
+  const issues = Array.isArray(r.j) ? r.j : [];
+  return issues.filter((issue) => {
+    const title = String(issue.title || "");
+    if (title.startsWith(`[${CHANNEL.name}]`)) return true;
+    return CHANNEL.config.pathMode === "legacy-adapter" && !/^\[[^\]]+\]/.test(title);
+  });
 }
 async function videoIssue(videoId) {
   const l = await etiketliIssuelar("yeni-video", "all");
@@ -221,7 +231,7 @@ async function videoIssue(videoId) {
 
 // ---------------- adimlar ----------------
 async function yeniVideolar(d) {
-  const uretim = path.join(KOK, "uretim");
+  const uretim = CHANNEL.paths.production;
   const liste = fs.existsSync(uretim) ? fs.readdirSync(uretim).map((s) => jsonOku(path.join(uretim, s, "BILDIRIM.json"), null)).filter(Boolean) : [];
   for (const b of liste) {
     if (d.gonderilen["video:" + b.videoId]) continue;
@@ -233,7 +243,7 @@ async function yeniVideolar(d) {
 }
 
 async function hatalar(d) {
-  const uretim = path.join(KOK, "uretim");
+  const uretim = CHANNEL.paths.production;
   const liste = fs.existsSync(uretim) ? fs.readdirSync(uretim).map((s) => jsonOku(path.join(uretim, s, "YUKLEME-HATASI.json"), null)).filter(Boolean) : [];
   for (const h of liste) {
     const k = "hata:" + h.slug + ":" + bugun();
@@ -241,18 +251,18 @@ async function hatalar(d) {
     await issueAc(hataMesaji(h));
     isaretle(d, k);
   }
-  const engel = Object.entries(jsonOku(path.join(KOK, "icerik", "engellenen.json"), {})).filter(([, e]) => String(e.tarih || "").startsWith(bugun()));
+  const engel = Object.entries(jsonOku(path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "engellenen.json" : "blocked.json"), {})).filter(([, e]) => String(e.tarih || "").startsWith(bugun()));
   for (const [slug, e] of engel) {
     const k = "engel:" + slug + ":" + bugun();
     if (d.gonderilen[k]) continue;
-    await issueAc({ baslik: `⛔ Kalite kapısı engelledi: ${slug}`, etiket: ["kalite-engeli"],
-      govde: `@${SAHIP} bu konu yüklenmedi (kalite yetersiz). Sistem sıradaki konuya geçti; bugünkü video etkilenmez.\n\nNeden: ${e.neden}\n\nRapor: https://github.com/${REPO}/blob/main/icerik/paket/${slug}/quality-gate.md` });
+    await issueAc({ baslik: kanalBaslik(`⛔ Kalite kapısı engelledi: ${slug}`), etiket: ["kalite-engeli"],
+      govde: `@${SAHIP} bu konu yüklenmedi (kalite yetersiz). Sistem sıradaki konuya geçti; bugünkü video etkilenmez.\n\nNeden: ${e.neden}\n\nRapor: https://github.com/${REPO}/blob/main/${paketRepoYolu}/${slug}/${kaliteRaporu}` });
     isaretle(d, k);
   }
 }
 
 async function saglik(d) {
-  const s = jsonOku(path.join(KOK, "icerik", "saglik.json"), null);
+  const s = jsonOku(path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "saglik.json" : "health.json"), null);
   if (!s) return;
   const m = saglikMesaji(s);
   const acik = await etiketliIssuelar("saglik");
@@ -272,7 +282,7 @@ async function saglik(d) {
 async function checkpointler(d) {
   const K = require("./lib/kutuphane");
   for (const y of K.yayinlananlar()) {
-    const dir = path.join(KOK, "analytics", y.videoId);
+    const dir = path.join(CHANNEL.paths.analytics, y.videoId);
     if (!fs.existsSync(dir)) continue;
     for (const f of fs.readdirSync(dir).filter((x) => /^\d+d\.json$/.test(x))) {
       const k = "cp:" + y.videoId + ":" + f;
@@ -291,13 +301,15 @@ async function yayinKontrol(d) {
     && Date.now() - Date.parse(y.publishAt) < 4 * 86400000 && !d.gonderilen["yayin:" + y.videoId]);
   if (!bekleyen.length || !yt.kimlikVar()) return;
   const api = yt.istemci(await yt.token());
+  if (CHANNEL.expectedChannelId()) await yt.verifyChannelIdentity(api, CHANNEL);
+  else if (CHANNEL.config.pathMode !== "legacy-adapter") return;
   const vids = await yt.videolar(api, bekleyen.map((y) => y.videoId));
   for (const y of bekleyen) {
     const v = vids.find((x) => x.id === y.videoId);
     const no = await videoIssue(y.videoId);
     if (v && v.status.privacyStatus === "public") { await yorumYaz(no, yayindaYorumu(v)); isaretle(d, "yayin:" + y.videoId); }
     else if (Date.now() - Date.parse(y.publishAt) > 60 * 60000) {
-      await issueAc({ baslik: `❌ Otomatik yayın gerçekleşmedi: ${y.baslik}`, etiket: ["hata"], govde:
+      await issueAc({ baslik: kanalBaslik(`❌ Otomatik yayın gerçekleşmedi: ${y.baslik}`), etiket: ["hata"], govde:
         `@${SAHIP} video ${trSaat(new Date(y.publishAt))} saatinde Public olmalıydı ama durumu: **${v ? v.status.privacyStatus : "bulunamadı"}**.\n\nStudio'dan kontrol et: https://studio.youtube.com/video/${y.videoId}/edit` });
       isaretle(d, "yayin:" + y.videoId);
     }
@@ -320,7 +332,7 @@ async function haftalik(d) {
   const hafta = (() => { const t = new Date(); const p = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate() - ((t.getUTCDay() + 6) % 7))); return p.toISOString().slice(0, 10); })();
   if (new Date().getUTCDay() !== 1 || d.gonderilen["hafta:" + hafta]) return;
   const K = require("./lib/kutuphane");
-  const kd = path.join(KOK, "analytics", "kanal");
+  const kd = path.join(CHANNEL.paths.analytics, "kanal");
   const anlik = fs.existsSync(kd) ? fs.readdirSync(kd).filter((f) => /\.json$/.test(f)).sort() : [];
   const simdi = anlik.length ? jsonOku(path.join(kd, anlik[anlik.length - 1]), null) : null;
   const esik = new Date(Date.now() - 7 * 86400000).toISOString().slice(0, 10);
@@ -328,8 +340,10 @@ async function haftalik(d) {
   const hafta7 = K.yayinlananlar().filter((y) => Date.parse(y.publishAt || y.tarih) >= Date.now() - 7 * 86400000);
   let izl = {};
   try { const yt = require("./lib/yt"); if (yt.kimlikVar() && hafta7.length) { const api = yt.istemci(await yt.token());
+    if (CHANNEL.expectedChannelId()) await yt.verifyChannelIdentity(api, CHANNEL);
+    else if (CHANNEL.config.pathMode !== "legacy-adapter") throw new Error(`${CHANNEL.prefix}_YT_CHANNEL_ID missing`);
     for (const v of await yt.videolar(api, hafta7.map((y) => y.videoId))) izl[v.id] = v.statistics.viewCount; } } catch (e) {}
-  const s = jsonOku(path.join(KOK, "icerik", "saglik.json"), null);
+  const s = jsonOku(path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "saglik.json" : "health.json"), null);
   const m = haftalikMesaj({ tarih: bugun(), simdi, once, videolar: hafta7.map((y) => ({ ...y, izlenme: izl[y.videoId] })),
     sira: K.kuyruk().slice(0, 7).map((k) => k.baslik),
     saglik: s ? (s.bulgular.every((b) => b.durum === "ok") ? "tüm kontroller geçti ✅" : s.bulgular.filter((b) => b.durum !== "ok").map((b) => b.mesaj).join("; ")) : "bilinmiyor" });
@@ -342,7 +356,7 @@ async function main() {
   const d = durumOku();
   const i = process.argv.indexOf("--is-hatasi");
   if (i > 0) {
-    await issueAc({ baslik: `🚨 Otomasyon hata verdi — ${bugun()}`, etiket: ["hata"],
+    await issueAc({ baslik: kanalBaslik(`🚨 Otomasyon hata verdi — ${bugun()}`), etiket: ["hata"],
       govde: `@${SAHIP} günlük iş akışı hata ile bitti.\n\nKayıt: ${process.argv[i + 1] || "(bağlantı yok)"}\n\nKonu harcanmadı; bir sonraki çalışma tekrar dener. Tekrarlarsa bu kaydı incele.` });
     return;
   }

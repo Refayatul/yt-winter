@@ -13,13 +13,15 @@
 const fs = require("fs");
 const path = require("path");
 const { KOK, jsonOku } = require("./lib/ortak");
+const SELECTED = require("./core/channel-context").selectFromArgv(process.argv.slice(2));
+const CHANNEL = SELECTED.channel;
 const { ayar } = require("./lib/ayar");
 const K = require("./lib/kutuphane");
 
 function sonOlcum(id) {
-  const dir = path.join(KOK, "analytics", id);
+  const dir = path.join(CHANNEL.paths.analytics, id);
   const l = fs.existsSync(dir) ? fs.readdirSync(dir).filter((f) => /\.json$/.test(f)).map((f) => jsonOku(path.join(dir, f), null)).filter(Boolean) : [];
-  const a = jsonOku(path.join(KOK, "analysis", id, "data.json"), null);
+  const a = jsonOku(path.join(CHANNEL.paths.analysis, id, "data.json"), null);
   if (a) l.push(a);
   return l.sort((x, y) => String(x.toplandi).localeCompare(String(y.toplandi))).pop() || null;
 }
@@ -31,7 +33,7 @@ const GUNLER = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 function topla() {
   const min = ayar().analytics.minSampleForInsight;
   const TE = require("./title-engine");
-  const kanalDir = path.join(KOK, "analytics", "kanal");
+  const kanalDir = path.join(CHANNEL.paths.analytics, "kanal");
   const kanal = fs.existsSync(kanalDir) ? fs.readdirSync(kanalDir).filter((f) => f.endsWith(".json")).sort().map((f) => jsonOku(path.join(kanalDir, f), null)).filter(Boolean) : [];
   const videolar = K.yayinlananlar().map((y) => {
     const o = sonOlcum(y.videoId);
@@ -79,7 +81,7 @@ function topla() {
   const hookKova = (v) => v.hookPuani == null ? null : v.hookPuani >= 80 ? "hook ≥80" : v.hookPuani >= 60 ? "hook 60-79" : "hook <60";
   olculen.forEach((v) => { v._uzunluk = uzunlukKova(v); v._hook = hookKova(v); });
   return {
-    olusturuldu: new Date().toISOString(), analitikKapsami: olculen.some((v) => v.avp != null) ? "analytics" : "public counters only (Analytics API scope missing)",
+    channel: CHANNEL.slug, channelName: CHANNEL.name, olusturuldu: new Date().toISOString(), analitikKapsami: olculen.some((v) => v.avp != null) ? "analytics" : "public counters only (Analytics API scope missing)",
     ozet, kanalGecmisi: kanal, videolar,
     desenler: [desen("baslikKalibi", "Title patterns"), desen("kapakDuzeni", "Thumbnail layouts"), desen("kume", "Topics (clusters)"),
       desen("_hook", "Hooks"), desen("_uzunluk", "Video length"), desen("gun", "Publish day (UTC)"), desen("saatUTC", "Publish hour (UTC)")],

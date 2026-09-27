@@ -35,10 +35,14 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const Channel = require("./core/channel-context");
+const SELECTED = Channel.selectFromArgv(process.argv.slice(2));
+const CHANNEL = SELECTED.channel;
 
 const KOK = __dirname;
 
 function env(ad) {
+  if (/^YT_/.test(ad)) return CHANNEL.scopedEnv(ad);
   if (process.env[ad]) return String(process.env[ad]).trim();
   try {
     for (const l of fs.readFileSync(path.join(KOK, ".env"), "utf8").split(/\r?\n/)) {
@@ -159,7 +163,7 @@ async function kanaldaVarMi(token, baslik) {
 
 // Yukleme hatasi kaydi — shorts-sira konuyu harcamaz, bildirim.js issue acar
 function hataYaz(BASE, IS, neden) {
-  try { fs.writeFileSync(path.join(BASE, "YUKLEME-HATASI.json"), JSON.stringify({ slug: IS, neden: String(neden).slice(0, 600),
+  try { fs.writeFileSync(path.join(BASE, "YUKLEME-HATASI.json"), JSON.stringify({ channel: CHANNEL.slug, channelName: CHANNEL.name, slug: IS, neden: String(neden).slice(0, 600),
     yetki: /YETKI_GECERSIZ|invalid_grant/.test(neden), tarih: new Date().toISOString() }, null, 2)); } catch (e) {}
 }
 
@@ -203,7 +207,7 @@ function govdeyiGonder(yuklemeUrl, dosya, boyut) {
 
 // --- Ana akis -------------------------------------------------------------
 async function main() {
-  const argv = process.argv.slice(2);
+  const argv = SELECTED.argv;
   const IS = argv.find((a) => !a.startsWith("--"));
   const kuru = argv.includes("--dogrula");
   let gizlilik = (env("YT_PRIVACY") || "private").toLowerCase();
@@ -212,11 +216,11 @@ async function main() {
   if (!["private", "unlisted", "public"].includes(gizlilik)) gizlilik = "private";
 
   if (!IS) {
-    console.error("Kullanim: node youtube-yukle.js <is-adi> [--dogrula] [--herkese-acik|--liste-disi]");
+    console.error("Kullanim: node youtube-yukle.js --channel <slug> <is-adi> [--dogrula] [--herkese-acik|--liste-disi]");
     process.exit(1);
   }
 
-  const BASE = path.join(KOK, "uretim", IS);
+  const BASE = path.join(CHANNEL.paths.production, IS);
   if (!fs.existsSync(path.join(BASE, "konu.json"))) {
     console.error("Is bulunamadi: " + BASE);
     process.exit(1);
@@ -246,7 +250,9 @@ async function main() {
   };
   // Gercekci sentetik/yeniden kurgu goruntu varsa YouTube'a beyan edilir (gizlenmez).
   let sentetik = false;
-  try { sentetik = (JSON.parse(fs.readFileSync(path.join(BASE, "konu.json"), "utf8")).sahneler || []).some((x) => x.sentetik); } catch (e) {}
+  let konuVerisi = {};
+  try { konuVerisi = JSON.parse(fs.readFileSync(path.join(BASE, "konu.json"), "utf8")); sentetik = (konuVerisi.sahneler || []).some((x) => x.sentetik); } catch (e) {}
+  const videoFormat = konuVerisi.format === "long" ? "long" : "short";
   const status = { privacyStatus: gizlilik, selfDeclaredMadeForKids: false, ...(sentetik ? { containsSyntheticMedia: true } : {}) };
 
   // Zamanlanmis yayin: kalite kapisi karari listedeyse video private yuklenir ve
@@ -256,7 +262,7 @@ async function main() {
   try {
     const plan = require("./lib/ayar").ayar().publishing.schedule || {};
     const kapi = require("./lib/ortak").jsonOku(require("./lib/kutuphane").paketYolu(IS, "quality-gate.json"), null);
-    kapiKarari = kapi ? kapi.karar : null;
+    kapiKarari = kapi ? (kapi.karar || kapi.decision) : null;
     if (plan.enabled && gizlilik === "private" && !argv.includes("--zamanlama-yok") && kapiKarari && (plan.gates || []).includes(kapiKarari)) {
       const dolu = require("./lib/kutuphane").yayinlananlar().map((y) => y.publishAt);
       publishAt = require("./lib/zamanlama").sonrakiSlot(new Date(), plan.hourUTC, plan.minLeadHours, dolu).toISOString();
@@ -265,6 +271,7 @@ async function main() {
   } catch (e) { console.log("  (zamanlama atlandi: " + e.message + ")"); }
 
   console.log("Dosya      : " + path.relative(KOK, dosya) + "  (" + (boyut / 1e6).toFixed(1) + " MB)");
+  console.log("Kanal      : " + CHANNEL.name + " (" + CHANNEL.slug + ")");
   console.log("Baslik     : " + snippet.title);
   console.log("Gizlilik   : " + gizlilik + (gizlilik === "public" ? "  ⚠ HERKESE ACIK" : "") +
     (publishAt ? "  → otomatik Public: " + require("./lib/zamanlama").trSaat(new Date(publishAt)) : ""));
@@ -281,6 +288,7 @@ async function main() {
     console.log("Meta dogrulama: " + (metaHata.length ? "HATA — " + metaHata.join("; ") : "gecti (baslik, aciklama, etiket, publishAt)"));
     if (metaHata.length) process.exitCode = 6;
     console.log("Kimlik bilgileri: " + (kimlikVar ? "hazir (yukleme yapilabilir)" : "EKSIK"));
+    console.log("Kanal kimligi: " + (CHANNEL.expectedChannelId() ? "configured; authenticated ID is checked before upload" : `EKSIK — ${CHANNEL.prefix}_YT_CHANNEL_ID gerekli, upload bloklanir`));
     if (!kimlikVar) {
       console.log("  Gereken: YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN");
       console.log("  Kurulum: MALIYET-VE-YETKILER.md");
@@ -302,13 +310,24 @@ async function main() {
   let token;
   try { token = await erisimJetonu(clientId, clientSecret, refreshToken); }
   catch (e) { hataYaz(BASE, IS, e.message); throw e; }
+  // Catastrophic wrong-channel guard: this runs after OAuth but before duplicate
+  // lookup, upload-session creation, playlist writes, or any other mutation.
+  try {
+    const yt = require("./lib/yt");
+    const identity = await yt.verifyChannelIdentity(yt.istemci({ erisim: token, kapsam: "" }), CHANNEL);
+    console.log(`✓ Kanal kimligi dogrulandi: ${identity.title || identity.actual} (${identity.actual})`);
+  } catch (error) {
+    hataYaz(BASE, IS, error.message);
+    console.error("⛔ " + error.message);
+    process.exit(7);
+  }
   // Cift yukleme korumasi: ayni baslik kanalda varsa yukleme yapilmaz, kayit tamamlanir.
   try {
     const varOlan = await kanaldaVarMi(token, snippet.title);
     if (varOlan) {
       console.log("✓ Bu baslikta video kanalda zaten var (" + varOlan + ") — tekrar YUKLENMEDI, kayit tamamlandi.");
-      require("./lib/kutuphane").yayinKaydet({ slug: IS, videoId: varOlan, baslik: snippet.title, tarih: new Date().toISOString(),
-        format: "short", kaynak: "duplicate-guard" });
+      require("./lib/kutuphane").yayinKaydet({ channel: CHANNEL.slug, slug: IS, videoId: varOlan, baslik: snippet.title, tarih: new Date().toISOString(),
+        format: videoFormat, kaynak: "duplicate-guard" });
       return;
     }
   } catch (e) { console.log("  (cift yukleme kontrolu yapilamadi: " + e.message + ")"); }
@@ -333,11 +352,11 @@ async function main() {
     }
     // Kayit: slug <-> videoId (analiz, ic baglanti ve takvim bunu kullanir)
     try {
-      require("./lib/kutuphane").yayinKaydet({ slug: IS, videoId: j.id, baslik: snippet.title, tarih: new Date().toISOString(),
-        format: JSON.parse(fs.readFileSync(path.join(BASE, "konu.json"), "utf8")).format === "long" ? "long" : "short",
+      require("./lib/kutuphane").yayinKaydet({ channel: CHANNEL.slug, slug: IS, videoId: j.id, baslik: snippet.title, tarih: new Date().toISOString(),
+        format: videoFormat,
         gizlilik, publishAt, kalite: kapiKarari, kaynak: "upload" });
       // Bildirim (GitHub issue) icin ozet — bildirim.js okur
-      fs.writeFileSync(path.join(BASE, "BILDIRIM.json"), JSON.stringify({ slug: IS, videoId: j.id, baslik: snippet.title,
+      fs.writeFileSync(path.join(BASE, "BILDIRIM.json"), JSON.stringify({ channel: CHANNEL.slug, channelName: CHANNEL.name, slug: IS, videoId: j.id, baslik: snippet.title,
         kalite: kapiKarari, publishAt, tarih: new Date().toISOString() }, null, 2));
     } catch (e) { console.log("  (yayin kaydi yazilamadi: " + e.message + ")"); }
     try { const kol = require("./experiments").otomatikAta(j.id, snippet.title); if (kol) console.log("  deney: title-style / " + kol); } catch (e) {}

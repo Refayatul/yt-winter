@@ -24,12 +24,15 @@
 const fs = require("fs");
 const path = require("path");
 const cp = require("child_process");
+const Channel = require("./core/channel-context");
+const SELECTED = Channel.selectFromArgv(process.argv.slice(2));
+const CHANNEL = SELECTED.channel;
 
 const KOK = __dirname;
-const KONULAR = path.join(KOK, "icerik", "konular");
-const DURUM = path.join(KOK, "icerik", "uretilenler.json");
-const BASARISIZ = path.join(KOK, "icerik", "basarisiz.json");
-const ENGELLENEN = path.join(KOK, "icerik", "engellenen.json");
+const KONULAR = CHANNEL.paths.topics;
+const DURUM = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "uretilenler.json" : "generated.json");
+const BASARISIZ = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "basarisiz.json" : "failed.json");
+const ENGELLENEN = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "engellenen.json" : "blocked.json");
 const crypto = require("crypto");
 
 function slugGecerli(s) { return /^[a-z0-9][a-z0-9-]{0,79}$/.test(s); }
@@ -66,7 +69,8 @@ function calistir(script, slug) {
 }
 
 function uploadHazir() {
-  return ["YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN"].every(k => process.env[k]);
+  const credentials = CHANNEL.credentials();
+  return !!(credentials.clientId && credentials.clientSecret && credentials.refreshToken);
 }
 
 function uretBir(slug) {
@@ -100,7 +104,7 @@ function uretBir(slug) {
   // Yukleme: yalnizca PUBLISH=1 ve kimlik varsa; her zaman private.
   const publish = process.env.PUBLISH === "1";
   if (publish && uploadHazir()) {
-    const r = cp.spawnSync("node", ["youtube-yukle.js", slug], { cwd: KOK, stdio: "inherit" });
+    const r = cp.spawnSync("node", ["youtube-yukle.js", "--channel", CHANNEL.slug, slug], { cwd: KOK, stdio: "inherit" });
     if (r.status !== 0) {
       // Yukleme olmadiysa konu HARCANMAZ: "uretildi" isaretlenmez, sonraki calisma tekrar dener.
       // Neden uretim/<slug>/YUKLEME-HATASI.json'da; bildirim.js issue acar.
@@ -121,7 +125,7 @@ function uretBir(slug) {
 }
 
 function main() {
-  const argv = process.argv.slice(2);
+  const argv = SELECTED.argv;
   const hepsi = argv.includes("--hepsi");
   const acikSlug = argv.find(a => !a.startsWith("--"));
   const tum = konuListesi();
@@ -170,5 +174,8 @@ function main() {
   return 0;
 }
 
-try { process.exit(main()); }
-catch (e) { console.error("Hata: " + e.message); process.exit(1); }
+try {
+  if (CHANNEL.slug === "impossible-brief") process.exit(require("./core/pipeline/impossible-brief").main(SELECTED.argv));
+  process.exit(main());
+}
+catch (e) { console.error(`[${CHANNEL.name}] Hata: ` + e.message); process.exit(1); }

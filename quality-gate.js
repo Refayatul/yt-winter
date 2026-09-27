@@ -15,6 +15,7 @@ const fs = require("fs");
 const path = require("path");
 const cp = require("child_process");
 const { KOK, jsonOku, jsonYaz, metinYaz, sinirla } = require("./lib/ortak");
+const SELECTED = require("./core/channel-context").selectFromArgv(process.argv.slice(2));
 const { ayar } = require("./lib/ayar");
 const M = require("./lib/metin");
 const K = require("./lib/kutuphane");
@@ -217,9 +218,9 @@ function rapor(r) {
 module.exports = { degerlendir, EN };
 
 if (require.main === module) {
-  const arg = process.argv[2];
+  const arg = SELECTED.argv[0];
   if (!arg) { console.error("Kullanim: node quality-gate.js <slug> [--final] | --all"); process.exit(1); }
-  const final = process.argv.includes("--final");
+  const final = SELECTED.argv.includes("--final");
   let engel = false;
   for (const s of arg === "--all" ? K.konular().map((k) => k.slug) : [arg]) {
     const r = degerlendir(s, { final });

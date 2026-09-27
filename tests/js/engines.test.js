@@ -257,14 +257,17 @@ test("yukleme meta dogrulama: YouTube sinirlari", () => {
 
 test("saglik: gecersiz yetki kritik (konu harcanmaz), yetki yasi uyarisi", async () => {
   const S = require("../../saglik");
-  const env = { YT_CLIENT_ID: process.env.YT_CLIENT_ID, YT_CLIENT_SECRET: process.env.YT_CLIENT_SECRET, YT_REFRESH_TOKEN: process.env.YT_REFRESH_TOKEN };
+  const env = { YT_CLIENT_ID: process.env.YT_CLIENT_ID, YT_CLIENT_SECRET: process.env.YT_CLIENT_SECRET, YT_REFRESH_TOKEN: process.env.YT_REFRESH_TOKEN, YT_CHANNEL_ID: process.env.YT_CHANNEL_ID };
   process.env.YT_CLIENT_ID = "a"; process.env.YT_CLIENT_SECRET = "b"; process.env.YT_REFRESH_TOKEN = "c";
+  process.env.YT_CHANNEL_ID = "UC_FAILURE_RECONSTRUCTED";
   try {
     const kotu = await S.denetle({ publish: "1", token: async () => { throw new Error("invalid_grant"); }, pexels: async () => 200, kalan: 20 });
     assert.equal(kotu.yuklemeUygun, false);
     assert.equal(kotu.bulgular.find((b) => b.ad === "youtube-yetki").durum, "kritik");
-    const iyi = await S.denetle({ publish: "1", token: async () => ({ kapsam: S.GEREKLI_KAPSAM.join(" ") }), pexels: async () => 200, kalan: 3 });
+    const iyi = await S.denetle({ publish: "1", token: async () => ({ kapsam: S.GEREKLI_KAPSAM.join(" ") }),
+      identity: async () => ({ actual: "UC_FAILURE_RECONSTRUCTED" }), pexels: async () => 200, kalan: 3 });
     assert.equal(iyi.yuklemeUygun, true);
+    assert.equal(iyi.bulgular.find((b) => b.ad === "youtube-kanal").durum, "ok");
     assert.equal(iyi.bulgular.find((b) => b.ad === "kutuphane").durum, "uyari");
   } finally { for (const [k, v] of Object.entries(env)) { if (v === undefined) delete process.env[k]; else process.env[k] = v; } }
 });
