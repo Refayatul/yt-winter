@@ -9,6 +9,12 @@ name: Gunluk kontrol (yayin + bos gun)
 # GitHub zamanlanmis isleri geciktirebildigi/atlayabildigi icin ucer saat.
 on:
   schedule:
+    # Bu is akisinin zamanlamalari calisiyor (olculen: 26 Eylul'de ikisi de tetiklendi),
+    # uretim.yml'inkiler ayni gun hic tetiklenmedi. Bu yuzden erken saatlere de kuruldu:
+    # gunun videosu yoksa uretimi BURADAN baslatir (uretim-is.yml'i cagirir).
+    - cron: '11 8 * * *'
+    - cron: '37 11 * * *'
+    - cron: '29 14 * * *'
     - cron: '47 16 * * *'
     - cron: '27 18 * * *'
     - cron: '53 19 * * *'
@@ -24,7 +30,15 @@ permissions:
   issues: write
 
 jobs:
+  # YEDEK URETIM: gunun videosu yoksa uretimi buradan baslatir. Ayni takvim
+  # kontrolu icerde de var, o yuzden cift video olmaz.
+  uret:
+    uses: ./.github/workflows/uretim-is.yml
+    secrets: inherit
+
   kontrol:
+    needs: uret
+    if: always()
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
