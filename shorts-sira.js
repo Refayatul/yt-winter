@@ -9,7 +9,8 @@
 //   final-gate (render sonrasi: ses yuksekligi, cozunurluk, sure, kaynak kaydi)
 //   BLOCK -> render/yukleme YOK, konu icerik/engellenen.json'a yazilir (spec
 //            degisince otomatik yeniden denenir), sonraki konuya gecilir.
-//   REVIEW -> private yuklenir, rapor icerik/paket/<slug>/quality-gate.md.
+//   REVIEW -> yuklenmez; ayni spec tekrar pahali bicimde uretilmez ve siradaki
+//             konu denenir. Rapor icerik/paket/<slug>/quality-gate.md'dedir.
 // Takvim (yayin-plani.js): gunluk modda slot dolmamissa hicbir sey uretilmez.
 //
 // Uretilenler icerik/uretilenler.json'a yazilir; sonraki calisma sonrakini alir.
@@ -33,6 +34,7 @@ const KONULAR = CHANNEL.paths.topics;
 const DURUM = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "uretilenler.json" : "generated.json");
 const BASARISIZ = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "basarisiz.json" : "failed.json");
 const ENGELLENEN = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "engellenen.json" : "blocked.json");
+const INCELEME = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "inceleme.json" : "review.json");
 const crypto = require("crypto");
 
 function slugGecerli(s) { return /^[a-z0-9][a-z0-9-]{0,79}$/.test(s); }
@@ -48,8 +50,16 @@ const specHash = (slug) => crypto.createHash("sha1").update(fs.readFileSync(path
 const engellenenler = () => { try { return JSON.parse(fs.readFileSync(ENGELLENEN, "utf8")); } catch (e) { return {}; } };
 function engelle(slug, neden) { const e = engellenenler(); e[slug] = { hash: specHash(slug), neden, tarih: new Date().toISOString() }; yaz(ENGELLENEN, e); }
 const engelliMi = (slug) => { const e = engellenenler()[slug]; return !!(e && e.hash === specHash(slug)); };
+const incelemedekiler = () => { try { return JSON.parse(fs.readFileSync(INCELEME, "utf8")); } catch (e) { return {}; } };
+function incelemeyeAl(slug, quality) {
+  const items = incelemedekiler();
+  items[slug] = { hash: specHash(slug), neden: `final gate ${quality.toplam}: human review required`, kalite: quality.toplam, tarih: new Date().toISOString() };
+  yaz(INCELEME, items);
+}
+const incelemedeMi = (slug) => { const item = incelemedekiler()[slug]; return !!(item && item.hash === specHash(slug)); };
 
 class Engellendi extends Error {}
+class IncelemeGerekli extends Error {}
 class YuklemeHatasi extends Error {}
 function kapi(slug, final) {
   const r = require("./quality-gate").degerlendir(slug, { final });
@@ -130,6 +140,15 @@ function uretBir(slug) {
   } catch (e) { console.log("  (onizleme kopyalanamadi: " + e.message + ")"); }
   try { require("./description-engine").calistir(slug); require("./pinned-comment").calistir(slug); } catch (e) { console.log("  (paket metni: " + e.message + ")"); }
 
+  // REVIEW is not publishable. Keeping it off YouTube entirely is safer than a
+  // private upload because later automation or a mistaken metadata edit could
+  // schedule it. A spec edit changes the hash and makes it eligible again.
+  if (son.karar === "REVIEW") {
+    incelemeyeAl(slug, son);
+    writeProductionResult(slug, son);
+    throw new IncelemeGerekli("kalite kapisi REVIEW; upload blocked");
+  }
+
   // Yukleme: yalnizca PUBLISH=1 ve kimlik varsa; her zaman private.
   const publish = process.env.PUBLISH === "1";
   if (publish && uploadHazir()) {
@@ -171,7 +190,8 @@ function main() {
   // Yayin kaydindaki (icerik/yayinlananlar.json) slug'lar da atlanir: elle yuklenmis bir
   // video uretilenler listesinde olmasa bile IKINCI KEZ yuklenmez.
   const yuklenmis = require("./lib/kutuphane").yayinlananlar().map((y) => y.slug).filter(Boolean);
-  const atla = new Set([...uretilenler(), ...basarisizlar(), ...yuklenmis, ...Object.keys(engellenenler()).filter(engelliMi)]);
+  const atla = new Set([...uretilenler(), ...basarisizlar(), ...yuklenmis,
+    ...Object.keys(engellenenler()).filter(engelliMi), ...Object.keys(incelemedekiler()).filter(incelemedeMi)]);
   // Siralama lib/kutuphane.kuyruk(): once gercek arsiv filmi olan konular, sonra stok.
   const kalan = require("./lib/kutuphane").kuyruk().map((k) => k.slug).filter((s) => !atla.has(s));
   if (!kalan.length) { console.log("Uretilecek yeni konu yok (" + tum.length + " toplam). Konu ekle."); return 0; }
@@ -192,6 +212,7 @@ function main() {
     try { uretBir(slug); basari++; }
     catch (e) {
       if (e instanceof Engellendi) { console.error(`  ⛔ ${slug} kalite kapisinda engellendi — rapor: icerik/paket/${slug}/quality-gate.md`); continue; }
+      if (e instanceof IncelemeGerekli) { console.error(`  ⚠ ${slug} insan incelemesine ayrildi; YouTube'a yuklenmedi — rapor: icerik/paket/${slug}/quality-gate.md`); continue; }
       // Yukleme hatasi konuya ait degildir (yetki/ag): baska konuyu da harcamamak icin dur.
       if (e instanceof YuklemeHatasi) { console.error(`  ✗ ${slug}: ${e.message}`); return 1; }
       console.error(`  ✗ ${slug} basarisiz: ${e.message} — atlaniyor`);

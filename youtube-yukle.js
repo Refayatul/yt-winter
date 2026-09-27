@@ -296,6 +296,14 @@ async function main() {
     return;
   }
 
+  // Defense in depth: orchestration already diverts REVIEW/BLOCK, but a direct
+  // uploader invocation must not bypass the quality decision either.
+  if (kapiKarari && kapiKarari !== "PUBLISH") {
+    hataYaz(BASE, IS, `QUALITY_NOT_PUBLISHABLE: ${kapiKarari}`);
+    console.error(`Kalite karari ${kapiKarari} — YouTube yuklemesi BLOKE EDILDI.`);
+    process.exit(8);
+  }
+
   if (!kimlikVar) {
     console.error("\nKimlik bilgileri eksik — yukleme YAPILMADI.");
     console.error("Gereken: YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN (.env ya da ortam).");

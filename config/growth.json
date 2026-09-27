@@ -46,13 +46,12 @@
     "stretchWhenRecentBlocks": 2,
     "stretchOnReview": false,
     "schedule": {
-      "_comment": "Auto-publish at a fixed hour. Audience is ~93% US (analytics 2026-09-25): 18:00 UTC = 21:00 TR = 14:00 ET = 11:00 PT. Gates listed here get scheduled; others stay private for manual review. BLOCK is never uploaded.",
+      "_comment": "Auto-publish at a fixed hour. Audience is ~93% US (analytics 2026-09-25): 18:00 UTC = 21:00 TR = 14:00 ET = 11:00 PT. Only PUBLISH is uploadable and scheduled; REVIEW/BLOCK never leave the runner.",
       "enabled": true,
       "hourUTC": 18,
       "minLeadHours": 1,
       "gates": [
-        "PUBLISH",
-        "REVIEW"
+        "PUBLISH"
       ]
     }
   },

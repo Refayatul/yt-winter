@@ -55,6 +55,7 @@ jobs:
       TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
       TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
       TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
+      TT_EXPECTED_OPEN_ID_SHA256: ${{ vars.TT_EXPECTED_OPEN_ID_SHA256 }}
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
       SHORTS_FONT: DejaVu Sans
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

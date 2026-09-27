@@ -136,13 +136,28 @@ function aciklama(slug) {
 async function main() {
   const argv = process.argv.slice(2);
   const kuru = argv.includes("--dogrula");
-  if (argv.includes("--yetki-kontrol")) {
+  if (argv.includes("--yetki-kontrol") || argv.includes("--durum-kontrol")) {
     const present = Object.fromEntries(TT.GEREKLI.map((key) => [key, !!process.env[key]]));
     if (!TT.kimlikVar()) throw new Error("TikTok kimlik bilgileri eksik");
     const token = await TT.token();
     const scopeOk = /(^|[\s,])video\.upload($|[\s,])/.test(token.kapsam) || !token.kapsam;
-    const result = { credentials: present, tokenRefresh: "ok", scope: token.kapsam || "unreported", videoUploadScope: scopeOk };
+    const identity = await TT.verifyAccountIdentity(token.erisim);
+    const result = { credentials: present, tokenRefresh: "ok", scope: token.kapsam || "unreported", videoUploadScope: scopeOk, identity };
+    if (argv.includes("--durum-kontrol")) {
+      result.records = [];
+      for (const record of kayitlar().filter((item) => item.publishId)) {
+        try {
+          const remote = await TT.durumGuvenli(token.erisim, record.publishId);
+          result.records.push({ slug: record.slug, publishId: record.publishId, recordedStatus: record.durum || null,
+            remoteStatus: remote.status || null, failReason: remote.fail_reason || null, uploadedBytes: remote.uploaded_bytes ?? null });
+        } catch (error) {
+          result.records.push({ slug: record.slug, publishId: record.publishId, recordedStatus: record.durum || null,
+            remoteStatus: "STATUS_CHECK_FAILED", error: String(error.message || error).slice(0, 240) });
+        }
+      }
+    }
     console.log(JSON.stringify(result));
+    resultYaz(argv, result);
     if (!scopeOk) process.exitCode = 3;
     return;
   }
@@ -201,6 +216,8 @@ async function main() {
 
   const tok = await TT.token();
   if (!/video\.upload/.test(tok.kapsam) && tok.kapsam) throw new Error("TikTok yetkisinde video.upload kapsami yok — node tiktok-yetki.js");
+  const identity = await TT.verifyAccountIdentity(tok.erisim);
+  console.log(`TikTok hesap: ${identity.displayName || "(adsiz)"} (${identity.openIdSha256.slice(0, 12)}…, ${identity.pinned ? "pinned" : "UNPINNED"})`);
   console.log("Gonderiliyor (" + (boyut / 1e6).toFixed(1) + " MB)...");
   const { publishId } = await TT.inboxYukle(tok.erisim, dosya);
   // Persist the publishId before polling. If the runner dies after upload, a
@@ -232,6 +249,6 @@ function gecmisKuyrugu() {
     .sort((a, b) => String(a.publishAt || a.tarih).localeCompare(String(b.publishAt || b.tarih)));
 }
 
-module.exports = { aciklama, kayitBul, dahaOnceGonderildi, videoYolu, sha256, sourceResult, gecmisKuyrugu };
+module.exports = { aciklama, kayitBul, dahaOnceGonderildi, videoYolu, sha256, sourceResult, gecmisKuyrugu, main };
 
 if (require.main === module) main().catch((e) => { console.error("Hata: " + e.message); process.exit(1); });

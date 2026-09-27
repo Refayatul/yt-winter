@@ -136,7 +136,10 @@ const sunucu = http.createServer(async (req, res) => {
       fs.writeFileSync(envYol, icerik);
       console.log(`\n✓ Basarili. ${tokenName} .env dosyasina yazildi.`);
     } catch (e) {
-      console.log(`\n✓ Basarili. .env'e yazilamadi, elle ekle:\n${CHANNEL.prefix}_YT_REFRESH_TOKEN=` + j.refresh_token);
+      // Refresh token must never be printed to a terminal or Actions log. If
+      // local persistence fails, discard it and repeat authorization after the
+      // filesystem problem has been fixed.
+      console.error(`\n⚠ ${CHANNEL.prefix}_YT_REFRESH_TOKEN .env dosyasina yazilamadi. Jeton guvenlik nedeniyle yazdirilmadi; dosya izinlerini duzeltip yetkilendirmeyi yeniden calistir.`);
     }
     console.log(`✓ Yetkilendirilen kanal: ${actual.title || "(adsiz)"} (${actual.id})`);
     if (!CHANNEL.expectedChannelId()) console.log(`Yuklemeyi acmadan once ${CHANNEL.prefix}_YT_CHANNEL_ID=${actual.id} ekle.`);

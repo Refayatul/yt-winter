@@ -79,6 +79,9 @@ jobs:
       TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
       TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
       TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
+      # Non-secret SHA-256 pin of the authorized TikTok open_id. Uploads stop
+      # if the refresh token later points at a different creator account.
+      TT_EXPECTED_OPEN_ID_SHA256: ${{ vars.TT_EXPECTED_OPEN_ID_SHA256 }}
       # Stok konular (tur: stok) icin Pexels anahtari — yoksa stok-bul.js calismaz.
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
       # Yukleme yalnizca PUBLISH=1 iken (repo Variables). Yoksa uretir, yuklemez.

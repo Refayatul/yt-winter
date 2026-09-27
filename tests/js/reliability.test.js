@@ -9,6 +9,7 @@ const { KOK, jsonOku } = require("../../lib/ortak");
 const SLA = require("../../production-sla-check");
 const Recovery = require("../../core/scheduling/recovery");
 const TikTok = require("../../tiktok-yukle");
+const TikTokApi = require("../../lib/tiktok");
 
 test("production SLA emits the required healthy machine-readable shape", () => {
   const result = SLA.evaluateSnapshot({
@@ -47,6 +48,15 @@ test("TikTok duplicate protection treats any durable publishId as already sent",
   assert.equal(TikTok.dahaOnceGonderildi(null), false);
 });
 
+test("TikTok account pinning uses a non-reversible fingerprint and blocks a different account", () => {
+  const expected = TikTokApi.accountFingerprint("authorized-open-id");
+  const identity = TikTokApi.accountIdentity({ openId: "authorized-open-id", displayName: "Failure Reconstructed" }, expected);
+  assert.equal(identity.displayName, "Failure Reconstructed");
+  assert.equal(identity.openIdSha256, expected);
+  assert.equal(identity.pinned, true);
+  assert.throws(() => TikTokApi.accountIdentity({ openId: "another-open-id", displayName: "Wrong Account" }, expected), /TT_ACCOUNT_MISMATCH/);
+});
+
 test("current historical TikTok candidate is Tacoma Narrows", () => {
   const sent = new Set(jsonOku(path.join(KOK, "icerik", "tiktok.json"), []).map((item) => item.slug));
   if (!sent.has("tacoma-narrows")) assert.equal(TikTok.gecmisKuyrugu()[0].slug, "tacoma-narrows");
@@ -59,6 +69,18 @@ test("workflow sends actual production result before one historical backlog item
   assert.ok(today > 0 && backlog > today);
   assert.match(source, /PRODUCTION_RESULT_PATH/);
   assert.doesNotMatch(source, /^\s*if:\s*!inputs/m, "YAML tag syntax must not break the reusable workflow");
+});
+
+test("REVIEW content is neither uploadable nor automatically scheduled", () => {
+  const config = jsonOku(path.join(KOK, "config", "growth.json"), {});
+  assert.deepEqual(config.publishing.schedule.gates, ["PUBLISH"]);
+  const source = fs.readFileSync(path.join(KOK, "shorts-sira.js"), "utf8");
+  const reviewGuard = source.indexOf('if (son.karar === "REVIEW")');
+  const upload = source.indexOf("if (publish && uploadHazir())");
+  assert.ok(reviewGuard > 0 && upload > reviewGuard, "REVIEW must be blocked before upload");
+  assert.match(source, /incelemedekiler\(\).*incelemedeMi/s);
+  const uploader = fs.readFileSync(path.join(KOK, "youtube-yukle.js"), "utf8");
+  assert.match(uploader, /kapiKarari && kapiKarari !== "PUBLISH"/);
 });
 
 test("Cloudflare watchdog sends the independent repository_dispatch event", async () => {

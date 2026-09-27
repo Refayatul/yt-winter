@@ -18,7 +18,7 @@ on:
       operation:
         description: 'Operation'
         type: choice
-        options: [produce, sla-check, watchdog-simulation, tiktok-from-artifact]
+        options: [produce, sla-check, watchdog-simulation, tiktok-diagnose, tiktok-from-artifact]
         default: produce
       hepsi:
         description: 'Tum uretilmemis konulari uret (yoksa sadece sonraki)'
@@ -139,6 +139,7 @@ jobs:
       TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
       TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
       TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
+      TT_EXPECTED_OPEN_ID_SHA256: ${{ vars.TT_EXPECTED_OPEN_ID_SHA256 }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -180,4 +181,29 @@ jobs:
           name: tiktok-delivery-results
           path: ${{ runner.temp }}/tiktok-*.json
           if-no-files-found: ignore
+          retention-days: 30
+
+  tiktok-diagnose:
+    if: ${{ github.event_name == 'workflow_dispatch' && inputs.operation == 'tiktok-diagnose' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
+      TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
+      TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
+      TT_EXPECTED_OPEN_ID_SHA256: ${{ vars.TT_EXPECTED_OPEN_ID_SHA256 }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Verify token, authorized account and inbox delivery status
+        run: node tiktok-yukle.js --durum-kontrol --result-file="${{ runner.temp }}/tiktok-diagnostic.json"
+      - name: Diagnostic evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: tiktok-diagnostic
+          path: ${{ runner.temp }}/tiktok-diagnostic.json
+          if-no-files-found: error
           retention-days: 30
