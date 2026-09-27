@@ -1,16 +1,14 @@
 {
-  "tarih": "2026-09-27T12:29:19.443Z",
-  "yuklemeUygun": true,
+  "channel": "failure-reconstructed",
+  "channelName": "Failure Reconstructed",
+  "tarih": "2026-09-27T19:49:31.110Z",
+  "yuklemeUygun": false,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "ok",
-      "mesaj": "refresh token çalışıyor"
-    },
-    {
-      "ad": "youtube-kapsam",
-      "durum": "ok",
-      "mesaj": "gerekli kapsamlar tamam"
+      "durum": "kritik",
+      "mesaj": "YouTube kimlik bilgileri yok (FR_YT_CLIENT_ID/SECRET/REFRESH_TOKEN)",
+      "cozum": "GitHub → Settings → Secrets and variables → Actions: FR_YT_* secret'larını ekle."
     },
     {
       "ad": "yetki-yasi",
@@ -25,7 +23,7 @@
     {
       "ad": "kutuphane",
       "durum": "ok",
-      "mesaj": "39 günlük üretilmemiş konu var"
+      "mesaj": "38 günlük üretilmemiş konu var"
     }
   ]
 }
