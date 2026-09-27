@@ -1,14 +1,14 @@
-# Quality gate — tacoma-narrows (final)
+# Quality gate — deepwater-horizon-2010 (final)
 
-**PUBLISH** — 95/100 (PUBLISH ≥ 85, REVIEW ≥ 70)
+**PUBLISH** — 94/100 (PUBLISH ≥ 85, REVIEW ≥ 70)
 
 | Component | Score | Notes |
 |---|---:|---|
-| TITLE | 76 | "Filmed as It Fell: The Tacoma Narrows Collapse" (engine 58.2) |
-| THUMBNAIL | 96 |  |
+| TITLE | 68 | "Deepwater Horizon: The Test Result Nobody Believed" (engine 53.8) |
+| THUMBNAIL | 100 |  |
 | HOOK | 100 |  |
 | SCRIPT | 100 |  |
-| ORIGINALITY | 81 |  |
+| ORIGINALITY | 80 |  |
 | VISUAL QUALITY | 100 |  |
 | ENGINEERING DEPTH | 100 |  |
 | SOURCE QUALITY | 100 |  |

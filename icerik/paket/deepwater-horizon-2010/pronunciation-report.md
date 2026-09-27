@@ -1,4 +1,4 @@
-# Pronunciation validation — tacoma-narrows
+# Pronunciation validation — deepwater-horizon-2010
 
 Score: **100/100** (unresolved risky words: 0, AI-cliché phrases: 0)
 

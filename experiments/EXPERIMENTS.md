@@ -9,10 +9,10 @@ Variable: title pattern · metric: `views_7d` · start: 2026-09-24
 
 | Arm | Meaning | Videos |
 |---|---|---|
-| TITLE_STYLE_A | object-that / two-beat story title | PGOKZhPYo7c, DLYpmaQ-EVw |
+| TITLE_STYLE_A | object-that / two-beat story title | PGOKZhPYo7c, DLYpmaQ-EVw, aScjSrwqeRk |
 | TITLE_STYLE_B | why/how question title | qkzRUqlEy5I, X0jw78mIGdk, ODZ7y6r1o6o, bqTpdauhlHo |
 
-Result (insufficient data confidence): Not enough videos per arm (need ≥5; have TITLE_STYLE_A=2, TITLE_STYLE_B=2). No conclusion — and no causal claim.
+Result (insufficient data confidence): Not enough videos per arm (need ≥5; have TITLE_STYLE_A=2, TITLE_STYLE_B=3). No conclusion — and no causal claim.
 
 ## thumbnail-text — planned
 

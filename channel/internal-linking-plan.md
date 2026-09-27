@@ -22,6 +22,7 @@ Playlist: **Structural Engineering Failures** — waiting (0/3 published)
 
 | Video | Status | Previous | Next | End screen / Related video | Description link |
 |---|---|---|---|---|---|
+| The Molasses Tank That Killed 21 People | queued | — | _queued: How a Hurricane Tears a House Apart_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
 | How a Hurricane Tears a House Apart | queued | — | _queued: Earthquakes Don't Kill. Buildings Do._ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
 | Earthquakes Don't Kill. Buildings Do. | queued | — | _queued: What Happens If Every Elevator Cable Snaps_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
 | What Happens If Every Elevator Cable Snaps | queued | — | — | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
@@ -64,7 +65,8 @@ Playlist: **Maritime Disasters** — waiting (0/3 published)
 
 | Video | Status | Previous | Next | End screen / Related video | Description link |
 |---|---|---|---|---|---|
-| The Ship That Capsized at the Dock — Because of a Safety Rule | queued | — | _queued: The 94-Second Fuse That Burned the USS Forrestal_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
+| The Ship That Capsized at the Dock — Because of a Safety Rule | queued | — | _queued: The Life Preservers That Were Filled With Iron_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
+| The Life Preservers That Were Filled With Iron | queued | — | _queued: The 94-Second Fuse That Burned the USS Forrestal_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
 | The 94-Second Fuse That Burned the USS Forrestal | queued | — | _queued: Ships Don't Just Sink — Many Roll Over_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
 | Ships Don't Just Sink — Many Roll Over | queued | — | — | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
 
@@ -98,12 +100,12 @@ Playlist: **Fires & Explosions** — waiting (0/3 published)
 
 _Industrial accidents and the organisational failures behind them._
 
-Playlist: **Industrial Disasters** — waiting (0/3 published)
+Playlist: **Industrial Disasters** — waiting (1/3 published)
 
 | Video | Status | Previous | Next | End screen / Related video | Description link |
 |---|---|---|---|---|---|
-| Deepwater Horizon: The Test Result Nobody Believed | queued | — | _queued: The Chain Collapse Miners Fear Most_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
-| The Chain Collapse Miners Fear Most | queued | — | — | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
+| Deepwater Horizon: The Test Result Nobody Believed ([aScjSrwqeRk](https://youtu.be/aScjSrwqeRk)) | published | — | _queued: The Chain Collapse Miners Fear Most_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
+| The Chain Collapse Miners Fear Most | queued | [Deepwater Horizon: The Test Result Nobody Believed](https://youtu.be/aScjSrwqeRk) | — | [Deepwater Horizon: The Test Result Nobody Believed](https://youtu.be/aScjSrwqeRk) | [Deepwater Horizon: The Test Result Nobody Believed](https://youtu.be/aScjSrwqeRk) |
 
 ## Infrastructure Failures
 
