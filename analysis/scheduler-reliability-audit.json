@@ -10,5 +10,29 @@
     { "workflow": ".github/workflows/uretim.yml", "slot": "2026-09-27T14:53:00Z", "scheduleRunFound": false }
   ],
   "allScheduleRunsAfterMerge": [],
+  "recheck": {
+    "verifiedAt": "2026-09-27T20:56:03Z",
+    "requiredSlotsStillMissing": true,
+    "laterScheduleRunsObserved": [
+      {
+        "workflow": ".github/workflows/yayin-kontrol.yml",
+        "createdAt": "2026-09-27T18:34:44Z",
+        "runId": 36341168659,
+        "conclusion": "success"
+      },
+      {
+        "workflow": ".github/workflows/portfolio-production.yml",
+        "createdAt": "2026-09-27T19:48:34Z",
+        "runId": 36345708990,
+        "conclusion": "success"
+      },
+      {
+        "workflow": ".github/workflows/yayin-kontrol.yml",
+        "createdAt": "2026-09-27T19:52:25Z",
+        "runId": 36345939538,
+        "conclusion": "success"
+      }
+    ]
+  },
   "conclusion": "GitHub scheduler did not trigger either required post-merge slot; two GitHub schedule workflows are not independent."
 }
