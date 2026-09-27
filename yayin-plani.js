@@ -11,6 +11,7 @@
 // Kullanim: node yayin-plani.js            durum
 //           node yayin-plani.js --kontrol short   (cikis kodu 0 = uygun, 3 = henuz degil)
 "use strict";
+const SELECTED = require("./core/channel-context").selectFromArgv(process.argv.slice(2));
 const { ayar } = require("./lib/ayar");
 const K = require("./lib/kutuphane");
 
@@ -40,9 +41,9 @@ function durum(format, simdi = new Date(), kayit = K.yayinlananlar(), kalite = K
 module.exports = { durum, toleransSaat };
 
 if (require.main === module) {
-  const i = process.argv.indexOf("--kontrol");
-  if (i > 0) {
-    const d = durum(process.argv[i + 1] || "short");
+  const i = SELECTED.argv.indexOf("--kontrol");
+  if (i >= 0) {
+    const d = durum(SELECTED.argv[i + 1] || "short");
     console.log(`${d.format}: ${d.uygun ? "UYGUN" : "BEKLE"} — ${d.neden}`);
     process.exit(d.uygun ? 0 : 3);
   }

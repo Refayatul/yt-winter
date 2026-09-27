@@ -1,4 +1,4 @@
-name: Shorts uretim (gunluk)
+name: Legacy Failure Reconstructed production (manual)
 
 # Gunluk Shorts uretimi. Isin kendisi uretim-is.yml'de (yayin-kontrol.yml de ayni
 # isi cagirabiliyor, boylece tek bir zamanlamaya bagimli kalmiyoruz).
@@ -9,15 +9,6 @@ name: Shorts uretim (gunluk)
 # acilir (bildirim.js). Elle de tetiklenebilir (Run workflow).
 
 on:
-  schedule:
-    # GitHub zamanlanmis isleri geciktirebilir ya da ATLAYABILIR. 27 Eylul'de ayni
-    # dakikaya (:23) kurulmus 10 denemenin hicbiri tetiklenmedi; ayni gun farkli
-    # dakikalardaki yayin-kontrol cronlari calisti. Bu yuzden dakikalar dagitildi.
-    # Ilk calisan gunun videosunu uretir; kalanlar takvim adiminda ~20 sn'de durur.
-    - cron: '7 7 * * *'
-    - cron: '41 9 * * *'
-    - cron: '19 12 * * *'
-    - cron: '53 14 * * *'
   workflow_dispatch:
     inputs:
       hepsi:
@@ -35,7 +26,7 @@ on:
 
 # Ayni anda tek uretim; yayin-kontrol.yml de ayni grubu kullanir.
 concurrency:
-  group: uretim
+  group: portfolio-production
   cancel-in-progress: false
 
 permissions:

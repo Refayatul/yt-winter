@@ -1,5 +1,27 @@
 # Otomasyon Paneli — konudan bitmiş videoya
 
+## Multi-channel YouTube Growth OS
+
+Tek kod tabanı iki bağımsız kanalı çalıştırır:
+
+- **Failure Reconstructed** — mevcut davranış ve eski `icerik/`, `analytics/`, `channel/` yolları geriye uyumlu adaptörle korunur.
+- **ImpossibleBrief** — what-if science, space, physics, Earth, humanity and future technology; tüm konu, durum, bellek, analiz ve kimlik bilgileri `channels/impossible-brief/` altında izole edilir.
+
+Her büyük komut `--channel` kabul eder. Bayrak verilmezse güvenli geriye uyumluluk için `failure-reconstructed` seçilir.
+
+```bash
+node shorts-sira.js --channel impossible-brief --no-render
+node library-health.js --channel impossible-brief
+node post-publish-analyzer.js --channel impossible-brief --due
+node channel-plan.js --channel impossible-brief
+node portfolio-scheduler.js
+node portfolio-dashboard.js
+node e2e-impossible-brief.js --render       # yerel kuru çalışma; upload yok
+node simulate-portfolio.js                  # 30 gün + enjekte hatalar
+```
+
+YouTube sırları kanal bazında `FR_YT_*` ve `IB_YT_*` adlarıyla tutulur. Her yüklemeden önce OAuth ile doğrulanan kanal kimliği, `FR_YT_CHANNEL_ID` veya `IB_YT_CHANNEL_ID` ile birebir karşılaştırılır; eksik ya da farklıysa yükleme başlamadan bloklanır. Ayrıntılar: [multi-channel architecture](docs/MULTI-CHANNEL-ARCHITECTURE.md), [ImpossibleBrief](docs/IMPOSSIBLE-BRIEF.md), [adding a channel](docs/ADDING-NEW-CHANNEL.md).
+
 ## Failure Reconstructed — Forensic Engineering Documentaries
 
 Bu depo artık **veriye dayalı bir adli mühendislik belgeseli üretim ve büyüme sistemi**. Yapay zekâ yalnızca bir üretim aracı; neyin yayınlanacağına kalite ve editoryal değer karar verir.

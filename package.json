@@ -8,6 +8,10 @@
     "panel": "node panel.js",
     "test": "node --test tests/js/*.test.js && python3 -m unittest discover -s tests",
     "test:js": "node --test tests/js/*.test.js",
+    "test:multi-channel": "node --test tests/js/multi-channel.test.js",
+    "test:impossible-brief": "node e2e-impossible-brief.js",
+    "simulate:portfolio": "node simulate-portfolio.js",
+    "library:impossible-brief": "node library-health.js --channel impossible-brief",
     "gate": "node quality-gate.js --all",
     "optimize": "node existing-video-optimizer.js --all",
     "dashboard": "node panel.js"

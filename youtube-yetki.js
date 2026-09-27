@@ -5,9 +5,8 @@
 // yazilir; onu .env'e (ya da GitHub Secrets'a) koyarsin. Yukleme betikleri
 // bundan sonra jetonu kendisi tazeler — bir daha giris gerekmez.
 //
-// Once .env'e sunlari koy (Google Cloud > API & Services > Credentials):
-//   YT_CLIENT_ID=...
-//   YT_CLIENT_SECRET=...
+// Once .env'e kanal on ekli degerleri koy (ornegin FR_YT_CLIENT_ID ve
+// FR_YT_CLIENT_SECRET; ImpossibleBrief icin IB_...).
 // Adim adim kurulum: MALIYET-VE-YETKILER.md
 //
 // Kullanim:
@@ -18,6 +17,8 @@ const path = require("path");
 const http = require("http");
 const https = require("https");
 const { URL } = require("url");
+const SELECTED = require("./core/channel-context").selectFromArgv(process.argv.slice(2));
+const CHANNEL = SELECTED.channel;
 
 const KOK = __dirname;
 const PORT = 53682;
@@ -64,11 +65,11 @@ function jetonDegistir(clientId, clientSecret, code) {
   });
 }
 
-const clientId = env("YT_CLIENT_ID");
-const clientSecret = env("YT_CLIENT_SECRET");
+const clientId = CHANNEL.scopedEnv("YT_CLIENT_ID");
+const clientSecret = CHANNEL.scopedEnv("YT_CLIENT_SECRET");
 
 if (!clientId || !clientSecret) {
-  console.error("Once .env dosyasina YT_CLIENT_ID ve YT_CLIENT_SECRET yaz.");
+  console.error(`Once .env dosyasina ${CHANNEL.prefix}_YT_CLIENT_ID ve ${CHANNEL.prefix}_YT_CLIENT_SECRET yaz.`);
   console.error("Nasil alinir: MALIYET-VE-YETKILER.md (Google Cloud OAuth istemcisi).");
   process.exit(1);
 }
@@ -98,11 +99,24 @@ const sunucu = http.createServer(async (req, res) => {
   const y = await jetonDegistir(clientId, clientSecret, code);
   const j = JSON.parse(y.govde || "{}");
   if (y.durum === 200 && j.refresh_token) {
+    let actual;
+    try {
+      const yt = require("./lib/yt");
+      actual = await yt.authenticatedChannel(yt.istemci({ erisim: j.access_token, kapsam: String(j.scope || "") }));
+      const expected = CHANNEL.expectedChannelId();
+      if (expected && actual.id !== expected) throw new Error(`CHANNEL_ID_MISMATCH: authenticated ${actual.id} (${actual.title || "unknown"}), expected ${expected}`);
+    } catch (error) {
+      res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+      res.end("<h2>Yanlış YouTube kanalı. Jeton kaydedilmedi.</h2>");
+      console.error("⛔ " + error.message + " — refresh token kaydedilmedi.");
+      sunucu.close(); process.exit(1);
+    }
     // Yetki ani kaydedilir: saglik.js Test modunda 5. gunde uyarir (config/yetki.json)
     try {
-      const yp = path.join(KOK, "config", "yetki.json");
+      const yp = CHANNEL.config.pathMode === "legacy-adapter" ? path.join(KOK, "config", "yetki.json") : path.join(CHANNEL.paths.state, "auth-state.json");
+      fs.mkdirSync(path.dirname(yp), { recursive: true });
       const eski = fs.existsSync(yp) ? JSON.parse(fs.readFileSync(yp, "utf8")) : {};
-      fs.writeFileSync(yp, JSON.stringify({ ...eski, yetkiTarihi: new Date().toISOString(), mod: eski.mod || "testing" }, null, 2) + "\n");
+      fs.writeFileSync(yp, JSON.stringify({ ...eski, channel: CHANNEL.slug, yetkiTarihi: new Date().toISOString(), mod: eski.mod || "testing" }, null, 2) + "\n");
       console.log("  config/yetki.json guncellendi (commit et ki saglik kontrolu yeni tarihi bilsin).");
     } catch (e) {}
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
@@ -112,16 +126,20 @@ const sunucu = http.createServer(async (req, res) => {
       const envYol = path.join(KOK, ".env");
       let icerik = "";
       try { icerik = fs.readFileSync(envYol, "utf8"); } catch (e) {}
-      if (/^YT_REFRESH_TOKEN=.*$/m.test(icerik)) {
-        icerik = icerik.replace(/^YT_REFRESH_TOKEN=.*$/m, "YT_REFRESH_TOKEN=" + j.refresh_token);
+      const tokenName = CHANNEL.prefix + "_YT_REFRESH_TOKEN";
+      const tokenPattern = new RegExp("^" + tokenName + "=.*$", "m");
+      if (tokenPattern.test(icerik)) {
+        icerik = icerik.replace(tokenPattern, tokenName + "=" + j.refresh_token);
       } else {
-        icerik += (icerik && !icerik.endsWith("\n") ? "\n" : "") + "YT_REFRESH_TOKEN=" + j.refresh_token + "\n";
+        icerik += (icerik && !icerik.endsWith("\n") ? "\n" : "") + tokenName + "=" + j.refresh_token + "\n";
       }
       fs.writeFileSync(envYol, icerik);
-      console.log("\n✓ Basarili. YT_REFRESH_TOKEN .env dosyasina yazildi.");
+      console.log(`\n✓ Basarili. ${tokenName} .env dosyasina yazildi.`);
     } catch (e) {
-      console.log("\n✓ Basarili. .env'e yazilamadi, elle ekle:\nYT_REFRESH_TOKEN=" + j.refresh_token);
+      console.log(`\n✓ Basarili. .env'e yazilamadi, elle ekle:\n${CHANNEL.prefix}_YT_REFRESH_TOKEN=` + j.refresh_token);
     }
+    console.log(`✓ Yetkilendirilen kanal: ${actual.title || "(adsiz)"} (${actual.id})`);
+    if (!CHANNEL.expectedChannelId()) console.log(`Yuklemeyi acmadan once ${CHANNEL.prefix}_YT_CHANNEL_ID=${actual.id} ekle.`);
     console.log("Not: OAuth onay ekrani Production modunda olmali (Test'te jeton 7 gunde olur).");
   } else {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
@@ -136,7 +154,7 @@ const sunucu = http.createServer(async (req, res) => {
 });
 
 sunucu.listen(PORT, () => {
-  console.log("Tarayicida su adresi ac ve Google ile onayla:\n");
+  console.log(`[${CHANNEL.name}] Tarayicida su adresi ac ve DOGRU kanal hesabi ile onayla:\n`);
   console.log(yetkiUrl + "\n");
   console.log("Onaydan sonra bu pencere " + REDIRECT + " adresine doner ve");
   console.log("jeton terminale yazilir. (Dinleniyor: " + PORT + ")");

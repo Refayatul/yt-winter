@@ -15,6 +15,8 @@
 const fs = require("fs");
 const path = require("path");
 const { KOK, jsonOku, jsonYaz, metinYaz, bugun, videoIdGecerli } = require("./lib/ortak");
+const SELECTED = require("./core/channel-context").selectFromArgv(process.argv.slice(2));
+const CHANNEL = SELECTED.channel;
 const { ayar } = require("./lib/ayar");
 const K = require("./lib/kutuphane");
 const A = require("./lib/analitik");
@@ -42,7 +44,7 @@ async function kanalAnlik(api) {
   const st = ch.veri.items[0].statistics;
   const kayit = { tarih: new Date().toISOString(), subscribers: +st.subscriberCount, views: +st.viewCount, videos: +st.videoCount,
     kaynak: "Data API channels.statistics (subscriber count is rounded by YouTube above 1,000)" };
-  jsonYaz(path.join(KOK, "analytics", "kanal", bugun() + ".json"), kayit);
+  jsonYaz(path.join(CHANNEL.paths.analytics, "kanal", bugun() + ".json"), { ...kayit, channel: CHANNEL.slug });
   return kayit;
 }
 
@@ -72,7 +74,7 @@ async function olc(api, video, checkpoint, baglam) {
   const paket = kon && kon.slug ? { titles: jsonOku(K.paketYolu(kon.slug, "titles.json"), null) } : {};
   const teshis = A.teshis(v, paket, ayar().analytics, baglam);
   const o = { ...v, checkpoint, teshis };
-  const dir = path.join(KOK, "analytics", video.id);
+  const dir = path.join(CHANNEL.paths.analytics, video.id);
   jsonYaz(path.join(dir, checkpoint + ".json"), o);
   const olcumler = fs.readdirSync(dir).filter((f) => /^\d+d\.json$|^manual-.*\.json$/.test(f))
     .map((f) => jsonOku(path.join(dir, f), null)).filter(Boolean).sort((a, b) => a.toplandi.localeCompare(b.toplandi));
@@ -81,12 +83,20 @@ async function olc(api, video, checkpoint, baglam) {
 }
 
 async function main() {
-  const arg = process.argv[2];
-  if (!arg) { console.error("Kullanim: node post-publish-analyzer.js --due | <videoId>"); process.exit(1); }
+  const arg = SELECTED.argv[0];
+  if (!arg) { console.error("Kullanim: node post-publish-analyzer.js --channel <slug> --due | <videoId>"); process.exit(1); }
   if (!yt.kimlikVar()) { console.log("YouTube kimligi yok — analiz atlandi (veri uydurulmaz)."); return; }
   const api = yt.istemci(await yt.token());
+  const expected = CHANNEL.expectedChannelId();
+  if (expected) {
+    const identity = await yt.verifyChannelIdentity(api, CHANNEL);
+    console.log(`✓ Analitik kanal kimligi dogrulandi: ${identity.title || identity.actual} (${identity.actual})`);
+  } else if (CHANNEL.config.pathMode !== "legacy-adapter") {
+    console.log(`${CHANNEL.prefix}_YT_CHANNEL_ID yok — yanlis kanal verisini kaydetmemek icin analiz atlandi.`);
+    return;
+  }
   const kanal = await kanalAnlik(api);
-  if (kanal) console.log(`kanal: ${kanal.subscribers} abone, ${kanal.views} izlenme, ${kanal.videos} video`);
+  if (kanal) console.log(`[${CHANNEL.name}] kanal: ${kanal.subscribers} abone, ${kanal.views} izlenme, ${kanal.videos} video`);
   const { ids } = await yt.yuklemeler(api);
   const hepsi = await yt.videolar(api, ids);
   const baglam = A.baglam(hepsi);
@@ -103,7 +113,7 @@ async function main() {
     if (v.status.privacyStatus !== "public") continue;
     const yas = (Date.now() - Date.parse(v.snippet.publishedAt)) / 86400000;
     for (const gun of ayar().analytics.checkpoints) {
-      const dosya = path.join(KOK, "analytics", v.id, gun + "d.json");
+      const dosya = path.join(CHANNEL.paths.analytics, v.id, gun + "d.json");
       if (yas >= gun && !fs.existsSync(dosya)) {
         // Gec kalinan checkpoint: yalnizca en son vadesi gelmis olani olc (gecmis yeniden kurulamaz)
         const sonraki = ayar().analytics.checkpoints.find((c) => c > gun);

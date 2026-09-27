@@ -28,7 +28,7 @@ test("tum .js/.cjs dosyalari derlenir", () => {
 });
 
 test("config ve konu JSON dosyalari gecerli", () => {
-  for (const d of ["config", "icerik/konular"]) {
+  for (const d of ["config", "icerik/konular", "channels"]) {
     for (const f of dosyalar(path.join(KOK, d), /\.json$/)) assert.doesNotThrow(() => JSON.parse(fs.readFileSync(f, "utf8")), f);
   }
   for (const f of dosyalar(path.join(KOK, "icerik/konular"), /\.json$/)) {
