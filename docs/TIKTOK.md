@@ -101,9 +101,15 @@ değişikliğini commit et (sağlık kontrolü bu tarihi okuyup süre bitmeden u
 ## Günlük işleyiş
 
 1. Günlük üretim videoyu yapar ve YouTube'a yükler (21:00'de otomatik yayın).
-2. Hemen ardından `tiktok-yukle.js` aynı MP4'ü TikTok gelen kutusuna gönderir.
-3. Telefonundaki TikTok bildirimine dokunur, açıklamayı görür, **Post**'a basarsın.
-4. Aynı video ikinci kez gönderilmez (`icerik/tiktok.json` kaydı).
+2. Başarılı üretim `PRODUCTION_RESULT_PATH` dosyasına gerçek slug, videoId,
+   `publishAt`, MP4 yolu ve SHA-256 yazar. TikTok adımı bu sonucu doğrular ve
+   YouTube için üretilen **aynı MP4'ü**, yeniden render etmeden inbox'a gönderir.
+3. Ayrı bir adım, varsa YouTube'da olup TikTok'ta olmayan en eski **bir** videoyu
+   daha inbox'a gönderir. Backlog bitince yalnızca bugünün videosu gider.
+4. Telefonundaki TikTok bildirimine dokunur, açıklamayı görür, **Post**'a basarsın.
+5. Her iki gönderim de bağımsız duplicate korumasından geçer. TikTok init'ten
+   dönen `publishId`, durum sorgusundan önce `icerik/tiktok.json` içine yazılır;
+   kesilen bir workflow bile aynı slug'ı ikinci kez gönderemez.
 
 Sağlık kontrolü TikTok'u da izler; jeton bozulursa ya da bitmesine 30 gün kalırsa
 GitHub bildirimi gelir. TikTok sorunu YouTube yayınını **durdurmaz**.

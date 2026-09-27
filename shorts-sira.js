@@ -68,6 +68,35 @@ function calistir(script, slug) {
   if (r.status !== 0) throw new Error(script + " basarisiz (slug: " + slug + ")");
 }
 
+function productionResult(slug, quality) {
+  const K = require("./lib/kutuphane");
+  const publication = K.yayinBul(slug);
+  const file = path.join(CHANNEL.paths.production, slug, "Videos", slug + ".mp4");
+  const rendered = fs.existsSync(file);
+  // A duplicate-guard hit proves a video exists on YouTube, but the freshly
+  // rendered local binary is not necessarily the binary uploaded earlier. Only
+  // a real upload in this run may authorize the "today exact MP4" TikTok step.
+  const uploadedThisRun = !!(publication && publication.videoId && publication.kaynak === "upload"
+    && Date.now() - Date.parse(publication.tarih || 0) < 30 * 60000);
+  return {
+    channel: CHANNEL.slug,
+    slug,
+    producedAt: new Date().toISOString(),
+    uploaded: uploadedThisRun,
+    videoId: publication && publication.videoId || null,
+    publishAt: publication && publication.publishAt || null,
+    quality: quality && (quality.karar || quality.decision) || publication && publication.kalite || null,
+    mp4Path: rendered ? path.relative(KOK, file).split(path.sep).join("/") : null,
+    mp4Sha256: rendered ? crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex") : null,
+  };
+}
+
+function writeProductionResult(slug, quality) {
+  const target = process.env.PRODUCTION_RESULT_PATH;
+  if (!target) return;
+  yaz(path.resolve(target), productionResult(slug, quality));
+}
+
 function uploadHazir() {
   const credentials = CHANNEL.credentials();
   return !!(credentials.clientId && credentials.clientSecret && credentials.refreshToken);
@@ -113,14 +142,13 @@ function uretBir(slug) {
       throw new YuklemeHatasi("yukleme basarisiz (konu kuyrukta kaldi)");
     }
     console.log(`yukleme: tamam (kalite: ${son.karar})`);
-    // TikTok (varsa): ayni videoyu gelen kutusuna gonderir. BASARISIZLIK GUNU BOZMAZ —
-    // YouTube yayini zaten tamam; TikTok bir sonraki calismada tekrar denenir.
-    const t = cp.spawnSync("node", ["tiktok-yukle.js", slug], { cwd: KOK, stdio: "inherit" });
-    if (t.status !== 0) console.log("  (TikTok gonderimi atlandi/basarisiz — YouTube etkilenmedi)");
   } else {
     console.log("yukleme atlandi (" + (publish ? "kimlik yok" : "PUBLISH!=1") + "); video: uretim/" + slug + "/Videos/");
   }
   isaretle(slug);
+  // The workflow consumes this exact result. TikTok must never guess the latest
+  // topic: it receives this slug and verifies this MP4's SHA-256 before upload.
+  writeProductionResult(slug, son);
   return slug;
 }
 

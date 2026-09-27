@@ -19,6 +19,10 @@ on:
       slug:
         type: string
         default: ''
+      force:
+        description: 'SLA recovery: bypass the normal schedule pre-check'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -39,7 +43,7 @@ jobs:
           node-version: '20'
       - id: k
         run: |
-          if [ "${{ github.event_name }}" != "schedule" ]; then
+          if [ "${{ inputs.force }}" = "true" ] || [ "${{ github.event_name }}" != "schedule" ]; then
             echo "Elle tetiklendi — takvim atlandi."; echo "uygun=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
           # Cikis kodu: 0 = vakti geldi, 3 = bugunun videosu zaten var, digeri = BEKLENMEDIK HATA.
@@ -67,6 +71,10 @@ jobs:
       YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
       YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
       YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+      FR_YT_CLIENT_ID: ${{ secrets.FR_YT_CLIENT_ID }}
+      FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
+      FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
+      FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
       # TikTok (istege bagli): yoksa TikTok adimi sessizce atlanir, YouTube etkilenmez.
       TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
       TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
@@ -98,7 +106,9 @@ jobs:
           node saglik.js || echo "saglik kontrolu - yukleme yapilamaz (ayrintilar yukarida)"
 
       - name: Sonraki Shorts'u uret
-        if: !inputs.kuru
+        if: ${{ !inputs.kuru }}
+        env:
+          PRODUCTION_RESULT_PATH: ${{ runner.temp }}/production-result.json
         run: |
           if [ "${{ inputs.hepsi }}" = "true" ]; then
             node shorts-sira.js --hepsi
@@ -110,7 +120,7 @@ jobs:
 
       # KURU CALISMA: gercek secret'lar ve gercek indirme/render ile uctan uca, ama yuklemesiz.
       - name: Kuru calisma (uctan uca, yuklemesiz)
-        if: inputs.kuru
+        if: ${{ inputs.kuru }}
         env:
           PUBLISH: '0'
         run: |
@@ -121,21 +131,32 @@ jobs:
           node e2e-kontrol.js "$SLUG"
           node bildirim.js --kuru
 
-      # TikTok arasini kapat: YouTube'da olup TikTok'ta olmayan en eski videoyu
-      # uretip gonderir (gunde bir). Kimlik yoksa ya da ara kapaliysa sessizce gecer.
-      # Basarisizlik gunu bozmaz — YouTube yayini zaten tamam.
+      # Bugunun slug'i "son konu" tahminiyle secilmez. shorts-sira yalnizca basarili
+      # YouTube sonucunu bu dosyaya yazar; TikTok ayni MP4 ve SHA-256'yi dogrular.
+      - name: Bugunun YouTube Short'unu TikTok inbox'a gonder
+        if: ${{ success() && !inputs.kuru }}
+        run: |
+          RESULT="${{ runner.temp }}/production-result.json"
+          if [ ! -s "$RESULT" ]; then echo "Basarili yeni YouTube sonucu yok — bugunun TikTok gonderimi yok."; exit 0; fi
+          READY=$(node -e 'const r=require(process.argv[1]);process.stdout.write(String(!!(r.uploaded&&r.videoId&&r.publishAt&&r.mp4Sha256)))' "$RESULT")
+          if [ "$READY" != "true" ]; then echo "YouTube uretimi yuklenmedi/zamanlanmadi — TikTok gonderimi yok."; exit 0; fi
+          SLUG=$(node -pe 'require(process.argv[1]).slug' "$RESULT")
+          node tiktok-yukle.js "$SLUG" --source-result="$RESULT" --result-file="${{ runner.temp }}/tiktok-today.json"
+
+      # Bugunun videosundan BAGIMSIZ duplicate korumasi ile, YouTube'da olup
+      # TikTok'ta olmayan en eski videodan yalnizca bir tane daha gonderilir.
       - name: TikTok gecmisini kapat (gunde 1 eski video)
-        if: always() && !inputs.kuru
+        if: ${{ always() && !inputs.kuru }}
         run: node tiktok-yukle.js --gecmis || echo "TikTok gecmis adimi atlandi"
 
       - name: Bildirim (her adim -> GitHub issue/yorum)
-        if: always() && !inputs.kuru
+        if: ${{ always() && !inputs.kuru }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node bildirim.js || echo "bildirim atlandi"
 
       - name: Yorumlara olculu yanit ver (etkilesim)
-        if: always() && !inputs.kuru
+        if: ${{ always() && !inputs.kuru }}
         run: node yorum-yanitla.js || echo "yorum yaniti atlandi (yorum yok / izin yok)"
 
       - name: Yayin sonrasi analiz (24s/72s/7g/14g/30g checkpoint'leri)
@@ -143,7 +164,7 @@ jobs:
         run: node post-publish-analyzer.js --due || echo "analiz atlandi (kimlik/kapsam yok) — veri uydurulmaz"
 
       - name: Teknik tartisma sabit yorumlari (public olan videolar)
-        if: always() && !inputs.kuru
+        if: ${{ always() && !inputs.kuru }}
         run: node pinned-comment.js --post-pending || echo "sabit yorum atlandi"
 
       - name: Kume + ic baglanti plani, deney degerlendirmesi
@@ -171,7 +192,7 @@ jobs:
           retention-days: 7
 
       - name: Uretim durumunu geri commit et
-        if: always() && !inputs.kuru
+        if: ${{ always() && !inputs.kuru }}
         run: |
           git config user.name  "uretim-bot"
           git config user.email "actions@users.noreply.github.com"
@@ -188,7 +209,7 @@ jobs:
           exit 1
 
       - name: Hata bildirimi (is akisi coktu)
-        if: failure() && !inputs.kuru
+        if: ${{ failure() && !inputs.kuru }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node bildirim.js --is-hatasi "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

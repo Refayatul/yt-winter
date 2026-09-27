@@ -44,10 +44,17 @@ jobs:
       FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
       FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
       FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+      YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
       IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
       IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
       IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
       IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
+      TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
+      TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
+      TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
       SHORTS_FONT: DejaVu Sans
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -70,14 +77,15 @@ jobs:
         if: github.event_name == 'schedule' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed'
         continue-on-error: true
         env:
-          PUBLISH: ${{ vars.FR_PUBLISH }}
+          PUBLISH: ${{ vars.FR_PUBLISH || vars.PUBLISH }}
+          PRODUCTION_RESULT_PATH: ${{ runner.temp }}/fr-production-result.json
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
           node saglik.js --channel failure-reconstructed || true
           node shorts-sira.js --channel failure-reconstructed
 
       - name: ImpossibleBrief Short
-        if: always() && (github.event_name == 'schedule' || inputs.channel == 'both' || inputs.channel == 'impossible-brief')
+        if: ${{ always() && ((github.event_name == 'schedule' && vars.IB_PUBLISH == '1') || inputs.channel == 'both' || inputs.channel == 'impossible-brief') }}
         continue-on-error: true
         env:
           PUBLISH: ${{ vars.IB_PUBLISH }}
@@ -85,6 +93,22 @@ jobs:
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
           node saglik.js --channel impossible-brief || true
           node shorts-sira.js --channel impossible-brief
+
+      - name: Send today's exact Failure Reconstructed MP4 to TikTok inbox
+        if: ${{ always() && inputs.dry_run != true && (github.event_name == 'schedule' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed') }}
+        continue-on-error: true
+        run: |
+          RESULT="${{ runner.temp }}/fr-production-result.json"
+          if [ ! -s "$RESULT" ]; then echo "No successful new YouTube production result; today's TikTok send is skipped."; exit 0; fi
+          READY=$(node -e 'const r=require(process.argv[1]);process.stdout.write(String(!!(r.uploaded&&r.videoId&&r.publishAt&&r.mp4Sha256)))' "$RESULT")
+          if [ "$READY" != "true" ]; then echo "YouTube upload/schedule incomplete; today's TikTok send is skipped."; exit 0; fi
+          SLUG=$(node -pe 'require(process.argv[1]).slug' "$RESULT")
+          node tiktok-yukle.js "$SLUG" --source-result="$RESULT" --result-file="${{ runner.temp }}/tiktok-today.json"
+
+      - name: Send one oldest Failure Reconstructed TikTok backlog item
+        if: ${{ always() && inputs.dry_run != true && (github.event_name == 'schedule' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed') }}
+        continue-on-error: true
+        run: node tiktok-yukle.js --gecmis --result-file="${{ runner.temp }}/tiktok-backlog.json"
 
       - name: Channel-scoped analytics, plans, health and notifications
         if: always()

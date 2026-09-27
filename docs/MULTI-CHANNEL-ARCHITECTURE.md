@@ -57,7 +57,9 @@ Prefixes are `FR` and `IB`. Token files are not shared. `secrets/<slug>/` is res
 
 `portfolio-scheduler.js` reads both channel cadences and emits an ordered queue. The default priority is FR Short, IB Short, FR long-form, IB long-form. Only due work appears. `--enqueue` atomically updates each channel's own scheduler file.
 
-`.github/workflows/portfolio-production.yml` runs both channel steps sequentially in one job. This physically enforces one render/upload at a time. Each channel step has `continue-on-error`, so the next channel still runs. Commit-back includes channel-scoped paths and uses retry/rebase logic. The old FR workflow remains manual as a rollback path; it no longer has a schedule.
+`.github/workflows/portfolio-production.yml` runs channel steps sequentially in one job. This physically enforces one render/upload at a time. ImpossibleBrief scheduled production remains disabled until `IB_PUBLISH=1`; this prevents dry renders from consuming its queue. Failure Reconstructed also has a primary daily schedule in `uretim.yml`.
+
+At the configured 16:30 UTC deadline, `production-sla-check.js` verifies repository state, the real YouTube video ID, `publishAt`, final quality gate and notification state. A Cloudflare Worker cron independently sends `repository_dispatch: production-sla-watchdog` at 16:35 UTC. The receiving workflow starts `uretim-is.yml` automatically when production is missing, then verifies the SLA again. A human issue is created only if that recovery fails. GitHub's own 17:07 watchdog cron is a secondary fallback, not an independent scheduler. Deployment and evidence are documented in [PRODUCTION-RELIABILITY.md](PRODUCTION-RELIABILITY.md).
 
 ## Analytics, retention, and portfolio reporting
 
@@ -67,4 +69,4 @@ Analytics paths are resolved by channel. `core/retention` filters samples by the
 
 ## Cross-platform preparation
 
-Every channel owns `state/platform-state.json`. Instagram and TikTok are disabled by default and have separate published registries. No cross-platform publish occurs until the relevant channel config and credentials explicitly enable it.
+Every channel owns `state/platform-state.json`. Instagram stays disabled. Failure Reconstructed TikTok delivery uses `SEND_TO_USER_INBOX` only: first the exact MP4 from the successful daily YouTube production result, then at most one oldest historical backlog MP4. `icerik/tiktok.json` is checked before every init request and stores the `publishId` immediately, preventing duplicate sends after interrupted polling.

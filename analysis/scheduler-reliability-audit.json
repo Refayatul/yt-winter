@@ -1,0 +1,14 @@
+{
+  "verifiedAt": "2026-09-27T16:17:14Z",
+  "source": "GitHub Actions REST API",
+  "pr26": {
+    "mergedAt": "2026-09-27T12:38:20Z",
+    "mergeCommit": "c607473c639518a63bc51683972e54922415708c"
+  },
+  "expectedPostMergeSlots": [
+    { "workflow": ".github/workflows/yayin-kontrol.yml", "slot": "2026-09-27T14:29:00Z", "scheduleRunFound": false },
+    { "workflow": ".github/workflows/uretim.yml", "slot": "2026-09-27T14:53:00Z", "scheduleRunFound": false }
+  ],
+  "allScheduleRunsAfterMerge": [],
+  "conclusion": "GitHub scheduler did not trigger either required post-merge slot; two GitHub schedule workflows are not independent."
+}
