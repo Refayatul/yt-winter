@@ -97,6 +97,7 @@ jobs:
           node-version: '20'
       - id: sla
         name: Simulate a missed scheduler deadline
+        continue-on-error: true
         run: node production-sla-check.js --channel failure-reconstructed --simulate-missing --github-output
 
   simulated_recovery:
