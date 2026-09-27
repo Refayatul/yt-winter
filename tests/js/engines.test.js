@@ -31,15 +31,19 @@ test("metin: benzerlik ve baslik bicimi", () => {
   assert.equal(M.diziBenzerlik(["a", "b", "c"], ["a", "b", "c"]), 1);
 });
 
-test("title engine: >=10 aday, puan detaylari saklanir", () => {
+test("title engine: >=20 meaningful candidates, scoring detail is retained", () => {
   const r = TE.degerlendir(tacoma(), { digerBasliklar: [], kaliplar: {} });
-  assert.ok(r.adaySayisi >= 10, "en az 10 aday");
+  assert.ok(r.adaySayisi >= 20, "at least 20 candidates");
   for (const a of r.adaylar) {
     for (const k of ["curiosity", "clarity", "tension", "consequence", "specificity", "appeal", "engineering", "search", "suggested"]) assert.ok(k in a.kriterler);
     assert.ok("similarity" in a && "clickbaitRisk" in a);
   }
   // Secim yalnizca insan-yazimi adaylardan
   assert.ok(["current", "editorial"].includes(r.adaylar.find((a) => a.baslik === r.secilen).kaynak));
+});
+
+test("every Failure Reconstructed topic has a 20+ title pool before selection", () => {
+  for (const topic of K.konular()) assert.ok(TE.adaylar(topic).length >= 20, topic.slug);
 });
 
 test("title engine: anahtar kelime tekrari ve desteklenmeyen iddia cezalandirilir", () => {
@@ -182,6 +186,9 @@ test("kapak: mobil okunabilirlik ve 3 farkli konsept", () => {
   const l = TS.konseptler(tacoma(), tacoma().baslik);
   assert.equal(l.length, 3);
   assert.equal(new Set(l.map((c) => c.metin)).size, 3);
+  const long = TS.konseptler({ ...tacoma(), format: "long" }, tacoma().baslik);
+  assert.equal(long.length, 5);
+  assert.equal(new Set(long.map((c) => c.duzen)).size, 5);
 });
 
 test("konu puani: erisilemeyen sinyal 'unavailable', guven dusuk", () => {

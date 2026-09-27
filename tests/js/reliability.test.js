@@ -10,6 +10,7 @@ const SLA = require("../../production-sla-check");
 const Recovery = require("../../core/scheduling/recovery");
 const TikTok = require("../../tiktok-yukle");
 const TikTokApi = require("../../lib/tiktok");
+const DailyReport = require("../../daily-operations-report");
 
 test("production SLA emits the required healthy machine-readable shape", () => {
   const result = SLA.evaluateSnapshot({
@@ -29,6 +30,9 @@ test("production SLA emits the required healthy machine-readable shape", () => {
     publishAt: "2026-09-27T18:00:00Z", quality: "PUBLISH", healthy: true,
   });
   assert.equal(result.verification, "youtube-api");
+  assert.equal(result.youtubeUploaded, true);
+  assert.equal(result.youtubeScheduled, true);
+  assert.equal(result.qualityGate, "PUBLISH");
 });
 
 test("missed scheduler starts recovery; a human is notified only if recovery also fails", () => {
@@ -94,4 +98,17 @@ test("Cloudflare watchdog sends the independent repository_dispatch event", asyn
   assert.equal(JSON.parse(request.options.body).event_type, "production-sla-watchdog");
   assert.match(request.url, /repos\/eyazan\/youtube-otomasyon\/dispatches$/);
   assert.doesNotMatch(JSON.stringify(result), /test-token/);
+});
+
+test("daily operations report covers both isolated channels and TikTok only for Failure Reconstructed", () => {
+  const report = DailyReport.build(new Date("2026-09-27T17:10:00.000Z"));
+  assert.deepEqual(report.channels.map((row) => row.channel).sort(), ["failure-reconstructed", "impossible-brief"]);
+  const fr = report.channels.find((row) => row.channel === "failure-reconstructed");
+  const ib = report.channels.find((row) => row.channel === "impossible-brief");
+  assert.ok(fr.tiktok);
+  assert.equal(ib.tiktok, null);
+  assert.equal(typeof fr.inventory.duplicateRate, "number");
+  assert.equal(fr.inventory.acceptance.minimumQualifiedTopics, 500);
+  assert.equal(ib.inventory.acceptance.minimumQualifiedTopics, 1000);
+  assert.match(DailyReport.markdown(report), /TikTok backlog/);
 });

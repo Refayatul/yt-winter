@@ -60,6 +60,11 @@ function rapor(id, baslik, olcumler) {
   const son = olcumler[olcumler.length - 1];
   s.push("", `## Diagnosis at ${son.checkpoint}`, "", ...son.teshis.map((t) => `- **${t.kod}** (${t.guven}) — ${t.aciklama}`), "",
     "## Suggested interventions", "", ...[...new Set(son.teshis.map((t) => MUDAHALE[t.kod] || t.oneri))].map((x) => "- " + x), "");
+  if (son.retentionDrop) s.push("## First major observed retention drop", "",
+    `- Timestamp: ${son.retentionDrop.second}s; magnitude: ${Math.round(son.retentionDrop.magnitude * 100)} percentage points.`,
+    `- Active sentence: ${son.retentionDrop.sentence || "unavailable"}`,
+    `- Visual type: ${son.retentionDrop.visualType || "unavailable"}`,
+    "- This is an observed alignment, not proof that the sentence or visual caused the drop.", "");
   if (olcumler.length >= 2) {
     const a = olcumler[olcumler.length - 2], b = son;
     const dv = (b.metrikler.views.deger ?? 0) - (a.metrikler.views.deger ?? 0);
@@ -68,12 +73,30 @@ function rapor(id, baslik, olcumler) {
   return s.join("\n");
 }
 
+function retentionContext(measurement, slug) {
+  const drop = require("./bildirim").dususNoktasi(measurement.tutma, measurement.sureSn);
+  if (!drop || !slug) return null;
+  const topic = K.uretimKonusu(slug) || {};
+  const timeline = jsonOku(K.paketYolu(slug, "sahne-zamanlari.json"), []);
+  let index = timeline.findIndex((row) => drop.sn >= row.bas && drop.sn <= row.son);
+  if (index < 0 && (topic.sahneler || []).length && measurement.sureSn) {
+    index = Math.min(topic.sahneler.length - 1, Math.floor(drop.sn / measurement.sureSn * topic.sahneler.length));
+  }
+  const scene = index >= 0 && (topic.sahneler || [])[index] || null;
+  const source = String(scene && scene.kaynak || "");
+  const visualType = scene && scene.sentetik ? "AI-GENERATED VISUAL"
+    : /\.(?:jpe?g|png|webp)$/i.test(source) ? "REAL ARCHIVAL IMAGE"
+      : source ? "REAL ARCHIVAL/LICENCED FOOTAGE" : "unavailable";
+  return { second: drop.sn, magnitude: drop.kayip, sceneIndex: index >= 0 ? index : null,
+    sentence: scene && scene.metin || null, visualType };
+}
+
 async function olc(api, video, checkpoint, baglam) {
   const v = await A.topla(api, video);
   const kon = K.yayinlananlar().find((y) => y.videoId === video.id);
   const paket = kon && kon.slug ? { titles: jsonOku(K.paketYolu(kon.slug, "titles.json"), null) } : {};
   const teshis = A.teshis(v, paket, ayar().analytics, baglam);
-  const o = { ...v, checkpoint, teshis };
+  const o = { ...v, checkpoint, teshis, retentionDrop: retentionContext(v, kon && kon.slug) };
   const dir = path.join(CHANNEL.paths.analytics, video.id);
   jsonYaz(path.join(dir, checkpoint + ".json"), o);
   const olcumler = fs.readdirSync(dir).filter((f) => /^\d+d\.json$|^manual-.*\.json$/.test(f))
@@ -106,6 +129,9 @@ async function main() {
     if (!v) { console.error("Video kanalda bulunamadi"); process.exit(1); }
     const o = await olc(api, v, "manual-" + bugun(), baglam);
     console.log(`✓ ${arg}: ${o.teshis.map((t) => t.kod).join(", ")} -> analytics/${arg}/report.md`);
+    const Retention = require("./core/retention");
+    const learned = Retention.learn(Retention.samplesFromAnalytics(CHANNEL), CHANNEL);
+    console.log(`Learning: ${learned.status} (${learned.sampleSize}/${learned.minimumSample})`);
     return;
   }
   let n = 0;
@@ -125,8 +151,11 @@ async function main() {
     }
   }
   console.log(`Bitti: ${n} checkpoint olculdu.`);
+  const Retention = require("./core/retention");
+  const learned = Retention.learn(Retention.samplesFromAnalytics(CHANNEL), CHANNEL);
+  console.log(`Learning: ${learned.status} (${learned.sampleSize}/${learned.minimumSample})`);
 }
 
-module.exports = { MUDAHALE, rapor };
+module.exports = { MUDAHALE, rapor, retentionContext };
 
 if (require.main === module) main().catch((e) => { console.error("Hata: " + e.message); process.exit(1); });

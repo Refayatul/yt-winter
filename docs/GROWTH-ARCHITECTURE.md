@@ -11,23 +11,23 @@ Failure Reconstructed is a **data-driven forensic engineering documentary produc
    SHORTS (daily, GitHub Actions)                     LONG-FORM (every 5 days, local / ShortsLab)
    shorts-sira.js                                      python -m shortslab run <job>
      ├─ yayin-plani.js      cadence due?                 script  senaryo-claude.js  (+ story-structure brief)
-     ├─ quality-gate.js     PRE gate  ── BLOCK ─▶ skip   voice   seslendir.js       (+ pronunciation dict, ## chapters)
+   ├─ quality-gate.js     PRE gate  ── BLOCK ─▶ skip   voice   seslendir.js       (+ pronunciation dict, ## chapters)
      ├─ arsiv-bul / stok-bul footage + source metadata   visuals gorsel-bul.js      (evidence-first tiers + metadata)
      ├─ shorts-yap.js       render                          └─ engineering-visuals.js (4–8 diagrams into scenes)
      │     pacing · overlays · stamps · music profile     render  video-yap.js       (pacing plan, cold open, chapters,
      ├─ quality-gate.js     FINAL gate ── BLOCK ─▶ skip                                 disclosure labels, next-episode outro)
-     └─ youtube-yukle.js    private upload             publish thumbnail-strategy --render → quality-gate --final
+     └─ youtube-yukle.js    PUBLISH-only upload        publish thumbnail-strategy --render → quality-gate --final
                                                                 → youtube-yukle.js (BLOCK stops it)
 ```
 
-Everything shares the same packaging engines and the same registry.
+Short production is live. The long-form column describes available local components, not an unattended channel-aware Actions pipeline; long queue items are not currently consumed or uploaded automatically.
 
 ## 2. Packaging engines (per video → `icerik/paket/<slug>/`)
 
 | Engine | Output | Purpose |
 |---|---|---|
-| `title-engine.js` | `titles.json` | ≥10 candidates, 11 scored criteria, support/clickbait check, channel-wide pattern penalty |
-| `thumbnail-strategy.js` | `thumbnails.json`, `uretim/<slug>/thumbnails/*.jpg` | 3 concepts (≤4 words, mobile check), rotating primary layout, rendered from real frames |
+| `title-engine.js` | `titles.json` | ≥20 structurally distinct candidates, 11 scored criteria, support/clickbait check, channel-wide pattern penalty |
+| `thumbnail-strategy.js` | `thumbnails.json`, `uretim/<slug>/thumbnails/*.jpg` | 3 Short concepts / 5 long-form concepts (≤4 words, mobile check), rotating primary layout, rendered from real frames |
 | `hook-engine.js` | `hook.json` | first-30-second scoring (0–5 / 5–12 / 12–20 / 20–30 s), forbidden openers, draft hook from the case file |
 | `scene-pacing.js` | `pacing.json` | role per scene → shot length, motion, transition, overlay |
 | `story-structure.js` | `story.json` | adaptive sections, open loops that must resolve later, CTA placement (`ctaStrategy`) |
@@ -75,14 +75,14 @@ The production queue takes topics with real archive film first, then stock expla
 
 ## 6. Publishing cadence
 
-`yayin-plani.js` + `config/growth.json → publishing`: Shorts every 1 day, long-form every 5 days, with a 3 h cron tolerance. Two BLOCKs in the last three real productions stretch the interval (Shorts up to 3 days, long-form up to 10). REVIEW does not slow the cadence (`stretchOnReview: false`): it already means "private upload, a human publishes".
+`yayin-plani.js` + `config/growth.json → publishing`: Shorts target every day. Failure Reconstructed's long-form target is five days and ImpossibleBrief's is seven days, but those long queue items are visibility signals until a production-grade long pipeline exists. Two BLOCKs in the last three real productions can stretch the interval. `REVIEW` is quarantined by spec hash and is never uploaded; the queue tries a different topic.
 
 ### Fixed publish time + notification
 
-- Production is triggered by **two independent workflows**, because GitHub drops scheduled runs. Measured on 27 September: all ten of `uretim.yml`'s scheduled attempts were dropped, while `yayin-kontrol.yml`'s crons ran the same day — ten crons sharing one minute (`:23`) on a single workflow appear to fare worse than a few crons on varied minutes. The production job now lives in a reusable workflow, `uretim-is.yml`, and both `uretim.yml` (07:07, 09:41, 12:19, 14:53 UTC) and `yayin-kontrol.yml` (08:11, 11:37, 14:29, 16:47, 18:27, 19:53 UTC) call it. Ten separately-scheduled chances across two workflows; the cheap `takvim` job still guarantees one video per day, so extra runs stop in about 20 seconds.
+- Production has multiple GitHub-native attempts (`portfolio-production.yml`, `uretim.yml`, and `yayin-kontrol.yml`). They improve retry probability but are not independent of GitHub's scheduler. `production-watchdog.yml` supplies deadline recovery. True failure-domain independence begins only after the Cloudflare Worker in `ops/production-watchdog-worker` is deployed.
 - If every one of them is dropped, `yayin-kontrol.yml` opens a "🚨 Bugün video üretilmedi" issue at 16:47 UTC with a one-click *Run workflow* link. It only fires when the queue is not empty and nothing was produced or scheduled for that day.
 - The video is uploaded private with `status.publishAt`. YouTube makes it public at **18:00 UTC**: 21:00 TR, 14:00 ET, 11:00 PT. The audience was ~93 % US on 2026-09-25.
-- Which gate verdicts are scheduled is set in `config/growth.json → publishing.schedule` (default PUBLISH + REVIEW). Anything else stays private, and BLOCK is never uploaded.
+- Only `PUBLISH` is uploadable/scheduled. `REVIEW` and `BLOCK` never leave the runner.
 - `bildirim.js` opens a GitHub issue that @mentions the owner (email + GitHub mobile push). It gives the title, gate verdict, publish time, Studio link and how to cancel. Older "yeni-video" issues are closed automatically; blocked topics get a "kalite-engeli" issue.
 - Once enough data exists, re-tune `hourUTC` from the dashboard's "Publish hour" pattern and the analytics country mix.
 

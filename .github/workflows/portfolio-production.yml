@@ -121,6 +121,7 @@ jobs:
             node bildirim.js --channel "$CHANNEL" || true
           done
           node portfolio-dashboard.js --write
+          node daily-operations-report.js
 
       - name: Preview artifacts
         if: always()
@@ -139,7 +140,7 @@ jobs:
         run: |
           git config user.name "portfolio-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add icerik channel analysis analytics experiments migration channels || true
+          git add icerik channel analysis analytics experiments migration channels reports || true
           if git diff --cached --quiet; then echo "No state changes."; exit 0; fi
           git commit -m "chore: channel-scoped production state"
           for i in 1 2 3 4 5; do

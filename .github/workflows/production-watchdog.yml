@@ -109,9 +109,10 @@ jobs:
       - name: Save notification state
         if: ${{ inputs.simulate_missing != true }}
         run: |
+          node daily-operations-report.js || true
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
-          git add icerik/bildirim-durum.json
+          git add icerik/bildirim-durum.json reports
           if git diff --cached --quiet; then echo "Notification state unchanged."; exit 0; fi
           git commit -m "chore: record production SLA notification"
           BRANCH="$GITHUB_REF_NAME"
@@ -126,5 +127,130 @@ jobs:
         with:
           name: production-sla-after
           path: ${{ runner.temp }}/sla-after.json
+          if-no-files-found: error
+          retention-days: 30
+
+  # ImpossibleBrief is completely dormant until the owner has configured its
+  # isolated OAuth identity and explicitly sets IB_PUBLISH=1. Once enabled, it
+  # receives the same deadline/recovery contract without inheriting FR secrets.
+  ib-sla:
+    if: ${{ vars.IB_PUBLISH == '1' && inputs.simulate_missing != true }}
+    runs-on: ubuntu-latest
+    outputs:
+      healthy: ${{ steps.check.outputs.healthy }}
+      production_ready: ${{ steps.check.outputs.production_ready }}
+    env:
+      IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
+      IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
+      IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
+      IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
+      PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - id: check
+        name: Check ImpossibleBrief production SLA
+        run: node production-sla-check.js --channel impossible-brief --verify-youtube --github-output --output="${{ runner.temp }}/ib-sla-before.json" || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: impossible-brief-sla-before
+          path: ${{ runner.temp }}/ib-sla-before.json
+          if-no-files-found: error
+          retention-days: 30
+
+  ib-recovery:
+    needs: [ib-sla, recovery]
+    if: ${{ always() && vars.IB_PUBLISH == '1' && inputs.simulate_missing != true && needs.ib-sla.outputs.production_ready != 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
+      IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
+      IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
+      IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
+      PUBLISH: '1'
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
+          npm install --no-audit --no-fund
+      - name: Recover one ImpossibleBrief Short
+        run: |
+          node saglik.js --channel impossible-brief
+          node shorts-sira.js --channel impossible-brief
+          node bildirim.js --channel impossible-brief || true
+          node daily-operations-report.js
+      - name: Commit isolated ImpossibleBrief state
+        run: |
+          git config user.name "production-watchdog"
+          git config user.email "actions@users.noreply.github.com"
+          git add channels/impossible-brief reports
+          if git diff --cached --quiet; then echo "ImpossibleBrief state unchanged."; exit 0; fi
+          git commit -m "chore: recover ImpossibleBrief production SLA"
+          BRANCH="$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+
+  ib-verify:
+    needs: [ib-sla, ib-recovery]
+    if: ${{ always() && vars.IB_PUBLISH == '1' && inputs.simulate_missing != true }}
+    runs-on: ubuntu-latest
+    env:
+      IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
+      IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
+      IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
+      IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
+      PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Repair normal notification and verify SLA
+        id: final
+        run: |
+          node bildirim.js --channel impossible-brief || true
+          node production-sla-check.js --channel impossible-brief --verify-youtube --recovery-started --github-output --output="${{ runner.temp }}/ib-sla-after.json" || true
+      - name: Notify only after ImpossibleBrief recovery failed
+        if: ${{ steps.final.outputs.healthy != 'true' }}
+        run: node bildirim.js --channel impossible-brief --sla-failure "${{ runner.temp }}/ib-sla-after.json"
+      - name: Save notification/report state
+        if: always()
+        run: |
+          node daily-operations-report.js || true
+          git config user.name "production-watchdog"
+          git config user.email "actions@users.noreply.github.com"
+          git add channels/impossible-brief/state/notification-state.json reports || true
+          if git diff --cached --quiet; then echo "ImpossibleBrief verification state unchanged."; exit 0; fi
+          git commit -m "chore: record ImpossibleBrief SLA verification"
+          BRANCH="$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+      - name: ImpossibleBrief SLA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: impossible-brief-sla-after
+          path: ${{ runner.temp }}/ib-sla-after.json
           if-no-files-found: error
           retention-days: 30

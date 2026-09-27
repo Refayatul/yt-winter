@@ -175,6 +175,7 @@ jobs:
         run: |
           node channel-plan.js || echo "kanal plani atlandi"
           node experiments.js degerlendir || echo "deneyler atlandi"
+          node daily-operations-report.js || echo "gunluk operasyon raporu atlandi"
 
       - name: Haftalik mevcut video optimizasyonu (Pazartesi)
         if: always() && github.event_name == 'schedule'
@@ -200,7 +201,7 @@ jobs:
           git config user.name  "uretim-bot"
           git config user.email "actions@users.noreply.github.com"
           # Durum + analiz dosyalari (sir icermez; .env ve medya .gitignore'da)
-          git add icerik channel analysis analytics experiments migration || true
+          git add icerik channel analysis analytics experiments migration reports || true
           if git diff --cached --quiet; then echo "Uretimde degisiklik yok."; exit 0; fi
           git commit -m "chore: uretim ilerlemesi + analiz (otomatik)"
           # Yaris (baska bir commit araya girdiyse) icin 5 deneme: kayit kaybolursa ayni konu

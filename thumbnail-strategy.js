@@ -1,4 +1,4 @@
-// THUMBNAIL STRATEGY — her video icin 3 kapak konsepti + gercek render.
+// THUMBNAIL STRATEGY — Shorts icin 3, long-form icin 5 kapak konsepti + render.
 //
 // Repoda daha once kapak ureteci yoktu; bu modul hem STRATEJIYI (konsept,
 // kirpma, odak, hiyerarsi, 2-4 kelime metin, duygu tetigi, kontrast, mobil
@@ -83,7 +83,23 @@ function konseptler(konu, baslik) {
   if (l.length < 3) l.push({ ...l[0], id: "no-text-frame", duzen: "full-bleed", metin: "",
     hiyerarsi: ["failure moment only"], duyguTetigi: "pure visual curiosity — the frame carries the story",
     kontrast: "natural colour, slight vignette" });
-  return l.slice(0, 3).map((c) => {
+  if (format === "long") {
+    l.push({ id: "failure-chain", duzen: "before-after-split",
+      anaGorsel: "two real/source-backed frames: intact system versus the decisive failure state",
+      kirpma: "16:9 split composition with one dominant subject and a narrow causal arrow",
+      odak: "the visual transition from normal operation to failure",
+      hiyerarsi: ["failed subject", "causal arrow", "short mechanism label"],
+      metin: sec("WHAT FAILED", "THE FAILURE CHAIN"), duyguTetigi: "causal curiosity — connect the two states",
+      kontrast: "cool intact side, warm failure side, one high-contrast arrow", kaynakSahne: "failure-chain" });
+    l.push({ id: "evidence-closeup", duzen: "single-evidence-closeup",
+      anaGorsel: "one authentic component, measurement, or source-backed technical detail; never a fake document",
+      kirpma: "extreme close-up occupying two-thirds of 16:9 with generous negative space",
+      odak: v.mekanizma ? `physical evidence of ${v.mekanizma}` : "the first failed component",
+      hiyerarsi: ["evidence detail", "one annotation", "minimal text"],
+      metin: sec("FIRST FAILURE", mekKisa.split(/\s+/).length <= 3 ? mekKisa : ""), duyguTetigi: "forensic intrigue",
+      kontrast: "neutral evidence colour, white annotation, restrained amber highlight", kaynakSahne: "technical" });
+  }
+  return l.slice(0, format === "long" ? 5 : 3).map((c) => {
     const mk = mobilKontrol(c.metin, format);
     const tekrar = tekrarOrani(c.metin);
     const uyari = [];

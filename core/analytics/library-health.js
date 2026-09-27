@@ -25,6 +25,8 @@ function legacyTopics(channel) {
         status: "qualified",
         category: spec.vaka?.kume || "uncategorized",
         sources: (spec.vaka?.kaynakca || []).map((source) => ({ name: source.ad || "documented source" })),
+        sourceReady: !!(spec.vaka?.kaynakca || []).length,
+        visualReady: !!(spec.sahneler || []).length,
         longFormPotential: { score: (spec.sahneler || []).length >= 8 ? 75 : 0 },
         confidence: "VERIFIED",
       };
@@ -55,7 +57,11 @@ function calculate(channel = getChannel()) {
   for (const topic of qualified) for (const source of topic.sources || []) authorityCoverage[source.name] = (authorityCoverage[source.name] || 0) + 1;
   const cadence = channel.config.publishingCadence.shorts.everyDays || 1;
   const days = readyShorts.length * cadence;
-  const minimumDays = legacy ? 0 : 365;
+  const minimumDays = 365;
+  const minimumQualifiedTopics = channel.slug === "failure-reconstructed" ? 500 : 1000;
+  const sourceReady = qualified.filter((topic) => topic.sourceReady !== false && (topic.sources || []).length >= 2).length;
+  const visualReady = qualified.filter((topic) => topic.visualReady === true || (topic.visualPotential && topic.visualPotential.score >= 70)).length;
+  const duplicateTopics = audits.filter((audit) => audit.blockers.includes("exact duplicate topic")).length;
   return {
     channel: channel.slug,
     channelName: channel.name,
@@ -69,8 +75,17 @@ function calculate(channel = getChannel()) {
     sourceCoverage: authorityCoverage,
     blockedTopics: Object.keys(blockedObject).length,
     lowConfidenceTopics: qualified.filter((topic) => !["VERIFIED", "SUPPORTED"].includes(topic.confidence)).length,
-    duplicateTopics: audits.filter((audit) => audit.blockers.includes("exact duplicate topic")).length,
-    acceptance: { minimumDays, passes: days >= minimumDays },
+    duplicateTopics,
+    duplicateRate: topics.length ? Math.round(duplicateTopics / topics.length * 10000) / 100 : 0,
+    sourceReadyRate: qualified.length ? Math.round(sourceReady / qualified.length * 10000) / 100 : 0,
+    visualReadyRate: qualified.length ? Math.round(visualReady / qualified.length * 10000) / 100 : 0,
+    acceptance: {
+      minimumDays,
+      minimumQualifiedTopics,
+      daysPass: days >= minimumDays,
+      topicTargetPass: qualified.length >= minimumQualifiedTopics,
+      passes: days >= minimumDays && qualified.length >= minimumQualifiedTopics,
+    },
   };
 }
 

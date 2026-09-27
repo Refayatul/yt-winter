@@ -137,6 +137,7 @@ function uretBir(slug) {
       fs.copyFileSync(path.join(vd, "onizleme.jpg"), K.paketYolu(slug, "onizleme.jpg"));
     }
     if (fs.existsSync(path.join(vd, "denetim.json"))) fs.copyFileSync(path.join(vd, "denetim.json"), K.paketYolu(slug, "denetim.json"));
+    if (fs.existsSync(path.join(vd, "sahne-zamanlari.json"))) fs.copyFileSync(path.join(vd, "sahne-zamanlari.json"), K.paketYolu(slug, "sahne-zamanlari.json"));
   } catch (e) { console.log("  (onizleme kopyalanamadi: " + e.message + ")"); }
   try { require("./description-engine").calistir(slug); require("./pinned-comment").calistir(slug); } catch (e) { console.log("  (paket metni: " + e.message + ")"); }
 

@@ -61,12 +61,19 @@ function evaluateSnapshot(snapshot) {
     channel: snapshot.channel,
     slug,
     produced,
+    topicSelected: !!slug,
+    scriptReady: produced,
+    assetsReady: produced,
+    renderReady: produced,
     uploaded,
     scheduled,
+    youtubeUploaded: uploaded,
+    youtubeScheduled: scheduled,
     videoId,
     videoIdExists,
     publishAt: record && record.publishAt || null,
     quality: decision,
+    qualityGate: decision,
     qualityPassed,
     notificationExists,
     productionReady,
@@ -143,12 +150,19 @@ async function main(argv = process.argv.slice(2)) {
   });
   if (selected.argv.includes("--simulate-missing")) {
     result.produced = false;
+    result.topicSelected = false;
+    result.scriptReady = false;
+    result.assetsReady = false;
+    result.renderReady = false;
     result.uploaded = false;
     result.scheduled = false;
+    result.youtubeUploaded = false;
+    result.youtubeScheduled = false;
     result.videoId = null;
     result.videoIdExists = false;
     result.publishAt = null;
     result.quality = null;
+    result.qualityGate = null;
     result.qualityPassed = false;
     result.notificationExists = false;
     result.productionReady = false;
