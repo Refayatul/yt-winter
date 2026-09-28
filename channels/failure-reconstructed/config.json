@@ -4,6 +4,12 @@
   "enabled": true,
   "youtubeChannelId": "",
   "credentialsPrefix": "FR",
+  "credentialEnv": {
+    "clientId": ["FR_YT_CLIENT_ID", "YT_CLIENT_ID"],
+    "clientSecret": ["FR_YT_CLIENT_SECRET", "YT_CLIENT_SECRET"],
+    "refreshToken": ["FR_YT_REFRESH_TOKEN", "YT_REFRESH_TOKEN"],
+    "channelId": ["FR_YT_CHANNEL_ID", "YT_CHANNEL_ID"]
+  },
   "allowLegacyYouTubeEnv": true,
   "pathMode": "legacy-adapter",
   "timezone": "Europe/Istanbul",

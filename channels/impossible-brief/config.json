@@ -4,6 +4,12 @@
   "enabled": true,
   "youtubeChannelId": "",
   "credentialsPrefix": "IB",
+  "credentialEnv": {
+    "clientId": ["IB_CLIENT_ID", "IB_YT_CLIENT_ID"],
+    "clientSecret": ["IB_CLIENT_SECRET", "IB_YT_CLIENT_SECRET"],
+    "refreshToken": ["IB_YT_REFRESH_TOKEN", "IB_REFRESH_TOKEN"],
+    "channelId": ["IB_YT_CHANNEL_ID"]
+  },
   "allowLegacyYouTubeEnv": false,
   "pathMode": "isolated",
   "timezone": "Europe/Istanbul",

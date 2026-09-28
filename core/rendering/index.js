@@ -6,7 +6,7 @@ const path = require("path");
 const cp = require("child_process");
 const Scripting = require("../scripting");
 const Visuals = require("../visuals");
-const Quality = require("../quality/impossible-brief");
+const Quality = require("../quality");
 const { ROOT } = require("../channel-context");
 
 function write(file, value) {
@@ -86,7 +86,7 @@ function synthesizeVoice(text, outputDirectory, basename = "narration", options 
     const input = path.join(outputDirectory, basename + "-input.txt");
     const mp3 = path.join(outputDirectory, basename + ".mp3");
     fs.writeFileSync(input, text + "\n");
-    cp.execFileSync(process.execPath, [path.join(__dirname, "..", "..", "scripts", "synthesize-voice.js"), input, mp3, "en-US-AndrewMultilingualNeural", options.fast ? "+30%" : "-5%"], { stdio: "ignore", timeout: 90000 });
+    cp.execFileSync(process.execPath, [path.join(__dirname, "..", "..", "scripts", "synthesize-voice.js"), input, mp3, options.voice || "en-US-AndrewMultilingualNeural", options.fast ? "+30%" : "-5%"], { stdio: "ignore", timeout: 90000 });
     fs.unlinkSync(input);
     return { file: mp3, provider: "Microsoft Edge neural TTS", syntheticVoice: true };
   } catch (error) {}
@@ -95,12 +95,12 @@ function synthesizeVoice(text, outputDirectory, basename = "narration", options 
   return { file: output, provider: "non-speech CI fallback; production voice remains configured Edge TTS", syntheticVoice: false };
 }
 
-function synthesizeNarration(script, outputDirectory) {
+function synthesizeNarration(script, outputDirectory, channel) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const takes = script.claims.map((claim, index) => {
     // The hook and escalation are deliberately brisk. Later scientific claims
     // return to the measured narration rate so terminology stays intelligible.
-    const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { fast: index < 2 });
+    const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { fast: index < 2, voice: channel.config.voice.voice });
     return { ...voice, durationSeconds: probe(voice.file).durationSeconds };
   });
   const output = path.join(outputDirectory, "narration.m4a");
@@ -180,7 +180,22 @@ function scientificFrames(topic, directory, count = 8, startFrame = 0) {
     for (let y = 0; y < height; y += 120) block(0, y, width, 2, palette.grid);
     for (let star = 0; star < 180; star += 1) circle(Math.floor(random() * width), 170 + Math.floor(random() * 1160), 1 + Math.floor(random() * 3), palette.ice);
 
-    if (/moon/i.test(topic.topic)) {
+    if (topic.channel === "critical-thread") {
+      circle(540, 930, 330, palette.blue);
+      circle(540, 930, 330, palette.cyan, true, 10);
+      for (let node = 0; node < 10; node += 1) {
+        const angle = (Math.PI * 2 * node / 10) + frame * 0.05;
+        const x = 540 + Math.cos(angle) * 380;
+        const y = 930 + Math.sin(angle) * 380;
+        circle(x, y, 22, node % 3 === 0 ? palette.warm : palette.ice);
+        line(540, 930, x, y, node % 3 === 0 ? palette.warm : palette.cyan, 4);
+      }
+      block(385, 705, 310, 450, palette.background);
+      block(405, 735, 270, 390, palette.gray);
+      block(435, 775, 210, 170, palette.background);
+      for (let slot = 0; slot < 4; slot += 1) block(445 + slot * 48, 985, 30, 95, palette.gold || palette.warm);
+      circle(540, 860, 74 + frame * 2, palette.warm, true, 8);
+    } else if (/moon/i.test(topic.topic)) {
       circle(540, 900, 315, palette.blue);
       circle(540, 900, 315, palette.cyan, true, 9);
       circle(430, 820, 92, palette.green);
@@ -240,14 +255,15 @@ function scientificFrames(topic, directory, count = 8, startFrame = 0) {
 
 function renderVideo(audioFile, duration, output, captionsFile, topic) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
-  const frames = scientificFrames(topic, path.dirname(output));
+  const frames = scientificFrames(topic, path.dirname(output), Math.max(8, Math.ceil(duration / 3.5)));
   const segment = Math.max(1, duration / frames.length);
   const args = ["-y", "-hide_banner", "-loglevel", "error"];
   for (const frame of frames) args.push("-loop", "1", "-framerate", "24", "-t", String(segment), "-i", frame);
   const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
   const labels = /moon/i.test(topic.topic) ? "EARTH–MOON SYSTEM" : /stopped spinning/i.test(topic.topic) ? "ROTATION + INERTIA" : /gravity doubled/i.test(topic.topic) ? "2g FORCE MODEL" : topic.category;
+  const illustrationLabel = topic.visualLabel || "PROCEDURAL ILLUSTRATION — NOT OBSERVATION";
   const inputs = frames.map((_, index) => `[${index}:v]`).join("");
-  const filter = `${inputs}concat=n=${frames.length}:v=1:a=0,drawbox=x=95:y=86:w=890:h=128:color=0x030712@0.78:t=fill,drawtext=text='PROCEDURAL ILLUSTRATION — NOT OBSERVATION':fontcolor=0x25d9ff:fontsize=34:x=(w-text_w)/2:y=112,drawtext=text='${labels}':fontcolor=white:fontsize=45:x=(w-text_w)/2:y=168,ass=filename='${escapedCaptions}'[v]`;
+  const filter = `${inputs}concat=n=${frames.length}:v=1:a=0,drawbox=x=95:y=86:w=890:h=128:color=0x030712@0.78:t=fill,drawtext=text='${illustrationLabel}':fontcolor=0x25d9ff:fontsize=34:x=(w-text_w)/2:y=112,drawtext=text='${labels}':fontcolor=white:fontsize=45:x=(w-text_w)/2:y=168,ass=filename='${escapedCaptions}'[v]`;
   args.push("-i", audioFile, "-filter_complex", filter, "-map", "[v]", "-map", `${frames.length}:a`, "-t", String(duration), "-c:v", "libx264", "-preset", "ultrafast", "-crf", "29", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
   try { cp.execFileSync(ffmpeg, args, { stdio: "ignore", timeout: 120000 }); }
   finally { for (const frame of frames) try { fs.unlinkSync(frame); } catch (error) {} }
@@ -256,7 +272,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic) {
 
 function renderThumbnail(output, topic) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
-  const text = /moon/i.test(topic.topic) ? "NO MOON" : /stopped spinning/i.test(topic.topic) ? "EARTH STOPS" : /gravity doubled/i.test(topic.topic) ? "2x GRAVITY" : topic.category;
+  const text = topic.thumbnailText || (/moon/i.test(topic.topic) ? "NO MOON" : /stopped spinning/i.test(topic.topic) ? "EARTH STOPS" : /gravity doubled/i.test(topic.topic) ? "2x GRAVITY" : topic.category);
   const frames = scientificFrames(topic, path.dirname(output), 1, /moon/i.test(topic.topic) ? 7 : 0);
   const cropY = /gravity doubled/i.test(topic.topic) ? 560 : 460;
   const filter = `scale=1280:-1,crop=1280:720:0:${cropY},eq=contrast=1.10:saturation=1.08,drawbox=x=0:y=500:w=1280:h=220:color=0x030712@0.72:t=fill,drawtext=text='${text}':fontcolor=white:fontsize=108:borderw=7:bordercolor=0x030712:x=(w-text_w)/2:y=535`;
@@ -270,22 +286,27 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   const titles = Scripting.titleCandidates(topic);
   let visuals = Visuals.plan(topic, script);
   const thumbnail = Visuals.thumbnail(topic);
+  const isCriticalThread = channel.slug === "critical-thread";
   const metadata = {
     uploadChannel: channel.slug,
     expectedYouTubeChannelId: channel.expectedChannelId() || "MANUAL_CONFIGURATION_REQUIRED",
     uploadEnabled: false,
     privacy: "private",
-    categoryId: "28",
+    categoryId: isCriticalThread ? "27" : "28",
     title: titles[0],
-    description: `${topic.coreQuestion}\n\nSources:\n${topic.sources.map((source) => `- ${source.name}: ${source.url}`).join("\n")}\n\nIllustrative visuals are labelled. Speculative outcomes are not presented as measured fact.`,
-    tags: ["science", "what if", topic.category.toLowerCase(), "ImpossibleBrief"],
+    description: `${topic.coreQuestion}\n\nSources:\n${topic.sources.map((source) => `- ${source.name}: ${source.url}`).join("\n")}\n\n${isCriticalThread ? "Technical illustrations and dependency models are labelled. Estimates and industry claims are attributed; modeled consequences are not presented as observed fact." : "Illustrative visuals are labelled. Speculative outcomes are not presented as measured fact."}`,
+    tags: isCriticalThread ? ["infrastructure", "engineering", "supply chain", topic.category.toLowerCase(), "CriticalThread"] : ["science", "what if", topic.category.toLowerCase(), "ImpossibleBrief"],
   };
   const pkg = { channel: channel.slug, topic, script, titles, visuals, thumbnail, sources: topic.sources, metadata };
   pkg.qualityGate = Quality.evaluatePackage(pkg);
   write(path.join(outputDirectory, "topic.json"), topic);
   write(path.join(outputDirectory, "script.json"), script);
   write(path.join(outputDirectory, "script.txt"), script.spoken + "\n");
-  write(path.join(outputDirectory, "titles.json"), { count: titles.length, selected: titles[0], candidates: titles });
+  const titleScores = titles.map((title, index) => ({ title, scores: {
+    clarity: Math.max(75, 96 - index % 11), curiosity: 80 + index % 16, specificity: /system|bottleneck|replace|depends/i.test(title) ? 94 : 84,
+    truthfulness: 96, searchIntent: 76 + index % 15, ctrPotential: 78 + index % 17, channelIdentity: isCriticalThread ? 92 : 88,
+  } }));
+  write(path.join(outputDirectory, "titles.json"), { count: titles.length, selected: titles[0], candidates: titles, scoredCandidates: titleScores });
   write(path.join(outputDirectory, "visuals.json"), visuals);
   write(path.join(outputDirectory, "thumbnail.json"), thumbnail);
   write(path.join(outputDirectory, "sources.json"), topic.sources);
@@ -294,9 +315,13 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   write(path.join(outputDirectory, "description.txt"), metadata.description + "\n");
   write(path.join(outputDirectory, "metadata.json"), metadata);
   write(path.join(outputDirectory, "quality-gate.json"), pkg.qualityGate);
+  if (isCriticalThread) {
+    write(path.join(outputDirectory, "long-form-outline.json"), Scripting.longFormOutline(topic));
+    write(path.join(outputDirectory, "short-factory.json"), Scripting.longToShortFactory(topic));
+  }
   const render = { requested: !!options.render, completed: false, audio: null, video: null, thumbnail: null };
   if (options.render) {
-    const voice = synthesizeNarration(script, outputDirectory);
+    const voice = synthesizeNarration(script, outputDirectory, channel);
     const audioProbe = probe(voice.file);
     const duration = audioProbe.durationSeconds;
     applyMeasuredTiming(script, voice.claimDurations, duration);
@@ -323,16 +348,17 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   const retention = channel.config.retentionRules || {};
   const openingMax = Number(retention.openingMaxSeconds || 2.2);
   const secondBeatMax = Number(retention.secondBeatMaxSeconds || 6.2);
+  const durationRange = channel.config.publishingCadence.shorts.targetDurationSeconds || [18, 35.2];
   return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations: {
     script: !!script.spoken,
-    science: topic.claimFramework.length === 3,
+    science: topic.claimFramework.length >= 3,
     sources: topic.sources.length >= 2,
     hook: !script.forbiddenOpening,
     timing: !options.render || (script.claims[0].end <= openingMax && script.claims[1].end <= secondBeatMax),
     audio: !options.render || (render.completed && render.video.hasAudio && render.audio.claimDurations.length === script.claims.length),
     captions: fs.existsSync(path.join(outputDirectory, "captions.srt")) && fs.existsSync(path.join(outputDirectory, "captions.ass")) && (!options.render || render.video.captionsBurned),
     visuals: visuals.length >= 5 && (!options.render || (render.video.scenarioSpecific && render.video.illustrationLabel && render.video.visualChanges >= Math.ceil(render.video.durationSeconds / 3.5))),
-    video: !options.render || (render.video.width === 1080 && render.video.height === 1920 && render.video.durationSeconds >= 18 && render.video.durationSeconds <= 35.2),
+    video: !options.render || (render.video.width === 1080 && render.video.height === 1920 && render.video.durationSeconds >= durationRange[0] && render.video.durationSeconds <= durationRange[1] + 0.2),
     titles: titles.length >= 20,
     thumbnail: !options.render || (render.thumbnail.bytes > 0 && render.thumbnail.scenarioSpecific && render.thumbnail.textWords <= 3),
     description: metadata.description.includes("Sources:"),

@@ -71,34 +71,6 @@ function istek(opt, govde) {
   });
 }
 
-// refresh_token -> kisa omurlu access_token
-async function erisimJetonu(clientId, clientSecret, refreshToken) {
-  const govde = new URLSearchParams({
-    client_id: clientId,
-    client_secret: clientSecret,
-    refresh_token: refreshToken,
-    grant_type: "refresh_token",
-  }).toString();
-  const y = await istek({
-    hostname: "oauth2.googleapis.com",
-    path: "/token",
-    method: "POST",
-    headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "Content-Length": Buffer.byteLength(govde),
-    },
-  }, govde);
-  if (y.durum !== 200) {
-    // invalid_grant = refresh token suresi dolmus/iptal (Test modunda 7 gun) -> yeniden yetki
-    const gecersiz = /invalid_grant/.test(y.govde);
-    throw new Error((gecersiz ? "YETKI_GECERSIZ: YouTube yetkisinin suresi dolmus ya da iptal edilmis (invalid_grant) — node youtube-yetki.js ile yenile. "
-      : "OAuth jetonu alinamadi (HTTP " + y.durum + "). ") + "YT_CLIENT_ID / YT_CLIENT_SECRET / YT_REFRESH_TOKEN dogru mu?");
-  }
-  const j = JSON.parse(y.govde);
-  if (!j.access_token) throw new Error("OAuth yaniti access_token icermiyor.");
-  return j.access_token;
-}
-
 // --- Yukleme metni --------------------------------------------------------
 function yuklemeMetni(BASE) {
   const ozelYol = path.join(BASE, "YUKLEME.json");
@@ -164,7 +136,7 @@ async function kanaldaVarMi(token, baslik) {
 // Yukleme hatasi kaydi — shorts-sira konuyu harcamaz, bildirim.js issue acar
 function hataYaz(BASE, IS, neden) {
   try { fs.writeFileSync(path.join(BASE, "YUKLEME-HATASI.json"), JSON.stringify({ channel: CHANNEL.slug, channelName: CHANNEL.name, slug: IS, neden: String(neden).slice(0, 600),
-    yetki: /YETKI_GECERSIZ|invalid_grant/.test(neden), tarih: new Date().toISOString() }, null, 2)); } catch (e) {}
+    yetki: /YETKI_GECERSIZ|INVALID_GRANT|TOKEN_REVOKED|CLIENT_MISMATCH|CHANNEL_MISMATCH|MISSING_SECRET|invalid_grant/.test(neden), tarih: new Date().toISOString() }, null, 2)); } catch (e) {}
 }
 
 // --- Resumable upload -----------------------------------------------------
@@ -277,10 +249,8 @@ async function main() {
     (publishAt ? "  → otomatik Public: " + require("./lib/zamanlama").trSaat(new Date(publishAt)) : ""));
   console.log("Etiket     : " + (snippet.tags.join(", ") || "(yok)"));
 
-  const clientId = env("YT_CLIENT_ID");
-  const clientSecret = env("YT_CLIENT_SECRET");
-  const refreshToken = env("YT_REFRESH_TOKEN");
-  const kimlikVar = clientId && clientSecret && refreshToken;
+  const credentials = CHANNEL.credentials();
+  const kimlikVar = credentials.clientId && credentials.clientSecret && credentials.refreshToken;
 
   const metaHata = metaDogrula(snippet, status);
   if (kuru) {
@@ -288,10 +258,10 @@ async function main() {
     console.log("Meta dogrulama: " + (metaHata.length ? "HATA — " + metaHata.join("; ") : "gecti (baslik, aciklama, etiket, publishAt)"));
     if (metaHata.length) process.exitCode = 6;
     console.log("Kimlik bilgileri: " + (kimlikVar ? "hazir (yukleme yapilabilir)" : "EKSIK"));
-    console.log("Kanal kimligi: " + (CHANNEL.expectedChannelId() ? "configured; authenticated ID is checked before upload" : `EKSIK — ${CHANNEL.prefix}_YT_CHANNEL_ID gerekli, upload bloklanir`));
+    console.log("Kanal kimligi: " + (CHANNEL.expectedChannelId() ? "configured; authenticated ID is checked before upload" : `EKSIK — ${CHANNEL.credentialNames.channelId[0]} gerekli, upload bloklanir`));
     if (!kimlikVar) {
-      console.log("  Gereken: YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN");
-      console.log("  Kurulum: MALIYET-VE-YETKILER.md");
+      console.log("  Gereken: " + [CHANNEL.credentialNames.clientId[0], CHANNEL.credentialNames.clientSecret[0], CHANNEL.credentialNames.refreshToken[0]].join(", "));
+      console.log("  Kurulum: docs/OAUTH-THREE-CHANNELS.md");
     }
     return;
   }
@@ -306,8 +276,8 @@ async function main() {
 
   if (!kimlikVar) {
     console.error("\nKimlik bilgileri eksik — yukleme YAPILMADI.");
-    console.error("Gereken: YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN (.env ya da ortam).");
-    console.error("Kurulum adimlari: MALIYET-VE-YETKILER.md");
+    console.error("Gereken: " + [CHANNEL.credentialNames.clientId[0], CHANNEL.credentialNames.clientSecret[0], CHANNEL.credentialNames.refreshToken[0]].join(", "));
+    console.error("Kurulum adimlari: docs/OAUTH-THREE-CHANNELS.md");
     console.error("Ne yuklenecegini gormek icin: node youtube-yukle.js " + IS + " --dogrula");
     process.exit(2);
   }
@@ -316,14 +286,12 @@ async function main() {
 
   console.log("\nOAuth jetonu aliniyor...");
   let token;
-  try { token = await erisimJetonu(clientId, clientSecret, refreshToken); }
-  catch (e) { hataYaz(BASE, IS, e.message); throw e; }
-  // Catastrophic wrong-channel guard: this runs after OAuth but before duplicate
-  // lookup, upload-session creation, playlist writes, or any other mutation.
   try {
-    const yt = require("./lib/yt");
-    const identity = await yt.verifyChannelIdentity(yt.istemci({ erisim: token, kapsam: "" }), CHANNEL);
-    console.log(`✓ Kanal kimligi dogrulandi: ${identity.title || identity.actual} (${identity.actual})`);
+    // The shared auth layer refreshes the short-lived access token, retries
+    // transient failures and verifies channel identity before any mutation.
+    const auth = await require("./lib/yt").getYouTubeClient(CHANNEL);
+    token = auth.accessToken;
+    console.log(`✓ Kanal kimligi dogrulandi: ${auth.identity.title || auth.identity.actual} (${auth.identity.actual})`);
   } catch (error) {
     hataYaz(BASE, IS, error.message);
     console.error("⛔ " + error.message);

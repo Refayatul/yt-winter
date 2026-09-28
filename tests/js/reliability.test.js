@@ -162,6 +162,9 @@ test("watchdog workflows enforce safe recovery, deployment evidence and no-produ
   assert.match(production, /types: \[production-sla-watchdog, production-sla-watchdog-self-test\]/);
   assert.match(production, /needs\.sla\.outputs\.safe_to_recover == 'true'/);
   assert.match(production, /vars\.IB_PUBLISH == '1'/);
+  assert.match(production, /needs\.ib-sla\.outputs\.safe_to_recover == 'true'/);
+  assert.match(production, /vars\.CT_PUBLISH == '1'/);
+  assert.match(production, /needs\.ct-sla\.outputs\.safe_to_recover == 'true'/);
   assert.match(deploy, /CLOUDFLARE_ACCOUNT_ID is required/);
   assert.match(deploy, /watchdog-deployment-evidence/);
   assert.match(deploy, /\.tokenConfigured == true/);
@@ -171,15 +174,18 @@ test("watchdog workflows enforce safe recovery, deployment evidence and no-produ
   assert.match(reusable, /inputs\.force \}\}" != "true".*github\.event_name.*!= "schedule"/s);
 });
 
-test("daily operations report covers both isolated channels and TikTok only for Failure Reconstructed", () => {
+test("daily operations report covers all channels and TikTok only for Failure Reconstructed", () => {
   const report = DailyReport.build(new Date("2026-09-27T17:10:00.000Z"));
-  assert.deepEqual(report.channels.map((row) => row.channel).sort(), ["failure-reconstructed", "impossible-brief"]);
+  assert.deepEqual(report.channels.map((row) => row.channel).sort(), ["critical-thread", "failure-reconstructed", "impossible-brief"]);
   const fr = report.channels.find((row) => row.channel === "failure-reconstructed");
   const ib = report.channels.find((row) => row.channel === "impossible-brief");
+  const ct = report.channels.find((row) => row.channel === "critical-thread");
   assert.ok(fr.tiktok);
   assert.equal(ib.tiktok, null);
+  assert.equal(ct.tiktok, null);
   assert.equal(typeof fr.inventory.duplicateRate, "number");
   assert.equal(fr.inventory.acceptance.minimumQualifiedTopics, 500);
   assert.equal(ib.inventory.acceptance.minimumQualifiedTopics, 1000);
+  assert.equal(ct.inventory.acceptance.minimumQualifiedTopics, 500);
   assert.match(DailyReport.markdown(report), /TikTok backlog/);
 });

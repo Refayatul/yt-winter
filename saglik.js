@@ -36,7 +36,7 @@ function getir(url, basliklar = {}) {
 }
 
 function kalanKonu() {
-  if (CHANNEL.slug === "impossible-brief") return require("./core/analytics/library-health").calculate(CHANNEL).readyShorts;
+  if (CHANNEL.config.pathMode !== "legacy-adapter") return require("./core/analytics/library-health").calculate(CHANNEL).readyShorts;
   const K = require("./lib/kutuphane");
   const bitti = new Set([...jsonOku(K.YOL.uretildi, []), ...jsonOku(K.YOL.basarisiz, []),
     ...K.yayinlananlar().map((y) => y.slug)]);
@@ -50,18 +50,19 @@ async function denetle(ops = {}) {
 
   // 1) YouTube yetkisi
   if (!yt.kimlikVar()) {
-    ekle("youtube-yetki", publish ? "kritik" : "uyari", `YouTube kimlik bilgileri yok (${CHANNEL.prefix}_YT_CLIENT_ID/SECRET/REFRESH_TOKEN)`,
-      `GitHub → Settings → Secrets and variables → Actions: ${CHANNEL.prefix}_YT_* secret'larını ekle.`);
+    const required = [CHANNEL.credentialNames.clientId[0], CHANNEL.credentialNames.clientSecret[0], CHANNEL.credentialNames.refreshToken[0]];
+    ekle("youtube-yetki", publish ? "kritik" : "uyari", `YouTube kimlik bilgileri yok (${required.join(", ")})`,
+      `GitHub → Settings → Secrets and variables → Actions: ${required.join(", ")} değerlerini ekle.`);
   } else {
     try {
       const t = await (ops.token || yt.token)();
       ekle("youtube-yetki", "ok", "refresh token çalışıyor");
       const eksik = GEREKLI_KAPSAM.filter((k) => !t.kapsam.includes(k));
       ekle("youtube-kapsam", eksik.length ? "uyari" : "ok", eksik.length ? "eksik yetki kapsamı: " + eksik.join(", ") : "gerekli kapsamlar tamam",
-        eksik.length ? `Yerelde \`node youtube-yetki.js --channel ${CHANNEL.slug}\` çalıştırıp yeni token'ı ${CHANNEL.prefix}_YT_REFRESH_TOKEN secret'ına koy.` : null);
+        eksik.length ? `Yerelde \`node youtube-yetki.js --channel ${CHANNEL.slug} --github\` çalıştır; yeni token ${CHANNEL.credentialNames.refreshToken[0]} secret'ına güvenle kaydedilir.` : null);
       if (!CHANNEL.expectedChannelId()) {
-        ekle("youtube-kanal", publish ? "kritik" : "uyari", `Beklenen YouTube kanal kimliği yok (${CHANNEL.prefix}_YT_CHANNEL_ID)`,
-          `Doğru kanalın UC... kimliğini ${CHANNEL.prefix}_YT_CHANNEL_ID olarak ekle; yükleme o zamana kadar bloklanır.`);
+        ekle("youtube-kanal", publish ? "kritik" : "uyari", `Beklenen YouTube kanal kimliği yok (${CHANNEL.credentialNames.channelId[0]})`,
+          `Doğru kanalın UC... kimliğini ${CHANNEL.credentialNames.channelId[0]} olarak ekle; yükleme o zamana kadar bloklanır.`);
       } else {
         try {
           const identity = await (ops.identity || ((tokenValue) => yt.verifyChannelIdentity(yt.istemci(tokenValue), CHANNEL)))(t);
@@ -72,8 +73,8 @@ async function denetle(ops = {}) {
         }
       }
     } catch (e) {
-      ekle("youtube-yetki", "kritik", "YouTube yetkisi geçersiz: " + String(e.message).slice(0, 160),
-        "Yerelde `node youtube-yetki.js` → tarayıcıda izin ver → .env'deki YT_REFRESH_TOKEN'ı GitHub secret'ına kopyala. Kalıcı çözüm: Google Cloud → OAuth consent screen → Publish app (Production).");
+      ekle("youtube-yetki", "kritik", `YOUTUBE_AUTH_FAILURE channel=${CHANNEL.slug} reason=${e.code || "UNKNOWN_AUTH_ERROR"}`,
+        `Yerelde \`node youtube-yetki.js --channel ${CHANNEL.slug} --github\` çalıştır. Kalıcı çözüm: Google Auth Platform → Audience → In production.`);
     }
   }
 
@@ -91,7 +92,7 @@ async function denetle(ops = {}) {
   }
 
   // 2b) TikTok (istege bagli — kimlik yoksa hic bahsedilmez)
-  if (["TT_CLIENT_KEY", "TT_CLIENT_SECRET", "TT_REFRESH_TOKEN"].some((k) => env(k))) {
+  if (CHANNEL.config.platforms.tiktok.enabled && ["TT_CLIENT_KEY", "TT_CLIENT_SECRET", "TT_REFRESH_TOKEN"].some((k) => env(k))) {
     const TT = require("./lib/tiktok");
     if (!TT.kimlikVar()) ekle("tiktok", "uyari", "TikTok kimlik bilgileri eksik (TT_CLIENT_KEY/TT_CLIENT_SECRET/TT_REFRESH_TOKEN)",
       "Eksik secret'i GitHub → Settings → Secrets → Actions altina ekle.");
@@ -118,7 +119,7 @@ async function denetle(ops = {}) {
 
   // 3) Pexels (stok konular)
   const pk = env("PEXELS_KEY");
-  if (CHANNEL.slug === "impossible-brief") ekle("gorsel-kaynak", "ok", "resmî bilim medyası ve prosedürel görsel motoru hazır; Pexels zorunlu değil");
+  if (CHANNEL.config.pathMode !== "legacy-adapter") ekle("gorsel-kaynak", "ok", "kanala özel kaynak öncelikleri ve prosedürel görsel motoru hazır; Pexels zorunlu değil");
   else if (!pk) ekle("pexels", "uyari", "PEXELS_KEY yok — stok konular üretilemez", "GitHub secret PEXELS_KEY ekle.");
   else {
     const d = await (ops.pexels || ((k) => getir("https://api.pexels.com/videos/search?query=ocean&per_page=1", { Authorization: k })))(pk);

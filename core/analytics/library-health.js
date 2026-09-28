@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const { getChannel } = require("../channel-context");
 const Discovery = require("../discovery");
-const Quality = require("../quality/impossible-brief");
+const Quality = require("../quality");
 
 function read(file, fallback) {
   try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch (error) { return fallback; }
@@ -58,7 +58,7 @@ function calculate(channel = getChannel()) {
   const cadence = channel.config.publishingCadence.shorts.everyDays || 1;
   const days = readyShorts.length * cadence;
   const minimumDays = 365;
-  const minimumQualifiedTopics = channel.slug === "failure-reconstructed" ? 500 : 1000;
+  const minimumQualifiedTopics = channel.slug === "failure-reconstructed" ? 500 : channel.slug === "critical-thread" ? 500 : 1000;
   const sourceReady = qualified.filter((topic) => topic.sourceReady !== false && (topic.sources || []).length >= 2).length;
   const visualReady = qualified.filter((topic) => topic.visualReady === true || (topic.visualPotential && topic.visualPotential.score >= 70)).length;
   const duplicateTopics = audits.filter((audit) => audit.blockers.includes("exact duplicate topic")).length;

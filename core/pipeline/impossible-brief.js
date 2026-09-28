@@ -29,7 +29,7 @@ function writeCompatibilityFiles(result, topic, channel) {
   }
   const packageDirectory = path.join(channel.paths.packages, topic.slug);
   fs.mkdirSync(packageDirectory, { recursive: true });
-  for (const file of ["quality-gate.json", "render.json", "titles.json", "metadata.json", "sources.json", "thumbnail.json"]) {
+  for (const file of ["quality-gate.json", "render.json", "titles.json", "metadata.json", "sources.json", "thumbnail.json", "validations.json", "long-form-outline.json", "short-factory.json"]) {
     const source = path.join(directory, file);
     if (fs.existsSync(source)) fs.copyFileSync(source, path.join(packageDirectory, file));
   }
@@ -51,8 +51,9 @@ function writeValidationEvidence(result, topic, channel, output) {
   return evidence;
 }
 
-function main(argv = []) {
-  const channel = Channel.getChannel("impossible-brief");
+function runChannel(slug, argv = []) {
+  const channel = Channel.getChannel(slug);
+  if (channel.config.pathMode === "legacy-adapter") throw new Error(`Isolated documentary pipeline cannot run legacy channel: ${slug}`);
   const explicit = argv.find((arg) => !arg.startsWith("--"));
   if (!explicit && process.env.PUBLISH === "1") {
     const due = require("../scheduling").channelPlan(channel).short;
@@ -61,17 +62,17 @@ function main(argv = []) {
   const topic = explicit
     ? Discovery.universe(channel).topics.find((item) => item.slug === explicit || item.id === explicit)
     : Discovery.discover(channel, { limit: 1 })[0];
-  if (!topic) throw new Error(explicit ? "ImpossibleBrief topic not found: " + explicit : "No qualified unused ImpossibleBrief topic remains");
+  if (!topic) throw new Error(explicit ? `${channel.name} topic not found: ${explicit}` : `No qualified unused ${channel.name} topic remains`);
   const noRender = argv.includes("--no-render");
   const output = path.join(channel.paths.production, topic.slug);
   const result = Rendering.buildPackage(topic, channel, output, { render: !noRender });
   const validationEvidence = writeValidationEvidence(result, topic, channel, output);
-  if (!validationEvidence.passed) throw new Error("ImpossibleBrief package failed quality validation: " + validationEvidence.failed.join(", "));
+  if (!validationEvidence.passed) throw new Error(`${channel.name} package failed quality validation: ${validationEvidence.failed.join(", ")}`);
   writeCompatibilityFiles(result, topic, channel);
   if (process.env.PUBLISH === "1") {
     if (!result.render.completed || !result.render.audio.syntheticVoice) throw new Error("Publishing blocked: a real synthetic narration render is required");
     const upload = cp.spawnSync(process.execPath, [path.join(Channel.ROOT, "youtube-yukle.js"), "--channel", channel.slug, topic.slug], { cwd: Channel.ROOT, stdio: "inherit", env: process.env });
-    if (upload.status !== 0) throw new Error("ImpossibleBrief upload failed; generated state was not advanced");
+    if (upload.status !== 0) throw new Error(`${channel.name} upload failed; generated state was not advanced`);
   }
   const generatedFile = path.join(channel.paths.state, "generated.json");
   const generated = (() => { try { return JSON.parse(fs.readFileSync(generatedFile, "utf8")); } catch (error) { return []; } })();
@@ -81,4 +82,6 @@ function main(argv = []) {
   return 0;
 }
 
-module.exports = { writeCompatibilityFiles, writeValidationEvidence, main };
+function main(argv = []) { return runChannel("impossible-brief", argv); }
+
+module.exports = { writeCompatibilityFiles, writeValidationEvidence, runChannel, main };

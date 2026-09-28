@@ -57,6 +57,33 @@ function envFileValue(name) {
   return "";
 }
 
+function firstEnv(names = []) {
+  for (const name of names) {
+    const value = envFileValue(name);
+    if (value) return value;
+  }
+  return "";
+}
+
+function credentialNames(config) {
+  const prefix = config.credentialsPrefix;
+  const configured = config.credentialEnv || {};
+  const names = (key, suffix) => {
+    const value = configured[key];
+    if (Array.isArray(value) && value.length) return [...new Set(value.map(String))];
+    if (typeof value === "string" && value) return [value];
+    const defaults = [`${prefix}_${suffix}`];
+    if (config.allowLegacyYouTubeEnv) defaults.push(suffix);
+    return defaults;
+  };
+  return Object.freeze({
+    clientId: names("clientId", "YT_CLIENT_ID"),
+    clientSecret: names("clientSecret", "YT_CLIENT_SECRET"),
+    refreshToken: names("refreshToken", "YT_REFRESH_TOKEN"),
+    channelId: names("channelId", "YT_CHANNEL_ID"),
+  });
+}
+
 function buildPaths(slug, config) {
   const base = path.join(ROOT, "channels", slug);
   if (config.pathMode === "legacy-adapter") {
@@ -103,20 +130,22 @@ function getChannel(slug = currentSlug()) {
   if (!config || config.slug !== slug || !brand) throw new Error("Channel config is incomplete: " + slug);
   const paths = buildPaths(slug, config);
   const prefix = config.credentialsPrefix;
+  const names = credentialNames(config);
   const scopedEnv = (name) => {
     const namespaced = envFileValue(prefix + "_" + name);
     if (namespaced) return namespaced;
     return config.allowLegacyYouTubeEnv ? envFileValue(name) : "";
   };
-  const expectedChannelId = () => scopedEnv("YT_CHANNEL_ID") || String(config.youtubeChannelId || "").trim();
+  const expectedChannelId = () => firstEnv(names.channelId) || String(config.youtubeChannelId || "").trim();
   const credentials = () => ({
-    clientId: scopedEnv("YT_CLIENT_ID"),
-    clientSecret: scopedEnv("YT_CLIENT_SECRET"),
-    refreshToken: scopedEnv("YT_REFRESH_TOKEN"),
+    clientId: firstEnv(names.clientId),
+    clientSecret: firstEnv(names.clientSecret),
+    refreshToken: firstEnv(names.refreshToken),
     expectedChannelId: expectedChannelId(),
     prefix,
+    names,
   });
-  return Object.freeze({ slug, name: config.name, entry, config, brand, paths, prefix, scopedEnv, expectedChannelId, credentials });
+  return Object.freeze({ slug, name: config.name, entry, config, brand, paths, prefix, credentialNames: names, scopedEnv, expectedChannelId, credentials });
 }
 
 function selectFromArgv(argv = process.argv.slice(2), options = {}) {
@@ -133,5 +162,5 @@ function ensureChannelDirectories(channel = getChannel()) {
 
 module.exports = {
   ROOT, REGISTRY_PATH, SLUG_PATTERN, registry, parseChannelArgv, selectChannel, selectFromArgv,
-  currentSlug, getChannel, ensureChannelDirectories,
+  currentSlug, getChannel, ensureChannelDirectories, credentialNames,
 };

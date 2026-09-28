@@ -18,8 +18,8 @@ const result = Simulation.simulate30Days({
   // docs are completed. The safety model can pass while production readiness
   // remains honestly NOT READY.
   longFormProductionWired: false,
-  externalWatchdogDeployed: false,
-  bothOAuthIdentitiesConfigured: false,
+  externalWatchdogDeployed: true,
+  allThreeOAuthIdentitiesConfigured: false,
 });
 const markdown = Simulation.markdown(result);
 const markdownFile = markdown.replace(/\s+$/, "") + "\n";
@@ -30,8 +30,11 @@ fs.writeFileSync(path.join(ROOT, "analysis", "two-channel-30-day-simulation.json
 fs.mkdirSync(path.join(ROOT, "reports"), { recursive: true });
 fs.writeFileSync(path.join(ROOT, "reports", "autonomy-simulation-30d.md"), markdownFile);
 fs.writeFileSync(path.join(ROOT, "reports", "autonomy-simulation-30d.json"), JSON.stringify(result, null, 2) + "\n");
+fs.writeFileSync(path.join(ROOT, "reports", "three-channel-autonomy-30d.md"), markdownFile);
+fs.writeFileSync(path.join(ROOT, "reports", "three-channel-autonomy-30d.json"), JSON.stringify(result, null, 2) + "\n");
 console.log(`30-day simulation: ${result.pass ? "PASS" : "FAIL"}`);
 console.log(`Production readiness: ${result.productionReady ? "READY" : "NOT READY"}`);
 console.log(`Failure Reconstructed: ${result.channels["failure-reconstructed"].shorts} Shorts, ${result.channels["failure-reconstructed"].longForm} long-form`);
 console.log(`ImpossibleBrief: ${result.channels["impossible-brief"].shorts} Shorts, ${result.channels["impossible-brief"].longForm} long-form`);
+console.log(`CriticalThread: ${result.channels["critical-thread"].shorts} Shorts, ${result.channels["critical-thread"].longForm} long-form`);
 if (!result.pass) process.exitCode = 4;

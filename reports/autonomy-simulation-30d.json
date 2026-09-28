@@ -9,6 +9,12 @@
       "recovery": "refresh credential and retry same isolated task"
     },
     {
+      "day": 3,
+      "channel": "critical-thread",
+      "type": "channel OAuth unavailable",
+      "recovery": "fail closed, alert only this channel, retry after credential repair"
+    },
+    {
       "day": 5,
       "channel": "failure-reconstructed",
       "type": "network failure",
@@ -19,6 +25,12 @@
       "channel": "impossible-brief",
       "type": "render failure",
       "recovery": "release render lock and retry"
+    },
+    {
+      "day": 9,
+      "channel": "critical-thread",
+      "type": "quality block",
+      "recovery": "block topic and choose the next qualified infrastructure topic"
     },
     {
       "day": 11,
@@ -45,19 +57,62 @@
       "recovery": "publish state unaffected; analytics checkpoint deferred"
     },
     {
+      "day": 21,
+      "channel": "critical-thread",
+      "type": "analytics API unavailable",
+      "recovery": "defer checkpoint without altering publication or learning state"
+    },
+    {
       "day": 23,
       "channel": "failure-reconstructed",
       "type": "primary scheduler missed deadline",
       "recovery": "independent watchdog starts idempotent production recovery"
     }
   ],
-  "wrongChannelGuard": {
-    "attemptedChannel": "impossible-brief",
-    "authenticatedChannel": "failure-reconstructed",
-    "blocked": true,
-    "mutationOccurred": false,
-    "reason": "CHANNEL_ID_MISMATCH"
-  },
+  "wrongChannelGuards": [
+    {
+      "attemptedChannel": "failure-reconstructed",
+      "authenticatedChannel": "impossible-brief",
+      "blocked": true,
+      "mutationOccurred": false,
+      "reason": "CHANNEL_MISMATCH"
+    },
+    {
+      "attemptedChannel": "failure-reconstructed",
+      "authenticatedChannel": "critical-thread",
+      "blocked": true,
+      "mutationOccurred": false,
+      "reason": "CHANNEL_MISMATCH"
+    },
+    {
+      "attemptedChannel": "impossible-brief",
+      "authenticatedChannel": "failure-reconstructed",
+      "blocked": true,
+      "mutationOccurred": false,
+      "reason": "CHANNEL_MISMATCH"
+    },
+    {
+      "attemptedChannel": "impossible-brief",
+      "authenticatedChannel": "critical-thread",
+      "blocked": true,
+      "mutationOccurred": false,
+      "reason": "CHANNEL_MISMATCH"
+    },
+    {
+      "attemptedChannel": "critical-thread",
+      "authenticatedChannel": "failure-reconstructed",
+      "blocked": true,
+      "mutationOccurred": false,
+      "reason": "CHANNEL_MISMATCH"
+    },
+    {
+      "attemptedChannel": "critical-thread",
+      "authenticatedChannel": "impossible-brief",
+      "blocked": true,
+      "mutationOccurred": false,
+      "reason": "CHANNEL_MISMATCH"
+    }
+  ],
   "channels": {
     "failure-reconstructed": {
       "shorts": 30,
@@ -67,8 +122,8 @@
       "qualityBlocks": 0,
       "analyticsCheckpoints": 95,
       "learningSamples": 26,
-      "inventoryStart": 38,
-      "inventoryEnd": 8
+      "inventoryStart": 37,
+      "inventoryEnd": 7
     },
     "impossible-brief": {
       "shorts": 30,
@@ -80,6 +135,17 @@
       "learningSamples": 26,
       "inventoryStart": 499,
       "inventoryEnd": 468
+    },
+    "critical-thread": {
+      "shorts": 30,
+      "longForm": 5,
+      "uniqueTopics": 30,
+      "failuresRecovered": 3,
+      "qualityBlocks": 1,
+      "analyticsCheckpoints": 95,
+      "learningSamples": 26,
+      "inventoryStart": 522,
+      "inventoryEnd": 491
     }
   },
   "tiktok": {
@@ -293,11 +359,12 @@
   "checks": {
     "failureReconstructedShorts": true,
     "impossibleBriefShorts": true,
+    "criticalThreadShorts": true,
     "noDuplicateUploads": true,
     "noTopicLoss": true,
     "noStateCollision": true,
     "channelFailureIsolation": true,
-    "wrongChannelUploadBlocked": true,
+    "allSixWrongChannelDirectionsBlocked": true,
     "renderConcurrencyRespected": true,
     "uploadConcurrencyRespected": true,
     "inventorySufficientForWindow": true,
@@ -305,7 +372,7 @@
     "tiktokTodayUsesExactYouTubeMp4": true,
     "tiktokBacklogReducedToZero": true,
     "analyticsCheckpointsScheduled": true,
-    "qualityBlockReplacedNotPublished": true,
+    "qualityBlocksReplacedNotPublished": true,
     "channelLearningIsolated": true,
     "cadenceModeled": true
   },
@@ -313,8 +380,8 @@
   "productionReadiness": {
     "shortSafetyModel": true,
     "longFormProductionWired": false,
-    "externalWatchdogDeployed": false,
-    "bothOAuthIdentitiesConfigured": false,
+    "externalWatchdogDeployed": true,
+    "allThreeOAuthIdentitiesConfigured": false,
     "inventoryTargetsMet": false
   },
   "productionReady": false,
@@ -352,6 +419,22 @@
       "status": "published"
     },
     {
+      "day": 1,
+      "date": "2026-10-01",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-001",
+      "task": "critical-thread:short:day-01:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 1,
+      "date": "2026-10-01",
+      "channel": "critical-thread",
+      "task": "critical-thread:long:day-01:1",
+      "status": "published"
+    },
+    {
       "day": 2,
       "date": "2026-10-02",
       "channel": "failure-reconstructed",
@@ -380,6 +463,15 @@
       "recoveredFrom": "channel token expired"
     },
     {
+      "day": 2,
+      "date": "2026-10-02",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-002",
+      "task": "critical-thread:short:day-02:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 3,
       "date": "2026-10-03",
       "channel": "failure-reconstructed",
@@ -398,6 +490,25 @@
       "recoveredFrom": null
     },
     {
+      "day": 3,
+      "date": "2026-10-03",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-003",
+      "task": "critical-thread:short:day-03:1",
+      "status": "failed-attempt",
+      "failure": "channel OAuth unavailable",
+      "otherChannelContinued": true
+    },
+    {
+      "day": 3,
+      "date": "2026-10-03",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-003",
+      "task": "critical-thread:short:day-03:1",
+      "status": "published",
+      "recoveredFrom": "channel OAuth unavailable"
+    },
+    {
       "day": 4,
       "date": "2026-10-04",
       "channel": "failure-reconstructed",
@@ -412,6 +523,15 @@
       "channel": "impossible-brief",
       "topic": "impossible-brief-topic-004",
       "task": "impossible-brief:short:day-04:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 4,
+      "date": "2026-10-04",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-004",
+      "task": "critical-thread:short:day-04:1",
       "status": "published",
       "recoveredFrom": null
     },
@@ -444,6 +564,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 5,
+      "date": "2026-10-05",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-005",
+      "task": "critical-thread:short:day-05:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 6,
       "date": "2026-10-06",
       "channel": "failure-reconstructed",
@@ -469,6 +598,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 6,
+      "date": "2026-10-06",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-006",
+      "task": "critical-thread:short:day-06:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 7,
       "date": "2026-10-07",
       "channel": "failure-reconstructed",
@@ -483,6 +621,15 @@
       "channel": "impossible-brief",
       "topic": "impossible-brief-topic-007",
       "task": "impossible-brief:short:day-07:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 7,
+      "date": "2026-10-07",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-007",
+      "task": "critical-thread:short:day-07:1",
       "status": "published",
       "recoveredFrom": null
     },
@@ -522,6 +669,22 @@
       "status": "published"
     },
     {
+      "day": 8,
+      "date": "2026-10-08",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-008",
+      "task": "critical-thread:short:day-08:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 8,
+      "date": "2026-10-08",
+      "channel": "critical-thread",
+      "task": "critical-thread:long:day-08:1",
+      "status": "published"
+    },
+    {
       "day": 9,
       "date": "2026-10-09",
       "channel": "failure-reconstructed",
@@ -540,6 +703,25 @@
       "recoveredFrom": null
     },
     {
+      "day": 9,
+      "date": "2026-10-09",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-009",
+      "task": "critical-thread:short:day-09:1",
+      "status": "failed-attempt",
+      "failure": "quality block",
+      "otherChannelContinued": true
+    },
+    {
+      "day": 9,
+      "date": "2026-10-09",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-009-replacement",
+      "task": "critical-thread:short:day-09:2",
+      "status": "published",
+      "recoveredFrom": "quality block"
+    },
+    {
       "day": 10,
       "date": "2026-10-10",
       "channel": "failure-reconstructed",
@@ -554,6 +736,15 @@
       "channel": "impossible-brief",
       "topic": "impossible-brief-topic-010",
       "task": "impossible-brief:short:day-10:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 10,
+      "date": "2026-10-10",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-010",
+      "task": "critical-thread:short:day-10:1",
       "status": "published",
       "recoveredFrom": null
     },
@@ -593,6 +784,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 11,
+      "date": "2026-10-11",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-011",
+      "task": "critical-thread:short:day-11:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 12,
       "date": "2026-10-12",
       "channel": "failure-reconstructed",
@@ -611,6 +811,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 12,
+      "date": "2026-10-12",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-012",
+      "task": "critical-thread:short:day-12:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 13,
       "date": "2026-10-13",
       "channel": "failure-reconstructed",
@@ -625,6 +834,15 @@
       "channel": "impossible-brief",
       "topic": "impossible-brief-topic-013",
       "task": "impossible-brief:short:day-13:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 13,
+      "date": "2026-10-13",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-013",
+      "task": "critical-thread:short:day-13:1",
       "status": "published",
       "recoveredFrom": null
     },
@@ -657,6 +875,15 @@
       "recoveredFrom": "quality block"
     },
     {
+      "day": 14,
+      "date": "2026-10-14",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-014",
+      "task": "critical-thread:short:day-14:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 15,
       "date": "2026-10-15",
       "channel": "failure-reconstructed",
@@ -682,6 +909,22 @@
       "status": "published"
     },
     {
+      "day": 15,
+      "date": "2026-10-15",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-015",
+      "task": "critical-thread:short:day-15:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 15,
+      "date": "2026-10-15",
+      "channel": "critical-thread",
+      "task": "critical-thread:long:day-15:1",
+      "status": "published"
+    },
+    {
       "day": 16,
       "date": "2026-10-16",
       "channel": "failure-reconstructed",
@@ -703,6 +946,15 @@
       "channel": "impossible-brief",
       "topic": "impossible-brief-topic-016",
       "task": "impossible-brief:short:day-16:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 16,
+      "date": "2026-10-16",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-016",
+      "task": "critical-thread:short:day-16:1",
       "status": "published",
       "recoveredFrom": null
     },
@@ -735,6 +987,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 17,
+      "date": "2026-10-17",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-017",
+      "task": "critical-thread:short:day-17:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 18,
       "date": "2026-10-18",
       "channel": "failure-reconstructed",
@@ -753,6 +1014,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 18,
+      "date": "2026-10-18",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-018",
+      "task": "critical-thread:short:day-18:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 19,
       "date": "2026-10-19",
       "channel": "failure-reconstructed",
@@ -767,6 +1037,15 @@
       "channel": "impossible-brief",
       "topic": "impossible-brief-topic-019",
       "task": "impossible-brief:short:day-19:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 19,
+      "date": "2026-10-19",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-019",
+      "task": "critical-thread:short:day-19:1",
       "status": "published",
       "recoveredFrom": null
     },
@@ -799,6 +1078,15 @@
       "recoveredFrom": "API unavailable"
     },
     {
+      "day": 20,
+      "date": "2026-10-20",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-020",
+      "task": "critical-thread:short:day-20:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 21,
       "date": "2026-10-21",
       "channel": "failure-reconstructed",
@@ -824,6 +1112,25 @@
       "recoveredFrom": null
     },
     {
+      "day": 21,
+      "date": "2026-10-21",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-021",
+      "task": "critical-thread:short:day-21:1",
+      "status": "failed-attempt",
+      "failure": "analytics API unavailable",
+      "otherChannelContinued": true
+    },
+    {
+      "day": 21,
+      "date": "2026-10-21",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-021",
+      "task": "critical-thread:short:day-21:1",
+      "status": "published",
+      "recoveredFrom": "analytics API unavailable"
+    },
+    {
       "day": 22,
       "date": "2026-10-22",
       "channel": "failure-reconstructed",
@@ -846,6 +1153,22 @@
       "date": "2026-10-22",
       "channel": "impossible-brief",
       "task": "impossible-brief:long:day-22:1",
+      "status": "published"
+    },
+    {
+      "day": 22,
+      "date": "2026-10-22",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-022",
+      "task": "critical-thread:short:day-22:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 22,
+      "date": "2026-10-22",
+      "channel": "critical-thread",
+      "task": "critical-thread:long:day-22:1",
       "status": "published"
     },
     {
@@ -877,6 +1200,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 23,
+      "date": "2026-10-23",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-023",
+      "task": "critical-thread:short:day-23:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 24,
       "date": "2026-10-24",
       "channel": "failure-reconstructed",
@@ -895,6 +1227,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 24,
+      "date": "2026-10-24",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-024",
+      "task": "critical-thread:short:day-24:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 25,
       "date": "2026-10-25",
       "channel": "failure-reconstructed",
@@ -909,6 +1250,15 @@
       "channel": "impossible-brief",
       "topic": "impossible-brief-topic-025",
       "task": "impossible-brief:short:day-25:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 25,
+      "date": "2026-10-25",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-025",
+      "task": "critical-thread:short:day-25:1",
       "status": "published",
       "recoveredFrom": null
     },
@@ -938,6 +1288,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 26,
+      "date": "2026-10-26",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-026",
+      "task": "critical-thread:short:day-26:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 27,
       "date": "2026-10-27",
       "channel": "failure-reconstructed",
@@ -956,6 +1315,15 @@
       "recoveredFrom": null
     },
     {
+      "day": 27,
+      "date": "2026-10-27",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-027",
+      "task": "critical-thread:short:day-27:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
       "day": 28,
       "date": "2026-10-28",
       "channel": "failure-reconstructed",
@@ -970,6 +1338,15 @@
       "channel": "impossible-brief",
       "topic": "impossible-brief-topic-028",
       "task": "impossible-brief:short:day-28:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 28,
+      "date": "2026-10-28",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-028",
+      "task": "critical-thread:short:day-28:1",
       "status": "published",
       "recoveredFrom": null
     },
@@ -999,6 +1376,22 @@
       "status": "published"
     },
     {
+      "day": 29,
+      "date": "2026-10-29",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-029",
+      "task": "critical-thread:short:day-29:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 29,
+      "date": "2026-10-29",
+      "channel": "critical-thread",
+      "task": "critical-thread:long:day-29:1",
+      "status": "published"
+    },
+    {
       "day": 30,
       "date": "2026-10-30",
       "channel": "failure-reconstructed",
@@ -1013,6 +1406,15 @@
       "channel": "impossible-brief",
       "topic": "impossible-brief-topic-030",
       "task": "impossible-brief:short:day-30:1",
+      "status": "published",
+      "recoveredFrom": null
+    },
+    {
+      "day": 30,
+      "date": "2026-10-30",
+      "channel": "critical-thread",
+      "topic": "critical-thread-topic-030",
+      "task": "critical-thread:short:day-30:1",
       "status": "published",
       "recoveredFrom": null
     }

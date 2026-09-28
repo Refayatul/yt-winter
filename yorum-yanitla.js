@@ -11,32 +11,21 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const Channel = require("./core/channel-context");
+const SELECTED = Channel.selectFromArgv(process.argv.slice(2));
+const CHANNEL = SELECTED.channel;
 
 const KOK = __dirname;
-const DURUM = path.join(KOK, "icerik", "yanitlanan.json");
-const LIMIT = Number((process.argv.find(a => a.startsWith("--limit=")) || "").split("=")[1]) ||
-  (process.argv.includes("--limit") ? Number(process.argv[process.argv.indexOf("--limit") + 1]) : 0) || 8;
+const DURUM = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "yanitlanan.json" : "replied-comments.json");
+const LIMIT = Number((SELECTED.argv.find(a => a.startsWith("--limit=")) || "").split("=")[1]) ||
+  (SELECTED.argv.includes("--limit") ? Number(SELECTED.argv[SELECTED.argv.indexOf("--limit") + 1]) : 0) || 8;
 
-function env(ad) {
-  if (process.env[ad]) return String(process.env[ad]).trim();
-  try { for (const l of fs.readFileSync(path.join(KOK, ".env"), "utf8").split(/\r?\n/)) {
-    const m = l.match(/^([A-Z0-9_]+)=(.*)$/); if (m && m[1] === ad) return m[2].trim(); } } catch (e) {}
-  return "";
-}
 function istek(opt, govde) {
   return new Promise((coz, red) => {
     const r = https.request(opt, (res) => { const p = []; res.on("data", d => p.push(d));
       res.on("end", () => coz({ durum: res.statusCode, govde: Buffer.concat(p).toString("utf8") })); });
     r.on("error", red); if (govde) r.write(govde); r.end();
   });
-}
-async function token() {
-  const g = new URLSearchParams({ client_id: env("YT_CLIENT_ID"), client_secret: env("YT_CLIENT_SECRET"),
-    refresh_token: env("YT_REFRESH_TOKEN"), grant_type: "refresh_token" }).toString();
-  const y = await istek({ hostname: "oauth2.googleapis.com", path: "/token", method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded", "Content-Length": Buffer.byteLength(g) } }, g);
-  if (y.durum !== 200) throw new Error("OAuth jetonu alinamadi (HTTP " + y.durum + ")");
-  return JSON.parse(y.govde).access_token;
 }
 const api = (tok, yol) => istek({ hostname: "www.googleapis.com", path: "/youtube/v3/" + yol,
   headers: { Authorization: "Bearer " + tok } });
@@ -79,7 +68,7 @@ function kategori(metin) {
 }
 
 async function main() {
-  const tok = await token();
+  const tok = (await require("./lib/yt").getYouTubeClient(CHANNEL)).accessToken;
   const yanitlanan = new Set((() => { try { return JSON.parse(fs.readFileSync(DURUM, "utf8")); } catch (e) { return []; } })());
 
   // Kanalin son yuklemelerini al

@@ -7,8 +7,10 @@
     "queuePriority": [
       "failure-reconstructed:short",
       "impossible-brief:short",
+      "critical-thread:short",
       "failure-reconstructed:long",
-      "impossible-brief:long"
+      "impossible-brief:long",
+      "critical-thread:long"
     ]
   },
   "channels": {
@@ -23,6 +25,12 @@
       "enabled": true,
       "config": "channels/impossible-brief/config.json",
       "brand": "channels/impossible-brief/brand.json"
+    },
+    "critical-thread": {
+      "name": "CriticalThread",
+      "enabled": true,
+      "config": "channels/critical-thread/config.json",
+      "brand": "channels/critical-thread/brand.json"
     }
   }
 }

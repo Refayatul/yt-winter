@@ -49,7 +49,9 @@ function calistir(slug) {
 async function bekleyenleriYaz() {
   if (!ayar().pinnedComment.post) { console.log("pinnedComment.post=false — atlandi"); return; }
   const yt = require("./lib/yt");
-  const api = yt.istemci(await yt.token());
+  // Comments are a YouTube write action: refresh and pin the authenticated
+  // identity to the configured channel before reading or posting anything.
+  const api = (await yt.getYouTubeClient()).api;
   const durum = jsonOku(DURUM, {});
   const kayit = K.yayinlananlar().filter((y) => y.slug && !durum[y.videoId]);
   if (!kayit.length) { console.log("Bekleyen sabit yorum yok."); return; }
