@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-09-28T15:41:28.507Z
+Generated: 2026-09-28T16:52:29.474Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -34,7 +34,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | unavailable |
 | Video ID | unavailable |
 | Analytics | no-channel-measurements |
-| Scheduler | pending-before-deadline |
+| Scheduler | sla-missed-or-channel-disabled |
 | Ready topic backlog | 499 |
 | Errors/review/blocks | 0 |
 
