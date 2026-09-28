@@ -131,7 +131,10 @@ jobs:
           path: |
             uretim/*/Videos/*.mp4
             channels/*/state/production/*/Videos/*.mp4
+            channels/*/state/production/*/*.mp4
             channels/*/state/production/*/quality-gate.json
+            channels/*/state/production/*/validations.json
+            channels/*/state/production/*/render.json
           if-no-files-found: ignore
           retention-days: 7
 

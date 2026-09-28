@@ -37,6 +37,20 @@ function writeCompatibilityFiles(result, topic, channel) {
   if (fs.existsSync(thumbnail)) fs.copyFileSync(thumbnail, path.join(packageDirectory, "onizleme.jpg"));
 }
 
+function writeValidationEvidence(result, topic, channel, output) {
+  const failed = Object.entries(result.validations).filter(([, passed]) => !passed).map(([name]) => name);
+  const evidence = {
+    channel: channel.slug,
+    topicId: topic.id,
+    slug: topic.slug,
+    passed: failed.length === 0,
+    failed,
+    checks: result.validations,
+  };
+  fs.writeFileSync(path.join(output, "validations.json"), JSON.stringify(evidence, null, 2) + "\n");
+  return evidence;
+}
+
 function main(argv = []) {
   const channel = Channel.getChannel("impossible-brief");
   const explicit = argv.find((arg) => !arg.startsWith("--"));
@@ -51,7 +65,8 @@ function main(argv = []) {
   const noRender = argv.includes("--no-render");
   const output = path.join(channel.paths.production, topic.slug);
   const result = Rendering.buildPackage(topic, channel, output, { render: !noRender });
-  if (!Object.values(result.validations).every(Boolean)) throw new Error("ImpossibleBrief package failed quality validation");
+  const validationEvidence = writeValidationEvidence(result, topic, channel, output);
+  if (!validationEvidence.passed) throw new Error("ImpossibleBrief package failed quality validation: " + validationEvidence.failed.join(", "));
   writeCompatibilityFiles(result, topic, channel);
   if (process.env.PUBLISH === "1") {
     if (!result.render.completed || !result.render.audio.syntheticVoice) throw new Error("Publishing blocked: a real synthetic narration render is required");
@@ -66,4 +81,4 @@ function main(argv = []) {
   return 0;
 }
 
-module.exports = { writeCompatibilityFiles, main };
+module.exports = { writeCompatibilityFiles, writeValidationEvidence, main };
