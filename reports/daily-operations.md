@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-09-27T21:30:00.000Z
+Generated: 2026-09-28T15:41:28.507Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,19 +8,19 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | deepwater-horizon-2010 |
+| Today topic | vesuvius-1944 |
 | Short | scheduled |
 | Long | due-not-produced |
-| Quality | PUBLISH / 94 |
+| Quality | PUBLISH / 92 |
 | YouTube | scheduled |
-| Publish time | 2026-09-27T18:00:00.000Z |
-| Video ID | aScjSrwqeRk |
+| Publish time | 2026-09-28T18:00:00.000Z |
+| Video ID | I86SnrokHMk |
 | Analytics | measured |
 | Scheduler | healthy |
-| Ready topic backlog | 38 |
-| Errors/review/blocks | 1 |
+| Ready topic backlog | 37 |
+| Errors/review/blocks | 2 |
 | TikTok today | SEND_TO_USER_INBOX |
-| TikTok backlog | 3 |
+| TikTok backlog | 2 |
 
 ## ImpossibleBrief
 
@@ -34,7 +34,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | unavailable |
 | Video ID | unavailable |
 | Analytics | no-channel-measurements |
-| Scheduler | sla-missed-or-channel-disabled |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 499 |
 | Errors/review/blocks | 0 |
 
