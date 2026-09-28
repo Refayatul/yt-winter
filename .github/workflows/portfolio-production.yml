@@ -136,7 +136,7 @@ jobs:
           retention-days: 7
 
       - name: Commit isolated state
-        if: always() && inputs.dry_run != 'true'
+        if: always() && inputs.dry_run != true
         run: |
           git config user.name "portfolio-bot"
           git config user.email "actions@users.noreply.github.com"
