@@ -75,6 +75,13 @@ test("workflow sends actual production result before one historical backlog item
   assert.doesNotMatch(source, /^\s*if:\s*!inputs/m, "YAML tag syntax must not break the reusable workflow");
 });
 
+test("portfolio dry runs cannot upload, notify, or commit state", () => {
+  const source = fs.readFileSync(path.join(KOK, ".github", "workflows", "portfolio-production.yml"), "utf8");
+  assert.match(source, /name: Send today's exact Failure Reconstructed MP4 to TikTok inbox\s+if:.*inputs\.dry_run != true/);
+  assert.match(source, /if \[ "\$\{\{ inputs\.dry_run \}\}" != "true" \]; then\s+node bildirim\.js/s);
+  assert.match(source, /name: Commit isolated state\s+if: always\(\) && inputs\.dry_run != true/);
+});
+
 test("REVIEW content is neither uploadable nor automatically scheduled", () => {
   const config = jsonOku(path.join(KOK, "config", "growth.json"), {});
   assert.deepEqual(config.publishing.schedule.gates, ["PUBLISH"]);

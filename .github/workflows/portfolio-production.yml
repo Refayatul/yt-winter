@@ -118,7 +118,11 @@ jobs:
             node post-publish-analyzer.js --channel "$CHANNEL" --due || true
             node channel-plan.js --channel "$CHANNEL" || true
             node library-health.js --channel "$CHANNEL" || true
-            node bildirim.js --channel "$CHANNEL" || true
+            if [ "${{ inputs.dry_run }}" != "true" ]; then
+              node bildirim.js --channel "$CHANNEL" || true
+            else
+              echo "Dry run: $CHANNEL notifications skipped."
+            fi
           done
           node portfolio-dashboard.js --write
           node daily-operations-report.js
