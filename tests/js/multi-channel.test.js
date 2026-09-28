@@ -126,7 +126,28 @@ test("retention learning only accepts samples from the selected channel", () => 
       { channel: "impossible-brief", hookType: "consequence", averagePercentageViewed: 80 },
     ], fake);
     assert.equal(result.sampleSize, 1);
-    assert.equal(result.learnedRules.find((rule) => rule.key === "hookType").value, "consequence");
+    assert.equal(result.status, "insufficient-data");
+    assert.equal(result.learnedRules.find((rule) => rule.key === "hookType").value, null);
+    assert.equal(result.learnedRules.find((rule) => rule.key === "hookType").confidence, "INSUFFICIENT_DATA");
+  } finally { fs.rmSync(temp, { recursive: true, force: true }); }
+});
+
+test("retention learning waits for a sample floor and aggregates repeated patterns", () => {
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), "ib-learning-"));
+  const base = Channel.getChannel("impossible-brief");
+  const fake = { ...base, paths: { ...base.paths, memory: temp } };
+  try {
+    const samples = [90, 88, 61, 63, 70].map((score, index) => ({
+      channel: "impossible-brief", averagePercentageViewed: score,
+      hookType: index < 2 ? "consequence" : index < 4 ? "question" : "statement",
+    }));
+    const result = Retention.learn(samples, fake);
+    const hook = result.learnedRules.find((rule) => rule.key === "hookType");
+    assert.equal(result.status, "sample-floor-met");
+    assert.equal(hook.value, "consequence");
+    assert.equal(hook.weakValue, "question");
+    assert.equal(hook.confidence, "SUPPORTED");
+    assert.ok(fs.existsSync(path.join(temp, "learning.json")));
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 });
 
@@ -135,9 +156,13 @@ test("30-day failure simulation preserves both channels and blocks wrong target"
   assert.equal(result.pass, true);
   assert.equal(result.channels["failure-reconstructed"].shorts, 30);
   assert.equal(result.channels["impossible-brief"].shorts, 30);
-  assert.equal(result.injectedFailures.length, 7);
+  assert.equal(result.injectedFailures.length, 8);
   assert.equal(result.wrongChannelGuard.blocked, true);
   assert.equal(result.wrongChannelGuard.mutationOccurred, false);
+  assert.equal(result.tiktok.endingBacklog, 0);
+  assert.equal(result.checks.schedulerRecovery, true);
+  assert.equal(result.checks.analyticsCheckpointsScheduled, true);
+  assert.equal(result.productionReady, false);
 });
 
 test("major CLI modules resolve channel-specific library paths", () => {

@@ -55,6 +55,7 @@ jobs:
       TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
       TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
       TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
+      TT_EXPECTED_OPEN_ID_SHA256: ${{ vars.TT_EXPECTED_OPEN_ID_SHA256 }}
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
       SHORTS_FONT: DejaVu Sans
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -120,6 +121,7 @@ jobs:
             node bildirim.js --channel "$CHANNEL" || true
           done
           node portfolio-dashboard.js --write
+          node daily-operations-report.js
 
       - name: Preview artifacts
         if: always()
@@ -138,7 +140,7 @@ jobs:
         run: |
           git config user.name "portfolio-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add icerik channel analysis analytics experiments migration channels || true
+          git add icerik channel analysis analytics experiments migration channels reports || true
           if git diff --cached --quiet; then echo "No state changes."; exit 0; fi
           git commit -m "chore: channel-scoped production state"
           for i in 1 2 3 4 5; do

@@ -397,7 +397,10 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
   // YAYIN ONCESI DENETIM 2: siyah kare / donmus goruntu + onizleme gorseli.
   const denetim = { tarih: new Date().toISOString(), damga: damgaPencere, katman: ustKatman ? { bas: +ustKatman.a.toFixed(2), son: +ustKatman.b.toFixed(2) } : null,
     yaziOlcegi: olcek, yaziTasmasi: tasma === null ? "olculemedi" : tasma.length,
-    tasmaOrnek: tasma && tasma.length ? tasma.slice(0, 5) : [], ton: TON ? "stok-belgesel" : "yok" };
+    tasmaOrnek: tasma && tasma.length ? tasma.slice(0, 5) : [], ton: TON ? "stok-belgesel" : "yok",
+    captionBurned: true, captionEvents: events.length,
+    captionMaxWords: events.reduce((max, event) => Math.max(max, event.txt.split(/\s+/).length), 0),
+    captionMaxLines: 1, captionSafeZoneMeasured: tasma !== null };
   try { Object.assign(denetim, DEN.videoDenetim(cikti)); } catch (e) { denetim.videoDenetimHata = String(e.message).slice(0, 160); }
   try { DEN.onizleme(cikti, path.join(VID, "onizleme.jpg"), sure(cikti)); denetim.onizleme = "Videos/onizleme.jpg"; }
   catch (e) { denetim.onizlemeHata = String(e.message).slice(0, 160); }

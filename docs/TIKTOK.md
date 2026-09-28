@@ -161,3 +161,11 @@ Bu yüzden onay gelene kadar gelen kutusu yolu daha iyidir.
 - **TikTok'tan doğrudan gelir beklemeyelim:** Creator Rewards programı 1 dakikadan uzun
   videolar istiyor; bizimkiler ~28 saniye. TikTok'un faydası kitle ve takipçi.
 - **Video boyutu:** tek parça gönderim sınırı 128 MB. Bizim videolar 10–40 MB.
+
+## Hesap ve teslimat teşhisi
+
+Actions → **Failure Reconstructed production** → operation `tiktok-diagnose` yeni video göndermeden tokenı yeniler, `video.upload` kapsamını doğrular, yetkilendirilmiş görünen hesap adını ve yalnızca SHA-256 hesap parmak izini gösterir, sonra kayıtlı her `publishId` için uzak durumu sorgular. Ham `open_id` ve tokenlar gösterilmez.
+
+`TT_EXPECTED_OPEN_ID_SHA256` repo variable'ı yetkili Failure Reconstructed hesabına sabitlenmiştir. Token başka bir hesaba dönerse her yeni gönderim `TT_ACCOUNT_MISMATCH` ile upload init'ten önce durur.
+
+28 Eylül canlı kontrolü: `failuredreconstructed` eşleşti; Hindenburg ve Bikini Baker `PUBLISH_COMPLETE`, Deepwater Horizon ve Tacoma Narrows `SEND_TO_USER_INBOX`. Son durum TikTok'un dosyayı taslak gelen kutusuna teslim ettiğini, herkese açık paylaşmadığını ifade eder. Uygulamada aynı hesaba geç, Inbox/Activities içindeki sistem bildirimini veya paylaşım taslağını aç ve manuel yayınla. Bildirimin görünmemesi yeniden gönderim gerekçesi değildir; kalıcı `publishId` duplicate guard ikinci kopyayı engeller.

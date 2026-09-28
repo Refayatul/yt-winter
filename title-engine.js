@@ -1,6 +1,6 @@
 // TITLE ENGINE — belgesel paketleme motoru (SEO-yalniz baslik yerine).
 //
-// Her video icin >=10 aday uretir: editoryal adaylar (konu.vaka.basliklar),
+// Her video icin >=20 anlamli aday uretir: editoryal adaylar (konu.vaka.basliklar),
 // mevcut baslik ve vaka verisinden kurulan sablonlar. Her aday 11 olcutle
 // puanlanir ve TUM puanlama ayrintisi saklanir (icerik/paket/<slug>/titles.json).
 //
@@ -47,6 +47,18 @@ function sablonlar(konu) {
     if (sistem && mekEtiket && mekEtiket.split(" ").length <= 3) ekle(`${M.buyukHarf(mekEtiket)}: The Force That Destroyed ${v.ad}`, "template:mechanism-force");
     if (sistem && v.tetik) ekle(`How ${v.tetik} Brought Down ${v.ad}`, "template:how-trigger");
     if (sistem) ekle(`Why ${v.ad} Failed`, "template:plain-why");
+    ekle(`Inside ${Ad}: The Failure Chain`, "template:inside-chain");
+    ekle(`${Ad}: What Failed First`, "template:failed-first");
+    ekle(`How ${Ad} Became ${v.sonuc}`, "template:how-became");
+    ekle(`${Ad}: The Engineering Behind the Failure`, "template:engineering-behind");
+    ekle(`The Chain Reaction Behind ${v.ad}`, "template:chain-reaction");
+    ekle(`What Engineers Learned From ${v.ad}`, "template:lesson");
+    if ((v.zincir || []).length >= 3) ekle(`${Ad}: ${(v.zincir || []).length} Failures in Sequence`, "template:failure-count");
+    if (mekEtiket) ekle(`${Ad}: How ${M.buyukHarf(mekEtiket)} Took Over`, "template:mechanism-took-over");
+    if (v.tetik) ekle(`The Trigger That Started ${v.ad}`, "template:trigger-started");
+    if (v.sayi) ekle(`${v.sayi}: The Scale of ${v.ad}`, "template:number-scale");
+    ekle(`${Ad}: Cause, Chain, Consequence`, "template:cause-chain-consequence");
+    ekle(`The First Failure Inside ${v.ad}`, "template:first-failure");
     ekle(`${v.kisa || Ad} Explained`, "baseline:seo-keyword");
   } else if (v.ad && v.sonuc) {
     const np = v.ad;
@@ -57,6 +69,23 @@ function sablonlar(konu) {
     if (!olumsuz) ekle(`What Breaks First When ${np} ${v.sonuc}`, "template:breaks-first");
     if (!olumsuz && mekEtiket && mekEtiket.split(" ").length <= 3) ekle(`${np} ${v.sonuc}. Engineers Call It ${M.buyukHarf(mekEtiket)}.`, "template:engineers-call-it");
     ekle(`The Physics of How ${np} ${v.sonuc}`, "template:physics-of");
+    ekle(`Inside the Physics of ${np}`, "template:inside-physics");
+    ekle(`${np}: The Failure Sequence`, "template:failure-sequence");
+    ekle(`The Force That Makes ${np} ${v.sonuc}`, "template:force-result");
+    if (mekEtiket) ekle(`Why ${M.buyukHarf(mekEtiket)} Matters for ${np}`, "template:mechanism-matters");
+    ekle(`The First Sign That ${np} ${v.sonuc}`, "template:first-sign");
+    ekle(`${np}: What Engineers Watch For`, "template:engineers-watch");
+    ekle(`How Engineers Explain Why ${np} ${v.sonuc}`, "template:engineers-explain");
+    ekle(`${np}: Cause, Chain, Consequence`, "template:cause-chain-consequence");
+    ekle(`One Mechanism Explains Why ${np} ${v.sonuc}`, "template:one-mechanism");
+    ekle(`The Engineering Reason ${np} ${v.sonuc}`, "template:engineering-reason");
+    ekle(`What Happens First as ${np} ${v.sonuc}`, "template:happens-first");
+    ekle(`The Hidden Physics Behind ${np}`, "template:hidden-physics");
+    ekle(`${np}: Mechanism vs. Consequence`, "template:mechanism-consequence");
+    ekle(`The Sequence Behind ${np}`, "template:sequence-behind");
+    ekle(`Engineering ${np}: What Happens Next`, "template:engineering-next");
+    ekle(`When ${np} ${v.sonuc}: The Physics`, "template:when-physics");
+    ekle(`${np}: From First Sign to Final Failure`, "template:first-to-final");
     ekle(`${np} Explained`, "baseline:seo-keyword");
   }
   return out;
@@ -207,7 +236,7 @@ function degerlendir(konu, opts = {}) {
     mevcutPuan: mevcut ? mevcut.toplam : null,
     sablonOnerisi: sablonOnerisi ? { baslik: sablonOnerisi.baslik, puan: sablonOnerisi.toplam, not: "template scored 10+ higher — review wording, then add it to vaka.basliklar to allow auto-selection" } : null,
     adaySayisi: sonuclar.length, adaylar: sonuclar,
-    yontem: "Heuristic scoring 0-10 per criterion; weighted to /100; minus similarity and clickbait penalties. Not a prediction of CTR." };
+    yontem: "At least 20 structurally distinct editorial/template candidates; heuristic scoring 0-10 per criterion weighted to /100, minus similarity and clickbait penalties. Not a prediction of CTR." };
 }
 
 function calistir(slug) {

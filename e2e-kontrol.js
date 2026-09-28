@@ -5,7 +5,7 @@
 //   video     dosya var · 1080x1920 · 15-60 sn · ses akisi var · A/V farki <= 0.5 sn
 //   ses       entegre yukseklik -14 LUFS ± 2 (YouTube seviyesi)
 //   denetim   yazi tasmasi 0 · siyah kare yok · donuk goruntu yok · onizleme gorseli var
-//   kalite    final kapi PUBLISH/REVIEW (BLOCK degil) · tutma kurallari (lib/tutunma)
+//   kalite    final kapi PUBLISH (REVIEW/BLOCK yuklenmez) · tutma kurallari (lib/tutunma)
 //   paket     aciklama: <=5000 bayt, sentetik ses notu, kaynak satiri, <=3 hashtag, bos
 //             satir/"undefined" yok · etiketler · sabit yorum metni · baslik <=100
 //   yukleme   youtube-yukle.js --dogrula: meta dogrulama gecer, publishAt slotu gelecekte
@@ -63,7 +63,7 @@ kontrol("denetim", "onizleme gorseli var", fs.existsSync(paket("onizleme.jpg")))
 
 // ---- kalite ----
 const kapi = jsonOku(paket("quality-gate.json"), null);
-kontrol("kalite", "final kapi BLOCK degil", kapi && kapi.asama === "final" && kapi.karar !== "BLOCK", kapi ? `${kapi.asama} ${kapi.karar} ${kapi.toplam}` : "rapor yok");
+kontrol("kalite", "final kapi PUBLISH", kapi && kapi.asama === "final" && kapi.karar === "PUBLISH", kapi ? `${kapi.asama} ${kapi.karar} ${kapi.toplam}` : "rapor yok");
 const konu = K.uretimKonusu(slug);
 const tut = require("./lib/tutunma").denetle(konu);
 kontrol("kalite", "tutma kurallari", !tut.length, tut.map((x) => x.mesaj).join("; "));

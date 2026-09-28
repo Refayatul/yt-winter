@@ -16,12 +16,13 @@ node post-publish-analyzer.js --channel impossible-brief --due
 node channel-plan.js --channel impossible-brief
 node portfolio-scheduler.js
 node portfolio-dashboard.js
+node daily-operations-report.js              # iki kanal + TikTok tek rapor
 node production-sla-check.js --channel failure-reconstructed
 node e2e-impossible-brief.js --render       # yerel kuru çalışma; upload yok
 node simulate-portfolio.js                  # 30 gün + enjekte hatalar
 ```
 
-YouTube sırları kanal bazında `FR_YT_*` ve `IB_YT_*` adlarıyla tutulur. Her yüklemeden önce OAuth ile doğrulanan kanal kimliği, `FR_YT_CHANNEL_ID` veya `IB_YT_CHANNEL_ID` ile birebir karşılaştırılır; eksik ya da farklıysa yükleme başlamadan bloklanır. Günlük üretim SLA'sı GitHub cron'una ek olarak bağımsız Cloudflare Cron → `repository_dispatch` watchdog'u ile korunur; eksik video bulunursa üretim otomatik başlar. Ayrıntılar: [multi-channel architecture](docs/MULTI-CHANNEL-ARCHITECTURE.md), [production reliability](docs/PRODUCTION-RELIABILITY.md), [ImpossibleBrief](docs/IMPOSSIBLE-BRIEF.md), [adding a channel](docs/ADDING-NEW-CHANNEL.md).
+YouTube sırları kanal bazında `FR_YT_*` ve `IB_YT_*` adlarıyla tutulur. Her yüklemeden önce OAuth ile doğrulanan kanal kimliği, `FR_YT_CHANNEL_ID` veya `IB_YT_CHANNEL_ID` ile birebir karşılaştırılır; eksik ya da farklıysa yükleme başlamadan bloklanır. Failure Reconstructed otomatik Short üretimi açıktır. ImpossibleBrief yayınlama, kanal OAuth'ı tamamlanıp `IB_PUBLISH=1` yapılana kadar kapalıdır. Cloudflare watchdog kodu hazırdır fakat bağımsız koruma ancak [tek seferlik dağıtım](docs/SCHEDULER-RECOVERY.md) tamamlanınca aktiftir. Uzun format henüz production workflow'una bağlı değildir. Ayrıntılar: [current audit](docs/AUTONOMY-AUDIT.md), [multi-channel](docs/MULTI-CHANNEL.md), [OAuth](docs/OAUTH-PRODUCTION-SETUP.md), [operations](docs/OPERATIONS.md).
 
 ## Failure Reconstructed — Forensic Engineering Documentaries
 
@@ -30,9 +31,9 @@ Bu depo artık **veriye dayalı bir adli mühendislik belgeseli üretim ve büy�
 | Ne | Nasıl | Belge |
 |---|---|---|
 | Günlük Shorts (otomatik, GitHub Actions) | `shorts-sira.js` → takvim → ön kalite kapısı → arşiv/stok → `shorts-yap.js` → final kapı → private yükleme | [docs/GROWTH-ARCHITECTURE.md](docs/GROWTH-ARCHITECTURE.md) |
-| Uzun belgesel (5 günde bir) | `python -m shortslab run <iş>` → senaryo brifi → kanıt öncelikli görseller + mühendislik diyagramları → `video-yap.js` | aynı |
+| Uzun belgesel | Yerel araçlar vardır; kanal-bazlı Actions üretim/yükleme hattı henüz tamamlanmadığı için otomatik yayınlanmaz | aynı |
 | Paketleme | başlık · kapak · hook · tempo · hikâye yapısı · açıklama · sabit yorum · telaffuz | `icerik/paket/<slug>/` |
-| Kalite | `quality-gate.js`: 9 bileşen, PUBLISH ≥85 / REVIEW 70–84 / BLOCK <70 · `originality-check.js` | [config/growth.json](config/growth.json) |
+| Kalite | `quality-gate.js`: 9 bileşen, PUBLISH ≥85 / REVIEW 70–84 / BLOCK <70 · yalnızca PUBLISH yüklenebilir | [config/growth.json](config/growth.json) |
 | Mevcut videolar | `node existing-video-optimizer.js --all` → `analysis/<id>/` + `migration/` | [migration/EXISTING-VIDEOS-PLAN.md](migration/EXISTING-VIDEOS-PLAN.md) |
 | Yayın sonrası | `post-publish-analyzer.js --due` (24 s/72 s/7 g/14 g/30 g) · panel → **📈 Büyüme** · `experiments.js` | [docs/GROWTH-ARCHITECTURE.md](docs/GROWTH-ARCHITECTURE.md) |
 | Konu seçimi | `node konu-puan.js "<konu>"` / `--adaylar` (11 ölçüt, ücretsiz sinyaller) | [icerik/aday-konular-puan.md](icerik/aday-konular-puan.md) |

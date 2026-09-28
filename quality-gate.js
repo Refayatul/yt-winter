@@ -113,12 +113,13 @@ function gorsel(konu, final, format) {
   }
   const vid = path.join(KOK, "uretim", konu.slug, "Videos", konu.slug + ".mp4");
   if (!fs.existsSync(vid)) return { puan: 0, notlar: ["rendered video missing"] };
-  let p = 100;
+  let p = 100, kritik = null;
   const pr = probe(vid);
   const hedef = format === "short" ? [1080, 1920] : [1920, 1080];
   if (pr.w !== hedef[0] || pr.h !== hedef[1]) { p -= 30; not.push(`resolution ${pr.w}x${pr.h}, expected ${hedef.join("x")}`); }
   if (format === "short" && pr.sure > 60) { p -= 40; not.push(`${pr.sure.toFixed(1)} s — over the Shorts limit`); }
   if (format === "short" && pr.sure > 58 && pr.sure <= 60) { p -= 5; not.push("very close to 60 s"); }
+  if (!pr.ses) { p -= 100; kritik = "MISSING NARRATION/AUDIO STREAM"; not.push(kritik); }
   const tekrar = {};
   for (const s of konu.sahneler || []) if (s.kaynak) tekrar[s.kaynak] = (tekrar[s.kaynak] || 0) + 1;
   const stokTekrar = konu.tur === "stok" ? Object.values(tekrar).filter((n) => n > 1).length : 0;
@@ -127,10 +128,11 @@ function gorsel(konu, final, format) {
   if (!eng) { p -= 5; not.push("no engineering overlay rendered"); }
   // Yayin oncesi gorsel denetim (shorts-yap.js olcer): yazi tasmasi, siyah kare, donmus goruntu
   const d = jsonOku(path.join(KOK, "uretim", konu.slug, "Videos", "denetim.json"), null);
-  let kritik = null;
-  if (!d) { p -= 10; not.push("no pre-publish visual check (denetim.json missing)"); }
+  if (!d) { p -= 100; kritik = kritik || "PRE-PUBLISH VISUAL/CAPTION CHECK MISSING"; not.push(kritik); }
   else {
-    if (d.yaziTasmasi === "olculemedi") { p -= 10; not.push("text overflow could not be measured"); }
+    if (d.captionBurned !== true || !d.captionEvents) { p -= 100; kritik = kritik || "MISSING BURNED CAPTIONS"; not.push("burned caption evidence missing"); }
+    if ((d.captionMaxWords || 0) > 3 || (d.captionMaxLines || 0) > 2) { p -= 60; kritik = kritik || "CAPTIONS EXCEED MOBILE DENSITY LIMIT"; not.push(`${d.captionMaxWords} words / ${d.captionMaxLines} lines`); }
+    if (d.yaziTasmasi === "olculemedi") { p -= 60; kritik = kritik || "CAPTION SAFE ZONE COULD NOT BE MEASURED"; not.push("text overflow could not be measured"); }
     else if (d.yaziTasmasi > 0) { p -= 60; kritik = `TEXT OVERFLOW in ${d.yaziTasmasi} frame(s) even after shrinking`; not.push(kritik); }
     if (d.sureFarki == null) { p -= 10; not.push("audio/video duration not measured"); }
     else if (d.sureFarki > 0.5) { p -= 60; kritik = kritik || `AUDIO/VIDEO LENGTH MISMATCH ${d.videoSure}s vs ${d.sesSure}s`; not.push(`audio/video mismatch ${d.sureFarki}s`); }
@@ -139,6 +141,8 @@ function gorsel(konu, final, format) {
     if (d.donukEnUzun > 4) { p -= 15; not.push(`frozen picture ${d.donukEnUzun}s`); }
     if (d.yaziOlcegi && d.yaziOlcegi < 1) not.push(`text auto-shrunk to ${Math.round(d.yaziOlcegi * 100)}% to fit`);
   }
+  const unrelated = (konu.sahneler || []).filter((s) => s.kaynakMeta && s.kaynakMeta.alaka != null && s.kaynakMeta.alaka < 0.15).length;
+  if (unrelated) { p -= 100; kritik = kritik || `OBVIOUSLY UNRELATED VISUALS: ${unrelated} scene(s)`; not.push(kritik); }
   return { puan: sinirla(p), notlar: not, olcum: pr, kritik };
 }
 
@@ -191,6 +195,9 @@ function degerlendir(slug, ops = {}) {
   const tw = Object.values(w).reduce((a, x) => a + x, 0);
   const toplam = Math.round(Object.entries(w).reduce((a, [k, x]) => a + b[k].puan * x, 0) / tw);
   const engel = [];
+  if (titles.adaySayisi < 20) engel.push(`TITLE: only ${titles.adaySayisi} candidates; minimum 20`);
+  if (format === "long" && thumbs.konseptler.length < 5) engel.push(`THUMBNAIL: only ${thumbs.konseptler.length} concepts; minimum 5`);
+  if (/\b(?:TODO|TBD|PLACEHOLDER|LOREM IPSUM)\b/i.test(K.anlati(konu))) engel.push("SCRIPT: placeholder content");
   if (hook.mevcut.engelleyici) engel.push("HOOK: forbidden opening");
   if (org.aksiyon === "BLOCK") engel.push("ORIGINALITY: near-duplicate of " + org.engelleyen.join(", "));
   for (const [k, esik] of Object.entries(g.hardBlocks || {})) if (b[k] && !b[k].olculmedi && b[k].puan < esik) engel.push(`${EN[k]} ${b[k].puan} < ${esik}`);

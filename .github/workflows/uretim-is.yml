@@ -79,6 +79,9 @@ jobs:
       TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
       TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
       TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
+      # Non-secret SHA-256 pin of the authorized TikTok open_id. Uploads stop
+      # if the refresh token later points at a different creator account.
+      TT_EXPECTED_OPEN_ID_SHA256: ${{ vars.TT_EXPECTED_OPEN_ID_SHA256 }}
       # Stok konular (tur: stok) icin Pexels anahtari — yoksa stok-bul.js calismaz.
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
       # Yukleme yalnizca PUBLISH=1 iken (repo Variables). Yoksa uretir, yuklemez.
@@ -172,6 +175,7 @@ jobs:
         run: |
           node channel-plan.js || echo "kanal plani atlandi"
           node experiments.js degerlendir || echo "deneyler atlandi"
+          node daily-operations-report.js || echo "gunluk operasyon raporu atlandi"
 
       - name: Haftalik mevcut video optimizasyonu (Pazartesi)
         if: always() && github.event_name == 'schedule'
@@ -197,7 +201,7 @@ jobs:
           git config user.name  "uretim-bot"
           git config user.email "actions@users.noreply.github.com"
           # Durum + analiz dosyalari (sir icermez; .env ve medya .gitignore'da)
-          git add icerik channel analysis analytics experiments migration || true
+          git add icerik channel analysis analytics experiments migration reports || true
           if git diff --cached --quiet; then echo "Uretimde degisiklik yok."; exit 0; fi
           git commit -m "chore: uretim ilerlemesi + analiz (otomatik)"
           # Yaris (baska bir commit araya girdiyse) icin 5 deneme: kayit kaybolursa ayni konu
