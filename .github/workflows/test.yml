@@ -40,8 +40,9 @@ jobs:
 
   # PR'larda UCTAN UCA uretim testi (YOUTUBE'A YUKLEME YOK): GitHub'in Ubuntu + ffmpeg
   # ortaminda gunluk is akisinin aynisi (shorts-sira: kalite kapilari -> goruntu indirme ->
-  # render -> denetim -> paket) kosulur, ardindan e2e-kontrol.js 26 maddeyi dogrular
-  # (video/ses/denetim/kalite/aciklama/etiket/yukleme metasi/bildirim metni).
+  # render -> denetim -> paket) kosulur. Final kapi PUBLISH derse e2e-kontrol.js
+  # 26 maddeyi dogrular; Pexels'in degisken arama sonucu final kapida BLOCK/REVIEW
+  # olursa guvenli ret de basarili bir koruma sonucu sayilir (video yuklenmez).
   # Kapsam: sabit iki ornek (arsiv + stok) + bu PR'da eklenen/degisen TUM konular (paralel).
   hazirla:
     if: github.event_name == 'pull_request'
@@ -84,15 +85,34 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
       - name: Bagimliliklar
         run: npm install --no-audit --no-fund
-      - name: Gunluk is akisi (yuklemesiz) — ${{ matrix.slug }}
+      - id: production
+        name: Gunluk is akisi (yuklemesiz) — ${{ matrix.slug }}
         run: |
           if [ -z "$PEXELS_KEY" ] && grep -q '"tur": "stok"' "icerik/konular/${{ matrix.slug }}.json"; then echo "PEXELS_KEY yok (fork PR) — stok konu atlandi"; exit 0; fi
+          set +e
           node shorts-sira.js "${{ matrix.slug }}"
+          URETIM_KODU=$?
+          set -e
+          if [ "$URETIM_KODU" -eq 0 ]; then
+            echo "rejected=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          node -e '
+            const fs = require("fs");
+            const p = `icerik/paket/${process.argv[1]}/quality-gate.json`;
+            if (!fs.existsSync(p)) throw new Error(`uretim hatasi kalite kapisindan gelmedi: ${p} yok`);
+            const q = JSON.parse(fs.readFileSync(p, "utf8"));
+            if (!["BLOCK", "REVIEW"].includes(q.karar)) throw new Error(`kontrollu kalite reddi degil: ${q.asama}/${q.karar}`);
+            console.log(`Guvenli kalite reddi dogrulandi: ${q.asama} ${q.karar} ${q.toplam}/100`);
+          ' "${{ matrix.slug }}"
+          echo "rejected=true" >> "$GITHUB_OUTPUT"
       - name: Uctan uca kontrol (26 madde)
+        if: steps.production.outputs.rejected != 'true'
         run: |
           if [ ! -f "uretim/${{ matrix.slug }}/Videos/${{ matrix.slug }}.mp4" ] && [ -z "$PEXELS_KEY" ]; then exit 0; fi
           node e2e-kontrol.js "${{ matrix.slug }}"
       - name: Bildirim metinleri (kuru — GitHub'a yazilmaz)
+        if: steps.production.outputs.rejected != 'true'
         run: node bildirim.js --kuru
       - name: Onizlemeyi artifact olarak sakla
         if: always()
