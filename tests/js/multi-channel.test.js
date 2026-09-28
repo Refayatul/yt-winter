@@ -95,6 +95,8 @@ test("library has 500 qualified, source-based, non-duplicate topics in the targe
 
 test("ImpossibleBrief package enforces claims, hooks, 20 titles, visuals, metadata and no upload", () => {
   const channel = Channel.getChannel("impossible-brief");
+  assert.equal(channel.config.retentionRules.openingMaxSeconds, 2.2);
+  assert.equal(channel.config.retentionRules.secondBeatMaxSeconds, 6.2);
   const topic = Discovery.universe(channel).topics.find((item) => item.topic === "What If Gravity Doubled Tomorrow?");
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), "ib-e2e-"));
   try {
@@ -106,6 +108,19 @@ test("ImpossibleBrief package enforces claims, hooks, 20 titles, visuals, metada
     assert.equal(metadata.uploadEnabled, false);
     assert.equal(metadata.uploadChannel, "impossible-brief");
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
+});
+
+test("ImpossibleBrief pipeline persists named validation evidence", () => {
+  const channel = Channel.getChannel("impossible-brief");
+  const topic = Discovery.universe(channel).topics.find((item) => item.topic === "What If Gravity Doubled Tomorrow?");
+  const output = fs.mkdtempSync(path.join(os.tmpdir(), "ib-validation-"));
+  try {
+    require("../../core/pipeline/impossible-brief").writeValidationEvidence({ validations: { science: true, timing: false } }, topic, channel, output);
+    const evidence = JSON.parse(fs.readFileSync(path.join(output, "validations.json"), "utf8"));
+    assert.equal(evidence.passed, false);
+    assert.deepEqual(evidence.failed, ["timing"]);
+    assert.deepEqual(evidence.checks, { science: true, timing: false });
+  } finally { fs.rmSync(output, { recursive: true, force: true }); }
 });
 
 test("portfolio scheduling serializes shared render/upload resources", () => {

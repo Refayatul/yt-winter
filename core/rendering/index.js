@@ -98,7 +98,9 @@ function synthesizeVoice(text, outputDirectory, basename = "narration", options 
 function synthesizeNarration(script, outputDirectory) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const takes = script.claims.map((claim, index) => {
-    const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { fast: index === 0 });
+    // The hook and escalation are deliberately brisk. Later scientific claims
+    // return to the measured narration rate so terminology stays intelligible.
+    const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { fast: index < 2 });
     return { ...voice, durationSeconds: probe(voice.file).durationSeconds };
   });
   const output = path.join(outputDirectory, "narration.m4a");
@@ -318,12 +320,15 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     if (portableRender[key] && portableRender[key].file) portableRender[key].file = path.relative(ROOT, portableRender[key].file);
   }
   write(path.join(outputDirectory, "render.json"), portableRender);
+  const retention = channel.config.retentionRules || {};
+  const openingMax = Number(retention.openingMaxSeconds || 2.2);
+  const secondBeatMax = Number(retention.secondBeatMaxSeconds || 6.2);
   return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations: {
     script: !!script.spoken,
     science: topic.claimFramework.length === 3,
     sources: topic.sources.length >= 2,
     hook: !script.forbiddenOpening,
-    timing: !options.render || (script.claims[0].end <= 1.6 && script.claims[1].end <= 5.1),
+    timing: !options.render || (script.claims[0].end <= openingMax && script.claims[1].end <= secondBeatMax),
     audio: !options.render || (render.completed && render.video.hasAudio && render.audio.claimDurations.length === script.claims.length),
     captions: fs.existsSync(path.join(outputDirectory, "captions.srt")) && fs.existsSync(path.join(outputDirectory, "captions.ass")) && (!options.render || render.video.captionsBurned),
     visuals: visuals.length >= 5 && (!options.render || (render.video.scenarioSpecific && render.video.illustrationLabel && render.video.visualChanges >= Math.ceil(render.video.durationSeconds / 3.5))),

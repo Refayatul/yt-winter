@@ -118,7 +118,11 @@ jobs:
             node post-publish-analyzer.js --channel "$CHANNEL" --due || true
             node channel-plan.js --channel "$CHANNEL" || true
             node library-health.js --channel "$CHANNEL" || true
-            node bildirim.js --channel "$CHANNEL" || true
+            if [ "${{ inputs.dry_run }}" != "true" ]; then
+              node bildirim.js --channel "$CHANNEL" || true
+            else
+              echo "Dry run: $CHANNEL notifications skipped."
+            fi
           done
           node portfolio-dashboard.js --write
           node daily-operations-report.js
@@ -131,12 +135,15 @@ jobs:
           path: |
             uretim/*/Videos/*.mp4
             channels/*/state/production/*/Videos/*.mp4
+            channels/*/state/production/*/*.mp4
             channels/*/state/production/*/quality-gate.json
+            channels/*/state/production/*/validations.json
+            channels/*/state/production/*/render.json
           if-no-files-found: ignore
           retention-days: 7
 
       - name: Commit isolated state
-        if: always() && inputs.dry_run != 'true'
+        if: always() && inputs.dry_run != true
         run: |
           git config user.name "portfolio-bot"
           git config user.email "actions@users.noreply.github.com"
