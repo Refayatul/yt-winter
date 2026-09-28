@@ -24,6 +24,61 @@ node simulate-portfolio.js                  # 30 gün + enjekte hatalar
 
 YouTube sırları kanal bazında `FR_YT_*` ve `IB_YT_*` adlarıyla tutulur. Her yüklemeden önce OAuth ile doğrulanan kanal kimliği, `FR_YT_CHANNEL_ID` veya `IB_YT_CHANNEL_ID` ile birebir karşılaştırılır; eksik ya da farklıysa yükleme başlamadan bloklanır. Failure Reconstructed otomatik Short üretimi açıktır. ImpossibleBrief yayınlama, kanal OAuth'ı tamamlanıp `IB_PUBLISH=1` yapılana kadar kapalıdır. Cloudflare watchdog kodu hazırdır fakat bağımsız koruma ancak [tek seferlik dağıtım](docs/SCHEDULER-RECOVERY.md) tamamlanınca aktiftir. Uzun format henüz production workflow'una bağlı değildir. Ayrıntılar: [current audit](docs/AUTONOMY-AUDIT.md), [multi-channel](docs/MULTI-CHANNEL.md), [OAuth](docs/OAUTH-PRODUCTION-SETUP.md), [operations](docs/OPERATIONS.md).
 
+## Production watchdog kurulumu ve doğrulaması
+
+Cloudflare Cron Worker her gün `16:35 UTC`'de, `16:30 UTC` üretim SLA'ından beş dakika sonra `production-sla-watchdog` olayı gönderir. GitHub-native `17:07 UTC` cron yedeği korunur. Recovery, Failure Reconstructed için önce kimliği doğrulanmış YouTube kanalını API ile tarar; bugünün Short'u uzakta da yoksa üretime izin verir. API/OAuth doğrulanamazsa duplicate riski almak yerine fail-closed durur ve issue açar. ImpossibleBrief yalnızca `IB_PUBLISH=1` olduğunda çalışır.
+
+Gerekli repository secrets:
+
+- `CLOUDFLARE_ACCOUNT_ID`: Worker'ın kurulacağı Cloudflare hesabı.
+- `CLOUDFLARE_API_TOKEN`: yalnız o hesapta `Workers Scripts: Edit` izni.
+- `WATCHDOG_GITHUB_TOKEN`: yalnız `eyazan/youtube-otomasyon` repository'sine erişen fine-grained PAT; repository permission **Contents: Read and write** olmalıdır. GitHub'ın `Create a repository dispatch event` endpoint'i bu yazma iznini ister. Classic PAT kullanılırsa `repo` scope gerekir.
+
+Secret'ları değerleri terminal geçmişine yazmadan ekleyin; her komut değeri interaktif olarak ister:
+
+```bash
+gh secret set CLOUDFLARE_ACCOUNT_ID -R eyazan/youtube-otomasyon
+gh secret set CLOUDFLARE_API_TOKEN -R eyazan/youtube-otomasyon
+gh secret set WATCHDOG_GITHUB_TOKEN -R eyazan/youtube-otomasyon
+gh secret list -R eyazan/youtube-otomasyon
+```
+
+Deploy ve kanıt indirme:
+
+```bash
+gh workflow run deploy-watchdog.yml -R eyazan/youtube-otomasyon --ref main
+gh run list -R eyazan/youtube-otomasyon --workflow deploy-watchdog.yml --limit 1
+# Üstteki run ID ile:
+gh run watch RUN_ID -R eyazan/youtube-otomasyon --exit-status
+gh run download RUN_ID -R eyazan/youtube-otomasyon -n watchdog-deployment-evidence
+jq . watchdog-deployment-evidence/summary.json
+```
+
+Deploy workflow secret eksikse isimlerini ayrı `::error` mesajlarıyla bildirir. Başarılı deploy; Cloudflare deployment listesini, `35 16 * * *` trigger'ını, Worker secret durumunu ve commit'e bağlı `/health` yanıtını doğrular. Health URL, run summary ve `summary.json` içindedir:
+
+```bash
+curl -fsS 'https://youtube-production-watchdog.CLOUDFLARE_SUBDOMAIN.workers.dev/health' | jq .
+# ok=true, tokenConfigured=true, repository, cron, deadlineUtc, version ve commit beklenir.
+```
+
+Gerçek video üretmeden aynı `WATCHDOG_GITHUB_TOKEN` ile `repository_dispatch` zincirini test edin:
+
+```bash
+gh workflow run watchdog-self-test.yml -R eyazan/youtube-otomasyon --ref main
+gh run list -R eyazan/youtube-otomasyon --workflow watchdog-self-test.yml --limit 1
+gh run watch RUN_ID -R eyazan/youtube-otomasyon --exit-status
+```
+
+Self-test GitHub'dan HTTP `204` bekler, `production-sla-watchdog-self-test` receiver run'ını correlation ID ile bulur ve `videoProductionStarted:false` kanıtı üretir. Gerçek recovery'yi yüklemesiz sınamak için:
+
+```bash
+gh workflow run production-watchdog.yml -R eyazan/youtube-otomasyon --ref main -f simulate_missing=true
+gh run list -R eyazan/youtube-otomasyon --workflow production-watchdog.yml --limit 1
+gh run watch RUN_ID -R eyazan/youtube-otomasyon --exit-status
+```
+
+Gerçek `production-sla-watchdog` dispatch'i video yoksa üretim başlatabilir; yalnız bilinçli canlı testte gönderin. Başarı kanıtı `production-sla-before` ve `production-sla-after` artifact'larında `youtubeVerified:true`, geçerli `videoId`, aynı gün `publishAt`, `productionReady:true` ve `healthy:true` olmasıdır. Ayrıntılı işletim/rotasyon prosedürü: [docs/SCHEDULER-RECOVERY.md](docs/SCHEDULER-RECOVERY.md).
+
 ## Failure Reconstructed — Forensic Engineering Documentaries
 
 Bu depo artık **veriye dayalı bir adli mühendislik belgeseli üretim ve büyüme sistemi**. Yapay zekâ yalnızca bir üretim aracı; neyin yayınlanacağına kalite ve editoryal değer karar verir.

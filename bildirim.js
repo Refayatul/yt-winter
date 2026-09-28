@@ -186,16 +186,22 @@ function bosGunMesaji(v) {
 }
 
 function slaHataMesaji(v) {
-  return { baslik: kanalBaslik(`🚨 Otomatik kurtarma başarısız — ${v.date || bugun()}`), etiket: ["hata"], govde: [
-    `@${SAHIP} günlük üretim SLA kontrolü başarısız oldu ve otomatik kurtarma çalıştıktan sonra da video hazır değil.`, "",
+  const recoveryStarted = !!v.automaticRecoveryStarted;
+  const verificationBlocked = !v.youtubeVerified;
+  return { baslik: kanalBaslik(`🚨 ${recoveryStarted ? "Otomatik kurtarma başarısız" : "Üretim SLA doğrulaması başarısız"} — ${v.date || bugun()}`), etiket: ["hata"], govde: [
+    `@${SAHIP} günlük üretim SLA kontrolü başarısız oldu${recoveryStarted ? " ve otomatik kurtarma çalıştıktan sonra da video hazır değil" : ""}.`, "",
+    `- YouTube API doğrulaması: **${v.youtubeVerified ? "başarılı" : "başarısız"}**`,
+    `- YouTube'da bugünün Short'u: **${v.youtubeTodayExists ? "var" : v.youtubeVerified ? "yok" : "bilinmiyor"}**`,
+    `- Otomatik kurtarma: **${recoveryStarted ? "başlatıldı" : verificationBlocked ? "duplicate riskine karşı durduruldu" : "gerekmedi/başlatılmadı"}**`,
     `- Üretildi: **${v.produced ? "evet" : "hayır"}**`,
     `- YouTube'a yüklendi: **${v.uploaded ? "evet" : "hayır"}**`,
     `- publishAt ayarlandı: **${v.scheduled ? "evet" : "hayır"}**`,
     `- videoId doğrulandı: **${v.videoIdExists ? "evet" : "hayır"}**`,
     `- Kalite kapısı: **${v.quality || "yok"}**`,
     `- Normal bildirim: **${v.notificationExists ? "var" : "yok"}**`, "",
+    ...(v.youtubeError ? [`- YouTube doğrulama hatası: \`${String(v.youtubeError).replace(/`/g, "'").slice(0, 240)}\``, ""] : []),
     `Çalışma kaydı: ${process.env.GITHUB_SERVER_URL || "https://github.com"}/${REPO}/actions/runs/${process.env.GITHUB_RUN_ID || ""}`,
-    "Bu bildirim yalnızca otomatik kurtarma da başarısız olduğunda oluşturulur.",
+    "API doğrulaması başarısızsa sistem fail-closed davranır ve olası duplicate yerine issue açar.",
   ].join("\n") };
 }
 

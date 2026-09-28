@@ -2,11 +2,14 @@
 
 function decide(sla) {
   const productionReady = !!(sla && sla.productionReady);
+  const safeToRecover = !!(sla && sla.safeToRecover);
   return {
     todayVideoScheduled: !!(sla && sla.scheduled),
-    startProduction: !productionReady,
+    youtubeTodayExists: !!(sla && sla.youtubeTodayExists),
+    verificationSucceeded: !!(sla && sla.youtubeVerified),
+    startProduction: !productionReady && safeToRecover,
     repairNotification: productionReady && !sla.notificationExists,
-    notifyHuman: false,
+    notifyHuman: !productionReady && !safeToRecover,
   };
 }
 

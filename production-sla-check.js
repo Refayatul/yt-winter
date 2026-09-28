@@ -39,6 +39,35 @@ function qualityFor(channel, slug) {
   return jsonOku(path.join(channel.paths.packages, slug, "quality-gate.json"), null);
 }
 
+function isoDay(value) {
+  const parsed = Date.parse(value || "");
+  return Number.isFinite(parsed) ? new Date(parsed).toISOString().slice(0, 10) : null;
+}
+
+function durationSeconds(value) {
+  const match = String(value || "").match(/^P(?:(\d+)D)?T?(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?$/);
+  if (!match) return null;
+  return (+match[1] || 0) * 86400 + (+match[2] || 0) * 3600 + (+match[3] || 0) * 60 + (+match[4] || 0);
+}
+
+// The repository commit is useful operational state, but it cannot be the
+// duplicate-prevention authority: an upload may have succeeded immediately
+// before its state commit failed. The authenticated YouTube channel is the
+// source of truth for whether today's Short slot is already occupied.
+function youtubeVideoForDate(videos, date) {
+  return (Array.isArray(videos) ? videos : [])
+    .filter((video) => {
+      const seconds = durationSeconds(video && video.contentDetails && video.contentDetails.duration);
+      const short = seconds != null && seconds <= 180;
+      const day = isoDay(video && video.status && video.status.publishAt)
+        || isoDay(video && video.snippet && video.snippet.publishedAt);
+      return short && day === date;
+    })
+    .sort((a, b) => String((a.status && a.status.publishAt) || (a.snippet && a.snippet.publishedAt) || "")
+      .localeCompare(String((b.status && b.status.publishAt) || (b.snippet && b.snippet.publishedAt) || "")))
+    .pop() || null;
+}
+
 function evaluateSnapshot(snapshot) {
   const record = recordForDate(snapshot.published, snapshot.date);
   const slug = record && record.slug || null;
@@ -47,12 +76,21 @@ function evaluateSnapshot(snapshot) {
   const finalGate = !quality || quality.asama === "final" || quality.stage === "final";
   const generated = ids(snapshot.generated);
   const produced = !!(slug && (generated.has(slug) || record));
-  const videoId = record && record.videoId || null;
+  const remoteTodayVideo = snapshot.remoteTodayVideo || null;
+  const videoId = record && record.videoId || remoteTodayVideo && remoteTodayVideo.id || null;
   const uploaded = !!(videoId && videoIdGecerli(videoId));
-  const scheduled = !!(record && record.publishAt && String(record.publishAt).slice(0, 10) === snapshot.date);
+  const remotePublishAt = remoteTodayVideo && remoteTodayVideo.status && remoteTodayVideo.status.publishAt || null;
+  const scheduled = !!((record && record.publishAt && String(record.publishAt).slice(0, 10) === snapshot.date)
+    || (remotePublishAt && isoDay(remotePublishAt) === snapshot.date));
   const qualityPassed = !!(decision && decision !== "BLOCK" && finalGate);
   const notificationExists = !!(videoId && snapshot.notifications && snapshot.notifications["video:" + videoId]);
   const videoIdExists = uploaded && snapshot.remoteVideoExists !== false;
+  const youtubeVerified = !!snapshot.youtubeVerified;
+  const youtubeTodayExists = youtubeVerified && !!remoteTodayVideo;
+  // Fail closed. An API/authentication failure is never interpreted as an
+  // empty day, because doing so could upload a duplicate after a state-commit
+  // failure. Recovery is authorized only by a successful remote absence check.
+  const safeToRecover = youtubeVerified && !youtubeTodayExists;
   const productionReady = produced && uploaded && scheduled && videoIdExists && qualityPassed;
   const healthy = productionReady && notificationExists;
   return {
@@ -71,15 +109,19 @@ function evaluateSnapshot(snapshot) {
     youtubeScheduled: scheduled,
     videoId,
     videoIdExists,
-    publishAt: record && record.publishAt || null,
+    publishAt: record && record.publishAt || remotePublishAt,
     quality: decision,
     qualityGate: decision,
     qualityPassed,
     notificationExists,
     productionReady,
+    youtubeVerified,
+    youtubeTodayExists,
+    remoteTodayVideoId: remoteTodayVideo && remoteTodayVideo.id || null,
+    safeToRecover,
     automaticRecoveryStarted: !!snapshot.automaticRecoveryStarted,
     healthy,
-    verification: snapshot.youtubeVerified ? "youtube-api" : "repository-state",
+    verification: youtubeVerified ? "youtube-api" : "repository-state",
   };
 }
 
@@ -94,16 +136,25 @@ async function check(options = {}) {
   const notificationsState = jsonOku(path.join(channel.paths.state, legacy ? "bildirim-durum.json" : "notification-state.json"), { gonderilen: {} });
   const record = recordForDate(published, date);
   let remoteVideoExists;
+  let remoteTodayVideo = null;
   let youtubeVerified = false;
   let youtubeError = null;
-  if (options.verifyYouTube && record && record.videoId) {
+  if (options.verifyYouTube) {
     try {
       const yt = options.youtube || require("./lib/yt");
       const token = await yt.token(undefined, channel);
       const api = yt.istemci(token);
       await yt.verifyChannelIdentity(api, channel);
-      const videos = await yt.videolar(api, [record.videoId]);
-      remoteVideoExists = videos.some((item) => item.id === record.videoId);
+      const uploads = await yt.yuklemeler(api, 100);
+      const idsToRead = [...new Set([...(uploads.ids || []), record && record.videoId].filter(Boolean))];
+      const videos = idsToRead.length ? await yt.videolar(api, idsToRead) : [];
+      remoteTodayVideo = youtubeVideoForDate(videos, date);
+      const recordedRemoteVideo = record && record.videoId ? videos.find((item) => item.id === record.videoId) : null;
+      remoteVideoExists = record && record.videoId ? !!recordedRemoteVideo : !!remoteTodayVideo;
+      // YouTube can omit status.publishAt after a scheduled video becomes
+      // public. If the authenticated API still proves the exact registry ID
+      // exists and the registry slot is today, prefer skipping to a duplicate.
+      if (!remoteTodayVideo && recordedRemoteVideo && isoDay(record.publishAt) === date) remoteTodayVideo = recordedRemoteVideo;
       youtubeVerified = true;
     } catch (error) {
       remoteVideoExists = false;
@@ -119,6 +170,7 @@ async function check(options = {}) {
     notifications: notificationsState.gonderilen || {},
     quality: qualityFor(channel, record && record.slug),
     remoteVideoExists,
+    remoteTodayVideo,
     youtubeVerified,
     automaticRecoveryStarted: options.automaticRecoveryStarted,
   });
@@ -132,6 +184,9 @@ function writeGitHubOutput(result, outputPath = process.env.GITHUB_OUTPUT) {
     healthy: result.healthy,
     production_ready: result.productionReady,
     today_video_scheduled: result.scheduled,
+    youtube_verified: result.youtubeVerified,
+    youtube_today_exists: result.youtubeTodayExists,
+    safe_to_recover: result.safeToRecover,
     slug: result.slug || "",
     video_id: result.videoId || "",
     publish_at: result.publishAt || "",
@@ -167,6 +222,9 @@ async function main(argv = process.argv.slice(2)) {
     result.notificationExists = false;
     result.productionReady = false;
     result.healthy = false;
+    result.youtubeVerified = true;
+    result.youtubeTodayExists = false;
+    result.safeToRecover = true;
     result.verification = "simulated-scheduler-failure";
   }
   const output = argValue(selected.argv, "--output");
@@ -176,7 +234,7 @@ async function main(argv = process.argv.slice(2)) {
   return result.healthy ? 0 : 2;
 }
 
-module.exports = { argValue, recordForDate, evaluateSnapshot, check, writeGitHubOutput, main };
+module.exports = { argValue, recordForDate, youtubeVideoForDate, evaluateSnapshot, check, writeGitHubOutput, main };
 
 if (require.main === module) main().then((code) => { process.exitCode = code; }).catch((error) => {
   process.stderr.write(JSON.stringify({ healthy: false, checkerError: String(error.message || error) }) + "\n");
