@@ -43,7 +43,11 @@ jobs:
           node-version: '20'
       - id: k
         run: |
-          if [ "${{ inputs.force }}" = "true" ] || [ "${{ github.event_name }}" != "schedule" ]; then
+          # Normal manual production may intentionally bypass the calendar.
+          # SLA recovery may not: it must re-check the calendar while holding
+          # the shared concurrency lock, so a late primary scheduler cannot
+          # fill the day and then be followed by a second upload.
+          if [ "${{ inputs.force }}" != "true" ] && [ "${{ github.event_name }}" != "schedule" ]; then
             echo "Elle tetiklendi — takvim atlandi."; echo "uygun=true" >> "$GITHUB_OUTPUT"; exit 0
           fi
           # Cikis kodu: 0 = vakti geldi, 3 = bugunun videosu zaten var, digeri = BEKLENMEDIK HATA.
