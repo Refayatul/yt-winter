@@ -37,12 +37,43 @@ test("production SLA emits the required healthy machine-readable shape", () => {
 
 test("missed scheduler starts recovery; a human is notified only if recovery also fails", () => {
   const missing = SLA.evaluateSnapshot({ date: "2026-09-28", channel: "failure-reconstructed",
-    published: [], generated: [], notifications: {}, quality: null, remoteVideoExists: false });
+    published: [], generated: [], notifications: {}, quality: null, remoteVideoExists: false, youtubeVerified: true });
   assert.equal(Recovery.decide(missing).startProduction, true);
   assert.equal(Recovery.decide(missing).notifyHuman, false);
   assert.equal(Recovery.afterRecovery(missing, { started: true }).notifyHuman, true);
   const recovered = { ...missing, scheduled: true, productionReady: true, notificationExists: true, healthy: true };
   assert.equal(Recovery.afterRecovery(recovered, { started: true }).notifyHuman, false);
+});
+
+test("YouTube API absence is required before watchdog recovery", () => {
+  const unknown = SLA.evaluateSnapshot({ date: "2026-09-28", channel: "failure-reconstructed",
+    published: [], generated: [], notifications: {}, quality: null, youtubeVerified: false });
+  assert.equal(unknown.youtubeTodayExists, false);
+  assert.equal(unknown.safeToRecover, false, "an OAuth/API failure must fail closed");
+
+  const absent = SLA.evaluateSnapshot({ date: "2026-09-28", channel: "failure-reconstructed",
+    published: [], generated: [], notifications: {}, quality: null, youtubeVerified: true, remoteTodayVideo: null });
+  assert.equal(absent.safeToRecover, true);
+
+  const remote = { id: "aScjSrwqeRk", snippet: { publishedAt: "2026-09-28T18:00:00Z" },
+    status: { publishAt: "2026-09-28T18:00:00Z" }, contentDetails: { duration: "PT52S" } };
+  const occupied = SLA.evaluateSnapshot({ date: "2026-09-28", channel: "failure-reconstructed",
+    published: [], generated: [], notifications: {}, quality: null, youtubeVerified: true, remoteTodayVideo: remote });
+  assert.equal(occupied.youtubeTodayExists, true);
+  assert.equal(occupied.safeToRecover, false);
+  assert.equal(occupied.remoteTodayVideoId, remote.id);
+  assert.equal(SLA.youtubeVideoForDate([remote], "2026-09-28").id, remote.id);
+  assert.equal(SLA.youtubeVideoForDate([{ ...remote, contentDetails: { duration: "PT8M" } }], "2026-09-28"), null);
+});
+
+test("YouTube upload-list API errors cannot masquerade as an empty channel", async () => {
+  let call = 0;
+  const api = { data: async () => {
+    call++;
+    if (call === 1) return { ok: true, veri: { items: [{ contentDetails: { relatedPlaylists: { uploads: "UP123" } } }] } };
+    return { ok: false, neden: "quota/auth failure" };
+  } };
+  await assert.rejects(() => require("../../lib/yt").yuklemeler(api, 100), /quota\/auth failure/);
 });
 
 test("TikTok duplicate protection treats any durable publishId as already sent", () => {
@@ -105,6 +136,39 @@ test("Cloudflare watchdog sends the independent repository_dispatch event", asyn
   assert.equal(JSON.parse(request.options.body).event_type, "production-sla-watchdog");
   assert.match(request.url, /repos\/eyazan\/youtube-otomasyon\/dispatches$/);
   assert.doesNotMatch(JSON.stringify(result), /test-token/);
+});
+
+test("Cloudflare watchdog exposes deployment health and detailed non-204 errors", async () => {
+  const worker = await import(pathToFileURL(path.join(KOK, "ops", "production-watchdog-worker", "src", "index.mjs")));
+  const env = { WATCHDOG_GITHUB_TOKEN: "test-token", GITHUB_REPOSITORY: "eyazan/youtube-otomasyon",
+    WATCHDOG_CRON: "35 16 * * *", PRODUCTION_DEADLINE_UTC: "16:30", WATCHDOG_VERSION: "v-test", WATCHDOG_COMMIT: "abc123" };
+  const health = await worker.default.fetch(new Request("https://watchdog.example/health"), env);
+  const body = await health.json();
+  assert.deepEqual({ tokenConfigured: body.tokenConfigured, repository: body.repository, cron: body.cron,
+    deadlineUtc: body.deadlineUtc, version: body.version, commit: body.commit }, {
+    tokenConfigured: true, repository: "eyazan/youtube-otomasyon", cron: "35 16 * * *",
+    deadlineUtc: "16:30", version: "v-test", commit: "abc123",
+  });
+  await assert.rejects(() => worker.dispatchWatchdog(env, async () => ({
+    status: 403, statusText: "Forbidden", headers: { get: () => "request-123" }, text: async () => '{"message":"Resource not accessible"}',
+  })), /403.*request-123.*Resource not accessible/);
+});
+
+test("watchdog workflows enforce safe recovery, deployment evidence and no-production self-test", () => {
+  const production = fs.readFileSync(path.join(KOK, ".github", "workflows", "production-watchdog.yml"), "utf8");
+  const deploy = fs.readFileSync(path.join(KOK, ".github", "workflows", "deploy-watchdog.yml"), "utf8");
+  const selfTest = fs.readFileSync(path.join(KOK, ".github", "workflows", "watchdog-self-test.yml"), "utf8");
+  const reusable = fs.readFileSync(path.join(KOK, ".github", "workflows", "uretim-is.yml"), "utf8");
+  assert.match(production, /types: \[production-sla-watchdog, production-sla-watchdog-self-test\]/);
+  assert.match(production, /needs\.sla\.outputs\.safe_to_recover == 'true'/);
+  assert.match(production, /vars\.IB_PUBLISH == '1'/);
+  assert.match(deploy, /CLOUDFLARE_ACCOUNT_ID is required/);
+  assert.match(deploy, /watchdog-deployment-evidence/);
+  assert.match(deploy, /\.tokenConfigured == true/);
+  assert.match(selfTest, /production-sla-watchdog-self-test/);
+  assert.match(selfTest, /videoProductionStarted:false/);
+  assert.doesNotMatch(selfTest, /uretim-is\.yml|shorts-sira\.js|youtube-yukle\.js/);
+  assert.match(reusable, /inputs\.force \}\}" != "true".*github\.event_name.*!= "schedule"/s);
 });
 
 test("daily operations report covers both isolated channels and TikTok only for Failure Reconstructed", () => {
