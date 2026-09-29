@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-09-29T16:35:52.765Z
+Generated: 2026-09-29T16:36:27.257Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -36,5 +36,21 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics | no-channel-measurements |
 | Scheduler | sla-missed-or-channel-disabled |
 | Ready topic backlog | 499 |
+| Errors/review/blocks | 0 |
+
+## CriticalThread
+
+| Signal | Status |
+|---|---|
+| Today topic | unavailable |
+| Short | due-not-produced |
+| Long | due-not-produced |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
+| Analytics | no-channel-measurements |
+| Scheduler | sla-missed-or-channel-disabled |
+| Ready topic backlog | 522 |
 | Errors/review/blocks | 0 |
 
