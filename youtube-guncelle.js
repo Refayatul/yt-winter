@@ -17,18 +17,11 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const Channel = require("./core/channel-context");
+const SELECTED = Channel.selectFromArgv(process.argv.slice(2));
+const CHANNEL = SELECTED.channel;
 
 const KOK = __dirname;
-function env(ad) {
-  if (process.env[ad]) return String(process.env[ad]).trim();
-  try {
-    for (const l of fs.readFileSync(path.join(KOK, ".env"), "utf8").split(/\r?\n/)) {
-      const m = l.match(/^([A-Z0-9_]+)=(.*)$/);
-      if (m && m[1] === ad) return m[2].trim();
-    }
-  } catch (e) {}
-  return "";
-}
 
 function istek(opt, govde) {
   return new Promise((coz, red) => {
@@ -38,17 +31,6 @@ function istek(opt, govde) {
     });
     r.on("error", red); if (govde) r.write(govde); r.end();
   });
-}
-
-async function erisimJetonu() {
-  const govde = new URLSearchParams({
-    client_id: env("YT_CLIENT_ID"), client_secret: env("YT_CLIENT_SECRET"),
-    refresh_token: env("YT_REFRESH_TOKEN"), grant_type: "refresh_token",
-  }).toString();
-  const y = await istek({ hostname: "oauth2.googleapis.com", path: "/token", method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded", "Content-Length": Buffer.byteLength(govde) } }, govde);
-  if (y.durum !== 200) throw new Error("OAuth jetonu alinamadi (HTTP " + y.durum + ")");
-  return JSON.parse(y.govde).access_token;
 }
 
 const temizle = (s) => String(s).replace(/[<>]/g, "");
@@ -64,15 +46,16 @@ function metniAl(BASE, is) {
 }
 
 async function main() {
-  const argv = process.argv.slice(2);
+  const argv = SELECTED.argv;
   const [id, is] = argv.filter((a, i) => !a.startsWith("--") && argv[i - 1] !== "--baslik");
   const kuru = argv.includes("--dogrula");
   const bi = argv.indexOf("--baslik");
   if (!id || !is) { console.error("Kullanim: node youtube-guncelle.js <video-id> <is-adi> [--dogrula] [--baslik \"<yeni>\" | --baslik-spec]"); process.exit(1); }
   if (!/^[A-Za-z0-9_-]{11}$/.test(id)) { console.error("Gecersiz video kimligi: " + id); process.exit(1); }
-  const BASE = path.join(KOK, "uretim", is);
+  const BASE = path.join(CHANNEL.paths.production, is);
   const m = metniAl(BASE, is);
-  const token = await erisimJetonu();
+  const auth = await require("./lib/yt").getYouTubeClient(CHANNEL);
+  const token = auth.accessToken;
 
   // Mevcut snippet'i al (categoryId gerekli).
   const mevcut = await istek({ hostname: "www.googleapis.com",
@@ -95,7 +78,7 @@ async function main() {
   console.log("Baslik : " + (yeni.snippet.title === snip.title ? "(degismiyor) " : snip.title + "  ->  ") + yeni.snippet.title);
   console.log("Aciklama:\n" + yeni.snippet.description.split("\n").map((l) => "  | " + l).join("\n"));
   if (kuru) { console.log("\n[--dogrula] Hicbir sey gonderilmedi."); return; }
-  const yedek = path.join(KOK, "analysis", id, "snippet-before-" + new Date().toISOString().replace(/[:.]/g, "-") + ".json");
+  const yedek = path.join(CHANNEL.paths.analysis, id, "snippet-before-" + new Date().toISOString().replace(/[:.]/g, "-") + ".json");
   fs.mkdirSync(path.dirname(yedek), { recursive: true });
   fs.writeFileSync(yedek, JSON.stringify(snip, null, 2));
   console.log("Yedek  : " + path.relative(KOK, yedek));

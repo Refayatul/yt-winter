@@ -1,8 +1,8 @@
 name: Multi-channel portfolio production
 
-# Both channels run in one job so maxConcurrentRenders/maxConcurrentUploads=1
-# is physically enforced. Each channel step is failure-isolated: a failed FR
-# step cannot prevent IB from running, and vice versa.
+# All channels run in one serialized portfolio lane so maxConcurrentRenders /
+# maxConcurrentUploads=1 is physically enforced. Every channel step is failure
+# isolated; one failed identity cannot stop either of the other channels.
 on:
   schedule:
     - cron: '23 7 * * *'
@@ -20,8 +20,8 @@ on:
       channel:
         description: Channel to run
         type: choice
-        options: [both, failure-reconstructed, impossible-brief]
-        default: both
+        options: [all, both, failure-reconstructed, impossible-brief, critical-thread]
+        default: all
       dry_run:
         description: Render and validate without upload
         type: boolean
@@ -48,10 +48,14 @@ jobs:
       YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
       YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
       YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
-      IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
-      IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
+      IB_CLIENT_ID: ${{ secrets.IB_CLIENT_ID }}
+      IB_CLIENT_SECRET: ${{ secrets.IB_CLIENT_SECRET }}
       IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
       IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
+      CT_CLIENT_ID: ${{ secrets.CT_CLIENT_ID }}
+      CT_CLIENT_SECRET: ${{ secrets.CT_CLIENT_SECRET }}
+      CT_YT_REFRESH_TOKEN: ${{ secrets.CT_YT_REFRESH_TOKEN }}
+      CT_YT_CHANNEL_ID: ${{ vars.CT_YT_CHANNEL_ID }}
       TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
       TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
       TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
@@ -75,7 +79,7 @@ jobs:
         run: node portfolio-scheduler.js --enqueue
 
       - name: Failure Reconstructed Short
-        if: github.event_name == 'schedule' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed'
+        if: github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed'
         continue-on-error: true
         env:
           PUBLISH: ${{ vars.FR_PUBLISH || vars.PUBLISH }}
@@ -86,7 +90,7 @@ jobs:
           node shorts-sira.js --channel failure-reconstructed
 
       - name: ImpossibleBrief Short
-        if: ${{ always() && ((github.event_name == 'schedule' && vars.IB_PUBLISH == '1') || inputs.channel == 'both' || inputs.channel == 'impossible-brief') }}
+        if: ${{ always() && ((github.event_name == 'schedule' && vars.IB_PUBLISH == '1') || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'impossible-brief') }}
         continue-on-error: true
         env:
           PUBLISH: ${{ vars.IB_PUBLISH }}
@@ -95,8 +99,18 @@ jobs:
           node saglik.js --channel impossible-brief || true
           node shorts-sira.js --channel impossible-brief
 
+      - name: CriticalThread Short
+        if: ${{ always() && ((github.event_name == 'schedule' && vars.CT_PUBLISH == '1') || inputs.channel == 'all' || inputs.channel == 'critical-thread') }}
+        continue-on-error: true
+        env:
+          PUBLISH: ${{ vars.CT_PUBLISH }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
+          node saglik.js --channel critical-thread || true
+          node shorts-sira.js --channel critical-thread
+
       - name: Send today's exact Failure Reconstructed MP4 to TikTok inbox
-        if: ${{ always() && inputs.dry_run != true && (github.event_name == 'schedule' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed') }}
+        if: ${{ always() && inputs.dry_run != true && (github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed') }}
         continue-on-error: true
         run: |
           RESULT="${{ runner.temp }}/fr-production-result.json"
@@ -107,14 +121,14 @@ jobs:
           node tiktok-yukle.js "$SLUG" --source-result="$RESULT" --result-file="${{ runner.temp }}/tiktok-today.json"
 
       - name: Send one oldest Failure Reconstructed TikTok backlog item
-        if: ${{ always() && inputs.dry_run != true && (github.event_name == 'schedule' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed') }}
+        if: ${{ always() && inputs.dry_run != true && (github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed') }}
         continue-on-error: true
         run: node tiktok-yukle.js --gecmis --result-file="${{ runner.temp }}/tiktok-backlog.json"
 
       - name: Channel-scoped analytics, plans, health and notifications
         if: always()
         run: |
-          for CHANNEL in failure-reconstructed impossible-brief; do
+          for CHANNEL in failure-reconstructed impossible-brief critical-thread; do
             node post-publish-analyzer.js --channel "$CHANNEL" --due || true
             node channel-plan.js --channel "$CHANNEL" || true
             node library-health.js --channel "$CHANNEL" || true

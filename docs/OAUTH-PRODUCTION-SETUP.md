@@ -1,4 +1,6 @@
-# Google OAuth production setup
+# Google OAuth production setup (legacy two-channel notes)
+
+> The authoritative three-channel procedure and current secret names are in [OAUTH-THREE-CHANNELS.md](OAUTH-THREE-CHANNELS.md). This file is retained for the existing ImpossibleBrief domain/branding deployment details.
 
 The repository is code-ready for two isolated OAuth identities. Google Cloud configuration, domain deployment, and one interactive authorization per channel remain manual because consent must be granted by the channel owner.
 

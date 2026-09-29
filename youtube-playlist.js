@@ -10,6 +10,9 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const Channel = require("./core/channel-context");
+const SELECTED = Channel.selectFromArgv(process.argv.slice(2));
+const CHANNEL = SELECTED.channel;
 
 const KOK = __dirname;
 
@@ -22,15 +25,11 @@ const SERILER = {
 };
 function seriAdi(konu) {
   if (konu && konu.playlist) return konu.playlist;
+  if (CHANNEL.slug === "critical-thread") return "Systems Holding the World Together";
+  if (CHANNEL.slug === "impossible-brief") return "Impossible Questions, Scientific Answers";
   return (konu && konu.tur === "stok") ? SERILER.stok.ad : SERILER.arsiv.ad;
 }
 
-function env(ad) {
-  if (process.env[ad]) return String(process.env[ad]).trim();
-  try { for (const l of fs.readFileSync(path.join(KOK, ".env"), "utf8").split(/\r?\n/)) {
-    const m = l.match(/^([A-Z0-9_]+)=(.*)$/); if (m && m[1] === ad) return m[2].trim(); } } catch (e) {}
-  return "";
-}
 function istek(opt, govde) {
   return new Promise((coz, red) => {
     const r = https.request(opt, (res) => { const p = []; res.on("data", d => p.push(d));
@@ -39,12 +38,7 @@ function istek(opt, govde) {
   });
 }
 async function token() {
-  const g = new URLSearchParams({ client_id: env("YT_CLIENT_ID"), client_secret: env("YT_CLIENT_SECRET"),
-    refresh_token: env("YT_REFRESH_TOKEN"), grant_type: "refresh_token" }).toString();
-  const y = await istek({ hostname: "oauth2.googleapis.com", path: "/token", method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded", "Content-Length": Buffer.byteLength(g) } }, g);
-  if (y.durum !== 200) throw new Error("OAuth jetonu alinamadi (HTTP " + y.durum + ")");
-  return JSON.parse(y.govde).access_token;
+  return (await require("./lib/yt").getYouTubeClient(CHANNEL)).accessToken;
 }
 const get = (tok, yol) => istek({ hostname: "www.googleapis.com", path: "/youtube/v3/" + yol,
   headers: { Authorization: "Bearer " + tok } }).then(r => JSON.parse(r.govde));
@@ -57,7 +51,7 @@ async function post(tok, yol, obj) {
 }
 
 // Playlist kimlikleri kaydi (ic baglanti / aciklama linkleri icin)
-const PL_KAYIT = path.join(KOK, "icerik", "playlistler.json");
+const PL_KAYIT = path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "playlistler.json" : "playlists.json");
 function kaydet(ad, id) {
   let k = {}; try { k = JSON.parse(fs.readFileSync(PL_KAYIT, "utf8")); } catch (e) {}
   if (k[ad] === id) return;
@@ -97,6 +91,11 @@ async function ekle(tok, videoId, ad) {
 // (config clusters.minVideosForPlaylist) — tek videolu bos listeler acilmaz.
 // Esik ilk asildiginda kumenin onceki videolari da listeye eklenir.
 async function kumeyeEkle(tok, videoId, konu) {
+  if (CHANNEL.config.pathMode !== "legacy-adapter") {
+    const category = konu && (konu.category || konu.cluster);
+    if (category) await ekle(tok, videoId, `${CHANNEL.name}: ${category}`);
+    return;
+  }
   const K = require("./lib/kutuphane");
   const min = require("./lib/ayar").ayar().clusters.minVideosForPlaylist;
   const kumeId = K.kumeBul(konu);
@@ -112,8 +111,9 @@ module.exports = { ekle, kumeyeEkle, seriAdi, token, SERILER };
 if (require.main === module) {
   (async () => {
     const tok = await token();
-    const argv = process.argv.slice(2);
+    const argv = SELECTED.argv;
     if (argv[0] === "--hepsi") {
+      if (CHANNEL.config.pathMode !== "legacy-adapter") throw new Error("--hepsi is only supported by the legacy Failure Reconstructed topic layout");
       // Kanaldaki videolari basliga gore konu dosyasiyla eslestirip serilere dagit.
       const konular = fs.readdirSync(path.join(KOK, "icerik", "konular"))
         .filter(f => f.endsWith(".json"))

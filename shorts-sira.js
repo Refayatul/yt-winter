@@ -225,7 +225,7 @@ function main() {
 }
 
 try {
-  if (CHANNEL.slug === "impossible-brief") process.exit(require("./core/pipeline/impossible-brief").main(SELECTED.argv));
+  if (CHANNEL.config.pathMode !== "legacy-adapter") process.exit(require("./core/pipeline/impossible-brief").runChannel(CHANNEL.slug, SELECTED.argv));
   process.exit(main());
 }
 catch (e) { console.error(`[${CHANNEL.name}] Hata: ` + e.message); process.exit(1); }

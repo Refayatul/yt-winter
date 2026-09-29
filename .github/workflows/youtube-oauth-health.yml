@@ -1,0 +1,94 @@
+name: YouTube OAuth health
+
+on:
+  schedule:
+    - cron: '43 6 * * *'
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Channel identity to validate
+        type: choice
+        options: [all, failure-reconstructed, impossible-brief, critical-thread]
+        default: all
+
+permissions:
+  contents: read
+
+jobs:
+  failure-reconstructed:
+    if: ${{ github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'failure-reconstructed' }}
+    runs-on: ubuntu-latest
+    env:
+      FR_YT_CLIENT_ID: ${{ secrets.FR_YT_CLIENT_ID }}
+      FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
+      FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
+      FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
+      YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+      YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+      YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate Failure Reconstructed identity
+        run: |
+          node oauth-health.js --channel failure-reconstructed > "$RUNNER_TEMP/failure-reconstructed-oauth.json"
+          cat "$RUNNER_TEMP/failure-reconstructed-oauth.json"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-reconstructed-oauth-health
+          path: ${{ runner.temp }}/failure-reconstructed-oauth.json
+          if-no-files-found: error
+          retention-days: 30
+
+  impossible-brief:
+    if: ${{ (github.event_name == 'schedule' && vars.IB_PUBLISH == '1') || github.event_name == 'workflow_dispatch' && (inputs.channel == 'all' || inputs.channel == 'impossible-brief') }}
+    runs-on: ubuntu-latest
+    env:
+      IB_CLIENT_ID: ${{ secrets.IB_CLIENT_ID }}
+      IB_CLIENT_SECRET: ${{ secrets.IB_CLIENT_SECRET }}
+      IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
+      IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate ImpossibleBrief identity
+        run: |
+          node oauth-health.js --channel impossible-brief > "$RUNNER_TEMP/impossible-brief-oauth.json"
+          cat "$RUNNER_TEMP/impossible-brief-oauth.json"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: impossible-brief-oauth-health
+          path: ${{ runner.temp }}/impossible-brief-oauth.json
+          if-no-files-found: error
+          retention-days: 30
+
+  critical-thread:
+    if: ${{ (github.event_name == 'schedule' && vars.CT_PUBLISH == '1') || github.event_name == 'workflow_dispatch' && (inputs.channel == 'all' || inputs.channel == 'critical-thread') }}
+    runs-on: ubuntu-latest
+    env:
+      CT_CLIENT_ID: ${{ secrets.CT_CLIENT_ID }}
+      CT_CLIENT_SECRET: ${{ secrets.CT_CLIENT_SECRET }}
+      CT_YT_REFRESH_TOKEN: ${{ secrets.CT_YT_REFRESH_TOKEN }}
+      CT_YT_CHANNEL_ID: ${{ vars.CT_YT_CHANNEL_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate CriticalThread identity
+        run: |
+          node oauth-health.js --channel critical-thread > "$RUNNER_TEMP/critical-thread-oauth.json"
+          cat "$RUNNER_TEMP/critical-thread-oauth.json"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: critical-thread-oauth-health
+          path: ${{ runner.temp }}/critical-thread-oauth.json
+          if-no-files-found: error
+          retention-days: 30

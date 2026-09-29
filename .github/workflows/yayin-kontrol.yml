@@ -38,10 +38,14 @@ jobs:
       FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
       FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
       FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
-      IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
-      IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
+      IB_CLIENT_ID: ${{ secrets.IB_CLIENT_ID }}
+      IB_CLIENT_SECRET: ${{ secrets.IB_CLIENT_SECRET }}
       IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
       IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
+      CT_CLIENT_ID: ${{ secrets.CT_CLIENT_ID }}
+      CT_CLIENT_SECRET: ${{ secrets.CT_CLIENT_SECRET }}
+      CT_YT_REFRESH_TOKEN: ${{ secrets.CT_YT_REFRESH_TOKEN }}
+      CT_YT_CHANNEL_ID: ${{ vars.CT_YT_CHANNEL_ID }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
@@ -51,7 +55,8 @@ jobs:
       - name: Yayin + bos gun kontrolu
         run: |
           node bildirim.js --channel failure-reconstructed --gun-kontrol || true
-          node bildirim.js --channel impossible-brief --gun-kontrol || true
+          if [ "${{ vars.IB_PUBLISH }}" = "1" ]; then node bildirim.js --channel impossible-brief --gun-kontrol || true; fi
+          if [ "${{ vars.CT_PUBLISH }}" = "1" ]; then node bildirim.js --channel critical-thread --gun-kontrol || true; fi
       - name: Bildirim durumunu kaydet
         run: |
           git config user.name  "uretim-bot"

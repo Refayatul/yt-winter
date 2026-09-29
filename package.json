@@ -10,6 +10,8 @@
     "test:js": "node --test tests/js/*.test.js",
     "test:multi-channel": "node --test tests/js/multi-channel.test.js",
     "test:impossible-brief": "node e2e-impossible-brief.js",
+    "test:critical-thread": "node e2e-critical-thread.js --render",
+    "oauth:health": "node oauth-health.js",
     "simulate:portfolio": "node simulate-portfolio.js",
     "report:daily": "node daily-operations-report.js",
     "library:impossible-brief": "node library-health.js --channel impossible-brief",

@@ -2,31 +2,38 @@
 
 ## Multi-channel YouTube Growth OS
 
-Tek kod tabanı iki bağımsız kanalı çalıştırır:
+Tek kod tabanı üç bağımsız kanalı çalıştırır:
 
 - **Failure Reconstructed** — mevcut davranış ve eski `icerik/`, `analytics/`, `channel/` yolları geriye uyumlu adaptörle korunur.
 - **ImpossibleBrief** — what-if science, space, physics, Earth, humanity and future technology; tüm konu, durum, bellek, analiz ve kimlik bilgileri `channels/impossible-brief/` altında izole edilir.
+- **CriticalThread** — modern dünyayı ayakta tutan görünmez makineler, malzemeler ve altyapı; konu, durum, bellek, analiz ve kimlik bilgileri `channels/critical-thread/` altında izole edilir. Başlangıç kütüphanesi 522 nitelikli konudur.
 
 Her büyük komut `--channel` kabul eder. Bayrak verilmezse güvenli geriye uyumluluk için `failure-reconstructed` seçilir.
 
 ```bash
 node shorts-sira.js --channel impossible-brief --no-render
+node shorts-sira.js --channel critical-thread --no-render
 node library-health.js --channel impossible-brief
+node library-health.js --channel critical-thread
 node post-publish-analyzer.js --channel impossible-brief --due
 node channel-plan.js --channel impossible-brief
 node portfolio-scheduler.js
 node portfolio-dashboard.js
-node daily-operations-report.js              # iki kanal + TikTok tek rapor
+node daily-operations-report.js              # üç kanal + TikTok tek rapor
 node production-sla-check.js --channel failure-reconstructed
 node e2e-impossible-brief.js --render       # yerel kuru çalışma; upload yok
-node simulate-portfolio.js                  # 30 gün + enjekte hatalar
+node e2e-critical-thread.js --render        # gerçek kuru render; upload yok
+node oauth-health.js --channel critical-thread
+node simulate-portfolio.js                  # üç kanal / 30 gün + enjekte hatalar
 ```
 
-YouTube sırları kanal bazında `FR_YT_*` ve `IB_YT_*` adlarıyla tutulur. Her yüklemeden önce OAuth ile doğrulanan kanal kimliği, `FR_YT_CHANNEL_ID` veya `IB_YT_CHANNEL_ID` ile birebir karşılaştırılır; eksik ya da farklıysa yükleme başlamadan bloklanır. Failure Reconstructed otomatik Short üretimi açıktır. ImpossibleBrief yayınlama, kanal OAuth'ı tamamlanıp `IB_PUBLISH=1` yapılana kadar kapalıdır. Cloudflare watchdog kodu hazırdır fakat bağımsız koruma ancak [tek seferlik dağıtım](docs/SCHEDULER-RECOVERY.md) tamamlanınca aktiftir. Uzun format henüz production workflow'una bağlı değildir. Ayrıntılar: [current audit](docs/AUTONOMY-AUDIT.md), [multi-channel](docs/MULTI-CHANNEL.md), [OAuth](docs/OAUTH-PRODUCTION-SETUP.md), [operations](docs/OPERATIONS.md).
+YouTube sırları kanal bazında tutulur. Failure Reconstructed için tercih edilen adlar `FR_YT_*`; mevcut `YT_*` değerleri yalnız geçiş fallback'idir. ImpossibleBrief canlı repository adları `IB_CLIENT_ID`, `IB_CLIENT_SECRET`, `IB_YT_REFRESH_TOKEN`; CriticalThread adları `CT_CLIENT_ID`, `CT_CLIENT_SECRET`, `CT_YT_REFRESH_TOKEN`'dır. Her YouTube yazma işleminden önce ortak OAuth katmanı erişim token'ını otomatik yeniler ve doğrulanan kanal kimliğini `FR_YT_CHANNEL_ID`, `IB_YT_CHANNEL_ID` veya `CT_YT_CHANNEL_ID` ile karşılaştırır. Eksik/farklı kimlikte işlem başlamadan bloklanır.
+
+Failure Reconstructed otomatik Short üretimi açıktır. ImpossibleBrief yalnız `IB_PUBLISH=1`, CriticalThread yalnız `CT_PUBLISH=1` olduğunda schedule/watchdog yayın hattına girer. İki yeni kanalın refresh token'ı tamamlanana kadar bu bayrakları açmayın. Tek seferlik güvenli kurulum: [üç kanal OAuth runbook'u](docs/OAUTH-THREE-CHANNELS.md). Güncel mimari/bulgu durumu: [üç kanal audit'i](docs/THREE-CHANNEL-AUDIT.md). Cloudflare watchdog production'da dağıtılmış ve HTTP 204 dispatch self-test'i geçmiştir. Uzun format outline/paket sistemi vardır; premium uzun render/yükleme henüz production workflow'una bağlı değildir.
 
 ## Production watchdog kurulumu ve doğrulaması
 
-Cloudflare Cron Worker her gün `16:35 UTC`'de, `16:30 UTC` üretim SLA'ından beş dakika sonra `production-sla-watchdog` olayı gönderir. GitHub-native `17:07 UTC` cron yedeği korunur. Recovery, Failure Reconstructed için önce kimliği doğrulanmış YouTube kanalını API ile tarar; bugünün Short'u uzakta da yoksa üretime izin verir. API/OAuth doğrulanamazsa duplicate riski almak yerine fail-closed durur ve issue açar. ImpossibleBrief yalnızca `IB_PUBLISH=1` olduğunda çalışır.
+Cloudflare Cron Worker her gün `16:35 UTC`'de, `16:30 UTC` üretim SLA'ından beş dakika sonra `production-sla-watchdog` olayı gönderir. GitHub-native `17:07 UTC` cron yedeği korunur. Recovery önce kimliği doğrulanmış YouTube kanalını API ile tarar; bugünün Short'u uzakta da yoksa üretime izin verir. API/OAuth doğrulanamazsa duplicate riski almak yerine fail-closed durur ve issue açar. ImpossibleBrief yalnız `IB_PUBLISH=1`, CriticalThread yalnız `CT_PUBLISH=1` olduğunda kendi izole SLA/recovery hattına girer.
 
 Gerekli repository secrets:
 

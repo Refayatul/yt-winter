@@ -22,7 +22,10 @@ jobs:
         with:
           python-version: '3.12'
       - name: Bagimliliklar
-        run: npm install --no-audit --no-fund
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
+          npm install --no-audit --no-fund
       - name: JS testleri + sozdizimi
         run: node --test tests/js/*.test.js
       - name: GitHub Actions semantic validation
@@ -33,7 +36,9 @@ jobs:
           ./actionlint .github/workflows/*.yml
       - name: ImpossibleBrief dry-run packages (no upload)
         run: node e2e-impossible-brief.js
-      - name: Two-channel 30-day simulation
+      - name: CriticalThread complete dry render (no upload)
+        run: node e2e-critical-thread.js --render
+      - name: Three-channel 30-day simulation
         run: node simulate-portfolio.js
       - name: Python testleri
         run: python -m unittest discover -s tests

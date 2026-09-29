@@ -12,6 +12,8 @@ const Publishing = require("../../core/publishing");
 const Research = require("../../core/research");
 const Scripting = require("../../core/scripting");
 const Quality = require("../../core/quality/impossible-brief");
+const CriticalQuality = require("../../core/quality/critical-thread");
+const SharedQuality = require("../../core/quality");
 const Discovery = require("../../core/discovery");
 const Library = require("../../core/analytics/library-health");
 const Scheduler = require("../../core/scheduling");
@@ -25,54 +27,69 @@ const ROOT = path.resolve(__dirname, "..", "..");
 test("channel registry defaults safely and parses --channel in both forms", () => {
   const registry = Channel.registry();
   assert.equal(registry.defaultChannel, "failure-reconstructed");
-  assert.deepEqual(Object.keys(registry.channels).sort(), ["failure-reconstructed", "impossible-brief"]);
+  assert.deepEqual(Object.keys(registry.channels).sort(), ["critical-thread", "failure-reconstructed", "impossible-brief"]);
   assert.deepEqual(Channel.parseChannelArgv(["--channel", "impossible-brief", "--due"]), { slug: "impossible-brief", argv: ["--due"] });
   assert.deepEqual(Channel.parseChannelArgv(["--channel=failure-reconstructed", "x"]), { slug: "failure-reconstructed", argv: ["x"] });
   assert.throws(() => Channel.parseChannelArgv(["--channel", "unknown"]), /Unknown channel/);
 });
 
 test("channel data roots, analytics, memory, production, and state never overlap", () => {
-  const fr = Channel.getChannel("failure-reconstructed");
-  const ib = Channel.getChannel("impossible-brief");
+  const channels = ["failure-reconstructed", "impossible-brief", "critical-thread"].map(Channel.getChannel);
   for (const key of ["topics", "analytics", "state", "memory", "reports", "packages", "production", "secrets"]) {
-    assert.notEqual(fr.paths[key], ib.paths[key], key);
+    assert.equal(new Set(channels.map((channel) => channel.paths[key])).size, 3, key);
   }
+  const ib = channels[1];
+  const ct = channels[2];
   assert.ok(ib.paths.state.startsWith(path.join(ROOT, "channels", "impossible-brief")));
   assert.ok(!ib.paths.state.includes(path.join(ROOT, "icerik")));
+  assert.ok(ct.paths.state.startsWith(path.join(ROOT, "channels", "critical-thread")));
 });
 
-test("YouTube credentials are namespaced; ImpossibleBrief cannot inherit legacy YT secrets", () => {
-  const keys = ["YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN", "FR_YT_CLIENT_ID", "FR_YT_CLIENT_SECRET", "FR_YT_REFRESH_TOKEN", "IB_YT_CLIENT_ID", "IB_YT_CLIENT_SECRET", "IB_YT_REFRESH_TOKEN"];
+test("YouTube credentials are namespaced; isolated channels cannot inherit legacy secrets", () => {
+  const keys = ["YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN", "FR_YT_CLIENT_ID", "FR_YT_CLIENT_SECRET", "FR_YT_REFRESH_TOKEN", "IB_CLIENT_ID", "IB_CLIENT_SECRET", "IB_YT_REFRESH_TOKEN", "CT_CLIENT_ID", "CT_CLIENT_SECRET", "CT_YT_REFRESH_TOKEN"];
   const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
   try {
     process.env.YT_CLIENT_ID = "legacy-id";
     process.env.YT_CLIENT_SECRET = "legacy-secret";
     process.env.YT_REFRESH_TOKEN = "legacy-token";
-    process.env.IB_YT_CLIENT_ID = "ib-id";
-    process.env.IB_YT_CLIENT_SECRET = "ib-secret";
+    process.env.IB_CLIENT_ID = "ib-id";
+    process.env.IB_CLIENT_SECRET = "ib-secret";
     process.env.IB_YT_REFRESH_TOKEN = "ib-token";
+    process.env.CT_CLIENT_ID = "ct-id";
+    process.env.CT_CLIENT_SECRET = "ct-secret";
+    process.env.CT_YT_REFRESH_TOKEN = "ct-token";
     const fr = Channel.getChannel("failure-reconstructed").credentials();
     const ib = Channel.getChannel("impossible-brief").credentials();
+    const ct = Channel.getChannel("critical-thread").credentials();
     assert.equal(fr.clientId, "legacy-id", "legacy fallback remains only for original channel");
     assert.equal(ib.clientId, "ib-id");
-    delete process.env.IB_YT_CLIENT_ID;
+    assert.equal(ct.clientId, "ct-id");
+    delete process.env.IB_CLIENT_ID;
     assert.equal(Channel.getChannel("impossible-brief").credentials().clientId, "", "no fallback to shared credential");
+    delete process.env.CT_CLIENT_ID;
+    assert.equal(Channel.getChannel("critical-thread").credentials().clientId, "", "CriticalThread cannot inherit another identity");
   } finally {
     for (const key of keys) saved[key] == null ? delete process.env[key] : process.env[key] = saved[key];
   }
 });
 
-test("wrong-channel upload is blocked before any mutation", async () => {
-  const key = "IB_YT_CHANNEL_ID";
-  const saved = process.env[key];
-  process.env[key] = "UC_IMPOSSIBLE_BRIEF";
+test("all six wrong-channel upload directions are blocked before mutation", async () => {
+  const keys = ["FR_YT_CHANNEL_ID", "IB_YT_CHANNEL_ID", "CT_YT_CHANNEL_ID"];
+  const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
+  process.env.FR_YT_CHANNEL_ID = "UC_FAILURE_RECONSTRUCTED";
+  process.env.IB_YT_CHANNEL_ID = "UC_IMPOSSIBLE_BRIEF";
+  process.env.CT_YT_CHANNEL_ID = "UC_CRITICAL_THREAD";
   try {
-    const ib = Channel.getChannel("impossible-brief");
-    assert.throws(() => Publishing.assertUploadTarget("UC_FAILURE_RECONSTRUCTED", ib), /CHANNEL_ID_MISMATCH/);
-    assert.deepEqual(Publishing.assertUploadTarget("UC_IMPOSSIBLE_BRIEF", ib).ok, true);
+    const channels = ["failure-reconstructed", "impossible-brief", "critical-thread"].map(Channel.getChannel);
+    for (const target of channels) {
+      assert.equal(Publishing.assertUploadTarget(target.expectedChannelId(), target).ok, true);
+      for (const source of channels.filter((channel) => channel.slug !== target.slug)) {
+        assert.throws(() => Publishing.assertUploadTarget(source.expectedChannelId(), target), /CHANNEL_MISMATCH/);
+      }
+    }
     const yt = require("../../lib/yt");
-    await assert.rejects(() => yt.verifyChannelIdentity({ data: async () => ({ ok: true, veri: { items: [{ id: "UC_FAILURE_RECONSTRUCTED", snippet: { title: "Failure Reconstructed" } }] } }) }, ib), /upload blocked/);
-  } finally { saved == null ? delete process.env[key] : process.env[key] = saved; }
+    await assert.rejects(() => yt.verifyChannelIdentity({ data: async () => ({ ok: true, veri: { items: [{ id: "UC_FAILURE_RECONSTRUCTED", snippet: { title: "Failure Reconstructed" } }] } }) }, Channel.getChannel("impossible-brief")), /upload\/write blocked/);
+  } finally { for (const key of keys) saved[key] == null ? delete process.env[key] : process.env[key] = saved[key]; }
 });
 
 test("library has 500 qualified, source-based, non-duplicate topics in the target mix", () => {
@@ -110,6 +127,36 @@ test("ImpossibleBrief package enforces claims, hooks, 20 titles, visuals, metada
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 });
 
+test("CriticalThread has 500+ distinct sourced topics and an isolated launch package", () => {
+  const channel = Channel.getChannel("critical-thread");
+  const universe = Discovery.universe(channel);
+  assert.ok(universe.count >= 500);
+  assert.equal(new Set(universe.topics.map((topic) => topic.canonicalTopic.toLowerCase())).size, universe.count);
+  assert.equal(new Set(universe.topics.map((topic) => topic.slug)).size, universe.count);
+  for (const topic of universe.topics) {
+    assert.equal(Research.auditTopic(topic).pass, true, topic.id);
+    assert.notEqual(CriticalQuality.evaluateTopic(topic, universe.topics).decision, "BLOCK", topic.id);
+  }
+  const topic = universe.topics.find((item) => item.topic === "The Machine the Entire Chip Industry Depends On");
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), "ct-e2e-"));
+  try {
+    const result = Rendering.buildPackage(topic, channel, temp, { render: false });
+    assert.ok(Object.values(result.validations).every(Boolean));
+    assert.ok(result.qualityGate.checked.includes("technical-credibility"));
+    assert.equal(SharedQuality.engineFor("critical-thread"), CriticalQuality);
+    assert.equal(Scripting.titleCandidates(topic).length, 20);
+    assert.equal(Scripting.longToShortFactory(topic).length, 4);
+    assert.equal(JSON.parse(fs.readFileSync(path.join(temp, "thumbnail.json"), "utf8")).concepts.length, 5);
+    const longForm = JSON.parse(fs.readFileSync(path.join(temp, "long-form-outline.json"), "utf8"));
+    assert.deepEqual(longForm.targetMinutes, [8, 18]);
+    assert.equal(longForm.sections.length, 8);
+    assert.equal(longForm.titleCandidates.length, 20);
+    assert.equal(longForm.standaloneShorts.length, 4);
+    assert.ok(longForm.evidence.length >= 4);
+    assert.equal(JSON.parse(fs.readFileSync(path.join(temp, "metadata.json"), "utf8")).uploadChannel, "critical-thread");
+  } finally { fs.rmSync(temp, { recursive: true, force: true }); }
+});
+
 test("ImpossibleBrief pipeline persists named validation evidence", () => {
   const channel = Channel.getChannel("impossible-brief");
   const topic = Discovery.universe(channel).topics.find((item) => item.topic === "What If Gravity Doubled Tomorrow?");
@@ -125,7 +172,7 @@ test("ImpossibleBrief pipeline persists named validation evidence", () => {
 
 test("portfolio scheduling serializes shared render/upload resources", () => {
   const plan = Scheduler.portfolioPlan(new Date("2030-01-01T12:00:00Z"));
-  assert.equal(plan.channels.length, 2);
+  assert.equal(plan.channels.length, 3);
   assert.equal(plan.resourceLimits.maxConcurrentRenders, 1);
   assert.equal(plan.resourceLimits.maxConcurrentUploads, 1);
   assert.ok(plan.queue.every((task) => task.renderLane === 0 && task.uploadLane === 0));
@@ -166,14 +213,15 @@ test("retention learning waits for a sample floor and aggregates repeated patter
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 });
 
-test("30-day failure simulation preserves both channels and blocks wrong target", () => {
+test("30-day failure simulation preserves three channels and blocks every wrong target", () => {
   const result = Simulation.simulate30Days();
   assert.equal(result.pass, true);
   assert.equal(result.channels["failure-reconstructed"].shorts, 30);
   assert.equal(result.channels["impossible-brief"].shorts, 30);
-  assert.equal(result.injectedFailures.length, 8);
-  assert.equal(result.wrongChannelGuard.blocked, true);
-  assert.equal(result.wrongChannelGuard.mutationOccurred, false);
+  assert.equal(result.channels["critical-thread"].shorts, 30);
+  assert.equal(result.injectedFailures.length, 11);
+  assert.equal(result.wrongChannelGuards.length, 6);
+  assert.ok(result.wrongChannelGuards.every((guard) => guard.blocked && !guard.mutationOccurred));
   assert.equal(result.tiktok.endingBacklog, 0);
   assert.equal(result.checks.schedulerRecovery, true);
   assert.equal(result.checks.analyticsCheckpointsScheduled, true);
@@ -191,6 +239,8 @@ test("major CLI modules resolve channel-specific library paths", () => {
 test("every notification title carries an unambiguous channel name", () => {
   const fr = Channel.getChannel("failure-reconstructed");
   const ib = Channel.getChannel("impossible-brief");
+  const ct = Channel.getChannel("critical-thread");
   assert.equal(Notifications.prefix("Short scheduled", fr), "[Failure Reconstructed] Short scheduled");
   assert.equal(Notifications.prefix("Short scheduled", ib), "[ImpossibleBrief] Short scheduled");
+  assert.equal(Notifications.prefix("Short scheduled", ct), "[CriticalThread] Short scheduled");
 });

@@ -130,12 +130,13 @@ function tiktokBolumu(slug) {
 
 function hataMesaji(h) {
   const adimlar = h.yetki ? [
-    "**Çözüm (2 dakika):**",
-    `1. Bilgisayarda proje klasöründe: \`node youtube-yetki.js --channel ${CHANNEL.slug}\``,
-    "2. Açılan tarayıcıda kanal hesabıyla giriş yap → izin ver",
-    `3. \`.env\` dosyasındaki yeni \`${CHANNEL.prefix}_YT_REFRESH_TOKEN\` değerini aynı adlı GitHub Actions secret'ına yapıştır`,
-    "4. Actions → *Multi-channel portfolio production* → Run workflow (ya da bir sonraki otomatik çalışmayı bekle)", "",
-    "Kalıcı çözüm: Google Cloud → OAuth consent screen → **Publish app** (Production). Test modunda yetki 7 günde biter.",
+    "**Tek seferlik çözüm:**",
+    `1. Google Auth Platform → Audience durumunu **In production** yap`,
+    `2. Bilgisayarda proje klasöründe: \`node youtube-yetki.js --channel ${CHANNEL.slug} --github\``,
+    "3. Açılan tarayıcıda bu kanalın sahibi/yöneticisi Google hesabıyla giriş yap → izin ver",
+    `4. Araç token'ı yazdırmadan \`${CHANNEL.credentialNames.refreshToken[0]}\` secret'ına ve kanal kimliğini \`${CHANNEL.credentialNames.channelId[0]}\` variable'ına kaydeder`,
+    "5. Actions → *Multi-channel portfolio production* → Run workflow (ya da bir sonraki otomatik çalışmayı bekle)", "",
+    "In production durumunda normal access-token yenilemeleri otomatik yapılır; haftalık token değişimi gerekmez.",
   ] : ["Otomasyon bir sonraki çalışmada tekrar deneyecek. Tekrarlarsa bu issue'ya bak."];
   return { baslik: kanalBaslik(`❌ Yükleme başarısız: ${h.slug}`), etiket: ["hata"], govde: [
     `@${SAHIP} video üretildi ama YouTube'a **yüklenemedi**. Konu harcanmadı; kuyrukta bekliyor.`, "",

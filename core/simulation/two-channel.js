@@ -2,12 +2,15 @@
 
 const FAILURES = [
   { day: 2, channel: "impossible-brief", type: "channel token expired", recovery: "refresh credential and retry same isolated task" },
+  { day: 3, channel: "critical-thread", type: "channel OAuth unavailable", recovery: "fail closed, alert only this channel, retry after credential repair" },
   { day: 5, channel: "failure-reconstructed", type: "network failure", recovery: "bounded retry" },
   { day: 8, channel: "impossible-brief", type: "render failure", recovery: "release render lock and retry" },
+  { day: 9, channel: "critical-thread", type: "quality block", recovery: "block topic and choose the next qualified infrastructure topic" },
   { day: 11, channel: "failure-reconstructed", type: "upload failure", recovery: "retain topic and retry without duplicate" },
   { day: 14, channel: "impossible-brief", type: "quality block", recovery: "block topic and choose next qualified topic" },
   { day: 17, channel: "failure-reconstructed", type: "state write conflict", recovery: "reload, compare-and-swap and retry" },
   { day: 20, channel: "impossible-brief", type: "API unavailable", recovery: "publish state unaffected; analytics checkpoint deferred" },
+  { day: 21, channel: "critical-thread", type: "analytics API unavailable", recovery: "defer checkpoint without altering publication or learning state" },
   { day: 23, channel: "failure-reconstructed", type: "primary scheduler missed deadline", recovery: "independent watchdog starts idempotent production recovery" },
 ];
 
@@ -15,10 +18,11 @@ function taskId(channel, format, day, sequence = 1) { return `${channel}:${forma
 
 function simulate30Days(options = {}) {
   const start = new Date(options.start || "2026-10-01T00:00:00.000Z");
-  const initialInventory = options.initialInventory || { "failure-reconstructed": 38, "impossible-brief": 499 };
+  const initialInventory = options.initialInventory || { "failure-reconstructed": 38, "impossible-brief": 499, "critical-thread": 522 };
   const states = {
     "failure-reconstructed": { shorts: [], long: [], topics: new Set(), failures: [], blockedTopics: 0, analyticsCheckpoints: 0, learningSamples: 0, initialInventory: initialInventory["failure-reconstructed"] },
     "impossible-brief": { shorts: [], long: [], topics: new Set(), failures: [], blockedTopics: 0, analyticsCheckpoints: 0, learningSamples: 0, initialInventory: initialInventory["impossible-brief"] },
+    "critical-thread": { shorts: [], long: [], topics: new Set(), failures: [], blockedTopics: 0, analyticsCheckpoints: 0, learningSamples: 0, initialInventory: initialInventory["critical-thread"] },
   };
   const events = [];
   const tiktok = { initialBacklog: options.tiktokBacklog ?? 3, todaySent: [], backlogSent: [], duplicateAttemptsPrevented: 0 };
@@ -61,21 +65,19 @@ function simulate30Days(options = {}) {
   }
   // Simulated catastrophic cross-channel attempt: guard blocks it before any
   // upload or state mutation, then the legitimate task continues.
-  const wrongChannelGuard = {
-    attemptedChannel: "impossible-brief",
-    authenticatedChannel: "failure-reconstructed",
-    blocked: true,
-    mutationOccurred: false,
-    reason: "CHANNEL_ID_MISMATCH",
-  };
+  const channelNames = Object.keys(states);
+  const wrongChannelGuards = channelNames.flatMap((attemptedChannel) => channelNames
+    .filter((authenticatedChannel) => authenticatedChannel !== attemptedChannel)
+    .map((authenticatedChannel) => ({ attemptedChannel, authenticatedChannel, blocked: true, mutationOccurred: false, reason: "CHANNEL_MISMATCH" })));
   const checks = {
     failureReconstructedShorts: states["failure-reconstructed"].shorts.length === 30,
     impossibleBriefShorts: states["impossible-brief"].shorts.length === 30,
+    criticalThreadShorts: states["critical-thread"].shorts.length === 30,
     noDuplicateUploads: Object.values(states).every((state) => new Set(state.shorts.map((item) => item.id)).size === state.shorts.length),
     noTopicLoss: Object.values(states).every((state) => state.topics.size === 30),
     noStateCollision: Object.entries(states).every(([channel, state]) => state.shorts.every((item) => item.id.startsWith(channel + ":"))),
     channelFailureIsolation: FAILURES.every((failure) => events.some((event) => event.day === failure.day && event.channel !== failure.channel && event.status === "published")),
-    wrongChannelUploadBlocked: wrongChannelGuard.blocked && !wrongChannelGuard.mutationOccurred,
+    allSixWrongChannelDirectionsBlocked: wrongChannelGuards.length === 6 && wrongChannelGuards.every((guard) => guard.blocked && !guard.mutationOccurred),
     renderConcurrencyRespected: maxActiveRender <= 1,
     uploadConcurrencyRespected: maxActiveUpload <= 1,
     inventorySufficientForWindow: Object.values(states).every((state) => state.initialInventory >= state.shorts.length + state.blockedTopics),
@@ -83,24 +85,25 @@ function simulate30Days(options = {}) {
     tiktokTodayUsesExactYouTubeMp4: tiktok.todaySent.length === 30 && tiktok.todaySent.every((item) => item.source === "exact-youtube-mp4"),
     tiktokBacklogReducedToZero: tiktok.backlogSent.length === tiktok.initialBacklog,
     analyticsCheckpointsScheduled: Object.values(states).every((state) => state.analyticsCheckpoints > 0),
-    qualityBlockReplacedNotPublished: states["impossible-brief"].blockedTopics === 1 &&
-      !events.some((event) => event.topic === "impossible-brief-topic-014" && event.status === "published"),
+    qualityBlocksReplacedNotPublished: states["impossible-brief"].blockedTopics === 1 && states["critical-thread"].blockedTopics === 1 &&
+      !events.some((event) => ["impossible-brief-topic-014", "critical-thread-topic-009"].includes(event.topic) && event.status === "published"),
     channelLearningIsolated: Object.entries(states).every(([channel, state]) => state.learningSamples >= 5 && state.shorts.every((item) => item.id.startsWith(channel + ":"))),
-    cadenceModeled: states["failure-reconstructed"].long.length === 6 && states["impossible-brief"].long.length === 5,
+    cadenceModeled: states["failure-reconstructed"].long.length === 6 && states["impossible-brief"].long.length === 5 && states["critical-thread"].long.length === 5,
   };
   const readiness = {
     shortSafetyModel: true,
     longFormProductionWired: !!options.longFormProductionWired,
     externalWatchdogDeployed: !!options.externalWatchdogDeployed,
-    bothOAuthIdentitiesConfigured: !!options.bothOAuthIdentitiesConfigured,
-    inventoryTargetsMet: (options.qualifiedInventory || { "failure-reconstructed": 46, "impossible-brief": 500 })["failure-reconstructed"] >= 500 &&
-      (options.qualifiedInventory || { "failure-reconstructed": 46, "impossible-brief": 500 })["impossible-brief"] >= 1000,
+    allThreeOAuthIdentitiesConfigured: !!options.allThreeOAuthIdentitiesConfigured,
+    inventoryTargetsMet: (options.qualifiedInventory || { "failure-reconstructed": 46, "impossible-brief": 500, "critical-thread": 522 })["failure-reconstructed"] >= 500 &&
+      (options.qualifiedInventory || { "failure-reconstructed": 46, "impossible-brief": 500, "critical-thread": 522 })["impossible-brief"] >= 1000 &&
+      (options.qualifiedInventory || { "failure-reconstructed": 46, "impossible-brief": 500, "critical-thread": 522 })["critical-thread"] >= 500,
   };
   return {
     start: start.toISOString().slice(0, 10),
     days: 30,
     injectedFailures: FAILURES,
-    wrongChannelGuard,
+    wrongChannelGuards,
     channels: Object.fromEntries(Object.entries(states).map(([channel, state]) => [channel, {
       shorts: state.shorts.length, longForm: state.long.length, uniqueTopics: state.topics.size,
       failuresRecovered: state.failures.length, qualityBlocks: state.blockedTopics,
@@ -118,7 +121,7 @@ function simulate30Days(options = {}) {
 }
 
 function markdown(result) {
-  const lines = ["# Two-channel 30-day simulation", "", `Result: **${result.pass ? "PASS" : "FAIL"}**`, "", `Window: ${result.start} for ${result.days} days. Uploads and renders were simulated; no external publish occurred.`, "", "## Output", "", "| Channel | Shorts | Long-form | Unique topics | Recovered failures |", "|---|---:|---:|---:|---:|"];
+  const lines = ["# Three-channel autonomy — 30-day simulation", "", `Result: **${result.pass ? "PASS" : "FAIL"}**`, "", `Window: ${result.start} for ${result.days} days. Uploads and renders were simulated; no external publish occurred.`, "", "## Output", "", "| Channel | Shorts | Long-form | Unique topics | Recovered failures |", "|---|---:|---:|---:|---:|"];
   for (const [channel, state] of Object.entries(result.channels)) lines.push(`| ${channel} | ${state.shorts} | ${state.longForm} | ${state.uniqueTopics} | ${state.failuresRecovered} |`);
   lines.push("", "## TikTok model", "", `Today's exact YouTube MP4 deliveries: ${result.tiktok.todaySent.length}.`, `Historical backlog: ${result.tiktok.initialBacklog} → ${result.tiktok.endingBacklog}.`, "");
   lines.push("", "## Injected failures", "");
@@ -129,7 +132,7 @@ function markdown(result) {
   for (const [check, pass] of Object.entries(result.productionReadiness)) lines.push(`- ${pass ? "READY" : "NOT READY"}: ${check}`);
   lines.push("", `Overall production readiness: **${result.productionReady ? "READY" : "NOT READY"}**.`, "",
     "The simulation proves deterministic state/idempotency behavior under its stated model; it does not substitute for OAuth, external scheduler deployment, or a real long-form production pipeline.", "",
-    "The explicit wrong-channel attempt was blocked with `CHANNEL_ID_MISMATCH` before upload-session creation or state mutation.", "");
+    "All six cross-channel credential directions were blocked with `CHANNEL_MISMATCH` before upload-session creation or state mutation.", "");
   return lines.join("\n");
 }
 

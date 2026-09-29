@@ -177,9 +177,12 @@ jobs:
     outputs:
       healthy: ${{ steps.check.outputs.healthy }}
       production_ready: ${{ steps.check.outputs.production_ready }}
+      youtube_verified: ${{ steps.check.outputs.youtube_verified }}
+      youtube_today_exists: ${{ steps.check.outputs.youtube_today_exists }}
+      safe_to_recover: ${{ steps.check.outputs.safe_to_recover }}
     env:
-      IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
-      IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
+      IB_CLIENT_ID: ${{ secrets.IB_CLIENT_ID }}
+      IB_CLIENT_SECRET: ${{ secrets.IB_CLIENT_SECRET }}
       IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
       IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
       PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
@@ -200,12 +203,12 @@ jobs:
 
   ib-recovery:
     needs: [ib-sla, recovery]
-    if: ${{ always() && github.event.action != 'production-sla-watchdog-self-test' && vars.IB_PUBLISH == '1' && inputs.simulate_missing != true && needs.ib-sla.outputs.production_ready != 'true' }}
+    if: ${{ always() && github.event.action != 'production-sla-watchdog-self-test' && vars.IB_PUBLISH == '1' && inputs.simulate_missing != true && needs.ib-sla.outputs.safe_to_recover == 'true' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     env:
-      IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
-      IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
+      IB_CLIENT_ID: ${{ secrets.IB_CLIENT_ID }}
+      IB_CLIENT_SECRET: ${{ secrets.IB_CLIENT_SECRET }}
       IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
       IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
       PUBLISH: '1'
@@ -247,8 +250,8 @@ jobs:
     if: ${{ always() && github.event.action != 'production-sla-watchdog-self-test' && vars.IB_PUBLISH == '1' && inputs.simulate_missing != true }}
     runs-on: ubuntu-latest
     env:
-      IB_YT_CLIENT_ID: ${{ secrets.IB_YT_CLIENT_ID }}
-      IB_YT_CLIENT_SECRET: ${{ secrets.IB_YT_CLIENT_SECRET }}
+      IB_CLIENT_ID: ${{ secrets.IB_CLIENT_ID }}
+      IB_CLIENT_SECRET: ${{ secrets.IB_CLIENT_SECRET }}
       IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
       IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
       PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
@@ -263,9 +266,13 @@ jobs:
           node-version: '20'
       - name: Repair normal notification and verify SLA
         id: final
+        env:
+          RECOVERY_RESULT: ${{ needs.ib-recovery.result }}
         run: |
           node bildirim.js --channel impossible-brief || true
-          node production-sla-check.js --channel impossible-brief --verify-youtube --recovery-started --github-output --output="${{ runner.temp }}/ib-sla-after.json" || true
+          RECOVERY_ARGS=()
+          if [ "$RECOVERY_RESULT" != "skipped" ]; then RECOVERY_ARGS+=(--recovery-started); fi
+          node production-sla-check.js --channel impossible-brief --verify-youtube "${RECOVERY_ARGS[@]}" --github-output --output="${{ runner.temp }}/ib-sla-after.json" || true
       - name: Notify only after ImpossibleBrief recovery failed
         if: ${{ steps.final.outputs.healthy != 'true' }}
         run: node bildirim.js --channel impossible-brief --sla-failure "${{ runner.temp }}/ib-sla-after.json"
@@ -290,5 +297,136 @@ jobs:
         with:
           name: impossible-brief-sla-after
           path: ${{ runner.temp }}/ib-sla-after.json
+          if-no-files-found: error
+          retention-days: 30
+
+  # CriticalThread has an independent identity, state tree and publish flag.
+  # An auth/API ambiguity fails closed and must not affect the other channels.
+  ct-sla:
+    if: ${{ github.event.action != 'production-sla-watchdog-self-test' && vars.CT_PUBLISH == '1' && inputs.simulate_missing != true }}
+    runs-on: ubuntu-latest
+    outputs:
+      healthy: ${{ steps.check.outputs.healthy }}
+      production_ready: ${{ steps.check.outputs.production_ready }}
+      youtube_verified: ${{ steps.check.outputs.youtube_verified }}
+      youtube_today_exists: ${{ steps.check.outputs.youtube_today_exists }}
+      safe_to_recover: ${{ steps.check.outputs.safe_to_recover }}
+    env:
+      CT_CLIENT_ID: ${{ secrets.CT_CLIENT_ID }}
+      CT_CLIENT_SECRET: ${{ secrets.CT_CLIENT_SECRET }}
+      CT_YT_REFRESH_TOKEN: ${{ secrets.CT_YT_REFRESH_TOKEN }}
+      CT_YT_CHANNEL_ID: ${{ vars.CT_YT_CHANNEL_ID }}
+      PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - id: check
+        name: Check CriticalThread production SLA
+        run: node production-sla-check.js --channel critical-thread --verify-youtube --github-output --output="${{ runner.temp }}/ct-sla-before.json" || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: critical-thread-sla-before
+          path: ${{ runner.temp }}/ct-sla-before.json
+          if-no-files-found: error
+          retention-days: 30
+
+  ct-recovery:
+    needs: [ct-sla, ib-verify]
+    if: ${{ always() && github.event.action != 'production-sla-watchdog-self-test' && vars.CT_PUBLISH == '1' && inputs.simulate_missing != true && needs.ct-sla.outputs.safe_to_recover == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      CT_CLIENT_ID: ${{ secrets.CT_CLIENT_ID }}
+      CT_CLIENT_SECRET: ${{ secrets.CT_CLIENT_SECRET }}
+      CT_YT_REFRESH_TOKEN: ${{ secrets.CT_YT_REFRESH_TOKEN }}
+      CT_YT_CHANNEL_ID: ${{ vars.CT_YT_CHANNEL_ID }}
+      PUBLISH: '1'
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
+          npm install --no-audit --no-fund
+      - name: Recover one CriticalThread Short
+        run: |
+          node saglik.js --channel critical-thread
+          node shorts-sira.js --channel critical-thread
+          node bildirim.js --channel critical-thread || true
+          node daily-operations-report.js
+      - name: Commit isolated CriticalThread state
+        run: |
+          git config user.name "production-watchdog"
+          git config user.email "actions@users.noreply.github.com"
+          git add channels/critical-thread reports
+          if git diff --cached --quiet; then echo "CriticalThread state unchanged."; exit 0; fi
+          git commit -m "chore: recover CriticalThread production SLA"
+          BRANCH="$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+
+  ct-verify:
+    needs: [ct-sla, ct-recovery]
+    if: ${{ always() && github.event.action != 'production-sla-watchdog-self-test' && vars.CT_PUBLISH == '1' && inputs.simulate_missing != true }}
+    runs-on: ubuntu-latest
+    env:
+      CT_CLIENT_ID: ${{ secrets.CT_CLIENT_ID }}
+      CT_CLIENT_SECRET: ${{ secrets.CT_CLIENT_SECRET }}
+      CT_YT_REFRESH_TOKEN: ${{ secrets.CT_YT_REFRESH_TOKEN }}
+      CT_YT_CHANNEL_ID: ${{ vars.CT_YT_CHANNEL_ID }}
+      PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Repair normal notification and verify SLA
+        id: final
+        env:
+          RECOVERY_RESULT: ${{ needs.ct-recovery.result }}
+        run: |
+          node bildirim.js --channel critical-thread || true
+          RECOVERY_ARGS=()
+          if [ "$RECOVERY_RESULT" != "skipped" ]; then RECOVERY_ARGS+=(--recovery-started); fi
+          node production-sla-check.js --channel critical-thread --verify-youtube "${RECOVERY_ARGS[@]}" --github-output --output="${{ runner.temp }}/ct-sla-after.json" || true
+      - name: Notify only after CriticalThread recovery failed
+        if: ${{ steps.final.outputs.healthy != 'true' }}
+        run: node bildirim.js --channel critical-thread --sla-failure "${{ runner.temp }}/ct-sla-after.json"
+      - name: Save notification/report state
+        if: always()
+        run: |
+          node daily-operations-report.js || true
+          git config user.name "production-watchdog"
+          git config user.email "actions@users.noreply.github.com"
+          git add channels/critical-thread/state/notification-state.json reports || true
+          if git diff --cached --quiet; then echo "CriticalThread verification state unchanged."; exit 0; fi
+          git commit -m "chore: record CriticalThread SLA verification"
+          BRANCH="$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+      - name: CriticalThread SLA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: critical-thread-sla-after
+          path: ${{ runner.temp }}/ct-sla-after.json
           if-no-files-found: error
           retention-days: 30
