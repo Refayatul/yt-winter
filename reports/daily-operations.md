@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-09-29T17:01:47.335Z
+Generated: 2026-09-29T18:18:26.325Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -26,31 +26,31 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | unavailable |
-| Short | due-not-produced |
+| Today topic | what-survives-if-the-speed-of-light-reverses-for-one-second |
+| Short | uploaded-not-scheduled |
 | Long | due-not-produced |
-| Quality | unavailable / unavailable |
-| YouTube | not-uploaded |
-| Publish time | unavailable |
-| Video ID | unavailable |
+| Quality | PUBLISH / unavailable |
+| YouTube | uploaded |
+| Publish time | 2026-09-30T18:00:00.000Z |
+| Video ID | tIXvjbAXStw |
 | Analytics | no-channel-measurements |
 | Scheduler | sla-missed-or-channel-disabled |
-| Ready topic backlog | 499 |
+| Ready topic backlog | 498 |
 | Errors/review/blocks | 0 |
 
 ## CriticalThread
 
 | Signal | Status |
 |---|---|
-| Today topic | unavailable |
-| Short | due-not-produced |
+| Today topic | when-wire-bonding-machine-becomes-the-bottleneck |
+| Short | uploaded-not-scheduled |
 | Long | due-not-produced |
-| Quality | unavailable / unavailable |
-| YouTube | not-uploaded |
-| Publish time | unavailable |
-| Video ID | unavailable |
+| Quality | PUBLISH / unavailable |
+| YouTube | uploaded |
+| Publish time | 2026-09-30T18:00:00.000Z |
+| Video ID | M4rr4aVc4Uc |
 | Analytics | no-channel-measurements |
 | Scheduler | sla-missed-or-channel-disabled |
-| Ready topic backlog | 522 |
+| Ready topic backlog | 521 |
 | Errors/review/blocks | 0 |
 

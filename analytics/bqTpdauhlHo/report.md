@@ -7,11 +7,21 @@ https://youtu.be/bqTpdauhlHo
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-09-28 | 1619 | 76 | 3 | — | — |  |
+| 3d | 2026-09-29 | 1691 | 77 | 3 | 93.43 | 3 | Shorts feed 88%, Search 11% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **OUTPERFORMER** (low) — 1619 views vs channel median 608.5 (n=8 videos).
+- **HEALTHY** (low) — No problem pattern detected with available data.
 
 ## Suggested interventions
 
-- OUTPERFORMER → keep as is; reuse its subject/hook shape in the next episode.
+- HEALTHY → no action.
+
+## First major observed retention drop
+
+- Timestamp: 1s; magnitude: 13 percentage points.
+- Active sentence: Seventy-three seconds after launch, Challenger broke apart.
+- Visual type: REAL ARCHIVAL/LICENCED FOOTAGE
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 72.
