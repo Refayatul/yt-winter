@@ -95,13 +95,44 @@ function synthesizeVoice(text, outputDirectory, basename = "narration", options 
   return { file: output, provider: "non-speech CI fallback; production voice remains configured Edge TTS", syntheticVoice: false };
 }
 
+function atempoFilter(rate) {
+  const factors = [];
+  let remaining = rate;
+  while (remaining > 2) { factors.push(2); remaining /= 2; }
+  while (remaining < 0.5) { factors.push(0.5); remaining /= 0.5; }
+  if (Math.abs(remaining - 1) > 0.001) factors.push(remaining);
+  return (factors.length ? factors : [1]).map((factor) => `atempo=${factor.toFixed(6)}`).join(",");
+}
+
+function retimeAudio(file, currentDuration, targetDuration) {
+  if (!(currentDuration > 0) || !(targetDuration > 0) || currentDuration <= targetDuration) return currentDuration;
+  const ffmpeg = require("../../ff-yol").ffmpeg;
+  const extension = path.extname(file);
+  const temporary = file.slice(0, -extension.length) + ".retimed" + extension;
+  const rate = currentDuration / targetDuration;
+  const args = ["-y", "-hide_banner", "-loglevel", "error", "-i", file, "-filter:a", atempoFilter(rate), "-vn"];
+  if (extension === ".m4a") args.push("-c:a", "aac", "-b:a", "128k");
+  args.push(temporary);
+  cp.execFileSync(ffmpeg, args, { stdio: "ignore", timeout: 120000 });
+  fs.renameSync(temporary, file);
+  return probe(file).durationSeconds;
+}
+
 function synthesizeNarration(script, outputDirectory, channel) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
+  const retention = channel.config.retentionRules || {};
+  const openingMax = Number(retention.openingMaxSeconds || 2.2);
+  const secondBeatMax = Number(retention.secondBeatMaxSeconds || 6.2);
+  let earlyCursor = 0;
   const takes = script.claims.map((claim, index) => {
     // The hook and escalation are deliberately brisk. Later scientific claims
     // return to the measured narration rate so terminology stays intelligible.
     const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { fast: index < 2, voice: channel.config.voice.voice });
-    return { ...voice, durationSeconds: probe(voice.file).durationSeconds };
+    let durationSeconds = probe(voice.file).durationSeconds;
+    const maximum = index === 0 ? openingMax * 0.94 : index === 1 ? Math.max(0.75, secondBeatMax - earlyCursor - 0.12) : Infinity;
+    if (durationSeconds > maximum) durationSeconds = retimeAudio(voice.file, durationSeconds, maximum);
+    if (index < 2) earlyCursor += durationSeconds;
+    return { ...voice, durationSeconds };
   });
   const output = path.join(outputDirectory, "narration.m4a");
   const args = ["-y", "-hide_banner", "-loglevel", "error"];
@@ -110,11 +141,22 @@ function synthesizeNarration(script, outputDirectory, channel) {
   args.push("-filter_complex", `${inputs}concat=n=${takes.length}:v=0:a=1[a]`, "-map", "[a]", "-c:a", "aac", "-b:a", "128k", output);
   try { cp.execFileSync(ffmpeg, args, { stdio: "ignore", timeout: 120000 }); }
   finally { for (const take of takes) try { fs.unlinkSync(take.file); } catch (error) {} }
+  let claimDurations = takes.map((take) => take.durationSeconds);
+  const durationRange = channel.config.publishingCadence.shorts.targetDurationSeconds || [18, 40];
+  const beforeFinalRetime = probe(output).durationSeconds;
+  const maximumDuration = Number(durationRange[1]) - 0.2;
+  const finalDuration = beforeFinalRetime > maximumDuration
+    ? retimeAudio(output, beforeFinalRetime, maximumDuration)
+    : beforeFinalRetime;
+  if (finalDuration < beforeFinalRetime) {
+    const scale = finalDuration / beforeFinalRetime;
+    claimDurations = claimDurations.map((duration) => duration * scale);
+  }
   return {
     file: output,
     provider: takes.every((take) => take.provider === takes[0].provider) ? takes[0].provider + " (claim-timed)" : "mixed claim-timed narration",
     syntheticVoice: takes.every((take) => take.syntheticVoice),
-    claimDurations: takes.map((take) => take.durationSeconds),
+    claimDurations,
   };
 }
 

@@ -28,4 +28,11 @@ const report = { channel: channel.slug, dryRun: true, uploadAttempted: false, re
 fs.mkdirSync(channel.paths.reports, { recursive: true });
 fs.writeFileSync(path.join(channel.paths.reports, "e2e-results.json"), JSON.stringify(report, null, 2) + "\n");
 console.log(`CriticalThread E2E: ${pass ? "PASS" : "FAIL"} — ${topic.topic}${render ? " (rendered)" : " (package)"}; upload disabled`);
-if (!pass) process.exitCode = 4;
+if (!pass) {
+  const failed = Object.entries(result.validations).filter(([, value]) => !value).map(([name]) => name);
+  console.error(`Failed validations: ${failed.join(", ")}`);
+  if (render && result.render.video) {
+    console.error(`Render evidence: duration=${result.render.video.durationSeconds}s resolution=${result.render.video.width}x${result.render.video.height} audio=${result.render.video.hasAudio} visualChanges=${result.render.video.visualChanges}`);
+  }
+  process.exitCode = 4;
+}
