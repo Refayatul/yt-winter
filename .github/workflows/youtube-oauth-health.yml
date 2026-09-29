@@ -33,8 +33,12 @@ jobs:
           node-version: '20'
       - name: Validate Failure Reconstructed identity
         run: |
+          set +e
           node oauth-health.js --channel failure-reconstructed > "$RUNNER_TEMP/failure-reconstructed-oauth.json"
+          STATUS=$?
+          set -e
           cat "$RUNNER_TEMP/failure-reconstructed-oauth.json"
+          exit "$STATUS"
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -58,8 +62,12 @@ jobs:
           node-version: '20'
       - name: Validate ImpossibleBrief identity
         run: |
+          set +e
           node oauth-health.js --channel impossible-brief > "$RUNNER_TEMP/impossible-brief-oauth.json"
+          STATUS=$?
+          set -e
           cat "$RUNNER_TEMP/impossible-brief-oauth.json"
+          exit "$STATUS"
       - if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -83,8 +91,12 @@ jobs:
           node-version: '20'
       - name: Validate CriticalThread identity
         run: |
+          set +e
           node oauth-health.js --channel critical-thread > "$RUNNER_TEMP/critical-thread-oauth.json"
+          STATUS=$?
+          set -e
           cat "$RUNNER_TEMP/critical-thread-oauth.json"
+          exit "$STATUS"
       - if: always()
         uses: actions/upload-artifact@v4
         with:
