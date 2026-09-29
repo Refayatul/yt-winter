@@ -87,7 +87,10 @@ const yetkiUrl = "https://accounts.google.com/o/oauth2/v2/auth?" + new URLSearch
   response_type: "code",
   scope: SCOPE,
   access_type: "offline",   // refresh_token almak icin sart
-  prompt: "consent",        // her seferinde refresh_token dondur
+  // Always show Google's account chooser. This prevents an existing browser
+  // session from silently authorizing the wrong channel owner account, while
+  // consent still guarantees a fresh refresh token for the selected account.
+  prompt: "select_account consent",
   include_granted_scopes: "true",
   state: STATE,
 }).toString();
