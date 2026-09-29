@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-09-28T22:30:34.535Z
+Generated: 2026-09-29T14:15:51.666Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,16 +8,16 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | vesuvius-1944 |
+| Today topic | apollo-13-1970 |
 | Short | scheduled |
 | Long | due-not-produced |
-| Quality | PUBLISH / 92 |
+| Quality | PUBLISH / 94 |
 | YouTube | scheduled |
-| Publish time | 2026-09-28T18:00:00.000Z |
-| Video ID | I86SnrokHMk |
+| Publish time | 2026-09-29T18:00:00.000Z |
+| Video ID | uqoAjXMbbls |
 | Analytics | measured |
 | Scheduler | healthy |
-| Ready topic backlog | 37 |
+| Ready topic backlog | 36 |
 | Errors/review/blocks | 2 |
 | TikTok today | SEND_TO_USER_INBOX |
 | TikTok backlog | 2 |
@@ -34,7 +34,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | unavailable |
 | Video ID | unavailable |
 | Analytics | no-channel-measurements |
-| Scheduler | sla-missed-or-channel-disabled |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 499 |
 | Errors/review/blocks | 0 |
 

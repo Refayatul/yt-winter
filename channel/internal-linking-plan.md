@@ -46,16 +46,16 @@ Playlist: **Aviation Failures** — waiting (1/3 published)
 
 _Launch and spaceflight failures — the engineering behind the fireball._
 
-Playlist: **Spaceflight Disasters** — waiting (1/3 published)
+Playlist: **Spaceflight Disasters** — waiting (2/3 published)
 
 | Video | Status | Previous | Next | End screen / Related video | Description link |
 |---|---|---|---|---|---|
-| Why Challenger Broke Apart 73 Seconds After Launch ([bqTpdauhlHo](https://youtu.be/bqTpdauhlHo)) | published | — | _queued: Apollo 1: The Fire That Happened on the Ground_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
-| Apollo 1: The Fire That Happened on the Ground | queued | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | _queued: The Wrong Voltage That Nearly Killed Apollo 13_ | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) |
-| The Wrong Voltage That Nearly Killed Apollo 13 | queued | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | _queued: How Skylab Lost Its Heat Shield 63 Seconds After Launch_ | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) |
-| How Skylab Lost Its Heat Shield 63 Seconds After Launch | queued | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | _queued: Flopnik: Why America's Answer to Sputnik Failed Twice_ | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) |
-| Flopnik: Why America's Answer to Sputnik Failed Twice | queued | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | _queued: The Stuck Valve That Destroys a Rocket_ | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) |
-| The Stuck Valve That Destroys a Rocket | queued | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | — | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) |
+| Why Challenger Broke Apart 73 Seconds After Launch ([bqTpdauhlHo](https://youtu.be/bqTpdauhlHo)) | published | — | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) |
+| 28 Volts vs 65: Apollo 13's Hidden Flaw ([uqoAjXMbbls](https://youtu.be/uqoAjXMbbls)) | published | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | _queued: Apollo 1: The Fire That Happened on the Ground_ | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) | [Why Challenger Broke Apart 73 Seconds After Launch](https://youtu.be/bqTpdauhlHo) |
+| Apollo 1: The Fire That Happened on the Ground | queued | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | _queued: How Skylab Lost Its Heat Shield 63 Seconds After Launch_ | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) |
+| How Skylab Lost Its Heat Shield 63 Seconds After Launch | queued | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | _queued: Flopnik: Why America's Answer to Sputnik Failed Twice_ | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) |
+| Flopnik: Why America's Answer to Sputnik Failed Twice | queued | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | _queued: The Stuck Valve That Destroys a Rocket_ | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) |
+| The Stuck Valve That Destroys a Rocket | queued | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | — | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) | [28 Volts vs 65: Apollo 13's Hidden Flaw](https://youtu.be/uqoAjXMbbls) |
 
 ## Maritime Disasters
 
