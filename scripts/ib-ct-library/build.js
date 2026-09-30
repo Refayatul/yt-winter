@@ -88,7 +88,9 @@ function lintRecord(channelSlug, record, rules) {
   if (/^(in|on|by)?\s*(1[5-9]|20)\d\d\b/i.test(lines[0] && lines[0].text || "")) errors.push("opening starts with a date");
   if (!record.openingLine || wordCount(record.openingLine) > openingWords) errors.push("openingLine missing or too long");
   if ((record.facts || []).length < 4) errors.push(`only ${(record.facts || []).length} sourced facts (≥ 4)`);
-  if (!record.thumbnailText || wordCount(record.thumbnailText) > 4) errors.push("thumbnailText missing or > 4 words");
+  // The renderer rejects thumbnails over 3 words (core/rendering renderThumbnail).
+  if (!record.thumbnailText || wordCount(record.thumbnailText) > 3) errors.push("thumbnailText missing or > 3 words");
+  if (/['\\]/.test(record.thumbnailText || "")) errors.push("thumbnailText must not contain ' or \\ (breaks the ffmpeg drawtext filter)");
   return { errors, words: total };
 }
 
