@@ -1,6 +1,6 @@
 # Growth dashboard
 
-Generated 2026-09-30T15:48:54.539Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-09-30T16:04:16.369Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
@@ -27,6 +27,10 @@ Generated 2026-09-30T15:48:54.539Z. Per-channel baselines are computed separatel
 - apollo-1-1967 (C): VideoPotential 84 in experimental band 55–67; sources 41 < 60; single-source: every claim rests on 1 source — add an authoritative second source to qualify for A/B
 - alexander-kielland-1980 (C): VideoPotential 83 in experimental band 55–67; sources 58 < 60
 - boston-molasses-1919 (C): VideoPotential 83 in experimental band 55–67; sources 41 < 60; single-source: every claim rests on 1 source — add an authoritative second source to qualify for A/B
+
+**Recent alerts**
+
+- 2026-09-30 PRODUCTION_READINESS_REVIEW: how-avalanches-start
 
 ## ImpossibleBrief
 

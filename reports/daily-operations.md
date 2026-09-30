@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-09-30T15:48:56.669Z
+Generated: 2026-09-30T16:04:18.470Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -18,7 +18,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics | measured |
 | Scheduler | healthy |
 | Ready topic backlog | 366 |
-| Errors/review/blocks | 2 |
+| Errors/review/blocks | 3 |
 | TikTok today | SEND_TO_USER_INBOX |
 | TikTok backlog | 2 |
 
