@@ -295,12 +295,15 @@ function scientificFrames(topic, directory, count = 8, startFrame = 0) {
   return files;
 }
 
-function renderVideo(audioFile, duration, output, captionsFile, topic) {
+function renderVideo(audioFile, duration, output, captionsFile, topic, options = {}) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
-  const frames = scientificFrames(topic, path.dirname(output), Math.max(8, Math.ceil(duration / 3.5)));
+  // Growth pacing supplies meaningful, non-mechanical segment lengths (fast in
+  // the first 3 s). Without it the legacy equal split is kept.
+  const segments = Array.isArray(options.segments) && options.segments.length ? options.segments : null;
+  const frames = scientificFrames(topic, path.dirname(output), segments ? segments.length : Math.max(8, Math.ceil(duration / 3.5)));
   const segment = Math.max(1, duration / frames.length);
   const args = ["-y", "-hide_banner", "-loglevel", "error"];
-  for (const frame of frames) args.push("-loop", "1", "-framerate", "24", "-t", String(segment), "-i", frame);
+  frames.forEach((frame, index) => args.push("-loop", "1", "-framerate", "24", "-t", String(segments ? Math.max(0.4, segments[index]) : segment), "-i", frame));
   const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
   const labels = /moon/i.test(topic.topic) ? "EARTH–MOON SYSTEM" : /stopped spinning/i.test(topic.topic) ? "ROTATION + INERTIA" : /gravity doubled/i.test(topic.topic) ? "2g FORCE MODEL" : topic.category;
   const illustrationLabel = topic.visualLabel || "PROCEDURAL ILLUSTRATION — NOT OBSERVATION";
@@ -309,7 +312,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic) {
   args.push("-i", audioFile, "-filter_complex", filter, "-map", "[v]", "-map", `${frames.length}:a`, "-t", String(duration), "-c:v", "libx264", "-preset", "ultrafast", "-crf", "29", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
   try { cp.execFileSync(ffmpeg, args, { stdio: "ignore", timeout: 120000 }); }
   finally { for (const frame of frames) try { fs.unlinkSync(frame); } catch (error) {} }
-  return { visualChanges: frames.length, illustrationLabel: true, scenarioSpecific: true };
+  return { visualChanges: frames.length, illustrationLabel: true, scenarioSpecific: true, segmentSeconds: segments || frames.map(() => segment) };
 }
 
 function renderThumbnail(output, topic) {
@@ -324,8 +327,15 @@ function renderThumbnail(output, topic) {
 }
 
 function buildPackage(topic, channel, outputDirectory, options = {}) {
-  const script = Scripting.shortScript(topic);
-  const titles = Scripting.titleCandidates(topic);
+  // options.growthPlan (core/growth planShort) replaces the templated script,
+  // titles, captions and pacing. Without it the legacy package is unchanged.
+  const growth = options.growthPlan || null;
+  const growthConfig = growth ? require("../growth/config").forChannel(channel) : null;
+  const Pacing = growth ? require("../growth/pacing") : null;
+  const script = growth ? JSON.parse(JSON.stringify({ format: "short", targetSeconds: growth.script.targetSeconds, spoken: growth.script.spoken, claims: growth.script.claims.map(({ role, ...claim }) => ({ ...claim, role })), forbiddenOpening: growth.script.forbiddenOpening, sourceIds: growth.script.sourceIds })) : Scripting.shortScript(topic);
+  const titles = growth ? growth.titles.candidates.filter((item) => !item.misleading).map((item) => item.title) : Scripting.titleCandidates(topic);
+  const captionSrt = (value) => growth ? Pacing.srt(value.claims, growthConfig.captions) : captions(value);
+  const captionAss = (value) => growth ? Pacing.ass(value.claims, growthConfig.captions) : assCaptions(value);
   let visuals = Visuals.plan(topic, script);
   const thumbnail = Visuals.thumbnail(topic);
   const isCriticalThread = channel.slug === "critical-thread";
@@ -344,7 +354,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   write(path.join(outputDirectory, "topic.json"), topic);
   write(path.join(outputDirectory, "script.json"), script);
   write(path.join(outputDirectory, "script.txt"), script.spoken + "\n");
-  const titleScores = titles.map((title, index) => ({ title, scores: {
+  const titleScores = growth ? growth.titles.candidates.map((item) => ({ title: item.title, pattern: item.pattern, total: item.adjustedTotal, scores: item.scores, misleading: item.misleading })) : titles.map((title, index) => ({ title, scores: {
     clarity: Math.max(75, 96 - index % 11), curiosity: 80 + index % 16, specificity: /system|bottleneck|replace|depends/i.test(title) ? 94 : 84,
     truthfulness: 96, searchIntent: 76 + index % 15, ctrPotential: 78 + index % 17, channelIdentity: isCriticalThread ? 92 : 88,
   } }));
@@ -352,9 +362,14 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   write(path.join(outputDirectory, "visuals.json"), visuals);
   write(path.join(outputDirectory, "thumbnail.json"), thumbnail);
   write(path.join(outputDirectory, "sources.json"), topic.sources);
-  write(path.join(outputDirectory, "captions.srt"), captions(script));
-  write(path.join(outputDirectory, "captions.ass"), assCaptions(script));
+  write(path.join(outputDirectory, "captions.srt"), captionSrt(script));
+  write(path.join(outputDirectory, "captions.ass"), captionAss(script));
   write(path.join(outputDirectory, "description.txt"), metadata.description + "\n");
+  if (growth) {
+    write(path.join(outputDirectory, "growth-plan.json"), growth);
+    write(path.join(outputDirectory, "hooks.json"), growth.hooks);
+    write(path.join(outputDirectory, "first-3-seconds.json"), growth.first3Seconds);
+  }
   write(path.join(outputDirectory, "metadata.json"), metadata);
   write(path.join(outputDirectory, "quality-gate.json"), pkg.qualityGate);
   if (isCriticalThread) {
@@ -371,11 +386,13 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     pkg.visuals = visuals;
     write(path.join(outputDirectory, "script.json"), script);
     write(path.join(outputDirectory, "visuals.json"), visuals);
-    write(path.join(outputDirectory, "captions.srt"), captions(script));
-    write(path.join(outputDirectory, "captions.ass"), assCaptions(script));
+    write(path.join(outputDirectory, "captions.srt"), captionSrt(script));
+    write(path.join(outputDirectory, "captions.ass"), captionAss(script));
     const video = path.join(outputDirectory, topic.slug + ".mp4");
+    const minimumSegments = Math.ceil(duration / 3.5);
     const image = path.join(outputDirectory, "thumbnail.jpg");
-    const visualRender = renderVideo(voice.file, duration, video, path.join(outputDirectory, "captions.ass"), topic);
+    const visualRender = renderVideo(voice.file, duration, video, path.join(outputDirectory, "captions.ass"), topic,
+      growth ? { segments: Pacing.segments(duration, growthConfig, { minimumSegments }) } : {});
     const thumbnailRender = renderThumbnail(image, topic);
     render.completed = true;
     render.audio = { ...voice, ...audioProbe };
@@ -406,6 +423,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     description: metadata.description.includes("Sources:"),
     qualityGate: pkg.qualityGate.decision === "PUBLISH",
     metadata: metadata.uploadChannel === channel.slug && metadata.uploadEnabled === false,
+    ...(growth ? { growthReadiness: growth.readiness.decision !== "BLOCK" } : {}),
   } };
 }
 

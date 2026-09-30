@@ -1,0 +1,245 @@
+"use strict";
+
+// TITLE ENGINES (PHASE 21 Shorts, PHASE 32J long-form). Separate generators
+// and separate weights; long-form favours search intent and evergreen value,
+// Shorts favour curiosity and specificity. Truthfulness dominates both: a title
+// whose content words are not supported by the topic record is penalised hard.
+// Patterns are not hard-coded winners — the pattern of every candidate is
+// stored so this channel's learning can discover which ones work.
+
+const M = require("../../lib/metin");
+const Model = require("./topic-model");
+const Sources = require("./sources");
+
+const CLICKBAIT = /\b(shocking|insane|unbelievable|you won'?t believe|mind[- ]blowing|terrifying truth|exposed|gone wrong|must see)\b/i;
+const CURIOSITY = /\?|\b(why|how|what|real|hidden|nobody|never|only|inside|first|behind|quietly|actually)\b/gi;
+// Structural title vocabulary: these words frame a question, they do not make
+// a factual claim. Claim-bearing words (killed, doomed, nobody…) are excluded.
+const TEMPLATE_WORDS = new Set(("the a an of in on to and how why what that this its it is was inside behind real first one really actually engineering failure failed fail fails " +
+  "chain reason science scientific physics system hidden explained story episode full happen happens happened break breaks breaking second last final works work " +
+  "hard replace replacement change changes changed depends depend stop stops stopped timeline complete known speculation vs predicts predict thought experiment " +
+  "minute seconds sequence cause consequence consequences reconstructing reconstructed investigation documentary modern life world key effect effects outcome " +
+  "breakdown simulated every next day notice fast handle earth humanity survive last long follows led map mapping explained learned engineers solved weakness flaw " +
+  "bottleneck dependency critical infrastructure matters think backup plan who makes few can can't doesn't wouldn't would could should never-happened").split(/\s+/));
+
+const clamp = (value) => Math.max(0, Math.min(100, Math.round(value)));
+
+function pattern(title) {
+  const t = title.toLowerCase();
+  if (/\?$/.test(t)) return /^what if/.test(t) ? "what-if-question" : "question";
+  if (/^why\b/.test(t)) return "why";
+  if (/^how\b/.test(t)) return "how";
+  if (/^inside\b/.test(t)) return "inside";
+  if (/^the \w+(?:[\s-]\w+)? that\b/.test(t)) return "the-x-that";
+  if (/^\d/.test(t)) return "number-led";
+  if (/:\s/.test(t)) return "label-colon";
+  if (/—|\. /.test(t)) return "two-beat";
+  return "statement";
+}
+
+function add(list, text, source) {
+  const value = Model.clean(text).replace(/\s+([?.!,:])/g, "$1").replace(/\.$/, "");
+  if (!value || /undefined|null/.test(value) || value.length > 100) return;
+  if (list.some((item) => item.title.toLowerCase() === value.toLowerCase())) return;
+  list.push({ title: M.baslikBicim ? M.baslikBicim(value) : value, source, pattern: pattern(value) });
+}
+
+function shortCandidates(topic, extra = []) {
+  const list = [];
+  const S = topic.subject;
+  const cap = Model.capital;
+  for (const title of topic.editorialTitles || []) add(list, title, "editorial");
+  if (topic.title) add(list, topic.title, "current");
+  for (const title of extra) add(list, title, "legacy-generator");
+  if (topic.channel === "failure-reconstructed") {
+    const object = topic.object || "System";
+    if (topic.result) {
+      add(list, `The ${object} That ${cap(topic.result)}`, "the-x-that");
+      add(list, `Why ${S} ${topic.result.replace(/^(lost|was|were)\b/, (m) => m)}`, "why");
+      add(list, `What Really Happened to ${S}`, "what-really");
+    }
+    if (topic.trigger) { add(list, `How ${cap(topic.trigger)} Brought Down ${S}`, "how-trigger"); add(list, `The Trigger Behind ${S}`, "trigger"); }
+    if (topic.number) add(list, `${topic.number}: The Detail That Doomed ${S}`, "number-led");
+    if (topic.mechanism) { const mech = (topic.mechanism.match(/\(([^)]+)\)/) || [])[1] || topic.mechanism.split(/[,;]/)[0]; if (mech.split(" ").length <= 5) add(list, `${cap(mech)}: What Destroyed ${S}`, "mechanism-label"); }
+    if ((topic.chain || []).length >= 3) add(list, `${S}: ${topic.chain.length} Failures in Sequence`, "failure-count");
+    if (topic.misconception) add(list, `What Everyone Gets Wrong About ${S}`, "misconception");
+    if (topic.lesson) add(list, `What Engineers Changed After ${S}`, "lesson");
+    add(list, `${S}: What Failed First`, "failed-first");
+    add(list, `Inside ${S}: The Failure Chain`, "inside-chain");
+    add(list, `The First Crack in ${S}`, "first-crack");
+    add(list, `${S}: Cause, Chain, Consequence`, "cause-chain-consequence");
+    add(list, `How ${S} Really Failed`, "how-really");
+    add(list, `The Hidden Flaw Inside ${S}`, "hidden-flaw");
+    add(list, `The Seconds That Decided ${S}`, "seconds");
+    add(list, `${S}: The Engineering Behind the Disaster`, "engineering-behind");
+    add(list, `Why Nobody Saw ${S} Coming`, "nobody-saw");
+    add(list, `${S} Explained in One Chain Reaction`, "one-chain");
+    add(list, `${S}: The Failure Reconstructed`, "brand");
+  } else if (topic.channel === "impossible-brief") {
+    const E = topic.event || S;
+    add(list, `If ${E}, What Happens First?`, "what-happens-first");
+    add(list, `${cap(S)}: What Changes First?`, "changes-first");
+    add(list, `What Breaks First If ${E}?`, "breaks-first");
+    add(list, `How Fast Would We Notice If ${E}?`, "how-fast");
+    add(list, `Could Earth Handle It If ${E}?`, "could-earth");
+    add(list, `The Hidden Consequence If ${E}`, "hidden-consequence");
+    add(list, `What Science Actually Predicts If ${E}`, "science-predicts");
+    add(list, `If ${E}: Known Science vs. Speculation`, "known-vs-speculation");
+    add(list, `The First Thing to Change If ${E}`, "first-thing");
+    add(list, `What Breaks Second If ${E}`, "breaks-second");
+    add(list, `What If ${cap(topic.scenario)}?`, "what-if");
+    if (topic.mechanism) add(list, `${cap(topic.mechanism.split(/[,;]/)[0])}: The Key to ${cap(S)}`, "mechanism-key");
+    if (topic.consequence) add(list, `If ${E}, ${topic.consequence.split(/[,;]/)[0]}`, "consequence-led");
+  } else {
+    const target = topic.dependencyTarget || topic.category.toLowerCase();
+    add(list, `The World Quietly Depends on ${S}`, "quiet-dependency");
+    add(list, `Why ${cap(S)} Is So Hard to Replace`, "hard-to-replace");
+    add(list, `What Stops If ${S} Stops`, "what-stops");
+    add(list, `The Bottleneck Nobody Sees: ${S}`, "bottleneck");
+    add(list, `${cap(target)} Runs Through ${S}`, "runs-through");
+    add(list, `Inside ${S}: The Hidden Dependency`, "inside");
+    add(list, `The ${S} Problem`, "the-x-problem");
+    add(list, `Can We Replace ${S} Fast Enough?`, "replace-fast");
+    add(list, `Why There Is No Quick Substitute for ${S}`, "no-substitute");
+    add(list, `The Fragile Chain Behind ${S}`, "fragile-chain");
+    for (const claim of (topic.evidence || []).filter((item) => /VERIFIED/.test(item.layer)).slice(0, 2)) {
+      const number = Model.numbersIn(claim.claim)[0];
+      if (number) add(list, `${number}: Inside ${S}`, "number-led");
+    }
+  }
+  return list;
+}
+
+function longCandidates(topic, extra = []) {
+  const list = [];
+  const S = topic.subject;
+  const cap = Model.capital;
+  for (const title of extra) add(list, title, "editorial");
+  if (topic.channel === "failure-reconstructed") {
+    add(list, `Why ${S} Failed`, "why-failed");
+    add(list, `The Failure Chain That Destroyed ${S}`, "failure-chain");
+    if (topic.trigger) add(list, `How One Weakness Brought Down ${S}`, "one-weakness");
+    add(list, `Inside the Engineering Failure of ${S}`, "inside-engineering");
+    add(list, `${S}: The Full Failure Reconstructed`, "full-reconstruction");
+    add(list, `What Really Destroyed ${S} — The Complete Investigation`, "complete-investigation");
+    add(list, `The Engineering Mistakes Behind ${S}`, "engineering-mistakes");
+    add(list, `${S}: From First Warning to Final Failure`, "warning-to-failure");
+    add(list, `How ${S} Changed Engineering Forever`, "changed-engineering");
+    add(list, `${S}: Every Link in the Failure Chain`, "every-link");
+    if (topic.mechanism) add(list, `${cap((topic.mechanism.match(/\(([^)]+)\)/) || [])[1] || topic.mechanism.split(/[,;]/)[0])}: How It Destroyed ${S}`, "mechanism-long");
+    add(list, `The ${topic.year || ""} Disaster Engineers Still Study: ${S}`.replace("The  ", "The "), "still-study");
+    add(list, `Why ${S} Should Never Have Happened`, "never-happened");
+    add(list, `Reconstructing ${S}: Cause, Chain, Consequence`, "reconstructing");
+    add(list, `${S}: The Investigation, Explained`, "investigation-explained");
+    add(list, `The Hidden Weakness Inside ${S}`, "hidden-weakness");
+    add(list, `How Engineers Solved the ${S} Failure`, "engineers-solved");
+    add(list, `${S}: What Failed, Why, and What Changed`, "what-why-changed");
+    add(list, `The Physics Behind the ${S} Disaster`, "physics-behind");
+    add(list, `${S} — A Forensic Engineering Documentary`, "documentary");
+    add(list, `Could ${S} Have Been Prevented?`, "prevented");
+  } else if (topic.channel === "impossible-brief") {
+    const E = topic.event || S;
+    add(list, `What Would Really Happen If ${E}?`, "what-would-happen");
+    add(list, `If ${E}: The Complete Scientific Timeline`, "timeline");
+    add(list, `What If ${cap(topic.scenario || E)}? The Full Scenario`, "full-scenario");
+    add(list, `If ${E}, Minute by Minute`, "minute-by-minute");
+    add(list, `If ${E}: First Effect to Final Outcome`, "first-to-final");
+    add(list, `How Long Would Earth Last If ${E}?`, "how-long");
+    add(list, `If ${E} — What Physics Says Happens Next`, "physics-next");
+    add(list, `Could Humanity Survive If ${E}?`, "survive");
+    add(list, `If ${E}: Known Science, Estimates and Speculation`, "known-estimates");
+    add(list, `The Chain Reaction That Follows If ${E}`, "chain-reaction");
+    add(list, `Every Consequence If ${E}, Explained`, "every-consequence");
+    add(list, `${cap(S)}: A Scientific Thought Experiment`, "thought-experiment");
+    add(list, `What Scientists Can and Can't Predict If ${E}`, "can-cant-predict");
+    add(list, `The Second-Order Effects If ${E}`, "second-order");
+    add(list, `If ${E}: The Full Breakdown`, "full-breakdown");
+    add(list, `If ${E}: What Breaks First, and What Breaks Last`, "first-last");
+    add(list, `The Real Physics If ${E}`, "real-physics");
+    add(list, `If ${E} — Simulated With Real Science`, "simulated");
+    add(list, `The Day After ${cap(E)}`, "day-after");
+    add(list, `What Changes — and What Doesn't — If ${E}`, "change-everything");
+  } else {
+    add(list, `The Hidden System Behind ${S}`, "hidden-system");
+    add(list, `How the World Depends on ${S}`, "world-depends");
+    add(list, `${cap(S)}: The Bottleneck Holding Up Modern Life`, "bottleneck");
+    add(list, `What Happens If ${S} Fails?`, "what-if-fails");
+    add(list, `Why ${cap(S)} Is So Hard to Replace`, "hard-to-replace");
+    add(list, `Inside ${S}: The Complete System Map`, "system-map");
+    add(list, `${cap(S)}: Where It Is, How It Works, What Depends on It`, "where-how-what");
+    add(list, `The Single Point of Failure: ${S}`, "single-point");
+    add(list, `How ${cap(S)} Became Critical Infrastructure`, "became-critical");
+    add(list, `The Global Chain Built on ${S}`, "global-chain");
+    add(list, `${cap(S)} Explained: Dependency, Bottleneck, Resilience`, "explained-dbr");
+    add(list, `If ${S} Stopped Tomorrow`, "stopped-tomorrow");
+    add(list, `The Cascading Failure Hidden in ${S}`, "cascade");
+    add(list, `Who Makes ${S} — and Why So Few Can`, "who-makes");
+    add(list, `The Invisible Infrastructure of ${S}`, "invisible");
+    add(list, `${cap(S)}: Redundancy, Risk and Recovery`, "redundancy");
+    add(list, `Mapping the ${S} Dependency Chain`, "mapping");
+    add(list, `Why ${cap(S)} Matters More Than You Think`, "matters-more");
+    add(list, `${cap(S)} — A Critical Systems Documentary`, "documentary");
+    add(list, `The Backup Plan for ${S}`, "backup-plan");
+  }
+  if (topic.title) add(list, topic.title, "current");
+  return list;
+}
+
+function vocabulary(topic) {
+  const text = [topic.title, topic.subject, topic.object, topic.consequence, topic.trigger, topic.mechanism, topic.misconception, topic.lesson,
+    topic.dependency, topic.bottleneck, topic.scenario, topic.category, topic.cluster, topic.number, topic.year, ...(topic.chain || []),
+    ...(topic.narration || []), ...(topic.editorialTitles || []), ...(topic.evidence || []).map((item) => item.claim)].join(" ");
+  return new Set(M.icerikKelimeleri(text).map((word) => word.slice(0, 6)));
+}
+
+function scoreOne(candidate, topic, config, kind, context = {}) {
+  const title = candidate.title;
+  const words = title.split(/\s+/).length;
+  const chars = title.length;
+  const vocab = vocabulary(topic);
+  const content = M.icerikKelimeleri(title).filter((word) => !TEMPLATE_WORDS.has(word));
+  const unsupported = content.filter((word) => !vocab.has(word.slice(0, 6)));
+  const superlatives = Sources.unsupportedSuperlatives(title, topic);
+  const numeric = Sources.numericSupport(title, topic);
+  const subjectWords = M.icerikKelimeleri(topic.subject);
+  const hasSubject = subjectWords.length && subjectWords.every((word) => title.toLowerCase().includes(word));
+  const curiosity = new Set((title.toLowerCase().match(CURIOSITY) || [])).size;
+  const lexicon = (config.lexicon || []).filter((stem) => title.toLowerCase().includes(stem)).length;
+  const similarity = (context.publishedTitles || []).length ? Math.max(...context.publishedTitles.map((other) => M.kelimeBenzerlik(other, title))) : 0;
+  const idealChars = kind === "long" ? [40, 70] : [28, 60];
+  const s = {
+    clarity: clamp(100 - Math.max(0, chars - idealChars[1]) * 1.5 - Math.max(0, idealChars[0] - chars) * 1.5 - Math.max(0, words - 11) * 5 - ((title.match(/[:—]/g) || []).length > 1 ? 10 : 0)),
+    curiosity: clamp(40 + Math.min(2, curiosity) * 18 + (/\?$/.test(title) ? 8 : 0)),
+    specificity: clamp(35 + (hasSubject ? 30 : 0) + (/\d/.test(title) ? 15 : 0) + Math.min(2, content.length) * 6),
+    truthfulness: clamp(100 - unsupported.length * 15 - superlatives.length * 30 - numeric.unsupported.length * 40 - (CLICKBAIT.test(title) ? 40 : 0)),
+    searchIntent: clamp(30 + (hasSubject ? 45 : 0) + (/^(why|how|what)\b/i.test(title) ? 12 : 0) + (title.toLowerCase().indexOf(subjectWords[0] || "\u0000") >= 0 && title.toLowerCase().indexOf(subjectWords[0]) < 20 ? 8 : 0)),
+    channelIdentity: clamp(50 + Math.min(3, lexicon) * 12 + (candidate.source === "editorial" ? 10 : 0)),
+    ctrPotential: clamp(35 + Math.min(2, curiosity) * 12 + (/\d/.test(title) ? 10 : 0) + (hasSubject ? 10 : 0) + (chars <= idealChars[1] ? 10 : 0) + (/\b(destroy|fail|collapse|explod|depend|stop|vanish|break|killed|doom|never)\w*/i.test(title) ? 8 : 0)),
+    novelty: clamp(100 - similarity * 80),
+    evergreenPotential: clamp(60 + (/\b(today|this week|breaking|new|latest|2026)\b/i.test(title) ? -30 : 15) + (hasSubject ? 10 : 0)),
+  };
+  const weights = kind === "long" ? config.titles.longform.weights : config.titles.shorts.weights;
+  const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
+  const total = Math.round(Object.entries(weights).reduce((sum, [key, weight]) => sum + (s[key] || 0) * weight, 0) / totalWeight);
+  const learnedBonus = (context.learnedPatternBonus || {})[candidate.pattern] || 0;
+  return { ...candidate, scores: s, total, adjustedTotal: Math.min(100, total + learnedBonus), unsupportedWords: unsupported, misleading: s.truthfulness < 60 };
+}
+
+function generate(topic, config, kind = "short", context = {}) {
+  const pool = kind === "long" ? longCandidates(topic, context.extra || []) : shortCandidates(topic, context.extra || []);
+  const scored = pool.map((candidate) => scoreOne(candidate, topic, config, kind, context))
+    .sort((a, b) => Number(a.misleading) - Number(b.misleading) || b.adjustedTotal - a.adjustedTotal);
+  const selected = scored.find((item) => !item.misleading) || null;
+  const minimum = kind === "long" ? config.titles.longform.minimumCandidates : config.titles.shorts.minimumCandidates;
+  return {
+    kind,
+    candidates: scored,
+    count: scored.length,
+    meetsMinimum: scored.length >= minimum,
+    selected,
+    selectedScore: selected ? selected.adjustedTotal : 0,
+    patterns: [...new Set(scored.map((item) => item.pattern))],
+  };
+}
+
+module.exports = { generate, scoreOne, shortCandidates, longCandidates, pattern };

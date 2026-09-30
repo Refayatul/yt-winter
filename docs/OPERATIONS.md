@@ -36,4 +36,10 @@ ImpossibleBrief follows the same scheduled Short path only after `IB_PUBLISH=1` 
 - Complete ImpossibleBrief Google OAuth once.
 - Review/post TikTok inbox drafts.
 - Expand source-checked inventories; current targets are not met.
-- Long-form remains a separate product gap and is not silently marked complete.
+- Long-form: the weekly lane runs unattended (`node growth.js longform`, see [GROWTH-ENGINE.md](GROWTH-ENGINE.md)). It stays at `QUALITY_BLOCKED` until the LLM writer is enabled (`ANTHROPIC_API_KEY` + `LONGFORM_LLM=1`), and render/upload stays off until `longform.render.enabled` + `<PREFIX>_LONGFORM_PUBLISH=1`. After each published episode, complete the `RELATED_VIDEO_MANUAL_ACTION_REQUIRED` tasks and the end-screen plan in Studio.
+
+## Weekly growth review
+
+1. `npm run growth:report` → `reports/growth-dashboard.md`: per-channel Shorts/long-form health, inventory buckets, backlog, funnel, learning, enrichment tasks. Baselines are never blended across channels.
+2. A long-form `QUALITY_BLOCKED` cycle is normal quality behaviour, not an incident. Read its hard fails in `channels/<slug>/state/longform/lane.json`.
+3. `NO_QUALIFIED_TOPIC` Short alerts mean the channel's inventory needs researched topics — do not enable `fallbackToC` to fill the calendar.

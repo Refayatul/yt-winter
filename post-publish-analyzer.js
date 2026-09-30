@@ -151,6 +151,12 @@ async function main() {
     }
   }
   console.log(`Bitti: ${n} checkpoint olculdu.`);
+  // Growth engine pass: 1h/6h/12h/24h/48h/7d/14d/30d checkpoints, Shorts and
+  // long-form baselines kept separate, diagnosis, channel-isolated learning.
+  try {
+    const growth = await require("./core/growth/runtime").analyticsPass(CHANNEL, hepsi, (video) => A.topla(api, video));
+    console.log(`Growth analytics: ${growth.measured} checkpoint(s) · learning shorts=${growth.learning.shorts} longform=${growth.learning.longform}`);
+  } catch (e) { console.log("  (growth analytics: " + e.message + ")"); }
   const Retention = require("./core/retention");
   const learned = Retention.learn(Retention.samplesFromAnalytics(CHANNEL), CHANNEL);
   console.log(`Learning: ${learned.status} (${learned.sampleSize}/${learned.minimumSample})`);

@@ -1,5 +1,7 @@
 # Growth architecture
 
+> The three-channel growth engine (topic buckets, hooks, first 3 s, readiness gates, weekly long-form lane, Short→Long funnel, channel-isolated analytics and learning) is described in [GROWTH-ENGINE.md](GROWTH-ENGINE.md). This page covers the Failure Reconstructed packaging engines.
+
 Failure Reconstructed is a **data-driven forensic engineering documentary production and growth system**. Automation handles the tedious parts (footage, voice, render, packaging, measurement). Quality and editorial value decide what gets published.
 
 ## 1. Two production formats, one packaging and quality layer
@@ -20,7 +22,7 @@ Failure Reconstructed is a **data-driven forensic engineering documentary produc
                                                                 → youtube-yukle.js (BLOCK stops it)
 ```
 
-Short production is live. The long-form column describes available local components, not an unattended channel-aware Actions pipeline; long queue items are not currently consumed or uploaded automatically.
+Short production is live. The long-form column describes the local components; the unattended, channel-aware **weekly long-form lane** (selection, research, script, quality gate, funnel; render/upload behind a per-channel switch) is documented in [GROWTH-ENGINE.md](GROWTH-ENGINE.md).
 
 ## 2. Packaging engines (per video → `icerik/paket/<slug>/`)
 
