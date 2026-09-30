@@ -3205,7 +3205,7 @@
       "openingLine": "Why one Swiss tree blacked out 56 million.",
       "secondBeat": "In 2003, a Swiss line arced to a tree.",
       "expectedConsequence": "a whole country dark for up to 12 hours",
-      "thumbnailText": "ONE TREE, ONE COUNTRY",
+      "thumbnailText": "ONE TREE BLACKOUT",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -3813,7 +3813,7 @@
       "openingLine": "Why one Chinese power line runs 3,000 kilometres.",
       "secondBeat": "It uses direct current at 1,100 kilovolts.",
       "expectedConsequence": "grid operators lose a large block of imported power instantly",
-      "thumbnailText": "3,000 KM OF POWER",
+      "thumbnailText": "3,000 KM POWERLINE",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -4651,7 +4651,7 @@
       "openingLine": "Why Texas's grid came 4 minutes from collapse.",
       "secondBeat": "In 2021, frozen plants dropped supply far below demand.",
       "expectedConsequence": "millions lose power for days to save the grid",
-      "thumbnailText": "4 MINUTES FROM COLLAPSE",
+      "thumbnailText": "4 MINUTES LEFT",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -5703,7 +5703,7 @@
       "openingLine": "Why overgrown trees blacked out 55 million people.",
       "secondBeat": "One August afternoon, sagging lines touched trees in Ohio.",
       "expectedConsequence": "a local fault cascades into a regional blackout",
-      "thumbnailText": "TREES VS THE GRID",
+      "thumbnailText": "TREES VS GRID",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -5916,7 +5916,7 @@
       "slug": "why-natural-gas-compressor-station-is-so-hard-to-replace",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "Why natural-gas compressor station Is So Hard to Replace",
+      "topic": "The Explosions That Broke 3 of 4 Gas Pipes",
       "canonicalTopic": "natural-gas compressor station",
       "category": "ENERGY",
       "cluster": "ENERGY",
@@ -5925,16 +5925,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in natural-gas compressor station, and what changes when it is unavailable?",
-      "dependency": "natural-gas compressor station supports fuel conversion and energy storage.",
-      "mechanism": "It occupies a specialized step in fuel conversion and energy storage, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on fuel conversion and energy storage; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, fuel conversion and energy storage loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "NATURAL-GAS COMPRESSOR STATION",
+      "coreQuestion": "What happened when undersea explosions disabled most of the Nord Stream pipelines?",
+      "dependency": "European gas supply depended partly on large undersea pipelines from Russia.",
+      "mechanism": "Compressor stations push gas through long pipelines at high pressure to consumers.",
+      "bottleneck": "A few large pipelines carried a big share of imports.",
+      "failureConsequence": "Explosions ruptured three of four pipes, leaving them inoperable.",
+      "resilience": "LNG imports and storage replaced much of the lost flow.",
+      "openingLine": "Why 3 of 4 gas pipes failed together.",
+      "secondBeat": "In 2022, undersea explosions ruptured the Nord Stream lines.",
+      "expectedConsequence": "gas prices swing and supply routes are rebuilt",
+      "thumbnailText": "3 PIPES DOWN",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -5962,7 +5962,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "On 26 September 2022, a series of underwater explosions and consequent gas leaks occurred on 3 of 4 Nord Stream pipes, rendering them inoperable.",
+          "source": "Wikipedia — 2022 Nord Stream pipeline sabotage"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Nord Stream 1 and Nord Stream 2 are two of twenty-three natural gas pipelines between Europe and Russia.",
+          "source": "Wikipedia — 2022 Nord Stream pipeline sabotage"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "From 31 August 2022, Gazprom had halted delivery via Nord Stream 1 indefinitely, officially because of maintenance.",
+          "source": "Wikipedia — 2022 Nord Stream pipeline sabotage"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Such an unlikely large leak from 54 metres (177 ft) water depth could result in a gas plume up to 15 metres wide at the surface.",
+          "source": "Wikipedia — 2022 Nord Stream pipeline sabotage"
+        }
+      ],
       "sources": [
         {
           "name": "U.S. Department of Energy — Grid",
@@ -5991,12 +6012,12 @@
       "visualPotential": {
         "score": 83,
         "scenes": [
-          "natural-gas compressor station close technical view",
-          "fuel conversion and energy storage system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "gas bubbling at the sea surface",
+          "pipeline route across the Baltic",
+          "compressor station",
+          "pipeline cross-section",
+          "LNG terminal replacing supply",
+          "timeline of shutdown and explosions"
         ]
       },
       "searchDemand": {
@@ -6044,7 +6065,82 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "3 of 4 pipes",
+      "editorialTitles": [
+        "The Undersea Explosions That Cut Europe's Gas",
+        "Why Pipelines Are Hard to Replace"
+      ],
+      "facts": [
+        {
+          "claim": "On 26 September 2022, a series of underwater explosions and consequent gas leaks occurred on 3 of 4 Nord Stream pipes, rendering them inoperable.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — 2022 Nord Stream pipeline sabotage",
+          "url": "https://en.wikipedia.org/wiki/2022_Nord_Stream_pipeline_sabotage"
+        },
+        {
+          "claim": "Nord Stream 1 and Nord Stream 2 are two of twenty-three natural gas pipelines between Europe and Russia.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — 2022 Nord Stream pipeline sabotage",
+          "url": "https://en.wikipedia.org/wiki/2022_Nord_Stream_pipeline_sabotage"
+        },
+        {
+          "claim": "From 31 August 2022, Gazprom had halted delivery via Nord Stream 1 indefinitely, officially because of maintenance.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — 2022 Nord Stream pipeline sabotage",
+          "url": "https://en.wikipedia.org/wiki/2022_Nord_Stream_pipeline_sabotage"
+        },
+        {
+          "claim": "Such an unlikely large leak from 54 metres (177 ft) water depth could result in a gas plume up to 15 metres wide at the surface.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — 2022 Nord Stream pipeline sabotage",
+          "url": "https://en.wikipedia.org/wiki/2022_Nord_Stream_pipeline_sabotage"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why 3 of 4 gas pipes failed together.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "In 2022, undersea explosions ruptured the Nord Stream lines.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "Gas bubbled up from the Baltic seabed.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "Deliveries through Nord Stream 1 had already halted.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Big pipelines take years and billions to build.",
+          "layer": "MODEL",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "Europe had to replace that gas with shipped LNG.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "That's why energy security runs along a few pipes on the seabed.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/2022_Nord_Stream_pipeline_sabotage"
+        ]
+      }
     },
     {
       "id": "CT-038",
@@ -8447,7 +8543,7 @@
       "openingLine": "Why 45% of eastern fuel rides one pipe.",
       "secondBeat": "That's the Colonial Pipeline, and ransomware shut it down.",
       "expectedConsequence": "gas stations run dry within days of a shutdown",
-      "thumbnailText": "45% OF EAST FUEL",
+      "thumbnailText": "45% EAST FUEL",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -8678,7 +8774,7 @@
       "openingLine": "Why 285.4 million barrels can't flow fast.",
       "secondBeat": "Its maximum withdrawal is 2.7 million barrels a day.",
       "expectedConsequence": "the reserve slows a price spike but cannot fully replace lost supply",
-      "thumbnailText": "2.7M BARRELS A DAY",
+      "thumbnailText": "2.7M BARRELS/DAY",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -10929,7 +11025,7 @@
       "openingLine": "Why a false missile alert ran 38 minutes.",
       "secondBeat": "In 2018, every phone in Hawaii warned of a missile.",
       "expectedConsequence": "panic spreads faster than the correction",
-      "thumbnailText": "38 MINUTES OF PANIC",
+      "thumbnailText": "38 MINUTES PANIC",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -12455,7 +12551,7 @@
       "openingLine": "Why 1 broken cable cut off Tonga.",
       "secondBeat": "In 2022, Hunga Tonga's plume rose 58 kilometres.",
       "expectedConsequence": "a whole country goes offline for weeks",
-      "thumbnailText": "ONE CABLE, ONE COUNTRY",
+      "thumbnailText": "ONE CABLE COUNTRY",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -14176,7 +14272,7 @@
       "openingLine": "Why cable breaks cut 75% of Mideast links.",
       "secondBeat": "In 2008, cable breaks hit links from the Middle East.",
       "expectedConsequence": "internet slows across whole countries until repairs",
-      "thumbnailText": "ONE ANCHOR, 75%",
+      "thumbnailText": "ANCHOR CUTS 75%",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -14812,7 +14908,7 @@
       "openingLine": "Why two earthquakes cut Asia's calls to 40%.",
       "secondBeat": "In 2006, shocks of 7.0 and 6.9 struck off Taiwan.",
       "expectedConsequence": "calls and internet slow for weeks during repairs",
-      "thumbnailText": "ONE QUAKE, MANY CABLES",
+      "thumbnailText": "QUAKE CUTS CABLES",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -15459,7 +15555,7 @@
       "openingLine": "Kepler lost its aim when two wheels failed.",
       "secondBeat": "They were reaction wheels, which point spacecraft.",
       "expectedConsequence": "precision pointing is lost first; missions survive only in degraded modes",
-      "thumbnailText": "2 OF 4 FAILED",
+      "thumbnailText": "2 OF 4",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -18502,7 +18598,7 @@
       "openingLine": "GPS clocks drift 38 microseconds every day.",
       "secondBeat": "Without correction, your position would slide away within hours.",
       "expectedConsequence": "errors grow gradually rather than switching off at once",
-      "thumbnailText": "38 µs A DAY",
+      "thumbnailText": "38 µs/DAY",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -25813,7 +25909,7 @@
       "slug": "inside-the-system-built-around-ship-classification-survey",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "Inside the System Built Around ship classification survey",
+      "topic": "The Coffee House Register That Rates Every Ship",
       "canonicalTopic": "ship classification survey",
       "category": "SHIPPING",
       "cluster": "SHIPPING",
@@ -25822,16 +25918,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in ship classification survey, and what changes when it is unavailable?",
-      "dependency": "ship classification survey supports ocean freight movement.",
-      "mechanism": "It occupies a specialized step in ocean freight movement, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on ocean freight movement; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, ocean freight movement loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "SHIP CLASSIFICATION SURVEY",
+      "coreQuestion": "How did a list kept in a coffee house become the system that rates ships' safety?",
+      "dependency": "Insurers, charterers and ports depend on classification societies to certify ships.",
+      "mechanism": "Surveyors inspect hulls and machinery and assign a class that insurers rely on.",
+      "bottleneck": "Ships without valid class struggle to get insurance or cargo.",
+      "failureConsequence": "A lost class can idle a ship until repairs are verified.",
+      "resilience": "Several societies compete, with shared standards.",
+      "openingLine": "Why a 1760 coffee-house list rates ships.",
+      "secondBeat": "It began as a register kept for underwriters.",
+      "expectedConsequence": "unclassed ships lose insurance and business",
+      "thumbnailText": "RATED A1",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -25859,7 +25955,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "In 1760, the Register Society was formed by the customers of the coffee house who assembled the Register of Shipping, the first known register of its type.",
+          "source": "Wikipedia — Lloyd's Register"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The best classification A1, from which the expression A1 or A1 at Lloyd's is derived, first appeared in the 1775–76 edition of the Register.",
+          "source": "Wikipedia — Lloyd's Register"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Between 1800 and 1833, a dispute between shipowners and underwriters resulted in each group publishing a list, the Red Book and the Green Book.",
+          "source": "Wikipedia — Lloyd's Register"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "In 1914, with an increasingly international outlook, the organisation changed its name to Lloyd's Register of Shipping.",
+          "source": "Wikipedia — Lloyd's Register"
+        }
+      ],
       "sources": [
         {
           "name": "International Maritime Organization",
@@ -25888,12 +26005,12 @@
       "visualPotential": {
         "score": 80,
         "scenes": [
-          "ship classification survey close technical view",
-          "ocean freight movement system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "18th-century coffee house",
+          "old shipping register pages",
+          "surveyor inspecting a hull",
+          "A1 rating certificate",
+          "insurance office",
+          "modern tanker in dry dock"
         ]
       },
       "searchDemand": {
@@ -25941,7 +26058,82 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "1760",
+      "editorialTitles": [
+        "Where 'A1' Comes From",
+        "The Surveyors Who Decide If Ships Can Sail"
+      ],
+      "facts": [
+        {
+          "claim": "In 1760, the Register Society was formed by the customers of the coffee house who assembled the Register of Shipping, the first known register of its type.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Lloyd's Register",
+          "url": "https://en.wikipedia.org/wiki/Lloyd's_Register"
+        },
+        {
+          "claim": "The best classification A1, from which the expression A1 or A1 at Lloyd's is derived, first appeared in the 1775–76 edition of the Register.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Lloyd's Register",
+          "url": "https://en.wikipedia.org/wiki/Lloyd's_Register"
+        },
+        {
+          "claim": "Between 1800 and 1833, a dispute between shipowners and underwriters resulted in each group publishing a list, the Red Book and the Green Book.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Lloyd's Register",
+          "url": "https://en.wikipedia.org/wiki/Lloyd's_Register"
+        },
+        {
+          "claim": "In 1914, with an increasingly international outlook, the organisation changed its name to Lloyd's Register of Shipping.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Lloyd's Register",
+          "url": "https://en.wikipedia.org/wiki/Lloyd's_Register"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why a 1760 coffee-house list rates ships.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "It began as a register kept for underwriters.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "The top grade, A1, appeared in the 1775 edition.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Owners and insurers once published rival lists.",
+          "layer": "VERIFIED FACT",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "Today, surveyors inspect hulls and engines to keep a ship in class.",
+          "layer": "MODEL",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Lose class, and insurers and cargo owners walk away.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "That's why 'A1' still means trustworthy at sea.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/Lloyd's_Register"
+        ]
+      }
     },
     {
       "id": "CT-154",
@@ -28066,7 +28258,7 @@
       "openingLine": "Why Baltimore's port closed for 11 weeks.",
       "secondBeat": "A ship struck the Key Bridge, dropping it into the channel.",
       "expectedConsequence": "cargo diverts to other ports at millions of dollars a day",
-      "thumbnailText": "PORT SHUT 11 WEEKS",
+      "thumbnailText": "PORT SHUT 11WKS",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -34773,7 +34965,7 @@
       "slug": "the-hidden-system-behind-electronic-toll-collection-system",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "The Hidden System Behind electronic toll collection system",
+      "topic": "The Tag That Pays 90% of Tolls",
       "canonicalTopic": "electronic toll collection system",
       "category": "ROADS AND BRIDGES",
       "cluster": "ROADS AND BRIDGES",
@@ -34782,16 +34974,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in electronic toll collection system, and what changes when it is unavailable?",
-      "dependency": "electronic toll collection system supports surface mobility and road freight.",
-      "mechanism": "It occupies a specialized step in surface mobility and road freight, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on surface mobility and road freight; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, surface mobility and road freight loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "ELECTRONIC TOLL COLLECTION",
+      "coreQuestion": "How does a small tag on your windscreen keep highways flowing?",
+      "dependency": "Toll roads depend on electronic tags to charge vehicles without stopping them.",
+      "mechanism": "Roadside readers detect transponders and bill accounts automatically.",
+      "bottleneck": "Most drivers rely on one interoperable tag network.",
+      "failureConsequence": "Reader or billing failures create queues or lost revenue.",
+      "resilience": "Plate cameras bill vehicles without working tags.",
+      "openingLine": "Why 90% of drivers there pay by tag.",
+      "secondBeat": "On New Jersey's turnpike, E-ZPass readers bill cars nonstop.",
+      "expectedConsequence": "toll plazas back up when tags stop working",
+      "thumbnailText": "90% PAY TAG",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -34819,7 +35011,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "According to the New Jersey Turnpike Authority, about 90% of vehicles on the New Jersey Turnpike and Garden State Parkway use E-ZPass.",
+          "source": "Wikipedia — E-ZPass"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "As of 2020, about 86% of vehicles along the Pennsylvania Turnpike use E-ZPass for payment of tolls.",
+          "source": "Wikipedia — E-ZPass"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Transponders are powered by a battery designed to last about 10 years.",
+          "source": "Wikipedia — E-ZPass"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "It was created in 1987, since which time several states' compatible systems have rebranded to E-ZPass.",
+          "source": "Wikipedia — E-ZPass"
+        }
+      ],
       "sources": [
         {
           "name": "U.S. Department of Transportation",
@@ -34848,12 +35061,12 @@
       "visualPotential": {
         "score": 86,
         "scenes": [
-          "electronic toll collection system close technical view",
-          "surface mobility and road freight system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "car passing an overhead toll reader",
+          "windscreen transponder",
+          "toll plaza queue",
+          "billing system diagram",
+          "adoption chart by road",
+          "licence plate camera"
         ]
       },
       "searchDemand": {
@@ -34901,7 +35114,82 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "90%",
+      "editorialTitles": [
+        "The Tiny Tag That Pays Your Tolls",
+        "Why Highways Stopped Needing Toll Booths"
+      ],
+      "facts": [
+        {
+          "claim": "According to the New Jersey Turnpike Authority, about 90% of vehicles on the New Jersey Turnpike and Garden State Parkway use E-ZPass.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — E-ZPass",
+          "url": "https://en.wikipedia.org/wiki/E-ZPass"
+        },
+        {
+          "claim": "As of 2020, about 86% of vehicles along the Pennsylvania Turnpike use E-ZPass for payment of tolls.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — E-ZPass",
+          "url": "https://en.wikipedia.org/wiki/E-ZPass"
+        },
+        {
+          "claim": "Transponders are powered by a battery designed to last about 10 years.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — E-ZPass",
+          "url": "https://en.wikipedia.org/wiki/E-ZPass"
+        },
+        {
+          "claim": "It was created in 1987, since which time several states' compatible systems have rebranded to E-ZPass.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — E-ZPass",
+          "url": "https://en.wikipedia.org/wiki/E-ZPass"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why 90% of drivers there pay by tag.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "On New Jersey's turnpike, E-ZPass readers bill cars nonstop.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "About 86% of vehicles on the Pennsylvania Turnpike use it.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Each tag's battery is designed to last about 10 years.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "The network began in 1987.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "If readers fail, cash lanes and cameras must absorb the traffic.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "That's why highway flow depends on a small plastic box.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/E-ZPass"
+        ]
+      }
     },
     {
       "id": "CT-211",
@@ -35448,7 +35736,7 @@
       "slug": "the-critical-role-of-urban-traffic-control-network",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "The Critical Role of urban traffic control network",
+      "topic": "The System Running 63,000 Traffic Lights",
       "canonicalTopic": "urban traffic control network",
       "category": "ROADS AND BRIDGES",
       "cluster": "ROADS AND BRIDGES",
@@ -35457,16 +35745,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in urban traffic control network, and what changes when it is unavailable?",
-      "dependency": "urban traffic control network supports surface mobility and road freight.",
-      "mechanism": "It occupies a specialized step in surface mobility and road freight, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on surface mobility and road freight; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, surface mobility and road freight loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "URBAN TRAFFIC CONTROL",
+      "coreQuestion": "Who decides how long your traffic light stays green?",
+      "dependency": "City traffic flow depends on adaptive control systems coordinating signals.",
+      "mechanism": "Detectors measure traffic and software adjusts green times and offsets in real time.",
+      "bottleneck": "One system coordinates tens of thousands of intersections worldwide.",
+      "failureConsequence": "When control fails, signals fall back to fixed timings and queues grow.",
+      "resilience": "Local controllers keep running basic plans if central control drops.",
+      "openingLine": "Why 63,000 intersections share one control system.",
+      "secondBeat": "SCATS runs signals in over 216 cities.",
+      "expectedConsequence": "congestion spreads when coordination is lost",
+      "thumbnailText": "63,000 TRAFFIC LIGHTS",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -35494,7 +35782,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "SCATS is installed at more than 63,000 intersections in over 216 cities in 33 countries.",
+          "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "In Australia, where the system was first developed, the majority of signalised intersections are SCATS operated (around 11,000).",
+          "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Longer or more frequent green signals for pedestrians can reduce unsafe crossing by 34%.",
+          "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The new method of on-line offset calculation showed an 8% improvement over the existing precalculated offset plans.",
+          "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System"
+        }
+      ],
       "sources": [
         {
           "name": "U.S. Department of Transportation",
@@ -35523,12 +35832,12 @@
       "visualPotential": {
         "score": 91,
         "scenes": [
-          "urban traffic control network close technical view",
-          "surface mobility and road freight system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "busy intersection from above",
+          "loop detectors in the road",
+          "traffic control centre screens",
+          "map of cities using the system",
+          "green wave animation",
+          "pedestrian crossing"
         ]
       },
       "searchDemand": {
@@ -35576,7 +35885,82 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "63,000 intersections",
+      "editorialTitles": [
+        "The Hidden System Running Your Traffic Lights",
+        "How Adaptive Signals Keep Cities Moving"
+      ],
+      "facts": [
+        {
+          "claim": "SCATS is installed at more than 63,000 intersections in over 216 cities in 33 countries.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+          "url": "https://en.wikipedia.org/wiki/Sydney_Coordinated_Adaptive_Traffic_System"
+        },
+        {
+          "claim": "In Australia, where the system was first developed, the majority of signalised intersections are SCATS operated (around 11,000).",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+          "url": "https://en.wikipedia.org/wiki/Sydney_Coordinated_Adaptive_Traffic_System"
+        },
+        {
+          "claim": "Longer or more frequent green signals for pedestrians can reduce unsafe crossing by 34%.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+          "url": "https://en.wikipedia.org/wiki/Sydney_Coordinated_Adaptive_Traffic_System"
+        },
+        {
+          "claim": "The new method of on-line offset calculation showed an 8% improvement over the existing precalculated offset plans.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+          "url": "https://en.wikipedia.org/wiki/Sydney_Coordinated_Adaptive_Traffic_System"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why 63,000 intersections share one control system.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "SCATS runs signals in over 216 cities.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "Australia alone has around 11,000 of them.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Sensors in the road feed real-time timing changes.",
+          "layer": "MODEL",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "Smarter offsets improved flow by 8% in one test.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "Better pedestrian timing cut unsafe crossing by 34%.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "That's why your green light is decided by software.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/Sydney_Coordinated_Adaptive_Traffic_System"
+        ]
+      }
     },
     {
       "id": "CT-216",
@@ -35988,7 +36372,7 @@
       "slug": "inside-the-system-built-around-rapid-sand-filter",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "Inside the System Built Around rapid sand filter",
+      "topic": "The Outbreak That Sickened 403,000 People",
       "canonicalTopic": "rapid sand filter",
       "category": "WATER",
       "cluster": "WATER",
@@ -35997,16 +36381,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in rapid sand filter, and what changes when it is unavailable?",
-      "dependency": "rapid sand filter supports safe municipal water delivery.",
-      "mechanism": "It occupies a specialized step in safe municipal water delivery, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on safe municipal water delivery; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, safe municipal water delivery loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "RAPID SAND FILTER",
+      "coreQuestion": "How did a parasite slip through a city's water treatment and sicken 403,000 people?",
+      "dependency": "Safe tap water depends on filtration that removes parasites chlorine can't kill.",
+      "mechanism": "Filters trap particles and cysts; if they underperform, pathogens pass into the network.",
+      "bottleneck": "Cryptosporidium resists chlorine, so filtration is the key barrier.",
+      "failureConsequence": "Treatment problems let the parasite into Milwaukee's supply.",
+      "resilience": "Filtration upgrades and monitoring followed the outbreak.",
+      "openingLine": "Why tap water sickened 403,000 people in Milwaukee.",
+      "secondBeat": "In 1993, a parasite slipped through water treatment.",
+      "expectedConsequence": "mass illness from tap water",
+      "thumbnailText": "403,000 SICK",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -36034,7 +36418,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The 1993 Milwaukee cryptosporidiosis outbreak was the largest waterborne disease outbreak in documented United States history.",
+          "source": "Wikipedia — 1993 Milwaukee Cryptosporidium outbreak"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Approximately 403,000 residents were affected, and 4,400 were hospitalized.",
+          "source": "Wikipedia — 1993 Milwaukee Cryptosporidium outbreak"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The total cost of the outbreak, in productivity loss and medical expenses, was $96 million.",
+          "source": "Wikipedia — 1993 Milwaukee Cryptosporidium outbreak"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Schools had to throw away 68,000 servings of Jell-O due to the possibility that it was contaminated.",
+          "source": "Wikipedia — 1993 Milwaukee Cryptosporidium outbreak"
+        }
+      ],
       "sources": [
         {
           "name": "U.S. Environmental Protection Agency — Water",
@@ -36063,12 +36468,12 @@
       "visualPotential": {
         "score": 95,
         "scenes": [
-          "rapid sand filter close technical view",
-          "safe municipal water delivery system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "water treatment filter beds",
+          "Cryptosporidium under a microscope",
+          "hospital admissions chart",
+          "boil water notice",
+          "turbidity monitor",
+          "Lake Michigan intake"
         ]
       },
       "searchDemand": {
@@ -36116,7 +36521,87 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "403,000 sick",
+      "editorialTitles": [
+        "The Largest Waterborne Outbreak in U.S. History",
+        "Why Filters Matter More Than Chlorine"
+      ],
+      "facts": [
+        {
+          "claim": "The 1993 Milwaukee cryptosporidiosis outbreak was the largest waterborne disease outbreak in documented United States history.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — 1993 Milwaukee Cryptosporidium outbreak",
+          "url": "https://en.wikipedia.org/wiki/1993_Milwaukee_Cryptosporidium_outbreak"
+        },
+        {
+          "claim": "Approximately 403,000 residents were affected, and 4,400 were hospitalized.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — 1993 Milwaukee Cryptosporidium outbreak",
+          "url": "https://en.wikipedia.org/wiki/1993_Milwaukee_Cryptosporidium_outbreak"
+        },
+        {
+          "claim": "The total cost of the outbreak, in productivity loss and medical expenses, was $96 million.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — 1993 Milwaukee Cryptosporidium outbreak",
+          "url": "https://en.wikipedia.org/wiki/1993_Milwaukee_Cryptosporidium_outbreak"
+        },
+        {
+          "claim": "Schools had to throw away 68,000 servings of Jell-O due to the possibility that it was contaminated.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — 1993 Milwaukee Cryptosporidium outbreak",
+          "url": "https://en.wikipedia.org/wiki/1993_Milwaukee_Cryptosporidium_outbreak"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why tap water sickened 403,000 people in Milwaukee.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "In 1993, a parasite slipped through water treatment.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "About 4,400 people were hospitalised.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "Cryptosporidium shrugs off chlorine, so filters must catch it.",
+          "layer": "MODEL",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "The outbreak cost about $96 million.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "Schools even threw out 68,000 servings of Jell-O.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Millions rely on filters they never see.",
+          "layer": "MODEL",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "That's why filtration is the quiet hero of tap water.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/1993_Milwaukee_Cryptosporidium_outbreak"
+        ]
+      }
     },
     {
       "id": "CT-220",
@@ -36669,7 +37154,7 @@
       "openingLine": "Why 150,000 people lost safe water in 2022.",
       "secondBeat": "Jackson, Mississippi's water system failed after flooding.",
       "expectedConsequence": "boil-water notices and dry taps across a city",
-      "thumbnailText": "NO WATER FOR 150,000",
+      "thumbnailText": "NO WATER",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -37817,7 +38302,7 @@
       "openingLine": "Why seawater must be pushed at 82 bar.",
       "secondBeat": "Reverse osmosis forces water through salt-blocking membranes.",
       "expectedConsequence": "water supply drops as soon as the pumps stop",
-      "thumbnailText": "82 BAR OF PRESSURE",
+      "thumbnailText": "82 BAR PRESSURE",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -38030,7 +38515,7 @@
       "slug": "inside-the-system-built-around-water-quality-laboratory",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "Inside the System Built Around water-quality laboratory",
+      "topic": "The Town Water Test That Came Too Late",
       "canonicalTopic": "water-quality laboratory",
       "category": "WATER",
       "cluster": "WATER",
@@ -38039,16 +38524,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in water-quality laboratory, and what changes when it is unavailable?",
-      "dependency": "water-quality laboratory supports safe municipal water delivery.",
-      "mechanism": "It occupies a specialized step in safe municipal water delivery, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on safe municipal water delivery; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, safe municipal water delivery loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "WATER-QUALITY LABORATORY",
+      "coreQuestion": "How did a small town's water become deadly while tests went unheeded?",
+      "dependency": "Drinking water safety depends on testing, reporting and trained operators acting on results.",
+      "mechanism": "Labs test for bacteria; operators must respond with chlorination and warnings.",
+      "bottleneck": "Untrained operators and weak reporting delayed the response.",
+      "failureConsequence": "E. coli spread through the town's supply.",
+      "resilience": "Ontario overhauled water testing and operator certification afterwards.",
+      "openingLine": "Why 2,000 fell sick in a 5,036-person town.",
+      "secondBeat": "In 2000, E. coli entered Walkerton's water.",
+      "expectedConsequence": "illness spreads before anyone is warned",
+      "thumbnailText": "TESTS IGNORED",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -38076,7 +38561,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The contamination caused gastroenteritis and sickened more than 2,000 people and resulted in seven deaths.",
+          "source": "Wikipedia — Walkerton E. coli outbreak"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The population of Walkerton in 1996 was recorded as 5,036 individuals.",
+          "source": "Wikipedia — Walkerton E. coli outbreak"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "At the time of the 2000 events, the town's drinking water was drawn from three chlorinated wells.",
+          "source": "Wikipedia — Walkerton E. coli outbreak"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Neither man had formal training in public utility operation or in water management, but by 2000, both had been promoted to management positions.",
+          "source": "Wikipedia — Walkerton E. coli outbreak"
+        }
+      ],
       "sources": [
         {
           "name": "U.S. Environmental Protection Agency — Water",
@@ -38105,12 +38611,12 @@
       "visualPotential": {
         "score": 90,
         "scenes": [
-          "water-quality laboratory close technical view",
-          "safe municipal water delivery system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "small town water well",
+          "lab sample bottles",
+          "boil water notice",
+          "chlorine dosing equipment",
+          "hospital ward",
+          "inquiry report"
         ]
       },
       "searchDemand": {
@@ -38158,7 +38664,87 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "2,000+ sick",
+      "editorialTitles": [
+        "The Water Tests That Came Too Late",
+        "Why Water Labs Need Someone to Act"
+      ],
+      "facts": [
+        {
+          "claim": "The contamination caused gastroenteritis and sickened more than 2,000 people and resulted in seven deaths.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Walkerton E. coli outbreak",
+          "url": "https://en.wikipedia.org/wiki/Walkerton_E._coli_outbreak"
+        },
+        {
+          "claim": "The population of Walkerton in 1996 was recorded as 5,036 individuals.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Walkerton E. coli outbreak",
+          "url": "https://en.wikipedia.org/wiki/Walkerton_E._coli_outbreak"
+        },
+        {
+          "claim": "At the time of the 2000 events, the town's drinking water was drawn from three chlorinated wells.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Walkerton E. coli outbreak",
+          "url": "https://en.wikipedia.org/wiki/Walkerton_E._coli_outbreak"
+        },
+        {
+          "claim": "Neither man had formal training in public utility operation or in water management, but by 2000, both had been promoted to management positions.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Walkerton E. coli outbreak",
+          "url": "https://en.wikipedia.org/wiki/Walkerton_E._coli_outbreak"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why 2,000 fell sick in a 5,036-person town.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "In 2000, E. coli entered Walkerton's water.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "Seven people died.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "The managers had no formal water treatment training.",
+          "layer": "VERIFIED FACT",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "Warning signs didn't trigger action in time.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "Testing only protects people if someone responds.",
+          "layer": "MODEL",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "The results existed, but the response lagged.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "That's why water safety is a chain from lab to tap.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/Walkerton_E._coli_outbreak"
+        ]
+      }
     },
     {
       "id": "CT-232",
@@ -38453,7 +39039,7 @@
       "openingLine": "Why 100,000 people drank from leaching pipes.",
       "secondBeat": "Flint skipped corrosion inhibitors, and old lead lines leached.",
       "expectedConsequence": "residents rely on bottled water while pipes are dug up",
-      "thumbnailText": "LEAD IN THE PIPES",
+      "thumbnailText": "LEAD IN PIPES",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -39601,7 +40187,7 @@
       "openingLine": "Why 2 mm of rain fouled the Thames.",
       "secondBeat": "London's Victorian sewers carry rain and sewage together.",
       "expectedConsequence": "river pollution rises with each heavy rain",
-      "thumbnailText": "2 MM OF RAIN",
+      "thumbnailText": "2 MM RAIN",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -41974,7 +42560,7 @@
       "openingLine": "Why 70% of beauty products hide palm oil.",
       "secondBeat": "Soap, shampoo, makeup and lotion all rely on it.",
       "expectedConsequence": "cooking oil and packaged food prices rise",
-      "thumbnailText": "60% FROM ONE COUNTRY",
+      "thumbnailText": "60% ONE COUNTRY",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -42841,7 +43427,7 @@
       "openingLine": "Why 1 sterile machine replaced the milk fridge.",
       "secondBeat": "Aseptic packaging removed the need for a cold chain.",
       "expectedConsequence": "shelf-stable supply tightens and cold-chain costs rise",
-      "thumbnailText": "MILK WITHOUT A FRIDGE",
+      "thumbnailText": "FRIDGE-FREE MILK",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -47145,7 +47731,7 @@
       "openingLine": "Why 70% of phosphate reserves sit in Morocco.",
       "secondBeat": "Morocco's OCP can reach over 70% of known reserves.",
       "expectedConsequence": "fertilizer prices rise and yields suffer where farmers cut back",
-      "thumbnailText": "70% OF PHOSPHATE",
+      "thumbnailText": "70% PHOSPHATE",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -47989,7 +48575,7 @@
       "openingLine": "Why one aquifer needs 6,000 years to refill.",
       "secondBeat": "The Ogallala feeds the Great Plains' crop circles.",
       "expectedConsequence": "farm output drops where wells fail",
-      "thumbnailText": "6,000 YEARS TO REFILL",
+      "thumbnailText": "6,000-YEAR REFILL",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -49081,7 +49667,7 @@
       "slug": "the-hidden-system-behind-veterinary-vaccine-plant",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "The Hidden System Behind veterinary vaccine plant",
+      "topic": "The Cattle Disease Wiped Out by Vaccines",
       "canonicalTopic": "veterinary vaccine plant",
       "category": "AGRICULTURE",
       "cluster": "AGRICULTURE",
@@ -49090,16 +49676,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in veterinary vaccine plant, and what changes when it is unavailable?",
-      "dependency": "veterinary vaccine plant supports large-scale crop and livestock production.",
-      "mechanism": "It occupies a specialized step in large-scale crop and livestock production, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on large-scale crop and livestock production; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, large-scale crop and livestock production loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "VETERINARY VACCINE PLANT",
+      "coreQuestion": "How did vaccines eradicate a cattle plague that once killed almost every animal it infected?",
+      "dependency": "Herds, farmers and food supply depend on veterinary vaccines against deadly livestock diseases.",
+      "mechanism": "Mass vaccination breaks transmission until the virus has nowhere left to spread.",
+      "bottleneck": "Vaccines must reach remote herds, often across borders.",
+      "failureConsequence": "Gaps in coverage let outbreaks return.",
+      "resilience": "A global campaign coordinated vaccination and surveillance.",
+      "openingLine": "Why a 100%-lethal cattle plague vanished.",
+      "secondBeat": "Rinderpest's last confirmed case came in 2001.",
+      "expectedConsequence": "a disease disappears from the planet",
+      "thumbnailText": "PLAGUE ERADICATED",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -49127,7 +49713,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Death rates during outbreaks were usually extremely high, approaching 100% in immunologically naïve populations.",
+          "source": "Wikipedia — Rinderpest"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "After a global eradication campaign that began in the mid-20th century, the last confirmed case of rinderpest was diagnosed in 2001.",
+          "source": "Wikipedia — Rinderpest"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "For the period of 1777 to 1781, 89% of inoculated animals survived, compared to a 29% survival rate after natural infection.",
+          "source": "Wikipedia — Rinderpest"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "By around 3,000 BC, a cattle plague had reached Egypt.",
+          "source": "Wikipedia — Rinderpest"
+        }
+      ],
       "sources": [
         {
           "name": "USDA Economic Research Service",
@@ -49156,12 +49763,12 @@
       "visualPotential": {
         "score": 91,
         "scenes": [
-          "veterinary vaccine plant close technical view",
-          "large-scale crop and livestock production system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "cattle herd in Africa",
+          "vaccination of cattle",
+          "eradication timeline",
+          "historical plague illustration",
+          "survival rate comparison chart",
+          "surveillance team"
         ]
       },
       "searchDemand": {
@@ -49209,7 +49816,87 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "2001",
+      "editorialTitles": [
+        "The Cattle Plague Humans Wiped Out",
+        "How Vaccines Ended Rinderpest"
+      ],
+      "facts": [
+        {
+          "claim": "Death rates during outbreaks were usually extremely high, approaching 100% in immunologically naïve populations.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Rinderpest",
+          "url": "https://en.wikipedia.org/wiki/Rinderpest"
+        },
+        {
+          "claim": "After a global eradication campaign that began in the mid-20th century, the last confirmed case of rinderpest was diagnosed in 2001.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Rinderpest",
+          "url": "https://en.wikipedia.org/wiki/Rinderpest"
+        },
+        {
+          "claim": "For the period of 1777 to 1781, 89% of inoculated animals survived, compared to a 29% survival rate after natural infection.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Rinderpest",
+          "url": "https://en.wikipedia.org/wiki/Rinderpest"
+        },
+        {
+          "claim": "By around 3,000 BC, a cattle plague had reached Egypt.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Rinderpest",
+          "url": "https://en.wikipedia.org/wiki/Rinderpest"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why a 100%-lethal cattle plague vanished.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "Rinderpest's last confirmed case came in 2001.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "A global vaccination campaign drove it out.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Early inoculation, from 1777, saved 89% of treated cattle.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Without it, only 29% survived infection.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "Vaccines had to reach remote herds across whole continents.",
+          "layer": "MODEL",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "One missed region can restart an outbreak.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "That's why veterinary vaccines protect the food supply.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/Rinderpest"
+        ]
+      }
     },
     {
       "id": "CT-301",
@@ -52417,7 +53104,7 @@
       "slug": "inside-the-system-built-around-refrigerant-production-line",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "Inside the System Built Around refrigerant production line",
+      "topic": "The Coolants 14,800 Times Worse Than CO2",
       "canonicalTopic": "refrigerant production line",
       "category": "INDUSTRIAL CHEMICALS",
       "cluster": "INDUSTRIAL CHEMICALS",
@@ -52426,16 +53113,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in refrigerant production line, and what changes when it is unavailable?",
-      "dependency": "refrigerant production line supports manufacturing inputs used across many sectors.",
-      "mechanism": "It occupies a specialized step in manufacturing inputs used across many sectors, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on manufacturing inputs used across many sectors; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, manufacturing inputs used across many sectors loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "REFRIGERANT PRODUCTION LINE",
+      "coreQuestion": "Why is the world phasing down the gases inside fridges and air conditioners?",
+      "dependency": "Cooling equipment depends on refrigerants, many with high warming potential.",
+      "mechanism": "HFCs replaced ozone-damaging CFCs but trap heat far more strongly than CO2.",
+      "bottleneck": "Switching refrigerants means redesigning equipment and supply chains.",
+      "failureConsequence": "Without a phase-down, HFC emissions would add significant warming.",
+      "resilience": "The Kigali Amendment sets a global schedule for cutting HFCs.",
+      "openingLine": "Why fridge gases can be 14,800× CO2.",
+      "secondBeat": "HFCs replaced ozone-damaging CFCs in cooling.",
+      "expectedConsequence": "equipment makers move to lower-impact refrigerants",
+      "thumbnailText": "14,800× CO2",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -52463,7 +53150,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "As of 8 April 2026, 172 states and the European Union have ratified the Kigali Amendment.",
+          "source": "Wikipedia — Kigali Amendment"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "HFCs are thousands of times more heat-trapping than CO2, with a 100 year global warming potential (GWP) between 12 on the low end and 14,800 on the high end.",
+          "source": "Wikipedia — Kigali Amendment"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "While their lifespan in the atmosphere is short (10 to 20 years) relative to carbon dioxide, HFCs filter infrared radiation much more powerfully.",
+          "source": "Wikipedia — Kigali Amendment"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The deleterious effect of CFCs on the ozone layer was revealed in 1974.",
+          "source": "Wikipedia — Kigali Amendment"
+        }
+      ],
       "sources": [
         {
           "name": "U.S. Department of Energy",
@@ -52492,12 +53200,12 @@
       "visualPotential": {
         "score": 95,
         "scenes": [
-          "refrigerant production line close technical view",
-          "manufacturing inputs used across many sectors system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "air conditioner units on a building",
+          "refrigerant molecule",
+          "warming potential comparison chart",
+          "fridge compressor",
+          "ratification map",
+          "technician recovering refrigerant"
         ]
       },
       "searchDemand": {
@@ -52545,7 +53253,82 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "14,800× CO2",
+      "editorialTitles": [
+        "The Fridge Gases 14,800 Times Worse Than CO2",
+        "Why the World Is Phasing Out HFCs"
+      ],
+      "facts": [
+        {
+          "claim": "As of 8 April 2026, 172 states and the European Union have ratified the Kigali Amendment.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Kigali Amendment",
+          "url": "https://en.wikipedia.org/wiki/Kigali_Amendment"
+        },
+        {
+          "claim": "HFCs are thousands of times more heat-trapping than CO2, with a 100 year global warming potential (GWP) between 12 on the low end and 14,800 on the high end.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Kigali Amendment",
+          "url": "https://en.wikipedia.org/wiki/Kigali_Amendment"
+        },
+        {
+          "claim": "While their lifespan in the atmosphere is short (10 to 20 years) relative to carbon dioxide, HFCs filter infrared radiation much more powerfully.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Kigali Amendment",
+          "url": "https://en.wikipedia.org/wiki/Kigali_Amendment"
+        },
+        {
+          "claim": "The deleterious effect of CFCs on the ozone layer was revealed in 1974.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Kigali Amendment",
+          "url": "https://en.wikipedia.org/wiki/Kigali_Amendment"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why fridge gases can be 14,800× CO2.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "HFCs replaced ozone-damaging CFCs in cooling.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "They last only 10 to 20 years in the air, but trap heat strongly.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "172 states and the EU have ratified a plan to cut them.",
+          "layer": "VERIFIED FACT",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "That means redesigning fridges and air conditioners.",
+          "layer": "MODEL",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "Leaks from old equipment keep adding warming.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "That's why the gas inside your fridge is a climate lever.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/Kigali_Amendment"
+        ]
+      }
     },
     {
       "id": "CT-322",
@@ -55596,7 +56379,7 @@
       "openingLine": "Why one mine makes 2.5% of Chile's GDP.",
       "secondBeat": "Escondida is a giant copper pit 3,100 metres up.",
       "expectedConsequence": "copper prices spike when a giant mine stops",
-      "thumbnailText": "ONE MINE, 2.5% GDP",
+      "thumbnailText": "ONE MINE, 2.5%",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -55827,7 +56610,7 @@
       "openingLine": "Why one smelter uses 13% of national power.",
       "secondBeat": "Tiwai Point opened in 1971, with its own hydro station.",
       "expectedConsequence": "power prices and jobs swing on one plant's future",
-      "thumbnailText": "13% OF NATIONAL POWER",
+      "thumbnailText": "13% NATIONAL POWER",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -56845,7 +57628,7 @@
       "openingLine": "Why one worm broke 1,000 machines.",
       "secondBeat": "Stuxnet surfaced in 2010 after years of development.",
       "expectedConsequence": "physical damage hidden behind normal-looking readouts",
-      "thumbnailText": "CODE THAT BREAKS METAL",
+      "thumbnailText": "CODE BREAKS METAL",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -62149,7 +62932,7 @@
       "openingLine": "Why 70% of formula shelves went empty.",
       "secondBeat": "In 2022, America's biggest formula plant shut down.",
       "expectedConsequence": "parents search store to store for formula",
-      "thumbnailText": "70% OUT OF STOCK",
+      "thumbnailText": "70% OUT-OF-STOCK",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -63003,7 +63786,7 @@
       "slug": "when-marine-cargo-insurance-becomes-the-bottleneck",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "When marine cargo insurance Becomes the Bottleneck",
+      "topic": "The Maritime Rule From 1890 That Splits the Losses",
       "canonicalTopic": "marine cargo insurance",
       "category": "SUPPLY CHAINS",
       "cluster": "SUPPLY CHAINS",
@@ -63012,16 +63795,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in marine cargo insurance, and what changes when it is unavailable?",
-      "dependency": "marine cargo insurance supports multi-tier production continuity.",
-      "mechanism": "It occupies a specialized step in multi-tier production continuity, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on multi-tier production continuity; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, multi-tier production continuity loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "MARINE CARGO INSURANCE",
+      "coreQuestion": "Why can cargo owners be billed when a ship they don't own catches fire?",
+      "dependency": "Ocean shipping depends on insurance rules for sharing losses in emergencies.",
+      "mechanism": "Under general average, all parties share sacrifices made to save a voyage.",
+      "bottleneck": "Cargo isn't released until owners post guarantees.",
+      "failureConsequence": "Uninsured cargo owners face large bills to recover their goods.",
+      "resilience": "Cargo insurance covers general average contributions.",
+      "openingLine": "Why an 1890 rule bills your cargo.",
+      "secondBeat": "It's general average, codified in the York-Antwerp Rules.",
+      "expectedConsequence": "goods are held until contributions are secured",
+      "thumbnailText": "SHARED SEA LOSSES",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -63049,7 +63832,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The York-Antwerp Rules remain in effect, having been modified and updated several times since their 1890 introduction.",
+          "source": "Wikipedia — General average"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Maersk declared general average for Maersk Honam after a fire in the Arabian Sea in March 2018.",
+          "source": "Wikipedia — General average"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The owners of the Hanjin Osaka declared general average following an explosion in the ship's engine room on 8 January 2012.",
+          "source": "Wikipedia — General average"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The M/V MSC Sabrina declared general average in effect after grounding in the Saint Lawrence river on 8 March 2008.",
+          "source": "Wikipedia — General average"
+        }
+      ],
       "sources": [
         {
           "name": "U.S. Department of Energy",
@@ -63078,12 +63882,12 @@
       "visualPotential": {
         "score": 94,
         "scenes": [
-          "marine cargo insurance close technical view",
-          "multi-tier production continuity system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "container ship on fire at sea",
+          "cargo owners' claim forms",
+          "York-Antwerp Rules document",
+          "salvage tug",
+          "containers held at port",
+          "insurance guarantee diagram"
         ]
       },
       "searchDemand": {
@@ -63131,7 +63935,82 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "1890",
+      "editorialTitles": [
+        "The Old Sea Rule That Bills Innocent Cargo",
+        "Why Cargo Owners Share a Ship's Losses"
+      ],
+      "facts": [
+        {
+          "claim": "The York-Antwerp Rules remain in effect, having been modified and updated several times since their 1890 introduction.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — General average",
+          "url": "https://en.wikipedia.org/wiki/General_average"
+        },
+        {
+          "claim": "Maersk declared general average for Maersk Honam after a fire in the Arabian Sea in March 2018.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — General average",
+          "url": "https://en.wikipedia.org/wiki/General_average"
+        },
+        {
+          "claim": "The owners of the Hanjin Osaka declared general average following an explosion in the ship's engine room on 8 January 2012.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — General average",
+          "url": "https://en.wikipedia.org/wiki/General_average"
+        },
+        {
+          "claim": "The M/V MSC Sabrina declared general average in effect after grounding in the Saint Lawrence river on 8 March 2008.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — General average",
+          "url": "https://en.wikipedia.org/wiki/General_average"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why an 1890 rule bills your cargo.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "It's general average, codified in the York-Antwerp Rules.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "Everyone with cargo aboard shares the cost of saving the voyage.",
+          "layer": "MODEL",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "In 2018, a fire aboard Maersk Honam triggered it.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "Goods can be held until owners post guarantees.",
+          "layer": "MODEL",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "Without insurance, cargo owners pay out of pocket.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "That's why shipping anything means sharing its risks.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/General_average"
+        ]
+      }
     },
     {
       "id": "CT-389",
@@ -63426,7 +64305,7 @@
       "openingLine": "Why some 'beef' meals were 100% horse.",
       "secondBeat": "In 2013, DNA tests exposed it across Europe.",
       "expectedConsequence": "mass recalls and lost trust in processed meat",
-      "thumbnailText": "BEEF THAT WAS HORSE",
+      "thumbnailText": "BEEF WAS HORSE",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -66031,7 +66910,7 @@
       "openingLine": "Why 400 ships a day never collide here.",
       "secondBeat": "The Strait of Dover runs on strict one-way lanes.",
       "expectedConsequence": "ships queue and reroute while lanes are cleared",
-      "thumbnailText": "400 SHIPS A DAY",
+      "thumbnailText": "400 SHIPS DAILY",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -66249,7 +67128,7 @@
       "slug": "inside-the-system-built-around-cape-of-good-hope-diversion-route",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "Inside the System Built Around Cape of Good Hope diversion route",
+      "topic": "The Detour That Added Weeks to Shipping",
       "canonicalTopic": "Cape of Good Hope diversion route",
       "category": "GLOBAL CHOKEPOINTS",
       "cluster": "GLOBAL CHOKEPOINTS",
@@ -66258,16 +67137,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in Cape of Good Hope diversion route, and what changes when it is unavailable?",
-      "dependency": "Cape of Good Hope diversion route supports concentrated international trade routes.",
-      "mechanism": "It occupies a specialized step in concentrated international trade routes, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on concentrated international trade routes; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, concentrated international trade routes loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "CAPE OF GOOD",
+      "coreQuestion": "Why did hundreds of ships start sailing around Africa instead of using Suez?",
+      "dependency": "Europe–Asia trade depends on the Red Sea and Suez as the short route.",
+      "mechanism": "When the Red Sea is unsafe, ships divert around the Cape of Good Hope.",
+      "bottleneck": "The only alternative route is thousands of kilometres longer.",
+      "failureConsequence": "Diversions add weeks of travel time and higher costs.",
+      "resilience": "Extra ships and schedule changes absorb part of the delay.",
+      "openingLine": "Why Red Sea traffic fell to 31 ships.",
+      "secondBeat": "Before the attacks, 75 ships passed daily.",
+      "expectedConsequence": "freight rates and delivery times rise",
+      "thumbnailText": "AROUND AFRICA",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -66295,7 +67174,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "As of May 2026, daily traffic through the strait was around 31 ships per day, as it had been since January 2024, remaining below the pre-war level of 75 ships per day.",
+          "source": "Wikipedia — Red Sea crisis"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The Houthis have attacked 178 vessels throughout their two-year blockade, sinking four ships and killing nine sailors.",
+          "source": "Wikipedia — Red Sea crisis"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "To avoid being attacked, hundreds of commercial vessels were rerouted to sail around South Africa.",
+          "source": "Wikipedia — Red Sea crisis"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Threats and attacks force commercial vessels and oil tankers to reroute around Africa's Cape of Good Hope, adding weeks of travel time and higher costs.",
+          "source": "Wikipedia — Red Sea crisis"
+        }
+      ],
       "sources": [
         {
           "name": "International Maritime Organization",
@@ -66324,12 +67224,12 @@
       "visualPotential": {
         "score": 94,
         "scenes": [
-          "Cape of Good Hope diversion route close technical view",
-          "concentrated international trade routes system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "ship rounding the Cape of Good Hope",
+          "Suez route versus Cape route map",
+          "Red Sea traffic chart",
+          "container ship at sea",
+          "freight cost graphic",
+          "naval escort"
         ]
       },
       "searchDemand": {
@@ -66377,7 +67277,87 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "31 vs 75 ships/day",
+      "editorialTitles": [
+        "Why Ships Are Sailing Around Africa Again",
+        "The Detour Reshaping World Trade"
+      ],
+      "facts": [
+        {
+          "claim": "As of May 2026, daily traffic through the strait was around 31 ships per day, as it had been since January 2024, remaining below the pre-war level of 75 ships per day.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Red Sea crisis",
+          "url": "https://en.wikipedia.org/wiki/Red_Sea_crisis"
+        },
+        {
+          "claim": "The Houthis have attacked 178 vessels throughout their two-year blockade, sinking four ships and killing nine sailors.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Red Sea crisis",
+          "url": "https://en.wikipedia.org/wiki/Red_Sea_crisis"
+        },
+        {
+          "claim": "To avoid being attacked, hundreds of commercial vessels were rerouted to sail around South Africa.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Red Sea crisis",
+          "url": "https://en.wikipedia.org/wiki/Red_Sea_crisis"
+        },
+        {
+          "claim": "Threats and attacks force commercial vessels and oil tankers to reroute around Africa's Cape of Good Hope, adding weeks of travel time and higher costs.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Red Sea crisis",
+          "url": "https://en.wikipedia.org/wiki/Red_Sea_crisis"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why Red Sea traffic fell to 31 ships.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "Before the attacks, 75 ships passed daily.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "Attacks pushed hundreds of ships around South Africa.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "178 vessels were attacked over two years.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "The detour adds weeks of travel time.",
+          "layer": "VERIFIED FACT",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "Europe–Asia trade normally takes the Suez shortcut.",
+          "layer": "MODEL",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Longer voyages tie up ships and raise freight rates.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "That's why one sea lane can reroute world trade.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/Red_Sea_crisis"
+        ]
+      }
     },
     {
       "id": "CT-406",
@@ -66885,7 +67865,7 @@
       "openingLine": "Why America's busiest container port has a twin.",
       "secondBeat": "Los Angeles sits right beside the Port of Long Beach.",
       "expectedConsequence": "ships wait offshore and inland deliveries slip",
-      "thumbnailText": "AMERICA'S PORT",
+      "thumbnailText": "AMERICA’S PORT",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -67103,7 +68083,7 @@
       "slug": "why-dover-calais-freight-corridor-is-so-hard-to-replace",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "Why Dover Calais freight corridor Is So Hard to Replace",
+      "topic": "The Motorway That Becomes a Lorry Park",
       "canonicalTopic": "Dover Calais freight corridor",
       "category": "GLOBAL CHOKEPOINTS",
       "cluster": "GLOBAL CHOKEPOINTS",
@@ -67112,16 +68092,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in Dover Calais freight corridor, and what changes when it is unavailable?",
-      "dependency": "Dover Calais freight corridor supports concentrated international trade routes.",
-      "mechanism": "It occupies a specialized step in concentrated international trade routes, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on concentrated international trade routes; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, concentrated international trade routes loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "DOVER CALAIS FREIGHT",
+      "coreQuestion": "What happens when Channel crossings stop and thousands of lorries have nowhere to go?",
+      "dependency": "Britain's trade with Europe depends heavily on lorries crossing at Dover.",
+      "mechanism": "When crossings are disrupted, lorries are parked in queues on the M20 motorway.",
+      "bottleneck": "One short crossing handles a huge share of freight.",
+      "failureConsequence": "Queues stretch for miles and local roads clog.",
+      "resilience": "Operation Stack parks lorries on the motorway to keep towns moving.",
+      "openingLine": "Why a motorway parks 3,000 extra lorries.",
+      "secondBeat": "When Channel crossings stop, lorries queue on the M20.",
+      "expectedConsequence": "deliveries stall and local businesses lose trade",
+      "thumbnailText": "MOTORWAY LORRY PARK",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -67149,7 +68129,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "By stacking lorries along the motorway, up to 3,000 additional parking spaces for freight can be created.",
+          "source": "Wikipedia — Operation Stack"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "This was the first time in the 20-year history of Operation Stack that the M20 was closed for more than three days; businesses in nearby towns reported trade down by up to 50%.",
+          "source": "Wikipedia — Operation Stack"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Operation Stack began to be removed from 3 July onwards, with more than 30 miles of parked HGVs needing to be cleared.",
+          "source": "Wikipedia — Operation Stack"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The whole of the M20 between Ashford and Folkestone was closed.",
+          "source": "Wikipedia — Operation Stack"
+        }
+      ],
       "sources": [
         {
           "name": "International Maritime Organization",
@@ -67178,12 +68179,12 @@
       "visualPotential": {
         "score": 81,
         "scenes": [
-          "Dover Calais freight corridor close technical view",
-          "concentrated international trade routes system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "lorries parked along a motorway",
+          "Dover port ferries",
+          "map of the M20 corridor",
+          "queue length graphic",
+          "Channel Tunnel shuttle",
+          "closed shops in a nearby town"
         ]
       },
       "searchDemand": {
@@ -67231,7 +68232,82 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "3,000 lorries",
+      "editorialTitles": [
+        "When a Motorway Becomes a Lorry Park",
+        "Why the Dover Crossing Is a Chokepoint"
+      ],
+      "facts": [
+        {
+          "claim": "By stacking lorries along the motorway, up to 3,000 additional parking spaces for freight can be created.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Operation Stack",
+          "url": "https://en.wikipedia.org/wiki/Operation_Stack"
+        },
+        {
+          "claim": "This was the first time in the 20-year history of Operation Stack that the M20 was closed for more than three days; businesses in nearby towns reported trade down by up to 50%.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Operation Stack",
+          "url": "https://en.wikipedia.org/wiki/Operation_Stack"
+        },
+        {
+          "claim": "Operation Stack began to be removed from 3 July onwards, with more than 30 miles of parked HGVs needing to be cleared.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Operation Stack",
+          "url": "https://en.wikipedia.org/wiki/Operation_Stack"
+        },
+        {
+          "claim": "The whole of the M20 between Ashford and Folkestone was closed.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Operation Stack",
+          "url": "https://en.wikipedia.org/wiki/Operation_Stack"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why a motorway parks 3,000 extra lorries.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "When Channel crossings stop, lorries queue on the M20.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "The plan is called Operation Stack.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Once, over 30 miles of parked lorries had to be cleared.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "Nearby businesses saw trade fall by up to 50%.",
+          "layer": "VERIFIED FACT",
+          "role": "FAILURE"
+        },
+        {
+          "text": "Most freight funnels through one short sea crossing.",
+          "layer": "MODEL",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "That's why a strait's weather can empty shop shelves.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/Operation_Stack"
+        ]
+      }
     },
     {
       "id": "CT-410",
@@ -67256,7 +68332,7 @@
       "openingLine": "One derailment shut the Gotthard for a year.",
       "secondBeat": "The tunnel runs 57 kilometres beneath the Alps.",
       "expectedConsequence": "trains divert to slower, steeper routes and capacity drops",
-      "thumbnailText": "57 KM UNDER ALPS",
+      "thumbnailText": "57 KM TUNNEL",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -68031,7 +69107,7 @@
       "openingLine": "Why 1 city sorts a million packages nightly.",
       "secondBeat": "FedEx built its main hub there in 1973.",
       "expectedConsequence": "next-day deliveries slip across the country",
-      "thumbnailText": "1M PACKAGES A NIGHT",
+      "thumbnailText": "1M PACKAGES NIGHTLY",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -68278,7 +69354,7 @@
       "openingLine": "Why 4-kilometre arms measure less than a proton.",
       "secondBeat": "LIGO bounces lasers along two long vacuum arms.",
       "expectedConsequence": "fewer detections and poorer sky localisation",
-      "thumbnailText": "SMALLER THAN A PROTON",
+      "thumbnailText": "SMALLER THAN PROTON",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -69594,7 +70670,7 @@
       "openingLine": "Why Hubble's mirror was 2,200 nanometres off.",
       "secondBeat": "It was polished smooth to about 10 nanometres.",
       "expectedConsequence": "a flagship telescope launched with blurred vision",
-      "thumbnailText": "HUBBLE'S BLURRY EYE",
+      "thumbnailText": "HUBBLE’S BLURRY EYE",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -74279,7 +75355,7 @@
       "slug": "why-real-time-gross-settlement-system-is-so-hard-to-replace",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "Why real-time gross settlement system Is So Hard to Replace",
+      "topic": "The System Moving €2.2 Trillion a Day",
       "canonicalTopic": "real-time gross settlement system",
       "category": "FINANCIAL INFRASTRUCTURE",
       "cluster": "FINANCIAL INFRASTRUCTURE",
@@ -74288,16 +75364,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in real-time gross settlement system, and what changes when it is unavailable?",
-      "dependency": "real-time gross settlement system supports settlement, payments and market trust.",
-      "mechanism": "It occupies a specialized step in settlement, payments and market trust, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on settlement, payments and market trust; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, settlement, payments and market trust loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "REAL-TIME GROSS SETTLEMENT",
+      "coreQuestion": "How do Europe's banks settle trillions of euros every day?",
+      "dependency": "Eurozone banks and markets depend on a central real-time settlement system.",
+      "mechanism": "Payments settle individually and immediately in central bank money.",
+      "bottleneck": "One system handles large-value euro payments for the whole area.",
+      "failureConsequence": "An outage would freeze interbank payments and liquidity.",
+      "resilience": "Backup procedures and contingency modules protect critical payments.",
+      "openingLine": "Why €2.2 trillion moved through one system daily.",
+      "secondBeat": "TARGET2 settled Eurozone payments one by one, instantly.",
+      "expectedConsequence": "payments queue and markets seize up",
+      "thumbnailText": "€2.2 TRILLION/DAY",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -74325,7 +75401,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "TARGET2 was the real-time gross settlement (RTGS) system for the Eurozone from its phased introduction in 2007-2008 until its replacement with T2 in March 2023.",
+          "source": "Wikipedia — TARGET2"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "TARGET2 previously handled transactions for over €2.2 trillion per day.",
+          "source": "Wikipedia — TARGET2"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "TARGET2 started operations on 19 November 2007, when the first group of countries migrated to the SSP.",
+          "source": "Wikipedia — TARGET2"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The Eurosystem in March 2023 switched its real-time gross settlement from TARGET2 to T2, which follows ISO 20022.",
+          "source": "Wikipedia — TARGET2"
+        }
+      ],
       "sources": [
         {
           "name": "Bank for International Settlements",
@@ -74354,12 +75451,12 @@
       "visualPotential": {
         "score": 89,
         "scenes": [
-          "real-time gross settlement system close technical view",
-          "settlement, payments and market trust system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "central bank building in Frankfurt",
+          "payment flow diagram between banks",
+          "daily value graphic",
+          "migration timeline 2007 to 2023",
+          "ISO 20022 message",
+          "trading floor"
         ]
       },
       "searchDemand": {
@@ -74407,7 +75504,82 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "€2.2 trillion/day",
+      "editorialTitles": [
+        "The Pipe Carrying Europe's Money",
+        "How Eurozone Banks Settle Trillions Daily"
+      ],
+      "facts": [
+        {
+          "claim": "TARGET2 was the real-time gross settlement (RTGS) system for the Eurozone from its phased introduction in 2007-2008 until its replacement with T2 in March 2023.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — TARGET2",
+          "url": "https://en.wikipedia.org/wiki/TARGET2"
+        },
+        {
+          "claim": "TARGET2 previously handled transactions for over €2.2 trillion per day.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — TARGET2",
+          "url": "https://en.wikipedia.org/wiki/TARGET2"
+        },
+        {
+          "claim": "TARGET2 started operations on 19 November 2007, when the first group of countries migrated to the SSP.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — TARGET2",
+          "url": "https://en.wikipedia.org/wiki/TARGET2"
+        },
+        {
+          "claim": "The Eurosystem in March 2023 switched its real-time gross settlement from TARGET2 to T2, which follows ISO 20022.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — TARGET2",
+          "url": "https://en.wikipedia.org/wiki/TARGET2"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why €2.2 trillion moved through one system daily.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "TARGET2 settled Eurozone payments one by one, instantly.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "It started in November 2007.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "In 2023, Europe switched it for a new system, T2.",
+          "layer": "VERIFIED FACT",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "An outage would freeze payments between banks.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "Markets, payrolls and card networks settle through it.",
+          "layer": "MODEL",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "That's why migrating a payment system is a delicate operation.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/TARGET2"
+        ]
+      }
     },
     {
       "id": "CT-452",
@@ -76925,7 +78097,7 @@
       "openingLine": "Why $42 billion fled one bank overnight.",
       "secondBeat": "In March 2023, Silicon Valley Bank faced a run.",
       "expectedConsequence": "payrolls freeze until regulators step in",
-      "thumbnailText": "$42B IN A DAY",
+      "thumbnailText": "$42B OVERNIGHT",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -77696,7 +78868,7 @@
       "openingLine": "Why servers get only 5 to 15 minutes.",
       "secondBeat": "That's typical battery runtime for an uninterruptible power supply.",
       "expectedConsequence": "a failed handover turns a brief outage into a full crash",
-      "thumbnailText": "15 MINUTES OF POWER",
+      "thumbnailText": "15 MINUTES POWER",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -80492,7 +81664,7 @@
       "openingLine": "Why donated red cells expire in 42 days.",
       "secondBeat": "They're refrigerated at 1 to 6 °C.",
       "expectedConsequence": "elective surgeries are postponed when stocks run low",
-      "thumbnailText": "42 DAYS TO EXPIRE",
+      "thumbnailText": "42-DAY EXPIRY",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -83308,7 +84480,7 @@
       "openingLine": "Why one landfill took 29,000 tons a day.",
       "secondBeat": "Fresh Kills was the world's largest landfill from 1955.",
       "expectedConsequence": "waste costs rise as trash travels farther",
-      "thumbnailText": "29,000 TONS A DAY",
+      "thumbnailText": "29,000 TONS/DAY",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -83667,7 +84839,7 @@
       "slug": "inside-the-system-built-around-landfill-gas-collection-system",
       "channel": "critical-thread",
       "status": "qualified",
-      "topic": "Inside the System Built Around landfill gas collection system",
+      "topic": "The Gas Rising From Every Landfill",
       "canonicalTopic": "landfill gas collection system",
       "category": "WASTE AND RECYCLING",
       "cluster": "WASTE AND RECYCLING",
@@ -83676,16 +84848,16 @@
         "long",
         "long-to-short"
       ],
-      "coreQuestion": "What does modern life quietly depend on in landfill gas collection system, and what changes when it is unavailable?",
-      "dependency": "landfill gas collection system supports safe removal and recovery of urban waste.",
-      "mechanism": "It occupies a specialized step in safe removal and recovery of urban waste, where interfaces, tolerances, capacity and operating knowledge are difficult to substitute quickly.",
-      "bottleneck": "Replacement depends on qualified equipment, trained operators, compatible standards, upstream materials and available capacity rather than the visible component alone.",
-      "failureConsequence": "Loss of capacity would first create delays and prioritization pressure, then propagate to systems that rely on safe removal and recovery of urban waste; the exact scale depends on inventories and redundancy.",
-      "resilience": "Resilience comes from maintenance, spares, geographic diversification, qualified alternatives, demand prioritization and practiced recovery plans.",
-      "openingLine": "This hidden system is easy to overlook.",
-      "secondBeat": "Without it, safe removal and recovery of urban waste loses qualified capacity.",
-      "expectedConsequence": "capacity tightens first; downstream effects depend on inventory, substitution and recovery time",
-      "thumbnailText": "LANDFILL GAS COLLECTION",
+      "coreQuestion": "What happens to the gas that landfills keep producing for decades?",
+      "dependency": "Landfill operators depend on gas collection to control methane and fire risk.",
+      "mechanism": "Wells and pipes pull gas from waste for flaring or power generation.",
+      "bottleneck": "Gas production starts months after burial and continues for years.",
+      "failureConsequence": "Uncollected methane escapes into the air.",
+      "resilience": "Capturing gas for electricity turns a liability into fuel.",
+      "openingLine": "Why landfill methane is 27× CO2.",
+      "secondBeat": "Buried waste starts producing gas after about six months.",
+      "expectedConsequence": "methane escapes where collection is weak",
+      "thumbnailText": "METHANE FROM TRASH",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",
@@ -83713,7 +84885,28 @@
           "rule": "Use only for clearly marked counterfactual extensions."
         }
       ],
-      "researchEvidence": [],
+      "researchEvidence": [
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Methane in the atmosphere is a far more potent greenhouse gas with a global warming potential of 27 over a one-hundred year period.",
+          "source": "Wikipedia — Landfill gas"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Formation of methane and CO2 commences about six months after depositing the landfill material.",
+          "source": "Wikipedia — Landfill gas"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "The major components are CO2 and methane, both of which are greenhouse gases.",
+          "source": "Wikipedia — Landfill gas"
+        },
+        {
+          "layer": "VERIFIED FACT",
+          "claim": "Trace amounts of non-methane volatile organic compounds, siloxanes, and hydrogen sulfide comprise the remainder (<1%).",
+          "source": "Wikipedia — Landfill gas"
+        }
+      ],
       "sources": [
         {
           "name": "U.S. Environmental Protection Agency — Water",
@@ -83742,12 +84935,12 @@
       "visualPotential": {
         "score": 94,
         "scenes": [
-          "landfill gas collection system close technical view",
-          "safe removal and recovery of urban waste system map",
-          "upstream qualification chain",
-          "downstream dependency map",
-          "failure and recovery timeline",
-          "redundancy and alternatives"
+          "gas wells across a landfill",
+          "methane molecule",
+          "flare stack burning gas",
+          "engine generating power from landfill gas",
+          "warming potential comparison",
+          "soil cover diagram"
         ]
       },
       "searchDemand": {
@@ -83795,7 +84988,82 @@
         "nonDuplicate": true,
         "qualified": true
       },
-      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION"
+      "visualLabel": "TECHNICAL ILLUSTRATION — NOT OBSERVATION",
+      "number": "27× CO2",
+      "editorialTitles": [
+        "The Invisible Gas Rising From Landfills",
+        "Why Trash Keeps Making Methane"
+      ],
+      "facts": [
+        {
+          "claim": "Methane in the atmosphere is a far more potent greenhouse gas with a global warming potential of 27 over a one-hundred year period.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Landfill gas",
+          "url": "https://en.wikipedia.org/wiki/Landfill_gas"
+        },
+        {
+          "claim": "Formation of methane and CO2 commences about six months after depositing the landfill material.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Landfill gas",
+          "url": "https://en.wikipedia.org/wiki/Landfill_gas"
+        },
+        {
+          "claim": "The major components are CO2 and methane, both of which are greenhouse gases.",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Landfill gas",
+          "url": "https://en.wikipedia.org/wiki/Landfill_gas"
+        },
+        {
+          "claim": "Trace amounts of non-methane volatile organic compounds, siloxanes, and hydrogen sulfide comprise the remainder (<1%).",
+          "layer": "VERIFIED FACT",
+          "source": "Wikipedia — Landfill gas",
+          "url": "https://en.wikipedia.org/wiki/Landfill_gas"
+        }
+      ],
+      "narration": [
+        {
+          "text": "Why landfill methane is 27× CO2.",
+          "layer": "VERIFIED FACT",
+          "role": "HIDDEN_SYSTEM"
+        },
+        {
+          "text": "Buried waste starts producing gas after about six months.",
+          "layer": "VERIFIED FACT",
+          "role": "WHY_IT_MATTERS"
+        },
+        {
+          "text": "That gas is mostly methane and carbon dioxide.",
+          "layer": "VERIFIED FACT",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "It keeps coming for years after the landfill closes.",
+          "layer": "MODEL",
+          "role": "BOTTLENECK"
+        },
+        {
+          "text": "Wells and pipes capture it for flaring or electricity.",
+          "layer": "MODEL",
+          "role": "WHAT_DEPENDS_ON_IT"
+        },
+        {
+          "text": "Where collection is weak, methane escapes.",
+          "layer": "MODEL",
+          "role": "FAILURE"
+        },
+        {
+          "text": "That's why landfills need plumbing long after trash arrives.",
+          "layer": "MODEL",
+          "role": "PAYOFF"
+        }
+      ],
+      "researched": {
+        "at": "2026-09-30",
+        "facts": 4,
+        "articles": [
+          "https://en.wikipedia.org/wiki/Landfill_gas"
+        ]
+      }
     },
     {
       "id": "CT-508",
@@ -83820,7 +85088,7 @@
       "openingLine": "Why a 0.5% rule upended global recycling.",
       "secondBeat": "China had been the main buyer of the world's scrap.",
       "expectedConsequence": "recycling costs rise and some programmes shrink",
-      "thumbnailText": "RECYCLING'S BIG SHOCK",
+      "thumbnailText": "RECYCLING SHOCK",
       "claimFramework": [
         {
           "layer": "VERIFIED FACT",

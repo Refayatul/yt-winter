@@ -315,12 +315,19 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   return { visualChanges: frames.length, illustrationLabel: true, scenarioSpecific: true, segmentSeconds: segments || frames.map(() => segment) };
 }
 
+// drawtext text inside a single-quoted filter value: an apostrophe would end
+// the quote and a backslash starts an escape, so both are replaced; colons,
+// commas and "%" are literal once quoted and expansion is off.
+function drawtextSafe(text) {
+  return String(text).replace(/'/g, "’").replace(/\\/g, "");
+}
+
 function renderThumbnail(output, topic) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const text = topic.thumbnailText || (/moon/i.test(topic.topic) ? "NO MOON" : /stopped spinning/i.test(topic.topic) ? "EARTH STOPS" : /gravity doubled/i.test(topic.topic) ? "2x GRAVITY" : topic.category);
   const frames = scientificFrames(topic, path.dirname(output), 1, /moon/i.test(topic.topic) ? 7 : 0);
   const cropY = /gravity doubled/i.test(topic.topic) ? 560 : 460;
-  const filter = `scale=1280:-1,crop=1280:720:0:${cropY},eq=contrast=1.10:saturation=1.08,drawbox=x=0:y=500:w=1280:h=220:color=0x030712@0.72:t=fill,drawtext=text='${text}':fontcolor=white:fontsize=108:borderw=7:bordercolor=0x030712:x=(w-text_w)/2:y=535`;
+  const filter = `scale=1280:-1,crop=1280:720:0:${cropY},eq=contrast=1.10:saturation=1.08,drawbox=x=0:y=500:w=1280:h=220:color=0x030712@0.72:t=fill,drawtext=expansion=none:text='${drawtextSafe(text)}':fontcolor=white:fontsize=108:borderw=7:bordercolor=0x030712:x=(w-text_w)/2:y=535`;
   try { cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", frames[0], "-vf", filter, "-frames:v", "1", "-update", "1", output], { stdio: "ignore" }); }
   finally { for (const frame of frames) try { fs.unlinkSync(frame); } catch (error) {} }
   return { scenarioSpecific: true, textWords: text.split(/\s+/).length };
