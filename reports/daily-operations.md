@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-09-30T16:04:18.470Z
+Generated: 2026-09-30T16:16:40.032Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -42,15 +42,15 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | unavailable |
-| Short | due-not-produced |
+| Today topic | why-high-lift-water-pump-is-so-hard-to-replace |
+| Short | scheduled |
 | Long | due-not-produced |
-| Quality | unavailable / unavailable |
-| YouTube | not-uploaded |
-| Publish time | unavailable |
-| Video ID | unavailable |
+| Quality | PUBLISH / unavailable |
+| YouTube | scheduled |
+| Publish time | 2026-09-30T18:00:00.000Z |
+| Video ID | 7q3E09HMIGI |
 | Analytics | no-channel-measurements |
-| Scheduler | pending-before-deadline |
-| Ready topic backlog | 521 |
+| Scheduler | healthy |
+| Ready topic backlog | 520 |
 | Errors/review/blocks | 0 |
 

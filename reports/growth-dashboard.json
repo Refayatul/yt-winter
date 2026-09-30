@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-30T16:04:16.369Z",
+  "generatedAt": "2026-09-30T16:16:37.881Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -251,9 +251,9 @@
         "lastPublished": "2026-09-30T18:00:00.000Z",
         "published": 1,
         "inventory": {
-          "A": 44,
-          "B": 97,
-          "C": 356,
+          "A": 47,
+          "B": 107,
+          "C": 343,
           "D": 0
         },
         "nextSelection": {
@@ -401,6 +401,11 @@
       "experiments": [],
       "enrichmentTasks": [
         {
+          "slug": "what-breaks-first-if-the-moon-suddenly-doubles-in-mass",
+          "bucket": "C",
+          "reason": "VideoPotential 72 in experimental band 55–67; boilerplate 0.5"
+        },
+        {
           "slug": "if-a-rogue-planet-vanished-right-now-what-would-change-first",
           "bucket": "C",
           "reason": "VideoPotential 72 in experimental band 55–67; boilerplate 0.5"
@@ -411,17 +416,17 @@
           "reason": "VideoPotential 72 in experimental band 55–67; boilerplate 0.5"
         },
         {
+          "slug": "if-the-moon-vanished-right-now-what-would-change-first",
+          "bucket": "C",
+          "reason": "VideoPotential 71 in experimental band 55–67; boilerplate 0.5"
+        },
+        {
           "slug": "what-breaks-first-if-a-rogue-planet-suddenly-doubles-in-mass",
           "bucket": "C",
           "reason": "VideoPotential 71 in experimental band 55–67; boilerplate 0.5"
         },
         {
           "slug": "what-happens-if-the-global-ocean-doubles",
-          "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 55–67; boilerplate 0.5"
-        },
-        {
-          "slug": "could-earth-survive-one-day-without-all-sea-ice",
           "bucket": "C",
           "reason": "VideoPotential 71 in experimental band 55–67; boilerplate 0.5"
         },
@@ -441,14 +446,9 @@
           "reason": "VideoPotential 71 in experimental band 55–67; boilerplate 0.5"
         },
         {
-          "slug": "if-a-nearby-neutron-star-moved-twice-as-close-when-would-earth-notice",
+          "slug": "if-the-sun-moved-twice-as-close-when-would-earth-notice",
           "bucket": "C",
           "reason": "VideoPotential 70 in experimental band 55–67; boilerplate 0.5"
-        },
-        {
-          "slug": "would-anything-change-if-a-rogue-planet-became-an-equal-mass-black-hole",
-          "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 55–67; hook 66 < 68; boilerplate 0.67"
         }
       ],
       "alerts": [],
@@ -458,16 +458,16 @@
       "channel": "critical-thread",
       "name": "CriticalThread",
       "shorts": {
-        "lastPublished": null,
-        "published": 0,
+        "lastPublished": "2026-09-30T18:00:00.000Z",
+        "published": 1,
         "inventory": {
-          "A": 26,
-          "B": 123,
+          "A": 30,
+          "B": 131,
           "C": 0,
-          "D": 372
+          "D": 359
         },
         "nextSelection": {
-          "slug": "why-high-lift-water-pump-is-so-hard-to-replace",
+          "slug": "when-grid-control-room-becomes-the-bottleneck",
           "reason": "best A topic"
         },
         "baseline": {
@@ -533,31 +533,31 @@
         "episodes": 0,
         "backlog": [
           {
+            "slug": "inside-the-system-built-around-rapid-sand-filter",
+            "LongFormPotentialScore": 76,
+            "bucket": "B",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "why-reservoir-outlet-works-is-so-hard-to-replace",
+            "LongFormPotentialScore": 76,
+            "bucket": "B",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-quietly-depends-on-desalination-reverse-osmosis-membrane",
+            "LongFormPotentialScore": 76,
+            "bucket": "B",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "the-hidden-system-behind-lead-service-line-replacement-program",
+            "LongFormPotentialScore": 76,
+            "bucket": "B",
+            "mode": "A_LONG_FIRST"
+          },
+          {
             "slug": "the-hidden-system-behind-bosporus-vessel-transit-system",
-            "LongFormPotentialScore": 76,
-            "bucket": "B",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-quietly-depends-on-english-channel-traffic-separation-scheme",
-            "LongFormPotentialScore": 76,
-            "bucket": "B",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "the-hidden-system-behind-swift-messaging-network",
-            "LongFormPotentialScore": 76,
-            "bucket": "B",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "why-foreign-exchange-settlement-system-is-so-hard-to-replace",
-            "LongFormPotentialScore": 76,
-            "bucket": "B",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "when-material-recovery-facility-becomes-the-bottleneck",
             "LongFormPotentialScore": 76,
             "bucket": "B",
             "mode": "A_LONG_FIRST"
@@ -576,11 +576,11 @@
         "enabled": false
       },
       "clusters": {
-        "count": 0,
+        "count": 1,
         "integrity": {
           "ok": true,
           "problems": [],
-          "count": 0
+          "count": 1
         }
       },
       "funnel": {
@@ -589,7 +589,7 @@
         "pendingRelatedVideoManualActions": 0
       },
       "growth": {
-        "trackedVideos": 0,
+        "trackedVideos": 1,
         "subscriberConversion": {
           "shorts": null,
           "longform": null
@@ -611,32 +611,12 @@
       "experiments": [],
       "enrichmentTasks": [
         {
-          "slug": "inside-the-system-built-around-blast-freezer",
-          "bucket": "D",
-          "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
-        },
-        {
           "slug": "the-hidden-system-behind-cold-storage-backup-power-system",
           "bucket": "D",
           "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
         },
         {
-          "slug": "inside-the-system-built-around-high-voltage-circuit-breaker",
-          "bucket": "D",
-          "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
-        },
-        {
-          "slug": "inside-the-system-built-around-power-system-time-source",
-          "bucket": "D",
-          "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
-        },
-        {
           "slug": "what-quietly-depends-on-spent-fuel-cooling-system",
-          "bucket": "D",
-          "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
-        },
-        {
-          "slug": "the-hidden-system-behind-subsea-cable-plough",
           "bucket": "D",
           "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
         },
@@ -657,6 +637,26 @@
         },
         {
           "slug": "why-refrigerated-distribution-warehouse-is-so-hard-to-replace",
+          "bucket": "D",
+          "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
+        },
+        {
+          "slug": "what-quietly-depends-on-supermarket-refrigeration-rack",
+          "bucket": "D",
+          "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
+        },
+        {
+          "slug": "inside-the-system-built-around-blast-freezer",
+          "bucket": "D",
+          "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
+        },
+        {
+          "slug": "when-reefer-container-pre-trip-inspection-becomes-the-bottleneck",
+          "bucket": "D",
+          "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
+        },
+        {
+          "slug": "the-critical-role-of-temperature-excursion-alert-network",
           "bucket": "D",
           "reason": "template content: 100% of fields repeat across the inventory and only 1 topic-specific fact(s) exist — needs a ResearchPackage"
         }
