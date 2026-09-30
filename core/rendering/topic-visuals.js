@@ -29,14 +29,20 @@ function claimRows(script, duration) {
 
 function timelineBoundaries(claims, duration, pacingSegments) {
   const boundaries = new Set([0, duration]);
+  const claimBoundaries = [0, duration];
   for (const claim of claims) {
-    boundaries.add(Math.max(0, Math.min(duration, claim.start)));
-    boundaries.add(Math.max(0, Math.min(duration, claim.end)));
+    const start = Math.max(0, Math.min(duration, claim.start));
+    const end = Math.max(0, Math.min(duration, claim.end));
+    boundaries.add(start);
+    boundaries.add(end);
+    claimBoundaries.push(start, end);
   }
   let cursor = 0;
   for (const segment of Array.isArray(pacingSegments) ? pacingSegments : []) {
     cursor += Number(segment) || 0;
-    if (cursor > 0 && cursor < duration) boundaries.add(cursor);
+    // A pacing cut almost on top of a claim boundary creates a flash-frame,
+    // not a meaningful visual change. The claim boundary wins.
+    if (cursor > 0 && cursor < duration && !claimBoundaries.some((value) => Math.abs(value - cursor) < 0.4)) boundaries.add(cursor);
   }
   if (!Array.isArray(pacingSegments) || !pacingSegments.length) {
     for (let at = 3; at < duration; at += 3) boundaries.add(at);

@@ -386,7 +386,10 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   }
   if (!inputs.length) throw new Error("No visual shots could be built");
   const args = ["-y", "-hide_banner", "-loglevel", "error"];
-  inputs.forEach((file, index) => args.push("-loop", "1", "-framerate", "24", "-t", String(plan[index].duration), "-i", file));
+  // Each input is one decoded still. zoompan creates the exact segment frame
+  // count; looping here would multiply those frames again and make a 30-second
+  // Short take minutes to render.
+  inputs.forEach((file) => args.push("-i", file));
   args.push("-i", audioFile);
   const filters = [];
   for (let index = 0; index < plan.length; index += 1) {
@@ -405,7 +408,11 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   const filterFile = path.join(path.dirname(output), ".visual-filter.txt");
   fs.writeFileSync(filterFile, filters.join(";\n") + "\n");
   args.push(ff.filtreBayragi, filterFile, "-map", "[v]", "-map", `${plan.length}:a`, "-t", String(duration), "-c:v", "libx264", "-preset", "ultrafast", "-crf", "29", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
-  try { cp.execFileSync(ffmpeg, args, { stdio: "ignore", timeout: 240000 }); }
+  try { cp.execFileSync(ffmpeg, args, { stdio: ["ignore", "ignore", "pipe"], timeout: 600000 }); }
+  catch (error) {
+    const detail = String(error.stderr || "").trim().slice(-4000);
+    throw new Error(`ffmpeg topic-visual render failed${detail ? `:\n${detail}` : ""}`);
+  }
   finally {
     for (const frame of generated) try { fs.unlinkSync(frame); } catch (error) {}
     try { fs.unlinkSync(filterFile); } catch (error) {}
