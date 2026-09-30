@@ -400,7 +400,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
       : shot.type === "number-card" ? "NUMBER FROM SOURCED NARRATION"
         : topic.visualLabel || "PROCEDURAL ILLUSTRATION — NOT OBSERVATION";
     const category = drawtextSafe(topic.category || topic.cluster || "EXPLAINER");
-    filters.push(`[${index}:v]scale=1280:2276:force_original_aspect_ratio=increase,crop=1280:2276,zoompan=z='min(zoom+${speed},1.10)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=24,trim=duration=${shot.duration.toFixed(3)},setpts=PTS-STARTPTS,drawbox=x=75:y=76:w=930:h=146:color=0x030712@0.80:t=fill,drawtext=expansion=none:text='${drawtextSafe(label)}':fontcolor=0x25d9ff:fontsize=30:x=(w-text_w)/2:y=103,drawtext=expansion=none:text='${category}':fontcolor=white:fontsize=42:x=(w-text_w)/2:y=158[v${index}]`);
+    filters.push(`[${index}:v]scale=1280:2276:force_original_aspect_ratio=increase,crop=1280:2276,zoompan=z='min(zoom+${speed},1.10)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=24,setsar=1,trim=duration=${shot.duration.toFixed(3)},setpts=PTS-STARTPTS,drawbox=x=75:y=76:w=930:h=146:color=0x030712@0.80:t=fill,drawtext=expansion=none:text='${drawtextSafe(label)}':fontcolor=0x25d9ff:fontsize=30:x=(w-text_w)/2:y=103,drawtext=expansion=none:text='${category}':fontcolor=white:fontsize=42:x=(w-text_w)/2:y=158[v${index}]`);
   }
   const concatInputs = plan.map((_, index) => `[v${index}]`).join("");
   const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
