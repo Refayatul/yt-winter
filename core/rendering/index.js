@@ -341,12 +341,27 @@ function drawtextSafe(text) {
   return String(text).replace(/'/g, "’").replace(/\\/g, "");
 }
 
+function numberCardFontSize(text) {
+  // DejaVu Sans is proportional, so character count alone lets wide labels
+  // such as "30 MINUTES" escape the 870 px card even when a longer label made
+  // only of narrow glyphs fits. Estimate glyph widths in em units and reserve
+  // generous horizontal padding for the drawtext border.
+  const widthEm = [...String(text)].reduce((total, character) => {
+    if (/\s/.test(character)) return total + 0.32;
+    if (/[MW@%]/.test(character)) return total + 0.92;
+    if (/[I1l|.,:;]/.test(character)) return total + 0.35;
+    if (/[A-Z0-9]/.test(character)) return total + 0.67;
+    return total + 0.58;
+  }, 0);
+  return Math.max(28, Math.min(146, Math.floor(750 / Math.max(1, widthEm))));
+}
+
 function renderNumberCard(output, shot, topic) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   fs.mkdirSync(path.dirname(output), { recursive: true });
   const headline = drawtextSafe(shot.numbers.slice(0, 2).join("  vs  ").toUpperCase());
   const title = drawtextSafe(topic.category || topic.cluster || "SOURCED NUMBER");
-  const fontSize = headline.length > 24 ? 88 : headline.length > 15 ? 112 : 146;
+  const fontSize = numberCardFontSize(headline);
   const filters = [
     "drawgrid=width=120:height=120:thickness=2:color=0x07334a@0.65",
     "drawbox=x=105:y=510:w=870:h=650:color=0x071827@0.92:t=fill",
@@ -571,4 +586,4 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations, validationReasons };
 }
 
-module.exports = { srtTime, captions, assTime, assCaptions, probe, drawtextSafe, scientificFrames, renderVideo, renderThumbnail, buildPackage };
+module.exports = { srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };

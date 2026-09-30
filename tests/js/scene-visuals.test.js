@@ -3,6 +3,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const TopicVisuals = require("../../core/rendering/topic-visuals");
+const Rendering = require("../../core/rendering");
 const PackageQuality = require("../../core/quality/impossible-brief");
 
 function shot(sourceId, type, start, end, claimIndex = 0, claimText = "80,800 km", numbers = ["80,800 km"]) {
@@ -58,4 +59,9 @@ test("number cards use only number-and-unit tokens present in their narration li
   assert.ok(cards.length >= 1);
   assert.ok(cards.every((item) => item.numbers.every((token) => item.claimText.includes(token))));
   assert.equal(TopicVisuals.visualMetrics(plan).cardNumbersValid, true);
+});
+
+test("number-card type scales down wide sourced values to stay inside the card", () => {
+  assert.ok(Rendering.numberCardFontSize("30 MINUTES") <= 122);
+  assert.ok(Rendering.numberCardFontSize("80,800 KM  VS  20–25 RPM") < Rendering.numberCardFontSize("7 MILLION"));
 });
