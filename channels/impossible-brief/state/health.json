@@ -1,14 +1,23 @@
 {
   "channel": "impossible-brief",
   "channelName": "ImpossibleBrief",
-  "tarih": "2026-09-29T16:55:34.982Z",
-  "yuklemeUygun": false,
+  "tarih": "2026-09-30T14:59:50.571Z",
+  "yuklemeUygun": true,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "kritik",
-      "mesaj": "YouTube kimlik bilgileri yok (IB_CLIENT_ID, IB_CLIENT_SECRET, IB_YT_REFRESH_TOKEN)",
-      "cozum": "GitHub → Settings → Secrets and variables → Actions: IB_CLIENT_ID, IB_CLIENT_SECRET, IB_YT_REFRESH_TOKEN değerlerini ekle."
+      "durum": "ok",
+      "mesaj": "refresh token çalışıyor"
+    },
+    {
+      "ad": "youtube-kapsam",
+      "durum": "ok",
+      "mesaj": "gerekli kapsamlar tamam"
+    },
+    {
+      "ad": "youtube-kanal",
+      "durum": "ok",
+      "mesaj": "doğru kanal doğrulandı (UCPNyvGBI4JdQElc7ljuIuMw)"
     },
     {
       "ad": "gorsel-kaynak",
@@ -18,7 +27,7 @@
     {
       "ad": "kutuphane",
       "durum": "ok",
-      "mesaj": "499 günlük üretilmemiş konu var"
+      "mesaj": "498 günlük üretilmemiş konu var"
     }
   ]
 }

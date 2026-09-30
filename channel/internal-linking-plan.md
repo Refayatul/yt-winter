@@ -61,14 +61,14 @@ Playlist: **Spaceflight Disasters** — waiting (2/3 published)
 
 _How ships lose stability, flood and sink._
 
-Playlist: **Maritime Disasters** — waiting (0/3 published)
+Playlist: **Maritime Disasters** — waiting (1/3 published)
 
 | Video | Status | Previous | Next | End screen / Related video | Description link |
 |---|---|---|---|---|---|
-| The Ship That Capsized at the Dock — Because of a Safety Rule | queued | — | _queued: The Life Preservers That Were Filled With Iron_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
-| The Life Preservers That Were Filled With Iron | queued | — | _queued: The 94-Second Fuse That Burned the USS Forrestal_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
-| The 94-Second Fuse That Burned the USS Forrestal | queued | — | _queued: Ships Don't Just Sink — Many Roll Over_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
-| Ships Don't Just Sink — Many Roll Over | queued | — | — | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
+| General Slocum: The Inspection That Killed ([NnGoWJOdaW0](https://youtu.be/NnGoWJOdaW0)) | published | — | _queued: The Ship That Capsized at the Dock — Because of a Safety Rule_ | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) | [The Disaster That Ended the Age of the Airship](https://youtu.be/PGOKZhPYo7c) |
+| The Ship That Capsized at the Dock — Because of a Safety Rule | queued | [General Slocum: The Inspection That Killed](https://youtu.be/NnGoWJOdaW0) | _queued: The 94-Second Fuse That Burned the USS Forrestal_ | [General Slocum: The Inspection That Killed](https://youtu.be/NnGoWJOdaW0) | [General Slocum: The Inspection That Killed](https://youtu.be/NnGoWJOdaW0) |
+| The 94-Second Fuse That Burned the USS Forrestal | queued | [General Slocum: The Inspection That Killed](https://youtu.be/NnGoWJOdaW0) | _queued: Ships Don't Just Sink — Many Roll Over_ | [General Slocum: The Inspection That Killed](https://youtu.be/NnGoWJOdaW0) | [General Slocum: The Inspection That Killed](https://youtu.be/NnGoWJOdaW0) |
+| Ships Don't Just Sink — Many Roll Over | queued | [General Slocum: The Inspection That Killed](https://youtu.be/NnGoWJOdaW0) | — | [General Slocum: The Inspection That Killed](https://youtu.be/NnGoWJOdaW0) | [General Slocum: The Inspection That Killed](https://youtu.be/NnGoWJOdaW0) |
 
 ## Nuclear Accidents
 
