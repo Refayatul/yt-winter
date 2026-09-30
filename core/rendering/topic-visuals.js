@@ -11,7 +11,7 @@ const MAX_HOLD_SECONDS = 4;
 const NUMBER_RE = /\d[\d,]*(?:\.\d+)?(?:\s*[–—-]\s*\d[\d,]*(?:\.\d+)?)?(?:\s*-?\s*(?:%|percent|rpm|km\/h|m\/s|mph|nm|nanometres?|nanometers?|μm|um|micrometres?|micrometers?|km|kilometres?|kilometers?|millimetres?|millimeters?|centimetres?|centimeters?|metres?|meters?|kg|kV|V|volts?|GW|MW|watts?|tons?|seconds?|minutes?|hours?|days?|years?|nautical\s+miles?|miles?|feet|inches?|litres?|liters?|°C|degrees?|million|billion|thousand|barrels?(?:\s+(?:per|a)\s+day)?|light-seconds?))?/gi;
 
 function numberTokens(text) {
-  return [...new Set((String(text || "").match(NUMBER_RE) || []).map((value) => value.replace(/\s+/g, " ").trim()))];
+  return [...new Set((String(text || "").match(NUMBER_RE) || []).map((value) => value.replace(/\s+/g, " ").replace(/[.,]$/, "").trim()))];
 }
 
 function scenesFor(topic) {
@@ -180,9 +180,21 @@ function wikiTitles(topic) {
   return titles;
 }
 
-function subjectPhrases(topic, articleTitle) {
+function anchorPhrases(topic, articleTitle) {
   const title = String(topic.topic || "").replace(/^what if\s+/i, "").replace(/[?]/g, "").replace(/\b(?:tomorrow|tonight|right now)\b/gi, "").trim();
-  return [...new Set([topic.canonicalTopic, topic.subject, title, articleTitle, ...scenesFor(topic)].filter(Boolean))];
+  const anchors = [topic.canonicalTopic, topic.subject, title, articleTitle].filter(Boolean);
+  // Commons metadata often calls an electrical grid simply "electric" or
+  // "power". Keep those narrow domain synonyms in the relevance anchors so
+  // genuine utility control rooms pass without weakening the three-term gate.
+  if (/\bgrid\b/i.test(topic.canonicalTopic || "")) {
+    anchors.push(String(topic.canonicalTopic).replace(/\bgrid\b/i, "electric"));
+    anchors.push(String(topic.canonicalTopic).replace(/\bgrid\b/i, "power"));
+  }
+  return [...new Set(anchors)];
+}
+
+function subjectPhrases(topic, articleTitle) {
+  return [...new Set([...anchorPhrases(topic, articleTitle), ...scenesFor(topic)].filter(Boolean))];
 }
 
 function cacheDirectory(outputDirectory) { return path.join(outputDirectory, "visual-cache"); }
@@ -212,9 +224,11 @@ async function prepareAssets(topic, outputDirectory) {
   for (const article of articles) {
     if (picked.length >= 6) break;
     const subjects = subjectPhrases(topic, article);
+    const anchorSubjects = anchorPhrases(topic, article);
     const found = await Commons.commonsStills(subjects, 4, article, {
       keywords: subjects,
       subjects,
+      anchorSubjects,
       strictSubject: true,
       articleOnly: true,
       strict: !!topic.strictStills,
@@ -232,9 +246,11 @@ async function prepareAssets(topic, outputDirectory) {
   // subject-title/description rules still apply.
   if (picked.length < 2) {
     const subjects = subjectPhrases(topic, articles[0] || "");
+    const anchorSubjects = anchorPhrases(topic, articles[0] || "");
     const found = await Commons.commonsStills(subjects, 6 - picked.length, null, {
       keywords: subjects,
       subjects,
+      anchorSubjects,
       strictSubject: true,
       strict: !!topic.strictStills,
       exclude: used,

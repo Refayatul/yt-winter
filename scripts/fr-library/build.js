@@ -221,7 +221,11 @@ async function commonsStills(queries, need = 7, wiki = null, options = {}) {
   const words = (q) => String(q).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length >= 3 && !GENERIC.has(w));
   const keywordSets = (options.keywords || list).filter((q) => !/^Category:/i.test(q)).map(words).filter((set) => set.length);
   const keywords = [...new Set(keywordSets.flat())];
-  const subjectSets = (options.subjects || []).map(words).filter((set) => set.length);
+  // Search terms may include richly described scenes. Those terms improve
+  // discovery, but they must not prove relevance: a generic scene word such
+  // as "grid" or "control" can otherwise admit an unrelated namesake. Only
+  // the record/article anchors are allowed to clear the strict subject gate.
+  const subjectSets = (options.anchorSubjects || options.subjects || []).map(words).filter((set) => set.length);
   const year = options.year ? String(options.year) : null;
   const exclude = options.exclude || new Set();
   // Editorial rejections (name collisions such as a namesake general or a later
@@ -238,7 +242,10 @@ async function commonsStills(queries, need = 7, wiki = null, options = {}) {
     // IB/CT production can require the record's subject to appear in the file
     // title or description. Categories alone are deliberately insufficient:
     // broad Commons categories often contain visually plausible namesakes.
-    if (options.strictSubject && subjectSets.length && !subjectSets.some((set) => set.some((word) => namedText.includes(word)))) return;
+    if (options.strictSubject && subjectSets.length && !subjectSets.some((set) => {
+      const matches = set.filter((word) => namedText.includes(word)).length;
+      return matches >= Math.min(3, set.length);
+    })) return;
     const strong = keywords.filter((k) => text.includes(k)).length;
     const namedStrong = keywords.filter((k) => namedText.includes(k)).length;
     const fullMatch = keywordSets.some((set) => set.every((k) => text.includes(k)));

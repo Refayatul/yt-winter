@@ -50,6 +50,7 @@ test("rendered-visual gate passes varied licensed stills and sourced cards", () 
 test("number cards use only number-and-unit tokens present in their narration line", () => {
   const line = "The rim spans 80,800 km and turns at 20–25 RPM.";
   assert.deepEqual(TopicVisuals.numberTokens(line), ["80,800 km", "20–25 RPM"]);
+  assert.deepEqual(TopicVisuals.numberTokens("In 2011, it stopped."), ["2011"]);
   const script = { targetSeconds: 6, claims: [{ text: line, start: 0, end: 6 }] };
   const topic = { id: "IB-TEST", category: "SPACE", visualPotential: { scenes: ["rotating orbital habitat"] } };
   const plan = TopicVisuals.buildVisualPlan(topic, script, [], [3, 3], 6);
