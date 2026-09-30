@@ -31,6 +31,9 @@ function evaluatePackage(pkg) {
   if (!pkg.script || pkg.script.forbiddenOpening) blockers.push("forbidden or missing opening");
   if (!pkg.titles || pkg.titles.length < 20) blockers.push("fewer than 20 title candidates");
   if (!pkg.visuals || pkg.visuals.some((scene) => scene.changeRequiredWithinSeconds > 3.5)) blockers.push("visual pacing too slow");
+  if (pkg.renderVisuals && pkg.renderVisuals.visualQuality && pkg.renderVisuals.visualQuality.decision === "BLOCK") {
+    blockers.push(...pkg.renderVisuals.visualQuality.reasons.map((reason) => "rendered visuals: " + reason));
+  }
   if (!pkg.sources || pkg.sources.length < 2) blockers.push("insufficient sources");
   if (!pkg.metadata || !pkg.metadata.uploadChannel) blockers.push("channel metadata missing");
   return { decision: blockers.length ? "BLOCK" : "PUBLISH", blockers, checked: ["science", "hook", "clarity", "retention", "visuals", "novelty", "sources", "confidence", "titles", "thumbnail", "repetition", "metadata"] };

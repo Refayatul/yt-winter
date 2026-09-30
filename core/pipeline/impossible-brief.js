@@ -32,7 +32,7 @@ function writeCompatibilityFiles(result, topic, channel) {
   }
   const packageDirectory = path.join(channel.paths.packages, topic.slug);
   fs.mkdirSync(packageDirectory, { recursive: true });
-  for (const file of ["quality-gate.json", "render.json", "titles.json", "metadata.json", "sources.json", "thumbnail.json", "validations.json", "long-form-outline.json", "short-factory.json"]) {
+  for (const file of ["quality-gate.json", "render.json", "titles.json", "metadata.json", "sources.json", "thumbnail.json", "visual-attribution.json", "validations.json", "long-form-outline.json", "short-factory.json"]) {
     const source = path.join(directory, file);
     if (fs.existsSync(source)) fs.copyFileSync(source, path.join(packageDirectory, file));
   }
@@ -49,6 +49,7 @@ function writeValidationEvidence(result, topic, channel, output) {
     passed: failed.length === 0,
     failed,
     checks: result.validations,
+    reasons: Object.fromEntries(failed.map((name) => [name, result.validationReasons && result.validationReasons[name] || [`${name} validation failed`]])),
   };
   fs.writeFileSync(path.join(output, "validations.json"), JSON.stringify(evidence, null, 2) + "\n");
   return evidence;
