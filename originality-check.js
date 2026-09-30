@@ -73,13 +73,37 @@ function karsilastir(yeni, digerleri) {
   return r;
 }
 
+// Karsilastirma evreni: yayinlananlar + zaten uretilmis konular (henuz
+// uretilmemis kutuphane konulari birbirinin "tekrari" sayilmaz — yuzlerce
+// konuluk bir kutuphanede sahne-rol dizileri kacinilmaz olarak cakisir).
+// Izleyicinin algiladigi tekrar penceresi: yapi/hook/sahne dizisi son
+// RECENT_WINDOW uretimle; baslik, cumle ve gorsel tekrari TUM uretimlerle.
+const RECENT_WINDOW = 30;
+function uretimEvreni() {
+  const sirali = [];
+  const ekle = (slug) => { if (slug && !sirali.includes(slug)) sirali.push(slug); };
+  for (const y of K.yayinlananlar().slice().sort((a, b) => String(a.tarih || "").localeCompare(String(b.tarih || "")))) ekle(y.slug);
+  for (const slug of jsonOku(K.YOL.uretildi, [])) ekle(typeof slug === "string" ? slug : slug && slug.slug);
+  return sirali;
+}
+
 function degerlendir(konu, ops = {}) {
   const a = ayar().originality;
-  const tum = (ops.konular || K.konular()).filter((k) => k.slug !== konu.slug);
-  // Karsilastirma evreni: yayinlananlar + zaten paketlenmis/uretilmis konular
+  let tum, yakin;
+  if (ops.konular) { tum = ops.konular.filter((k) => k.slug !== konu.slug); yakin = tum; }
+  else {
+    const evren = uretimEvreni().filter((slug) => slug !== konu.slug);
+    const bySlug = new Map(K.konular().map((k) => [k.slug, k]));
+    tum = evren.map((slug) => bySlug.get(slug)).filter(Boolean);
+    const son = new Set(evren.slice(-RECENT_WINDOW));
+    yakin = tum.filter((k) => son.has(k.slug));
+  }
   const yeni = iz(konu);
   const digerleri = tum.map(iz);
   const r = karsilastir(yeni, digerleri);
+  // Yapi, hook ve sahne dizisi yalnizca yakin pencerede olculur.
+  const rYakin = karsilastir(yeni, yakin.map(iz));
+  for (const k of ["structure", "hook", "scenes", "thumbnail", "cta", "music"]) r[k] = rYakin[k];
   const fazla = Object.entries(AGIRLIK).reduce((t, [k, w]) => {
     const esik = a.reviewAt[k] || 0.9, taban = TABAN[k] || 0;
     return t + w * sinirla(((r[k].deger || 0) - taban) / Math.max(0.05, esik - taban), 0, 1.5);

@@ -17,7 +17,12 @@
     "library:impossible-brief": "node library-health.js --channel impossible-brief",
     "gate": "node quality-gate.js --all",
     "optimize": "node existing-video-optimizer.js --all",
-    "dashboard": "node panel.js"
+    "dashboard": "node panel.js",
+    "growth": "node growth.js status",
+    "growth:report": "node growth.js report",
+    "growth:dry-run": "node growth.js dry-run",
+    "growth:simulate": "node growth.js simulate",
+    "test:growth": "node --test tests/js/growth.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",

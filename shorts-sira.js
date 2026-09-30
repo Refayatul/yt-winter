@@ -58,6 +58,53 @@ function incelemeyeAl(slug, quality) {
 }
 const incelemedeMi = (slug) => { const item = incelemedekiler()[slug]; return !!(item && item.hash === specHash(slug)); };
 
+// Growth engine (core/growth): topic buckets, hooks, first 3 s, retention lint,
+// factual/visual integrity and ProductionReadinessScore. It runs AFTER the
+// existing quality gate and can only make a decision stricter, never looser.
+// GROWTH_GATE_MODE=shadow logs growth decisions without enforcing them
+// (emergency lever; default is enforce).
+const Growth = require("./core/growth");
+const GrowthRuntime = require("./core/growth/runtime");
+const growthPlans = {};
+function buyumeKapisi(slug, legacy, final) {
+  let plan;
+  try {
+    plan = GrowthRuntime.planLegacy(CHANNEL, slug, final ? {
+      stage: "final",
+      externalGate: Growth.externalFromLegacyGate(legacy),
+      render: renderBilgisi(slug),
+      write: true,
+    } : {});
+  } catch (e) {
+    // A planning error is a bug, not a quality verdict: never let it silently pass.
+    engelle(slug, "growth plan error: " + e.message);
+    throw new Engellendi("growth plan error: " + e.message);
+  }
+  growthPlans[slug] = plan;
+  const r = plan.readiness;
+  console.log(`  growth readiness (${final ? "final" : "pre"}): ${r.decision} ${r.ProductionReadinessScore}/100 · topic ${plan.topicScore.bucket} ${plan.topicScore.VideoPotentialScore} · hook ${plan.hooks.selected ? plan.hooks.selected.family + " " + plan.hooks.selected.adjustedTotal : "none"} · first-3s ${plan.first3Seconds.score}` + (r.hardFails.length ? " — " + r.hardFails.join("; ") : ""));
+  if (Growth.gateMode() === "shadow") return plan;
+  if (r.decision === "BLOCK") { engelle(slug, `growth ${final ? "final" : "pre"} ${r.ProductionReadinessScore}: ${r.hardFails.join("; ") || "below threshold"}`); throw new Engellendi("growth readiness BLOCK"); }
+  if (r.decision === "REVIEW") {
+    incelemeyeAl(slug, { toplam: r.ProductionReadinessScore });
+    GrowthRuntime.alert(CHANNEL, "PRODUCTION_READINESS_REVIEW", slug, { score: r.ProductionReadinessScore, dimensions: r.dimensions });
+    throw new IncelemeGerekli("growth readiness REVIEW; upload blocked");
+  }
+  return plan;
+}
+function renderBilgisi(slug) {
+  try {
+    const video = path.join(KOK, "uretim", slug, "Videos", slug + ".mp4");
+    if (!fs.existsSync(video)) return { completed: false };
+    const FP = require("./ff-yol").ffprobe;
+    const j = JSON.parse(cp.execFileSync(FP, ["-v", "error", "-show_entries", "stream=codec_type,width,height:format=duration", "-of", "json", video]).toString());
+    const vs = (j.streams || []).find((x) => x.codec_type === "video") || {};
+    const d = (() => { try { return JSON.parse(fs.readFileSync(path.join(KOK, "uretim", slug, "Videos", "denetim.json"), "utf8")); } catch (e) { return null; } })();
+    return { completed: true, width: vs.width, height: vs.height, durationSeconds: +(j.format || {}).duration, hasAudio: (j.streams || []).some((x) => x.codec_type === "audio"),
+      syntheticVoice: true, captionsBurned: d ? d.captionBurned === true : undefined };
+  } catch (e) { return { completed: false }; }
+}
+
 class Engellendi extends Error {}
 class IncelemeGerekli extends Error {}
 class YuklemeHatasi extends Error {}
@@ -123,7 +170,8 @@ function uretBir(slug) {
   konu.slug = slug;
   fs.writeFileSync(path.join(job, "konu.json"), JSON.stringify(konu, null, 2));
   console.log(`\n=== ${slug} ===`);
-  kapi(slug, false);
+  const oncekiKapi = kapi(slug, false);
+  buyumeKapisi(slug, oncekiKapi, false);
   // Goruntu kaynagi: "stok" (Pexels) ya da arsiv (kamu mali).
   calistir(konu.tur === "stok" ? "stok-bul.js" : "arsiv-bul.js", slug);
   calistir("shorts-yap.js", slug);
@@ -149,6 +197,7 @@ function uretBir(slug) {
     writeProductionResult(slug, son);
     throw new IncelemeGerekli("kalite kapisi REVIEW; upload blocked");
   }
+  buyumeKapisi(slug, son, true);
 
   // Yukleme: yalnizca PUBLISH=1 ve kimlik varsa; her zaman private.
   const publish = process.env.PUBLISH === "1";
@@ -162,8 +211,11 @@ function uretBir(slug) {
       throw new YuklemeHatasi("yukleme basarisiz (konu kuyrukta kaldi)");
     }
     console.log(`yukleme: tamam (kalite: ${son.karar})`);
+    const videoId = GrowthRuntime.afterUpload(CHANNEL, slug, growthPlans[slug]);
+    console.log(GrowthRuntime.shortSummary(growthPlans[slug], { "Upload Status": "uploaded (scheduled)", "Video ID": videoId || "—" }));
   } else {
     console.log("yukleme atlandi (" + (publish ? "kimlik yok" : "PUBLISH!=1") + "); video: uretim/" + slug + "/Videos/");
+    console.log(GrowthRuntime.shortSummary(growthPlans[slug], { "Upload Status": "skipped (" + (publish ? "no credentials" : "PUBLISH!=1") + ")", "Video ID": "—" }));
   }
   isaretle(slug);
   // The workflow consumes this exact result. TikTok must never guess the latest
@@ -193,9 +245,17 @@ function main() {
   const yuklenmis = require("./lib/kutuphane").yayinlananlar().map((y) => y.slug).filter(Boolean);
   const atla = new Set([...uretilenler(), ...basarisizlar(), ...yuklenmis,
     ...Object.keys(engellenenler()).filter(engelliMi), ...Object.keys(incelemedekiler()).filter(incelemedeMi)]);
-  // Siralama lib/kutuphane.kuyruk(): once gercek arsiv filmi olan konular, sonra stok.
-  const kalan = require("./lib/kutuphane").kuyruk().map((k) => k.slug).filter((s) => !atla.has(s));
-  if (!kalan.length) { console.log("Uretilecek yeni konu yok (" + tum.length + " toplam). Konu ekle."); return 0; }
+  // Siralama: growth engine (A/B once, C yalnizca deney gunu ya da kanal izin
+  // veriyorsa yedek; D asla). Growth kuyrugu bossa eski kutuphane sirasi DEGIL,
+  // uyari: zayif konu takvimi doldurmak icin yayinlanmaz.
+  const buyume = Growth.orderedQueue(CHANNEL, { exclude: [...atla] });
+  const kalan = buyume.order.filter((s) => !atla.has(s) && tum.includes(s));
+  console.log(`growth queue: ${buyume.reason} · inventory A${buyume.inventory.A}/B${buyume.inventory.B}/C${buyume.inventory.C}/D${buyume.inventory.D}`);
+  if (!kalan.length) {
+    GrowthRuntime.alert(CHANNEL, "NO_QUALIFIED_TOPIC", buyume.reason, { inventory: buyume.inventory });
+    console.log("::warning::Uretilecek nitelikli konu yok (" + tum.length + " toplam) — " + buyume.reason);
+    return 0;
+  }
 
   // Saglik: yukleme yapilacaksa once YouTube yetkisi dogrulanir. Yetki yoksa hicbir konu
   // uretilmez (eskiden konu uretilip yuklenemeden "uretildi" sayiliyordu).

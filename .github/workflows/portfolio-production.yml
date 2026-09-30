@@ -125,6 +125,30 @@ jobs:
         continue-on-error: true
         run: node tiktok-yukle.js --gecmis --result-file="${{ runner.temp }}/tiktok-backlog.json"
 
+      # Weekly long-form lane (after every Short step, so it can never delay or
+      # starve Shorts). Idempotent per ISO week: on most hourly runs it only
+      # reports "not due". A QUALITY_BLOCKED / REVIEW_REQUIRED cycle is expected
+      # behaviour and exits 0. Render/upload additionally require the channel's
+      # growth-engine longform.render.enabled AND <PREFIX>_LONGFORM_PUBLISH=1;
+      # the LLM writer requires LONGFORM_LLM=1 and the ANTHROPIC_API_KEY secret.
+      - name: Weekly long-form lane (quality over cadence)
+        if: always()
+        continue-on-error: true
+        timeout-minutes: 90
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
+          LONGFORM_LLM: ${{ vars.LONGFORM_LLM }}
+          FR_LONGFORM_PUBLISH: ${{ vars.FR_LONGFORM_PUBLISH }}
+          IB_LONGFORM_PUBLISH: ${{ vars.IB_LONGFORM_PUBLISH }}
+          CT_LONGFORM_PUBLISH: ${{ vars.CT_LONGFORM_PUBLISH }}
+        run: |
+          DRY=""
+          if [ "${{ inputs.dry_run }}" = "true" ]; then DRY="--dry-run"; fi
+          for CHANNEL in failure-reconstructed impossible-brief critical-thread; do
+            node growth.js longform --channel "$CHANNEL" $DRY || echo "long-form lane for $CHANNEL failed; Shorts are unaffected."
+          done
+
       - name: Channel-scoped analytics, plans, health and notifications
         if: always()
         run: |
@@ -139,6 +163,7 @@ jobs:
             fi
           done
           node portfolio-dashboard.js --write
+          node growth.js report || true
           node daily-operations-report.js
 
       - name: Preview artifacts
