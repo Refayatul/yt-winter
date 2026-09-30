@@ -1,22 +1,22 @@
 # Growth dashboard
 
-Generated 2026-09-30T15:16:50.333Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-09-30T15:48:54.539Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
-**Shorts health** — last published 2026-09-29T18:00:00.000Z · 9 published · inventory A63/B239/C65/D0 · next: ponte-morandi-2018 (experiment day (ratio 0.15): best C topic)
+**Shorts health** — last published 2026-09-30T18:00:00.000Z · 10 published · inventory A63/B239/C64/D0 · next: ponte-morandi-2018 (experiment day (ratio 0.15): best C topic)
 
-**Long-form health** — cycle 2026-W40: no cycle yet · episodes 0 · lane DUE (due)
+**Long-form health** — cycle 2026-W40: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W40 already QUALITY_BLOCKED)
 
-**TikTok** — enabled (SEND_TO_USER_INBOX); 7 recorded item(s)
+**TikTok** — enabled (SEND_TO_USER_INBOX); 8 recorded item(s)
 
 **Long-form backlog** — challenger-1986 83/A, columbia-2003 82/A, apollo-13-1970 81/A, chernobyl-1986 81/A, deepwater-horizon-2010 80/A
 
 **Content clusters** — 0 · integrity OK
 
-**Growth / subscriber conversion** — tracked 0 · subs/1k Shorts n/a · subs/1k long n/a
+**Growth / subscriber conversion** — tracked 9 · subs/1k Shorts 2.05 · subs/1k long n/a
 
-**Learning** — Shorts heuristics-only (n=0, adopted 0) · Long-form heuristics-only (n=0)
+**Learning** — Shorts observing (n=9, adopted 0) · Long-form heuristics-only (n=0)
 
 **Short → Long funnel** — 0 link(s), 0 long→long, 0 pending RELATED_VIDEO_MANUAL_ACTION_REQUIRED
 
@@ -30,15 +30,15 @@ Generated 2026-09-30T15:16:50.333Z. Per-channel baselines are computed separatel
 
 ## ImpossibleBrief
 
-**Shorts health** — last published never · 0 published · inventory A45/B97/C357/D0 · next: what-if-sunlight-could-push-a-spaceship (best A topic)
+**Shorts health** — last published 2026-09-30T18:00:00.000Z · 1 published · inventory A44/B97/C356/D0 · next: what-if-we-tried-to-drill-through-the-earth (best A topic)
 
-**Long-form health** — cycle 2026-W40: no cycle yet · episodes 0 · lane DUE (due)
+**Long-form health** — cycle 2026-W40: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W40 already QUALITY_BLOCKED)
 
-**Long-form backlog** — could-earth-survive-one-day-without-earth-s-magnetic-field 78/A, what-if-synthetic-fertilizer-disappeared 78/A, what-if-the-ozone-hole-never-closed 77/B, what-if-the-tunguska-blast-happened-over-a-city 77/B, what-if-the-permafrost-thawed 77/B
+**Long-form backlog** — what-if-we-mined-a-metal-asteroid 79/A, could-earth-survive-one-day-without-earth-s-magnetic-field 78/A, what-if-synthetic-fertilizer-disappeared 78/A, what-if-the-ozone-hole-never-closed 77/B, what-if-the-tunguska-blast-happened-over-a-city 77/B
 
-**Content clusters** — 0 · integrity OK
+**Content clusters** — 1 · integrity OK
 
-**Growth / subscriber conversion** — tracked 0 · subs/1k Shorts n/a · subs/1k long n/a
+**Growth / subscriber conversion** — tracked 1 · subs/1k Shorts n/a · subs/1k long n/a
 
 **Learning** — Shorts heuristics-only (n=0, adopted 0) · Long-form heuristics-only (n=0)
 
@@ -46,17 +46,17 @@ Generated 2026-09-30T15:16:50.333Z. Per-channel baselines are computed separatel
 
 **Research/source enrichment tasks**
 
-- if-a-rogue-planet-vanished-right-now-what-would-change-first (C): VideoPotential 73 in experimental band 55–67; boilerplate 0.5
-- what-breaks-first-if-a-rogue-planet-suddenly-doubles-in-mass (C): VideoPotential 72 in experimental band 55–67; boilerplate 0.5
+- if-a-rogue-planet-vanished-right-now-what-would-change-first (C): VideoPotential 72 in experimental band 55–67; boilerplate 0.5
 - if-a-rogue-planet-moved-twice-as-close-when-would-earth-notice (C): VideoPotential 72 in experimental band 55–67; boilerplate 0.5
+- what-breaks-first-if-a-rogue-planet-suddenly-doubles-in-mass (C): VideoPotential 71 in experimental band 55–67; boilerplate 0.5
 - what-happens-if-the-global-ocean-doubles (C): VideoPotential 71 in experimental band 55–67; boilerplate 0.5
 - could-earth-survive-one-day-without-all-sea-ice (C): VideoPotential 71 in experimental band 55–67; boilerplate 0.5
 
 ## CriticalThread
 
-**Shorts health** — last published never · 0 published · inventory A26/B123/C0/D373 · next: why-high-lift-water-pump-is-so-hard-to-replace (best A topic)
+**Shorts health** — last published never · 0 published · inventory A26/B123/C0/D372 · next: why-high-lift-water-pump-is-so-hard-to-replace (best A topic)
 
-**Long-form health** — cycle 2026-W40: no cycle yet · episodes 0 · lane DUE (due)
+**Long-form health** — cycle 2026-W40: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W40 already QUALITY_BLOCKED)
 
 **Long-form backlog** — the-hidden-system-behind-bosporus-vessel-transit-system 76/B, what-quietly-depends-on-english-channel-traffic-separation-scheme 76/B, the-hidden-system-behind-swift-messaging-network 76/B, why-foreign-exchange-settlement-system-is-so-hard-to-replace 76/B, when-material-recovery-facility-becomes-the-bottleneck 76/B
 
