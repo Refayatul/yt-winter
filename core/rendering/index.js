@@ -7,6 +7,7 @@ const cp = require("child_process");
 const Scripting = require("../scripting");
 const Visuals = require("../visuals");
 const Quality = require("../quality");
+const TopicVisuals = require("./topic-visuals");
 const { ROOT } = require("../channel-context");
 
 function write(file, value) {
@@ -236,14 +237,15 @@ function scientificFrames(topic, directory, count = 8, startFrame = 0) {
       block(405, 735, 270, 390, palette.gray);
       block(435, 775, 210, 170, palette.background);
       for (let slot = 0; slot < 4; slot += 1) block(445 + slot * 48, 985, 30, 95, palette.gold || palette.warm);
-      circle(540, 860, 74 + frame * 2, palette.warm, true, 8);
+      circle(540, 860, 74 + (frame % 12) * 2, palette.warm, true, 8);
     } else if (/moon/i.test(topic.topic)) {
       circle(540, 900, 315, palette.blue);
       circle(540, 900, 315, palette.cyan, true, 9);
       circle(430, 820, 92, palette.green);
       circle(655, 970, 68, palette.green);
-      circle(540, 900, 365 + frame * 5, palette.ice, true, 4);
-      const moonRadius = frame < 3 ? 92 : Math.max(0, 92 - (frame - 2) * 20);
+      circle(540, 900, 365 + (frame % 12) * 5, palette.ice, true, 4);
+      const moonFrame = frame % 8;
+      const moonRadius = moonFrame < 3 ? 92 : Math.max(0, 92 - (moonFrame - 2) * 20);
       if (moonRadius > 4) {
         circle(810, 525, moonRadius, palette.gray);
         circle(810, 525, moonRadius, palette.ice, true, 6);
@@ -257,7 +259,7 @@ function scientificFrames(topic, directory, count = 8, startFrame = 0) {
       circle(450, 805, 105, palette.green);
       circle(660, 1010, 82, palette.green);
       for (let band = -2; band <= 2; band += 1) line(205, 900 + band * 90, 875, 900 + band * 90, palette.ice, 3);
-      const drift = frame * 28;
+      const drift = (frame % 20) * 28;
       for (let particle = 0; particle < 11; particle += 1) {
         const x = 170 + ((particle * 95 + drift) % 760);
         circle(x, 510 + (particle % 3) * 55, 8, palette.warm);
@@ -269,7 +271,7 @@ function scientificFrames(topic, directory, count = 8, startFrame = 0) {
     } else if (/gravity doubled/i.test(topic.topic)) {
       block(0, 1190, width, 730, palette.blue);
       block(0, 1190, width, 9, palette.cyan);
-      const fall = Math.min(620, frame * 92);
+      const fall = Math.min(620, (frame % 10) * 92);
       circle(300, 430 + fall, 64, palette.warm);
       circle(780, 320 + fall, 42, palette.ice);
       for (const x of [300, 540, 780]) {
@@ -286,33 +288,50 @@ function scientificFrames(topic, directory, count = 8, startFrame = 0) {
     } else {
       circle(540, 850, 310, palette.blue);
       circle(540, 850, 310, palette.cyan, true, 10);
-      circle(540, 850, 355 + frame * 8, palette.ice, true, 5);
+      circle(540, 850, 355 + (frame % 12) * 8, palette.ice, true, 5);
     }
-    const file = path.join(directory, `.science-frame-${sequence}.ppm`);
+    // The fallback remains procedural, but its composition is selected from
+    // the current claim's scene description. This prevents unrelated claims
+    // from receiving one repeated circle or hub-and-spoke drawing.
+    const sceneList = Array.isArray(topic.visualScenes) ? topic.visualScenes : (topic.visualPotential || {}).scenes || [];
+    const sceneValue = sceneList[frame % Math.max(1, sceneList.length)];
+    const sceneText = typeof sceneValue === "string" ? sceneValue : sceneValue && sceneValue.text || `${topic.category} ${frame}`;
+    const motifSeed = [...sceneText].reduce((value, char) => (value * 31 + char.charCodeAt(0)) >>> 0, 17);
+    const motif = motifSeed % 4;
+    if (motif === 0) {
+      for (let bar = 0; bar < 5; bar += 1) {
+        const barHeight = 100 + ((motifSeed >>> (bar * 3)) % 390);
+        block(190 + bar * 150, 1320 - barHeight, 90, barHeight, bar % 2 ? palette.warm : palette.cyan);
+      }
+    } else if (motif === 1) {
+      for (let arrow = 0; arrow < 4; arrow += 1) {
+        const y = 520 + arrow * 230;
+        line(180, y, 880, y + ((motifSeed >>> arrow) % 3 - 1) * 85, arrow % 2 ? palette.ice : palette.warm, 12);
+        line(880, y + ((motifSeed >>> arrow) % 3 - 1) * 85, 830, y - 35, arrow % 2 ? palette.ice : palette.warm, 12);
+      }
+    } else if (motif === 2) {
+      const nodes = 5 + motifSeed % 4;
+      for (let node = 0; node < nodes; node += 1) {
+        const angle = Math.PI * 2 * node / nodes + frame * 0.19;
+        const x = 540 + Math.cos(angle) * (220 + (motifSeed % 130));
+        const y = 870 + Math.sin(angle) * (350 + (motifSeed % 90));
+        line(540, 870, x, y, palette.cyan, 5);
+        circle(x, y, 20 + node % 3 * 7, node % 2 ? palette.warm : palette.ice);
+      }
+    } else {
+      let previous = null;
+      for (let point = 0; point <= 18; point += 1) {
+        const x = 100 + point * 49;
+        const y = 900 + Math.sin(point * 0.72 + motifSeed % 11) * (120 + motifSeed % 160);
+        if (previous) line(previous.x, previous.y, x, y, palette.warm, 10);
+        previous = { x, y };
+      }
+    }
+    const file = path.join(directory, `.science-frame-${startFrame}-${sequence}.ppm`);
     fs.writeFileSync(file, Buffer.concat([Buffer.from(`P6\n${width} ${height}\n255\n`), data]));
     files.push(file);
   }
   return files;
-}
-
-function renderVideo(audioFile, duration, output, captionsFile, topic, options = {}) {
-  const ffmpeg = require("../../ff-yol").ffmpeg;
-  // Growth pacing supplies meaningful, non-mechanical segment lengths (fast in
-  // the first 3 s). Without it the legacy equal split is kept.
-  const segments = Array.isArray(options.segments) && options.segments.length ? options.segments : null;
-  const frames = scientificFrames(topic, path.dirname(output), segments ? segments.length : Math.max(8, Math.ceil(duration / 3.5)));
-  const segment = Math.max(1, duration / frames.length);
-  const args = ["-y", "-hide_banner", "-loglevel", "error"];
-  frames.forEach((frame, index) => args.push("-loop", "1", "-framerate", "24", "-t", String(segments ? Math.max(0.4, segments[index]) : segment), "-i", frame));
-  const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
-  const labels = /moon/i.test(topic.topic) ? "EARTH–MOON SYSTEM" : /stopped spinning/i.test(topic.topic) ? "ROTATION + INERTIA" : /gravity doubled/i.test(topic.topic) ? "2g FORCE MODEL" : topic.category;
-  const illustrationLabel = topic.visualLabel || "PROCEDURAL ILLUSTRATION — NOT OBSERVATION";
-  const inputs = frames.map((_, index) => `[${index}:v]`).join("");
-  const filter = `${inputs}concat=n=${frames.length}:v=1:a=0,drawbox=x=95:y=86:w=890:h=128:color=0x030712@0.78:t=fill,drawtext=text='${illustrationLabel}':fontcolor=0x25d9ff:fontsize=34:x=(w-text_w)/2:y=112,drawtext=text='${labels}':fontcolor=white:fontsize=45:x=(w-text_w)/2:y=168,ass=filename='${escapedCaptions}'[v]`;
-  args.push("-i", audioFile, "-filter_complex", filter, "-map", "[v]", "-map", `${frames.length}:a`, "-t", String(duration), "-c:v", "libx264", "-preset", "ultrafast", "-crf", "29", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
-  try { cp.execFileSync(ffmpeg, args, { stdio: "ignore", timeout: 120000 }); }
-  finally { for (const frame of frames) try { fs.unlinkSync(frame); } catch (error) {} }
-  return { visualChanges: frames.length, illustrationLabel: true, scenarioSpecific: true, segmentSeconds: segments || frames.map(() => segment) };
 }
 
 // drawtext text inside a single-quoted filter value: an apostrophe would end
@@ -322,15 +341,109 @@ function drawtextSafe(text) {
   return String(text).replace(/'/g, "’").replace(/\\/g, "");
 }
 
-function renderThumbnail(output, topic) {
+function renderNumberCard(output, shot, topic) {
+  const ffmpeg = require("../../ff-yol").ffmpeg;
+  fs.mkdirSync(path.dirname(output), { recursive: true });
+  const headline = drawtextSafe(shot.numbers.slice(0, 2).join("  vs  ").toUpperCase());
+  const title = drawtextSafe(topic.category || topic.cluster || "SOURCED NUMBER");
+  const fontSize = headline.length > 24 ? 88 : headline.length > 15 ? 112 : 146;
+  const filters = [
+    "drawgrid=width=120:height=120:thickness=2:color=0x07334a@0.65",
+    "drawbox=x=105:y=510:w=870:h=650:color=0x071827@0.92:t=fill",
+    "drawbox=x=105:y=510:w=870:h=650:color=0x25d9ff@0.9:t=7",
+    `drawtext=expansion=none:text='${title}':fontcolor=0x25d9ff:fontsize=42:x=(w-text_w)/2:y=590`,
+    `drawtext=expansion=none:text='${headline}':fontcolor=white:fontsize=${fontSize}:borderw=5:bordercolor=0x030712:x=(w-text_w)/2:y=760`,
+  ];
+  if (shot.comparison.length >= 2) {
+    const values = shot.comparison.map((value) => Number((value.replace(/,/g, "").match(/\d+(?:\.\d+)?/) || [1])[0]));
+    const maximum = Math.max(...values, 1);
+    const widths = values.map((value) => Math.max(80, Math.round(620 * value / maximum)));
+    filters.push(`drawbox=x=230:y=1010:w=${widths[0]}:h=34:color=0xffb347@0.95:t=fill`);
+    filters.push(`drawbox=x=230:y=1070:w=${widths[1]}:h=34:color=0x25d9ff@0.95:t=fill`);
+  }
+  cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=0x030712:s=1080x1920:d=0.1", "-vf", filters.join(","), "-frames:v", "1", "-update", "1", output], { stdio: "ignore", timeout: 30000 });
+  return output;
+}
+
+function renderVideo(audioFile, duration, output, captionsFile, topic, options = {}) {
+  const ff = require("../../ff-yol");
+  const ffmpeg = ff.ffmpeg;
+  const plan = TopicVisuals.buildVisualPlan(topic, options.script, options.assets && options.assets.stills || [], options.segments || [], duration);
+  const generated = [];
+  const cardDirectory = path.join(path.dirname(output), "visual-cache");
+  const inputs = [];
+  for (const shot of plan) {
+    if (shot.type === "licensed-still") inputs.push(shot.still.path);
+    else if (shot.type === "number-card") {
+      const file = path.join(cardDirectory, shot.sourceId.replace(/[^a-z0-9-]/gi, "-") + ".jpg");
+      if (!fs.existsSync(file)) renderNumberCard(file, shot, topic);
+      inputs.push(file);
+    } else {
+      const file = scientificFrames({ ...topic, visualScenes: [shot.scene] }, path.dirname(output), 1, shot.proceduralFrame)[0];
+      generated.push(file);
+      inputs.push(file);
+    }
+  }
+  if (!inputs.length) throw new Error("No visual shots could be built");
+  const args = ["-y", "-hide_banner", "-loglevel", "error"];
+  inputs.forEach((file, index) => args.push("-loop", "1", "-framerate", "24", "-t", String(plan[index].duration), "-i", file));
+  args.push("-i", audioFile);
+  const filters = [];
+  for (let index = 0; index < plan.length; index += 1) {
+    const shot = plan[index];
+    const frames = Math.max(1, Math.ceil(shot.duration * 24));
+    const speed = shot.type === "licensed-still" ? "0.0007" : "0.00028";
+    const label = shot.type === "licensed-still" ? "LICENSED CONTEXT — NOT EVENT OBSERVATION"
+      : shot.type === "number-card" ? "NUMBER FROM SOURCED NARRATION"
+        : topic.visualLabel || "PROCEDURAL ILLUSTRATION — NOT OBSERVATION";
+    const category = drawtextSafe(topic.category || topic.cluster || "EXPLAINER");
+    filters.push(`[${index}:v]scale=1280:2276:force_original_aspect_ratio=increase,crop=1280:2276,zoompan=z='min(zoom+${speed},1.10)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=24,trim=duration=${shot.duration.toFixed(3)},setpts=PTS-STARTPTS,drawbox=x=75:y=76:w=930:h=146:color=0x030712@0.80:t=fill,drawtext=expansion=none:text='${drawtextSafe(label)}':fontcolor=0x25d9ff:fontsize=30:x=(w-text_w)/2:y=103,drawtext=expansion=none:text='${category}':fontcolor=white:fontsize=42:x=(w-text_w)/2:y=158[v${index}]`);
+  }
+  const concatInputs = plan.map((_, index) => `[v${index}]`).join("");
+  const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
+  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'[v]`);
+  const filterFile = path.join(path.dirname(output), ".visual-filter.txt");
+  fs.writeFileSync(filterFile, filters.join(";\n") + "\n");
+  args.push(ff.filtreBayragi, filterFile, "-map", "[v]", "-map", `${plan.length}:a`, "-t", String(duration), "-c:v", "libx264", "-preset", "ultrafast", "-crf", "29", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
+  try { cp.execFileSync(ffmpeg, args, { stdio: "ignore", timeout: 240000 }); }
+  finally {
+    for (const frame of generated) try { fs.unlinkSync(frame); } catch (error) {}
+    try { fs.unlinkSync(filterFile); } catch (error) {}
+  }
+  const metrics = TopicVisuals.visualMetrics(plan);
+  return { ...metrics, visualQuality: TopicVisuals.evaluateVisualQuality(metrics), segmentSeconds: plan.map((shot) => shot.duration), sources: plan.map(({ shot, claimIndex, type, sourceId, numbers }) => ({ shot, claimIndex, type, sourceId, numbers })) };
+}
+
+function renderThumbnail(output, topic, assets = { stills: [] }, script = null) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const text = topic.thumbnailText || (/moon/i.test(topic.topic) ? "NO MOON" : /stopped spinning/i.test(topic.topic) ? "EARTH STOPS" : /gravity doubled/i.test(topic.topic) ? "2x GRAVITY" : topic.category);
-  const frames = scientificFrames(topic, path.dirname(output), 1, /moon/i.test(topic.topic) ? 7 : 0);
-  const cropY = /gravity doubled/i.test(topic.topic) ? 560 : 460;
-  const filter = `scale=1280:-1,crop=1280:720:0:${cropY},eq=contrast=1.10:saturation=1.08,drawbox=x=0:y=500:w=1280:h=220:color=0x030712@0.72:t=fill,drawtext=expansion=none:text='${drawtextSafe(text)}':fontcolor=white:fontsize=108:borderw=7:bordercolor=0x030712:x=(w-text_w)/2:y=535`;
-  try { cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", frames[0], "-vf", filter, "-frames:v", "1", "-update", "1", output], { stdio: "ignore" }); }
-  finally { for (const frame of frames) try { fs.unlinkSync(frame); } catch (error) {} }
-  return { scenarioSpecific: true, textWords: text.split(/\s+/).length };
+  let source;
+  let sourceType;
+  let sourceId;
+  let generated = null;
+  if (assets.stills && assets.stills.length) {
+    source = assets.stills[0].path;
+    sourceType = "licensed-still";
+    sourceId = `still:${assets.stills[0].file}`;
+  } else {
+    const claim = script && script.claims && script.claims.find((item) => TopicVisuals.numberTokens(item.text).length);
+    if (claim) {
+      const shot = { numbers: TopicVisuals.numberTokens(claim.text), comparison: TopicVisuals.numberTokens(claim.text).slice(0, 2) };
+      source = path.join(path.dirname(output), "visual-cache", "thumbnail-number-card.jpg");
+      renderNumberCard(source, shot, topic);
+      sourceType = "number-card";
+      sourceId = `thumbnail-card:${shot.numbers.join("|")}`;
+    } else {
+      generated = scientificFrames(topic, path.dirname(output), 1, 0)[0];
+      source = generated;
+      sourceType = "procedural";
+      sourceId = `procedural-thumbnail:${topic.id}`;
+    }
+  }
+  const filter = `scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,eq=contrast=1.10:saturation=1.08,drawbox=x=0:y=500:w=1280:h=220:color=0x030712@0.72:t=fill,drawtext=expansion=none:text='${drawtextSafe(text)}':fontcolor=white:fontsize=108:borderw=7:bordercolor=0x030712:x=(w-text_w)/2:y=535`;
+  try { cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", source, "-vf", filter, "-frames:v", "1", "-update", "1", output], { stdio: "ignore" }); }
+  finally { if (generated) try { fs.unlinkSync(generated); } catch (error) {} }
+  return { sourceType, sourceId, textWords: text.split(/\s+/).length, usesLicensedStill: sourceType === "licensed-still" };
 }
 
 function buildPackage(topic, channel, outputDirectory, options = {}) {
@@ -385,6 +498,14 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   }
   const render = { requested: !!options.render, completed: false, audio: null, video: null, thumbnail: null };
   if (options.render) {
+    const assets = TopicVisuals.prepareAssetsSync(path.join(outputDirectory, "topic.json"), outputDirectory);
+    const attribution = TopicVisuals.attributionLines(assets.stills);
+    if (attribution.length) {
+      metadata.description += `\n\nVisual credits (Wikimedia Commons):\n${attribution.join("\n")}`;
+      write(path.join(outputDirectory, "metadata.json"), metadata);
+      write(path.join(outputDirectory, "description.txt"), metadata.description + "\n");
+    }
+    write(path.join(outputDirectory, "visual-attribution.json"), { count: assets.stills.length, stills: assets.stills.map(({ path: localPath, ...still }) => still), error: assets.error || null });
     const voice = synthesizeNarration(script, outputDirectory, channel);
     const audioProbe = probe(voice.file);
     const duration = audioProbe.durationSeconds;
@@ -399,12 +520,15 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     const minimumSegments = Math.ceil(duration / 3.5);
     const image = path.join(outputDirectory, "thumbnail.jpg");
     const visualRender = renderVideo(voice.file, duration, video, path.join(outputDirectory, "captions.ass"), topic,
-      growth ? { segments: Pacing.segments(duration, growthConfig, { minimumSegments }) } : {});
-    const thumbnailRender = renderThumbnail(image, topic);
+      { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [] });
+    const thumbnailRender = renderThumbnail(image, topic, assets, script);
     render.completed = true;
     render.audio = { ...voice, ...audioProbe };
     render.video = { file: video, captionsBurned: true, ...visualRender, ...probe(video) };
     render.thumbnail = { file: image, bytes: fs.statSync(image).size, ...thumbnailRender };
+    pkg.renderVisuals = visualRender;
+    pkg.qualityGate = Quality.evaluatePackage(pkg);
+    write(path.join(outputDirectory, "quality-gate.json"), pkg.qualityGate);
   }
   const portableRender = JSON.parse(JSON.stringify(render));
   for (const key of ["audio", "video", "thumbnail"]) {
@@ -415,7 +539,8 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   const openingMax = Number(retention.openingMaxSeconds || 2.2);
   const secondBeatMax = Number(retention.secondBeatMaxSeconds || 6.2);
   const durationRange = channel.config.publishingCadence.shorts.targetDurationSeconds || [18, 35.2];
-  return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations: {
+  const visualQuality = options.render ? render.video.visualQuality : { decision: "PUBLISH", reasons: [] };
+  const validations = {
     script: !!script.spoken,
     science: topic.claimFramework.length >= 3,
     sources: topic.sources.length >= 2,
@@ -423,15 +548,20 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     timing: !options.render || (script.claims[0].end <= openingMax && script.claims[1].end <= secondBeatMax),
     audio: !options.render || (render.completed && render.video.hasAudio && render.audio.claimDurations.length === script.claims.length),
     captions: fs.existsSync(path.join(outputDirectory, "captions.srt")) && fs.existsSync(path.join(outputDirectory, "captions.ass")) && (!options.render || render.video.captionsBurned),
-    visuals: visuals.length >= 5 && (!options.render || (render.video.scenarioSpecific && render.video.illustrationLabel && render.video.visualChanges >= Math.ceil(render.video.durationSeconds / 3.5))),
+    visuals: visuals.length >= 5 && (!options.render || visualQuality.decision === "PUBLISH"),
     video: !options.render || (render.video.width === 1080 && render.video.height === 1920 && render.video.durationSeconds >= durationRange[0] && render.video.durationSeconds <= durationRange[1] + 0.2),
     titles: titles.length >= 20,
-    thumbnail: !options.render || (render.thumbnail.bytes > 0 && render.thumbnail.scenarioSpecific && render.thumbnail.textWords <= 3),
+    thumbnail: !options.render || (render.thumbnail.bytes > 0 && ["licensed-still", "number-card"].includes(render.thumbnail.sourceType) && render.thumbnail.textWords <= 3),
     description: metadata.description.includes("Sources:"),
     qualityGate: pkg.qualityGate.decision === "PUBLISH",
     metadata: metadata.uploadChannel === channel.slug && metadata.uploadEnabled === false,
     ...(growth ? { growthReadiness: growth.readiness.decision !== "BLOCK" } : {}),
-  } };
+  };
+  const validationReasons = {};
+  if (!validations.visuals) validationReasons.visuals = visualQuality.reasons || ["visual plan contains fewer than five scenes"];
+  if (!validations.thumbnail && options.render) validationReasons.thumbnail = [`thumbnail source ${render.thumbnail.sourceType} is neither a licensed still nor a sourced number card`];
+  if (!validations.qualityGate) validationReasons.qualityGate = pkg.qualityGate.blockers || [];
+  return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations, validationReasons };
 }
 
-module.exports = { srtTime, captions, assTime, assCaptions, probe, buildPackage };
+module.exports = { srtTime, captions, assTime, assCaptions, probe, drawtextSafe, scientificFrames, renderVideo, renderThumbnail, buildPackage };

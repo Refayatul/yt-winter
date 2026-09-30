@@ -40,18 +40,20 @@ async function get(url, options = {}) {
     await sleep((res.retryAfter || 0) * 1000 || 2000 * 2 ** attempt);
   }
 }
-function getOnce(url, { json = false, head = false, redirects = 5, browser = false } = {}) {
+function getOnce(url, { json = false, binary = false, head = false, redirects = 5, browser = false } = {}) {
   return new Promise((resolve) => {
     const request = https.request(url, { method: head ? "HEAD" : "GET", headers: { "User-Agent": browser ? BROWSER_UA : UA, Accept: json ? "application/json" : "*/*", "Accept-Encoding": "identity" }, timeout: 25000 }, (res) => {
       if ([301, 302, 303, 307, 308].includes(res.statusCode) && res.headers.location && redirects > 0) {
         res.resume();
-        return resolve(getOnce(new URL(res.headers.location, url).toString(), { json, head, redirects: redirects - 1, browser }));
+        return resolve(getOnce(new URL(res.headers.location, url).toString(), { json, binary, head, redirects: redirects - 1, browser }));
       }
       const parts = [];
       res.on("data", (d) => parts.push(d));
       res.on("end", () => {
-        const body = Buffer.concat(parts).toString("utf8");
+        const buffer = Buffer.concat(parts);
+        const body = binary ? buffer : buffer.toString("utf8");
         const retryAfter = Number(res.headers["retry-after"]) || 0;
+        if (binary) return resolve({ status: res.statusCode, body, retryAfter, contentType: res.headers["content-type"] || "" });
         if (!json) return resolve({ status: res.statusCode, body, retryAfter });
         try { resolve({ status: res.statusCode, body: JSON.parse(body), retryAfter }); } catch (e) { resolve({ status: res.statusCode, body: null, retryAfter }); }
       });
@@ -185,7 +187,7 @@ async function imageInfo(titles) {
   const out = [];
   for (let i = 0; i < titles.length; i += 20) {
     const batch = titles.slice(i, i + 20);
-    const info = await get("https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url|size|extmetadata&format=json&titles=" + encodeURIComponent(batch.join("|")), { json: true });
+    const info = await get("https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url|size|extmetadata&iiurlwidth=1600&format=json&titles=" + encodeURIComponent(batch.join("|")), { json: true });
     const pages = info.body && info.body.query ? Object.values(info.body.query.pages) : [];
     for (const title of batch) {
       const page = pages.find((p) => p.title === title);
@@ -195,7 +197,10 @@ async function imageInfo(titles) {
       const licence = meta.LicenseShortName ? meta.LicenseShortName.value : "";
       const strip = (v) => String(v && v.value || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").slice(0, 600);
       out.push({ file: title.replace(/^File:/, ""), licence, width: ii.width, height: ii.height,
-        categories: strip(meta.Categories), description: strip(meta.ImageDescription), taken: strip(meta.DateTimeOriginal).slice(0, 40) });
+        categories: strip(meta.Categories), description: strip(meta.ImageDescription), taken: strip(meta.DateTimeOriginal).slice(0, 40),
+        author: strip(meta.Artist) || strip(meta.Credit) || "Wikimedia Commons contributor",
+        sourceUrl: ii.descriptionurl || `https://commons.wikimedia.org/wiki/${encodeURIComponent(title.replace(/ /g, "_"))}`,
+        imageUrl: ii.thumburl || ii.url });
     }
     await sleep(250);
   }
@@ -216,6 +221,7 @@ async function commonsStills(queries, need = 7, wiki = null, options = {}) {
   const words = (q) => String(q).toLowerCase().split(/[^a-z0-9]+/).filter((w) => w.length >= 3 && !GENERIC.has(w));
   const keywordSets = (options.keywords || list).filter((q) => !/^Category:/i.test(q)).map(words).filter((set) => set.length);
   const keywords = [...new Set(keywordSets.flat())];
+  const subjectSets = (options.subjects || []).map(words).filter((set) => set.length);
   const year = options.year ? String(options.year) : null;
   const exclude = options.exclude || new Set();
   // Editorial rejections (name collisions such as a namesake general or a later
@@ -226,9 +232,15 @@ async function commonsStills(queries, need = 7, wiki = null, options = {}) {
     if (!usable(item) || exclude.has(item.file) || scored.some((x) => x.file === item.file)) return;
     if (reject.some((r) => item.file.toLowerCase().includes(r))) return;
     const text = `${item.file} ${item.categories || ""} ${item.description || ""}`.toLowerCase();
+    const namedText = `${item.file} ${item.description || ""}`.toLowerCase();
     // Never let a namesake search pull adult or otherwise unsafe material.
     if (UNSAFE.test(text)) return;
+    // IB/CT production can require the record's subject to appear in the file
+    // title or description. Categories alone are deliberately insufficient:
+    // broad Commons categories often contain visually plausible namesakes.
+    if (options.strictSubject && subjectSets.length && !subjectSets.some((set) => set.some((word) => namedText.includes(word)))) return;
     const strong = keywords.filter((k) => text.includes(k)).length;
+    const namedStrong = keywords.filter((k) => namedText.includes(k)).length;
     const fullMatch = keywordSets.some((set) => set.every((k) => text.includes(k)));
     const context = EVENT_WORDS.test(text) ? 1 : 0;
     const dated = year && (text.includes(year) || String(item.taken || "").includes(year)) ? 1 : 0;
@@ -238,8 +250,9 @@ async function commonsStills(queries, need = 7, wiki = null, options = {}) {
     // the case in full (all words of one query) in name/categories/description,
     // and must not be a photo taken in another year unless dated to the event.
     const nearYear = !takenYear || !year || Math.abs(Number(takenYear) - Number(year)) <= 2;
+    const searchMatch = options.strictSubject ? namedStrong >= 2 : fullMatch;
     const ok = origin === "wikipedia-article" || origin === "commons-category" ? (strong >= 1 || dated || origin === "commons-category") && !(origin === "commons-category" && otherYear && !dated)
-      : fullMatch && (takenYear ? nearYear : (dated || context));
+      : searchMatch && (takenYear ? nearYear : (dated || context || options.strictSubject));
     if (!ok) return;
     // Strict mode (namesake-prone cases: ships named after people, towns that
     // share a name): anything the article itself doesn't show must be dated to
@@ -253,31 +266,33 @@ async function commonsStills(queries, need = 7, wiki = null, options = {}) {
     const titles = ((page && page.images) || []).map((image) => image.title).filter((t) => /\.(jpe?g|png)$/i.test(t));
     for (const item of await imageInfo(titles)) consider(item, "wikipedia-article");
   }
-  // Curated Commons categories: explicit "Category:…" seeds plus categories
-  // whose title names the case (auto-discovered).
-  const categories = list.filter((q) => /^Category:/i.test(q));
-  for (const query of list.filter((q) => !/^Category:/i.test(q)).slice(0, 2)) {
-    const r = await get("https://commons.wikimedia.org/w/api.php?action=query&list=search&srnamespace=14&srlimit=10&format=json&srsearch=" + encodeURIComponent(query), { json: true });
-    for (const row of (r.body && r.body.query && r.body.query.search) || []) {
-      const title = row.title.toLowerCase();
-      // The category must carry the case's full name, generic words included
-      // ("Schoharie Creek Bridge", not just "Schoharie Creek").
-      const phrases = (options.phrases || []).map((p) => String(p).toLowerCase()).filter(Boolean);
-      const named = phrases.length ? phrases.some((p) => title.includes(p)) : keywordSets.some((set) => set.every((k) => title.includes(k)));
-      if (named && !categories.includes(row.title) && categories.length < 3) categories.push(row.title);
+  if (!options.articleOnly) {
+    // Curated Commons categories: explicit "Category:…" seeds plus categories
+    // whose title names the case (auto-discovered).
+    const categories = list.filter((q) => /^Category:/i.test(q));
+    for (const query of list.filter((q) => !/^Category:/i.test(q)).slice(0, 2)) {
+      const r = await get("https://commons.wikimedia.org/w/api.php?action=query&list=search&srnamespace=14&srlimit=10&format=json&srsearch=" + encodeURIComponent(query), { json: true });
+      for (const row of (r.body && r.body.query && r.body.query.search) || []) {
+        const title = row.title.toLowerCase();
+        // The category must carry the case's full name, generic words included
+        // ("Schoharie Creek Bridge", not just "Schoharie Creek").
+        const phrases = (options.phrases || []).map((p) => String(p).toLowerCase()).filter(Boolean);
+        const named = phrases.length ? phrases.some((p) => title.includes(p)) : keywordSets.some((set) => set.every((k) => title.includes(k)));
+        if (named && !categories.includes(row.title) && categories.length < 3) categories.push(row.title);
+      }
+      await sleep(200);
     }
-    await sleep(200);
-  }
-  for (const query of categories) {
-    const r = await get("https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtype=file&cmlimit=100&format=json&cmtitle=" + encodeURIComponent(query), { json: true });
-    const titles = ((r.body && r.body.query && r.body.query.categorymembers) || []).map((row) => row.title).filter((t) => /\.(jpe?g|png)$/i.test(t));
-    for (const item of await imageInfo(titles.slice(0, 60))) consider(item, "commons-category");
-  }
-  for (const query of list.filter((q) => !/^Category:/i.test(q))) {
-    if (scored.length >= need) break;
-    const search = await get("https://commons.wikimedia.org/w/api.php?action=query&list=search&srnamespace=6&srlimit=50&format=json&srsearch=" + encodeURIComponent(query + " filetype:bitmap"), { json: true });
-    const titles = ((search.body && search.body.query && search.body.query.search) || []).map((row) => row.title).filter((t) => /\.(jpe?g|png)$/i.test(t));
-    for (const item of await imageInfo(titles)) consider(item, "commons-search");
+    for (const query of categories) {
+      const r = await get("https://commons.wikimedia.org/w/api.php?action=query&list=categorymembers&cmtype=file&cmlimit=100&format=json&cmtitle=" + encodeURIComponent(query), { json: true });
+      const titles = ((r.body && r.body.query && r.body.query.categorymembers) || []).map((row) => row.title).filter((t) => /\.(jpe?g|png)$/i.test(t));
+      for (const item of await imageInfo(titles.slice(0, 60))) consider(item, "commons-category");
+    }
+    for (const query of list.filter((q) => !/^Category:/i.test(q))) {
+      if (scored.length >= need) break;
+      const search = await get("https://commons.wikimedia.org/w/api.php?action=query&list=search&srnamespace=6&srlimit=50&format=json&srsearch=" + encodeURIComponent(query + " filetype:bitmap"), { json: true });
+      const titles = ((search.body && search.body.query && search.body.query.search) || []).map((row) => row.title).filter((t) => /\.(jpe?g|png)$/i.test(t));
+      for (const item of await imageInfo(titles)) consider(item, "commons-search");
+    }
   }
   // At most two stills from the same series (e.g. "Anniversary Observance (1..4)").
   const prefix = (file) => file.toLowerCase().replace(/[\d()_.,-]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 28);
