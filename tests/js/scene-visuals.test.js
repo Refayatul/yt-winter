@@ -52,11 +52,15 @@ test("number cards use only number-and-unit tokens present in their narration li
   const line = "The rim spans 80,800 km and turns at 20–25 RPM.";
   assert.deepEqual(TopicVisuals.numberTokens(line), ["80,800 km", "20–25 RPM"]);
   assert.deepEqual(TopicVisuals.numberTokens("In 2011, it stopped."), ["2011"]);
+  assert.deepEqual(TopicVisuals.numberTokens("Drilling Kola SG-3 began in 1970."), ["SG-3", "1970"]);
   const script = { targetSeconds: 6, claims: [{ text: line, start: 0, end: 6 }] };
   const topic = { id: "IB-TEST", category: "SPACE", visualPotential: { scenes: ["rotating orbital habitat"] } };
   const plan = TopicVisuals.buildVisualPlan(topic, script, [], [3, 3], 6);
   const cards = plan.filter((item) => item.type === "number-card");
-  assert.ok(cards.length >= 1);
+  assert.equal(cards.length, 2);
+  assert.equal(new Set(cards.map((item) => item.sourceId)).size, 2);
+  assert.deepEqual(cards[0].comparison, ["80,800 km", "20–25 RPM"]);
+  assert.deepEqual(cards[1].numbers, ["20–25 RPM"]);
   assert.ok(cards.every((item) => item.numbers.every((token) => item.claimText.includes(token))));
   assert.equal(TopicVisuals.visualMetrics(plan).cardNumbersValid, true);
 });

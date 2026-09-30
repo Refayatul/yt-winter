@@ -8,7 +8,7 @@ const { ROOT } = require("../channel-context");
 
 const CACHE_SCHEMA = 1;
 const MAX_HOLD_SECONDS = 4;
-const NUMBER_RE = /\d[\d,]*(?:\.\d+)?(?:\s*[–—-]\s*\d[\d,]*(?:\.\d+)?)?(?:\s*-?\s*(?:%|percent|rpm|km\/h|m\/s|mph|nm|nanometres?|nanometers?|μm|um|micrometres?|micrometers?|km|kilometres?|kilometers?|millimetres?|millimeters?|centimetres?|centimeters?|metres?|meters?|kg|kV|V|volts?|GW|MW|watts?|tons?|seconds?|minutes?|hours?|days?|years?|nautical\s+miles?|miles?|feet|inches?|litres?|liters?|°C|degrees?|million|billion|thousand|barrels?(?:\s+(?:per|a)\s+day)?|light-seconds?))?/gi;
+const NUMBER_RE = /\b[A-Z]{1,6}-\d+\b|\d[\d,]*(?:\.\d+)?(?:\s*[–—-]\s*\d[\d,]*(?:\.\d+)?)?(?:\s*-?\s*(?:%|percent|rpm|km\/h|m\/s|mph|nm|nanometres?|nanometers?|μm|um|micrometres?|micrometers?|km|kilometres?|kilometers?|millimetres?|millimeters?|centimetres?|centimeters?|metres?|meters?|kg|kV|V|volts?|GW|MW|watts?|tons?|seconds?|minutes?|hours?|days?|years?|nautical\s+miles?|miles?|feet|inches?|litres?|liters?|°C|degrees?|million|billion|thousand|barrels?(?:\s+(?:per|a)\s+day)?|light-seconds?))?/gi;
 
 function numberTokens(text) {
   return [...new Set((String(text || "").match(NUMBER_RE) || []).map((value) => value.replace(/\s+/g, " ").replace(/[.,]$/, "").trim()))];
@@ -76,6 +76,7 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
   const scenes = scenesFor(topic);
   let stillIndex = 0;
   let preferPhoto = true;
+  const cardUses = new Map();
   const plan = [];
 
   for (let shotIndex = 0; shotIndex < boundaries.length - 1; shotIndex += 1) {
@@ -93,8 +94,21 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     else if (numbers.length) type = "number-card";
     else type = "procedural";
 
-    const cardSourceId = `card:${claimIndex}:${shortHash(numbers.join("|"))}`;
+    let cardNumbers = numbers;
+    let comparison = numbers.length >= 2 ? numbers.slice(0, 2) : [];
+    if (type === "number-card") {
+      const use = cardUses.get(claimIndex) || 0;
+      // The first card preserves the line's comparison. If a long claim earns
+      // another paced cut, focus that genuinely different card on one of the
+      // other sourced values instead of replaying and counting the same card.
+      if (use > 0 && numbers.length > 1) {
+        cardNumbers = [numbers[use % numbers.length]];
+        comparison = [];
+      }
+    }
+    const cardSourceId = `card:${claimIndex}:${shortHash(cardNumbers.join("|"))}`;
     if (type === "number-card" && plan.length && plan[plan.length - 1].sourceId === cardSourceId) type = "procedural";
+    else if (type === "number-card") cardUses.set(claimIndex, (cardUses.get(claimIndex) || 0) + 1);
 
     let sourceId;
     let still = null;
@@ -121,8 +135,8 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
       scene: scenes[claimIndex % Math.max(1, scenes.length)] || claim.text,
       type,
       sourceId,
-      numbers,
-      comparison: numbers.length >= 2 ? numbers.slice(0, 2) : [],
+      numbers: type === "number-card" ? cardNumbers : numbers,
+      comparison: type === "number-card" ? comparison : [],
       still,
       proceduralFrame,
     });
