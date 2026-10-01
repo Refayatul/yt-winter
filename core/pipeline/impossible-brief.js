@@ -65,6 +65,25 @@ function recordBlocked(channel, topic, reason) {
   fs.writeFileSync(file, JSON.stringify(blocked, null, 2) + "\n");
 }
 
+// A render rejected only by the visual gate (too few licensed stills or
+// sourced number cards, or no usable thumbnail source) is a property of the
+// topic, not of this run. Returns the reason, or null when anything else
+// failed or the Commons fetch itself errored (a transient fault must not block
+// the topic forever).
+function visualRejection(result, output) {
+  const failed = Object.entries(result.validations).filter(([, passed]) => !passed).map(([name]) => name);
+  if (!failed.length || !failed.some((name) => name === "visuals" || name === "thumbnail")) return null;
+  if (!failed.every((name) => ["visuals", "thumbnail", "qualityGate"].includes(name))) return null;
+  const reasons = result.validationReasons || {};
+  if (failed.includes("qualityGate") && !(reasons.qualityGate || []).every((reason) => /^rendered visuals: /.test(reason))) return null;
+  try {
+    if (JSON.parse(fs.readFileSync(path.join(output, "visual-attribution.json"), "utf8")).error) return null;
+  } catch (error) { return null; }
+  return failed.map((name) => `${name}: ${(reasons[name] || []).join("; ") || "failed"}`).join(" | ");
+}
+
+const MAX_RENDER_ATTEMPTS = 3;
+
 // Growth-engine topic choice: A/B first, C deliberately, D never; a topic
 // whose pre-render readiness is BLOCK is recorded and the next one is tried.
 function chooseTopic(channel, explicit, universe) {
@@ -96,29 +115,44 @@ function runChannel(slug, argv = []) {
     if (!due.due) { console.log(`[${channel.name}] Takvim: henuz degil`); return 0; }
   }
   const universe = Discovery.universe(channel).topics;
-  const choice = chooseTopic(channel, explicit, universe);
-  if (!choice.topic) {
-    // Quality over cadence: no weak topic is produced to fill the slot. The
-    // skip is an actionable alert, not a pipeline failure.
-    GrowthRuntime.alert(channel, "NO_QUALIFIED_TOPIC", choice.reason, { inventory: choice.inventory || null });
-    console.log(`::warning::[${channel.name}] ${choice.reason}`);
-    return 0;
-  }
-  const topic = choice.topic;
   const noRender = argv.includes("--no-render");
-  const output = path.join(channel.paths.production, topic.slug);
-  const result = Rendering.buildPackage(topic, channel, output, { render: !noRender, growthPlan: choice.plan });
-  const finalPlan = !noRender && result.render.completed
-    ? Growth.planShort(channel, topic.id, {
-      legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true, stage: "final",
-      assignExperiment: true, write: true, selection: choice.plan.topicDecision,
-      render: { completed: true, syntheticVoice: result.render.audio.syntheticVoice, hasAudio: result.render.video.hasAudio, captionsBurned: result.render.video.captionsBurned,
-        width: result.render.video.width, height: result.render.video.height, durationSeconds: result.render.video.durationSeconds },
-    })
-    : choice.plan;
-  fs.writeFileSync(path.join(output, "readiness.json"), JSON.stringify(finalPlan.readiness, null, 2) + "\n");
-  const validationEvidence = writeValidationEvidence(result, topic, channel, output);
-  if (!validationEvidence.passed) throw new Error(`${channel.name} package failed quality validation: ${validationEvidence.failed.join(", ")}`);
+  let choice, topic, output, result, finalPlan;
+  for (let attempt = 1; ; attempt += 1) {
+    choice = chooseTopic(channel, explicit, universe);
+    if (!choice.topic) {
+      // Quality over cadence: no weak topic is produced to fill the slot. The
+      // skip is an actionable alert, not a pipeline failure.
+      GrowthRuntime.alert(channel, "NO_QUALIFIED_TOPIC", choice.reason, { inventory: choice.inventory || null });
+      console.log(`::warning::[${channel.name}] ${choice.reason}`);
+      return 0;
+    }
+    topic = choice.topic;
+    output = path.join(channel.paths.production, topic.slug);
+    result = Rendering.buildPackage(topic, channel, output, { render: !noRender, growthPlan: choice.plan });
+    finalPlan = !noRender && result.render.completed
+      ? Growth.planShort(channel, topic.id, {
+        legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true, stage: "final",
+        assignExperiment: true, write: true, selection: choice.plan.topicDecision,
+        render: { completed: true, syntheticVoice: result.render.audio.syntheticVoice, hasAudio: result.render.video.hasAudio, captionsBurned: result.render.video.captionsBurned,
+          width: result.render.video.width, height: result.render.video.height, durationSeconds: result.render.video.durationSeconds },
+      })
+      : choice.plan;
+    fs.writeFileSync(path.join(output, "readiness.json"), JSON.stringify(finalPlan.readiness, null, 2) + "\n");
+    const validationEvidence = writeValidationEvidence(result, topic, channel, output);
+    if (validationEvidence.passed) break;
+    // Without this the same top-ranked topic would be re-selected and fail on
+    // every scheduled run, stalling the channel.
+    const visualReason = !noRender && !explicit ? visualRejection(result, output) : null;
+    if (!visualReason) throw new Error(`${channel.name} package failed quality validation: ${validationEvidence.failed.join(", ")}`);
+    recordBlocked(channel, topic, `render visual gate: ${visualReason}`);
+    GrowthRuntime.alert(channel, "VISUAL_GATE_BLOCK", topic.slug, { reason: visualReason, attempt });
+    console.log(`::warning::[${channel.name}] visual gate BLOCK for ${topic.slug}: ${visualReason}`);
+    if (attempt >= MAX_RENDER_ATTEMPTS) {
+      GrowthRuntime.alert(channel, "NO_QUALIFIED_TOPIC", `${MAX_RENDER_ATTEMPTS} consecutive visual gate blocks`, {});
+      console.log(`::warning::[${channel.name}] ${MAX_RENDER_ATTEMPTS} consecutive visual gate blocks; slot skipped (quality over cadence)`);
+      return 0;
+    }
+  }
   writeCompatibilityFiles(result, topic, channel);
   let uploadStatus = process.env.PUBLISH === "1" ? "pending" : "skipped (PUBLISH!=1)";
   if (process.env.PUBLISH === "1") {
@@ -145,4 +179,4 @@ function runChannel(slug, argv = []) {
 
 function main(argv = []) { return runChannel("impossible-brief", argv); }
 
-module.exports = { writeCompatibilityFiles, writeValidationEvidence, runChannel, main };
+module.exports = { writeCompatibilityFiles, writeValidationEvidence, visualRejection, runChannel, main };
