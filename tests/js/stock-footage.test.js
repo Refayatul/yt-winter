@@ -26,6 +26,11 @@ test("stock footage: the page slug must name the topic, and people clips are rej
   assert.equal(Stock.accept(video(5, "helicopter-on-a-landing-pad-near-mont-blanc"), terms, subject), false, "place name is not the subject");
   assert.equal(Stock.accept(video(6, "firefighter-loading-equipment-in-a-tunnel"), terms, subject), false, "uniformed crew");
   assert.equal(Stock.accept(video(7, "car-entering-a-road-tunnel-in-snow"), terms, subject), true);
+  // Second dry run (run 36920857486): a metro station for an Alpine road tunnel.
+  const roadTopic = "inside the system built around road tunnel ventilation road tunnel ventilation system roads and bridges";
+  assert.equal(Stock.accept(video(8, "a-subway-train-is-traveling-through-a-tunnel"), terms, subject, roadTopic), false, "metro for a road tunnel");
+  assert.equal(Stock.accept(video(9, "a-train-entering-a-tunnel"), terms, subject, roadTopic + " rail"), true, "train fits a rail topic");
+  assert.equal(Stock.modeConflict(["cargo", "ship", "at", "port"], "the ports that move global trade"), false);
 });
 
 test("stock footage: only portrait HD MP4 files are used, closest to 1920 tall", () => {
