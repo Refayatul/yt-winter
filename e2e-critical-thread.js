@@ -31,6 +31,10 @@ console.log(`CriticalThread E2E: ${pass ? "PASS" : "FAIL"} — ${topic.topic}${r
 if (!pass) {
   const failed = Object.entries(result.validations).filter(([, value]) => !value).map(([name]) => name);
   console.error(`Failed validations: ${failed.join(", ")}`);
+  for (const name of failed) {
+    const reasons = result.validationReasons && result.validationReasons[name];
+    if (Array.isArray(reasons) && reasons.length) console.error(`  ${name}: ${reasons.join("; ")}`);
+  }
   if (render && result.render.video) {
     console.error(`Render evidence: duration=${result.render.video.durationSeconds}s resolution=${result.render.video.width}x${result.render.video.height} audio=${result.render.video.hasAudio} visualChanges=${result.render.video.visualChanges}`);
   }
