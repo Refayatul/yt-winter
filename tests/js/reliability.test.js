@@ -106,6 +106,13 @@ test("workflow sends actual production result before one historical backlog item
   assert.doesNotMatch(source, /^\s*if:\s*!inputs/m, "YAML tag syntax must not break the reusable workflow");
 });
 
+test("pull-request E2E recognizes safe rejections from both quality gates", () => {
+  const source = fs.readFileSync(path.join(KOK, ".github", "workflows", "test.yml"), "utf8");
+  assert.match(source, /quality-gate\.json/);
+  assert.match(source, /growth-plan\.json/);
+  assert.match(source, /\["BLOCK", "REVIEW"\]\.includes\(gate\.decision\)/);
+});
+
 test("comment replies run independently every four hours with a conservative cap", () => {
   const replies = fs.readFileSync(path.join(KOK, ".github", "workflows", "yorum-yanitla.yml"), "utf8");
   const production = fs.readFileSync(path.join(KOK, ".github", "workflows", "uretim-is.yml"), "utf8");
