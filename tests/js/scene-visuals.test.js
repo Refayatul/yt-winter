@@ -2,6 +2,8 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("fs");
+const path = require("path");
 const TopicVisuals = require("../../core/rendering/topic-visuals");
 const Rendering = require("../../core/rendering");
 const PackageQuality = require("../../core/quality/impossible-brief");
@@ -68,4 +70,28 @@ test("number cards use only number-and-unit tokens present in their narration li
 test("number-card type scales down wide sourced values to stay inside the card", () => {
   assert.ok(Rendering.numberCardFontSize("30 MINUTES") <= 122);
   assert.ok(Rendering.numberCardFontSize("80,800 KM  VS  20–25 RPM") < Rendering.numberCardFontSize("7 MILLION"));
+});
+
+test("pipeline skips a topic rejected only by the rendered-visual gate", () => {
+  const os = require("os");
+  const { visualRejection } = require("../../core/pipeline/impossible-brief");
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), "visual-rejection-"));
+  const attribution = (error) => fs.writeFileSync(path.join(directory, "visual-attribution.json"), JSON.stringify({ count: 1, stills: [], error }));
+  const result = (validations, validationReasons) => ({ validations: { script: true, audio: true, ...validations }, validationReasons });
+  const visualBlock = result({ visuals: false, qualityGate: false }, {
+    visuals: ["requires 2 licensed real images or 5 number cards (got 1 images, 1 cards)"],
+    qualityGate: ["rendered visuals: requires 2 licensed real images or 5 number cards (got 1 images, 1 cards)"],
+  });
+
+  attribution(null);
+  assert.match(visualRejection(visualBlock, directory), /requires 2 licensed real images/);
+  // A Commons fetch failure is transient: the topic must not be blocked forever.
+  attribution("visual cache preparation failed");
+  assert.equal(visualRejection(visualBlock, directory), null);
+  attribution(null);
+  // Any non-visual failure keeps the old hard failure.
+  assert.equal(visualRejection(result({ visuals: false, audio: false }, {}), directory), null);
+  assert.equal(visualRejection(result({ visuals: false, qualityGate: false }, { qualityGate: ["unsupported claim"] }), directory), null);
+  assert.equal(visualRejection(result({ qualityGate: false }, { qualityGate: ["rendered visuals: x"] }), directory), null);
+  assert.equal(visualRejection(result({}, {}), directory), null);
 });
