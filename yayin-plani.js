@@ -11,13 +11,15 @@
 // Kullanim: node yayin-plani.js            durum
 //           node yayin-plani.js --kontrol short   (cikis kodu 0 = uygun, 3 = henuz degil)
 "use strict";
-const SELECTED = require("./core/channel-context").selectFromArgv(process.argv.slice(2));
+const Channel = require("./core/channel-context");
+const SELECTED = Channel.selectFromArgv(process.argv.slice(2));
+const Calendar = require("./core/scheduling/calendar");
 const { ayar } = require("./lib/ayar");
 const K = require("./lib/kutuphane");
 
-// GitHub zamanlanmis isleri saatlerce gecikebilir (olculen: 16:00 cron 19:46'da basladi).
-// Dunku gec calisma bugunku zamaninda calismayi bloklamasin: aralik yarisi kadar
-// tolerans (gunluk yayinda 12 sa). Gunde tek cron oldugu icin ayni gun cift yayin olmaz.
+// Uzun video icin yuvarlanan aralik toleransi (GitHub cron gecikmesi). Shorts
+// takvim gunune baglidir (core/scheduling/calendar.js): Europe/Istanbul gununde
+// kanal basina tek Short; dunku 21:00 videosu bu sabahki uretimi bloklamaz.
 const toleransSaat = (gun) => Math.min(12, gun * 24 / 2);
 
 function durum(format, simdi = new Date(), kayit = K.yayinlananlar(), kalite = K.kaliteKayitlari()) {
@@ -31,6 +33,13 @@ function durum(format, simdi = new Date(), kayit = K.yayinlananlar(), kalite = K
   const sorunlu = sonKararlar.filter((k) => k === "BLOCK" || (p.stretchOnReview && k === "REVIEW")).length;
   const esnetme = sorunlu >= (p.stretchWhenRecentBlocks || 2) ? Math.min(f.maxStretchDays - f.everyDays, sorunlu - 1) : 0;
   const aralik = f.everyDays + Math.max(0, esnetme);
+  if (format === "short") {
+    const gun = Calendar.shortDecision(Channel.getChannel(), kayit, simdi, { everyDays: aralik });
+    return { format, sonYayin: son ? son.toISOString() : null, aralikGun: aralik, taban: f.everyDays, esnetme,
+      sonKararlar, uygun: gun.due, bugun: gun.today, uretimSaati: gun.productionAt, yayinSaati: gun.publishAt,
+      sonrakiUygun: gun.due ? simdi.toISOString() : gun.productionAt,
+      neden: gun.reason + (esnetme ? ` (stretched +${esnetme}d: recent gate results ${sonKararlar.join(", ")})` : "") };
+  }
   const sonraki = son ? new Date(son.getTime() + aralik * 86400000 - toleransSaat(aralik) * 3600000) : simdi;
   const uygun = !son || simdi >= sonraki;
   return { format, sonYayin: son ? son.toISOString() : null, aralikGun: aralik, taban: f.everyDays, esnetme,

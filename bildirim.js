@@ -179,7 +179,7 @@ function bosGunMesaji(v) {
   if (v.bugunVar || !v.kalanKonu) return null;
   return { baslik: kanalBaslik(`🚨 Bugün video üretilmedi — ${v.tarih}`), etiket: ["hata"], govde: [
     `@${SAHIP} bugün (${v.tarih}) hiç video üretilmedi ve kuyrukta ${v.kalanKonu} konu bekliyor.`, "",
-    "Bunun tek bilinen nedeni: GitHub günün **tüm** zamanlanmış denemelerini atlamış olması (07:23–16:23 UTC arası 10 deneme).", "",
+    "Bunun tek bilinen nedeni: GitHub günün **tüm** zamanlanmış denemelerini atlamış olması (09:00–19:23 TR arası tüm denemeler).", "",
     "**Yapılacak:** Actions → *Multi-channel portfolio production* → **Run workflow**. İlgili kanalı seçip çalıştır.",
     `${v.sunucu}/${REPO}/actions/workflows/portfolio-production.yml`, "",
     "Yarınki otomatik çalışma bundan etkilenmez.",
@@ -339,10 +339,16 @@ async function yayinKontrol(d) {
 
 async function gunKontrol(d) {
   const K = require("./lib/kutuphane");
-  const g = bugun();
+  const Calendar = require("./core/scheduling/calendar");
+  const tz = CHANNEL.config.timezone || Calendar.DEFAULT_TIME_ZONE;
+  const g = Calendar.dayKey(new Date(), tz);
   if (d.gonderilen["bosgun:" + g]) return;
-  // Bugun URETILDI mi (yukleme ani) ya da bugune PLANLANDI mi — ikisi de "gun dolu" sayilir
-  const bugunVar = K.yayinlananlar().some((y) => String(y.tarih || "").startsWith(g) || String(y.publishAt || "").startsWith(g));
+  // Alarm yalnizca uretim SLA son saatinden sonra: sabah slotlari (09:00/09:30/10:00 TR)
+  // ile son saat arasinda saatlik yeniden denemeler hala bugunun Short'unu uretebilir.
+  const sonSaat = process.env.PRODUCTION_DEADLINE_UTC || "16:30";
+  if (Date.now() < Date.parse(`${new Date().toISOString().slice(0, 10)}T${sonSaat}:00Z`)) { console.log(`Uretim son saati (${sonSaat} UTC) henuz gelmedi — bos gun kontrolu atlandi.`); return; }
+  // Bugun (Europe/Istanbul takvim gunu) URETILDI mi ya da bugune PLANLANDI mi — ikisi de "gun dolu" sayilir
+  const bugunVar = !!Calendar.shortForDay(K.yayinlananlar(), g, tz);
   const m = bosGunMesaji({ tarih: g, bugunVar, kalanKonu: K.kuyruk().length, sunucu: process.env.GITHUB_SERVER_URL || "https://github.com" });
   if (!m) { console.log(bugunVar ? "Bugun video uretildi — alarm yok." : "Kuyruk bos — alarm yok."); return; }
   await issueAc(m);

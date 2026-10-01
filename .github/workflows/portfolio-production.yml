@@ -3,8 +3,18 @@ name: Multi-channel portfolio production
 # All channels run in one serialized portfolio lane so maxConcurrentRenders /
 # maxConcurrentUploads=1 is physically enforced. Every channel step is failure
 # isolated; one failed identity cannot stop either of the other channels.
+#
+# Shorts production slots (Europe/Istanbul, UTC+3; each channel's config.json
+# publishingCadence.shorts.productionTime): Failure Reconstructed 09:00,
+# ImpossibleBrief 09:30, CriticalThread 10:00. Every uploaded Short is scheduled
+# to go public at 21:00 TR (18:00 UTC) the same day. Eligibility is one Short
+# per channel per Istanbul calendar day, so the hourly retries below only
+# produce for a channel whose slot has passed and whose day is still empty.
 on:
   schedule:
+    - cron: '0 6 * * *'
+    - cron: '30 6 * * *'
+    - cron: '0 7 * * *'
     - cron: '23 7 * * *'
     - cron: '23 8 * * *'
     - cron: '23 9 * * *'

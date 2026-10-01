@@ -8,6 +8,7 @@ const path = require("path");
 const Channel = require("./core/channel-context");
 const Library = require("./core/analytics/library-health");
 const Scheduling = require("./core/scheduling");
+const Calendar = require("./core/scheduling/calendar");
 
 function read(file, fallback) {
   try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch (error) { return fallback; }
@@ -78,7 +79,7 @@ function performance(rows, format) {
 
 function publicationForDate(rows, date, format = "short") {
   return rows.filter((row) => (row.format || "short") === format &&
-    (String(row.publishAt || "").slice(0, 10) === date || String(row.tarih || row.generatedAt || "").slice(0, 10) === date))
+    (Calendar.dayKey(row.publishAt) === date || Calendar.dayKey(row.tarih || row.generatedAt) === date))
     .sort((a, b) => String(a.tarih || "").localeCompare(String(b.tarih || ""))).pop() || null;
 }
 
@@ -119,7 +120,7 @@ function channelReport(channel, date, now) {
   const failures = (Array.isArray(failed) ? failed.length : Object.keys(failed || {}).length) +
     Object.keys(blocked || {}).length + Object.keys(review || {}).length;
   const youtubeUploaded = !!(short && short.videoId);
-  const youtubeScheduled = !!(short && short.publishAt && String(short.publishAt).slice(0, 10) === date);
+  const youtubeScheduled = !!(short && short.publishAt && Calendar.dayKey(short.publishAt) === date);
   const deadline = new Date(`${date}T16:30:00.000Z`);
   const schedulerHealth = youtubeScheduled ? "healthy" : now < deadline ? "pending-before-deadline" : "sla-missed-or-channel-disabled";
   const tiktok = tikTokState(channel, short && short.slug);
@@ -147,7 +148,7 @@ function channelReport(channel, date, now) {
 }
 
 function build(now = new Date()) {
-  const date = now.toISOString().slice(0, 10);
+  const date = Calendar.dayKey(now);
   const channels = Object.keys(Channel.registry().channels).map((slug) => channelReport(Channel.getChannel(slug), date, now));
   return { generatedAt: now.toISOString(), date, channels };
 }

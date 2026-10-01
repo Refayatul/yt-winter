@@ -240,8 +240,10 @@ async function main() {
     const kapi = require("./lib/ortak").jsonOku(require("./lib/kutuphane").paketYolu(IS, "quality-gate.json"), null);
     kapiKarari = kapi ? (kapi.karar || kapi.decision) : null;
     if (plan.enabled && gizlilik === "private" && !argv.includes("--zamanlama-yok") && kapiKarari && (plan.gates || []).includes(kapiKarari)) {
-      const dolu = require("./lib/kutuphane").yayinlananlar().map((y) => y.publishAt);
-      publishAt = require("./lib/zamanlama").sonrakiSlot(new Date(), plan.hourUTC, plan.minLeadHours, dolu).toISOString();
+      // Bugunun yerel yayin saati (Europe/Istanbul 21:00), gun bossa ve hala
+      // gelecekteyse; yoksa sonraki bos gun. Uretim penceresi (calendar.js)
+      // uretimin bu saatten en az minLeadMinutes once baslamasini zaten saglar.
+      publishAt = require("./core/scheduling/calendar").publishSlot(CHANNEL, require("./lib/kutuphane").yayinlananlar(), new Date()).toISOString();
       status.publishAt = publishAt;
     }
   } catch (e) { console.log("  (zamanlama atlandi: " + e.message + ")"); }
