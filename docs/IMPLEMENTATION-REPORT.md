@@ -85,7 +85,7 @@ See `docs/CHANNEL-AUDIT.md`. The most important:
 2. **Analytics are currently public counters only** (no watch time, retention or traffic) until that re-auth. Diagnoses are limited accordingly and are labelled that way.
 3. **Heuristic scores** (title, hook, gate) are editorial aids, not predictions. Calibrate the thresholds in `config/growth.json` once ≥20 videos have 7-day data.
 4. **Shorts thumbnails** cannot be set meaningfully via the API. The opening frame and the on-screen hook do that job.
-5. **Comment replies stay template-based** (capped at 8/day). Consider reducing or switching to manual if they start to look repetitive.
+5. **Comment replies stay template-based** and run independently every four hours (capped at 4/run). Consider reducing or switching to manual if they start to look repetitive.
 6. **Manual Studio steps** remain: pinning comments, the Shorts "related video" link and long-form end screens.
 7. **The long-form pipeline needs a script source**: a hand-written script or `ANTHROPIC_API_KEY` for `senaryo-claude.js` (a paid API). The daily Shorts are fully free.
 8. The render adds zoompan on push/drift shots, which makes a Short take ~1m40s to render locally. This is fine on Actions (120 min timeout).

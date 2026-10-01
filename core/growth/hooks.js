@@ -19,13 +19,14 @@ const CLICKBAIT = /\b(shocking|insane|unbelievable|you won'?t believe|mind[- ]bl
 const FAMILIES = [
   "shocking_consequence", "tiny_cause_massive_consequence", "hidden_cause", "contradiction", "countdown", "warning_ignored",
   "system_dependency", "impossible_sounding_fact", "misconception_reversal", "visual_first_reveal", "unexpected_chain_reaction",
-  "scarcity_bottleneck", "before_after_consequence", "impossible_question", "question_gap",
+  "scarcity_bottleneck", "before_after_consequence", "impossible_question", "question_gap", "human_consequence", "number_anomaly", "mechanism_reveal",
 ];
 
 const VISUAL_BASE = {
   visual_first_reveal: 92, shocking_consequence: 85, countdown: 80, unexpected_chain_reaction: 76, before_after_consequence: 76,
   impossible_sounding_fact: 70, tiny_cause_massive_consequence: 72, system_dependency: 70, scarcity_bottleneck: 66, contradiction: 66,
   warning_ignored: 68, hidden_cause: 64, misconception_reversal: 62, impossible_question: 70, question_gap: 55,
+  human_consequence: 82, number_anomaly: 78, mechanism_reveal: 72,
 };
 
 const words = (text) => String(text || "").split(/\s+/).filter(Boolean);
@@ -187,6 +188,17 @@ function build(topic, config) {
     const lead = sentences(topic.hookText)[0];
     if (lead && compress(lead, max)) add(candidate("countdown", compress(lead, max), topic, ["hookText"], { editorial: true }));
   }
+  // Explicit additional strategies required by the competition set. These
+  // candidates are assembled only from sourced narration/evidence.
+  const sourcedSentences = [...(topic.narration || []), ...(topic.evidence || []).map((item) => item.claim)].flatMap(sentences);
+  const human = sourcedSentences.find((text) => /\b(crew|people|lives|passengers|workers|children|killed|died|survivors?|victims?)\b/i.test(text) && compress(text, max));
+  if (human) add(candidate("human_consequence", compress(human, max), topic, ["evidence"]));
+  const anomaly = sourcedSentences.find((text) => /\d/.test(text) && /\b(only|more than|less than|times|percent|%|seconds?|minutes?|hours?|crew|people|workers|passengers)\b/i.test(text) && !DATE_OPENING.test(text) && compress(text, max));
+  if (anomaly) add(candidate("number_anomaly", compress(anomaly, max), topic, ["evidence"]));
+  if (topic.mechanism && topic.subject) {
+    const reveal = compress(`${Model.capital(topic.subject)} failed because ${Model.lower(topic.mechanism)}`, max);
+    if (reveal) add(candidate("mechanism_reveal", reveal, topic, ["mechanism", "subject"]));
+  }
   return out;
 }
 
@@ -226,6 +238,12 @@ function score(hook, topic, config, templated = [], options = {}) {
     VisualCompatibility: clamp((VISUAL_BASE[hook.family] || 60) + (topic.archivalFilm ? 8 : 0) + ((topic.visualScenes || []).length >= 4 ? 4 : 0)),
     ChannelFit: clamp(50 + Math.min(4, lexiconHits(text, config.lexicon)) * 10 + ((config.hooks.preferredFamilies || []).includes(hook.family) ? 10 : 0)),
   };
+  scores.ImmediateComprehension = clamp(scores.Clarity * 0.7 + (hasSubject ? 25 : 10) + (count <= 10 ? 8 : 0));
+  scores.RetentionExpectation = clamp(scores.CuriosityGap * 0.55 + scores.SwipeStoppingPower * 0.45);
+  scores.VoiceoverNaturalness = clamp(100 - Math.max(0, count - 10) * 5 - Math.max(0, (text.match(/[,;:]/g) || []).length - 1) * 10);
+  scores.FirstFrameCompatibility = scores.VisualCompatibility;
+  scores.FactualDefensibility = scores.Credibility;
+  scores.ShortFormSuitability = clamp((count >= 4 && count <= config.hooks.maxSpokenWords ? 92 : 55) + (seconds <= 3.5 ? 5 : -10));
   const weights = config.hooks.weights;
   const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
   const total = Math.round(Object.entries(weights).reduce((sum, [key, weight]) => sum + scores[key] * weight, 0) / totalWeight);

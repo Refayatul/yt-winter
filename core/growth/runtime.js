@@ -75,9 +75,11 @@ async function analyticsPass(channel, videos, measure, options = {}) {
   const Config = require("./config");
   const Diagnosis = require("./diagnosis");
   const Learning = require("./learning");
+  const Performance = require("./performance");
   const config = Config.forChannel(channel);
   const now = options.now || new Date();
   const rows = Analytics.readAll(channel);
+  const ctx = require("./context").build(channel, { performanceRows: rows.filter((row) => row.contentType === "short") });
   const results = [];
   for (const video of videos) {
     if (!video || !video.status || video.status.privacyStatus !== "public") continue;
@@ -86,17 +88,22 @@ async function analyticsPass(channel, videos, measure, options = {}) {
     const label = Analytics.dueCheckpoint(video.snippet.publishedAt, now, done, config);
     if (!label) continue;
     const measurement = await measure(video);
-    if (!existing) Analytics.registerVideo(channel, { videoId: video.id, channel: channel.slug, contentType: measurement.format === "long" ? "long" : "short", title: video.snippet.title, publishAt: video.snippet.publishedAt, durationSeconds: measurement.sureSn, registeredBy: "analytics-pass" });
+    const publication = ctx.history.published.find((item) => item.videoId === video.id) || {};
+    const topic = ctx.inventory.find((item) => item.slug === publication.slug || item.id === publication.topicId);
+    Analytics.registerVideo(channel, { ...(existing || {}), videoId: video.id, channel: channel.slug, contentType: measurement.format === "long" ? "long" : "short", slug: publication.slug || existing && existing.slug || null, topicCluster: topic && topic.cluster || existing && existing.topicCluster || null, title: video.snippet.title, publishAt: video.snippet.publishedAt, durationSeconds: measurement.sureSn || existing && existing.durationSeconds, registeredBy: existing && existing.registeredBy || "analytics-pass" });
     const row = Analytics.recordCheckpoint(channel, video.id, label, measurement);
-    row.durationSeconds = row.durationSeconds || measurement.sureSn;
     results.push({ videoId: video.id, label, row });
   }
-  const all = Analytics.readAll(channel);
+  const all = Performance.refresh(channel, Analytics.readAll(channel));
   const baselines = Analytics.baselines(channel, all);
   const diagnoses = Store.readState(channel, "growth", "diagnoses.json", []);
-  for (const { videoId, label, row } of results) {
+  for (const { videoId, label } of results) {
     if (!config.diagnosis.checkpoints.includes(label)) continue;
+    const row = all.find((item) => item.videoId === videoId);
+    if (!row) continue;
     const diagnosis = Diagnosis.diagnose(row, baselines, config, { checkpoint: label });
+    if (row.performance && row.performance.plateau) diagnosis.diagnoses.unshift({ code: "EARLY_DISTRIBUTION_PLATEAU", confidence: "medium", evidence: `${row.performance.plateau.earlyViews} → ${row.performance.plateau.latestViews} views; later/early velocity ${row.performance.plateau.velocityRatio}`, recommendation: "Treat listed causes as hypotheses; change one opening, duration or topic variable on a future upload." });
+    if (row.performance && row.performance.breakout) diagnosis.diagnoses.unshift({ code: "BREAKOUT", confidence: baselines.short.n >= 10 ? "medium" : "low", evidence: row.performance.breakout.signals.join("; "), recommendation: "Nominate adjacent same-cluster topics without duplicating this event." });
     diagnoses.push({ ...diagnosis, at: now.toISOString() });
     console.log(analyticsSummary(channel, row, diagnosis));
   }

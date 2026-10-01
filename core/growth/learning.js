@@ -24,7 +24,7 @@ const DIMENSIONS = {
 const FILE = "growth-learning.json";
 
 function empty(channel) {
-  const block = () => ({ sampleSize: 0, baselines: {}, observations: [], hypotheses: [], adopted: [], adoptedWeights: {}, adoptedHookFamilyBonus: {} });
+  const block = () => ({ sampleSize: 0, baselines: {}, observations: [], hypotheses: [], adopted: [], suppressed: [], adoptedWeights: {}, adoptedHookFamilyBonus: {}, adoptedTitlePatternBonus: {}, adoptedClusterBonus: {}, adoptedDurationBucketBonus: {} });
   return { channel: channel.slug, updatedAt: null, shorts: block(), longform: block() };
 }
 
@@ -47,19 +47,22 @@ function sd(values) {
 // time per view and subscribers per 1,000 views relative to its own baseline.
 function outcome(record, baselines, contentType) {
   const metrics = record.metrics || {};
+  if (record.performance && Number.isFinite(record.performance.growthScore)) return record.performance.growthScore / 50;
   const parts = [];
   const rel = (value, base) => Number.isFinite(value) && Number.isFinite(base) && base > 0 ? value / base : null;
   if (contentType === "shorts") {
-    parts.push(rel(metrics.averagePercentageViewed, baselines.averagePercentageViewed));
-    parts.push(rel(metrics.subscribersPer1000Views, baselines.subscribersPer1000Views));
-    parts.push(rel(metrics.views, baselines.views));
+    parts.push([rel(metrics.averagePercentageViewed, baselines.averagePercentageViewed), 0.25]);
+    parts.push([rel(metrics.subscribersPer1000Views, baselines.subscribersPer1000Views), 0.35]);
+    parts.push([rel(metrics.engagementPer1000Views, baselines.engagementPer1000Views), 0.15]);
+    parts.push([rel(metrics.views, baselines.views), 0.25]);
   } else {
-    parts.push(rel(metrics.watchHoursPer1000Views, baselines.watchHoursPer1000Views));
-    parts.push(rel(metrics.averagePercentageViewed, baselines.averagePercentageViewed));
-    parts.push(rel(metrics.subscribersPer1000Views, baselines.subscribersPer1000Views));
+    parts.push([rel(metrics.watchHoursPer1000Views, baselines.watchHoursPer1000Views), 0.35]);
+    parts.push([rel(metrics.averagePercentageViewed, baselines.averagePercentageViewed), 0.25]);
+    parts.push([rel(metrics.subscribersPer1000Views, baselines.subscribersPer1000Views), 0.4]);
   }
-  const usable = parts.filter((value) => value != null);
-  return usable.length ? mean(usable) : null;
+  const usable = parts.filter(([value]) => value != null);
+  const total = usable.reduce((sum, [, weight]) => sum + weight, 0);
+  return usable.length ? usable.reduce((sum, [value, weight]) => sum + value * weight, 0) / total : null;
 }
 
 function baselinesFor(records) {
@@ -81,6 +84,7 @@ function learnBlock(records, contentType, config) {
   const observations = [];
   const hypotheses = [];
   const adopted = [];
+  const suppressed = [];
   for (const dimension of DIMENSIONS[contentType]) {
     const groups = new Map();
     for (const row of scored) {
@@ -98,6 +102,7 @@ function learnBlock(records, contentType, config) {
       observations.push(row);
       if (ys.length >= rules.minimumSampleHypothesis && Math.abs(lift) >= rules.minimumLift) hypotheses.push({ ...row, stage: "HYPOTHESIS" });
       if (ys.length >= rules.minimumSampleAdopt && lift >= rules.minimumLift && z >= 2) adopted.push({ ...row, stage: "ADOPTED_LEARNING" });
+      if (ys.length >= rules.minimumSampleAdopt && lift <= -rules.minimumLift && z <= -2) suppressed.push({ ...row, stage: "SUPPRESSED_PATTERN" });
     }
   }
   // Adaptive weighting: correlate topic factors with the outcome, only once
@@ -119,7 +124,16 @@ function learnBlock(records, contentType, config) {
     }
   }
   const adoptedHookFamilyBonus = {};
-  for (const row of adopted.filter((item) => item.dimension === "hookType")) adoptedHookFamilyBonus[row.value] = Math.min(5, Math.round(row.lift * 20));
+  const adoptedTitlePatternBonus = {};
+  const adoptedClusterBonus = {};
+  const adoptedDurationBucketBonus = {};
+  const bonus = (row) => Math.max(-8, Math.min(8, Math.round(row.lift * 20)));
+  for (const row of [...adopted, ...suppressed]) {
+    if (row.dimension === "hookType") adoptedHookFamilyBonus[row.value] = bonus(row);
+    if (row.dimension === "titlePattern") adoptedTitlePatternBonus[row.value] = bonus(row);
+    if (row.dimension === "topicCluster") adoptedClusterBonus[row.value] = bonus(row);
+    if (row.dimension === "durationBucket") adoptedDurationBucketBonus[row.value] = bonus(row);
+  }
   return {
     sampleSize: scored.length,
     status: scored.length >= rules.minimumSampleAdopt ? "adaptive" : scored.length >= rules.minimumSampleObservation ? "observing" : "heuristics-only",
@@ -127,8 +141,12 @@ function learnBlock(records, contentType, config) {
     observations,
     hypotheses,
     adopted,
+    suppressed,
     adoptedWeights,
     adoptedHookFamilyBonus,
+    adoptedTitlePatternBonus,
+    adoptedClusterBonus,
+    adoptedDurationBucketBonus,
   };
 }
 

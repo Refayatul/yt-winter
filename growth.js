@@ -6,6 +6,9 @@
 //   node growth.js status                         per-channel lane + inventory status
 //   node growth.js report [--out reports/growth-dashboard.md]
 //                                                 per-channel dashboard (PHASE 34)
+//   node growth.js report --channel <slug>         detailed channel growth report
+//   node growth.js backfill --channel failure-reconstructed
+//                                                 import real legacy analytics and relearn
 //   node growth.js dry-run [--channel <slug>]     full Short + long-form dry runs → reports/dry-runs/ (sandbox)
 //   node growth.js simulate [--days 30]           30-day simulation → reports/growth-system-30d-simulation.md (sandbox)
 //   node growth.js longform --channel <slug> [--dry-run] [--force]
@@ -48,12 +51,44 @@ async function main() {
   }
   if (command === "report") {
     const Report = require("./core/growth/report");
+    if (a.channel) {
+      const channel = Channel.getChannel(a.channel);
+      const report = Report.detailedChannel(channel);
+      const out = a.out || path.join("reports", channel.slug.replace(/-/g, "_"), "latest_growth_report.md");
+      fs.mkdirSync(path.dirname(out), { recursive: true });
+      fs.writeFileSync(out, Report.detailedMarkdown(report));
+      fs.writeFileSync(out.replace(/\.md$/, ".json"), JSON.stringify(report, null, 2) + "\n");
+      console.log(`${channel.name} growth report → ${out}`);
+      return 0;
+    }
     const report = Report.build();
     const out = a.out || path.join("reports", "growth-dashboard.md");
     fs.mkdirSync(path.dirname(out), { recursive: true });
     fs.writeFileSync(out, Report.markdown(report));
     fs.writeFileSync(out.replace(/\.md$/, ".json"), JSON.stringify(report, null, 2) + "\n");
     console.log(`growth dashboard → ${out}`);
+    return 0;
+  }
+  if (command === "backfill") {
+    if (!a.channel) throw new Error("--channel is required for backfill");
+    const Analytics = require("./core/growth/analytics");
+    const Learning = require("./core/growth/learning");
+    const Performance = require("./core/growth/performance");
+    const Store = require("./core/growth/store");
+    const Report = require("./core/growth/report");
+    const channel = Channel.getChannel(a.channel);
+    const result = Analytics.backfillLegacy(channel);
+    const rows = Performance.refresh(channel, Analytics.readAll(channel));
+    const learning = Learning.learn(channel, rows);
+    const clusters = { channel: channel.slug, updatedAt: new Date().toISOString(), clusters: Performance.clusterStats(rows) };
+    Store.writeState(channel, "growth", "clusters.json", clusters);
+    const report = Report.detailedChannel(channel);
+    const directory = path.join("reports", channel.slug.replace(/-/g, "_"));
+    fs.mkdirSync(directory, { recursive: true });
+    fs.writeFileSync(path.join(directory, "latest_growth_report.md"), Report.detailedMarkdown(report));
+    fs.writeFileSync(path.join(directory, "latest_growth_report.json"), JSON.stringify(report, null, 2) + "\n");
+    fs.writeFileSync(path.join(directory, "backfill_result.json"), JSON.stringify({ ...result, learning: { shorts: learning.shorts.status, sampleSize: learning.shorts.sampleSize }, clusters: Object.keys(clusters.clusters).length, completedAt: new Date().toISOString() }, null, 2) + "\n");
+    console.log(`${channel.name}: backfilled ${result.snapshots} real snapshot(s) for ${result.videos} video(s); ${result.skipped.length} skipped → ${directory}`);
     return 0;
   }
   if (command === "dry-run") {

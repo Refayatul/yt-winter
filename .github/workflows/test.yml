@@ -104,11 +104,21 @@ jobs:
           fi
           node -e '
             const fs = require("fs");
-            const p = "icerik/paket/" + process.argv[1] + "/quality-gate.json";
-            if (!fs.existsSync(p)) throw new Error("uretim hatasi kalite kapisindan gelmedi: " + p + " yok");
-            const q = JSON.parse(fs.readFileSync(p, "utf8"));
-            if (!["BLOCK", "REVIEW"].includes(q.karar)) throw new Error("kontrollu kalite reddi degil: " + q.asama + "/" + q.karar);
-            console.log("Guvenli kalite reddi dogrulandi: " + q.asama + " " + q.karar + " " + q.toplam + "/100");
+            const root = "icerik/paket/" + process.argv[1];
+            const gates = [];
+            const qualityPath = root + "/quality-gate.json";
+            const growthPath = root + "/growth-plan.json";
+            if (fs.existsSync(qualityPath)) {
+              const q = JSON.parse(fs.readFileSync(qualityPath, "utf8"));
+              gates.push({ gate: "quality", stage: q.asama, decision: q.karar, score: q.toplam });
+            }
+            if (fs.existsSync(growthPath)) {
+              const g = JSON.parse(fs.readFileSync(growthPath, "utf8"));
+              if (g.readiness) gates.push({ gate: "growth", stage: g.readiness.stage || "pre", decision: g.readiness.decision, score: g.readiness.ProductionReadinessScore });
+            }
+            const rejection = gates.find((gate) => ["BLOCK", "REVIEW"].includes(gate.decision));
+            if (!rejection) throw new Error("uretim hatasi kontrollu bir kalite/growth reddinden gelmedi: " + JSON.stringify(gates));
+            console.log("Guvenli kapı reddi dogrulandi: " + rejection.gate + "/" + rejection.stage + " " + rejection.decision + " " + rejection.score + "/100");
           ' "${{ matrix.slug }}"
           echo "rejected=true" >> "$GITHUB_OUTPUT"
       - name: Uctan uca kontrol (26 madde)

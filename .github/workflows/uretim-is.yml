@@ -162,10 +162,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node bildirim.js || echo "bildirim atlandi"
 
-      - name: Yorumlara olculu yanit ver (etkilesim)
-        if: ${{ always() && !inputs.kuru }}
-        run: node yorum-yanitla.js || echo "yorum yaniti atlandi (yorum yok / izin yok)"
-
       - name: Yayin sonrasi analiz (24s/72s/7g/14g/30g checkpoint'leri)
         if: always()
         run: node post-publish-analyzer.js --due || echo "analiz atlandi (kimlik/kapsam yok) — veri uydurulmaz"

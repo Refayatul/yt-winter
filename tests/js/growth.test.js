@@ -29,6 +29,7 @@ const Longform = require("../../core/growth/longform");
 const Research = require("../../core/growth/research");
 const Titles = require("../../core/growth/titles");
 const Config = require("../../core/growth/config");
+const Performance = require("../../core/growth/performance");
 
 const SLUGS = ["failure-reconstructed", "impossible-brief", "critical-thread"];
 const ch = (slug) => Channel.getChannel(slug);
@@ -38,6 +39,13 @@ const contexts = {};
 const ctxFor = (slug) => (contexts[slug] = contexts[slug] || Context.build(ch(slug)));
 const frTopic = (slug = "chernobyl-1986") => ctxFor("failure-reconstructed").inventory.find((topic) => topic.slug === slug);
 const sampleRow = (channel, videoId, contentType, metrics, extra = {}) => ({ videoId, channel, contentType, metrics, ...extra });
+
+test("growth config enforces candidate, experiment, hook, title and subscriber-weight invariants", () => {
+  const config = Config.forChannel(FR());
+  assert.equal(Config.validate(config), config);
+  assert.throws(() => Config.validate({ ...config, selection: { ...config.selection, exploreRatio: 0.5 } }), /exploitRatio/);
+  assert.throws(() => Config.validate({ ...config, candidatePool: { ...config.candidatePool, minimum: 10 } }), /candidatePool/);
+});
 
 // ---------------------------------------------------------------- isolation
 test("multi-channel state isolation: every growth path is derived from one channel", () => {
@@ -82,6 +90,16 @@ test("duplicate production: published topics are never selected; duplicates bloc
   assert.ok(plan.readiness.hardFails.some((item) => /duplicate/.test(item)));
 });
 
+test("topic decision pool: 20–50 inspectable candidates and deterministic 75/25 mode", () => {
+  const selection = Growth.selectShortTopic(FR(), { date: "2026-10-02", ranked: Context.rank(FR(), { context: ctxFor("failure-reconstructed") }) });
+  assert.ok(selection.candidatePool.count >= 20 && selection.candidatePool.count <= 50);
+  assert.equal(selection.candidatePool.candidates.length, selection.candidatePool.count);
+  assert.ok(["EXPLOIT", "EXPLORE"].includes(selection.mode));
+  assert.ok(selection.candidatePool.candidates.every((row) => row.viralScore != null && row.selectionScore != null && row.viralComponents));
+  assert.equal(Config.forChannel(FR()).selection.exploitRatio, 0.75);
+  assert.equal(Config.forChannel(FR()).selection.exploreRatio, 0.25);
+});
+
 test("topic scoring: editorial case scores A/B; templated or mechanism-less topics fall to D", () => {
   const ctx = ctxFor("failure-reconstructed");
   const good = Context.evaluate(frTopic(), ctx);
@@ -124,11 +142,19 @@ test("quality block: hard fails force BLOCK regardless of the weighted score", (
   assert.equal(wrong.decision, "BLOCK");
 });
 
-test("Shorts regression safety: Failure Reconstructed narration is mapped, never rewritten", () => {
+test("Shorts regression safety: Failure Reconstructed source stays immutable while the selected factual hook is promoted", () => {
   const topic = frTopic();
+  const original = [...topic.narration];
   const plan = Growth.planShort(FR(), topic, { context: ctxFor("failure-reconstructed") });
-  assert.equal(plan.script.generator, "editorial (case file)");
-  assert.deepEqual(plan.script.lines, topic.narration);
+  assert.equal(plan.script.generator, "editorial case file + selected hook");
+  assert.deepEqual(plan.script.originalLines, original);
+  assert.deepEqual(topic.narration, original, "source case file must never be mutated");
+  assert.equal(plan.script.lines[0].replace(/\.$/, ""), plan.hooks.selected.spoken.replace(/\.$/, ""));
+  assert.ok(plan.script.openingRewrite.changed || plan.script.lines[0] === original[0]);
+  const overlay = Growth.applyLegacyOverlay({ ...topic.raw, slug: topic.slug }, plan);
+  assert.equal(overlay.sahneler[0].metin.replace(/\.$/, ""), plan.hooks.selected.spoken.replace(/\.$/, ""));
+  assert.equal(overlay.baslik, plan.titles.selected.title);
+  assert.equal(overlay.hook, plan.hooks.selected.onScreen || plan.hooks.selected.spoken);
   assert.equal(plan.readiness.decision, "PUBLISH");
 });
 
@@ -140,6 +166,52 @@ test("missing analytics metrics stay UNAVAILABLE (never zero) and diagnosis wait
   assert.equal(snap.metrics.ctr.status, "NOT_COLLECTED");
   const d = Diagnosis.diagnose({ videoId: "a", channel: "failure-reconstructed", contentType: "short", metrics: Analytics.flatMetrics(snap) }, { short: {}, long: {} }, Config.forChannel(FR()));
   assert.deepEqual(d.diagnoses.map((row) => row.code), ["INSUFFICIENT_DATA"]);
+});
+
+test("legacy net subscriber snapshots are never mislabeled as gross acquisition", () => {
+  const raw = { metrics: { views: { value: 1000, status: "DIRECTLY_MEASURED" }, subscribers_gained: { value: 2, status: "DIRECTLY_MEASURED", source: "Analytics API (net)" } } };
+  const flat = Performance.flatSnapshot(raw);
+  assert.equal(flat.subscribersGained, null);
+  assert.equal(flat.netSubscribers, 2);
+});
+
+test("age normalization, subscriber conversion, plateau and breakout classification", () => {
+  const metric = (value) => ({ value, status: "DIRECTLY_MEASURED" });
+  const snap = (views, subscribers, avp, likes = 30) => ({ metrics: { views: metric(views), subscribers_gained: metric(subscribers), average_percentage_viewed: metric(avp), likes: metric(likes), comments: metric(2), shares: metric(1) } });
+  const rows = [
+    { videoId: "plateau", channel: "failure-reconstructed", contentType: "short", topicCluster: "spaceflight", checkpoints: { "12h": snap(1200, 1, 65), "24h": snap(1240, 1, 65) } },
+    { videoId: "base-a", channel: "failure-reconstructed", contentType: "short", topicCluster: "aviation", checkpoints: { "12h": snap(800, 0, 60), "24h": snap(1000, 0, 60) } },
+    { videoId: "base-b", channel: "failure-reconstructed", contentType: "short", topicCluster: "aviation", checkpoints: { "12h": snap(850, 0, 62), "24h": snap(1100, 0, 62) } },
+    { videoId: "breakout", channel: "failure-reconstructed", contentType: "short", topicCluster: "spaceflight", checkpoints: { "12h": snap(1800, 12, 95, 220), "24h": snap(5000, 20, 95, 300) } },
+  ];
+  Performance.analyze(rows, Config.forChannel(FR()));
+  assert.equal(rows[0].normalized.viewsPerHour, 51.67);
+  assert.equal(rows[0].performance.plateau.code, "EARLY_DISTRIBUTION_PLATEAU");
+  assert.equal(rows[0].performance.classification, "FAILED_TEST");
+  assert.equal(rows[3].performance.classification, "BREAKOUT");
+  assert.equal(rows[3].normalized.subscribersPer1000Views, 4);
+  assert.ok(Config.forChannel(FR()).performance.growthScoreWeights.subscriberConversion > Config.forChannel(FR()).performance.growthScoreWeights.views);
+});
+
+test("historical legacy backfill imports only real files and preserves missing checkpoints", () => {
+  const analyticsDir = fs.mkdtempSync(path.join(os.tmpdir(), "growth-backfill-"));
+  fs.mkdirSync(path.join(analyticsDir, "video-real"));
+  fs.writeFileSync(path.join(analyticsDir, "video-real", "1d.json"), JSON.stringify({ format: "short", sureSn: 31, toplandi: "2026-09-02T00:00:00.000Z", metrikler: { views: { durum: "ok", deger: 900, kaynak: "Data API" } } }));
+  const base = FR();
+  const channel = { ...base, paths: { ...base.paths, analytics: analyticsDir } };
+  const result = Analytics.backfillLegacy(channel, { context: { history: { published: [{ videoId: "video-real", slug: "real-case", publishAt: "2026-09-01T00:00:00.000Z", format: "short" }] }, inventory: [{ slug: "real-case", cluster: "aviation" }] } });
+  const row = Analytics.readAll(channel).find((item) => item.videoId === "video-real");
+  assert.equal(result.snapshots, 1);
+  assert.equal(row.checkpoints["24h"].metrics.views.value, 900);
+  assert.equal(row.checkpoints["1h"], undefined);
+});
+
+test("Failure Reconstructed durable inventory contains 500 unique source-verified records", () => {
+  const universe = require("../../core/growth/topic-model").durableInventory(FR());
+  assert.ok(universe.stats.total >= 500);
+  assert.equal(new Set(universe.topics.map((row) => row.topic_id)).size, universe.topics.length);
+  assert.ok(universe.topics.every((row) => row.qualification_status === "QUALIFIED_SOURCE_VERIFIED" && row.sources.length));
+  assert.ok(universe.stats.production_ready >= 377);
 });
 
 test("diagnosis thresholds: hook and retention failures fire only on the measured metric", () => {

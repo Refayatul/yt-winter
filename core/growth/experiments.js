@@ -34,8 +34,9 @@ function create(channel, spec, options = {}) {
   const value = load(channel);
   const active = value.experiments.filter((item) => item.status === "RUNNING" && item.content_type === contentType);
   if (active.length >= config.experiments.maxActivePerContentType) throw new Error(`EXPERIMENT_REJECTED: ${active[0].experiment_id} is already running for ${contentType}`);
+  const startedAt = (options.now || new Date()).toISOString();
   const row = {
-    experiment_id: spec.id || `${channel.slug}-${contentType}-${variables[0]}-${(options.now || new Date()).toISOString().slice(0, 10)}`,
+    experiment_id: spec.id || `${channel.slug}-${contentType}-${variables[0]}-${startedAt.slice(0, 10)}`,
     channel: channel.slug,
     content_type: contentType,
     hypothesis: spec.hypothesis,
@@ -48,7 +49,9 @@ function create(channel, spec, options = {}) {
     result: null,
     confidence: "INSUFFICIENT_DATA",
     status: "RUNNING",
-    created_at: (options.now || new Date()).toISOString(),
+    created_at: startedAt,
+    start_time: startedAt,
+    notes: spec.notes || null,
   };
   value.experiments.push(row);
   if (options.write !== false) save(channel, value);

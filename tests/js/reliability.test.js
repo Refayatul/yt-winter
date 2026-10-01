@@ -106,6 +106,38 @@ test("workflow sends actual production result before one historical backlog item
   assert.doesNotMatch(source, /^\s*if:\s*!inputs/m, "YAML tag syntax must not break the reusable workflow");
 });
 
+test("pull-request E2E recognizes safe rejections from both quality gates", () => {
+  const source = fs.readFileSync(path.join(KOK, ".github", "workflows", "test.yml"), "utf8");
+  assert.match(source, /quality-gate\.json/);
+  assert.match(source, /growth-plan\.json/);
+  assert.match(source, /\["BLOCK", "REVIEW"\]\.includes\(gate\.decision\)/);
+});
+
+test("comment replies run independently every four hours with a conservative cap", () => {
+  const replies = fs.readFileSync(path.join(KOK, ".github", "workflows", "yorum-yanitla.yml"), "utf8");
+  const production = fs.readFileSync(path.join(KOK, ".github", "workflows", "uretim-is.yml"), "utf8");
+  assert.match(replies, /cron: '17 1,5,9,13,17,21 \* \* \*'/);
+  assert.match(replies, /group: portfolio-production/);
+  assert.match(replies, /node yorum-yanitla\.js --channel failure-reconstructed --limit 4/);
+  assert.match(replies, /git add icerik\/yanitlanan\.json/);
+  assert.match(replies, /Persist processed comment IDs\s+if: always\(\)/);
+  assert.match(replies, /git push origin HEAD:main/);
+  assert.doesNotMatch(replies, /shorts-sira\.js|youtube-yukle\.js/);
+  assert.doesNotMatch(production, /node yorum-yanitla\.js/);
+});
+
+test("comment reply classifier remains conservative and failed writes stay retryable", () => {
+  const replies = require("../../yorum-yanitla");
+  assert.equal(replies.kategori("Could this happen again?"), "soru");
+  assert.equal(replies.kategori("👏👏"), "atla");
+  assert.equal(replies.kategori("This is a detailed contribution with enough context to improve the discussion."), "bilgi");
+  assert.equal(replies.kategori("Great video"), "ovgu");
+  assert.equal(replies.apiHatasi({ durum: 403, govde: JSON.stringify({ error: { errors: [{ reason: "commentsDisabled" }] } }) }), "commentsDisabled");
+  const source = fs.readFileSync(path.join(KOK, "yorum-yanitla.js"), "utf8");
+  assert.match(source, /yanit basarisiz \(yeniden denenecek/);
+  assert.match(source, /if \(basarisiz\) throw new Error/);
+});
+
 test("portfolio dry runs cannot upload, notify, or commit state", () => {
   const source = fs.readFileSync(path.join(KOK, ".github", "workflows", "portfolio-production.yml"), "utf8");
   assert.match(source, /name: Send today's exact Failure Reconstructed MP4 to TikTok inbox\s+if:.*inputs\.dry_run != true/);

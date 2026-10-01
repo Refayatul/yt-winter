@@ -66,6 +66,7 @@ const incelemedeMi = (slug) => { const item = incelemedekiler()[slug]; return !!
 const Growth = require("./core/growth");
 const GrowthRuntime = require("./core/growth/runtime");
 const growthPlans = {};
+const growthSelections = {};
 function buyumeKapisi(slug, legacy, final) {
   let plan;
   try {
@@ -74,13 +75,19 @@ function buyumeKapisi(slug, legacy, final) {
       externalGate: Growth.externalFromLegacyGate(legacy),
       render: renderBilgisi(slug),
       write: true,
-    } : {});
+      assignExperiment: true,
+      selection: growthSelections[slug] || null,
+    } : { write: true, assignExperiment: true, selection: growthSelections[slug] || null });
   } catch (e) {
     // A planning error is a bug, not a quality verdict: never let it silently pass.
     engelle(slug, "growth plan error: " + e.message);
     throw new Engellendi("growth plan error: " + e.message);
   }
   growthPlans[slug] = plan;
+  // The legacy renderer and uploader consume this audited overlay. Source case
+  // files stay unchanged; only this production run gets the winning hook/title.
+  fs.mkdirSync(path.join(CHANNEL.paths.packages, slug), { recursive: true });
+  fs.writeFileSync(path.join(CHANNEL.paths.packages, slug, "growth-plan.json"), JSON.stringify(plan, null, 2) + "\n");
   const r = plan.readiness;
   console.log(`  growth readiness (${final ? "final" : "pre"}): ${r.decision} ${r.ProductionReadinessScore}/100 · topic ${plan.topicScore.bucket} ${plan.topicScore.VideoPotentialScore} · hook ${plan.hooks.selected ? plan.hooks.selected.family + " " + plan.hooks.selected.adjustedTotal : "none"} · first-3s ${plan.first3Seconds.score}` + (r.hardFails.length ? " — " + r.hardFails.join("; ") : ""));
   if (Growth.gateMode() === "shadow") return plan;
@@ -171,7 +178,11 @@ function uretBir(slug) {
   fs.writeFileSync(path.join(job, "konu.json"), JSON.stringify(konu, null, 2));
   console.log(`\n=== ${slug} ===`);
   const oncekiKapi = kapi(slug, false);
-  buyumeKapisi(slug, oncekiKapi, false);
+  const preGrowth = buyumeKapisi(slug, oncekiKapi, false);
+  // arsiv-bul.js and shorts-yap.js read this run-local file directly. Promote
+  // the selected title/hook/script before either process starts; never modify
+  // the editorial source in icerik/konular/.
+  fs.writeFileSync(path.join(job, "konu.json"), JSON.stringify(Growth.applyLegacyOverlay(konu, preGrowth), null, 2) + "\n");
   // Goruntu kaynagi: "stok" (Pexels) ya da arsiv (kamu mali).
   calistir(konu.tur === "stok" ? "stok-bul.js" : "arsiv-bul.js", slug);
   calistir("shorts-yap.js", slug);
@@ -248,9 +259,10 @@ function main() {
   // Siralama: growth engine (A/B once, C yalnizca deney gunu ya da kanal izin
   // veriyorsa yedek; D asla). Growth kuyrugu bossa eski kutuphane sirasi DEGIL,
   // uyari: zayif konu takvimi doldurmak icin yayinlanmaz.
-  const buyume = Growth.orderedQueue(CHANNEL, { exclude: [...atla] });
+  const buyume = Growth.orderedQueue(CHANNEL, { exclude: [...atla], write: true });
+  if (buyume.selected) growthSelections[buyume.selected] = buyume.decision;
   const kalan = buyume.order.filter((s) => !atla.has(s) && tum.includes(s));
-  console.log(`growth queue: ${buyume.reason} · inventory A${buyume.inventory.A}/B${buyume.inventory.B}/C${buyume.inventory.C}/D${buyume.inventory.D}`);
+  console.log(`growth queue: ${buyume.reason} · ${buyume.mode} · candidate pool ${buyume.candidatePool.count}/${buyume.candidatePool.target} (minimum ${buyume.candidatePool.minimum}) · inventory A${buyume.inventory.A}/B${buyume.inventory.B}/C${buyume.inventory.C}/D${buyume.inventory.D}`);
   if (!kalan.length) {
     GrowthRuntime.alert(CHANNEL, "NO_QUALIFIED_TOPIC", buyume.reason, { inventory: buyume.inventory });
     console.log("::warning::Uretilecek nitelikli konu yok (" + tum.length + " toplam) — " + buyume.reason);

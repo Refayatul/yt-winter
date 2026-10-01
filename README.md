@@ -97,7 +97,7 @@ Bu depo artık **veriye dayalı bir adli mühendislik belgeseli üretim ve büy�
 | Paketleme | başlık · kapak · hook · tempo · hikâye yapısı · açıklama · sabit yorum · telaffuz | `icerik/paket/<slug>/` |
 | Kalite | `quality-gate.js`: 9 bileşen, PUBLISH ≥85 / REVIEW 70–84 / BLOCK <70 · yalnızca PUBLISH yüklenebilir | [config/growth.json](config/growth.json) |
 | Mevcut videolar | `node existing-video-optimizer.js --all` → `analysis/<id>/` + `migration/` | [migration/EXISTING-VIDEOS-PLAN.md](migration/EXISTING-VIDEOS-PLAN.md) |
-| Büyüme motoru (3 kanal) | konu kovaları A/B/C/D · 10+ kanca · ilk 3 sn planı · ProductionReadiness kapısı · haftalık uzun video hattı · Short→Long hunisi · kanal-izole analitik/öğrenme · `npm run growth:report` | [docs/GROWTH-ENGINE.md](docs/GROWTH-ENGINE.md) |
+| Büyüme motoru (3 kanal) | her slotta 20–50 aday · şeffaf viral puan · 75/25 explore/exploit · 10+ kanca · 20+ başlık · retention kapısı · yaş-normalize performans/plato/breakout · haftalık uzun video · kanal-izole öğrenme · `npm run growth:report` | [docs/GROWTH-ENGINE.md](docs/GROWTH-ENGINE.md) |
 | Yayın sonrası | `post-publish-analyzer.js --due` (24 s/72 s/7 g/14 g/30 g) · panel → **📈 Büyüme** · `experiments.js` | [docs/GROWTH-ARCHITECTURE.md](docs/GROWTH-ARCHITECTURE.md) |
 | Konu seçimi | `node konu-puan.js "<konu>"` / `--adaylar` (11 ölçüt, ücretsiz sinyaller) | [icerik/aday-konular-puan.md](icerik/aday-konular-puan.md) |
 | Kurallar | sahte etkileşim yok, yanıltıcı başlık/kapak yok, kopya yükleme yok, sentetik içerik beyan edilir | [docs/YOUTUBE-CONTENT-QUALITY.md](docs/YOUTUBE-CONTENT-QUALITY.md) |

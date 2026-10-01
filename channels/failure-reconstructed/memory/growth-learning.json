@@ -6,17 +6,30 @@
     "sampleSize": 10,
     "status": "observing",
     "baselines": {
-      "views": 1035,
-      "averagePercentageViewed": 67.77,
-      "subscribersPer1000Views": 2.05,
-      "watchHoursPer1000Views": 2.94,
-      "engagementPer1000Views": 37.52
+      "views": 1033,
+      "averagePercentageViewed": 65.29,
+      "subscribersPer1000Views": null,
+      "watchHoursPer1000Views": 1.92,
+      "engagementPer1000Views": 36.79
     },
-    "observations": [],
+    "observations": [
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "natural-hazards",
+        "sample": 3,
+        "lift": -0.119,
+        "z": -0.36
+      }
+    ],
     "hypotheses": [],
     "adopted": [],
+    "suppressed": [],
     "adoptedWeights": {},
-    "adoptedHookFamilyBonus": {}
+    "adoptedHookFamilyBonus": {},
+    "adoptedTitlePatternBonus": {},
+    "adoptedClusterBonus": {},
+    "adoptedDurationBucketBonus": {}
   },
   "longform": {
     "sampleSize": 0,
@@ -31,7 +44,11 @@
     "observations": [],
     "hypotheses": [],
     "adopted": [],
+    "suppressed": [],
     "adoptedWeights": {},
-    "adoptedHookFamilyBonus": {}
+    "adoptedHookFamilyBonus": {},
+    "adoptedTitlePatternBonus": {},
+    "adoptedClusterBonus": {},
+    "adoptedDurationBucketBonus": {}
   }
 }

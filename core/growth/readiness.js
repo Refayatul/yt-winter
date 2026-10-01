@@ -33,8 +33,14 @@ function shorts(inputs, config) {
   d.hook = inputs.hooks.selectedScore;
   if (!inputs.hooks.selected) hardFails.push("no usable hook");
   if (!inputs.hooks.meetsMinimum) notes.push(`only ${inputs.hooks.candidateCount} hook candidates`);
+  if (inputs.hooks.selected && !inputs.hooks.passes) hardFails.push(`hook score ${inputs.hooks.selectedScore} < ${config.hooks.minimumScore}`);
+  d.title = inputs.titles ? inputs.titles.selectedScore : null;
+  if (!inputs.titles || !inputs.titles.selected) hardFails.push("no truthful title candidate");
+  else if (inputs.titles.selectedScore < config.titles.shorts.minimumScore) hardFails.push(`title score ${inputs.titles.selectedScore} < ${config.titles.shorts.minimumScore}`);
+  if (inputs.titles && !inputs.titles.meetsMinimum) hardFails.push(`only ${inputs.titles.count} title candidates; minimum ${config.titles.shorts.minimumCandidates}`);
   d.script = inputs.script.score;
   for (const blocker of inputs.script.blockers || []) hardFails.push("script: " + blocker.replace(/^BLOCKER:\s*/, ""));
+  if (!inputs.script.passes && !(inputs.script.blockers || []).length) hardFails.push(`retention quality ${inputs.script.score} < ${config.script.shorts.minimumScore}`);
   d.firstSeconds = inputs.firstSeconds.score;
   for (const blocker of inputs.firstSeconds.blockers || []) hardFails.push("first 3 s: " + blocker);
   d.factual = inputs.factual.score;

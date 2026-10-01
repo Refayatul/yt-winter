@@ -71,8 +71,15 @@ function shortsEvidence(channel, cluster, rows) {
   const inCluster = shorts.filter((row) => row.topicCluster === cluster);
   if (!inCluster.length) return null;
   const best = Math.max(...inCluster.map((row) => row.metrics.views));
+  const channelSubs = shorts.map((row) => row.normalized && row.normalized.subscriberConversion).filter(Number.isFinite).sort((a, b) => a - b);
+  const medianSubs = channelSubs.length ? channelSubs[Math.floor(channelSubs.length / 2)] : null;
+  const bestSubs = Math.max(...inCluster.map((row) => row.normalized && row.normalized.subscriberConversion).filter(Number.isFinite), 0);
+  const bestGrowth = Math.max(...inCluster.map((row) => row.performance && row.performance.growthScore).filter(Number.isFinite), 50);
   const outperform = median && best >= Math.max(config.longform.shortsEvidence.minimumViews, median * config.longform.shortsEvidence.outperformerViewsMultiple);
-  return { score: Math.max(30, Math.min(100, Math.round(50 + (median ? (best / median - 1) * 20 : 0)))), note: `best cluster Short ${best} views vs channel Short median ${median}${outperform ? " — MODE B: Short proved demand" : ""}`, modeB: !!outperform };
+  const viewSignal = median ? Math.max(0, Math.min(100, 50 + (best / median - 1) * 25)) : 50;
+  const subscriberSignal = medianSubs && bestSubs ? Math.max(0, Math.min(100, 50 + (bestSubs / medianSubs - 1) * 25)) : 50;
+  const score = Math.round(viewSignal * 0.4 + subscriberSignal * 0.3 + bestGrowth * 0.3);
+  return { score: Math.max(30, Math.min(100, score)), note: `best cluster Short ${best} views vs channel median ${median}; best subscriber conversion ${bestSubs || "unavailable"}; best growth score ${bestGrowth}${outperform ? " — MODE B: Short proved demand" : ""}`, modeB: !!outperform, bestViews: best, bestSubscriberConversion: bestSubs || null, bestGrowthScore: bestGrowth };
 }
 
 function candidates(channel, ctx, options = {}) {

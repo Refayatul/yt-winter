@@ -120,7 +120,7 @@ Any critical finding (text still overflowing, A/V mismatch, >1.5 s of black) mak
    - A failed upload leaves the topic in the queue and writes `YUKLEME-HATASI.json`.
 3. `bildirim.js`: notifications (see §9).
 4. `tiktok-yukle.js` (optional): sends the same MP4 to the TikTok inbox. Without TikTok credentials the step is silently skipped, and a TikTok failure never breaks the day — YouTube is already published. See `docs/TIKTOK.md`.
-5. `yorum-yanitla.js`, `post-publish-analyzer.js --due`, `pinned-comment.js --post-pending`, `channel-plan.js`, `experiments.js degerlendir`, and on Mondays `existing-video-optimizer.js --all`.
+5. `post-publish-analyzer.js --due`, `pinned-comment.js --post-pending`, `channel-plan.js`, `experiments.js degerlendir`, and on Mondays `existing-video-optimizer.js --all`. Comment replies are decoupled from production and run every four hours through `.github/workflows/yorum-yanitla.yml`.
 6. State is committed back with a 5-attempt pull/rebase/push loop.
 7. On failure, a "🚨" issue is opened.
 
