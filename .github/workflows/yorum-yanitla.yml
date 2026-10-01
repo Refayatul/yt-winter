@@ -32,6 +32,8 @@ jobs:
       FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
 
       - uses: actions/setup-node@v4
         with:
