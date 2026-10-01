@@ -125,3 +125,26 @@ test("pipeline skips a topic rejected only by the rendered-visual gate", () => {
   assert.equal(visualRejection(result({ qualityGate: false }, { qualityGate: ["rendered visuals: x"] }), directory), null);
   assert.equal(visualRejection(result({}, {}), directory), null);
 });
+
+test("music bed mood follows the topic category; colour grade is per channel", () => {
+  const Muzik = require("../../lib/muzik");
+  assert.equal(Rendering.musicMood({ channel: "impossible-brief", category: "SPACE" }), "spaceflight-disasters");
+  assert.equal(Rendering.musicMood({ channel: "impossible-brief", category: "EARTH" }), "natural-hazards");
+  assert.equal(Rendering.musicMood({ channel: "critical-thread", category: "PORTS" }), "maritime-disasters");
+  assert.equal(Rendering.musicMood({ channel: "critical-thread", category: "RAIL" }), "infrastructure-failures");
+  for (const mood of ["spaceflight-disasters", "natural-hazards", "aviation-failures", "materials-failures", "nuclear-accidents", "industrial-disasters", "maritime-disasters", "infrastructure-failures"]) {
+    assert.ok(Muzik.RUH[mood], `mood ${mood} exists in lib/muzik.js`);
+  }
+  assert.notEqual(Rendering.colourGrade({ channel: "impossible-brief" }), Rendering.colourGrade({ channel: "critical-thread" }));
+  assert.equal(Rendering.colourGrade({ channel: "critical-thread", colorGrade: "" }), "");
+});
+
+test("ImpossibleBrief records render with their channel's look and music", () => {
+  const Channel = require("../../core/channel-context");
+  const Discovery = require("../../core/discovery");
+  const topic = Discovery.universe(Channel.getChannel("impossible-brief")).topics[0];
+  assert.equal(topic.channel, undefined, "IB research records carry no channel field");
+  const source = fs.readFileSync(path.join(__dirname, "../../core/rendering/index.js"), "utf8");
+  assert.match(source, /const renderTopic = topic\.channel \? topic : \{ \.\.\.topic, channel: channel\.slug \}/);
+  assert.notEqual(Rendering.musicMood({ ...topic, channel: "impossible-brief" }), "structural-failures");
+});
