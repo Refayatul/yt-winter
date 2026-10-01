@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-01T20:31:14.573Z
+Generated: 2026-10-01T21:08:59.055Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,18 +8,18 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | eastern-212-1974 |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / 89 |
-| YouTube | scheduled |
-| Publish time | 2026-10-01T18:00:00.000Z |
-| Video ID | rgSsk8q6eyM |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 365 |
 | Errors/review/blocks | 3 |
-| TikTok today | SEND_TO_USER_INBOX |
+| TikTok today | NO_TODAY_VIDEO |
 | TikTok backlog | 2 |
 
 ## ImpossibleBrief
@@ -34,7 +34,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | unavailable |
 | Video ID | unavailable |
 | Analytics | no-channel-measurements |
-| Scheduler | sla-missed-or-channel-disabled |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 497 |
 | Errors/review/blocks | 0 |
 
@@ -50,7 +50,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | unavailable |
 | Video ID | unavailable |
 | Analytics | no-channel-measurements |
-| Scheduler | sla-missed-or-channel-disabled |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 520 |
 | Errors/review/blocks | 0 |
 
