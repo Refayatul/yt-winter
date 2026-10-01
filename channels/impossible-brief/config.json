@@ -16,10 +16,10 @@
   "publishTime": "21:00",
   "publishTimeUtc": "18:00",
   "publishingCadence": {
-    "shorts": { "everyDays": 1, "productionTime": "09:30", "targetDurationSeconds": [18, 35] },
+    "shorts": { "everyDays": 1, "productionTime": "09:30", "targetDurationSeconds": [18, 42] },
     "longForm": { "everyDays": 7, "targetDurationMinutes": [8, 12], "qualityOverCadence": true }
   },
-  "voice": { "provider": "edge-tts", "voice": "en-US-AndrewMultilingualNeural", "style": "clear cinematic science" },
+  "voice": { "provider": "edge-tts", "voice": "en-US-AndrewMultilingualNeural", "rate": "-6%", "style": "clear cinematic science" },
   "brandStyle": "cinematic science, space, physics, future, dark cosmic, clean, modern, premium, high contrast",
   "contentNiche": "what-if science, space, physics, Earth, humanity and future technology",
   "topicRules": {
@@ -42,8 +42,10 @@
     "memoryScope": "channel",
     "learnAfterVideos": 5,
     "doNotShareAcrossChannels": true,
-    "openingMaxSeconds": 2.2,
-    "secondBeatMaxSeconds": 6.2,
+    "openingMaxSeconds": 3,
+    "secondBeatMaxSeconds": 8,
+    "hookVoiceMaxSeconds": 5.5,
+    "secondBeatVoiceMaxSeconds": 11,
     "visualChangeTargetSeconds": [1.5, 3.5]
   },
   "ctaStrategy": "optional curiosity bridge after the scientific payoff",

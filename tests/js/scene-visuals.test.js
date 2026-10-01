@@ -59,12 +59,42 @@ test("number cards use only number-and-unit tokens present in their narration li
   const topic = { id: "IB-TEST", category: "SPACE", visualPotential: { scenes: ["rotating orbital habitat"] } };
   const plan = TopicVisuals.buildVisualPlan(topic, script, [], [3, 3], 6);
   const cards = plan.filter((item) => item.type === "number-card");
-  assert.equal(cards.length, 2);
-  assert.equal(new Set(cards.map((item) => item.sourceId)).size, 2);
-  assert.deepEqual(cards[0].comparison, ["80,800 km", "20–25 RPM"]);
-  assert.deepEqual(cards[1].numbers, ["20–25 RPM"]);
+  // One card per narration line, and km vs RPM is not a comparison.
+  assert.equal(cards.length, 1);
+  assert.deepEqual(cards[0].numbers, ["80,800 km"]);
+  assert.deepEqual(cards[0].comparison, []);
   assert.ok(cards.every((item) => item.numbers.every((token) => item.claimText.includes(token))));
   assert.equal(TopicVisuals.visualMetrics(plan).cardNumbersValid, true);
+  const sameUnit = TopicVisuals.buildVisualPlan(topic, { targetSeconds: 3, claims: [{ text: "Winters fall from 15 °C to 5 °C.", start: 0, end: 3 }] }, [], [3], 3);
+  assert.deepEqual(sameUnit[0].comparison, ["15 °C", "5 °C"]);
+});
+
+test("cards only for values with a unit; bare numbers and identifiers stay off screen", () => {
+  assert.deepEqual(TopicVisuals.cardTokens(["8", "4", "10", "1970", "SG-3"]), []);
+  assert.deepEqual(TopicVisuals.cardTokens(["25%", "10 °C", "80,800 km", "7 million"]), ["25%", "10 °C", "80,800 km", "7 million"]);
+});
+
+test("visual plan leads with photographs, caps cards, and reuses stills with a new camera move", () => {
+  const stills = [
+    { file: "AMOC chart.png", description: "model graph" },
+    { file: "Gulf Stream from orbit.jpg", description: "satellite photograph" },
+    { file: "Iceberg.jpg", description: "iceberg near Greenland" },
+  ];
+  assert.deepEqual(stills.map(TopicVisuals.stillKind), ["diagram", "photo", "photo"]);
+  const claims = Array.from({ length: 6 }, (_, index) => ({ text: `Line ${index} moves ${index + 2}0% of the heat.`, start: index * 5, end: index * 5 + 5 }));
+  const plan = TopicVisuals.buildVisualPlan({ id: "IB-PLAN" }, { targetSeconds: 30, claims }, stills, Array(12).fill(2.5), 30);
+  const cards = plan.filter((shot) => shot.type === "number-card");
+  assert.ok(cards.length <= 3, `cards ${cards.length}`);
+  assert.ok(plan.every((shot, index) => !index || !(shot.type === "number-card" && plan[index - 1].type === "number-card")), "no back-to-back cards");
+  assert.ok(cards.every((card) => card.backdrop), "cards sit on a picture from the topic");
+  const firstStill = plan.find((shot) => shot.type === "licensed-still");
+  assert.equal(firstStill.kind, "photo", "photographs before diagrams");
+  assert.ok(plan.every((shot, index) => !index || shot.type !== "licensed-still" || plan[index - 1].still !== shot.still), "never the same picture twice in a row");
+  const reused = plan.filter((shot) => shot.type === "licensed-still" && shot.motion > 0);
+  assert.ok(reused.length > 0 && reused.every((shot) => /#\d+$/.test(shot.sourceId)));
+  const metrics = TopicVisuals.visualMetrics(plan);
+  assert.equal(metrics.realImageCount, 3, "a re-used still counts once");
+  assert.equal(TopicVisuals.evaluateVisualQuality(metrics).decision, "PUBLISH");
 });
 
 test("number-card type scales down wide sourced values to stay inside the card", () => {

@@ -8,6 +8,8 @@ const { ROOT } = require("../channel-context");
 
 const CACHE_SCHEMA = 1;
 const MAX_HOLD_SECONDS = 4;
+// Enough licensed pictures that a 30-second Short rarely needs to reuse one.
+const MAX_STILLS = 8;
 const NUMBER_RE = /\b[A-Z]{1,6}-\d+\b|\d[\d,]*(?:\.\d+)?(?:\s*[–—-]\s*\d[\d,]*(?:\.\d+)?)?(?:\s*-?\s*(?:%|percent|rpm|km\/h|m\/s|mph|nm|nanometres?|nanometers?|μm|um|micrometres?|micrometers?|km|kilometres?|kilometers?|millimetres?|millimeters?|centimetres?|centimeters?|metres?|meters?|kg|kV|V|volts?|GW|MW|watts?|tons?|seconds?|minutes?|hours?|days?|years?|nautical\s+miles?|miles?|feet|inches?|litres?|liters?|°C|degrees?|million|billion|thousand|barrels?(?:\s+(?:per|a)\s+day)?|light-seconds?))?/gi;
 
 function numberTokens(text) {
@@ -69,15 +71,51 @@ function shortHash(value) {
   return crypto.createHash("sha256").update(String(value)).digest("hex").slice(0, 12);
 }
 
+// Paper figures, charts and maps are unreadable when cropped to 9:16; they
+// are shown whole over a blurred copy of themselves. Photographs fill the frame.
+const DIAGRAM_RE = /\b(?:graph|chart|diagram|plot|figure|fig|map|schematic|timeline|data|anomal\w*|model\w*|simulation|cross[- ]section|infographic|table|curve|scheme|projection|trend|svg)\b/i;
+
+function stillKind(still) {
+  const text = `${still.file || ""} ${still.description || ""}`.replace(/[_]/g, " ");
+  return /\.(?:png|svg|gif)$/i.test(still.file || "") || DIAGRAM_RE.test(text) ? "diagram" : "photo";
+}
+
+// A card is worth showing only for a value with a unit or percentage. Bare
+// numbers ("8", "4 vs 10") and identifiers carry no meaning on screen.
+function cardTokens(numbers) {
+  return numbers.filter((token) => !/^[A-Z]{1,6}-\d+$/.test(token) && /[a-z%°]/i.test(token));
+}
+
+function tokenUnit(token) {
+  return String(token).replace(/^[\d,.\s–—-]+/, "").trim().toLowerCase();
+}
+
+const MAX_CARDS_WITH_STILLS = 3;
+const MAX_CARDS_WITHOUT_STILLS = 6;
+
 function buildVisualPlan(topic, script, stills = [], pacingSegments = [], duration = script && script.targetSeconds || 0) {
   const claims = claimRows(script, duration);
   if (!claims.length || !(duration > 0)) return [];
   const boundaries = timelineBoundaries(claims, duration, pacingSegments);
   const scenes = scenesFor(topic);
-  let stillIndex = 0;
-  let preferPhoto = true;
-  const cardUses = new Map();
+  // Photographs first (they carry the story), diagrams after, each in the
+  // relevance order prepareAssets produced.
+  const ordered = [...stills.filter((still) => stillKind(still) === "photo"), ...stills.filter((still) => stillKind(still) === "diagram")];
+  const maxCards = ordered.length >= 2 ? MAX_CARDS_WITH_STILLS : MAX_CARDS_WITHOUT_STILLS;
+  const stillUses = new Map();
+  const cardedClaims = new Set();
+  let cards = 0;
+  let backdropIndex = 0;
   const plan = [];
+
+  const nextStill = () => {
+    const last = plan.length ? plan[plan.length - 1].still : null;
+    const candidates = ordered.filter((still) => still !== last);
+    if (!candidates.length) return null;
+    // Unused stills first; once all are used, the least used one returns with
+    // a different camera move.
+    return candidates.reduce((best, still) => ((stillUses.get(still.file) || 0) < (stillUses.get(best.file) || 0) ? still : best), candidates[0]);
+  };
 
   for (let shotIndex = 0; shotIndex < boundaries.length - 1; shotIndex += 1) {
     const start = boundaries[shotIndex];
@@ -86,74 +124,58 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     const claimIndex = activeClaim(claims, start + 0.002);
     const claim = claims[claimIndex];
     const numbers = numberTokens(claim.text);
+    const eligible = cardTokens(numbers);
+    const previous = plan[plan.length - 1];
+    const cardAllowed = eligible.length && cards < maxCards && !cardedClaims.has(claimIndex) && (!previous || previous.type !== "number-card");
     let type;
-    // A numeric opening is itself the hook visual. After that, favor the
-    // requested photo -> number -> photo rhythm whenever both are available.
-    if (shotIndex === 0 && numbers.length) type = "number-card";
-    else if (preferPhoto && stillIndex < stills.length) type = "licensed-still";
-    else if (numbers.length) type = "number-card";
+    // A numeric hook is the opening visual; later, one card per claim at most,
+    // never two in a row, and stills carry everything else.
+    if (shotIndex === 0 && cardAllowed) type = "number-card";
+    else if (cardAllowed && (!ordered.length || (previous && previous.type === "licensed-still"))) type = "number-card";
+    else if (ordered.length && nextStill()) type = "licensed-still";
+    else if (cardAllowed) type = "number-card";
     else type = "procedural";
 
-    let cardNumbers = numbers;
-    let comparison = numbers.length >= 2 ? numbers.slice(0, 2) : [];
-    if (type === "number-card") {
-      const use = cardUses.get(claimIndex) || 0;
-      // The first card preserves the line's comparison. If a long claim earns
-      // another paced cut, focus that genuinely different card on one of the
-      // other sourced values instead of replaying and counting the same card.
-      if (use > 0 && numbers.length > 1) {
-        cardNumbers = [numbers[use % numbers.length]];
-        comparison = [];
-      }
-    }
-    const cardSourceId = `card:${claimIndex}:${shortHash(cardNumbers.join("|"))}`;
-    if (type === "number-card" && plan.length && plan[plan.length - 1].sourceId === cardSourceId) type = "procedural";
-    else if (type === "number-card") cardUses.set(claimIndex, (cardUses.get(claimIndex) || 0) + 1);
-
-    let sourceId;
-    let still = null;
-    const proceduralFrame = claimIndex * 97 + shotIndex;
+    const entry = { shot: plan.length + 1, start, end, duration: end - start, claimIndex, claimText: claim.text,
+      scene: scenes[claimIndex % Math.max(1, scenes.length)] || claim.text, type, numbers, comparison: [], still: null,
+      proceduralFrame: claimIndex * 97 + shotIndex };
     if (type === "licensed-still") {
-      still = stills[stillIndex];
-      stillIndex += 1;
-      sourceId = `still:${still.file}`;
-      preferPhoto = false;
+      const still = nextStill();
+      const use = stillUses.get(still.file) || 0;
+      stillUses.set(still.file, use + 1);
+      Object.assign(entry, { still, kind: stillKind(still), motion: use, sourceId: use ? `still:${still.file}#${use + 1}` : `still:${still.file}`, visualKey: `still:${still.file}` });
     } else if (type === "number-card") {
-      sourceId = cardSourceId;
-      preferPhoto = true;
+      const sameUnit = eligible.length >= 2 && tokenUnit(eligible[0]) && tokenUnit(eligible[0]) === tokenUnit(eligible[1]);
+      const cardNumbers = sameUnit ? eligible.slice(0, 2) : eligible.slice(0, 1);
+      cards += 1;
+      cardedClaims.add(claimIndex);
+      // The narration caption already says what the value means; the card shows
+      // the value alone over a blurred picture from the same topic.
+      const backdrop = ordered.length ? ordered[backdropIndex++ % ordered.length] : null;
+      Object.assign(entry, { numbers: cardNumbers, comparison: sameUnit ? cardNumbers : [], backdrop, sourceId: `card:${claimIndex}:${shortHash(cardNumbers.join("|"))}` });
+      entry.visualKey = entry.sourceId;
     } else {
-      sourceId = `procedural:${claimIndex}:${proceduralFrame}:${shortHash(scenes[claimIndex % Math.max(1, scenes.length)] || claim.text)}`;
-      preferPhoto = true;
+      entry.sourceId = `procedural:${claimIndex}:${entry.proceduralFrame}:${shortHash(entry.scene)}`;
+      entry.visualKey = entry.sourceId;
     }
-    plan.push({
-      shot: plan.length + 1,
-      start,
-      end,
-      duration: end - start,
-      claimIndex,
-      claimText: claim.text,
-      scene: scenes[claimIndex % Math.max(1, scenes.length)] || claim.text,
-      type,
-      sourceId,
-      numbers: type === "number-card" ? cardNumbers : numbers,
-      comparison: type === "number-card" ? comparison : [],
-      still,
-      proceduralFrame,
-    });
+    plan.push(entry);
   }
   return plan;
 }
 
 function visualMetrics(plan) {
-  const distinct = new Set(plan.map((shot) => shot.sourceId));
-  const real = new Set(plan.filter((shot) => shot.type === "licensed-still").map((shot) => shot.sourceId));
-  const cards = new Set(plan.filter((shot) => shot.type === "number-card").map((shot) => shot.sourceId));
+  // A still re-used with another camera move is the same picture: it counts
+  // once for variety, and back-to-back uses count as one static hold.
+  const key = (shot) => shot.visualKey || shot.sourceId;
+  const distinct = new Set(plan.map(key));
+  const real = new Set(plan.filter((shot) => shot.type === "licensed-still").map(key));
+  const cards = new Set(plan.filter((shot) => shot.type === "number-card").map(key));
   let maxStaticSeconds = 0;
   let runSource = null;
   let runSeconds = 0;
   for (const shot of plan) {
-    if (shot.sourceId === runSource) runSeconds += shot.duration;
-    else { runSource = shot.sourceId; runSeconds = shot.duration; }
+    if (key(shot) === runSource) runSeconds += shot.duration;
+    else { runSource = key(shot); runSeconds = shot.duration; }
     maxStaticSeconds = Math.max(maxStaticSeconds, runSeconds);
   }
   const first = plan[0];
@@ -236,7 +258,7 @@ async function prepareAssets(topic, outputDirectory) {
   const articles = wikiTitles(topic);
 
   for (const article of articles) {
-    if (picked.length >= 6) break;
+    if (picked.length >= MAX_STILLS) break;
     const subjects = subjectPhrases(topic, article);
     const anchorSubjects = anchorPhrases(topic, article);
     const found = await Commons.commonsStills(subjects, 4, article, {
@@ -251,17 +273,19 @@ async function prepareAssets(topic, outputDirectory) {
     });
     for (const item of found) {
       if (!used.has(item.file)) { picked.push(item); used.add(item.file); }
-      if (picked.length >= 6) break;
+      if (picked.length >= MAX_STILLS) break;
     }
   }
 
   // Some Wikipedia pages intentionally use diagrams only. A tightly filtered
   // Commons search is the secondary source; the same licence, safety, size and
-  // subject-title/description rules still apply.
+  // subject-title/description rules still apply. It runs only when the article
+  // itself has too few pictures: a broad search returns loosely related photos
+  // (an aircraft "over the Atlantic" for an ocean-current topic).
   if (picked.length < 2) {
     const subjects = subjectPhrases(topic, articles[0] || "");
     const anchorSubjects = anchorPhrases(topic, articles[0] || "");
-    const found = await Commons.commonsStills(subjects, 6 - picked.length, null, {
+    const found = await Commons.commonsStills(subjects, MAX_STILLS - picked.length, null, {
       keywords: subjects,
       subjects,
       anchorSubjects,
@@ -273,13 +297,19 @@ async function prepareAssets(topic, outputDirectory) {
     });
     for (const item of found) {
       if (!used.has(item.file)) { picked.push(item); used.add(item.file); }
-      if (picked.length >= 6) break;
+      if (picked.length >= MAX_STILLS) break;
     }
   }
 
   const relevanceTerms = [...new Set(subjectPhrases(topic, articles[0] || "").join(" ").toLowerCase().split(/[^a-z0-9]+/)
     .filter((word) => word.length >= 4 && !["what", "with", "from", "into", "that", "this", "showing", "diagram", "comparison"].includes(word)))];
   const relevance = (item) => relevanceTerms.filter((word) => `${item.file} ${item.description || ""}`.toLowerCase().includes(word)).length;
+  // Diagrams are kept only from the topic's own Wikipedia article, where an
+  // editor placed them; a keyword search turns up unrelated schematics (a
+  // military "defence system" sketch for a tunnel ventilation system).
+  for (let index = picked.length - 1; index >= 0; index -= 1) {
+    if (picked[index].origin !== "wikipedia-article" && stillKind(picked[index]) === "diagram") picked.splice(index, 1);
+  }
   picked.sort((a, b) => relevance(b) - relevance(a) || b.score - a.score || a.file.localeCompare(b.file));
 
   const stills = [];
@@ -327,6 +357,6 @@ function attributionLines(stills) {
 }
 
 module.exports = {
-  CACHE_SCHEMA, MAX_HOLD_SECONDS, numberTokens, buildVisualPlan, visualMetrics, evaluateVisualQuality,
+  CACHE_SCHEMA, MAX_HOLD_SECONDS, numberTokens, stillKind, cardTokens, buildVisualPlan, visualMetrics, evaluateVisualQuality,
   wikiTitles, prepareAssets, prepareAssetsSync, loadManifest, attributionLines,
 };

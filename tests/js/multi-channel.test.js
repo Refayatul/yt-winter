@@ -112,8 +112,8 @@ test("library has 500 qualified, source-based, non-duplicate topics in the targe
 
 test("ImpossibleBrief package enforces claims, hooks, 20 titles, visuals, metadata and no upload", () => {
   const channel = Channel.getChannel("impossible-brief");
-  assert.equal(channel.config.retentionRules.openingMaxSeconds, 2.2);
-  assert.equal(channel.config.retentionRules.secondBeatMaxSeconds, 6.2);
+  assert.equal(channel.config.retentionRules.openingMaxSeconds, 3);
+  assert.equal(channel.config.retentionRules.secondBeatMaxSeconds, 8);
   const topic = Discovery.universe(channel).topics.find((item) => item.topic === "What If Gravity Doubled Tomorrow?");
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), "ib-e2e-"));
   try {

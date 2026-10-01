@@ -78,10 +78,10 @@ function lintRecord(channelSlug, record, rules) {
     if (!LAYERS[channelSlug].includes(line.layer)) errors.push(`line ${index + 1} layer "${line.layer}" not in ${LAYERS[channelSlug].join("/")}`);
     if (!line.role) errors.push(`line ${index + 1} has no role`);
   }
-  // Measured-time budget: the growth hook engine and renderer assume fast
-  // neural TTS (~3.6 words/s); keep a margin below it.
-  const openingWords = Math.floor(rules.openingMaxSeconds * 1.15 * 3.6);
-  const secondWords = Math.floor(rules.secondBeatMaxSeconds * 3.0);
+  // Measured-time budget at the natural narration pace the renderer uses
+  // (~2.8 words/s for the hook; ~2.3 including the line pause).
+  const openingWords = Math.floor(rules.openingMaxSeconds * 1.15 * 2.8);
+  const secondWords = Math.floor(rules.secondBeatMaxSeconds * 2.3);
   if (lines[0] && wordCount(lines[0].text) > openingWords) errors.push(`opening "${lines[0].text}" > ${openingWords} words (opening ≤ ${rules.openingMaxSeconds}s)`);
   if (lines[1] && wordCount(lines[0].text) + wordCount(lines[1].text) > secondWords) errors.push(`opening + second beat > ${secondWords} words (second beat ≤ ${rules.secondBeatMaxSeconds}s)`);
   if (lines[0] && record.openingLine && lines[0].text !== record.openingLine) errors.push("narration line 1 must equal openingLine (it is the spoken hook)");

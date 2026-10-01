@@ -18,10 +18,10 @@
   "publishTime": "21:00",
   "publishTimeUtc": "18:00",
   "publishingCadence": {
-    "shorts": { "everyDays": 1, "productionTime": "10:00", "targetDurationSeconds": [20, 40] },
+    "shorts": { "everyDays": 1, "productionTime": "10:00", "targetDurationSeconds": [20, 45] },
     "longForm": { "everyDays": 7, "targetDurationMinutes": [8, 12], "qualityOverCadence": true }
   },
-  "voice": { "provider": "edge-tts", "voice": "en-US-GuyNeural", "style": "measured premium technical documentary" },
+  "voice": { "provider": "edge-tts", "voice": "en-US-GuyNeural", "rate": "-6%", "style": "measured premium technical documentary" },
   "brandStyle": "dark technical documentary, global infrastructure, precise, premium, cinematic, restrained",
   "contentNiche": "hidden systems, machines, materials and infrastructure that keep the modern world running",
   "topicRules": {
@@ -46,8 +46,10 @@
     "memoryScope": "channel",
     "learnAfterVideos": 5,
     "doNotShareAcrossChannels": true,
-    "openingMaxSeconds": 2,
-    "secondBeatMaxSeconds": 6,
+    "openingMaxSeconds": 3,
+    "secondBeatMaxSeconds": 8,
+    "hookVoiceMaxSeconds": 5.5,
+    "secondBeatVoiceMaxSeconds": 11,
     "visualChangeTargetSeconds": [1.5, 3.5]
   },
   "ctaStrategy": "optional system-dependency bridge after the factual payoff",
