@@ -39,7 +39,9 @@ const API = "https://api.pexels.com/videos/search";
 const LICENCE = "Pexels License";
 const MAX_CLIPS = 3;
 // A Short about a port should not cut to a smiling stranger.
-const PEOPLE = /\b(?:woman|women|man|men|girl|girls|boy|boys|person|people|couple|family|portrait|selfie|lady|guy|kid|kids|child|children|businessman|businesswoman|worker|workers|model|dancing|smiling|face)\b/i;
+// Uniformed crews read as a specific country's service (a Russian fire crew in
+// a Short about a French–Italian tunnel).
+const PEOPLE = /\b(?:woman|women|man|men|girl|girls|boy|boys|person|people|couple|family|portrait|selfie|lady|guy|kid|kids|child|children|businessman|businesswoman|worker|workers|model|dancing|smiling|face|firefighters?|fireman|firemen|rescuers?|soldiers?|army|military|police|policeman|officers?|doctors?|nurses?|pilots?|technicians?|engineers?|operators?|crew|team|tourists?|athletes?|students?|employees?)\b/i;
 
 function slugWords(pageUrl) {
   const match = String(pageUrl || "").match(/\/video\/([^/]+?)(?:-\d+)?\/?$/);
@@ -58,11 +60,18 @@ function queries(topic) {
   ].filter((query) => query && query.split(/\s+/).length >= 1))].slice(0, 6);
 }
 
-function accept(video, terms) {
+// The subject of the topic (its canonical subject, or its title words), not a
+// place name: "Mont Blanc" alone admitted a helicopter on a landing pad.
+function subjectTerms(topic) {
+  const words = Nasa.contentWords(topic.canonicalTopic || topic.subject || topic.topic);
+  return new Set(words.filter((word) => !["system", "systems"].includes(word)));
+}
+
+function accept(video, terms, subject = terms.anchors) {
   if (!video || !(video.duration >= 5)) return false;
   const words = slugWords(video.url);
   if (!words.length || PEOPLE.test(words.join(" "))) return false;
-  return words.some((word) => terms.anchors.has(word));
+  return words.some((word) => subject.has(word));
 }
 
 function pickFile(video) {
@@ -83,7 +92,8 @@ async function search(topic, directory, key, options = {}) {
   const get = options.get || httpGet;
   const limit = options.limit || MAX_CLIPS;
   const terms = Nasa.topicTerms(topic);
-  if (!key || !terms.anchors.size) return [];
+  const subject = subjectTerms(topic);
+  if (!key || !subject.size) return [];
   const seen = new Set(options.exclude || []);
   const candidates = [];
   for (const query of queries(topic)) {
@@ -92,11 +102,11 @@ async function search(topic, directory, key, options = {}) {
     let body;
     try { body = typeof response.body === "string" ? JSON.parse(response.body) : response.body; } catch (error) { continue; }
     for (const video of (body && body.videos) || []) {
-      if (seen.has(video.id) || !accept(video, terms)) continue;
+      if (seen.has(video.id) || !accept(video, terms, subject)) continue;
       const file = pickFile(video);
       if (!file) continue;
       seen.add(video.id);
-      const score = slugWords(video.url).filter((word) => terms.anchors.has(word)).length;
+      const score = slugWords(video.url).filter((word) => subject.has(word)).length * 2 + slugWords(video.url).filter((word) => terms.anchors.has(word)).length;
       candidates.push({ video, file, score });
     }
   }
@@ -127,4 +137,4 @@ async function search(topic, directory, key, options = {}) {
   return clips;
 }
 
-module.exports = { API, LICENCE, MAX_CLIPS, httpGet, slugWords, queries, accept, pickFile, brightness, search };
+module.exports = { API, LICENCE, MAX_CLIPS, httpGet, slugWords, subjectTerms, queries, accept, pickFile, brightness, search };

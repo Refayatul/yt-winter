@@ -21,6 +21,11 @@ test("stock footage: the page slug must name the topic, and people clips are rej
   assert.equal(Stock.accept(video(2, "woman-walking-in-a-tunnel"), terms), false, "people");
   assert.equal(Stock.accept(video(3, "sunset-over-the-beach"), terms), false, "off topic");
   assert.equal(Stock.accept(video(4, "cars-driving-through-a-tunnel", { duration: 3 }), terms), false, "too short");
+  // Seen in the first real dry run (2026-10-01): a place-name match and a uniformed crew.
+  const subject = Stock.subjectTerms(tunnel);
+  assert.equal(Stock.accept(video(5, "helicopter-on-a-landing-pad-near-mont-blanc"), terms, subject), false, "place name is not the subject");
+  assert.equal(Stock.accept(video(6, "firefighter-loading-equipment-in-a-tunnel"), terms, subject), false, "uniformed crew");
+  assert.equal(Stock.accept(video(7, "car-entering-a-road-tunnel-in-snow"), terms, subject), true);
 });
 
 test("stock footage: only portrait HD MP4 files are used, closest to 1920 tall", () => {
