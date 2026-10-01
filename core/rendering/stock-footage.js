@@ -60,6 +60,19 @@ function queries(topic) {
   ].filter((query) => query && query.split(/\s+/).length >= 1))].slice(0, 6);
 }
 
+// A road-tunnel Short should not cut to a metro station: a clip showing a
+// transport mode the topic never mentions is about something else.
+const MODES = [
+  { clip: /\b(?:train|trains|subway|metro|railway|tram|locomotive)\b/, topic: /\b(?:train|trains|rail|railway|railways|subway|metro|tram|locomotive)\b/ },
+  { clip: /\b(?:airplane|airplanes|plane|planes|aircraft|airport|jet)\b/, topic: /\b(?:aviation|aircraft|airport|airports|plane|planes|flight|flights|jet|airline)\b/ },
+  { clip: /\b(?:ship|ships|boat|boats|vessel|vessels|ferry|yacht)\b/, topic: /\b(?:ship|ships|shipping|boat|vessel|vessels|ferry|port|ports|maritime|canal|cable|cables|strait|chokepoint|chokepoints)\b/ },
+];
+
+function modeConflict(words, topicText) {
+  const clip = words.join(" ");
+  return MODES.some((mode) => mode.clip.test(clip) && !mode.topic.test(topicText));
+}
+
 // The subject of the topic (its canonical subject, or its title words), not a
 // place name: "Mont Blanc" alone admitted a helicopter on a landing pad.
 function subjectTerms(topic) {
@@ -67,10 +80,10 @@ function subjectTerms(topic) {
   return new Set(words.filter((word) => !["system", "systems"].includes(word)));
 }
 
-function accept(video, terms, subject = terms.anchors) {
+function accept(video, terms, subject = terms.anchors, topicText = [...terms.anchors].join(" ")) {
   if (!video || !(video.duration >= 5)) return false;
   const words = slugWords(video.url);
-  if (!words.length || PEOPLE.test(words.join(" "))) return false;
+  if (!words.length || PEOPLE.test(words.join(" ")) || modeConflict(words, topicText)) return false;
   return words.some((word) => subject.has(word));
 }
 
@@ -80,12 +93,15 @@ function pickFile(video) {
     .sort((a, b) => Math.abs(a.height - 1920) - Math.abs(b.height - 1920))[0] || null;
 }
 
-// Mean luma of three frames; mostly dark clips read as black on a phone.
-function brightness(file) {
+// Luma of the darkest half-second in the middle four seconds: a shot always
+// uses the middle of its clip (core/rendering renderVideo), and a train
+// entering a tunnel is bright first, then black.
+function brightness(file, duration = 0) {
   const { ffmpeg } = require("../../ff-yol");
-  const out = cp.spawnSync(ffmpeg, ["-hide_banner", "-i", file, "-vf", "fps=1/2,scale=64:-1,signalstats,metadata=print:key=lavfi.signalstats.YAVG", "-frames:v", "3", "-f", "null", "-"], { encoding: "utf8", timeout: 60000 });
+  const start = Math.max(0, duration / 2 - 2);
+  const out = cp.spawnSync(ffmpeg, ["-hide_banner", "-ss", start.toFixed(2), "-t", "4", "-i", file, "-vf", "fps=2,scale=64:-1,signalstats,metadata=print:key=lavfi.signalstats.YAVG", "-f", "null", "-"], { encoding: "utf8", timeout: 90000 });
   const values = [...String(out.stderr || "").matchAll(/YAVG=([\d.]+)/g)].map((match) => Number(match[1]));
-  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : 0;
+  return values.length ? Math.min(...values) : 0;
 }
 
 async function search(topic, directory, key, options = {}) {
@@ -93,6 +109,7 @@ async function search(topic, directory, key, options = {}) {
   const limit = options.limit || MAX_CLIPS;
   const terms = Nasa.topicTerms(topic);
   const subject = subjectTerms(topic);
+  const topicText = [topic.topic, topic.canonicalTopic, topic.category, ...Nasa.queries(topic)].filter(Boolean).join(" ").toLowerCase();
   if (!key || !subject.size) return [];
   const seen = new Set(options.exclude || []);
   const candidates = [];
@@ -102,7 +119,7 @@ async function search(topic, directory, key, options = {}) {
     let body;
     try { body = typeof response.body === "string" ? JSON.parse(response.body) : response.body; } catch (error) { continue; }
     for (const video of (body && body.videos) || []) {
-      if (seen.has(video.id) || !accept(video, terms, subject)) continue;
+      if (seen.has(video.id) || !accept(video, terms, subject, topicText)) continue;
       const file = pickFile(video);
       if (!file) continue;
       seen.add(video.id);
@@ -119,7 +136,7 @@ async function search(topic, directory, key, options = {}) {
     const response = await get(file.link, { binary: true });
     if (!(response.status >= 200 && response.status < 300) || !Buffer.isBuffer(response.body) || !response.body.length) continue;
     fs.writeFileSync(target, response.body);
-    if ((options.brightness || brightness)(target) < 40) { fs.unlinkSync(target); continue; }
+    if ((options.brightness || brightness)(target, video.duration) < 28) { fs.unlinkSync(target); continue; }
     clips.push({
       id: video.id,
       file: `Pexels video ${video.id}`,
@@ -137,4 +154,4 @@ async function search(topic, directory, key, options = {}) {
   return clips;
 }
 
-module.exports = { API, LICENCE, MAX_CLIPS, httpGet, slugWords, subjectTerms, queries, accept, pickFile, brightness, search };
+module.exports = { API, LICENCE, MAX_CLIPS, httpGet, slugWords, subjectTerms, modeConflict, queries, accept, pickFile, brightness, search };
