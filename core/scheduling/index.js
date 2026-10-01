@@ -3,6 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const Channel = require("../channel-context");
+const Calendar = require("./calendar");
 
 function read(file, fallback) {
   try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch (error) { return fallback; }
@@ -22,8 +23,24 @@ function lastPublished(channel, format) {
   return [scheduled, published].filter(Boolean).sort().pop() || null;
 }
 
+// Short records of the channel, plus the scheduler's own last Short marker.
+function shortRecords(channel) {
+  if (channel.config.pathMode === "legacy-adapter") return read(path.join(channel.paths.state, "yayinlananlar.json"), []);
+  const state = read(path.join(channel.paths.state, "scheduler-state.json"), {});
+  const published = read(path.join(channel.paths.state, "published.json"), []);
+  return [...(Array.isArray(published) ? published : []), ...(state.lastShort ? [{ format: "short", publishAt: state.lastShort }] : [])];
+}
+
+// Rolling interval: used only for the weekly long-form lane. Daily Shorts use
+// calendar-day idempotency (core/scheduling/calendar.js).
 function isDue(last, everyDays, now) {
   return !last || now.getTime() - Date.parse(last) >= everyDays * 86400000;
+}
+
+function shortPlan(channel, last, everyDays, now) {
+  const decision = Calendar.shortDecision(channel, shortRecords(channel), now);
+  return { due: decision.due, last, everyDays, reason: decision.reason, today: decision.today, timeZone: decision.timeZone,
+    productionAt: decision.productionAt, publishAt: decision.publishAt, closesAt: decision.closesAt, existing: decision.existing };
 }
 
 function channelPlan(channel, now = new Date()) {
@@ -33,7 +50,7 @@ function channelPlan(channel, now = new Date()) {
   return {
     channel: channel.slug,
     channelName: channel.name,
-    short: { due: isDue(shortLast, cadence.shorts.everyDays, now), last: shortLast, everyDays: cadence.shorts.everyDays },
+    short: shortPlan(channel, shortLast, cadence.shorts.everyDays, now),
     long: { due: isDue(longLast, cadence.longForm.everyDays, now), last: longLast, everyDays: cadence.longForm.everyDays },
   };
 }
@@ -60,8 +77,8 @@ function enqueue(plan = portfolioPlan()) {
     const channel = Channel.getChannel(task.channel);
     const file = path.join(channel.paths.state, "scheduler-state.json");
     const state = read(file, { channel: task.channel, lastShort: null, lastLong: null, queue: [] });
-    if (!state.queue.some((item) => item.key === task.key && item.date === plan.generatedAt.slice(0, 10))) {
-      state.queue.push({ ...task, date: plan.generatedAt.slice(0, 10), status: "queued" });
+    if (!state.queue.some((item) => item.key === task.key && item.date === Calendar.dayKey(plan.generatedAt, channel.config.timezone))) {
+      state.queue.push({ ...task, date: Calendar.dayKey(plan.generatedAt, channel.config.timezone), status: "queued" });
       fs.mkdirSync(path.dirname(file), { recursive: true });
       const temporary = file + `.tmp-${process.pid}`;
       fs.writeFileSync(temporary, JSON.stringify(state, null, 2) + "\n");
@@ -71,4 +88,4 @@ function enqueue(plan = portfolioPlan()) {
   return plan;
 }
 
-module.exports = { lastPublished, isDue, channelPlan, portfolioPlan, enqueue };
+module.exports = { lastPublished, shortRecords, isDue, shortPlan, channelPlan, portfolioPlan, enqueue };

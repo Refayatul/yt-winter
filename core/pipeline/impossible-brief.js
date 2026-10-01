@@ -112,7 +112,7 @@ function runChannel(slug, argv = []) {
   const explicit = argv.find((arg) => !arg.startsWith("--"));
   if (!explicit && process.env.PUBLISH === "1") {
     const due = require("../scheduling").channelPlan(channel).short;
-    if (!due.due) { console.log(`[${channel.name}] Takvim: henuz degil`); return 0; }
+    if (!due.due) { console.log(`[${channel.name}] Takvim: henuz degil — ${due.reason}`); return 0; }
   }
   const universe = Discovery.universe(channel).topics;
   const noRender = argv.includes("--no-render");
