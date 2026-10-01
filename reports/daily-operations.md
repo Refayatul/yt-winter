@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-01T14:38:21.219Z
+Generated: 2026-10-01T15:31:38.604Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -17,7 +17,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Video ID | rgSsk8q6eyM |
 | Analytics | measured |
 | Scheduler | healthy |
-| Ready topic backlog | 0 |
+| Ready topic backlog | 365 |
 | Errors/review/blocks | 3 |
 | TikTok today | SEND_TO_USER_INBOX |
 | TikTok backlog | 2 |

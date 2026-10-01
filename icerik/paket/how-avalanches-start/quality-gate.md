@@ -1,11 +1,11 @@
 # Quality gate — how-avalanches-start (pre)
 
-**PUBLISH** — 87/100 (PUBLISH ≥ 85, REVIEW ≥ 70)
+**PUBLISH** — 85/100 (PUBLISH ≥ 85, REVIEW ≥ 70)
 
 | Component | Score | Notes |
 |---|---:|---|
-| TITLE | 52 | "How a Single Step Triggers an Avalanche" (engine 46) |
-| THUMBNAIL | 96 |  |
+| TITLE | 30 | "The Hidden Layer That Makes Snow Slide" (engine 34.9) |
+| THUMBNAIL | 100 |  |
 | HOOK | 100 |  |
 | SCRIPT | 100 |  |
 | ORIGINALITY | 89 |  |

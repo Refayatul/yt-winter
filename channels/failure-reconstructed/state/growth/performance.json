@@ -488,10 +488,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 79.4,
+      "growthScore": 84,
       "classification": "FAILED_TEST",
       "percentiles": {
-        "viewVelocity": 88.9,
+        "viewVelocity": 100,
         "retention": null,
         "engagement": 66.7,
         "subscriberConversion": null,
@@ -7744,10 +7744,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 57.5,
+      "growthScore": 60.7,
       "classification": "FAILED_TEST",
       "percentiles": {
-        "viewVelocity": 66.7,
+        "viewVelocity": 77.8,
         "retention": 66.7,
         "engagement": 55.6,
         "subscriberConversion": null,
@@ -22542,10 +22542,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 72.2,
+      "growthScore": 76.8,
       "classification": "FAILED_TEST",
       "percentiles": {
-        "viewVelocity": 77.8,
+        "viewVelocity": 88.9,
         "retention": null,
         "engagement": 44.4,
         "subscriberConversion": null,
@@ -22756,263 +22756,6 @@
       "probableCauses": [],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
     }
-  },
-  {
-    "checkpoints": {
-      "1h": {
-        "collectedAt": "2026-09-30T19:27:04.632Z",
-        "metrics": {
-          "views": {
-            "value": 517,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "likes": {
-            "value": 15,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "comments": {
-            "value": 0,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "shares": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_gained": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_view_duration": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_percentage_viewed": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "watch_time_minutes": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "impressions": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "ctr": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "returning_viewers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed per video by the public API"
-          },
-          "first_30s_retention": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "engaged_views": {
-            "value": null,
-            "status": "NOT_COLLECTED",
-            "reason": null
-          },
-          "subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "engagement_per_1000_views": {
-            "value": 29.01,
-            "status": "DERIVED",
-            "from": "likes+comments+shares / views"
-          },
-          "watch_hours_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          }
-        },
-        "traffic": [],
-        "retention": [],
-        "analyticsStatus": "ok"
-      },
-      "12h": {
-        "collectedAt": "2026-10-01T14:38:12.946Z",
-        "metrics": {
-          "views": {
-            "value": 932,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "likes": {
-            "value": 17,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "comments": {
-            "value": 0,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "shares": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_gained": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_lost": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "net_subscribers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_view_duration": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_percentage_viewed": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "watch_time_minutes": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "impressions": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "ctr": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "returning_viewers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed per video by the public API"
-          },
-          "first_30s_retention": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "engaged_views": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "net_subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "engagement_per_1000_views": {
-            "value": 18.24,
-            "status": "DERIVED",
-            "from": "likes+comments+shares / views"
-          },
-          "watch_hours_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          }
-        },
-        "traffic": [],
-        "retention": [],
-        "analyticsStatus": "ok"
-      }
-    },
-    "videoId": "NnGoWJOdaW0",
-    "channel": "failure-reconstructed",
-    "contentType": "short",
-    "title": "General Slocum: The Inspection That Killed",
-    "publishAt": "2026-09-30T18:00:11Z",
-    "durationSeconds": 25,
-    "registeredBy": "analytics-pass",
-    "metrics": {
-      "views": 932,
-      "averagePercentageViewed": null,
-      "averageViewDuration": null,
-      "likes": 17,
-      "comments": 0,
-      "shares": null,
-      "subscribersGained": null,
-      "engagedViews": null,
-      "subscribersLost": null,
-      "netSubscribers": null,
-      "subscribersPer1000Views": null,
-      "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 18.24,
-      "watchHoursPer1000Views": null,
-      "ctr": null,
-      "first30sRetention": null,
-      "shortsFeedShare": null
-    },
-    "latestCheckpoint": "12h",
-    "normalized": {
-      "ageHours": 12,
-      "viewsPerHour": 77.67,
-      "recentViewVelocity": 37.73,
-      "likeRate": 0.01824,
-      "commentRate": 0,
-      "shareRate": null,
-      "engagementRate": 0.01824,
-      "engagedViewRate": null,
-      "subscriberConversion": null,
-      "subscribersPer1000Views": null
-    },
-    "performance": {
-      "growthScore": 81.9,
-      "classification": "STRONG",
-      "percentiles": {
-        "viewVelocity": 100,
-        "retention": null,
-        "engagement": 33.3,
-        "subscriberConversion": null,
-        "views": 100
-      },
-      "baselines": {
-        "views": 1004.5,
-        "viewsPerHour": 10.855,
-        "averagePercentageViewed": 67.77,
-        "engagementRate": 0.035185,
-        "subscriberConversion": 0.00146
-      },
-      "missing": [
-        "retention",
-        "subscriberConversion"
-      ],
-      "plateau": null,
-      "breakout": null,
-      "probableCauses": [],
-      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
-    },
-    "slug": "general-slocum-1904",
-    "topicCluster": "maritime-disasters"
   },
   {
     "checkpoints": {
@@ -26873,10 +26616,10 @@
       "subscribersPer1000Views": 1.46
     },
     "performance": {
-      "growthScore": 56.2,
+      "growthScore": 58.4,
       "classification": "FAILED_TEST",
       "percentiles": {
-        "viewVelocity": 55.6,
+        "viewVelocity": 66.7,
         "retention": 100,
         "engagement": 11.1,
         "subscriberConversion": 50,
@@ -26908,5 +26651,362 @@
       ],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
     }
+  },
+  {
+    "checkpoints": {
+      "1h": {
+        "collectedAt": "2026-09-30T19:27:04.632Z",
+        "metrics": {
+          "views": {
+            "value": 517,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 15,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "NOT_COLLECTED",
+            "reason": null
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 29.01,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      },
+      "12h": {
+        "collectedAt": "2026-10-01T14:38:12.946Z",
+        "metrics": {
+          "views": {
+            "value": 932,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 17,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 18.24,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      },
+      "6h": {
+        "collectedAt": "2026-10-01T15:31:33.111Z",
+        "metrics": {
+          "views": {
+            "value": 931,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 17,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 18.26,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      }
+    },
+    "videoId": "NnGoWJOdaW0",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "title": "General Slocum: The Inspection That Killed",
+    "publishAt": "2026-09-30T18:00:11Z",
+    "durationSeconds": 25,
+    "registeredBy": "analytics-pass",
+    "metrics": {
+      "views": 931,
+      "averagePercentageViewed": null,
+      "averageViewDuration": null,
+      "likes": 17,
+      "comments": 0,
+      "shares": null,
+      "subscribersGained": null,
+      "engagedViews": null,
+      "subscribersLost": null,
+      "netSubscribers": null,
+      "subscribersPer1000Views": null,
+      "netSubscribersPer1000Views": null,
+      "engagementPer1000Views": 18.26,
+      "watchHoursPer1000Views": null,
+      "ctr": null,
+      "first30sRetention": null,
+      "shortsFeedShare": null
+    },
+    "latestCheckpoint": "6h",
+    "normalized": {
+      "ageHours": 12,
+      "viewsPerHour": 77.67,
+      "recentViewVelocity": 0.17,
+      "likeRate": 0.01824,
+      "commentRate": 0,
+      "shareRate": null,
+      "engagementRate": 0.01824,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": 63.4,
+      "classification": "NORMAL",
+      "percentiles": {
+        "viewVelocity": 55.6,
+        "retention": null,
+        "engagement": 33.3,
+        "subscriberConversion": null,
+        "views": 100
+      },
+      "baselines": {
+        "views": 1004.5,
+        "viewsPerHour": 10.855,
+        "averagePercentageViewed": 67.77,
+        "engagementRate": 0.035185,
+        "subscriberConversion": 0.00146
+      },
+      "missing": [
+        "retention",
+        "subscriberConversion"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    },
+    "slug": "general-slocum-1904",
+    "topicCluster": "maritime-disasters"
   }
 ]
