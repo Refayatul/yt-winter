@@ -581,7 +581,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     const assets = TopicVisuals.prepareAssetsSync(path.join(outputDirectory, "topic.json"), outputDirectory);
     const attribution = TopicVisuals.attributionLines(assets.stills);
     if (attribution.length) {
-      metadata.description += `\n\nVisual credits (Wikimedia Commons):\n${attribution.join("\n")}`;
+      metadata.description += `\n\nVisual credits:\n${attribution.join("\n")}`;
       write(path.join(outputDirectory, "metadata.json"), metadata);
       write(path.join(outputDirectory, "description.txt"), metadata.description + "\n");
     }

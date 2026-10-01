@@ -310,6 +310,18 @@ async function prepareAssets(topic, outputDirectory) {
   for (let index = picked.length - 1; index >= 0; index -= 1) {
     if (picked[index].origin !== "wikipedia-article" && stillKind(picked[index]) === "diagram") picked.splice(index, 1);
   }
+
+  // Articles about oceans, planets or the Sun often carry only paper figures.
+  // NASA's public-domain library fills in photographs (core/rendering/nasa-images.js
+  // decides rights and relevance). A NASA outage only means fewer pictures.
+  if (picked.filter((item) => stillKind(item) === "photo").length < 3 && picked.length < MAX_STILLS && process.env.NASA_IMAGES !== "0") {
+    try {
+      const found = await require("./nasa-images").search(topic, MAX_STILLS - picked.length, Commons.get, used);
+      for (const item of found) {
+        if (!used.has(item.file)) { picked.push(item); used.add(item.file); }
+      }
+    } catch (error) {}
+  }
   picked.sort((a, b) => relevance(b) - relevance(a) || b.score - a.score || a.file.localeCompare(b.file));
 
   const stills = [];
