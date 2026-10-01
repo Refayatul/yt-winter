@@ -164,6 +164,52 @@ function synthesizeNarration(script, outputDirectory, channel) {
   };
 }
 
+// Atmosphere bed: the same procedural, licence-free generator and ducking
+// chain as Failure Reconstructed (lib/muzik.js, shorts-yap.js), with a mood
+// chosen from the topic's category so every video does not play one bed.
+const MUSIC_MOODS = {
+  "impossible-brief": { SPACE: "spaceflight-disasters", "FUTURE TECHNOLOGY": "spaceflight-disasters", EARTH: "natural-hazards", OTHER: "natural-hazards",
+    PHYSICS: "aviation-failures", HUMAN: "materials-failures", "EXTREME SCIENCE": "nuclear-accidents", default: "natural-hazards" },
+  "critical-thread": { ENERGY: "industrial-disasters", "ELECTRICAL GRID": "industrial-disasters", "INDUSTRIAL CHEMICALS": "industrial-disasters",
+    MANUFACTURING: "industrial-disasters", "CRITICAL MINERALS": "industrial-disasters", SHIPPING: "maritime-disasters", PORTS: "maritime-disasters",
+    "SUBMARINE CABLES": "maritime-disasters", "GLOBAL CHOKEPOINTS": "maritime-disasters", AVIATION: "aviation-failures", SATELLITES: "aviation-failures",
+    "GPS AND TIMING": "aviation-failures", default: "infrastructure-failures" },
+};
+
+function musicMood(topic) {
+  const moods = MUSIC_MOODS[topic.channel] || {};
+  return moods[String(topic.category || "").toUpperCase()] || moods.default || "structural-failures";
+}
+
+function mixMusicBed(voiceFile, duration, topic, outputDirectory) {
+  const ffmpeg = require("../../ff-yol").ffmpeg;
+  const mood = musicMood(topic);
+  const profile = require("../../lib/muzik").profil(topic.slug || topic.id, mood);
+  const total = duration.toFixed(2);
+  const bed = path.join(outputDirectory, ".music-bed.wav");
+  const output = path.join(outputDirectory, "narration-music.m4a");
+  try {
+    cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error",
+      "-f", "lavfi", "-i", `sine=frequency=${profile.kok}:duration=${total}`,
+      "-f", "lavfi", "-i", `sine=frequency=${(profile.kok * profile.oran).toFixed(2)}:duration=${total}`,
+      "-f", "lavfi", "-i", `anoisesrc=d=${total}:c=${profile.renk}:a=0.04`,
+      "-filter_complex",
+      `[0]volume=0.55,tremolo=f=${profile.trem}:d=0.5[a];[1]volume=0.26[b];[2]highpass=f=180,lowpass=f=1100,volume=0.6[c];`
+      + `[a][b][c]amix=inputs=3:normalize=0,lowpass=f=${profile.alcak},aecho=0.8:0.9:${profile.yanki[0]}|${profile.yanki[1]}:0.28|0.2,`
+      + `afade=t=in:st=0:d=1.6,afade=t=out:st=${Math.max(0, duration - 1.6).toFixed(2)}:d=1.6[m]`,
+      "-map", "[m]", "-t", total, bed], { stdio: "ignore", timeout: 120000 });
+    // Narration ducks the bed (sidechain); the final mix is brought to -14 LUFS.
+    cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", voiceFile, "-i", bed, "-filter_complex",
+      "[0:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,apad,asplit=2[vo1][vo2];[1:a]aresample=48000,volume=1.0[mus];"
+      + "[mus][vo1]sidechaincompress=threshold=0.035:ratio=6:attack=6:release=340[duck];"
+      + "[duck][vo2]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[a]",
+      "-map", "[a]", "-t", duration.toFixed(3), "-ar", "48000", "-c:a", "aac", "-b:a", "160k", output], { stdio: "ignore", timeout: 120000 });
+  } finally { try { fs.unlinkSync(bed); } catch (error) {} }
+  const mixed = probe(output).durationSeconds;
+  if (Math.abs(mixed - duration) > 0.3) throw new Error(`music mix length ${mixed.toFixed(2)} s != narration ${duration.toFixed(2)} s`);
+  return { file: output, mood, profile };
+}
+
 function applyMeasuredTiming(script, claimDurations, totalDuration) {
   const measuredTotal = claimDurations.reduce((sum, value) => sum + value, 0) || totalDuration;
   let cursor = 0;
@@ -397,6 +443,18 @@ function renderNumberCard(output, shot, topic) {
 
 const FPS = 30;
 
+// One consistent look per channel on photographs (figures and cards keep their
+// exact colours so values stay readable). A topic "colorGrade": ""
+// switches it off.
+const COLOUR_GRADES = {
+  "impossible-brief": "eq=contrast=1.06:saturation=1.10:gamma=0.98,colorbalance=bs=0.05:bm=0.02:rh=0.03,vignette=angle=PI/5,noise=alls=3:allf=t",
+  "critical-thread": "eq=contrast=1.08:saturation=0.90:gamma=0.97,colorbalance=rs=-0.02:bs=0.04:rh=0.05:gh=0.02,vignette=angle=PI/5,noise=alls=3:allf=t",
+};
+function colourGrade(topic) {
+  const grade = topic.colorGrade != null ? topic.colorGrade : COLOUR_GRADES[topic.channel] || "";
+  return grade ? "," + grade : "";
+}
+
 // A figure shown again is a closer look at one part of it (paper figures are
 // usually panels side by side or stacked), not the same whole figure.
 function diagramCrop(shot) {
@@ -461,7 +519,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
         + `[fg${index}]${diagramCrop(shot)}scale=1000:1000:force_original_aspect_ratio=decrease[fgs${index}];`
         + `[bgb${index}][fgs${index}]overlay=(W-w)/2:210+(1000-h)/2,zoompan=z='1+0.0004*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
     } else if (shot.type === "licensed-still") {
-      chain = `[${index}:v]scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,zoompan=${cameraMove(shot.motion || 0, frames)}:d=${frames}:s=1080x1920:fps=${FPS}`;
+      chain = `[${index}:v]scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,zoompan=${cameraMove(shot.motion || 0, frames)}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
     } else if (shot.type === "number-card") {
       chain = `[${index}:v]scale=1080:1920,zoompan=z='1+0.0006*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
     } else {
@@ -581,7 +639,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     const assets = TopicVisuals.prepareAssetsSync(path.join(outputDirectory, "topic.json"), outputDirectory);
     const attribution = TopicVisuals.attributionLines(assets.stills);
     if (attribution.length) {
-      metadata.description += `\n\nVisual credits (Wikimedia Commons):\n${attribution.join("\n")}`;
+      metadata.description += `\n\nVisual credits:\n${attribution.join("\n")}`;
       write(path.join(outputDirectory, "metadata.json"), metadata);
       write(path.join(outputDirectory, "description.txt"), metadata.description + "\n");
     }
@@ -599,11 +657,15 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     const video = path.join(outputDirectory, topic.slug + ".mp4");
     const minimumSegments = Math.ceil(duration / 3.5);
     const image = path.join(outputDirectory, "thumbnail.jpg");
-    const visualRender = renderVideo(voice.file, duration, video, path.join(outputDirectory, "captions.ass"), topic,
+    // ImpossibleBrief records do not carry their channel; the look, the music
+    // mood and the card accent are chosen per channel.
+    const renderTopic = topic.channel ? topic : { ...topic, channel: channel.slug };
+    const music = channel.config.music && channel.config.music.enabled === false || process.env.MUSIC === "0" ? null : mixMusicBed(voice.file, duration, renderTopic, outputDirectory);
+    const visualRender = renderVideo(music ? music.file : voice.file, duration, video, path.join(outputDirectory, "captions.ass"), renderTopic,
       { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [] });
-    const thumbnailRender = renderThumbnail(image, topic, assets, script);
+    const thumbnailRender = renderThumbnail(image, renderTopic, assets, script);
     render.completed = true;
-    render.audio = { ...voice, ...audioProbe };
+    render.audio = { ...voice, ...audioProbe, music: music ? { mood: music.mood, profile: music.profile } : null };
     render.video = { file: video, captionsBurned: true, ...visualRender, ...probe(video) };
     render.thumbnail = { file: image, bytes: fs.statSync(image).size, ...thumbnailRender };
     pkg.renderVisuals = visualRender;
@@ -646,4 +708,4 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations, validationReasons };
 }
 
-module.exports = { srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
+module.exports = { musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
