@@ -93,7 +93,11 @@ function tokenUnit(token) {
 const MAX_CARDS_WITH_STILLS = 3;
 const MAX_CARDS_WITHOUT_STILLS = 6;
 
-function buildVisualPlan(topic, script, stills = [], pacingSegments = [], duration = script && script.targetSeconds || 0) {
+// Moving footage opens the body (shot 2) and returns every few cuts; each clip
+// is used once.
+const CLIP_SPACING = 4;
+
+function buildVisualPlan(topic, script, stills = [], pacingSegments = [], duration = script && script.targetSeconds || 0, clips = []) {
   const claims = claimRows(script, duration);
   if (!claims.length || !(duration > 0)) return [];
   const boundaries = timelineBoundaries(claims, duration, pacingSegments);
@@ -106,6 +110,8 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
   const cardedClaims = new Set();
   let cards = 0;
   let backdropIndex = 0;
+  let clipIndex = 0;
+  let lastClipShot = -CLIP_SPACING;
   const plan = [];
 
   const nextStill = () => {
@@ -128,9 +134,11 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     const previous = plan[plan.length - 1];
     const cardAllowed = eligible.length && cards < maxCards && !cardedClaims.has(claimIndex) && (!previous || previous.type !== "number-card");
     let type;
+    const clipDue = clipIndex < clips.length && plan.length > 0 && plan.length - lastClipShot >= CLIP_SPACING && (!previous || previous.type !== "stock-video");
     // A numeric hook is the opening visual; later, one card per claim at most,
     // never two in a row, and stills carry everything else.
     if (shotIndex === 0 && cardAllowed) type = "number-card";
+    else if (clipDue) type = "stock-video";
     else if (cardAllowed && (!ordered.length || (previous && previous.type === "licensed-still"))) type = "number-card";
     else if (ordered.length && nextStill()) type = "licensed-still";
     else if (cardAllowed) type = "number-card";
@@ -139,7 +147,11 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     const entry = { shot: plan.length + 1, start, end, duration: end - start, claimIndex, claimText: claim.text,
       scene: scenes[claimIndex % Math.max(1, scenes.length)] || claim.text, type, numbers, comparison: [], still: null,
       proceduralFrame: claimIndex * 97 + shotIndex };
-    if (type === "licensed-still") {
+    if (type === "stock-video") {
+      const clip = clips[clipIndex++];
+      lastClipShot = plan.length;
+      Object.assign(entry, { clip, sourceId: `video:${clip.id}`, visualKey: `video:${clip.id}` });
+    } else if (type === "licensed-still") {
       const still = nextStill();
       const use = stillUses.get(still.file) || 0;
       stillUses.set(still.file, use + 1);
@@ -168,7 +180,7 @@ function visualMetrics(plan) {
   // once for variety, and back-to-back uses count as one static hold.
   const key = (shot) => shot.visualKey || shot.sourceId;
   const distinct = new Set(plan.map(key));
-  const real = new Set(plan.filter((shot) => shot.type === "licensed-still").map(key));
+  const real = new Set(plan.filter((shot) => shot.type === "licensed-still" || shot.type === "stock-video").map(key));
   const cards = new Set(plan.filter((shot) => shot.type === "number-card").map(key));
   let maxStaticSeconds = 0;
   let runSource = null;
@@ -241,8 +253,9 @@ function loadManifest(outputDirectory) {
     const manifest = JSON.parse(fs.readFileSync(manifestPath(outputDirectory), "utf8"));
     if (manifest.schemaVersion !== CACHE_SCHEMA) return null;
     const stills = (manifest.stills || []).map((still) => ({ ...still, path: path.join(cacheDirectory(outputDirectory), still.cachedFile) }));
-    if (!stills.every((still) => fs.existsSync(still.path))) return null;
-    return { ...manifest, stills };
+    const clips = (manifest.clips || []).map((clip) => ({ ...clip, path: path.join(cacheDirectory(outputDirectory), clip.cachedFile) }));
+    if (!stills.every((still) => fs.existsSync(still.path)) || !clips.every((clip) => fs.existsSync(clip.path))) return null;
+    return { ...manifest, stills, clips };
   } catch (error) { return null; }
 }
 
@@ -345,7 +358,14 @@ async function prepareAssets(topic, outputDirectory) {
       score: item.score,
     });
   }
-  const manifest = { schemaVersion: CACHE_SCHEMA, topicId: topic.id, stills };
+  // Moving footage (core/rendering/stock-footage.js) when a Pexels key is
+  // configured; without one, or when Pexels fails, the Short uses stills only.
+  let clips = [];
+  const pexelsKey = process.env.PEXELS_KEY;
+  if (pexelsKey && process.env.STOCK_FOOTAGE !== "0") {
+    try { clips = await require("./stock-footage").search(topic, directory, pexelsKey); } catch (error) { clips = []; }
+  }
+  const manifest = { schemaVersion: CACHE_SCHEMA, topicId: topic.id, stills, clips };
   fs.writeFileSync(manifestPath(outputDirectory), JSON.stringify(manifest, null, 2) + "\n");
   return loadManifest(outputDirectory) || { ...manifest, stills: [] };
 }
@@ -356,7 +376,7 @@ function prepareAssetsSync(topicFile, outputDirectory) {
   const result = cp.spawnSync(process.execPath, [path.join(ROOT, "scripts", "ib-ct-visual-cache.js"), topicFile, outputDirectory], {
     cwd: ROOT,
     encoding: "utf8",
-    timeout: 240000,
+    timeout: 480000,
     env: process.env,
   });
   const loaded = loadManifest(outputDirectory);
@@ -364,8 +384,11 @@ function prepareAssetsSync(topicFile, outputDirectory) {
   return { schemaVersion: CACHE_SCHEMA, topicId: null, stills: [], error: (result.stderr || result.error && result.error.message || "visual cache preparation failed").trim() };
 }
 
-function attributionLines(stills) {
-  return (stills || []).map((still) => `- ${still.file} — ${still.author}; ${still.licence}; ${still.sourceUrl}`);
+function attributionLines(stills, clips = []) {
+  return [
+    ...(stills || []).map((still) => `- ${still.file} — ${still.author}; ${still.licence}; ${still.sourceUrl}`),
+    ...(clips || []).map((clip) => `- Stock footage: Pexels / ${clip.author}; ${clip.licence}; ${clip.sourceUrl}`),
+  ];
 }
 
 module.exports = {

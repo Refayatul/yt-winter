@@ -484,12 +484,16 @@ function cameraMove(variant, frames) {
 function renderVideo(audioFile, duration, output, captionsFile, topic, options = {}) {
   const ff = require("../../ff-yol");
   const ffmpeg = ff.ffmpeg;
-  const plan = TopicVisuals.buildVisualPlan(topic, options.script, options.assets && options.assets.stills || [], options.segments || [], duration);
+  const plan = TopicVisuals.buildVisualPlan(topic, options.script, options.assets && options.assets.stills || [], options.segments || [], duration, options.assets && options.assets.clips || []);
   const generated = [];
   const cardDirectory = path.join(path.dirname(output), "visual-cache");
   const inputs = [];
   for (const shot of plan) {
-    if (shot.type === "licensed-still") inputs.push(shot.still.path);
+    if (shot.type === "stock-video") {
+      // The middle of the clip, just long enough for the shot.
+      const offset = Math.max(0, ((shot.clip.duration || shot.duration) - shot.duration) / 2);
+      inputs.push({ pre: ["-ss", offset.toFixed(2), "-t", (shot.duration + 0.3).toFixed(2)], file: shot.clip.path });
+    } else if (shot.type === "licensed-still") inputs.push(shot.still.path);
     else if (shot.type === "number-card") {
       const file = path.join(cardDirectory, (shot.sourceId + (shot.backdrop ? "-" + shot.backdrop.cachedFile : "")).replace(/[^a-z0-9-]/gi, "-") + ".jpg");
       if (!fs.existsSync(file)) renderNumberCard(file, shot, topic);
@@ -505,14 +509,16 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   // Each input is one decoded still. zoompan creates the exact segment frame
   // count; looping here would multiply those frames again and make a 30-second
   // Short take minutes to render.
-  inputs.forEach((file) => args.push("-i", file));
+  inputs.forEach((input) => typeof input === "string" ? args.push("-i", input) : args.push(...input.pre, "-i", input.file));
   args.push("-i", audioFile);
   const filters = [];
   for (let index = 0; index < plan.length; index += 1) {
     const shot = plan[index];
     const frames = Math.max(1, Math.ceil(shot.duration * FPS));
     let chain;
-    if (shot.type === "licensed-still" && shot.kind === "diagram") {
+    if (shot.type === "stock-video") {
+      chain = `[${index}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=${FPS}${colourGrade(topic)}`;
+    } else if (shot.type === "licensed-still" && shot.kind === "diagram") {
       // Whole figure, readable, above the caption band, over its own blur.
       chain = `[${index}:v]split=2[bg${index}][fg${index}];`
         + `[bg${index}]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,gblur=sigma=30,eq=brightness=-0.30:saturation=0.65[bgb${index}];`
@@ -527,7 +533,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
     }
     // Disclosure stays, as a small corner tag: stills are context for the
     // topic, not footage of the scenario; procedural frames are illustrations.
-    const tag = shot.type === "licensed-still" ? "CONTEXT IMAGE" : shot.type === "procedural" ? "ILLUSTRATION" : null;
+    const tag = shot.type === "licensed-still" ? "CONTEXT IMAGE" : shot.type === "stock-video" ? "STOCK FOOTAGE" : shot.type === "procedural" ? "ILLUSTRATION" : null;
     if (tag) chain += `,drawtext=expansion=none:text='${tag}':fontcolor=white@0.78:fontsize=26:box=1:boxcolor=0x000000@0.45:boxborderw=10:x=48:y=84`;
     filters.push(`${chain},setsar=1,trim=duration=${shot.duration.toFixed(3)},setpts=PTS-STARTPTS[v${index}]`);
   }
@@ -637,13 +643,13 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   const render = { requested: !!options.render, completed: false, audio: null, video: null, thumbnail: null };
   if (options.render) {
     const assets = TopicVisuals.prepareAssetsSync(path.join(outputDirectory, "topic.json"), outputDirectory);
-    const attribution = TopicVisuals.attributionLines(assets.stills);
+    const attribution = TopicVisuals.attributionLines(assets.stills, assets.clips);
     if (attribution.length) {
       metadata.description += `\n\nVisual credits:\n${attribution.join("\n")}`;
       write(path.join(outputDirectory, "metadata.json"), metadata);
       write(path.join(outputDirectory, "description.txt"), metadata.description + "\n");
     }
-    write(path.join(outputDirectory, "visual-attribution.json"), { count: assets.stills.length, stills: assets.stills.map(({ path: localPath, ...still }) => still), error: assets.error || null });
+    write(path.join(outputDirectory, "visual-attribution.json"), { count: assets.stills.length, stills: assets.stills.map(({ path: localPath, ...still }) => still), clips: (assets.clips || []).map(({ path: localPath, ...clip }) => clip), error: assets.error || null });
     const voice = synthesizeNarration(script, outputDirectory, channel);
     const audioProbe = probe(voice.file);
     const duration = audioProbe.durationSeconds;
