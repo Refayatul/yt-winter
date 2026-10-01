@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-09-30T21:37:30.197Z
+Generated: 2026-10-01T14:38:21.219Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,16 +8,16 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | general-slocum-1904 |
+| Today topic | eastern-212-1974 |
 | Short | scheduled |
 | Long | due-not-produced |
-| Quality | PUBLISH / 92 |
+| Quality | PUBLISH / 89 |
 | YouTube | scheduled |
-| Publish time | 2026-09-30T18:00:00.000Z |
-| Video ID | NnGoWJOdaW0 |
+| Publish time | 2026-10-01T18:00:00.000Z |
+| Video ID | rgSsk8q6eyM |
 | Analytics | measured |
 | Scheduler | healthy |
-| Ready topic backlog | 366 |
+| Ready topic backlog | 0 |
 | Errors/review/blocks | 3 |
 | TikTok today | SEND_TO_USER_INBOX |
 | TikTok backlog | 2 |
@@ -26,15 +26,15 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | what-if-sunlight-could-push-a-spaceship |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / unavailable |
-| YouTube | scheduled |
-| Publish time | 2026-09-30T18:00:00.000Z |
-| Video ID | NobEECFBrwo |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | no-channel-measurements |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 497 |
 | Errors/review/blocks | 0 |
 
@@ -42,15 +42,15 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | why-high-lift-water-pump-is-so-hard-to-replace |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / unavailable |
-| YouTube | scheduled |
-| Publish time | 2026-09-30T18:00:00.000Z |
-| Video ID | 7q3E09HMIGI |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | no-channel-measurements |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 520 |
 | Errors/review/blocks | 0 |
 
