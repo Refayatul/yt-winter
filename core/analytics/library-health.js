@@ -37,7 +37,9 @@ function legacyTopics(channel) {
 function calculate(channel = getChannel()) {
   const library = Discovery.universe(channel);
   const legacy = channel.config.pathMode === "legacy-adapter";
-  const topics = library.topics?.length ? library.topics : legacyTopics(channel);
+  // A legacy channel produces only from its topic specs; its growth universe
+  // (a scoring backlog in another schema) is not production inventory.
+  const topics = legacy ? legacyTopics(channel) : library.topics || [];
   const generated = read(path.join(channel.paths.state, channel.config.pathMode === "legacy-adapter" ? "uretilenler.json" : "generated.json"), []);
   const published = read(path.join(channel.paths.state, channel.config.pathMode === "legacy-adapter" ? "yayinlananlar.json" : "published.json"), []);
   const blockedValue = read(path.join(channel.paths.state, channel.config.pathMode === "legacy-adapter" ? "basarisiz.json" : "blocked.json"), legacy ? [] : {});
