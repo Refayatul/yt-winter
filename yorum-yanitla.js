@@ -54,6 +54,22 @@ const BILGI_YANIT = [
 ];
 const rasgele = (a) => a[Math.floor(Math.random() * a.length)];
 
+function json(metin) {
+  try { return JSON.parse(metin || "{}"); } catch (e) { return {}; }
+}
+
+function apiHatasi(yanit) {
+  const govde = json(yanit.govde);
+  return govde?.error?.errors?.[0]?.reason || govde?.error?.message || `HTTP ${yanit.durum}`;
+}
+
+function durumuYaz(yanitlanan) {
+  fs.mkdirSync(path.dirname(DURUM), { recursive: true });
+  const gecici = `${DURUM}.${process.pid}.tmp`;
+  fs.writeFileSync(gecici, JSON.stringify([...yanitlanan], null, 2) + "\n");
+  fs.renameSync(gecici, DURUM);
+}
+
 function kategori(metin) {
   const t = metin.trim();
   if (/\?/.test(t)) return "soru";
@@ -73,16 +89,24 @@ async function main() {
 
   // Kanalin son yuklemelerini al
   const ch = await api(tok, "channels?part=contentDetails&mine=true");
-  const uploads = (JSON.parse(ch.govde).items || [{}])[0]?.contentDetails?.relatedPlaylists?.uploads;
+  if (ch.durum !== 200) throw new Error(`Kanal okunamadi: ${apiHatasi(ch)}`);
+  const uploads = (json(ch.govde).items || [{}])[0]?.contentDetails?.relatedPlaylists?.uploads;
   if (!uploads) throw new Error("Yuklemeler listesi bulunamadi (izin/kanal?).");
   const pl = await api(tok, "playlistItems?part=contentDetails&maxResults=15&playlistId=" + uploads);
-  const videoIds = (JSON.parse(pl.govde).items || []).map(i => i.contentDetails.videoId);
+  if (pl.durum !== 200) throw new Error(`Yuklemeler okunamadi: ${apiHatasi(pl)}`);
+  const videoIds = (json(pl.govde).items || []).map(i => i.contentDetails.videoId);
 
   let yanit = 0;
+  let basarisiz = 0;
   for (const vid of videoIds) {
     if (yanit >= LIMIT) break;
     const c = await api(tok, "commentThreads?part=snippet&maxResults=20&order=time&videoId=" + vid);
-    const threads = (JSON.parse(c.govde).items || []);
+    if (c.durum !== 200) {
+      const neden = apiHatasi(c);
+      if (neden === "commentsDisabled") { console.log(`  - ${vid}: yorumlar kapali`); continue; }
+      throw new Error(`${vid} yorumlari okunamadi: ${neden}`);
+    }
+    const threads = (json(c.govde).items || []);
     for (const th of threads) {
       if (yanit >= LIMIT) break;
       const top = th.snippet.topLevelComment;
@@ -92,25 +116,33 @@ async function main() {
       if (yanitlanan.has(cid)) continue;
       // Kanalin KENDI yorumuna (or. sabit tartisma yorumu) asla cevap verme —
       // yazar kimligi video sahibinin kanal kimligiyle karsilastirilir.
-      if (yazar && yazar === th.snippet.channelId) { yanitlanan.add(cid); continue; }
+      if (yazar && yazar === th.snippet.channelId) { yanitlanan.add(cid); durumuYaz(yanitlanan); continue; }
       // zaten cevaplanmis konusmaya tekrar girme
-      if (th.snippet.totalReplyCount > 0) { yanitlanan.add(cid); continue; }
+      if (th.snippet.totalReplyCount > 0) { yanitlanan.add(cid); durumuYaz(yanitlanan); continue; }
       const kat = kategori(metin);
-      if (kat === "atla") { yanitlanan.add(cid); continue; }
+      if (kat === "atla") { yanitlanan.add(cid); durumuYaz(yanitlanan); continue; }
       const cevap = kat === "soru" ? rasgele(SORU_YANIT)
         : kat === "bilgi" ? rasgele(BILGI_YANIT) : rasgele(OVGU_YANIT);
       const body = JSON.stringify({ snippet: { parentId: cid, textOriginal: cevap } });
       const r = await istek({ hostname: "www.googleapis.com", path: "/youtube/v3/comments?part=snippet",
         method: "POST", headers: { Authorization: "Bearer " + tok, "Content-Type": "application/json",
           "Content-Length": Buffer.byteLength(body) } }, body);
-      if (r.durum === 200) { console.log(`  ✓ [${kat}] "${metin.slice(0, 40)}" -> yanitlandi`); yanit++; }
-      else console.log(`  ✗ yanit basarisiz (HTTP ${r.durum}): ${r.govde.slice(0, 120)}`);
-      yanitlanan.add(cid);
+      if (r.durum === 200) {
+        console.log(`  ✓ [${kat}] "${metin.slice(0, 40)}" -> yanitlandi`);
+        yanit++;
+        yanitlanan.add(cid);
+        durumuYaz(yanitlanan);
+      } else {
+        basarisiz++;
+        console.log(`  ✗ yanit basarisiz (yeniden denenecek, HTTP ${r.durum}): ${r.govde.slice(0, 120)}`);
+      }
       await new Promise(r => setTimeout(r, 800));
     }
   }
-  fs.mkdirSync(path.dirname(DURUM), { recursive: true });
-  fs.writeFileSync(DURUM, JSON.stringify([...yanitlanan], null, 2) + "\n");
+  durumuYaz(yanitlanan);
   console.log(`Bitti. ${yanit} yorum yanitlandi (limit ${LIMIT}).`);
+  if (basarisiz) throw new Error(`${basarisiz} yorum yaniti gonderilemedi; sonraki calismada yeniden denenecek.`);
 }
-main().catch(e => { console.error("Hata: " + e.message); process.exit(1); });
+if (require.main === module) main().catch(e => { console.error("Hata: " + e.message); process.exit(1); });
+
+module.exports = { kategori, apiHatasi, durumuYaz, main };
