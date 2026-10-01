@@ -97,7 +97,16 @@ const MAX_CARDS_WITHOUT_STILLS = 6;
 // is used once.
 const CLIP_SPACING = 4;
 
-function buildVisualPlan(topic, script, stills = [], pacingSegments = [], duration = script && script.targetSeconds || 0, clips = []) {
+// Opening experiment, 50/50 by topic: "number" opens on the hook's sourced
+// number card (the original look); "motion" opens on moving footage (or the
+// lead photograph) with the hook words on screen. Recorded in render.json so
+// Studio "viewed vs swiped away" can be compared per variant.
+function openingVariant(topic) {
+  return parseInt(shortHash(`opening:${topic.slug || topic.id}`).slice(0, 8), 16) % 2 ? "motion" : "number";
+}
+
+function buildVisualPlan(topic, script, stills = [], pacingSegments = [], duration = script && script.targetSeconds || 0, clips = [], options = {}) {
+  const opening = options.opening || "number";
   const claims = claimRows(script, duration);
   if (!claims.length || !(duration > 0)) return [];
   const boundaries = timelineBoundaries(claims, duration, pacingSegments);
@@ -134,10 +143,12 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     const previous = plan[plan.length - 1];
     const cardAllowed = eligible.length && cards < maxCards && !cardedClaims.has(claimIndex) && (!previous || previous.type !== "number-card");
     let type;
+    const motionOpen = opening === "motion" && shotIndex === 0 && (clips.length || ordered.some((still) => stillKind(still) === "photo"));
     const clipDue = clipIndex < clips.length && plan.length > 0 && plan.length - lastClipShot >= CLIP_SPACING && (!previous || previous.type !== "stock-video");
     // A numeric hook is the opening visual; later, one card per claim at most,
     // never two in a row, and stills carry everything else.
-    if (shotIndex === 0 && cardAllowed) type = "number-card";
+    if (motionOpen) type = clips.length ? "stock-video" : "licensed-still";
+    else if (shotIndex === 0 && cardAllowed) type = "number-card";
     else if (clipDue) type = "stock-video";
     else if (cardAllowed && (!ordered.length || (previous && previous.type === "licensed-still"))) type = "number-card";
     else if (ordered.length && nextStill()) type = "licensed-still";
@@ -392,6 +403,6 @@ function attributionLines(stills, clips = []) {
 }
 
 module.exports = {
-  CACHE_SCHEMA, MAX_HOLD_SECONDS, numberTokens, stillKind, cardTokens, buildVisualPlan, visualMetrics, evaluateVisualQuality,
+  CACHE_SCHEMA, MAX_HOLD_SECONDS, numberTokens, stillKind, cardTokens, openingVariant, buildVisualPlan, visualMetrics, evaluateVisualQuality,
   wikiTitles, prepareAssets, prepareAssetsSync, loadManifest, attributionLines,
 };
