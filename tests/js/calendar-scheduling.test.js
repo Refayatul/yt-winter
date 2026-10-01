@@ -152,3 +152,15 @@ test("watchdog checks today's Istanbul calendar day, not a rolling interval", ()
   assert.equal(snapshot.productionReady, false);
   assert.equal(snapshot.safeToRecover, true, "today is empty, so recovery may produce today's Short");
 });
+
+test("state-writing workflows check out the latest branch tip, not the trigger commit", () => {
+  // A run queued behind the concurrency lock would otherwise read state from
+  // before the previous run's upload: the calendar check could see today as
+  // empty (duplicate Short) and the state commit would conflict on rebase.
+  for (const name of ["portfolio-production", "uretim-is", "production-watchdog", "yayin-kontrol", "yorum-yanitla"]) {
+    const text = fs.readFileSync(path.join(__dirname, "../../.github/workflows", name + ".yml"), "utf8");
+    const checkouts = text.split(/- uses: actions\/checkout@v4/).slice(1);
+    assert.ok(checkouts.length, name);
+    for (const block of checkouts) assert.match(block.split(/\n\s*- (?:uses|name|id):/)[0], /ref: \$\{\{ github\.ref_name \}\}/, name);
+  }
+});
