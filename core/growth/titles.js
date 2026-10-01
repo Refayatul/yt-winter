@@ -258,8 +258,15 @@ function scoreOne(candidate, topic, config, kind, context = {}) {
 
 function generate(topic, config, kind = "short", context = {}) {
   const pool = kind === "long" ? longCandidates(topic, context.extra || []) : shortCandidates(topic, context.extra || []);
+  // Researched records (editorial narration) carry titles written and
+  // fact-checked with the research ("The Fire That Closed the Mont Blanc
+  // Tunnel"). Keyword templates out-score them on literal subject matching
+  // ("What Depends on Road Tunnel Ventilation System?") yet read as
+  // machine-made, so the best editorial title leads when one is truthful.
+  const editorialFirst = kind === "short" && (topic.narrationBeats || []).length > 0;
+  const rank = (candidate) => (editorialFirst && candidate.source === "editorial" ? 1 : 0);
   const scored = pool.map((candidate) => scoreOne(candidate, topic, config, kind, context))
-    .sort((a, b) => Number(a.misleading) - Number(b.misleading) || b.adjustedTotal - a.adjustedTotal);
+    .sort((a, b) => Number(a.misleading) - Number(b.misleading) || rank(b) - rank(a) || b.adjustedTotal - a.adjustedTotal);
   const selected = scored.find((item) => !item.misleading) || null;
   const minimum = kind === "long" ? config.titles.longform.minimumCandidates : config.titles.shorts.minimumCandidates;
   return {

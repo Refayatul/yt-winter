@@ -21,7 +21,7 @@ permissions:
 jobs:
   reply:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 20
     env:
       YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
       YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
@@ -30,6 +30,14 @@ jobs:
       FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
       FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
       FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
+      IB_CLIENT_ID: ${{ secrets.IB_CLIENT_ID }}
+      IB_CLIENT_SECRET: ${{ secrets.IB_CLIENT_SECRET }}
+      IB_YT_REFRESH_TOKEN: ${{ secrets.IB_YT_REFRESH_TOKEN }}
+      IB_YT_CHANNEL_ID: ${{ vars.IB_YT_CHANNEL_ID }}
+      CT_CLIENT_ID: ${{ secrets.CT_CLIENT_ID }}
+      CT_CLIENT_SECRET: ${{ secrets.CT_CLIENT_SECRET }}
+      CT_YT_REFRESH_TOKEN: ${{ secrets.CT_YT_REFRESH_TOKEN }}
+      CT_YT_CHANNEL_ID: ${{ vars.CT_YT_CHANNEL_ID }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,12 +50,37 @@ jobs:
       - name: Reply to eligible new comments
         run: node yorum-yanitla.js --channel failure-reconstructed --limit 4
 
+      # Each channel uses its own identity; a failure in one never stops the others.
+      - name: ImpossibleBrief replies and seed comment
+        if: ${{ always() && vars.IB_PUBLISH == '1' }}
+        continue-on-error: true
+        run: |
+          node yorum-yanitla.js --channel impossible-brief --limit 4 || true
+          node seed-comment.js --channel impossible-brief
+
+      - name: CriticalThread replies and seed comment
+        if: ${{ always() && vars.CT_PUBLISH == '1' }}
+        continue-on-error: true
+        run: |
+          node yorum-yanitla.js --channel critical-thread --limit 4 || true
+          node seed-comment.js --channel critical-thread
+
+      # Failure Reconstructed moved to the portfolio workflow, which does not
+      # post its discussion comment; videos are public only from 21:00 TR.
+      - name: Failure Reconstructed discussion comment
+        if: always()
+        continue-on-error: true
+        run: node pinned-comment.js --post-pending
+
       - name: Persist processed comment IDs
         if: always()
         run: |
           git config user.name "comment-reply-bot"
           git config user.email "actions@users.noreply.github.com"
-          git add icerik/yanitlanan.json
+          # One path at a time: git add stages nothing when any listed path is missing.
+          for STATE in icerik/yanitlanan.json icerik/sabit-yorumlar.json channels/*/state/replied-comments.json channels/*/state/seeded-comments.json; do
+            if [ -e "$STATE" ]; then git add "$STATE"; fi
+          done
           if git diff --cached --quiet; then
             echo "No new comment state to persist."
             exit 0

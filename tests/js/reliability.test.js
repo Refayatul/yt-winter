@@ -119,7 +119,15 @@ test("comment replies run independently every four hours with a conservative cap
   assert.match(replies, /cron: '17 1,5,9,13,17,21 \* \* \*'/);
   assert.match(replies, /group: portfolio-production/);
   assert.match(replies, /node yorum-yanitla\.js --channel failure-reconstructed --limit 4/);
-  assert.match(replies, /git add icerik\/yanitlanan\.json/);
+  // State files are staged one at a time (git add stages nothing if any path is missing).
+  assert.match(replies, /for STATE in icerik\/yanitlanan\.json icerik\/sabit-yorumlar\.json channels\/\*\/state\/replied-comments\.json channels\/\*\/state\/seeded-comments\.json/);
+  assert.match(replies, /if \[ -e "\$STATE" \]; then git add "\$STATE"; fi/);
+  // ImpossibleBrief / CriticalThread reply and seed with their own identities, only when publishing.
+  assert.match(replies, /if: \$\{\{ always\(\) && vars\.IB_PUBLISH == '1' \}\}[\s\S]*?node yorum-yanitla\.js --channel impossible-brief --limit 4[\s\S]*?node seed-comment\.js --channel impossible-brief/);
+  assert.match(replies, /if: \$\{\{ always\(\) && vars\.CT_PUBLISH == '1' \}\}[\s\S]*?node yorum-yanitla\.js --channel critical-thread --limit 4[\s\S]*?node seed-comment\.js --channel critical-thread/);
+  assert.match(replies, /IB_YT_REFRESH_TOKEN: \$\{\{ secrets\.IB_YT_REFRESH_TOKEN \}\}/);
+  assert.match(replies, /CT_YT_REFRESH_TOKEN: \$\{\{ secrets\.CT_YT_REFRESH_TOKEN \}\}/);
+  assert.match(replies, /node pinned-comment\.js --post-pending/);
   assert.match(replies, /Persist processed comment IDs\s+if: always\(\)/);
   assert.match(replies, /git push origin HEAD:main/);
   assert.doesNotMatch(replies, /shorts-sira\.js|youtube-yukle\.js/);
