@@ -322,7 +322,20 @@ function inventory(channel) {
   return (universe.topics || []).filter((topic) => topic.status === "qualified").map((raw) => normalize(channel, raw));
 }
 
+// Discovery inventory is deliberately separate from production inventory.
+// A source-verified backlog record must not enter rendering until it has been
+// researched into a full case file and passed the normal source/visual gates.
+function durableInventory(channel) {
+  const universe = readJson(channel.paths.topicUniverse, { topics: [] });
+  return {
+    schema: universe.schema || null,
+    generatedAt: universe.generated_at || null,
+    stats: universe.stats || { total: 0, qualified: 0, production_ready: 0, research_backlog: 0, used: 0 },
+    topics: universe.topics || [],
+  };
+}
+
 module.exports = {
-  normalize, inventory, templateIndex, boilerplate, skeleton, numbersIn,
+  normalize, inventory, durableInventory, templateIndex, boilerplate, skeleton, numbersIn,
   clean, firstSentence, stripEnd, capital, lower, TEMPLATE_FIELDS,
 };

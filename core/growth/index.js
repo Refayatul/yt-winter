@@ -26,42 +26,122 @@ const Experiments = require("./experiments");
 
 function durationBucket(seconds) {
   if (!Number.isFinite(seconds)) return null;
-  if (seconds < 25) return "under-25s";
-  if (seconds <= 35) return "25-35s";
-  if (seconds <= 45) return "35-45s";
-  return "over-45s";
+  if (seconds < 18) return "under-18s";
+  if (seconds <= 25) return "18-25s";
+  if (seconds <= 35) return "26-35s";
+  if (seconds <= 45) return "36-45s";
+  if (seconds <= 60) return "46-60s";
+  return "over-60s";
+}
+
+function optimizeEditorialOpening(lines, selectedHook, config) {
+  const original = [...lines];
+  if (!config.hooks.applySelectedOpening || !selectedHook || !selectedHook.spoken || !original.length) return { lines: original, changed: false, original: original[0] || null, selected: original[0] || null };
+  const clean = (value) => String(value || "").toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+  const spoken = selectedHook.spoken;
+  if (clean(original[0]) === clean(spoken)) return { lines: original, changed: false, original: original[0], selected: original[0] };
+  const existing = original.findIndex((line, index) => index > 0 && clean(line) === clean(spoken));
+  const next = existing > 0 ? [original[existing], ...original.slice(0, existing), ...original.slice(existing + 1)] : [spoken, ...original.slice(1)];
+  return { lines: next, changed: true, original: original[0], selected: next[0], source: existing > 0 ? `editorial line ${existing + 1} promoted` : "fact-checked hook candidate" };
 }
 
 function findTopic(ctx, idOrSlug) {
   return ctx.inventory.find((topic) => topic.id === idOrSlug || topic.slug === idOrSlug) || null;
 }
 
-// Deterministic selection: primary buckets first; the experimental bucket is
-// used on a deterministic share of days; fallback to C only when the channel
-// config allows it and no A/B remains. D is never selected.
+function decisionCandidate(row) {
+  return {
+    topicId: row.topic.id,
+    slug: row.topic.slug,
+    topic: row.topic.title,
+    cluster: row.topic.cluster,
+    bucket: row.score.bucket,
+    viralScore: row.score.ViralPotentialScore,
+    videoPotentialScore: row.score.VideoPotentialScore,
+    selectionScore: row.score.SelectionScore,
+    viralComponents: row.score.viralComponents,
+    selectedHook: row.score.selectedHook,
+    rejectionReasons: row.score.reasons,
+  };
+}
+
+function writeDecision(channel, decision) {
+  const rows = Store.readState(channel, "growth", "decisions.json", []);
+  const next = rows.filter((row) => !(row.date === decision.date && row.contentType === decision.contentType)).concat(decision).slice(-500);
+  Store.writeState(channel, "growth", "decisions.json", next);
+  Store.writeState(channel, "growth", "latest-decision.json", decision);
+}
+
+// Deterministic 75/25 exploit/explore selection over a real, inspectable
+// 20–50 topic decision pool. Exploit follows measured scoring. Explore favours
+// under-sampled clusters while retaining quality buckets. D is never selected.
 function selectShortTopic(channel, options = {}) {
   const ranked = options.ranked || Context.rank(channel, options);
   const config = Config.forChannel(channel);
   const policy = config.scheduler.shorts;
+  const selectionPolicy = config.selection;
+  const poolPolicy = config.candidatePool;
   const day = options.date || new Date().toISOString().slice(0, 10);
   const exclude = new Set(options.exclude || []);
   const eligible = ranked.rows.filter((row) => !exclude.has(row.topic.id) && !exclude.has(row.topic.slug));
-  const primary = eligible.filter((row) => policy.primaryBuckets.includes(row.score.bucket));
-  const experimental = eligible.filter((row) => row.score.bucket === policy.experimentalBucket);
-  const experimentDay = Engagement.hash01(`${channel.slug}:${day}:experiment`) < policy.experimentRatio;
+  const qualified = eligible.filter((row) => row.score.bucket !== "D");
+  const candidatePool = qualified.slice(0, poolPolicy.target);
+  const poolReady = candidatePool.length >= poolPolicy.minimum;
+  const primary = candidatePool.filter((row) => selectionPolicy.exploitBuckets.includes(row.score.bucket));
+  const experimental = candidatePool.filter((row) => row.score.bucket === policy.experimentalBucket);
+  const modeRoll = Engagement.hash01(`${channel.slug}:${day}:explore-exploit`);
+  const mode = modeRoll < selectionPolicy.exploreRatio ? "EXPLORE" : "EXPLOIT";
   let choice = null;
   let reason = null;
-  if (experimentDay && experimental.length) { choice = experimental[0]; reason = `experiment day (ratio ${policy.experimentRatio}): best C topic`; }
-  else if (primary.length) { choice = primary[0]; reason = `best ${primary[0].score.bucket} topic`; }
+  if (!poolReady) reason = `NO_CANDIDATE_POOL: ${candidatePool.length} qualified unused topic(s); minimum ${poolPolicy.minimum}`;
+  else if (mode === "EXPLORE") {
+    const allowed = candidatePool.filter((row) => selectionPolicy.exploreBuckets.includes(row.score.bucket));
+    const byCluster = new Map();
+    for (const row of allowed) {
+      const rows = byCluster.get(row.topic.cluster) || [];
+      if (rows.length < selectionPolicy.exploreTopPerCluster) rows.push(row);
+      byCluster.set(row.topic.cluster, rows);
+    }
+    const underSampled = [...byCluster.entries()].flatMap(([cluster, rows]) => rows.map((row) => ({
+      row,
+      observations: ranked.context.clusterPerformance[cluster] && ranked.context.clusterPerformance[cluster].n || 0,
+      roll: Engagement.hash01(`${channel.slug}:${day}:${row.topic.slug}:explore`),
+    }))).sort((a, b) => a.observations - b.observations || a.roll - b.roll || b.row.score.SelectionScore - a.row.score.SelectionScore);
+    choice = underSampled[0] && underSampled[0].row || null;
+    reason = choice ? `EXPLORE (${selectionPolicy.exploreRatio}): under-sampled cluster ${choice.topic.cluster}` : "NO_EXPLORE_CANDIDATE";
+  } else if (primary.length) { choice = primary[0]; reason = `EXPLOIT (${selectionPolicy.exploitRatio}): best ${primary[0].score.bucket} topic by SelectionScore`; }
   else if (policy.fallbackToC && experimental.length) { choice = experimental[0]; reason = "FALLBACK_TO_C: no A/B topic remains; C must still pass full production readiness"; }
   const inventory = { A: 0, B: 0, C: 0, D: 0 };
   for (const row of eligible) inventory[row.score.bucket] += 1;
+  const decision = {
+    schema: "growth-topic-decision/1",
+    channel: channel.slug,
+    contentType: "short",
+    date: day,
+    createdAt: (options.now || new Date()).toISOString(),
+    mode,
+    modeRoll: Math.round(modeRoll * 1000) / 1000,
+    pool: {
+      minimum: poolPolicy.minimum,
+      target: poolPolicy.target,
+      count: candidatePool.length,
+      meetsMinimum: poolReady,
+      candidates: candidatePool.slice(0, poolPolicy.maximumLogged).map(decisionCandidate),
+    },
+    selected: choice ? decisionCandidate(choice) : null,
+    reason,
+  };
+  if (options.write) writeDecision(channel, decision);
   return {
+    schema: decision.schema,
     channel: channel.slug,
     date: day,
+    mode,
     selected: choice,
-    reason: choice ? reason : `NO_QUALIFIED_TOPIC: ${primary.length} A/B, ${experimental.length} C${policy.fallbackToC ? "" : " (C fallback disabled)"}; skipping is better than publishing weak content`,
+    reason: choice ? reason : reason || `NO_QUALIFIED_TOPIC: ${primary.length} A/B, ${experimental.length} C${policy.fallbackToC ? "" : " (C fallback disabled)"}; skipping is better than publishing weak content`,
     inventory,
+    candidatePool: decision.pool,
+    decision,
     ranked,
   };
 }
@@ -80,7 +160,7 @@ function orderedQueue(channel, options = {}) {
   push(selection.selected);
   rows.filter((row) => policy.primaryBuckets.includes(row.score.bucket)).forEach(push);
   if (policy.fallbackToC) rows.filter((row) => row.score.bucket === policy.experimentalBucket).forEach(push);
-  return { order, reason: selection.reason, inventory: selection.inventory, selected: selection.selected ? selection.selected.topic.slug : null };
+  return { order, reason: selection.reason, mode: selection.mode, inventory: selection.inventory, candidatePool: selection.candidatePool, decision: selection.decision, selected: selection.selected ? selection.selected.topic.slug : null };
 }
 
 const DEFAULT_LAYER = { "impossible-brief": "KNOWN SCIENCE", "critical-thread": "VERIFIED FACT" };
@@ -114,6 +194,22 @@ function captionClaimsFromNarration(lines, seconds) {
   return lines.map((text, index) => { const start = t; t += seconds * words[index] / total; return { start, end: t, text }; });
 }
 
+// Legacy FR renders from uretim/<slug>/konu.json. Apply the audited growth
+// choices to that per-run copy before footage/TTS/render, while leaving the
+// source case file in icerik/konular immutable.
+function applyLegacyOverlay(spec, plan) {
+  const copy = JSON.parse(JSON.stringify(spec));
+  if (!plan || plan.channel !== "failure-reconstructed" || !plan.topic || !copy.slug || plan.topic.slug !== copy.slug || !plan.readiness || plan.readiness.decision === "BLOCK") return copy;
+  const lines = plan.script && Array.isArray(plan.script.lines) ? plan.script.lines : [];
+  const title = plan.titles && plan.titles.selected && plan.titles.selected.title;
+  const hook = plan.hooks && plan.hooks.selected;
+  if (title) copy.baslik = title;
+  if (lines.length) copy.sahneler = (copy.sahneler || []).map((scene, index) => ({ ...scene, metin: lines[index] || scene.metin }));
+  if (hook) copy.hook = hook.onScreen || hook.spoken || copy.hook;
+  copy.growthPlan = { schema: plan.schema, selectedHook: hook || null, selectedTitle: plan.titles.selected || null, openingRewrite: plan.script.openingRewrite || null };
+  return copy;
+}
+
 function planShort(channel, idOrTopic, options = {}) {
   const ctx = options.context || Context.build(channel, options);
   const config = ctx.config;
@@ -127,12 +223,15 @@ function planShort(channel, idOrTopic, options = {}) {
   const cta = Engagement.cta(topic, config, { relatedLongVideo: related ? { videoId: related.long.videoId, title: related.long.title, relationship: related.relationship } : null });
   const experiment = options.assignExperiment ? Experiments.assign(channel, "short", topic.slug, { write: options.write }) : null;
   const legacyTitles = options.legacyTitles || [];
-  const titles = Titles.generate(topic, config, "short", { extra: legacyTitles, publishedTitles: ctx.history.publishedTitles, learnedPatternBonus: ((ctx.learning || {}).shorts || {}).adoptedTitlePatternBonus });
+  const titles = Titles.generate(topic, config, "short", { extra: legacyTitles, publishedTitles: ctx.history.publishedTitles, learnedPatternBonus: ctx.learnedTitlePatternBonus });
   let script;
   if (topic.channel === "failure-reconstructed") {
-    // Editorial narration is never auto-replaced; it is mapped and linted.
-    const lint = Script.lint(topic.narration, topic, config, { templatedFields: evaluation.boilerplate.templatedFields });
-    script = { format: "short", generator: "editorial (case file)", spoken: topic.narration.join(" "), lines: topic.narration, structure: lint.roles, retention: lint };
+    // The source case file remains immutable. The production plan may promote
+    // the highest-scoring fact-checked hook into line one; provenance and the
+    // original opening remain in the plan for audit and rollback.
+    const opening = optimizeEditorialOpening(topic.narration, hooks.selected, config);
+    const lint = Script.lint(opening.lines, topic, config, { templatedFields: evaluation.boilerplate.templatedFields });
+    script = { format: "short", generator: "editorial case file + selected hook", spoken: opening.lines.join(" "), lines: opening.lines, originalLines: topic.narration, openingRewrite: opening, structure: lint.roles, retention: lint };
   } else if (topic.narration && topic.narration.length) {
     // Researched ImpossibleBrief / CriticalThread records: editorial narration,
     // one timed claim per line with its evidence layer (the renderer's
@@ -159,6 +258,7 @@ function planShort(channel, idOrTopic, options = {}) {
     channel: channel.slug,
     topicScore: evaluation.score,
     hooks,
+    titles,
     script: script.retention,
     firstSeconds: first,
     factual,
@@ -180,7 +280,8 @@ function planShort(channel, idOrTopic, options = {}) {
     createdAt: (options.now || new Date()).toISOString(),
     topic: { id: topic.id, slug: topic.slug, title: topic.title, cluster: topic.cluster, subject: topic.subject },
     topicScore: evaluation.score,
-    hooks: { selected: hooks.selected, candidateCount: hooks.candidateCount, familyCount: hooks.familyCount, meetsMinimum: hooks.meetsMinimum, candidates: hooks.candidates },
+    topicDecision: options.selection || null,
+    hooks: { selected: hooks.selected, selectedScore: hooks.selectedScore, passes: hooks.passes, candidateCount: hooks.candidateCount, familyCount: hooks.familyCount, meetsMinimum: hooks.meetsMinimum, candidates: hooks.candidates },
     first3Seconds: first,
     script: { ...script, estimatedSeconds },
     titles: { selected: titles.selected, selectedScore: titles.selectedScore, count: titles.count, meetsMinimum: titles.meetsMinimum, candidates: titles.candidates },
@@ -196,15 +297,22 @@ function planShort(channel, idOrTopic, options = {}) {
     growthMeta: {
       hookType: hooks.selected ? hooks.selected.family : null,
       hookScore: hooks.selectedScore,
+      selectedHook: hooks.selected ? hooks.selected.spoken : null,
+      firstLine: lines[0] || null,
+      firstSecondsScore: first.score,
       topicCluster: topic.cluster,
       bucket: evaluation.score.bucket,
+      viralScore: evaluation.score.ViralPotentialScore,
+      viralComponents: evaluation.score.viralComponents,
       storyStructure: (config.story && config.story.shorts || []).join(">"),
       titlePattern: titles.selected ? titles.selected.pattern : null,
+      selectedTitle: titles.selected ? titles.selected.title : null,
       ctaStyle: cta.type,
       durationBucket: durationBucket(estimatedSeconds),
       openingVisual: first.First3SecondPlan ? first.First3SecondPlan.firstFrame.sourceClass : null,
       experimentVariant: experiment ? `${experiment.experiment_id}:${experiment.arm}` : null,
       factors: Object.fromEntries(Object.entries(evaluation.score.factors).map(([key, value]) => [key, value.value])),
+      selectionMode: options.selection && options.selection.mode || null,
     },
   };
   plan.summary = summary(plan);
@@ -253,5 +361,5 @@ function printSummary(summaryObject, extra = {}) {
 }
 
 module.exports = {
-  Config, Store, Model, Context, selectShortTopic, orderedQueue, gateMode, planShort, externalFromLegacyGate, summary, printSummary, durationBucket, findTopic,
+  Config, Store, Model, Context, selectShortTopic, orderedQueue, gateMode, planShort, externalFromLegacyGate, summary, printSummary, durationBucket, optimizeEditorialOpening, applyLegacyOverlay, findTopic, decisionCandidate, writeDecision,
 };

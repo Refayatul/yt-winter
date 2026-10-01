@@ -9,14 +9,18 @@
 
 const Store = require("./store");
 const Config = require("./config");
+const fs = require("fs");
+const path = require("path");
 
 const SUPPORT = Object.freeze({
   views: { status: "SUPPORTED", source: "Data API statistics.viewCount / Analytics views" },
-  engaged_views: { status: "SUPPORTED", source: "Analytics API engagedViews (not yet requested by lib/analitik; recorded when present)" },
+  engaged_views: { status: "ACCOUNT-DEPENDENT", source: "Analytics API engagedViews (requested with the video-filtered report)" },
   likes: { status: "SUPPORTED", source: "Data API statistics.likeCount" },
   comments: { status: "SUPPORTED", source: "Data API statistics.commentCount" },
   shares: { status: "ACCOUNT-DEPENDENT", source: "Analytics API shares (requires yt-analytics.readonly on the channel's token)" },
-  subscribers_gained: { status: "ACCOUNT-DEPENDENT", source: "Analytics API subscribersGained − subscribersLost" },
+  subscribers_gained: { status: "ACCOUNT-DEPENDENT", source: "Analytics API subscribersGained" },
+  subscribers_lost: { status: "ACCOUNT-DEPENDENT", source: "Analytics API subscribersLost" },
+  net_subscribers: { status: "DERIVED", source: "subscribersGained − subscribersLost" },
   average_view_duration: { status: "ACCOUNT-DEPENDENT", source: "Analytics API averageViewDuration" },
   average_percentage_viewed: { status: "ACCOUNT-DEPENDENT", source: "Analytics API averageViewPercentage" },
   watch_time: { status: "ACCOUNT-DEPENDENT", source: "Analytics API estimatedMinutesWatched" },
@@ -41,7 +45,8 @@ const SUPPORT = Object.freeze({
 
 const METRIC_MAP = {
   views: (m) => m.views, likes: (m) => m.likes, comments: (m) => m.comments, shares: (m) => m.shares,
-  subscribers_gained: (m) => m.subscribersGained, average_view_duration: (m) => m.averageViewDuration,
+  subscribers_gained: (m) => m.subscribersGained, subscribers_lost: (m) => m.subscribersLost,
+  net_subscribers: (m) => m.netSubscribers, average_view_duration: (m) => m.averageViewDuration,
   average_percentage_viewed: (m) => m.averageViewPercentage, watch_time_minutes: (m) => m.watchTimeMinutes,
   impressions: (m) => m.impressions, ctr: (m) => m.ctr, returning_viewers: (m) => m.returningViewers,
   first_30s_retention: (m) => m.first30sRetention, engaged_views: (m) => m.engagedViews,
@@ -67,9 +72,16 @@ function snapshot(measurement) {
   const m = measurement.metrikler || {};
   const metrics = {};
   for (const [key, pick] of Object.entries(METRIC_MAP)) metrics[key] = value(pick(m));
+  // Older snapshots stored net subscribers under `subscribersGained`. Preserve
+  // that value as net; do not silently relabel it as gross subscribers gained.
+  if (m.subscribersGained && /\bnet\b/i.test(String(m.subscribersGained.kaynak || "")) && !m.netSubscribers) {
+    metrics.net_subscribers = value(m.subscribersGained);
+    metrics.subscribers_gained = { value: null, status: "UNAVAILABLE", reason: "legacy snapshot contains net subscribers only" };
+  }
   const views = metrics.views.value;
   const derive = (numerator, factor, label) => numerator != null && views ? { value: Math.round(numerator / views * factor * 100) / 100, status: "DERIVED", from: label } : { value: null, status: "UNAVAILABLE" };
   metrics.subscribers_per_1000_views = derive(metrics.subscribers_gained.value, 1000, "subscribers_gained / views");
+  metrics.net_subscribers_per_1000_views = derive(metrics.net_subscribers.value, 1000, "net_subscribers / views");
   metrics.engagement_per_1000_views = views && metrics.likes.value != null && metrics.comments.value != null
     ? { value: Math.round((metrics.likes.value + metrics.comments.value + (metrics.shares.value || 0)) / views * 1000 * 100) / 100, status: "DERIVED", from: "likes+comments+shares / views" }
     : { value: null, status: "UNAVAILABLE" };
@@ -82,7 +94,10 @@ function flatMetrics(snap) {
   const pick = (key) => snap.metrics[key] ? snap.metrics[key].value : null;
   return {
     views: pick("views"), averagePercentageViewed: pick("average_percentage_viewed"), averageViewDuration: pick("average_view_duration"),
-    subscribersPer1000Views: pick("subscribers_per_1000_views"), engagementPer1000Views: pick("engagement_per_1000_views"),
+    likes: pick("likes"), comments: pick("comments"), shares: pick("shares"), subscribersGained: pick("subscribers_gained"),
+    engagedViews: pick("engaged_views"),
+    subscribersLost: pick("subscribers_lost"), netSubscribers: pick("net_subscribers"),
+    subscribersPer1000Views: pick("subscribers_per_1000_views"), netSubscribersPer1000Views: pick("net_subscribers_per_1000_views"), engagementPer1000Views: pick("engagement_per_1000_views"),
     watchHoursPer1000Views: pick("watch_hours_per_1000_views"), ctr: pick("ctr"), first30sRetention: pick("first_30s_retention"),
     shortsFeedShare: (snap.traffic.find((row) => row.source === "SHORTS") || {}).share ?? null,
   };
@@ -159,4 +174,77 @@ function conversionBreakdown(channel, rows = readAll(channel)) {
 
 function supportMatrix() { return SUPPORT; }
 
-module.exports = { SUPPORT, FILE, snapshot, flatMetrics, dueCheckpoint, readAll, registerVideo, recordCheckpoint, baselines, conversionBreakdown, supportMatrix, config: Config };
+function checkpointLabel(file) {
+  const value = file.replace(/\.json$/, "");
+  if (value === "1d") return "24h";
+  if (value === "7d") return "7d";
+  if (/^\d+d$/.test(value)) return `${Number(value.slice(0, -1)) * 24}h`;
+  return value;
+}
+
+// Import the channel's existing, real analytics snapshots into the shared
+// growth registry. This is idempotent and never fabricates old 1h/6h values:
+// only files that actually exist are imported under their real age label.
+function backfillLegacy(channel, options = {}) {
+  if (channel.config.pathMode !== "legacy-adapter") throw new Error(`LEGACY_BACKFILL_UNSUPPORTED: ${channel.slug} has no legacy analytics tree`);
+  const Context = require("./context");
+  const Performance = require("./performance");
+  const ctx = options.context || Context.build(channel);
+  const published = ctx.history.published;
+  const topics = new Map(ctx.inventory.map((topic) => [topic.slug, topic]));
+  let videos = 0;
+  let snapshots = 0;
+  const skipped = [];
+  // Enrich every published registry row, including a just-published video
+  // whose first legacy snapshot directory has not been created yet.
+  for (const publication of published.filter((row) => row.videoId)) {
+    const topic = topics.get(publication.slug);
+    const existing = readAll(channel).find((row) => row.videoId === publication.videoId);
+    registerVideo(channel, {
+      ...(existing || {}),
+      videoId: publication.videoId,
+      channel: channel.slug,
+      contentType: publication.format === "long" ? "long" : "short",
+      slug: publication.slug || existing && existing.slug || null,
+      title: publication.baslik || publication.title || existing && existing.title || null,
+      publishAt: publication.publishAt || publication.tarih || existing && existing.publishAt || null,
+      topicCluster: topic && topic.cluster || existing && existing.topicCluster || null,
+      registeredBy: existing && existing.registeredBy || "legacy-publication-registry",
+    });
+  }
+  if (!fs.existsSync(channel.paths.analytics)) return { channel: channel.slug, videos, snapshots, skipped: ["analytics directory missing"] };
+  for (const videoId of fs.readdirSync(channel.paths.analytics).sort()) {
+    const directory = path.join(channel.paths.analytics, videoId);
+    if (videoId === "kanal" || !fs.existsSync(directory) || !fs.statSync(directory).isDirectory()) continue;
+    const files = fs.readdirSync(directory).filter((file) => /^\d+d\.json$|^manual-.*\.json$/.test(file)).sort();
+    if (!files.length) continue;
+    const publication = published.find((row) => row.videoId === videoId) || {};
+    const topic = topics.get(publication.slug);
+    let importedForVideo = 0;
+    for (const file of files) {
+      let measurement;
+      try { measurement = JSON.parse(fs.readFileSync(path.join(directory, file), "utf8")); } catch (error) { skipped.push(`${videoId}/${file}: invalid JSON`); continue; }
+      if (!measurement || !measurement.metrikler) { skipped.push(`${videoId}/${file}: no measurement`); continue; }
+      const contentType = measurement.format === "long" ? "long" : "short";
+      registerVideo(channel, {
+        videoId,
+        channel: channel.slug,
+        contentType,
+        slug: publication.slug || null,
+        title: measurement.baslik || publication.baslik || null,
+        publishAt: publication.publishAt || publication.tarih || (measurement.yayin ? `${measurement.yayin}T00:00:00.000Z` : null),
+        durationSeconds: measurement.sureSn || null,
+        topicCluster: topic && topic.cluster || null,
+        registeredBy: "legacy-analytics-backfill",
+      });
+      recordCheckpoint(channel, videoId, checkpointLabel(file), measurement);
+      importedForVideo += 1;
+      snapshots += 1;
+    }
+    if (importedForVideo) videos += 1;
+  }
+  const rows = Performance.refresh(channel, readAll(channel), { write: options.write !== false });
+  return { channel: channel.slug, videos, snapshots, trackedVideos: rows.length, skipped };
+}
+
+module.exports = { SUPPORT, FILE, snapshot, flatMetrics, dueCheckpoint, readAll, registerVideo, recordCheckpoint, baselines, conversionBreakdown, supportMatrix, checkpointLabel, backfillLegacy, config: Config };

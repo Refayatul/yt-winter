@@ -40,10 +40,30 @@ function build(channel, options = {}) {
   const past = options.history || history(channel);
   const learning = options.learning || require("./learning").read(channel);
   const shortsLearning = (learning && learning.shorts) || {};
+  const performanceRows = options.performanceRows || require("./analytics").readAll(channel).filter((row) => row.contentType === "short");
+  const clusterPerformance = {};
+  for (const row of performanceRows) {
+    const cluster = row.topicCluster || "uncategorized";
+    const group = clusterPerformance[cluster] = clusterPerformance[cluster] || { n: 0, scores: [], breakouts: 0, subscribers: [] };
+    group.n += 1;
+    if (row.performance && Number.isFinite(row.performance.growthScore)) group.scores.push(row.performance.growthScore);
+    if (row.performance && row.performance.classification === "BREAKOUT") group.breakouts += 1;
+    if (row.normalized && Number.isFinite(row.normalized.subscriberConversion)) group.subscribers.push(row.normalized.subscriberConversion);
+  }
+  for (const group of Object.values(clusterPerformance)) {
+    group.score = group.scores.length ? Math.round(group.scores.reduce((sum, value) => sum + value, 0) / group.scores.length) : 50;
+    group.breakoutRate = group.n ? group.breakouts / group.n : 0;
+    group.subscriberConversion = group.subscribers.length ? group.subscribers.reduce((sum, value) => sum + value, 0) / group.subscribers.length : null;
+  }
   return {
     channel, config, inventory, index, clusterSizes, history: past,
     learnedWeights: (shortsLearning.adoptedWeights || {}),
     learnedFamilyBonus: (shortsLearning.adoptedHookFamilyBonus || {}),
+    learnedTitlePatternBonus: (shortsLearning.adoptedTitlePatternBonus || {}),
+    learnedClusterBonus: (shortsLearning.adoptedClusterBonus || {}),
+    learnedDurationBucketBonus: (shortsLearning.adoptedDurationBucketBonus || {}),
+    performanceRows,
+    clusterPerformance,
     learning,
   };
 }
@@ -67,7 +87,8 @@ function evaluate(topic, ctx, options = {}) {
   const sourceQuality = Sources.sourceQuality(topic.sources);
   const scoringContext = {
     config: ctx.config, boilerplate, hooks, sourceQuality, publishedTitles: ctx.history.publishedTitles,
-    clusterSizes: ctx.clusterSizes, learnedWeights: ctx.learnedWeights, duplicate: options.skipDuplicate ? null : duplicateOf(topic, ctx),
+    clusterSizes: ctx.clusterSizes, learnedWeights: ctx.learnedWeights, learnedClusterBonus: ctx.learnedClusterBonus,
+    clusterPerformance: ctx.clusterPerformance, duplicate: options.skipDuplicate ? null : duplicateOf(topic, ctx),
     performance: options.performance || {},
   };
   const score = Scoring.scoreShort(topic, scoringContext);
@@ -93,7 +114,7 @@ function rank(channel, options = {}) {
     rows.push(evaluate(topic, ctx));
   }
   const order = { A: 0, B: 1, C: 2, D: 3 };
-  rows.sort((a, b) => order[a.score.bucket] - order[b.score.bucket] || b.score.VideoPotentialScore - a.score.VideoPotentialScore);
+  rows.sort((a, b) => order[a.score.bucket] - order[b.score.bucket] || b.score.SelectionScore - a.score.SelectionScore || b.score.VideoPotentialScore - a.score.VideoPotentialScore);
   const distribution = { A: 0, B: 0, C: 0, D: 0 };
   for (const row of rows) distribution[row.score.bucket] += 1;
   return { channel: channel.slug, context: ctx, rows, distribution };

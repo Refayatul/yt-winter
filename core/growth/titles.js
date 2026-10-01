@@ -87,6 +87,14 @@ function shortCandidates(topic, extra = []) {
     add(list, `If ${E}: Known Science vs. Speculation`, "known-vs-speculation");
     add(list, `The First Thing to Change If ${E}`, "first-thing");
     add(list, `What Breaks Second If ${E}`, "breaks-second");
+    add(list, `If ${E}: The First 60 Seconds`, "first-minute");
+    add(list, `What Would Stay the Same If ${E}?`, "what-stays");
+    add(list, `The Immediate Effect If ${E}`, "immediate-effect");
+    add(list, `If ${E}: Cause to Consequence`, "cause-to-consequence");
+    add(list, `How ${cap(S)} Would Unfold`, "how-unfolds");
+    add(list, `${cap(S)}: The Mechanism Explained`, "mechanism-explained");
+    add(list, `What We Know About ${cap(S)}`, "what-we-know");
+    add(list, `${cap(S)}: What Happens Next?`, "happens-next");
     add(list, `What If ${cap(topic.scenario)}?`, "what-if");
     if (topic.mechanism) add(list, `${cap(topic.mechanism.split(/[,;]/)[0])}: The Key to ${cap(S)}`, "mechanism-key");
     if (topic.consequence) add(list, `If ${E}, ${topic.consequence.split(/[,;]/)[0]}`, "consequence-led");
@@ -102,6 +110,14 @@ function shortCandidates(topic, extra = []) {
     add(list, `Can We Replace ${S} Fast Enough?`, "replace-fast");
     add(list, `Why There Is No Quick Substitute for ${S}`, "no-substitute");
     add(list, `The Fragile Chain Behind ${S}`, "fragile-chain");
+    add(list, `What Depends on ${S}?`, "what-depends");
+    add(list, `${S}: The System Behind the System`, "system-behind-system");
+    add(list, `Why ${cap(S)} Became Irreplaceable`, "became-irreplaceable");
+    add(list, `The Chain Reaction If ${S} Fails`, "failure-chain");
+    add(list, `How ${cap(S)} Holds the Chain Together`, "holds-chain");
+    add(list, `${cap(S)}: One Bottleneck, Global Consequences`, "global-consequences");
+    add(list, `Where the ${S} Dependency Starts`, "dependency-start");
+    add(list, `${cap(S)}: The Risk Hidden in Plain Sight`, "hidden-risk");
     for (const claim of (topic.evidence || []).filter((item) => /VERIFIED/.test(item.layer)).slice(0, 2)) {
       const number = Model.numbersIn(claim.claim)[0];
       if (number) add(list, `${number}: Inside ${S}`, "number-led");
@@ -180,6 +196,14 @@ function longCandidates(topic, extra = []) {
     add(list, `Why ${cap(S)} Matters More Than You Think`, "matters-more");
     add(list, `${cap(S)} — A Critical Systems Documentary`, "documentary");
     add(list, `The Backup Plan for ${S}`, "backup-plan");
+    add(list, `What Depends on ${S}?`, "what-depends");
+    add(list, `${S}: The System Behind the System`, "system-behind-system");
+    add(list, `Why ${cap(S)} Became Irreplaceable`, "became-irreplaceable");
+    add(list, `The Chain Reaction If ${S} Fails`, "failure-chain");
+    add(list, `How ${cap(S)} Holds the Chain Together`, "holds-chain");
+    add(list, `${cap(S)}: One Bottleneck, Global Consequences`, "global-consequences");
+    add(list, `Where the ${S} Dependency Starts`, "dependency-start");
+    add(list, `${cap(S)}: The Risk Hidden in Plain Sight`, "hidden-risk");
   }
   if (topic.title) add(list, topic.title, "current");
   return list;
@@ -218,6 +242,13 @@ function scoreOne(candidate, topic, config, kind, context = {}) {
     novelty: clamp(100 - similarity * 80),
     evergreenPotential: clamp(60 + (/\b(today|this week|breaking|new|latest|2026)\b/i.test(title) ? -30 : 15) + (hasSubject ? 10 : 0)),
   };
+  const consequenceWords = /\b(fail|collapse|destroy|break|stop|sink|sank|burn|explode|kill|without|depend|consequence|disaster|doomed?)\w*/i.test(title);
+  s.consequence = clamp(42 + (consequenceWords ? 38 : 0) + (topic.consequence && M.kelimeBenzerlik(title, topic.consequence) >= 0.15 ? 15 : 0));
+  s.compactness = clamp(100 - Math.max(0, chars - 60) * 2 - Math.max(0, words - 10) * 7);
+  s.recognizability = clamp(38 + (hasSubject ? 42 : 0) + ((topic.signals || {}).priority || 0) * 0.2);
+  s.nonRedundancy = s.novelty;
+  s.factualIntegrity = s.truthfulness;
+  s.historicalPerformanceSimilarity = clamp(50 + ((context.learnedPatternBonus || {})[candidate.pattern] || 0) * 5);
   const weights = kind === "long" ? config.titles.longform.weights : config.titles.shorts.weights;
   const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
   const total = Math.round(Object.entries(weights).reduce((sum, [key, weight]) => sum + (s[key] || 0) * weight, 0) / totalWeight);

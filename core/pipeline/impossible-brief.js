@@ -71,14 +71,14 @@ function chooseTopic(channel, explicit, universe) {
   if (explicit) {
     const topic = universe.find((item) => item.slug === explicit || item.id === explicit);
     if (!topic) throw new Error(`${channel.name} topic not found: ${explicit}`);
-    return { topic, plan: Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true }), reason: "explicit topic" };
+    return { topic, plan: Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true, assignExperiment: true, write: true }), reason: "explicit topic" };
   }
   const exclude = [...Discovery.usedIds(channel)];
   for (let attempt = 0; attempt < 3; attempt += 1) {
-    const selection = Growth.selectShortTopic(channel, { exclude });
+    const selection = Growth.selectShortTopic(channel, { exclude, write: true });
     if (!selection.selected) return { topic: null, plan: null, reason: selection.reason, inventory: selection.inventory };
     const topic = universe.find((item) => item.id === selection.selected.topic.id);
-    const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), write: true });
+    const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), write: true, assignExperiment: true, selection: selection.decision });
     if (plan.readiness.decision !== "BLOCK") return { topic, plan, reason: selection.reason, inventory: selection.inventory };
     console.log(`[${channel.name}] pre-render readiness BLOCK for ${topic.slug}: ${plan.readiness.hardFails.join("; ") || plan.readiness.ProductionReadinessScore}`);
     recordBlocked(channel, topic, `growth pre-gate ${plan.readiness.ProductionReadinessScore}: ${plan.readiness.hardFails.join("; ") || "below threshold"}`);
@@ -111,6 +111,7 @@ function runChannel(slug, argv = []) {
   const finalPlan = !noRender && result.render.completed
     ? Growth.planShort(channel, topic.id, {
       legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true, stage: "final",
+      assignExperiment: true, write: true, selection: choice.plan.topicDecision,
       render: { completed: true, syntheticVoice: result.render.audio.syntheticVoice, hasAudio: result.render.video.hasAudio, captionsBurned: result.render.video.captionsBurned,
         width: result.render.video.width, height: result.render.video.height, durationSeconds: result.render.video.durationSeconds },
     })

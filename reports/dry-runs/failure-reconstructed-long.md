@@ -50,24 +50,25 @@ Coverage 82% · missing: CRITICAL_MOMENT, AFTERMATH
 
 ## Cold-open candidates
 
+- (shocking_consequence, 82, ~3.1s) The Space Shuttle Challenger broke apart 73 seconds after launch.
 - (hidden_cause, 81, ~4.7s) Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.
-- (shocking_consequence, 76, ~3.1s) The Space Shuttle Challenger broke apart 73 seconds after launch.
-- (countdown, 70, ~0.6s) 73 seconds.
-- (visual_first_reveal, 69, ~2.2s) Seventy-three seconds after launch, Challenger broke apart.
-- (contradiction, 68, ~2.8s) The engineers had the data but not the authority.
+- (visual_first_reveal, 77, ~2.2s) Seventy-three seconds after launch, Challenger broke apart.
+- (contradiction, 76, ~2.8s) The engineers had the data but not the authority.
+- (mechanism_reveal, 76, ~4.1s) Challenger failed because o-ring seal failure in a solid rocket booster field joint.
+- (countdown, 75, ~0.6s) 73 seconds.
+- (tiny_cause_massive_consequence, 73, ~2.8s) It took only an O-ring seal stiffened by cold.
+- (before_after_consequence, 73, ~2.5s) Today, that warning is taught to every engineer.
+- (warning_ignored, 70, ~3.4s) Engineers had warned against launching in the cold the night before.
+- (unexpected_chain_reaction, 69, ~5s) It started with cold night below freezing. It ended with VEHICLE BREAKS APART AT 73 s.
 - (question_gap, 68, ~1.3s) Challenger: what failed first?
-- (before_after_consequence, 67, ~5s) After Challenger, NASA redesigned the booster joints and changed how engineering objections are heard before launch.
-- (unexpected_chain_reaction, 66, ~5s) It started with cold night below freezing. It ended with VEHICLE BREAKS APART AT 73 s.
-- (tiny_cause_massive_consequence, 64, ~2.8s) It took only an O-ring seal stiffened by cold.
-- (warning_ignored, 63, ~3.4s) Engineers had warned against launching in the cold the night before.
 
-Selected cold open: **Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.**
+Selected cold open: **The Space Shuttle Challenger broke apart 73 seconds after launch.**
 
 ## Long-form script
 
-Generator: deterministic-evidence · 338 words · ~2.3 min (target 8–12 min) · new beat every ~17s
+Generator: deterministic-evidence · 333 words · ~2.2 min (target 8–12 min) · new beat every ~17s
 
-**COLD_OPEN** — Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.
+**COLD_OPEN** — The Space Shuttle Challenger broke apart 73 seconds after launch.
 
 **CONSEQUENCE** — But that was only the visible part. The Space Shuttle Challenger broke apart 73 seconds after launch. The key figure: 73 SECONDS.
 
@@ -87,7 +88,7 @@ Generator: deterministic-evidence · 338 words · ~2.3 min (target 8–12 min) �
 
 | # | Section | Visual type | Subject | Seconds | Disclosure |
 |---|---|---|---|---|---|
-| 1 | COLD_OPEN | REAL_ARCHIVAL | Seventy-three seconds after launch, Challenger broke apart. | 6 | — |
+| 1 | COLD_OPEN | REAL_ARCHIVAL | Seventy-three seconds after launch, Challenger broke apart. | 4 | — |
 | 2 | CONSEQUENCE | REAL_ARCHIVAL | Seven astronauts were killed, in front of the world. | 8.8 | — |
 | 3 | WHAT_HAPPENED | REAL_ARCHIVAL | The cause was just a rubber ring, a quarter-inch thick. | 17.7 | — |
 | 4 | WHAT_HAPPENED | REAL_ARCHIVAL | Overnight, temperatures fell well below freezing. | 17.7 | — |
@@ -133,10 +134,10 @@ Selected title: **Why Challenger Broke Apart 73 Seconds After Launch** (85)
 ## Short derivatives
 
 - what-happened: "+73 s: External tank fails; Challenger breaks apart — 7 crew lost." (shocking_consequence, 84)
-- failure-chain: "Step 2 of the failure chain: o-rINGS lose resilience." (impossible_sounding_fact, 78)
-- hidden-weakness: "Challenger didn't simply 'explode'." (hidden_cause, 77)
-- consequence: "The Space Shuttle Challenger broke apart 73 seconds after launch." (shocking_consequence, 76)
-- engineering-explanation: "The Space Shuttle Challenger broke apart 73 seconds after launch." (shocking_consequence, 76)
+- consequence: "The Space Shuttle Challenger broke apart 73 seconds after launch." (shocking_consequence, 82)
+- hidden-weakness: "The Space Shuttle Challenger broke apart 73 seconds after launch." (shocking_consequence, 82)
+- failure-chain: "The Space Shuttle Challenger broke apart 73 seconds after launch." (shocking_consequence, 82)
+- engineering-explanation: "The Space Shuttle Challenger broke apart 73 seconds after launch." (shocking_consequence, 82)
 
 ## Related-video mapping
 
@@ -150,7 +151,7 @@ Shorts Related Video cannot be set through the public API; each mapping becomes 
 - Primary next: The Rocket Nose Cone That Wouldn't Open — Twice (same series; subject overlap 0.00, same cluster spaceflight-disasters)
 - Secondary next: A Decades-Old Engine Exploded Seconds After Launch
 - Playlist: spaceflight-disasters · subscribe element: true
-- Timing: last 20s from 118s — final 20 s; narration must not end abruptly
+- Timing: last 20s from 112s — final 20 s; narration must not end abruptly
 - Transition line: And Challenger wasn't the only time a hidden weakness decided everything — The Rocket Nose Cone That Wouldn't Open — Twice is next.
 - End screens are set in YouTube Studio (no API write).
 
@@ -158,14 +159,14 @@ Shorts Related Video cannot be set through the public API; each mapping becomes 
 
 **83 → BLOCK** (publish ≥ 85)
 
-Dimensions: TopicDepth 97 · NarrativeQuality 86 · Hook 81 · ResearchQuality 83 · SourceCoverage 57 · FactualAccuracy 100 · ScriptRetention 54 · VisualCoverage 80 · AudioQuality n/m · Editing n/m · Thumbnail 89 · Title 85 · CopyrightSafety 90 · Disclosure 95 · EndScreenPlan 90 · ShortFunnelPotential 90
+Dimensions: TopicDepth 97 · NarrativeQuality 86 · Hook 82 · ResearchQuality 83 · SourceCoverage 57 · FactualAccuracy 100 · ScriptRetention 54 · VisualCoverage 80 · AudioQuality n/m · Editing n/m · Thumbnail 89 · Title 85 · CopyrightSafety 90 · Disclosure 95 · EndScreenPlan 90 · ShortFunnelPotential 90
 
-Hard fails: INSUFFICIENT_DEPTH: evidence supports ~2.3 min; target 8–12 min — not padded
+Hard fails: INSUFFICIENT_DEPTH: evidence supports ~2.2 min; target 8–12 min — not padded
 
 - Note: 2 sources (preferred 3): add an independent source before the next revision
 - Note: 160 deep-research claims need the LLM writer (LONGFORM_LLM=1 + ANTHROPIC_API_KEY); the deterministic writer never narrates encyclopedia text verbatim
 
-Cost estimate: $0.07 (llmTokens 0, ttsMinutes 2.3, renderMinutesCpu 6.9, assets 11, youtubeQuotaUnits 1650)
+Cost estimate: $0.06 (llmTokens 0, ttsMinutes 2.2, renderMinutesCpu 6.6, assets 11, youtubeQuotaUnits 1650)
 
 ## Publish / Review / Block decision
 

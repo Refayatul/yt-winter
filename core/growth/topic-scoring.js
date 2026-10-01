@@ -26,6 +26,10 @@ function factor(value, basis, note) {
   return { value: clamp(value), basis, ...(note ? { note } : {}) };
 }
 
+function component(value, basis, note) {
+  return { value: Math.max(-100, Math.min(100, Math.round(value))), basis, ...(note ? { note } : {}) };
+}
+
 function allText(topic) {
   return [topic.title, topic.consequence, topic.trigger, topic.mechanism, topic.misconception, topic.debate, topic.lesson,
     topic.dependency, topic.bottleneck, topic.hookText, topic.openingLine, topic.secondBeat, ...(topic.narration || []),
@@ -91,7 +95,7 @@ function factors(topic, context) {
   f.CommentPotentialScore = factor(45 + (topic.debate ? 20 : 0) + (topic.misconception ? 10 : 0) + (topic.question ? 8 : 0) + (topic.channel === "impossible-brief" ? 8 : 0) - generic * 15, "derived");
 
   const clusterSize = clusterSizes[topic.cluster] || 1;
-  f.SubscriberConversionPotential = factor(50 + Math.min(20, clusterSize * 2) + ((config.topic.priorityClusters || []).includes(topic.cluster) ? 10 : 0) + (lexHits >= 3 ? 8 : 0), "derived",
+  f.SubscriberConversionPotential = factor(50 + Math.min(20, clusterSize * 2) + ((config.topic.priorityClusters || []).includes(topic.cluster) ? 10 : 0) + (lexHits >= 3 ? 8 : 0) + ((context.learnedClusterBonus || {})[topic.cluster] || 0), "derived+learned",
     `series depth: ${clusterSize} topics in ${topic.cluster || "no cluster"}`);
 
   const similarity = publishedTitles.length ? Math.max(...publishedTitles.map((title) => M.kelimeBenzerlik(title, topic.title))) : 0;
@@ -105,6 +109,66 @@ function factors(topic, context) {
       : [topic.dependency, topic.bottleneck, topic.consequence];
   f.ChannelFitScore = factor(45 + Math.min(5, lexHits) * 6 + required.filter(Boolean).length / required.length * 25 - generic * 10, "derived");
   return { factors: f, evidenceCount, similarity };
+}
+
+// Transparent Viral Potential Score. It complements the existing editorial
+// VideoPotentialScore with the exact packaging, recognizability, evidence and
+// risk dimensions used at a publication decision. Penalties stay visible as
+// negative numbers instead of being buried in the final score.
+function viralFactors(topic, context, parts) {
+  const config = context.config;
+  const text = allText(topic);
+  const evidence = parts.evidenceCount;
+  const humans = count(text, HUMAN_STAKES);
+  const surprises = count(text, SURPRISE);
+  const numbers = Model.numbersIn(text).length;
+  const performance = (context.clusterPerformance || {})[topic.cluster] || { n: 0, score: 50, breakoutRate: 0 };
+  const learnedCluster = (context.learnedClusterBonus || {})[topic.cluster] || 0;
+  const recognizabilitySeed = has(topic.signals && topic.signals.searchDemand) ? topic.signals.searchDemand
+    : has(topic.signals && topic.signals.priority) ? topic.signals.priority : topic.year ? 65 : 50;
+  const titleCount = (topic.editorialTitles || []).length + (topic.title ? 1 : 0);
+  const duplicateRisk = Math.round(parts.similarity * 100);
+  const saturationRisk = performance.n ? Math.min(100, performance.n / Math.max(1, context.clusterSizes && context.clusterSizes[topic.cluster] || 1) * 300) : 0;
+  const sourceRisk = 100 - context.sourceQuality.score;
+  const weakFootageRisk = topic.archivalFilm ? 0 : topic.archival ? 15 : topic.stock ? 45 : Math.max(20, 75 - (topic.visualScenes || []).length * 7);
+  const components = {
+    curiosity_gap: component(parts.factors.CuriosityScore.value, "derived"),
+    immediate_stakes: component(45 + (topic.consequence ? 25 : 0) + Math.min(3, humans) * 8, "derived"),
+    human_consequence: component(35 + Math.min(6, humans) * 10, "derived"),
+    recognizability: component(recognizabilitySeed + (topic.year ? 5 : 0), has(topic.signals && (topic.signals.searchDemand != null || topic.signals.priority != null)) ? "inventory-signal" : "derived"),
+    surprise: component(40 + Math.min(4, surprises) * 10 + (topic.misconception ? 10 : 0), "derived"),
+    visual_potential: component(parts.factors.VisualImpactScore.value, parts.factors.VisualImpactScore.basis),
+    archival_footage_potential: component(topic.archivalFilm ? 100 : topic.archival ? 80 : topic.stock ? 45 : 35, "inventory-signal"),
+    first_frame_potential: component((topic.visualScenes || []).length ? (topic.archivalFilm ? 95 : topic.archival ? 82 : 68) : 30, "derived"),
+    title_potential: component(45 + Math.min(5, titleCount) * 8 + (topic.number ? 8 : 0) + (topic.misconception ? 7 : 0), "derived", `${titleCount} source-backed title seeds`),
+    emotional_tension: component(parts.factors.EmotionalImpactScore.value, "derived"),
+    contradiction: component(topic.misconception ? 85 : topic.debate ? 68 : surprises ? 50 : 30, "derived"),
+    unexpected_cause: component(topic.trigger && topic.mechanism ? 82 : topic.mechanism ? 65 : 25, "derived"),
+    numerical_anomaly: component(numbers ? Math.min(95, 50 + numbers * 12) : 25, "derived"),
+    didnt_know_factor: component((parts.factors.NoveltyScore.value + parts.factors.CuriosityScore.value) / 2, "derived"),
+    shareability: component(parts.factors.SharePotentialScore.value, "derived"),
+    channel_fit: component(parts.factors.ChannelFitScore.value, "derived"),
+    historical_similarity: component(performance.score + learnedCluster, performance.n ? "learned" : "neutral", performance.n ? `${performance.n} same-cluster upload(s), breakout rate ${performance.breakoutRate}` : "no same-cluster channel evidence yet"),
+    duplicate_risk: component(-duplicateRisk, "penalty", duplicateRisk ? `published-title similarity ${parts.similarity.toFixed(2)}` : "no published-title collision"),
+    saturation_risk: component(-saturationRisk, "penalty", `${performance.n || 0} published / ${context.clusterSizes && context.clusterSizes[topic.cluster] || 1} inventory in cluster`),
+    source_confidence_risk: component(-sourceRisk, "penalty", context.sourceQuality.notes.join("; ") || `${context.sourceQuality.score}/100 source quality`),
+    weak_footage_risk: component(-weakFootageRisk, "penalty", topic.archivalFilm ? "archival film available" : topic.archival ? "archival stills available" : "no archival footage confirmed"),
+  };
+  const weights = config.viralScoring.weights;
+  let positiveSum = 0;
+  let positiveWeight = 0;
+  let penaltySum = 0;
+  let penaltyWeight = 0;
+  const penaltyKeys = new Set(["duplicate_risk", "saturation_risk", "source_confidence_risk", "weak_footage_risk"]);
+  for (const [key, weight] of Object.entries(weights)) {
+    const value = components[key] && components[key].value;
+    if (!Number.isFinite(value)) continue;
+    if (penaltyKeys.has(key)) { penaltySum += Math.abs(value) * weight; penaltyWeight += weight; }
+    else { positiveSum += value * weight; positiveWeight += weight; }
+  }
+  const positive = positiveWeight ? positiveSum / positiveWeight : 0;
+  const penalty = penaltyWeight ? penaltySum / penaltyWeight * config.viralScoring.penaltyScale : 0;
+  return { score: clamp(positive - penalty), components, weights, calculation: { positive: Math.round(positive * 10) / 10, penalty: Math.round(penalty * 10) / 10, penaltyScale: config.viralScoring.penaltyScale }, specificEvidence: evidence };
 }
 
 function weighted(factorMap, weights) {
@@ -172,9 +236,12 @@ function bucket(score, parts, topic, context) {
 
 function scoreShort(topic, context) {
   const parts = factors(topic, context);
+  const viral = viralFactors(topic, context, parts);
   const weights = applyLearnedWeights(context.config.topic.weights, context.learnedWeights, context.config.learning.maxWeightShift);
   const score = weighted(parts.factors, weights);
   const classification = bucket(score, parts, topic, context);
+  const candidate = context.config.candidatePool;
+  const selectionScore = Math.round(score * candidate.videoPotentialWeight + viral.score * candidate.viralPotentialWeight);
   return {
     channel: topic.channel,
     topicId: topic.id,
@@ -182,10 +249,15 @@ function scoreShort(topic, context) {
     title: topic.title,
     cluster: topic.cluster,
     VideoPotentialScore: score,
+    ViralPotentialScore: viral.score,
+    SelectionScore: selectionScore,
     bucket: classification.bucket,
     reasons: classification.reasons,
     enrichable: !!classification.enrichable,
     factors: parts.factors,
+    viralComponents: viral.components,
+    viralWeights: viral.weights,
+    viralCalculation: viral.calculation,
     weights,
     boilerplate: context.boilerplate,
     specificEvidence: parts.evidenceCount,
@@ -237,4 +309,4 @@ function scoreLongForm(topic, context) {
   return { channel: topic.channel, topicId: topic.id, slug: topic.slug, title: topic.title, cluster: topic.cluster, LongFormPotentialScore: score, bucket: bucketName, reasons, factors: f, weights, specificEvidence: evidenceCount };
 }
 
-module.exports = { factors, weighted, bucket, scoreShort, scoreLongForm, applyLearnedWeights, specificEvidenceCount };
+module.exports = { factors, viralFactors, weighted, bucket, scoreShort, scoreLongForm, applyLearnedWeights, specificEvidenceCount };

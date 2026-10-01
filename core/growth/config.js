@@ -34,6 +34,21 @@ function channelOverridePath(channel) {
 
 const cache = new Map();
 
+function validate(config) {
+  const fail = (message) => { throw new Error(`INVALID_GROWTH_CONFIG: ${message}`); };
+  if (!config.candidatePool || config.candidatePool.minimum < 20 || config.candidatePool.target < config.candidatePool.minimum || config.candidatePool.target > 50) fail("candidatePool must select 20–50 topics");
+  if (Math.abs(config.candidatePool.videoPotentialWeight + config.candidatePool.viralPotentialWeight - 1) > 1e-9) fail("candidatePool scoring weights must equal 1");
+  const exploit = config.selection && config.selection.exploitRatio;
+  const explore = config.selection && config.selection.exploreRatio;
+  if (![exploit, explore].every((value) => Number.isFinite(value) && value >= 0) || Math.abs(exploit + explore - 1) > 1e-9) fail("exploitRatio + exploreRatio must equal 1");
+  if (config.hooks.minimumCandidates < 10) fail("hooks.minimumCandidates must be at least 10");
+  if (config.titles.shorts.minimumCandidates < 5) fail("titles.shorts.minimumCandidates must be at least 5");
+  if (!config.performance || config.performance.growthScoreWeights.subscriberConversion < config.performance.growthScoreWeights.views) fail("subscriber conversion must have meaningful growth-score weight");
+  const buckets = config.script.shorts.durationBuckets || [];
+  if (buckets.length !== 4 || buckets.some((bucket, index) => !(bucket.min <= bucket.max) || (index && bucket.min <= buckets[index - 1].max))) fail("Short duration buckets must be four ordered, non-overlapping ranges");
+  return config;
+}
+
 function forChannel(channel = Channel.getChannel()) {
   const key = channel.slug;
   if (cache.has(key)) return cache.get(key);
@@ -46,6 +61,7 @@ function forChannel(channel = Channel.getChannel()) {
   const cadence = channel.config.publishingCadence || {};
   if (cadence.longForm && cadence.longForm.everyDays) merged.longform.cadenceDays = cadence.longForm.everyDays;
   if (cadence.shorts && cadence.shorts.targetDurationSeconds) merged.shortsDurationSeconds = cadence.shorts.targetDurationSeconds;
+  validate(merged);
   const frozen = Object.freeze(merged);
   cache.set(key, frozen);
   return frozen;
@@ -53,4 +69,4 @@ function forChannel(channel = Channel.getChannel()) {
 
 function clearCache() { cache.clear(); }
 
-module.exports = { DEFAULTS_PATH, deepMerge, forChannel, channelOverridePath, clearCache, readJson };
+module.exports = { DEFAULTS_PATH, deepMerge, validate, forChannel, channelOverridePath, clearCache, readJson };

@@ -87,10 +87,14 @@ function yuklemeMetni(BASE) {
     const K = require("./lib/kutuphane");
     const konuP = K.uretimKonusu(slug);
     if (konuP && konuP.vaka) {
+      const growthFile = K.paketYolu(slug, "growth-plan.json");
+      const growth = fs.existsSync(growthFile) ? JSON.parse(fs.readFileSync(growthFile, "utf8")) : null;
+      const growthTitle = growth && growth.channel === CHANNEL.slug && growth.readiness && growth.readiness.decision === "PUBLISH"
+        && growth.titles && growth.titles.selected && growth.titles.selected.title;
       const t = K.paketYolu(slug, "titles.json");
       const secilen = fs.existsSync(t) ? JSON.parse(fs.readFileSync(t, "utf8")).secilen : null;
       const d = require("./description-engine").olustur(konuP);
-      return { baslik: String(secilen || konuP.baslik).slice(0, 100), aciklama: d.metin, etiketler: d.etiketler };
+      return { baslik: String(growthTitle || secilen || konuP.baslik).slice(0, 100), aciklama: d.metin, etiketler: d.etiketler };
     }
   } catch (e) { console.log("  (paketleme motoru kullanilamadi, konu.json metni: " + e.message + ")"); }
   const konu = JSON.parse(fs.readFileSync(path.join(BASE, "konu.json"), "utf8"));
