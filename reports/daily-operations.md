@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-01T19:36:15.801Z
+Generated: 2026-10-01T20:31:14.573Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
