@@ -72,12 +72,21 @@ function probe(file) {
   return { durationSeconds: +(data.format || {}).duration, width: video.width || null, height: video.height || null, hasAudio: (data.streams || []).some((stream) => stream.codec_type === "audio") };
 }
 
+// Natural documentary pace (~150-160 words per minute with Edge neural voices).
+const DEFAULT_VOICE_RATE = "-6%";
+// Breath between narration lines; part of each line's measured duration, so
+// captions and cuts stay aligned.
+const LINE_PAUSE_SECONDS = 0.28;
+// Retiming is a last resort for a script slightly over the channel maximum;
+// beyond this the voice audibly rushes, and the duration check decides instead.
+const MAX_TEMPO = 1.08;
+
 function synthesizeVoice(text, outputDirectory, basename = "narration", options = {}) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const output = path.join(outputDirectory, basename + ".m4a");
-  if (process.platform === "darwin" && commandExists("say")) {
+  if (process.platform === "darwin" && process.env.TTS_PROVIDER !== "edge" && commandExists("say")) {
     const aiff = path.join(outputDirectory, basename + ".aiff");
-    cp.execFileSync("say", ["-r", options.fast ? "285" : "185", "-o", aiff, text], { stdio: "ignore" });
+    cp.execFileSync("say", ["-r", "170", "-o", aiff, text], { stdio: "ignore" });
     cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", aiff, "-c:a", "aac", "-b:a", "128k", output], { stdio: "ignore" });
     fs.unlinkSync(aiff);
     return { file: output, provider: "macOS say dry-run voice", syntheticVoice: true };
@@ -87,7 +96,7 @@ function synthesizeVoice(text, outputDirectory, basename = "narration", options 
     const input = path.join(outputDirectory, basename + "-input.txt");
     const mp3 = path.join(outputDirectory, basename + ".mp3");
     fs.writeFileSync(input, text + "\n");
-    cp.execFileSync(process.execPath, [path.join(__dirname, "..", "..", "scripts", "synthesize-voice.js"), input, mp3, options.voice || "en-US-AndrewMultilingualNeural", options.fast ? "+30%" : "-5%"], { stdio: "ignore", timeout: 90000 });
+    cp.execFileSync(process.execPath, [path.join(__dirname, "..", "..", "scripts", "synthesize-voice.js"), input, mp3, options.voice || "en-US-AndrewMultilingualNeural", options.rate || DEFAULT_VOICE_RATE], { stdio: "ignore", timeout: 90000 });
     fs.unlinkSync(input);
     return { file: mp3, provider: "Microsoft Edge neural TTS", syntheticVoice: true };
   } catch (error) {}
@@ -121,42 +130,36 @@ function retimeAudio(file, currentDuration, targetDuration) {
 
 function synthesizeNarration(script, outputDirectory, channel) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
-  const retention = channel.config.retentionRules || {};
-  const openingMax = Number(retention.openingMaxSeconds || 2.2);
-  const secondBeatMax = Number(retention.secondBeatMaxSeconds || 6.2);
-  let earlyCursor = 0;
+  const voiceConfig = channel.config.voice || {};
+  // Every line, hook included, is read at the same unhurried rate. The hook's
+  // brevity comes from the script, never from speeding the voice up.
   const takes = script.claims.map((claim, index) => {
-    // The hook and escalation are deliberately brisk. Later scientific claims
-    // return to the measured narration rate so terminology stays intelligible.
-    const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { fast: index < 2, voice: channel.config.voice.voice });
-    let durationSeconds = probe(voice.file).durationSeconds;
-    const maximum = index === 0 ? openingMax * 0.94 : index === 1 ? Math.max(0.75, secondBeatMax - earlyCursor - 0.12) : Infinity;
-    if (durationSeconds > maximum) durationSeconds = retimeAudio(voice.file, durationSeconds, maximum);
-    if (index < 2) earlyCursor += durationSeconds;
-    return { ...voice, durationSeconds };
+    const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { voice: voiceConfig.voice, rate: voiceConfig.rate || DEFAULT_VOICE_RATE });
+    const pause = index < script.claims.length - 1 ? LINE_PAUSE_SECONDS : 0;
+    return { ...voice, pause, durationSeconds: probe(voice.file).durationSeconds + pause };
   });
   const output = path.join(outputDirectory, "narration.m4a");
   const args = ["-y", "-hide_banner", "-loglevel", "error"];
   for (const take of takes) args.push("-i", take.file);
-  const inputs = takes.map((_, index) => `[${index}:a]`).join("");
-  args.push("-filter_complex", `${inputs}concat=n=${takes.length}:v=0:a=1[a]`, "-map", "[a]", "-c:a", "aac", "-b:a", "128k", output);
+  const padded = takes.map((take, index) => `[${index}:a]aresample=44100,aformat=channel_layouts=mono,apad=pad_dur=${take.pause.toFixed(2)}[p${index}]`).join(";");
+  const inputs = takes.map((_, index) => `[p${index}]`).join("");
+  // Consistent loudness for mobile playback (YouTube normalises to about -14 LUFS).
+  args.push("-filter_complex", `${padded};${inputs}concat=n=${takes.length}:v=0:a=1,loudnorm=I=-14:TP=-1.5:LRA=11[a]`, "-map", "[a]", "-ar", "44100", "-c:a", "aac", "-b:a", "160k", output);
   try { cp.execFileSync(ffmpeg, args, { stdio: "ignore", timeout: 120000 }); }
   finally { for (const take of takes) try { fs.unlinkSync(take.file); } catch (error) {} }
   let claimDurations = takes.map((take) => take.durationSeconds);
   const durationRange = channel.config.publishingCadence.shorts.targetDurationSeconds || [18, 40];
   const beforeFinalRetime = probe(output).durationSeconds;
   const maximumDuration = Number(durationRange[1]) - 0.2;
-  const finalDuration = beforeFinalRetime > maximumDuration
-    ? retimeAudio(output, beforeFinalRetime, maximumDuration)
-    : beforeFinalRetime;
-  if (finalDuration < beforeFinalRetime) {
-    const scale = finalDuration / beforeFinalRetime;
-    claimDurations = claimDurations.map((duration) => duration * scale);
-  }
+  const target = Math.max(maximumDuration, beforeFinalRetime / MAX_TEMPO);
+  const finalDuration = beforeFinalRetime > target ? retimeAudio(output, beforeFinalRetime, target) : beforeFinalRetime;
+  const scale = finalDuration / (claimDurations.reduce((sum, value) => sum + value, 0) || finalDuration);
+  claimDurations = claimDurations.map((duration) => duration * scale);
   return {
     file: output,
     provider: takes.every((take) => take.provider === takes[0].provider) ? takes[0].provider + " (claim-timed)" : "mixed claim-timed narration",
     syntheticVoice: takes.every((take) => take.syntheticVoice),
+    rate: voiceConfig.rate || DEFAULT_VOICE_RATE,
     claimDurations,
   };
 }
@@ -356,28 +359,68 @@ function numberCardFontSize(text) {
   return Math.max(28, Math.min(146, Math.floor(750 / Math.max(1, widthEm))));
 }
 
+function channelAccent(topic) {
+  return topic && topic.channel === "critical-thread" ? "0xffb347" : "0x25d9ff";
+}
+
+// A sourced number over a blurred, darkened photograph from the same topic (or
+// a dark grid when the topic has no photograph), with its meaning underneath.
+// No box and no internal labels: the value and its context are the visual.
 function renderNumberCard(output, shot, topic) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   fs.mkdirSync(path.dirname(output), { recursive: true });
+  const accent = channelAccent(topic);
   const headline = drawtextSafe(shot.numbers.slice(0, 2).join("  vs  ").toUpperCase());
-  const title = drawtextSafe(topic.category || topic.cluster || "SOURCED NUMBER");
-  const fontSize = numberCardFontSize(headline);
-  const filters = [
-    "drawgrid=width=120:height=120:thickness=2:color=0x07334a@0.65",
-    "drawbox=x=105:y=510:w=870:h=650:color=0x071827@0.92:t=fill",
-    "drawbox=x=105:y=510:w=870:h=650:color=0x25d9ff@0.9:t=7",
-    `drawtext=expansion=none:text='${title}':fontcolor=0x25d9ff:fontsize=42:x=(w-text_w)/2:y=590`,
-    `drawtext=expansion=none:text='${headline}':fontcolor=white:fontsize=${fontSize}:borderw=5:bordercolor=0x030712:x=(w-text_w)/2:y=760`,
-  ];
-  if (shot.comparison.length >= 2) {
+  const caption = drawtextSafe(String(shot.caption || "").toUpperCase());
+  const fontSize = Math.min(190, Math.floor(numberCardFontSize(headline) * 1.25));
+  const barY = 600 + fontSize + 46;
+  const backdrop = shot.backdrop && shot.backdrop.path && fs.existsSync(shot.backdrop.path) ? shot.backdrop.path : null;
+  const filters = backdrop
+    ? ["scale=1080:1920:force_original_aspect_ratio=increase", "crop=1080:1920", "gblur=sigma=28", "eq=brightness=-0.30:saturation=0.70"]
+    : ["drawgrid=width=120:height=120:thickness=2:color=0x0d2a3d@0.55"];
+  filters.push(
+    `drawtext=expansion=none:text='${headline}':fontcolor=white:fontsize=${fontSize}:borderw=6:bordercolor=0x000000@0.55:x=(w-text_w)/2:y=600`,
+    `drawbox=x=420:y=${barY}:w=240:h=10:color=${accent}@0.95:t=fill`,
+  );
+  if (caption) filters.push(`drawtext=expansion=none:text='${caption}':fontcolor=${accent}:fontsize=${Math.max(40, Math.min(66, Math.floor(1650 / Math.max(1, caption.length))))}:borderw=4:bordercolor=0x000000@0.55:x=(w-text_w)/2:y=${barY + 52}`);
+  if (shot.comparison && shot.comparison.length >= 2) {
     const values = shot.comparison.map((value) => Number((value.replace(/,/g, "").match(/\d+(?:\.\d+)?/) || [1])[0]));
     const maximum = Math.max(...values, 1);
     const widths = values.map((value) => Math.max(80, Math.round(620 * value / maximum)));
-    filters.push(`drawbox=x=230:y=1010:w=${widths[0]}:h=34:color=0xffb347@0.95:t=fill`);
-    filters.push(`drawbox=x=230:y=1070:w=${widths[1]}:h=34:color=0x25d9ff@0.95:t=fill`);
+    filters.push(`drawbox=x=230:y=${barY + 70}:w=${widths[0]}:h=34:color=0xffb347@0.95:t=fill`);
+    filters.push(`drawbox=x=230:y=${barY + 130}:w=${widths[1]}:h=34:color=0x25d9ff@0.95:t=fill`);
   }
-  cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", "color=c=0x030712:s=1080x1920:d=0.1", "-vf", filters.join(","), "-frames:v", "1", "-update", "1", output], { stdio: "ignore", timeout: 30000 });
+  const input = backdrop ? ["-i", backdrop] : ["-f", "lavfi", "-i", "color=c=0x060b16:s=1080x1920:d=0.1"];
+  cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", ...input, "-vf", filters.join(","), "-frames:v", "1", "-update", "1", "-q:v", "2", output], { stdio: "ignore", timeout: 30000 });
   return output;
+}
+
+const FPS = 30;
+
+// A figure shown again is a closer look at one part of it (paper figures are
+// usually panels side by side or stacked), not the same whole figure.
+function diagramCrop(shot) {
+  const variant = shot.motion || 0;
+  if (!variant) return "";
+  const wide = !(shot.still && shot.still.height > (shot.still.width || 0));
+  const crops = wide
+    ? ["crop=iw/2:ih:0:0", "crop=iw/2:ih:iw/2:0", "crop=iw*0.6:ih*0.6:iw*0.2:ih*0.2"]
+    : ["crop=iw:ih/2:0:0", "crop=iw:ih/2:0:ih/2", "crop=iw*0.6:ih*0.6:iw*0.2:ih*0.2"];
+  return crops[(variant - 1) % crops.length] + ",";
+}
+
+// Distinct slow camera moves, so a photograph shown twice is a different shot.
+function cameraMove(variant, frames) {
+  const t = `on/${Math.max(1, frames)}`;
+  const center = "x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'";
+  const moves = [
+    `z='1+0.10*${t}':${center}`,
+    `z='1.16':x='(iw-iw/zoom)*${t}':y='ih/2-(ih/zoom/2)'`,
+    `z='1.12-0.10*${t}':${center}`,
+    `z='1.16':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*${t}'`,
+    `z='1.16':x='(iw-iw/zoom)*(1-${t})':y='ih/2-(ih/zoom/2)'`,
+  ];
+  return moves[variant % moves.length];
 }
 
 function renderVideo(audioFile, duration, output, captionsFile, topic, options = {}) {
@@ -390,7 +433,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   for (const shot of plan) {
     if (shot.type === "licensed-still") inputs.push(shot.still.path);
     else if (shot.type === "number-card") {
-      const file = path.join(cardDirectory, shot.sourceId.replace(/[^a-z0-9-]/gi, "-") + ".jpg");
+      const file = path.join(cardDirectory, (shot.sourceId + (shot.backdrop ? "-" + shot.backdrop.cachedFile : "")).replace(/[^a-z0-9-]/gi, "-") + ".jpg");
       if (!fs.existsSync(file)) renderNumberCard(file, shot, topic);
       inputs.push(file);
     } else {
@@ -409,20 +452,33 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   const filters = [];
   for (let index = 0; index < plan.length; index += 1) {
     const shot = plan[index];
-    const frames = Math.max(1, Math.ceil(shot.duration * 24));
-    const speed = shot.type === "licensed-still" ? "0.0007" : "0.00028";
-    const label = shot.type === "licensed-still" ? "LICENSED CONTEXT — NOT EVENT OBSERVATION"
-      : shot.type === "number-card" ? "NUMBER FROM SOURCED NARRATION"
-        : topic.visualLabel || "PROCEDURAL ILLUSTRATION — NOT OBSERVATION";
-    const category = drawtextSafe(topic.category || topic.cluster || "EXPLAINER");
-    filters.push(`[${index}:v]scale=1280:2276:force_original_aspect_ratio=increase,crop=1280:2276,zoompan=z='min(zoom+${speed},1.10)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=24,setsar=1,trim=duration=${shot.duration.toFixed(3)},setpts=PTS-STARTPTS,drawbox=x=75:y=76:w=930:h=146:color=0x030712@0.80:t=fill,drawtext=expansion=none:text='${drawtextSafe(label)}':fontcolor=0x25d9ff:fontsize=30:x=(w-text_w)/2:y=103,drawtext=expansion=none:text='${category}':fontcolor=white:fontsize=42:x=(w-text_w)/2:y=158[v${index}]`);
+    const frames = Math.max(1, Math.ceil(shot.duration * FPS));
+    let chain;
+    if (shot.type === "licensed-still" && shot.kind === "diagram") {
+      // Whole figure, readable, above the caption band, over its own blur.
+      chain = `[${index}:v]split=2[bg${index}][fg${index}];`
+        + `[bg${index}]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,gblur=sigma=30,eq=brightness=-0.30:saturation=0.65[bgb${index}];`
+        + `[fg${index}]${diagramCrop(shot)}scale=1000:1000:force_original_aspect_ratio=decrease[fgs${index}];`
+        + `[bgb${index}][fgs${index}]overlay=(W-w)/2:210+(1000-h)/2,zoompan=z='1+0.0004*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
+    } else if (shot.type === "licensed-still") {
+      chain = `[${index}:v]scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,zoompan=${cameraMove(shot.motion || 0, frames)}:d=${frames}:s=1080x1920:fps=${FPS}`;
+    } else if (shot.type === "number-card") {
+      chain = `[${index}:v]scale=1080:1920,zoompan=z='1+0.0006*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
+    } else {
+      chain = `[${index}:v]scale=1080:1920,zoompan=z='min(zoom+0.0004,1.08)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
+    }
+    // Disclosure stays, as a small corner tag: stills are context for the
+    // topic, not footage of the scenario; procedural frames are illustrations.
+    const tag = shot.type === "licensed-still" ? "CONTEXT IMAGE" : shot.type === "procedural" ? "ILLUSTRATION" : null;
+    if (tag) chain += `,drawtext=expansion=none:text='${tag}':fontcolor=white@0.78:fontsize=26:box=1:boxcolor=0x000000@0.45:boxborderw=10:x=48:y=84`;
+    filters.push(`${chain},setsar=1,trim=duration=${shot.duration.toFixed(3)},setpts=PTS-STARTPTS[v${index}]`);
   }
   const concatInputs = plan.map((_, index) => `[v${index}]`).join("");
   const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
   filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'[v]`);
   const filterFile = path.join(path.dirname(output), ".visual-filter.txt");
   fs.writeFileSync(filterFile, filters.join(";\n") + "\n");
-  args.push(ff.filtreBayragi, filterFile, "-map", "[v]", "-map", `${plan.length}:a`, "-t", String(duration), "-c:v", "libx264", "-preset", "ultrafast", "-crf", "29", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
+  args.push(ff.filtreBayragi, filterFile, "-map", "[v]", "-map", `${plan.length}:a`, "-t", String(duration), "-r", String(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
   try { cp.execFileSync(ffmpeg, args, { stdio: ["ignore", "ignore", "pipe"], timeout: 600000 }); }
   catch (error) {
     const detail = String(error.stderr || "").trim().slice(-4000);
@@ -444,9 +500,11 @@ function renderThumbnail(output, topic, assets = { stills: [] }, script = null) 
   let sourceId;
   let generated = null;
   if (assets.stills && assets.stills.length) {
-    source = assets.stills[0].path;
+    // A photograph reads at thumbnail size; a paper figure does not.
+    const still = assets.stills.find((item) => TopicVisuals.stillKind(item) === "photo") || assets.stills[0];
+    source = still.path;
     sourceType = "licensed-still";
-    sourceId = `still:${assets.stills[0].file}`;
+    sourceId = `still:${still.file}`;
   } else {
     const claim = script && script.claims && script.claims.find((item) => TopicVisuals.numberTokens(item.text).length);
     if (claim) {
@@ -567,7 +625,9 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     science: topic.claimFramework.length >= 3,
     sources: topic.sources.length >= 2,
     hook: !script.forbiddenOpening,
-    timing: !options.render || (script.claims[0].end <= openingMax && script.claims[1].end <= secondBeatMax),
+    // Natural-pace narration: the hook line must still land quickly, but it is
+    // never sped up to hit the visual opening window.
+    timing: !options.render || (script.claims[0].end <= Number(retention.hookVoiceMaxSeconds || openingMax) && script.claims[1].end <= Number(retention.secondBeatVoiceMaxSeconds || secondBeatMax)),
     audio: !options.render || (render.completed && render.video.hasAudio && render.audio.claimDurations.length === script.claims.length),
     captions: fs.existsSync(path.join(outputDirectory, "captions.srt")) && fs.existsSync(path.join(outputDirectory, "captions.ass")) && (!options.render || render.video.captionsBurned),
     visuals: visuals.length >= 5 && (!options.render || visualQuality.decision === "PUBLISH"),

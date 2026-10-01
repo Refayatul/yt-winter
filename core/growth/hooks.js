@@ -288,11 +288,11 @@ function generate(topic, config, options = {}) {
   const learned = options.learnedFamilyBonus || {};
   for (const hook of scored) hook.adjustedTotal = hook.blocked ? hook.total : Math.min(100, hook.total + (learned[hook.family] || 0));
   scored.sort((a, b) => Number(a.blocked) - Number(b.blocked) || b.adjustedTotal - a.adjustedTotal);
-  // Procedural channels squeeze the first claim into openingMaxSeconds; a hook
-  // that would need unnaturally fast speech is kept for the record but is not
-  // selectable (fast neural TTS ≈ 3.6 words/s).
+  // Procedural channels voice the first claim at a natural pace (≈ 2.8
+  // words/s) inside openingMaxSeconds; a hook that would need rushed speech is
+  // kept for the record but is not selectable.
   if (options.openingMaxSeconds) {
-    for (const hook of scored) hook.fitsOpening = hook.words / 3.6 <= options.openingMaxSeconds * 1.15;
+    for (const hook of scored) hook.fitsOpening = hook.words / 2.8 <= options.openingMaxSeconds * 1.15;
   }
   // Researched ImpossibleBrief / CriticalThread records speak their own
   // editorial opening: that line IS the hook, so it is what gets scored and
