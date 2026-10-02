@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-01T21:50:28.374Z
+Generated: 2026-10-02T12:32:42.957Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,49 +8,49 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | unavailable |
-| Short | not-due |
+| Today topic | lower-van-norman-dam-1971 |
+| Short | scheduled |
 | Long | due-not-produced |
-| Quality | unavailable / unavailable |
-| YouTube | not-uploaded |
-| Publish time | unavailable |
-| Video ID | unavailable |
+| Quality | PUBLISH / 89 |
+| YouTube | scheduled |
+| Publish time | 2026-10-02T18:00:00.000Z |
+| Video ID | WlZ2z90pqx8 |
 | Analytics | measured |
-| Scheduler | pending-before-deadline |
-| Ready topic backlog | 365 |
+| Scheduler | healthy |
+| Ready topic backlog | 364 |
 | Errors/review/blocks | 3 |
-| TikTok today | NO_TODAY_VIDEO |
+| TikTok today | SEND_TO_USER_INBOX |
 | TikTok backlog | 2 |
 
 ## ImpossibleBrief
 
 | Signal | Status |
 |---|---|
-| Today topic | unavailable |
-| Short | not-due |
+| Today topic | what-if-we-swam-in-europas-ocean |
+| Short | scheduled |
 | Long | due-not-produced |
-| Quality | unavailable / unavailable |
-| YouTube | not-uploaded |
-| Publish time | unavailable |
-| Video ID | unavailable |
+| Quality | PUBLISH / unavailable |
+| YouTube | scheduled |
+| Publish time | 2026-10-02T18:00:00.000Z |
+| Video ID | 5yPoQCElJuk |
 | Analytics | no-channel-measurements |
-| Scheduler | pending-before-deadline |
-| Ready topic backlog | 497 |
+| Scheduler | healthy |
+| Ready topic backlog | 496 |
 | Errors/review/blocks | 0 |
 
 ## CriticalThread
 
 | Signal | Status |
 |---|---|
-| Today topic | unavailable |
-| Short | not-due |
+| Today topic | inside-the-system-built-around-road-tunnel-ventilation-system |
+| Short | scheduled |
 | Long | due-not-produced |
-| Quality | unavailable / unavailable |
-| YouTube | not-uploaded |
-| Publish time | unavailable |
-| Video ID | unavailable |
+| Quality | PUBLISH / unavailable |
+| YouTube | scheduled |
+| Publish time | 2026-10-02T18:00:00.000Z |
+| Video ID | fGE8kZOaQZ4 |
 | Analytics | no-channel-measurements |
-| Scheduler | pending-before-deadline |
-| Ready topic backlog | 520 |
+| Scheduler | healthy |
+| Ready topic backlog | 519 |
 | Errors/review/blocks | 0 |
 

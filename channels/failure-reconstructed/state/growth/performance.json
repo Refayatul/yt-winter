@@ -498,7 +498,7 @@
         "views": 70
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -3811,7 +3811,7 @@
         "views": 50
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -7754,7 +7754,7 @@
         "views": 30
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -11625,7 +11625,7 @@
         "views": 0
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -14909,7 +14909,7 @@
         "views": 20
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -18193,7 +18193,7 @@
         "views": 60
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -22124,7 +22124,7 @@
         "views": 10
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -26008,7 +26008,7 @@
         "views": 40
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -26473,7 +26473,7 @@
         "views": 90
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -27004,7 +27004,7 @@
         "views": 80
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -27030,6 +27030,182 @@
       "probableCauses": [
         "distribution slowed; available metrics do not isolate a reliable cause"
       ],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    }
+  },
+  {
+    "checkpoints": {},
+    "hookType": "hidden_cause",
+    "hookScore": 82,
+    "selectedHook": "The dam didn't fail.",
+    "firstLine": "The dam didn't fail.",
+    "firstSecondsScore": 93,
+    "topicCluster": "infrastructure-failures",
+    "bucket": "A",
+    "viralScore": 83,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 98,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 95,
+        "basis": "inventory-signal"
+      },
+      "surprise": {
+        "value": 90,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 78,
+        "basis": "derived"
+      },
+      "archival_footage_potential": {
+        "value": 80,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 92,
+        "basis": "derived",
+        "note": "4 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 74,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 86,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 88,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 50,
+        "basis": "neutral",
+        "note": "no same-cluster channel evidence yet"
+      },
+      "duplicate_risk": {
+        "value": -10,
+        "basis": "penalty",
+        "note": "published-title similarity 0.10"
+      },
+      "saturation_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 published / 37 inventory in cluster"
+      },
+      "source_confidence_risk": {
+        "value": -25,
+        "basis": "penalty",
+        "note": "75/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -15,
+        "basis": "penalty",
+        "note": "archival stills available"
+      }
+    },
+    "storyStructure": "CONSEQUENCE>FAILURE>CAUSE>ESCALATION>ENGINEERING_REVEAL",
+    "titlePattern": "inside",
+    "selectedTitle": "Inside Van Norman Dam: The Failure Chain",
+    "ctaStyle": "COMMENT_PROMPT",
+    "durationBucket": "18-25s",
+    "openingVisual": "REAL_ARCHIVAL",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 90,
+      "CuriosityScore": 98,
+      "HookPotentialScore": 82,
+      "VisualImpactScore": 78,
+      "EmotionalImpactScore": 97,
+      "StoryCompressionScore": 100,
+      "RewatchPotentialScore": 71,
+      "SharePotentialScore": 97,
+      "CommentPotentialScore": 83,
+      "SubscriberConversionPotential": 88,
+      "NoveltyScore": 74,
+      "AudienceFitScore": 85,
+      "SourceQualityScore": 75,
+      "ChannelFitScore": 88
+    },
+    "selectionMode": "EXPLORE",
+    "videoId": "WlZ2z90pqx8",
+    "slug": "lower-van-norman-dam-1971",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "title": "Inside Van Norman Dam: The Failure Chain",
+    "publishAt": "2026-10-02T18:00:00.000Z",
+    "publishHourUTC": 18,
+    "readiness": 90,
+    "normalized": {
+      "ageHours": 1,
+      "viewsPerHour": null,
+      "recentViewVelocity": null,
+      "likeRate": null,
+      "commentRate": null,
+      "shareRate": null,
+      "engagementRate": null,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": null,
+      "classification": "NORMAL",
+      "percentiles": {
+        "viewVelocity": null,
+        "retention": null,
+        "engagement": null,
+        "subscriberConversion": null,
+        "views": null
+      },
+      "baselines": {
+        "views": 1032,
+        "viewsPerHour": 13.56,
+        "averagePercentageViewed": 67.77,
+        "engagementRate": 0.03293,
+        "subscriberConversion": 0.00146
+      },
+      "missing": [
+        "viewVelocity",
+        "retention",
+        "engagement",
+        "subscriberConversion",
+        "views"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
     }
   },
@@ -27123,6 +27299,106 @@
           },
           "engagement_per_1000_views": {
             "value": 29.41,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      },
+      "12h": {
+        "collectedAt": "2026-10-02T12:32:30.858Z",
+        "metrics": {
+          "views": {
+            "value": 1032,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 21,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 21.32,
             "status": "DERIVED",
             "from": "likes+comments+shares / views"
           },
@@ -27269,13 +27545,13 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 1,
-      "viewsPerHour": 102,
-      "recentViewVelocity": null,
-      "likeRate": 0.02941,
-      "commentRate": 0,
+      "ageHours": 12,
+      "viewsPerHour": 86,
+      "recentViewVelocity": 84.55,
+      "likeRate": 0.02035,
+      "commentRate": 0.00097,
       "shareRate": null,
-      "engagementRate": 0.02941,
+      "engagementRate": 0.02132,
       "engagedViewRate": null,
       "subscriberConversion": null,
       "subscribersPer1000Views": null
@@ -27291,7 +27567,7 @@
         "views": 100
       },
       "baselines": {
-        "views": 976,
+        "views": 1032,
         "viewsPerHour": 13.56,
         "averagePercentageViewed": 67.77,
         "engagementRate": 0.03293,
@@ -27309,11 +27585,11 @@
     "durationSeconds": 21,
     "registeredBy": "analytics-pass",
     "metrics": {
-      "views": 102,
+      "views": 1032,
       "averagePercentageViewed": null,
       "averageViewDuration": null,
-      "likes": 3,
-      "comments": 0,
+      "likes": 21,
+      "comments": 1,
       "shares": null,
       "subscribersGained": null,
       "engagedViews": null,
@@ -27321,12 +27597,12 @@
       "netSubscribers": null,
       "subscribersPer1000Views": null,
       "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 29.41,
+      "engagementPer1000Views": 21.32,
       "watchHoursPer1000Views": null,
       "ctr": null,
       "first30sRetention": null,
       "shortsFeedShare": null
     },
-    "latestCheckpoint": "1h"
+    "latestCheckpoint": "12h"
   }
 ]
