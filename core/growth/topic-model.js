@@ -7,6 +7,7 @@
 // invented, so hooks/titles/scripts built from it stay traceable.
 
 const fs = require("fs");
+const Popularity = require("./popularity");
 const path = require("path");
 const M = require("../../lib/metin");
 
@@ -240,10 +241,19 @@ function fromCriticalThread(raw) {
 
 function normalize(channel, raw, slug) {
   const channelSlug = typeof channel === "string" ? channel : channel.slug;
-  if (channelSlug === "failure-reconstructed") return fromFailureReconstructed(raw, slug || raw.slug);
-  if (channelSlug === "impossible-brief") return fromImpossibleBrief(raw);
-  if (channelSlug === "critical-thread") return fromCriticalThread(raw);
-  throw new Error("No growth topic adapter for channel: " + channelSlug);
+  let topic;
+  if (channelSlug === "failure-reconstructed") topic = fromFailureReconstructed(raw, slug || raw.slug);
+  else if (channelSlug === "impossible-brief") topic = fromImpossibleBrief(raw);
+  else if (channelSlug === "critical-thread") topic = fromCriticalThread(raw);
+  else throw new Error("No growth topic adapter for channel: " + channelSlug);
+  // Measured recognition: monthly Wikipedia pageviews of the topic's own
+  // article (core/growth/popularity.js, refreshed by scripts/wiki-popularity.js).
+  const popularity = Popularity.forTopic(channelSlug, raw);
+  if (popularity) {
+    topic.popularity = popularity;
+    topic.signals.popularity = popularity.score;
+  }
+  return topic;
 }
 
 // ---------------------------------------------------------------------------
