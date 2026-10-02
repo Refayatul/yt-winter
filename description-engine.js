@@ -13,6 +13,7 @@ const path = require("path");
 const { KOK, jsonOku, jsonYaz, metinYaz } = require("./lib/ortak");
 const { ayar } = require("./lib/ayar");
 const K = require("./lib/kutuphane");
+const Hashtags = require("./core/hashtags");
 
 const HASHTAG = { "bridge-failures": "#bridges", "structural-failures": "#structuralengineering", "aviation-failures": "#aviation",
   "spaceflight-disasters": "#spaceflight", "maritime-disasters": "#maritime", "nuclear-accidents": "#nuclear",
@@ -112,8 +113,10 @@ function olustur(konu, ops = {}) {
   if (format === "long" && Array.isArray(bolumler) && bolumler.length >= 3 && bolumler[0].t === 0)
     bl.push("Chapters:\n" + bolumler.map((c) => `${zaman(c.t)} ${c.baslik}`).join("\n"));
   if (a.disclosure.descriptionNote && a.disclosure.voiceNote) bl.push(a.disclosure.voiceNote);
-  const tags = format === "short" ? ["#shorts", "#engineering", HASHTAG[kumeId] || "#disaster"] : ["#engineering", HASHTAG[kumeId] || "#disaster"];
-  bl.push([...new Set(tags)].join(" "));
+  // En fazla 3 hashtag: #shorts + vakanin kendi adi (#VanNormanDam) + kume. Vaka adi
+  // turetilemezse eski genel #engineering etiketi yerini alir.
+  const konuEtiketi = Hashtags.subjectHashtag({ names: [v.kisa, v.ad], references: v.kaynakca || [] });
+  bl.push(Hashtags.compose({ format, subject: konuEtiketi, category: HASHTAG[kumeId] || "#disaster", theme: "#engineering" }).join(" "));
   const metin = bl.filter(Boolean).join("\n\n").replace(/[<>]/g, "");
   return { metin: metin.slice(0, 4900), etiketler: etiketler(konu) };
 }
