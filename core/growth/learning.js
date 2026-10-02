@@ -17,7 +17,7 @@ const Config = require("./config");
 const Store = require("./store");
 
 const DIMENSIONS = {
-  shorts: ["hookType", "topicCluster", "durationBucket", "titlePattern", "storyStructure", "ctaStyle", "publishHourUTC", "openingVisual", "bucket", "experimentVariant"],
+  shorts: ["hookType", "topicCluster", "durationBucket", "titlePattern", "storyStructure", "ctaStyle", "publishHourUTC", "publishSlot", "popularityBand", "openingVisual", "bucket", "experimentVariant"],
   longform: ["topicCluster", "durationBucket", "titlePattern", "thumbnailPattern", "coldOpenType", "storyStructure", "publishDay", "sourceDepthBucket", "sceneDensityBucket", "endScreenPath", "seriesRelationship"],
 };
 

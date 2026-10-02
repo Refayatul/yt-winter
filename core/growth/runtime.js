@@ -5,6 +5,7 @@
 // never breaks a render, an upload or TikTok.
 
 const fs = require("fs");
+const WeeklyLearning = require("./weekly-learning");
 const path = require("path");
 const Store = require("./store");
 const Analytics = require("./analytics");
@@ -44,6 +45,10 @@ function afterUpload(channel, slug, plan) {
       ...(plan ? plan.growthMeta : {}), videoId: row.videoId, slug, channel: channel.slug, contentType: "short",
       title: row.baslik || (plan && plan.titles.selected && plan.titles.selected.title) || null, publishAt: row.publishAt || row.tarih || null,
       publishHourUTC: row.publishAt ? new Date(row.publishAt).getUTCHours() : null,
+      // Learning dimensions for the two 2026-10-02 changes: the US-evening
+      // publish slot and Wikipedia-measured topic recognition.
+      publishSlot: WeeklyLearning.publishSlot(row.publishAt || null),
+      popularityBand: WeeklyLearning.popularityBand(plan && plan.topic && plan.topic.popularity ? plan.topic.popularity.score : null),
       readiness: plan ? plan.readiness.ProductionReadinessScore : null,
     });
     if (plan && plan.experiment) Experiments.attachVideo(channel, slug, row.videoId);
