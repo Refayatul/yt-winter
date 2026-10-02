@@ -48,6 +48,8 @@ function currentSlug() {
 
 function envFileValue(name) {
   if (Object.prototype.hasOwnProperty.call(process.env, name) && String(process.env[name]).trim()) return String(process.env[name]).trim();
+  // Tests must be hermetic: an operator's real local .env must never leak in.
+  if (process.env.NODE_TEST_CONTEXT) return "";
   try {
     for (const line of fs.readFileSync(path.join(ROOT, ".env"), "utf8").split(/\r?\n/)) {
       const match = line.match(/^([A-Z0-9_]+)=(.*)$/);
