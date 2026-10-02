@@ -53,7 +53,7 @@ function aciklamaSorunlari(d) {
   if (!/wikipedia|report|reference|https?:\/\/(?!youtu)/i.test(t)) s.push("no technical references");
   if (!/youtu\.be\/|youtube\.com\/watch|playlist\?list=/i.test(t)) s.push("no related-episode or playlist link (session growth)");
   const h = (t.match(/#\w+/g) || []).length;
-  if (h > 5) s.push(`${h} hashtags — keep to 3`);
+  if (h > 5) s.push(`${h} hashtags — keep to 5`);
   if (!/synthetic voice|ai voice|narration/i.test(t)) s.push("no synthetic-voice disclosure line");
   return s;
 }

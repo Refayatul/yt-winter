@@ -1,16 +1,20 @@
 "use strict";
 
-// HASHTAGS — at most three per video, all relevant (YouTube shows the first
-// three above the title and ignores every hashtag once there are more than 15).
+// HASHTAGS — at most five per video, all relevant. YouTube shows the first
+// three above the title and ignores every hashtag once there are more than 15;
+// unrelated trending tags (#viral, #fyp) count as spam, so none are used.
 //
-//   Short: #shorts · #<Subject> · #<category>
-//   Long:  #<Subject> · #<category> · #<channel theme>
+//   Short: #shorts · #<broad> · #<Subject> · #<category> · #<second broad>
+//   Long:          #<broad> · #<Subject> · #<category> · #<second broad>
+//
+// The visible three are therefore #shorts, a high-volume channel hashtag and
+// the video's own subject.
 //
 // The subject hashtag names the video's own case/object (#VanNormanDam,
 // #Europa, #MontBlancTunnel). It comes from the topic's short case name or its
 // first English Wikipedia reference, so it is deterministic and never invented.
 
-const MAX_HASHTAGS = 3;
+const MAX_HASHTAGS = 5;
 const MAX_SUBJECT_LENGTH = 30;
 
 const CATEGORY = Object.freeze({
@@ -31,10 +35,11 @@ const CATEGORY = Object.freeze({
   },
 });
 
-const THEME = Object.freeze({
-  "failure-reconstructed": "#engineering",
-  "impossible-brief": "#science",
-  "critical-thread": "#infrastructure",
+// High-volume hashtags that describe each channel's whole catalogue.
+const BROAD = Object.freeze({
+  "failure-reconstructed": ["#engineering", "#history"],
+  "impossible-brief": ["#science", "#whatif"],
+  "critical-thread": ["#engineering", "#howitworks"],
 });
 
 // "Lower Van Norman Dam" -> "#LowerVanNormanDam"; "Europa (moon)" -> "#Europa".
@@ -74,8 +79,9 @@ function subjectHashtag({ names = [], references = [] } = {}) {
   return tags.find((tag) => /^#[A-Za-z]/.test(tag)) || tags[0] || null;
 }
 
-function compose({ format = "short", subject = null, category = null, theme = null } = {}) {
-  const ordered = format === "short" ? ["#shorts", subject, category, theme] : [subject, category, theme];
+function compose({ format = "short", subject = null, category = null, broad = [] } = {}) {
+  const [primary = null, secondary = null] = broad;
+  const ordered = [format === "short" ? "#shorts" : null, primary, subject, category, secondary];
   const seen = new Set();
   const out = [];
   for (const tag of ordered) {
@@ -91,7 +97,7 @@ function compose({ format = "short", subject = null, category = null, theme = nu
 function forTopic(channelSlug, topic = {}, options = {}) {
   const subject = subjectHashtag({ references: [...(topic.facts || []), ...(topic.researchEvidence || []), ...(topic.sources || [])] });
   const category = (CATEGORY[channelSlug] || {})[String(topic.category || "").toUpperCase()] || null;
-  return compose({ format: options.format || "short", subject, category, theme: THEME[channelSlug] || null });
+  return compose({ format: options.format || "short", subject, category, broad: BROAD[channelSlug] || [] });
 }
 
 // Plain subject phrase for the YouTube tags field ("Mont Blanc Tunnel").
@@ -102,4 +108,4 @@ function subjectPhrase(topic = {}) {
   return title || null;
 }
 
-module.exports = { MAX_HASHTAGS, CATEGORY, THEME, toHashtag, wikipediaTitles, subjectHashtag, compose, forTopic, subjectPhrase };
+module.exports = { MAX_HASHTAGS, CATEGORY, BROAD, toHashtag, wikipediaTitles, subjectHashtag, compose, forTopic, subjectPhrase };

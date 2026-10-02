@@ -6,7 +6,7 @@
 //   ses       entegre yukseklik -14 LUFS ± 2 (YouTube seviyesi)
 //   denetim   yazi tasmasi 0 · siyah kare yok · donuk goruntu yok · onizleme gorseli var
 //   kalite    final kapi PUBLISH (REVIEW/BLOCK yuklenmez) · tutma kurallari (lib/tutunma)
-//   paket     aciklama: <=5000 bayt, sentetik ses notu, kaynak satiri, <=3 hashtag, bos
+//   paket     aciklama: <=5000 bayt, sentetik ses notu, kaynak satiri, <=5 hashtag, bos
 //             satir/"undefined" yok · etiketler · sabit yorum metni · baslik <=100
 //   yukleme   youtube-yukle.js --dogrula: meta dogrulama gecer, publishAt slotu gelecekte
 //   bildirim  issue metni eksiksiz (undefined/NaN yok, onizleme ve Studio baglantisi var)
@@ -74,7 +74,7 @@ kontrol("paket", "aciklama var", acik.length > 80);
 kontrol("paket", "aciklama <= 5000 bayt", Buffer.byteLength(acik) <= 5000, Buffer.byteLength(acik) + " bayt");
 kontrol("paket", "sentetik ses notu", acik.includes(ayar().disclosure.voiceNote));
 kontrol("paket", "kaynak satiri", /Footage & sources:\n• /.test(acik));
-kontrol("paket", "<= 3 hashtag", (acik.match(/#\w+/g) || []).length <= 3);
+kontrol("paket", "<= 5 hashtag", (acik.match(/#\w+/g) || []).length <= 5);
 kontrol("paket", "undefined/null yok", !/undefined|null|NaN/.test(acik));
 const etiket = jsonOku(paket("tags.json"), []);
 kontrol("paket", "etiketler", Array.isArray(etiket) && etiket.length >= 3 && etiket.join(",").length <= 480, etiket.length + " etiket");
