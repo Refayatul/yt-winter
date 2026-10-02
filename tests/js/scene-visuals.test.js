@@ -203,3 +203,21 @@ test("stills: the story's own article leads, and within it pictures naming the s
   assert.equal(ordered[ordered.length - 1].file, "Jet fan in a road tunnel.jpg", "background article last");
   assert.ok(ordered.findIndex((item) => item.file.startsWith("NASA")) > ordered.findIndex((item) => item.file.startsWith("Ventilation System")), "NASA after the story's own article");
 });
+
+test("visual pre-check skips picture-poor topics before a render, but never on a source outage", () => {
+  const os = require("os");
+  const Pipeline = require("../../core/pipeline/impossible-brief");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "precheck-"));
+  try {
+    const topic = { id: "CT-X", slug: "ct-x" };
+    const fake = (stills, clips = 0, error) => () => ({ stills: Array(stills).fill({}), clips: Array(clips).fill({}), error });
+    assert.match(Pipeline.visualShortfall(topic, dir, fake(1)), /1 licensed pictures\/clips < 4/);
+    assert.match(Pipeline.visualShortfall(topic, dir, fake(2, 1)), /3 licensed/);
+    assert.equal(Pipeline.visualShortfall(topic, dir, fake(3, 1)), null);
+    assert.equal(Pipeline.visualShortfall(topic, dir, fake(0, 0, "Commons timeout")), null, "outage: let the render gate decide");
+    assert.ok(fs.existsSync(path.join(dir, "topic.json")), "the render reuses the same topic file and picture cache");
+    const source = fs.readFileSync(path.join(__dirname, "../../core/pipeline/impossible-brief.js"), "utf8");
+    assert.match(source, /const shortfall = !noRender && !explicit \? visualShortfall\(topic, output\) : null;/);
+    assert.match(source, /attempt -= 1;\n      continue;/, "pre-check skips do not use up render attempts");
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});

@@ -13,7 +13,7 @@ const Discovery = require("./core/discovery");
 const Rendering = require("./core/rendering");
 const Scripting = require("./core/scripting");
 const Growth = require("./core/growth");
-const { visualRejection } = require("./core/pipeline/impossible-brief");
+const { visualRejection, visualShortfall, MAX_VISUAL_PRECHECKS } = require("./core/pipeline/impossible-brief");
 
 const MAX_ATTEMPTS = 3;
 const channel = Channel.getChannel("critical-thread");
@@ -44,9 +44,20 @@ function portable(result) {
 const attempts = [];
 let result = null;
 let pass = false;
+let prechecks = 0;
 for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
   const topic = nextTopic(attempts);
   if (!topic) break;
+  // Same visual pre-check as production: a picture-poor topic is skipped
+  // before rendering and does not use up a render attempt.
+  const shortfall = render && !requested ? visualShortfall(topic, path.join(channel.paths.reports, "dry-runs", topic.slug)) : null;
+  if (shortfall && prechecks < MAX_VISUAL_PRECHECKS) {
+    prechecks += 1;
+    attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass: false, visualPrecheck: shortfall });
+    console.log(`CriticalThread E2E pre-check: skipped ${topic.topic} — ${shortfall}`);
+    attempt -= 1;
+    continue;
+  }
   const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true });
   const outputDirectory = path.join(channel.paths.reports, "dry-runs", topic.slug);
   result = Rendering.buildPackage(topic, channel, outputDirectory, { render, growthPlan: plan });
