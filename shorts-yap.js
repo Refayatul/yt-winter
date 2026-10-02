@@ -257,9 +257,15 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
   const DEN = require("./lib/gorsel-denetim");
   // Muhendislik paneli penceresi (FAILURE CHAIN, sol ust) ASS'ten ONCE bilinir: tarih
   // damgasi da sol ustte durdugu icin ayni saniyelere dusmemeli (ust uste binme olculdu).
-  const katmanSahne = planlar.findIndex((p, i) => ["technical", "discovery"].includes(p.rol) && zamanlar[i].bas >= 3 && zamanlar[i].bas + 3 <= VODUR - 3);
-  const katmanA = katmanSahne >= 0 ? zamanlar[katmanSahne].bas + 0.15 : null;
-  const katmanB = katmanSahne >= 0 ? Math.min(katmanA + 3.4, VODUR - 3) : null;
+  // Zincir artik her Short'ta gosterilir (eski kural 21 sn'lik videolarda hic pencere
+  // bulamiyordu): teknik sahne varsa onun basinda, yoksa videonun ~%35'inde
+  // (engineering-visuals.kisaZincirPenceresi).
+  const teknikSahne = planlar.findIndex((p, i) => ["technical", "discovery"].includes(p.rol) && zamanlar[i].bas >= 3);
+  const zincirPencere = require("./engineering-visuals").kisaZincirPenceresi({ adimSayisi: ((konu.vaka || {}).zincir || []).length,
+    vodur: VODUR, teknikBas: teknikSahne >= 0 ? zamanlar[teknikSahne].bas + 0.15 : null });
+  const katmanSahne = zincirPencere ? Math.max(0, teknikSahne) : -1;
+  const katmanA = zincirPencere ? zincirPencere.a : null;
+  const katmanB = zincirPencere ? zincirPencere.b : null;
   const katmanlaCakisir = (a, b) => katmanA != null && a < katmanB + 0.3 && b > katmanA - 0.3;
   let damgaPencere = null;
   const assKur = (k) => `[Script Info]
@@ -362,25 +368,34 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
   const hy = Math.round(H * 0.052);
   // Muhendislik ust katmani: ilk teknik/kesif sahnesinde ~3 sn FAILURE CHAIN paneli
   // (kanca ve kapanis sorusu pencereleriyle cakismaz).
+  // Muhendislik katmani: FAILURE CHAIN adim adim acilir; her asama bir kutu ekler,
+  // en yeni adim kirmizi vurgulanir.
   let ustKatman = null;
-  const ti = katmanSahne;
-  if (ti >= 0) {
+  if (zincirPencere) {
     try {
-      const png = require("./engineering-visuals").kisaUstKatman(konu, path.join(TMP, "zincir.png"));
-      if (png) {
-        const a = katmanA, b = katmanB;
-        ustKatman = { png, a, b };
-        fs.writeFileSync(path.join(VID, "muhendislik-katmani.json"), JSON.stringify({ tip: "failure-chain", sahne: ti, bas: a, son: b }, null, 2));
+      const pngs = require("./engineering-visuals").kisaZincirAsamalari(konu, TMP);
+      if (pngs.length && pngs.length === zincirPencere.asamalar.length) {
+        ustKatman = { pngs, a: katmanA, b: katmanB, asamalar: zincirPencere.asamalar };
+        fs.writeFileSync(path.join(VID, "muhendislik-katmani.json"), JSON.stringify({ tip: "failure-chain", animasyon: "adim-adim", sahne: katmanSahne, bas: katmanA, son: katmanB, asamalar: zincirPencere.asamalar }, null, 2));
       }
     } catch (e) { console.log("  (muhendislik katmani atlandi: " + e.message.slice(0, 120) + ")"); }
   }
   const handleF = `drawtext=fontfile='${DFONT}':text='${HANDLE.replace(/'/g, "")}':fontcolor=white@0.72:` +
     `fontsize=${Math.round(W * 0.030)}:x=(w-tw)/2:y=${hy}:shadowcolor=black@0.5:shadowx=0:shadowy=2`;
   const altyaziF = `subtitles='${assPath.replace(/:/g, "\\:")}',format=yuv420p[v]`;
-  const vFilter = ustKatman
-    ? `[0:v]${handleF}[b0];[2:v]format=rgba,fade=t=in:st=${ustKatman.a.toFixed(2)}:d=0.3:alpha=1,fade=t=out:st=${(ustKatman.b - 0.3).toFixed(2)}:d=0.3:alpha=1[ov];` +
-      `[b0][ov]overlay=0:0:enable='between(t,${ustKatman.a.toFixed(2)},${ustKatman.b.toFixed(2)})':shortest=1:eof_action=pass[b1];[b1]${altyaziF}`
-    : `[0:v]${handleF},${altyaziF}`;
+  const zincirFiltre = () => {
+    const son = ustKatman.pngs.length - 1;
+    const parcalar = [`[0:v]${handleF}[b0]`];
+    ustKatman.asamalar.forEach((st, i) => {
+      let f = `[${2 + i}:v]format=rgba`;
+      if (i === 0) f += `,fade=t=in:st=${st.a.toFixed(2)}:d=0.25:alpha=1`;
+      if (i === son) f += `,fade=t=out:st=${(st.b - 0.3).toFixed(2)}:d=0.3:alpha=1`;
+      parcalar.push(`${f}[ov${i}]`);
+      parcalar.push(`[b${i}][ov${i}]overlay=0:0:enable='between(t,${st.a.toFixed(2)},${st.b.toFixed(2)})':shortest=1:eof_action=pass[b${i + 1}]`);
+    });
+    return parcalar.join(";") + `;[b${son + 1}]${altyaziF}`;
+  };
+  const vFilter = ustKatman ? zincirFiltre() : `[0:v]${handleF},${altyaziF}`;
   // SES AYRI ADIMDA karistirilir: ducking zinciri (sidechaincompress + amix) video
   // filtreleriyle ayni grafikte calisinca ffmpeg is siralamasi yuzunden bazi videolarda
   // erken bitiyordu (olculen: goruntu 31.5 sn, ses 19.3 sn). Ayri adimda sure tamdir.
@@ -398,13 +413,13 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
   run(["-hide_banner", "-loglevel", "error", "-i", vid, "-i", karisim,
     // PNG katmani videoyla AYNI kare hizinda (30) beslenir; aksi halde (varsayilan 25 fps)
     // bazi kaynak kombinasyonlarinda cikti suresi sisiyordu (31 sn -> 57 sn).
-    ...(ustKatman ? ["-loop", "1", "-framerate", String(FPS), "-t", TOPLAM.toFixed(2), "-i", ustKatman.png] : []),
+    ...(ustKatman ? ustKatman.pngs.flatMap((png) => ["-loop", "1", "-framerate", String(FPS), "-t", TOPLAM.toFixed(2), "-i", png]) : []),
     "-filter_complex", vFilter,
     "-map", "[v]", "-map", "1:a", "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p",
     "-c:a", "aac", "-b:a", "160k", "-movflags", "+faststart", "-y", cikti]);
 
   // YAYIN ONCESI DENETIM 2: siyah kare / donmus goruntu + onizleme gorseli.
-  const denetim = { tarih: new Date().toISOString(), damga: damgaPencere, katman: ustKatman ? { bas: +ustKatman.a.toFixed(2), son: +ustKatman.b.toFixed(2) } : null,
+  const denetim = { tarih: new Date().toISOString(), damga: damgaPencere, katman: ustKatman ? { bas: +ustKatman.a.toFixed(2), son: +ustKatman.b.toFixed(2), asama: ustKatman.pngs.length } : null,
     yaziOlcegi: olcek, yaziTasmasi: tasma === null ? "olculemedi" : tasma.length,
     tasmaOrnek: tasma && tasma.length ? tasma.slice(0, 5) : [], ton: TON ? "stok-belgesel" : "yok",
     captionBurned: true, captionEvents: events.length,

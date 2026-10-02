@@ -228,3 +228,19 @@ test("multi-panel figures are detected from titles listing several features", ()
   assert.equal(TopicVisuals.stillKind({ file: "Gotthard Road Tunnel - Ventilation Center Bäzberg (15607257755).jpg" }), "photo");
   assert.equal(TopicVisuals.stillKind({ file: "Dam.jpg", description: "Two panels side by side" }), "diagram");
 });
+
+test("number cards count up only for whole sourced values, then show the exact text", () => {
+  const card = (numbers, extra = {}) => ({ numbers, duration: 2, ...extra });
+  assert.deepEqual(Rendering.countUp(card(["39"])), { value: 39, suffix: "", seconds: 0.9 });
+  assert.deepEqual(Rendering.countUp(card(["14,800 tonnes"])), { value: 14800, suffix: " TONNES", seconds: 0.9 });
+  assert.equal(Rendering.countUp(card(["45%"])).suffix, "%");
+  for (const numbers of [["1999"], ["11.611 kilometres"], ["2–3"], ["8"], ["200", "400"]]) assert.equal(Rendering.countUp(card(numbers)), null, numbers.join("|"));
+  assert.equal(Rendering.countUp(card(["300 metres"], { comparison: ["300", "400"] })), null);
+  assert.equal(Rendering.countUp(card(["39"], { duration: 0.6 })).seconds, 0.5, "short shots count faster");
+  const shot = card(["39"]);
+  shot.countUp = Rendering.countUp(shot);
+  const filter = Rendering.countUpFilter(shot);
+  assert.match(filter, /text='%\{eif\\:floor\(39\*t\/0\.9\)\\:d\}'.*enable='lt\(t,0\.9\)'/);
+  assert.match(filter, /text='39'.*enable='gte\(t,0\.9\)'/, "the exact sourced value after the count");
+  assert.doesNotMatch(filter, /min\(/, "no comma inside the expression");
+});
