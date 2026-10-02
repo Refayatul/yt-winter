@@ -77,11 +77,20 @@ function shortHash(value) {
 // open a Short or stand in for the real subject. Multi-panel images
 // (comparisons, composites, mosaics) are shown whole: cropped to 9:16 the
 // "Europa, Earth & Moon size comparison" showed only Earth.
-const DIAGRAM_RE = /\b(?:graph|chart|diagram|plot|figure|fig|map|schematic|timeline|data|anomal\w*|model\w*|simulation|cross[- ]section|infographic|table|curve|scheme|projection|trend|svg|illustration|artist'?s?|cutaway|rendering|tectonics|comparison|composite|mosaic|montage|collage)\b/i;
+const DIAGRAM_RE = /\b(?:graph|chart|diagram|plot|figure|fig|map|schematic|timeline|data|anomal\w*|model\w*|simulation|cross[- ]section|infographic|table|curve|scheme|projection|trend|svg|illustration|artist'?s?|cutaway|rendering|tectonics|comparison|composite|mosaic|montage|collage|panels?|side[- ]by[- ]side|before and after)\b/i;
+
+// A file title that names three or more separate features ("Chaos
+// Transition, Crisscrossing Bands & Chaos Near Agenor Linea") is a multi-panel
+// figure: cropped to 9:16 it opened an ImpossibleBrief Short as a labelled
+// 2x2 grid.
+function multiPanelTitle(file) {
+  const title = String(file || "").replace(/\.[a-z0-9]+$/i, "").replace(/\([^)]*\)/g, " ").replace(/^.*? - /, "");
+  return (title.match(/,|\s&\s/g) || []).length >= 2;
+}
 
 function stillKind(still) {
   const text = `${still.file || ""} ${still.description || ""}`.replace(/[_]/g, " ");
-  return /\.(?:png|svg|gif)$/i.test(still.file || "") || DIAGRAM_RE.test(text) ? "diagram" : "photo";
+  return /\.(?:png|svg|gif)$/i.test(still.file || "") || DIAGRAM_RE.test(text) || multiPanelTitle(still.file) ? "diagram" : "photo";
 }
 
 // A card is worth showing only for a value with a unit or percentage. Bare

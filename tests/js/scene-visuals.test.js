@@ -221,3 +221,10 @@ test("visual pre-check skips picture-poor topics before a render, but never on a
     assert.match(source, /attempt -= 1;\n      continue;/, "pre-check skips do not use up render attempts");
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
+
+test("multi-panel figures are detected from titles listing several features", () => {
+  assert.equal(TopicVisuals.stillKind({ file: "Europa PIA2387x - Chaos Transition, Crisscrossing Bands & Chaos Near Agenor Linea.jpg" }), "diagram");
+  assert.equal(TopicVisuals.stillKind({ file: "Jupiter's moon Europa, as seen by Juno.jpg" }), "photo", "one comma is a caption, not panels");
+  assert.equal(TopicVisuals.stillKind({ file: "Gotthard Road Tunnel - Ventilation Center Bäzberg (15607257755).jpg" }), "photo");
+  assert.equal(TopicVisuals.stillKind({ file: "Dam.jpg", description: "Two panels side by side" }), "diagram");
+});
