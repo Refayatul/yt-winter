@@ -9,6 +9,12 @@
 // date), never "last publishAt + 24 h", which kept yesterday's 21:00 Short
 // blocking this morning's production.
 //
+// The production calendar and the publish clock may use different zones: a
+// channel produces on Istanbul days but publishes at an audience-local time
+// (e.g. 18:00 America/New_York). A Short belongs to the production day D and
+// goes public at publishTime on the same date D in publishTimeZone, so its
+// slot day is read in publishTimeZone (01:00 Istanbul on D+1 is still day D).
+//
 // All conversions go through Intl with an explicit time zone, so the runner's
 // local TZ never matters and DST transitions are handled by the tz database.
 
@@ -80,6 +86,7 @@ function shortSchedule(channel) {
   const shorts = (config.publishingCadence && config.publishingCadence.shorts) || {};
   return {
     timeZone: config.timezone || DEFAULT_TIME_ZONE,
+    publishTimeZone: shorts.publishTimeZone || config.publishTimeZone || config.timezone || DEFAULT_TIME_ZONE,
     productionTime: validTime(shorts.productionTime, DEFAULT_PRODUCTION_TIME),
     publishTime: validTime(shorts.publishTime || config.publishTime, DEFAULT_PUBLISH_TIME),
     minLeadMinutes: Number.isFinite(shorts.minLeadMinutes) ? shorts.minLeadMinutes : DEFAULT_MIN_LEAD_MINUTES,
@@ -91,20 +98,25 @@ function shortRows(records) {
   return (Array.isArray(records) ? records : []).filter((row) => row && typeof row === "object" && (row.format || "short") === "short");
 }
 
-// A Short occupies the local day it goes public on, and also the day it was
-// uploaded: a Short uploaded today but scheduled later still counts for today,
-// so no run can follow it with a second upload on the same date.
-function occupiedDays(row, timeZone) {
-  return [...new Set([dayKey(row.publishAt, timeZone), dayKey(row.tarih || row.generatedAt, timeZone)].filter(Boolean))];
+// A Short occupies the day of its publish slot (read in the publish zone) and
+// the local day it was uploaded: a Short uploaded today but scheduled later
+// still counts for today, so no run can follow it with a second upload.
+function occupiedDays(row, timeZone, publishTimeZone = timeZone) {
+  return [...new Set([dayKey(row.publishAt, publishTimeZone), dayKey(row.tarih || row.generatedAt, timeZone)].filter(Boolean))];
 }
 
-function shortForDay(records, key, timeZone = DEFAULT_TIME_ZONE) {
-  return shortRows(records).filter((row) => occupiedDays(row, timeZone).includes(key))
+function shortForDay(records, key, timeZone = DEFAULT_TIME_ZONE, publishTimeZone = timeZone) {
+  return shortRows(records).filter((row) => occupiedDays(row, timeZone, publishTimeZone).includes(key))
     .sort((a, b) => String(a.tarih || "").localeCompare(String(b.tarih || ""))).pop() || null;
 }
 
-function lastShortDay(records, timeZone = DEFAULT_TIME_ZONE) {
-  return shortRows(records).flatMap((row) => occupiedDays(row, timeZone)).sort().pop() || null;
+function lastShortDay(records, timeZone = DEFAULT_TIME_ZONE, publishTimeZone = timeZone) {
+  return shortRows(records).flatMap((row) => occupiedDays(row, timeZone, publishTimeZone)).sort().pop() || null;
+}
+
+// The production day a publish instant belongs to, for this channel.
+function publishDay(value, channel) {
+  return dayKey(value, shortSchedule(channel).publishTimeZone);
 }
 
 // Daily eligibility. `everyDays` > 1 (a stretched cadence) requires that many
@@ -115,20 +127,20 @@ function shortDecision(channel, records, now = new Date(), options = {}) {
   const everyDays = options.everyDays || schedule.everyDays;
   const today = dayKey(now, timeZone);
   const productionAt = zonedTime(today, schedule.productionTime, timeZone);
-  const publishAt = zonedTime(today, schedule.publishTime, timeZone);
+  const publishAt = zonedTime(today, schedule.publishTime, schedule.publishTimeZone);
   const closesAt = new Date(publishAt.getTime() - schedule.minLeadMinutes * 60000);
-  const existing = shortForDay(records, today, timeZone);
-  const lastDay = lastShortDay(records, timeZone);
+  const existing = shortForDay(records, today, timeZone, schedule.publishTimeZone);
+  const lastDay = lastShortDay(records, timeZone, schedule.publishTimeZone);
   const gap = lastDay ? daysBetween(lastDay, today) : null;
   let due = false;
   let reason;
   if (existing) reason = `today's Short already exists (${existing.slug || existing.videoId || "recorded"})`;
   else if (gap != null && gap < everyDays) reason = `cadence every ${everyDays} day(s); last Short ${lastDay}`;
   else if (now < productionAt) reason = `before production slot ${schedule.productionTime} ${timeZone}`;
-  else if (now >= closesAt) reason = `production window closed at ${schedule.publishTime} ${timeZone} minus ${schedule.minLeadMinutes} min`;
+  else if (now >= closesAt) reason = `production window closed at ${schedule.publishTime} ${schedule.publishTimeZone} minus ${schedule.minLeadMinutes} min`;
   else { due = true; reason = "due"; }
   return {
-    due, reason, today, timeZone, everyDays, lastDay,
+    due, reason, today, timeZone, publishTimeZone: schedule.publishTimeZone, everyDays, lastDay,
     productionAt: productionAt.toISOString(),
     publishAt: publishAt.toISOString(),
     closesAt: closesAt.toISOString(),
@@ -136,15 +148,18 @@ function shortDecision(channel, records, now = new Date(), options = {}) {
   };
 }
 
-// publishAt for a Short being uploaded now: today's local publish time when
-// that day is free and still in the future, otherwise the next free day.
+// publishAt for a Short being uploaded now: today's publish time (in the
+// publish zone, on today's production date) when that day is free and still in
+// the future, otherwise the next free day.
 function publishSlot(channel, records, now = new Date(), minLeadMinutes = MIN_UPLOAD_LEAD_MINUTES) {
   const schedule = shortSchedule(channel);
   const timeZone = schedule.timeZone;
-  const taken = new Set(shortRows(records).map((row) => dayKey(row.publishAt, timeZone)).filter(Boolean));
-  let key = dayKey(now, timeZone);
+  const taken = new Set(shortRows(records).map((row) => dayKey(row.publishAt, schedule.publishTimeZone)).filter(Boolean));
+  // Start one day back: after local midnight the previous production day's
+  // release (e.g. 18:00 New York = 01:00 Istanbul) can still be ahead and free.
+  let key = addDays(dayKey(now, timeZone), -1);
   for (let guard = 0; guard < 400; guard += 1, key = addDays(key, 1)) {
-    const candidate = zonedTime(key, schedule.publishTime, timeZone);
+    const candidate = zonedTime(key, schedule.publishTime, schedule.publishTimeZone);
     if (!taken.has(key) && candidate.getTime() - now.getTime() >= minLeadMinutes * 60000) return candidate;
   }
   throw new Error("no free publish slot within 400 days");
@@ -152,5 +167,5 @@ function publishSlot(channel, records, now = new Date(), minLeadMinutes = MIN_UP
 
 module.exports = {
   DEFAULT_TIME_ZONE, MIN_UPLOAD_LEAD_MINUTES,
-  dayKey, zonedTime, addDays, daysBetween, shortSchedule, shortForDay, lastShortDay, shortDecision, publishSlot,
+  dayKey, zonedTime, addDays, daysBetween, shortSchedule, shortForDay, lastShortDay, publishDay, shortDecision, publishSlot,
 };

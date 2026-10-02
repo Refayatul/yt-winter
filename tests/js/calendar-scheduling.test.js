@@ -32,14 +32,49 @@ test("each channel is not due before its Istanbul production slot and due at/aft
   }
 });
 
-test("all three channels schedule the public release for 21:00 Istanbul (18:00 UTC) the same day", () => {
+test("all three channels schedule the public release for 18:00 New York on the production date", () => {
   for (const [channel, , utc] of SLOTS) {
+    assert.equal(Calendar.shortSchedule(channel).publishTimeZone, "America/New_York");
     const decision = Calendar.shortDecision(channel, yesterdays, at(utc));
-    assert.equal(decision.publishAt, `${DAY}T18:00:00.000Z`);
+    // 18:00 EDT = 22:00 UTC = 01:00 Istanbul on the next calendar day.
+    assert.equal(decision.publishAt, `${DAY}T22:00:00.000Z`);
     // The uploader runs a few minutes after production starts.
     const uploadedAt = new Date(at(utc).getTime() + 12 * 60000);
-    assert.equal(Calendar.publishSlot(channel, yesterdays, uploadedAt).toISOString(), `${DAY}T18:00:00.000Z`);
+    assert.equal(Calendar.publishSlot(channel, yesterdays, uploadedAt).toISOString(), `${DAY}T22:00:00.000Z`);
   }
+});
+
+test("a Short public at 01:00 Istanbul belongs to the previous production day and never blocks the next one", () => {
+  // Without a separate publish zone this Short would occupy Istanbul's 3 Oct and
+  // the 3 Oct morning production would be skipped: one video every other day.
+  const today = [...yesterdays, { format: "short", slug: "today", videoId: "GGGGGGGGGGG", tarih: `${DAY}T06:14:00Z`, publishAt: `${DAY}T22:00:00.000Z` }];
+  for (const [channel, , utc] of SLOTS) {
+    const nextMorning = new Date(`2026-10-03T${utc}:00Z`);
+    const decision = Calendar.shortDecision(channel, today, nextMorning);
+    assert.equal(decision.due, true, channel.slug);
+    assert.equal(decision.lastDay, DAY);
+    assert.equal(decision.publishAt, "2026-10-03T22:00:00.000Z");
+    assert.equal(Calendar.publishSlot(channel, today, nextMorning).toISOString(), "2026-10-03T22:00:00.000Z");
+    assert.equal(Calendar.publishDay(`${DAY}T22:00:00.000Z`, channel), DAY);
+  }
+});
+
+test("the 18:00 New York release follows US daylight saving time automatically", () => {
+  // US clocks fall back on 1 Nov 2026: 18:00 EST = 23:00 UTC = 02:00 Istanbul.
+  assert.equal(Calendar.shortDecision(FR, [], new Date("2026-10-31T06:00:00Z")).publishAt, "2026-10-31T22:00:00.000Z");
+  assert.equal(Calendar.shortDecision(FR, [], new Date("2026-11-02T06:00:00Z")).publishAt, "2026-11-02T23:00:00.000Z");
+  // And spring forward on 14 Mar 2027.
+  assert.equal(Calendar.shortDecision(IB, [], new Date("2027-03-12T07:00:00Z")).publishAt, "2027-03-12T23:00:00.000Z");
+  assert.equal(Calendar.shortDecision(IB, [], new Date("2027-03-15T07:00:00Z")).publishAt, "2027-03-15T22:00:00.000Z");
+});
+
+test("the switch from 21:00 Istanbul to 18:00 New York neither skips nor doubles a day", () => {
+  // Last old-schedule Short: public 21:00 Istanbul on 2 Oct (18:00 UTC).
+  const old = [{ format: "short", slug: "old", videoId: "HHHHHHHHHHH", tarih: `${DAY}T06:14:00Z`, publishAt: `${DAY}T18:00:00.000Z` }];
+  assert.equal(Calendar.shortDecision(FR, old, at("16:00")).due, false, "2 Oct is still filled");
+  const next = Calendar.shortDecision(FR, old, new Date("2026-10-03T06:00:00Z"));
+  assert.equal(next.due, true, "3 Oct is produced");
+  assert.equal(next.publishAt, "2026-10-03T22:00:00.000Z");
 });
 
 test("yesterday's 21:00 Short does not block this morning's production", () => {
@@ -73,16 +108,21 @@ test("a Short already uploaded or scheduled for today prevents a second producti
   assert.equal(Calendar.shortDecision(CT, [{ format: "long", tarih: `${DAY}T05:00:00Z`, publishAt: `${DAY}T18:00:00.000Z` }], at("08:00")).due, true);
 });
 
-test("the production window closes one hour before the 21:00 release; nothing rolls into tomorrow", () => {
-  assert.equal(Calendar.shortDecision(FR, yesterdays, at("16:59")).due, true);
-  const closed = Calendar.shortDecision(FR, yesterdays, at("17:00"));
-  assert.equal(closed.due, false);
-  assert.match(closed.reason, /production window closed/);
-  // An upload that finishes after the window but before 21:00 still gets today.
-  assert.equal(Calendar.publishSlot(FR, yesterdays, at("17:30")).toISOString(), `${DAY}T18:00:00.000Z`);
+test("the production window closes one hour before the 18:00 New York release; nothing rolls into tomorrow", () => {
+  // The window closes at 17:00 New York (21:00 UTC), which is also Istanbul
+  // midnight: production is due all through the Istanbul day.
+  assert.equal(Calendar.shortDecision(FR, yesterdays, at("20:59")).due, true);
+  const nextDay = Calendar.shortDecision(FR, yesterdays, at("21:00"));
+  assert.equal(nextDay.due, false);
+  assert.equal(nextDay.today, "2026-10-03");
+  assert.match(nextDay.reason, /before production slot/);
+  // An upload that finishes after Istanbul midnight but before the release still gets that day.
+  assert.equal(Calendar.publishSlot(FR, yesterdays, at("21:30")).toISOString(), `${DAY}T22:00:00.000Z`);
+  // Too late for that day's release -> the next free day.
+  assert.equal(Calendar.publishSlot(FR, yesterdays, at("21:55")).toISOString(), "2026-10-03T22:00:00.000Z");
   // Today's slot already taken -> next free day.
-  const taken = [...yesterdays, { format: "short", publishAt: `${DAY}T18:00:00.000Z` }];
-  assert.equal(Calendar.publishSlot(FR, taken, at("08:00")).toISOString(), "2026-10-03T18:00:00.000Z");
+  const taken = [...yesterdays, { format: "short", publishAt: `${DAY}T22:00:00.000Z` }];
+  assert.equal(Calendar.publishSlot(FR, taken, at("08:00")).toISOString(), "2026-10-03T22:00:00.000Z");
 });
 
 test("Europe/Istanbul handling is DST- and runner-timezone-safe", () => {
@@ -104,7 +144,7 @@ test("Europe/Istanbul handling is DST- and runner-timezone-safe", () => {
     `process.stdout.write(JSON.stringify([d.today,d.productionAt,d.publishAt,C.zonedTime("2026-10-02","09:00").toISOString()]));`;
   for (const tz of ["UTC", "America/Los_Angeles", "Pacific/Kiritimati", "Asia/Kolkata"]) {
     const out = cp.execFileSync(process.execPath, ["-e", script], { env: { ...process.env, TZ: tz } }).toString();
-    assert.deepEqual(JSON.parse(out), ["2026-10-02", "2026-10-02T07:00:00.000Z", "2026-10-02T18:00:00.000Z", "2026-10-02T06:00:00.000Z"], tz);
+    assert.deepEqual(JSON.parse(out), ["2026-10-02", "2026-10-02T07:00:00.000Z", "2026-10-02T22:00:00.000Z", "2026-10-02T06:00:00.000Z"], tz);
   }
 });
 
@@ -151,6 +191,27 @@ test("watchdog checks today's Istanbul calendar day, not a rolling interval", ()
   const snapshot = Sla.evaluateSnapshot({ date: DAY, channel: "critical-thread", published: yesterdays, generated: [], notifications: {}, youtubeVerified: true });
   assert.equal(snapshot.productionReady, false);
   assert.equal(snapshot.safeToRecover, true, "today is empty, so recovery may produce today's Short");
+});
+
+test("watchdog reads a 01:00 Istanbul release as today's Short, so it never recovers into a duplicate", () => {
+  const NY = "America/New_York";
+  const tonight = `${DAY}T22:00:00.000Z`;
+  const video = { id: "tonight", contentDetails: { duration: "PT40S" }, status: { publishAt: tonight } };
+  // Read in Istanbul this instant is 3 Oct, which would leave 2 Oct looking empty.
+  assert.equal(Sla.youtubeVideoForDate([video], DAY), null);
+  assert.equal(Sla.youtubeVideoForDate([video], DAY, "Europe/Istanbul", NY).id, "tonight");
+  const records = [...yesterdays, { format: "short", slug: "tonight", videoId: "IIIIIIIIIII", tarih: `${DAY}T06:14:00Z`, publishAt: tonight }];
+  assert.equal(Sla.recordForDate(records, DAY, "Europe/Istanbul", NY).slug, "tonight");
+  const snapshot = Sla.evaluateSnapshot({ date: DAY, timeZone: "Europe/Istanbul", publishTimeZone: NY, channel: "critical-thread",
+    published: records, generated: ["tonight"], notifications: {}, youtubeVerified: true, remoteVideoExists: true, remoteTodayVideo: video });
+  assert.equal(snapshot.scheduled, true);
+  assert.equal(snapshot.safeToRecover, false);
+});
+
+test("the empty-day alarm waits for the Istanbul day's deadline, not the UTC date's", () => {
+  const source = fs.readFileSync(path.join(__dirname, "../../bildirim.js"), "utf8");
+  assert.match(source, /Date\.parse\(`\$\{g\}T\$\{sonSaat\}:00Z`\)/);
+  assert.match(source, /shortForDay\(K\.yayinlananlar\(\), g, tz, Calendar\.shortSchedule\(CHANNEL\)\.publishTimeZone\)/);
 });
 
 test("state-writing workflows check out the latest branch tip, not the trigger commit", () => {

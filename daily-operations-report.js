@@ -77,9 +77,11 @@ function performance(rows, format) {
   };
 }
 
-function publicationForDate(rows, date, format = "short") {
+// A publish instant is read in the channel's publish zone (18:00 New York on
+// D is still production day D even though it is 01:00 Istanbul on D+1).
+function publicationForDate(rows, date, format = "short", publishTimeZone = Calendar.DEFAULT_TIME_ZONE) {
   return rows.filter((row) => (row.format || "short") === format &&
-    (Calendar.dayKey(row.publishAt) === date || Calendar.dayKey(row.tarih || row.generatedAt) === date))
+    (Calendar.dayKey(row.publishAt, publishTimeZone) === date || Calendar.dayKey(row.tarih || row.generatedAt) === date))
     .sort((a, b) => String(a.tarih || "").localeCompare(String(b.tarih || ""))).pop() || null;
 }
 
@@ -111,8 +113,9 @@ function channelReport(channel, date, now) {
   const failed = read(stateFile(channel, "basarisiz.json", "failed.json"), []);
   const blocked = read(stateFile(channel, "engellenen.json", "blocked.json"), {});
   const review = read(stateFile(channel, "inceleme.json", "review.json"), {});
-  const short = publicationForDate(published, date, "short");
-  const long = publicationForDate(published, date, "long");
+  const publishTimeZone = Calendar.shortSchedule(channel).publishTimeZone;
+  const short = publicationForDate(published, date, "short", publishTimeZone);
+  const long = publicationForDate(published, date, "long", publishTimeZone);
   const gate = quality(channel, short && short.slug);
   const plan = Scheduling.channelPlan(channel, now);
   const inventory = Library.calculate(channel);
@@ -120,7 +123,7 @@ function channelReport(channel, date, now) {
   const failures = (Array.isArray(failed) ? failed.length : Object.keys(failed || {}).length) +
     Object.keys(blocked || {}).length + Object.keys(review || {}).length;
   const youtubeUploaded = !!(short && short.videoId);
-  const youtubeScheduled = !!(short && short.publishAt && Calendar.dayKey(short.publishAt) === date);
+  const youtubeScheduled = !!(short && short.publishAt && Calendar.dayKey(short.publishAt, publishTimeZone) === date);
   const deadline = new Date(`${date}T16:30:00.000Z`);
   const schedulerHealth = youtubeScheduled ? "healthy" : now < deadline ? "pending-before-deadline" : "sla-missed-or-channel-disabled";
   const tiktok = tikTokState(channel, short && short.slug);

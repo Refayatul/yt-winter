@@ -7,7 +7,8 @@ name: Multi-channel portfolio production
 # Shorts production slots (Europe/Istanbul, UTC+3; each channel's config.json
 # publishingCadence.shorts.productionTime): Failure Reconstructed 09:00,
 # ImpossibleBrief 09:30, CriticalThread 10:00. Every uploaded Short is scheduled
-# to go public at 21:00 TR (18:00 UTC) the same day. Eligibility is one Short
+# to go public at 18:00 America/New_York on the production date (01:00 TR next
+# day in US summer time, 02:00 TR in winter). Eligibility is one Short
 # per channel per Istanbul calendar day, so the hourly retries below only
 # produce for a channel whose slot has passed and whose day is still empty.
 on:

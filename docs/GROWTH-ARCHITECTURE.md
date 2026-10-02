@@ -83,7 +83,7 @@ The production queue takes topics with real archive film first, then stock expla
 
 - Production has multiple GitHub-native attempts (`portfolio-production.yml`, `uretim.yml`, and `yayin-kontrol.yml`). They improve retry probability but are not independent of GitHub's scheduler. `production-watchdog.yml` supplies deadline recovery. True failure-domain independence begins only after the Cloudflare Worker in `ops/production-watchdog-worker` is deployed.
 - If every one of them is dropped, `yayin-kontrol.yml` opens a "🚨 Bugün video üretilmedi" issue at 16:47 UTC with a one-click *Run workflow* link. It only fires when the queue is not empty and nothing was produced or scheduled for that day.
-- The video is uploaded private with `status.publishAt`. YouTube makes it public at **18:00 UTC**: 21:00 TR, 14:00 ET, 11:00 PT. The audience was ~93 % US on 2026-09-25.
+- The video is uploaded private with `status.publishAt`. YouTube makes it public at **18:00 America/New_York** (US evening; the audience was ~93 % US on 2026-09-25): 15:00 PT, and 01:00 TR during US daylight time / 02:00 TR in US winter time. `core/scheduling/calendar.js` keeps production on Istanbul days and reads the release in the publish zone (`publishTimeZone`), so a 01:00 TR release still belongs to the previous production day; DST is handled by the tz database.
 - Only `PUBLISH` is uploadable/scheduled. `REVIEW` and `BLOCK` never leave the runner.
 - `bildirim.js` opens a GitHub issue that @mentions the owner (email + GitHub mobile push). It gives the title, gate verdict, publish time, Studio link and how to cancel. Older "yeni-video" issues are closed automatically; blocked topics get a "kalite-engeli" issue.
 - Once enough data exists, re-tune `hourUTC` from the dashboard's "Publish hour" pattern and the analytics country mix.
@@ -96,7 +96,7 @@ The production queue takes topics with real archive film first, then stock expla
 - **Audio/video length:** a mismatch over 0.5 s is critical. On 2026-09-25 this caught a mux bug that produced 57 s of video with 19 s of audio.
 - **Black frames and frozen picture:** blackdetect / freezedetect.
 - **Loudness:** measured at the final gate. The mix is normalised to −14 LUFS; it was −22 before.
-- **Preview:** an 8-frame contact sheet (`icerik/paket/<slug>/onizleme.jpg`) is embedded in the GitHub notification, so you can check the video from your phone before the 21:00 publish.
+- **Preview:** an 8-frame contact sheet (`icerik/paket/<slug>/onizleme.jpg`) is embedded in the GitHub notification, so you can check the video from your phone before the US-evening publish.
 
 Any critical finding (text still overflowing, A/V mismatch, >1.5 s of black) makes the final gate **BLOCK**. The video is not uploaded and you get a "kalite-engeli" notification. Stock footage gets the channel's **strong documentary grade** (`config/growth.json → renk.stok`: colour halved, cool steel shadows). It sits with the archival films but stays clearly colour: modern stock is never disguised as historical black-and-white film. Archival film keeps its original tone.
 
