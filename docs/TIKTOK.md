@@ -1,5 +1,7 @@
 # TikTok — kurulum ve işleyiş
 
+> **Emekli (2 Ekim 2026).** Otomasyon artık yalnız YouTube Shorts üretir. TikTok tüm kanallarda kapalıdır (`platforms.tiktok.enabled: false`) ve hiçbir workflow TikTok'a gönderim yapmaz. Kod referans için duruyor; `TT_CLIENT_KEY`, `TT_CLIENT_SECRET`, `TT_REFRESH_TOKEN` secret'ları ve `TT_EXPECTED_OPEN_ID_SHA256` değişkeni silinebilir. Aşağısı tarihsel kayıttır.
+
 Aynı videolar, aynı otomasyon. YouTube yayını bundan **hiç etkilenmez**: TikTok kimlik
 bilgileri yoksa adım sessizce atlanır, TikTok tarafında bir hata olursa gün bozulmaz.
 

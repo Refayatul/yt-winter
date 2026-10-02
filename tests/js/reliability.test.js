@@ -97,11 +97,15 @@ test("current historical TikTok candidate is Tacoma Narrows", () => {
   if (!sent.has("tacoma-narrows")) assert.equal(TikTok.gecmisKuyrugu()[0].slug, "tacoma-narrows");
 });
 
-test("workflow sends actual production result before one historical backlog item", () => {
+test("TikTok is retired: no workflow sends to it and no channel enables it", () => {
+  for (const file of fs.readdirSync(path.join(KOK, ".github", "workflows"))) {
+    const workflow = fs.readFileSync(path.join(KOK, ".github", "workflows", file), "utf8");
+    assert.doesNotMatch(workflow, /tiktok-yukle\.js|TT_REFRESH_TOKEN|TT_CLIENT_SECRET/, file);
+  }
+  for (const slug of ["failure-reconstructed", "impossible-brief", "critical-thread"]) {
+    assert.equal(jsonOku(path.join(KOK, "channels", slug, "config.json"), {}).platforms.tiktok.enabled, false, slug);
+  }
   const source = fs.readFileSync(path.join(KOK, ".github", "workflows", "uretim-is.yml"), "utf8");
-  const today = source.indexOf('tiktok-yukle.js "$SLUG" --source-result="$RESULT"');
-  const backlog = source.indexOf("tiktok-yukle.js --gecmis");
-  assert.ok(today > 0 && backlog > today);
   assert.match(source, /PRODUCTION_RESULT_PATH/);
   assert.doesNotMatch(source, /^\s*if:\s*!inputs/m, "YAML tag syntax must not break the reusable workflow");
 });
@@ -148,7 +152,6 @@ test("comment reply classifier remains conservative and failed writes stay retry
 
 test("portfolio dry runs cannot upload, notify, or commit state", () => {
   const source = fs.readFileSync(path.join(KOK, ".github", "workflows", "portfolio-production.yml"), "utf8");
-  assert.match(source, /name: Send today's exact Failure Reconstructed MP4 to TikTok inbox\s+if:.*inputs\.dry_run != true/);
   assert.match(source, /if \[ "\$\{\{ inputs\.dry_run \}\}" != "true" \]; then\s+node bildirim\.js/s);
   assert.match(source, /name: Commit isolated state\s+if: always\(\) && inputs\.dry_run != true/);
 });
