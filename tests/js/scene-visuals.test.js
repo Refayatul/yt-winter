@@ -148,3 +148,76 @@ test("ImpossibleBrief records render with their channel's look and music", () =>
   assert.match(source, /const renderTopic = topic\.channel \? topic : \{ \.\.\.topic, channel: channel\.slug \}/);
   assert.notEqual(Rendering.musicMood({ ...topic, channel: "impossible-brief" }), "structural-failures");
 });
+
+test("a still comes back only when the previous shot cannot hold longer", () => {
+  const stills = [{ file: "Tunnel entrance.jpg" }, { file: "Portal.jpg" }];
+  const claims = Array.from({ length: 4 }, (_, index) => ({ text: `Line ${index} without values.`, start: index * 4, end: index * 4 + 4 }));
+  const plan = TopicVisuals.buildVisualPlan({ id: "CT-HOLD" }, { targetSeconds: 16, claims }, stills, Array(16).fill(1), 16);
+  for (const [index, shot] of plan.entries()) {
+    if (shot.type !== "licensed-still" || !(shot.motion > 0)) continue;
+    const previous = plan[index - 1];
+    assert.ok(!previous || !["licensed-still", "stock-video"].includes(previous.type) || previous.duration + shot.duration > 3.75,
+      `shot ${shot.shot} reuses a still although shot ${previous.shot} could have held`);
+  }
+  assert.ok(plan.every((shot) => shot.duration <= 4.001), "static-hold limit kept");
+  assert.equal(plan[0].start, 0);
+  assert.ok(Math.abs(plan[plan.length - 1].end - 16) < 0.001, "timeline still covers the whole narration");
+  assert.ok(plan.every((shot, index) => !index || Math.abs(shot.start - plan[index - 1].end) < 0.001), "no gaps after holding longer");
+  const old = plan.filter((shot) => shot.type === "licensed-still").length;
+  assert.ok(old < 16, `fewer cuts than pacing segments when pictures run out (${old})`);
+});
+
+test("artist's illustrations and cutaways never count as photographs", () => {
+  assert.equal(TopicVisuals.stillKind({ file: "Plate Tectonics on Europa.jpg", description: "Artist's illustration of subduction" }), "diagram");
+  assert.equal(TopicVisuals.stillKind({ file: "Europa-moon.jpg", description: "Europa imaged by Galileo" }), "photo");
+});
+
+test("ImpossibleBrief and CriticalThread narrate at Failure Reconstructed's brisker Shorts pace", () => {
+  const Channel = require("../../core/channel-context");
+  for (const slug of ["impossible-brief", "critical-thread"]) {
+    const rate = Number(String(Channel.getChannel(slug).config.voice.rate).replace("%", ""));
+    assert.ok(rate >= 0 && rate <= 10, `${slug} voice rate ${rate}%`);
+  }
+  const source = fs.readFileSync(path.join(__dirname, "../../core/rendering/index.js"), "utf8");
+  assert.match(source, /const LINE_PAUSE_SECONDS = 0\.18;/);
+});
+
+test("multi-panel comparisons and composites are shown whole, never cropped as a photo", () => {
+  for (const file of ["Europa, Earth & Moon size comparison.jpg", "Photo composite of suspected water plumes on Europa.jpg", "Galileo mosaic of Europa.jpg"]) {
+    assert.equal(TopicVisuals.stillKind({ file }), "diagram", file);
+  }
+  assert.equal(TopicVisuals.stillKind({ file: "Tunel mont blanc.jpg" }), "photo");
+});
+
+test("stills: the story's own article leads, and within it pictures naming the subject", () => {
+  const items = [
+    { file: "Gotthard Road Tunnel - Ventilation Center Bäzberg (15607257755).jpg", articleRank: 0, score: 9 },
+    { file: "Ventilation System (9627691007).jpg", articleRank: 0, score: 8 },
+    { file: "Tunel mont blanc.jpg", articleRank: 0, score: 1 },
+    { file: "Entrance of Mont-Blanc tunnel from le Brevent.jpg", articleRank: 0, score: 2 },
+    { file: "Jet fan in a road tunnel.jpg", articleRank: 1, score: 10 },
+    { file: "NASA tunnel photo.jpg", articleRank: 0.5, score: 5 },
+  ];
+  const ordered = TopicVisuals.orderStills(items, ["Mont Blanc Tunnel", "Tunnel ventilation"], ["ventilation", "road", "tunnel"]);
+  assert.deepEqual(ordered.slice(0, 2).map((item) => item.file), ["Entrance of Mont-Blanc tunnel from le Brevent.jpg", "Tunel mont blanc.jpg"]);
+  assert.equal(ordered[ordered.length - 1].file, "Jet fan in a road tunnel.jpg", "background article last");
+  assert.ok(ordered.findIndex((item) => item.file.startsWith("NASA")) > ordered.findIndex((item) => item.file.startsWith("Ventilation System")), "NASA after the story's own article");
+});
+
+test("visual pre-check skips picture-poor topics before a render, but never on a source outage", () => {
+  const os = require("os");
+  const Pipeline = require("../../core/pipeline/impossible-brief");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "precheck-"));
+  try {
+    const topic = { id: "CT-X", slug: "ct-x" };
+    const fake = (stills, clips = 0, error) => () => ({ stills: Array(stills).fill({}), clips: Array(clips).fill({}), error });
+    assert.match(Pipeline.visualShortfall(topic, dir, fake(1)), /1 licensed pictures\/clips < 4/);
+    assert.match(Pipeline.visualShortfall(topic, dir, fake(2, 1)), /3 licensed/);
+    assert.equal(Pipeline.visualShortfall(topic, dir, fake(3, 1)), null);
+    assert.equal(Pipeline.visualShortfall(topic, dir, fake(0, 0, "Commons timeout")), null, "outage: let the render gate decide");
+    assert.ok(fs.existsSync(path.join(dir, "topic.json")), "the render reuses the same topic file and picture cache");
+    const source = fs.readFileSync(path.join(__dirname, "../../core/pipeline/impossible-brief.js"), "utf8");
+    assert.match(source, /const shortfall = !noRender && !explicit \? visualShortfall\(topic, output\) : null;/);
+    assert.match(source, /attempt -= 1;\n      continue;/, "pre-check skips do not use up render attempts");
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});

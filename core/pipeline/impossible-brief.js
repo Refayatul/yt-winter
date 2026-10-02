@@ -84,6 +84,28 @@ function visualRejection(result, output) {
 
 const MAX_RENDER_ATTEMPTS = 3;
 
+// Visual pre-check: download the topic's licensed pictures and clips (cached
+// in the output folder, so the render reuses them) BEFORE spending ~5 minutes
+// on a render the visual gate would reject. A topic with too few real
+// pictures is recorded as blocked and the next one is checked; these quick
+// rejections do not use up the three render attempts. Before this, three
+// picture-poor topics in a row (1 image, 0 images, 4 visuals) left the slot
+// empty.
+const MIN_PRECHECK_VISUALS = 4;
+const MAX_VISUAL_PRECHECKS = 8;
+
+function visualShortfall(topic, output, prepare = (topicFile, directory) => require("../rendering/topic-visuals").prepareAssetsSync(topicFile, directory)) {
+  fs.mkdirSync(output, { recursive: true });
+  const topicFile = path.join(output, "topic.json");
+  fs.writeFileSync(topicFile, JSON.stringify(topic, null, 2) + "\n");
+  const assets = prepare(topicFile, output) || {};
+  // A source outage is not evidence that the topic lacks pictures; the
+  // render-time gate stays the judge then.
+  if (assets.error) return null;
+  const count = (assets.stills || []).length + (assets.clips || []).length;
+  return count < MIN_PRECHECK_VISUALS ? `${count} licensed pictures/clips < ${MIN_PRECHECK_VISUALS}` : null;
+}
+
 // Growth-engine topic choice: A/B first, C deliberately, D never; a topic
 // whose pre-render readiness is BLOCK is recorded and the next one is tried.
 function chooseTopic(channel, explicit, universe) {
@@ -127,6 +149,7 @@ function runChannel(slug, argv = []) {
   const universe = Discovery.universe(channel).topics;
   const noRender = argv.includes("--no-render");
   let choice, topic, output, result, finalPlan;
+  let prechecks = 0;
   for (let attempt = 1; ; attempt += 1) {
     choice = chooseTopic(channel, explicit, universe);
     if (!choice.topic) {
@@ -138,6 +161,20 @@ function runChannel(slug, argv = []) {
     }
     topic = choice.topic;
     output = path.join(channel.paths.production, topic.slug);
+    const shortfall = !noRender && !explicit ? visualShortfall(topic, output) : null;
+    if (shortfall) {
+      recordBlocked(channel, topic, `visual pre-check: ${shortfall}`);
+      GrowthRuntime.alert(channel, "VISUAL_PRECHECK_BLOCK", topic.slug, { reason: shortfall });
+      console.log(`::notice::[${channel.name}] visual pre-check skipped ${topic.slug}: ${shortfall}`);
+      prechecks += 1;
+      if (prechecks >= MAX_VISUAL_PRECHECKS) {
+        GrowthRuntime.alert(channel, "NO_QUALIFIED_TOPIC", `${MAX_VISUAL_PRECHECKS} topics without enough licensed pictures`, {});
+        console.log(`::warning::[${channel.name}] ${MAX_VISUAL_PRECHECKS} topics without enough licensed pictures; slot skipped (quality over cadence)`);
+        return 0;
+      }
+      attempt -= 1;
+      continue;
+    }
     result = Rendering.buildPackage(topic, channel, output, { render: !noRender, growthPlan: choice.plan });
     finalPlan = !noRender && result.render.completed
       ? Growth.planShort(channel, topic.id, {
@@ -189,4 +226,4 @@ function runChannel(slug, argv = []) {
 
 function main(argv = []) { return runChannel("impossible-brief", argv); }
 
-module.exports = { writeCompatibilityFiles, writeValidationEvidence, visualRejection, runChannel, main };
+module.exports = { MIN_PRECHECK_VISUALS, MAX_VISUAL_PRECHECKS, visualShortfall, writeCompatibilityFiles, writeValidationEvidence, visualRejection, runChannel, main };

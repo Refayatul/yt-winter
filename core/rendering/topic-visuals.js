@@ -6,7 +6,7 @@ const path = require("path");
 const cp = require("child_process");
 const { ROOT } = require("../channel-context");
 
-const CACHE_SCHEMA = 1;
+const CACHE_SCHEMA = 2;
 const MAX_HOLD_SECONDS = 4;
 // Enough licensed pictures that a 30-second Short rarely needs to reuse one.
 const MAX_STILLS = 8;
@@ -73,7 +73,11 @@ function shortHash(value) {
 
 // Paper figures, charts and maps are unreadable when cropped to 9:16; they
 // are shown whole over a blurred copy of themselves. Photographs fill the frame.
-const DIAGRAM_RE = /\b(?:graph|chart|diagram|plot|figure|fig|map|schematic|timeline|data|anomal\w*|model\w*|simulation|cross[- ]section|infographic|table|curve|scheme|projection|trend|svg)\b/i;
+// Artist's illustrations and cutaways are not photographs either: they never
+// open a Short or stand in for the real subject. Multi-panel images
+// (comparisons, composites, mosaics) are shown whole: cropped to 9:16 the
+// "Europa, Earth & Moon size comparison" showed only Earth.
+const DIAGRAM_RE = /\b(?:graph|chart|diagram|plot|figure|fig|map|schematic|timeline|data|anomal\w*|model\w*|simulation|cross[- ]section|infographic|table|curve|scheme|projection|trend|svg|illustration|artist'?s?|cutaway|rendering|tectonics|comparison|composite|mosaic|montage|collage)\b/i;
 
 function stillKind(still) {
   const text = `${still.file || ""} ${still.description || ""}`.replace(/[_]/g, " ");
@@ -155,6 +159,20 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     else if (cardAllowed) type = "number-card";
     else type = "procedural";
 
+    // A picture the viewer has already seen reads as a slideshow. Before a
+    // still comes back, the previous real shot holds a little longer instead,
+    // as long as it stays within the static-hold limit.
+    if (type === "licensed-still") {
+      const candidate = nextStill();
+      const reused = candidate && (stillUses.get(candidate.file) || 0) > 0;
+      if (reused && previous && ["licensed-still", "stock-video"].includes(previous.type) &&
+        previous.duration + (end - start) <= MAX_HOLD_SECONDS - 0.25) {
+        previous.end = end;
+        previous.duration = previous.end - previous.start;
+        continue;
+      }
+    }
+
     const entry = { shot: plan.length + 1, start, end, duration: end - start, claimIndex, claimText: claim.text,
       scene: scenes[claimIndex % Math.max(1, scenes.length)] || claim.text, type, numbers, comparison: [], still: null,
       proceduralFrame: claimIndex * 97 + shotIndex };
@@ -182,6 +200,29 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
       entry.visualKey = entry.sourceId;
     }
     plan.push(entry);
+  }
+  return loopBack(plan);
+}
+
+// Loop ending: the last shot returns to the opening picture (with another
+// camera move), so the cut from the end back to the start is seamless and
+// rewatches feel natural. Only a real picture opening, only over a closing
+// still or clip, and only when the Short has enough shots to make it a
+// callback rather than a repeat.
+function loopBack(plan) {
+  const first = plan[0];
+  const last = plan[plan.length - 1];
+  if (plan.length < 5 || !first || !last || first === last) return plan;
+  if (!["licensed-still", "stock-video"].includes(first.type) || !["licensed-still", "stock-video"].includes(last.type)) return plan;
+  if (first.type === "licensed-still" && first.kind !== "photo") return plan;
+  // Never at the cost of variety: the visual gate needs 5 distinct visuals.
+  const key = (shot) => shot.visualKey || shot.sourceId;
+  if (new Set(plan.slice(0, -1).map(key)).size < 5) return plan;
+  if (first.type === "stock-video") {
+    Object.assign(last, { type: "stock-video", clip: first.clip, still: null, kind: undefined, sourceId: `${first.sourceId}#loop`, visualKey: first.visualKey, loopBack: true });
+  } else {
+    Object.assign(last, { type: "licensed-still", still: first.still, kind: first.kind, clip: undefined, motion: (first.motion || 0) + 2,
+      sourceId: `${first.sourceId}#loop`, visualKey: first.visualKey, loopBack: true });
   }
   return plan;
 }
@@ -270,6 +311,21 @@ function loadManifest(outputDirectory) {
   } catch (error) { return null; }
 }
 
+// Order of candidate stills: the story's own article first (then NASA's
+// subject search, then background articles); within an article, pictures that
+// name the story's subject; then keyword relevance. Mutates and returns items.
+function orderStills(items, articles = [], relevanceTerms = []) {
+  const relevance = (item) => relevanceTerms.filter((word) => `${item.file} ${item.description || ""}`.toLowerCase().includes(word)).length;
+  const rank = (item) => Number.isFinite(item.articleRank) ? item.articleRank : articles.length;
+  // Within an article, pictures that name the story's subject lead: the Mont
+  // Blanc Tunnel article also carries Gotthard ventilation-plant photos, and a
+  // keyword score alone ("ventilation") put those first.
+  const titleTerms = [...new Set(String(articles[0] || "").replace(/\([^)]*\)/g, " ").toLowerCase().split(/[^a-z0-9]+/)
+    .filter((word) => word.length >= 3 && !["the", "and", "for", "of"].includes(word)))];
+  const titleHits = (item) => titleTerms.filter((word) => `${item.file} ${item.description || ""}`.toLowerCase().replace(/[^a-z0-9]+/g, " ").split(" ").includes(word)).length;
+  return items.sort((a, b) => rank(a) - rank(b) || titleHits(b) - titleHits(a) || relevance(b) - relevance(a) || b.score - a.score || a.file.localeCompare(b.file));
+}
+
 async function prepareAssets(topic, outputDirectory) {
   const cached = loadManifest(outputDirectory);
   if (cached) return cached;
@@ -281,7 +337,9 @@ async function prepareAssets(topic, outputDirectory) {
   const used = new Set(excluded);
   const articles = wikiTitles(topic);
 
-  for (const article of articles) {
+  // articleRank: the story's own article (first fact) leads; a broader
+  // background article (tunnel ventilation for the Mont Blanc fire) follows.
+  for (const [articleRank, article] of articles.entries()) {
     if (picked.length >= MAX_STILLS) break;
     const subjects = subjectPhrases(topic, article);
     const anchorSubjects = anchorPhrases(topic, article);
@@ -296,7 +354,7 @@ async function prepareAssets(topic, outputDirectory) {
       reject: excluded,
     });
     for (const item of found) {
-      if (!used.has(item.file)) { picked.push(item); used.add(item.file); }
+      if (!used.has(item.file)) { picked.push({ ...item, articleRank }); used.add(item.file); }
       if (picked.length >= MAX_STILLS) break;
     }
   }
@@ -327,7 +385,6 @@ async function prepareAssets(topic, outputDirectory) {
 
   const relevanceTerms = [...new Set(subjectPhrases(topic, articles[0] || "").join(" ").toLowerCase().split(/[^a-z0-9]+/)
     .filter((word) => word.length >= 4 && !["what", "with", "from", "into", "that", "this", "showing", "diagram", "comparison"].includes(word)))];
-  const relevance = (item) => relevanceTerms.filter((word) => `${item.file} ${item.description || ""}`.toLowerCase().includes(word)).length;
   // Diagrams are kept only from the topic's own Wikipedia article, where an
   // editor placed them; a keyword search turns up unrelated schematics (a
   // military "defence system" sketch for a tunnel ventilation system).
@@ -341,12 +398,14 @@ async function prepareAssets(topic, outputDirectory) {
   if (picked.filter((item) => stillKind(item) === "photo").length < 3 && picked.length < MAX_STILLS && process.env.NASA_IMAGES !== "0") {
     try {
       const found = await require("./nasa-images").search(topic, MAX_STILLS - picked.length, Commons.get, used);
+      // NASA's topic search is subject-specific (real Europa photographs), so it
+      // ranks right after the story's own article.
       for (const item of found) {
-        if (!used.has(item.file)) { picked.push(item); used.add(item.file); }
+        if (!used.has(item.file)) { picked.push({ ...item, articleRank: 0.5 }); used.add(item.file); }
       }
     } catch (error) {}
   }
-  picked.sort((a, b) => relevance(b) - relevance(a) || b.score - a.score || a.file.localeCompare(b.file));
+  orderStills(picked, articles, relevanceTerms);
 
   const stills = [];
   for (const item of picked) {
@@ -367,6 +426,7 @@ async function prepareAssets(topic, outputDirectory) {
       description: item.description,
       origin: item.origin,
       score: item.score,
+      articleRank: Number.isFinite(item.articleRank) ? item.articleRank : articles.length,
     });
   }
   // Moving footage (core/rendering/stock-footage.js) when a Pexels key is
@@ -411,6 +471,7 @@ function attributionLines(stills, clips = []) {
 }
 
 module.exports = {
+  loopBack, orderStills,
   CACHE_SCHEMA, MAX_HOLD_SECONDS, numberTokens, stillKind, cardTokens, openingVariant, buildVisualPlan, visualMetrics, evaluateVisualQuality,
   wikiTitles, prepareAssets, prepareAssetsSync, loadManifest, attributionLines,
 };

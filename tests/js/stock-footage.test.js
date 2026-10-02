@@ -31,6 +31,13 @@ test("stock footage: the page slug must name the topic, and people clips are rej
   assert.equal(Stock.accept(video(8, "a-subway-train-is-traveling-through-a-tunnel"), terms, subject, roadTopic), false, "metro for a road tunnel");
   assert.equal(Stock.accept(video(9, "a-train-entering-a-tunnel"), terms, subject, roadTopic + " rail"), true, "train fits a rail topic");
   assert.equal(Stock.modeConflict(["cargo", "ship", "at", "port"], "the ports that move global trade"), false);
+  // Third real render (2026-10-02): dolphins on Earth for Europa's buried ocean.
+  const europa = "what if we swam in europa's ocean space";
+  const europaSubject = new Set(["swam", "europa", "ocean"]);
+  assert.equal(Stock.accept(video(10, "dolphins-leaping-in-open-ocean-at-sunset"), terms, europaSubject, europa), false, "Earth ocean for an off-world ocean");
+  assert.equal(Stock.accept(video(11, "ocean-waves-and-currents"), terms, europaSubject, europa), false);
+  assert.equal(Stock.offWorldConflict(["ocean", "planet", "from", "space"], europa), false, "space footage still fits");
+  assert.equal(Stock.offWorldConflict(["ocean", "waves"], "how rogue waves sink ships"), false, "Earth topics keep Earth footage");
 });
 
 test("stock footage: only portrait HD MP4 files are used, closest to 1920 tall", () => {

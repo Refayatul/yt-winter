@@ -70,6 +70,15 @@ const TMP = fs.mkdtempSync(path.join(os.tmpdir(), "shorts-" + IS + "-"));
 const run = (a) => cp.execFileSync(FF.ffmpeg, a, { stdio: ["ignore", "ignore", "pipe"] });
 const sure = (f) => parseFloat(cp.execFileSync(FF.ffprobe,
   ["-v", "error", "-show_entries", "format=duration", "-of", "default=nw=1:nk=1", f]).toString().trim());
+// Kaynak en/boy (fotograf ve video): tam ekran kadraj karari icin (lib/dikey-kadraj.js).
+const boyut = (f) => {
+  try {
+    const [w, h] = cp.execFileSync(FF.ffprobe, ["-v", "error", "-select_streams", "v:0", "-show_entries", "stream=width,height",
+      "-of", "csv=p=0:s=x", f]).toString().trim().split("x").map(Number);
+    return { w, h };
+  } catch (e) { return { w: 0, h: 0 }; }
+};
+const Kadraj = require("./lib/dikey-kadraj");
 
 // --- 1) Seslendirme (tek parca) -----------------------------------------
 function seslendir(metin, dosya) {
@@ -149,10 +158,8 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
   // solgun renk, biraz kontrast, celik/soguk golgeler. Arsiv filmleri oldugu gibi kalir.
   // config/growth.json > renk.stok ile ayarlanir ("" = kapali).
   const TON = konu.tur === "stok" ? (ayar().renk && ayar().renk.stok) || "" : "";
-  const taban =
-    "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=26:2,eq=brightness=-0.20:contrast=1.05[bg];" +
-    "[0:v]scale=1080:-2[fg];" +
-    "[bg][fg]overlay=(W-w)/2:(H-h)/2:shortest=1," + (TON ? TON + "," : "") + "noise=alls=6:allf=t+u,vignette=angle=PI/4.5,fps=30,format=yuv420p";
+  // Kadraj: fotograf tam ekran + pan, video ~%60 yukseklik (lib/dikey-kadraj.js).
+  const boyutlar = {};
   // Hareket: punch = tek sayili alt cekimde anlik %7 yakinlasma (kurgu ritmi);
   // push/drift = 2x ara olcekte zoompan (alt-piksel titreme olmasin).
   const hareketFiltre = (h, j, n) => {
@@ -161,19 +168,9 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
     if (h === "drift") return `scale=2160:3840,zoompan=z='1.04':x='(iw-iw/zoom)*(0.5+0.35*(on/${n}-0.5))':y='ih/2-(ih/zoom/2)':d=1:s=1080x1920:fps=30`;
     return "";
   };
-  // ARSIV FOTOGRAFI destegi: kamu mali felaket FILMI sinirli, ama FOTOGRAF bol
-  // (Titanic, Texas City, Hartford sirk yangini...). Fotograf hareketsiz oldugu
-  // icin Shorts'ta olu durur; bu yuzden her cekimde yavas zoom + hafif kaydirma
-  // ("Ken Burns") uygulanir. Yon cekim sirasina gore degisir, art arda gelen iki
-  // fotograf ayni hareketi yapmaz.
+  // ARSIV FOTOGRAFI: hareketsiz kare Shorts'ta olu durur; her cekimde tam ekran pan ya da
+  // yavas yakinlasma uygulanir, yon cekim sirasina gore degisir (lib/dikey-kadraj.fotoFiltre).
   const FOTO = /\.(jpe?g|png|webp)$/i;
-  const fotoHareket = (j, n) => {
-    const iceri = j % 2 === 0;                       // sirayla yakinlas / uzaklas
-    const z = iceri ? `1+0.12*on/${n}` : `1.12-0.12*on/${n}`;
-    const yon = [["0.5", "0.5"], ["0.35", "0.5"], ["0.65", "0.45"], ["0.5", "0.6"]][j % 4];
-    return `scale=2160:-2,zoompan=z='${z}':x='(iw-iw/zoom)*${yon[0]}':y='(ih-ih/zoom)*${yon[1]}':d=1:s=1080x1920:fps=30`;
-  };
-
   const kaynakSure = {};
   const klipler = [];
   const zamanlar = [];
@@ -197,8 +194,10 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
     for (let j = 0; j < k; j++) {
       const out = path.join(TMP, "s" + String(n++).padStart(3, "0") + ".mp4");
       // Fotograf: hareket zorunlu (durgun kare Shorts'ta olu durur); video: plandaki hareket.
-      const hf = foto ? fotoHareket(j, bol[j]) : hareketFiltre(p.hareket, j, bol[j]);
-      const vf = taban + (hf ? "[v0];[v0]" + hf + ",format=yuv420p[v]" : "[v]");
+      const d = boyutlar[s.kaynak] || (boyutlar[s.kaynak] = boyut(kaynak));
+      const hf = foto ? "" : hareketFiltre(p.hareket, j, bol[j]);
+      const vf = foto ? Kadraj.fotoFiltre({ ...d, j: n, n: bol[j], ton: TON })
+        : Kadraj.videoTaban({ ...d, ton: TON }) + (hf ? "[v0];[v0]" + hf + ",format=yuv420p[v]" : "[v]");
       const girdi = foto ? ["-loop", "1", "-framerate", String(FPS), "-i", kaynak]
         : ["-ss", Math.max(0, Math.min(t, kaynakSure[s.kaynak] - bol[j] / FPS - 0.05)).toFixed(3), "-i", kaynak];
       run(["-hide_banner", "-loglevel", "error", ...girdi, "-filter_complex", vf, "-map", "[v]",
@@ -296,11 +295,12 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         }
         satirlar = [en.a, en.b];
       }
-      const fs = Math.round(DEN.sigdir(satirlar.join("\\N"), W * 0.062, W) * k), bord = Math.max(4, Math.round(W * 0.005));
+      const fs = Math.round(DEN.sigdir(satirlar.join("\\N"), W * 0.078, W) * k), bord = Math.max(5, Math.round(W * 0.006));
       const y = Math.round(H * 0.40);
       const hookSon = Math.min(2.7, VODUR * 0.4);
-      ekstra.push(`Dialogue: 0,${assTime(0.15)},${assTime(hookSon)},Pop,,0,0,0,,` +
-        `{\\an5\\pos(${cx},${y})\\fs${fs}\\bord${bord}\\shad3\\fad(160,220)}${satirlar.map(assKacis).join("\\N")}`);
+      // Kanca ILK KAREDE ekranda (fade-in yok): Shorts akisinda kaydirma karari ilk karede verilir.
+      ekstra.push(`Dialogue: 0,${assTime(0)},${assTime(hookSon)},Pop,,0,0,0,,` +
+        `{\\an5\\pos(${cx},${y})\\fs${fs}\\bord${bord}\\shad3\\fad(0,220)}${satirlar.map(assKacis).join("\\N")}`);
     }
     // Tarih/yer damgasi (yalnizca belirli bir olay/vaka ise) — baglam sahnesinde
     const v = konu.vaka || {};

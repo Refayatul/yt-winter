@@ -67,6 +67,7 @@ function factors(topic, context) {
   // otherwise evergreen as a weak proxy. Measured Search data replaces it via
   // learning (performance.demand) once the channel has published evidence.
   if (has(performance.topicDemand)) f.TopicDemandScore = factor(performance.topicDemand, "learned", "channel search/traffic evidence");
+  else if (has(s.popularity)) f.TopicDemandScore = factor(s.popularity, "measured", `Wikipedia monthly pageviews: ${topic.popularity.article} (${topic.popularity.monthlyViews})`);
   else if (has(s.searchDemand)) f.TopicDemandScore = factor(s.searchDemand, "inventory-signal", "seed estimate pending channel Search observations");
   else if (has(s.priority)) f.TopicDemandScore = factor(s.priority, "inventory-signal", "editorial priority (oncelik)");
   else f.TopicDemandScore = factor(has(s.evergreen) ? s.evergreen * 0.8 : 55, "derived", "no demand signal; evergreen proxy");
@@ -124,7 +125,9 @@ function viralFactors(topic, context, parts) {
   const numbers = Model.numbersIn(text).length;
   const performance = (context.clusterPerformance || {})[topic.cluster] || { n: 0, score: 50, breakoutRate: 0 };
   const learnedCluster = (context.learnedClusterBonus || {})[topic.cluster] || 0;
-  const recognizabilitySeed = has(topic.signals && topic.signals.searchDemand) ? topic.signals.searchDemand
+  // Measured recognition first (Wikipedia pageviews), then inventory seeds.
+  const recognizabilitySeed = has(topic.signals && topic.signals.popularity) ? topic.signals.popularity
+    : has(topic.signals && topic.signals.searchDemand) ? topic.signals.searchDemand
     : has(topic.signals && topic.signals.priority) ? topic.signals.priority : topic.year ? 65 : 50;
   const titleCount = (topic.editorialTitles || []).length + (topic.title ? 1 : 0);
   const duplicateRisk = Math.round(parts.similarity * 100);
@@ -135,7 +138,8 @@ function viralFactors(topic, context, parts) {
     curiosity_gap: component(parts.factors.CuriosityScore.value, "derived"),
     immediate_stakes: component(45 + (topic.consequence ? 25 : 0) + Math.min(3, humans) * 8, "derived"),
     human_consequence: component(35 + Math.min(6, humans) * 10, "derived"),
-    recognizability: component(recognizabilitySeed + (topic.year ? 5 : 0), has(topic.signals && (topic.signals.searchDemand != null || topic.signals.priority != null)) ? "inventory-signal" : "derived"),
+    recognizability: component(recognizabilitySeed + (has(topic.signals && topic.signals.popularity) ? 0 : topic.year ? 5 : 0),
+      has(topic.signals && topic.signals.popularity) ? "measured" : has(topic.signals && (topic.signals.searchDemand != null || topic.signals.priority != null)) ? "inventory-signal" : "derived"),
     surprise: component(40 + Math.min(4, surprises) * 10 + (topic.misconception ? 10 : 0), "derived"),
     visual_potential: component(parts.factors.VisualImpactScore.value, parts.factors.VisualImpactScore.basis),
     archival_footage_potential: component(topic.archivalFilm ? 100 : topic.archival ? 80 : topic.stock ? 45 : 35, "inventory-signal"),

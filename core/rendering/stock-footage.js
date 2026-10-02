@@ -73,6 +73,15 @@ function modeConflict(words, topicText) {
   const clip = words.join(" ");
   return MODES.some((mode) => mode.clip.test(clip) && !mode.topic.test(topicText));
 }
+// A Short about another world must not cut to Earth scenery: "ocean" admitted
+// dolphins leaping at sunset for a Short about Europa's ice-covered ocean.
+const OFF_WORLD = /\b(?:europa|enceladus|titan|mars|martian|venus|jupiter|saturn|uranus|neptune|pluto|moon|moons|lunar|asteroids?|comets?|exoplanets?|galax(?:y|ies)|black holes?|neutron stars?|sun|solar|space|spacecraft|spaceship|orbit|cosmic|universe)\b/;
+const EARTH_SCENE = /\b(?:ocean|oceans|sea|seas|beach|waves?|dolphins?|whales?|fish|coral|underwater|surf|surfing|sunset|sunrise|forest|trees?|city|street|traffic|mountains?|lake|river|desert|field|farm|island|boat|clouds?)\b/;
+const SPACE_CLIP = /\b(?:space|stars?|galax(?:y|ies)|planets?|moon|nebula|universe|cosmos|astronaut|rocket|satellite|orbit|telescope|jupiter|saturn|mars|europa)\b/;
+function offWorldConflict(words, topicText) {
+  const clip = words.join(" ");
+  return OFF_WORLD.test(String(topicText || "").toLowerCase()) && EARTH_SCENE.test(clip) && !SPACE_CLIP.test(clip);
+}
 
 // The subject of the topic (its canonical subject, or its title words), not a
 // place name: "Mont Blanc" alone admitted a helicopter on a landing pad.
@@ -85,6 +94,7 @@ function accept(video, terms, subject = terms.anchors, topicText = [...terms.anc
   if (!video || !(video.duration >= 5)) return false;
   const words = slugWords(video.url);
   if (!words.length || PEOPLE.test(words.join(" ")) || modeConflict(words, topicText)) return false;
+  if (offWorldConflict(words, topicText)) return false;
   return words.some((word) => subject.has(word));
 }
 
@@ -159,4 +169,4 @@ async function search(topic, directory, key, options = {}) {
   return clips;
 }
 
-module.exports = { API, LICENCE, MAX_CLIPS, httpGet, lumaStats, slugWords, subjectTerms, modeConflict, queries, accept, pickFile, brightness, search };
+module.exports = { API, LICENCE, MAX_CLIPS, httpGet, lumaStats, slugWords, subjectTerms, modeConflict, offWorldConflict, queries, accept, pickFile, brightness, search };
