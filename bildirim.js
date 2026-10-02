@@ -148,7 +148,9 @@ function saglikMesaji(s) {
   if (!sorun.length) return null;
   const ikon = { uyari: "⚠️", kritik: "❌" };
   return { baslik: kanalBaslik(sorun.some((b) => b.durum === "kritik") ? "🩺 Sistem uyarısı — müdahale gerekiyor" : "🩺 Sistem uyarısı"),
-    etiket: ["saglik"], ozet: sorun.map((b) => b.ad + ":" + b.durum + ":" + b.mesaj).join("|"),
+    // Numeric countdown/inventory text changes every run. Deduplicate on the
+    // actionable state so comments are emitted only when a threshold/code changes.
+    etiket: ["saglik"], ozet: sorun.map((b) => b.ad + ":" + b.durum + ":" + (b.kod || "")).join("|"),
     govde: [`@${SAHIP} otomatik sağlık kontrolü (${trSaat(new Date(s.tarih))}):`, "",
       ...(s.bulgular || []).map((b) => `- ${ikon[b.durum] || "✅"} **${b.ad}** — ${b.mesaj}` + (b.cozum ? `\n  - Yapılacak: ${b.cozum}` : "")), "",
       "Sorun giderilince bu issue otomatik kapanır."].join("\n") };
@@ -285,6 +287,10 @@ async function hatalar(d) {
 async function saglik(d) {
   const s = jsonOku(path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "saglik.json" : "health.json"), null);
   if (!s) return;
+  // OAuth, capability and inventory health is consolidated by
+  // youtube-oauth-health.yml into the persistent portfolio issue. Keeping the
+  // per-channel publisher here would create three competing health issues.
+  if (s.aggregateManaged) return;
   const m = saglikMesaji(s);
   const acik = await etiketliIssuelar("saglik");
   if (!m) {

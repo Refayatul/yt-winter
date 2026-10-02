@@ -30,14 +30,17 @@ const REDIRECT = "http://localhost:" + PORT;
 // (existing-video-optimizer.js / post-publish-analyzer.js). Salt-okunur.
 // Not: yeni scope'un etkili olmasi icin bir kez yeniden yetkilendirme gerekir;
 // Google Cloud > OAuth consent > Data access'e "yt-analytics.readonly" eklenmeli.
-const SCOPE = [
-  "https://www.googleapis.com/auth/youtube.force-ssl",
-  "https://www.googleapis.com/auth/yt-analytics.readonly",
-].join(" ");
+const SCOPE = require("./lib/yt").REQUIRED_SCOPES.join(" ");
 const STATE = crypto.randomBytes(32).toString("hex");
 const SAVE_TO_GITHUB = SELECTED.argv.includes("--github");
 const REPO_ARG = SELECTED.argv.find((arg) => arg.startsWith("--repo="));
 const GITHUB_REPO = REPO_ARG ? REPO_ARG.slice("--repo=".length) : process.env.GITHUB_REPOSITORY || "eyazan/youtube-otomasyon";
+const MODE_ARG = SELECTED.argv.find((arg) => arg.startsWith("--oauth-mode="));
+const OAUTH_MODE = MODE_ARG ? MODE_ARG.slice("--oauth-mode=".length).toLowerCase() : null;
+if (OAUTH_MODE && !["testing", "production"].includes(OAUTH_MODE)) {
+  console.error("--oauth-mode testing veya --oauth-mode production olmali.");
+  process.exit(1);
+}
 
 function env(ad) {
   if (process.env[ad]) return String(process.env[ad]).trim();
@@ -70,6 +73,28 @@ function jetonDegistir(clientId, clientSecret, code) {
     r.end();
   });
 }
+
+// The expected channel ID must be known before consent. Locally it is often
+// absent (.env rarely holds it), so with --github it is read from the
+// repository variable. Without it a personal account could be saved in place
+// of the channel's Brand Account and the variable silently overwritten.
+function githubVariable(name) {
+  const result = cp.spawnSync("gh", ["variable", "get", name, "-R", GITHUB_REPO], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+  return result.status === 0 ? String(result.stdout || "").trim() : "";
+}
+const LOCAL_EXPECTED = CHANNEL.expectedChannelId();
+const GITHUB_EXPECTED = SAVE_TO_GITHUB ? githubVariable(CHANNEL.credentialNames.channelId[0]) : "";
+if (LOCAL_EXPECTED && GITHUB_EXPECTED && LOCAL_EXPECTED !== GITHUB_EXPECTED) {
+  console.error(`${CHANNEL.credentialNames.channelId[0]} yerelde ${LOCAL_EXPECTED}, GitHub'da ${GITHUB_EXPECTED}. Hangisi dogru netlesmeden devam edilmez.`);
+  process.exit(1);
+}
+const EXPECTED_CHANNEL_ID = LOCAL_EXPECTED || GITHUB_EXPECTED;
+if (!EXPECTED_CHANNEL_ID && !SELECTED.argv.includes("--new-channel")) {
+  console.error(`Beklenen kanal kimligi (${CHANNEL.credentialNames.channelId[0]}) bulunamadi; yanlis kanala jeton kaydetmemek icin durduruldu.`);
+  console.error("Kimligi .env'e ekle ya da --github ile calistir. Ilk kez kurulan bir kanal icin bilerek --new-channel ekle.");
+  process.exit(1);
+}
+if (EXPECTED_CHANNEL_ID) console.log(`[${CHANNEL.name}] Beklenen YouTube kanali: ${EXPECTED_CHANNEL_ID} — onay ekraninda bu kanali sec.`);
 
 const credentials = CHANNEL.credentials();
 const clientId = credentials.clientId;
@@ -128,7 +153,7 @@ const sunucu = http.createServer(async (req, res) => {
     try {
       const yt = require("./lib/yt");
       actual = await yt.authenticatedChannel(yt.istemci({ erisim: j.access_token, kapsam: String(j.scope || "") }));
-      const expected = CHANNEL.expectedChannelId();
+      const expected = EXPECTED_CHANNEL_ID;
       if (expected && actual.id !== expected) throw new Error(`CHANNEL_ID_MISMATCH: authenticated ${actual.id} (${actual.title || "unknown"}), expected ${expected}`);
     } catch (error) {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
@@ -141,7 +166,11 @@ const sunucu = http.createServer(async (req, res) => {
       const yp = CHANNEL.config.pathMode === "legacy-adapter" ? path.join(KOK, "config", "yetki.json") : path.join(CHANNEL.paths.state, "auth-state.json");
       fs.mkdirSync(path.dirname(yp), { recursive: true });
       const eski = fs.existsSync(yp) ? JSON.parse(fs.readFileSync(yp, "utf8")) : {};
-      fs.writeFileSync(yp, JSON.stringify({ ...eski, channel: CHANNEL.slug, yetkiTarihi: new Date().toISOString(), mod: eski.mod || "unknown" }, null, 2) + "\n");
+      const now = new Date();
+      const mode = OAUTH_MODE || eski.oauthMode || eski.mod || "unknown";
+      const reauthDeadline = mode === "testing" ? new Date(now.getTime() + 7 * 86400000).toISOString() : null;
+      fs.writeFileSync(yp, JSON.stringify({ ...eski, channel: CHANNEL.slug, authorizedAt: now.toISOString(), oauthMode: mode,
+        reauthDeadline, yetkiTarihi: now.toISOString(), mod: mode }, null, 2) + "\n");
       console.log("  Kanal OAuth yetkilendirme tarihi yerel state'e kaydedildi.");
     } catch (e) {}
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
@@ -162,10 +191,23 @@ const sunucu = http.createServer(async (req, res) => {
       try { fs.chmodSync(envYol, 0o600); } catch (error) {}
       console.log(`\n✓ Basarili. ${tokenName} .env dosyasina yazildi.`);
       if (SAVE_TO_GITHUB) {
+        // Store the client pair that minted this token under the same
+        // preferred channel-scoped names. Otherwise a token saved as
+        // FR_YT_REFRESH_TOKEN next to legacy YT_CLIENT_* secrets is an
+        // incomplete bundle, which the health check correctly blocks.
+        for (const [key, value] of [["clientId", clientId], ["clientSecret", clientSecret]]) {
+          saveGitHub(CHANNEL.credentialNames[key][0], value, "secret");
+          console.log(`✓ ${CHANNEL.credentialNames[key][0]} GitHub Actions secret olarak kaydedildi (deger yazdirilmadi).`);
+        }
         saveGitHub(tokenName, j.refresh_token, "secret");
         console.log(`✓ ${tokenName} GitHub Actions secret olarak kaydedildi (deger yazdirilmadi).`);
-        saveGitHub(CHANNEL.credentialNames.channelId[0], actual.id, "variable");
-        console.log(`✓ ${CHANNEL.credentialNames.channelId[0]} GitHub Actions variable olarak doğrulandı/kaydedildi.`);
+        // Never overwrite an existing expected ID; the match was verified above.
+        if (!GITHUB_EXPECTED) {
+          saveGitHub(CHANNEL.credentialNames.channelId[0], actual.id, "variable");
+          console.log(`✓ ${CHANNEL.credentialNames.channelId[0]} GitHub Actions variable olarak kaydedildi.`);
+        } else {
+          console.log(`✓ ${CHANNEL.credentialNames.channelId[0]} zaten ${GITHUB_EXPECTED}; kanal eslesmesi dogrulandi, degistirilmedi.`);
+        }
       }
     } catch (e) {
       // Refresh token must never be printed to a terminal or Actions log. If
@@ -174,7 +216,8 @@ const sunucu = http.createServer(async (req, res) => {
       console.error(`\n⚠ ${CHANNEL.credentialNames.refreshToken[0]} kaydedilemedi. Jeton guvenlik nedeniyle yazdirilmadi; sorunu duzeltip yetkilendirmeyi yeniden calistir.`);
     }
     console.log(`✓ Yetkilendirilen kanal: ${actual.title || "(adsiz)"} (${actual.id})`);
-    if (!CHANNEL.expectedChannelId() && !SAVE_TO_GITHUB) console.log(`Yuklemeyi acmadan once ${CHANNEL.credentialNames.channelId[0]}=${actual.id} ekle.`);
+    if (!EXPECTED_CHANNEL_ID && !SAVE_TO_GITHUB) console.log(`Yuklemeyi acmadan once ${CHANNEL.credentialNames.channelId[0]}=${actual.id} ekle.`);
+    if (!OAUTH_MODE) console.log("⚠ OAuth Audience modu kaydedilemedi. Sonraki calistirmada --oauth-mode=testing veya --oauth-mode=production belirt.");
     console.log("Not: External OAuth Audience durumu In production olmali; Testing modunda refresh token 7 gunde sona erer.");
   } else {
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });

@@ -48,6 +48,8 @@ function currentSlug() {
 
 function envFileValue(name) {
   if (Object.prototype.hasOwnProperty.call(process.env, name) && String(process.env[name]).trim()) return String(process.env[name]).trim();
+  // Tests must be hermetic: an operator's real local .env must never leak in.
+  if (process.env.NODE_TEST_CONTEXT) return "";
   try {
     for (const line of fs.readFileSync(path.join(ROOT, ".env"), "utf8").split(/\r?\n/)) {
       const match = line.match(/^([A-Z0-9_]+)=(.*)$/);
@@ -63,6 +65,14 @@ function firstEnv(names = []) {
     if (value) return value;
   }
   return "";
+}
+
+function firstNamedEnv(names = []) {
+  for (const name of names) {
+    const value = envFileValue(name);
+    if (value) return { name, value };
+  }
+  return { name: null, value: "" };
 }
 
 function credentialNames(config) {
@@ -136,15 +146,34 @@ function getChannel(slug = currentSlug()) {
     if (namespaced) return namespaced;
     return config.allowLegacyYouTubeEnv ? envFileValue(name) : "";
   };
-  const expectedChannelId = () => firstEnv(names.channelId) || String(config.youtubeChannelId || "").trim();
-  const credentials = () => ({
-    clientId: firstEnv(names.clientId),
-    clientSecret: firstEnv(names.clientSecret),
-    refreshToken: firstEnv(names.refreshToken),
-    expectedChannelId: expectedChannelId(),
-    prefix,
-    names,
-  });
+  const credentials = () => {
+    // Failure Reconstructed accepts unscoped YT_* names only as a migration
+    // fallback. Once any preferred FR_* credential is present, never fill a
+    // missing field from the legacy bundle: mixing OAuth clients and refresh
+    // tokens can produce a misleading invalid_grant and defeats isolation.
+    const keys = ["clientId", "clientSecret", "refreshToken"];
+    const preferredPresent = config.allowLegacyYouTubeEnv && keys.some((key) => envFileValue(names[key][0]));
+    const candidates = (key) => config.allowLegacyYouTubeEnv && preferredPresent ? names[key].slice(0, 1) : names[key];
+    const selected = Object.fromEntries([...keys, "channelId"].map((key) => [key,
+      firstNamedEnv(config.allowLegacyYouTubeEnv && preferredPresent ? names[key].slice(0, 1) : names[key])
+    ]));
+    const legacyFallback = !!(config.allowLegacyYouTubeEnv && !preferredPresent && keys.some((key) => selected[key].name && selected[key].name !== names[key][0]));
+    const missingPreferred = preferredPresent ? keys.filter((key) => !firstEnv(candidates(key))) : [];
+    return {
+      clientId: selected.clientId.value,
+      clientSecret: selected.clientSecret.value,
+      refreshToken: selected.refreshToken.value,
+      expectedChannelId: selected.channelId.value || String(config.youtubeChannelId || "").trim(),
+      prefix,
+      names,
+      selectedNames: Object.fromEntries(Object.entries(selected).map(([key, item]) => [key, item.name])),
+      source: legacyFallback ? "legacy" : "channel-scoped",
+      legacyFallback,
+      partialPreferred: missingPreferred.length > 0,
+      missingPreferred,
+    };
+  };
+  const expectedChannelId = () => credentials().expectedChannelId;
   return Object.freeze({ slug, name: config.name, entry, config, brand, paths, prefix, credentialNames: names, scopedEnv, expectedChannelId, credentials });
 }
 

@@ -5,10 +5,11 @@
 1. `config/channels.json` is the only channel registry. Unknown slugs fail closed.
 2. `core/channel-context.js` resolves every stateful path and credential namespace before workflow modules load.
 3. ImpossibleBrief and CriticalThread never fall back to unscoped `YT_*` credentials. Failure Reconstructed alone may read them during migration.
-4. A YouTube write cannot begin until `channels?mine=true` returns the configured expected channel ID. Missing configuration and mismatch both block before duplicate lookup, upload-session creation, playlist writes, or local published-state mutation.
-5. Published records carry a `channel` field, and `lib/kutuphane.js` rejects a record for another channel.
-6. Retention rules, experiments, analytics checkpoints, topic usage, upload state, scheduler state, notifications, and platform state are stored per channel.
-7. Shared resources are serialized: the registry sets one render and one upload at a time. A channel failure is caught at its own workflow step.
+4. Failure Reconstructed never mixes a partial preferred `FR_YT_*` bundle with legacy `YT_*`; partial migration fails closed.
+5. A YouTube write cannot begin until refresh succeeds, the upload scope is present, and `channels?mine=true` returns exactly one configured expected channel ID. Missing configuration and mismatch both block before duplicate lookup, upload-session creation, playlist writes, or local published-state mutation.
+6. Published records carry a `channel` field, and `lib/kutuphane.js` rejects a record for another channel.
+7. Retention rules, experiments, analytics checkpoints, topic usage, upload state, scheduler state, notifications, and platform state are stored per channel.
+8. Shared resources are serialized: the registry sets one render and one upload at a time. A channel failure is caught at its own workflow step.
 
 ## Layout
 
@@ -48,6 +49,7 @@ Channel-aware entry points include `shorts-sira.js`, `youtube-yukle.js`, `youtub
 select channel
   → read only the selected channel's configured client/secret/refresh names
   → exchange refresh token
+  → verify repository-required scopes (Google tokeninfo fallback if needed)
   → channels?part=id,snippet&mine=true
   → compare actual ID with <PREFIX>_YT_CHANNEL_ID
       mismatch/missing → BLOCK, write channel-scoped error, no mutation
@@ -55,6 +57,8 @@ select channel
 ```
 
 Prefixes are `FR`, `IB` and `CT`. The live IB/CT client-pair names are `IB_CLIENT_ID`/`IB_CLIENT_SECRET` and `CT_CLIENT_ID`/`CT_CLIENT_SECRET`; refresh secrets remain `IB_YT_REFRESH_TOKEN` and `CT_YT_REFRESH_TOKEN`. Token files are not shared. `secrets/<slug>/` is reserved and gitignored through the repository-wide secret rules; production uses environment/GitHub secrets.
+
+`.github/workflows/youtube-oauth-health.yml` runs before the first production slot and always validates all enabled YouTube channels, regardless of their publish flags. It writes one table to the job summary and reuses the persistent `saglik` issue. Issue comments key off status/error-code transitions, not changing countdown or inventory numbers.
 
 ## Scheduling and failure isolation
 
