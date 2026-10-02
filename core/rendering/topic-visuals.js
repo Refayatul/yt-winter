@@ -74,8 +74,10 @@ function shortHash(value) {
 // Paper figures, charts and maps are unreadable when cropped to 9:16; they
 // are shown whole over a blurred copy of themselves. Photographs fill the frame.
 // Artist's illustrations and cutaways are not photographs either: they never
-// open a Short or stand in for the real subject.
-const DIAGRAM_RE = /\b(?:graph|chart|diagram|plot|figure|fig|map|schematic|timeline|data|anomal\w*|model\w*|simulation|cross[- ]section|infographic|table|curve|scheme|projection|trend|svg|illustration|artist'?s?|cutaway|rendering|tectonics)\b/i;
+// open a Short or stand in for the real subject. Multi-panel images
+// (comparisons, composites, mosaics) are shown whole: cropped to 9:16 the
+// "Europa, Earth & Moon size comparison" showed only Earth.
+const DIAGRAM_RE = /\b(?:graph|chart|diagram|plot|figure|fig|map|schematic|timeline|data|anomal\w*|model\w*|simulation|cross[- ]section|infographic|table|curve|scheme|projection|trend|svg|illustration|artist'?s?|cutaway|rendering|tectonics|comparison|composite|mosaic|montage|collage)\b/i;
 
 function stillKind(still) {
   const text = `${still.file || ""} ${still.description || ""}`.replace(/[_]/g, " ");
@@ -309,6 +311,21 @@ function loadManifest(outputDirectory) {
   } catch (error) { return null; }
 }
 
+// Order of candidate stills: the story's own article first (then NASA's
+// subject search, then background articles); within an article, pictures that
+// name the story's subject; then keyword relevance. Mutates and returns items.
+function orderStills(items, articles = [], relevanceTerms = []) {
+  const relevance = (item) => relevanceTerms.filter((word) => `${item.file} ${item.description || ""}`.toLowerCase().includes(word)).length;
+  const rank = (item) => Number.isFinite(item.articleRank) ? item.articleRank : articles.length;
+  // Within an article, pictures that name the story's subject lead: the Mont
+  // Blanc Tunnel article also carries Gotthard ventilation-plant photos, and a
+  // keyword score alone ("ventilation") put those first.
+  const titleTerms = [...new Set(String(articles[0] || "").replace(/\([^)]*\)/g, " ").toLowerCase().split(/[^a-z0-9]+/)
+    .filter((word) => word.length >= 3 && !["the", "and", "for", "of"].includes(word)))];
+  const titleHits = (item) => titleTerms.filter((word) => `${item.file} ${item.description || ""}`.toLowerCase().replace(/[^a-z0-9]+/g, " ").split(" ").includes(word)).length;
+  return items.sort((a, b) => rank(a) - rank(b) || titleHits(b) - titleHits(a) || relevance(b) - relevance(a) || b.score - a.score || a.file.localeCompare(b.file));
+}
+
 async function prepareAssets(topic, outputDirectory) {
   const cached = loadManifest(outputDirectory);
   if (cached) return cached;
@@ -368,7 +385,6 @@ async function prepareAssets(topic, outputDirectory) {
 
   const relevanceTerms = [...new Set(subjectPhrases(topic, articles[0] || "").join(" ").toLowerCase().split(/[^a-z0-9]+/)
     .filter((word) => word.length >= 4 && !["what", "with", "from", "into", "that", "this", "showing", "diagram", "comparison"].includes(word)))];
-  const relevance = (item) => relevanceTerms.filter((word) => `${item.file} ${item.description || ""}`.toLowerCase().includes(word)).length;
   // Diagrams are kept only from the topic's own Wikipedia article, where an
   // editor placed them; a keyword search turns up unrelated schematics (a
   // military "defence system" sketch for a tunnel ventilation system).
@@ -389,8 +405,7 @@ async function prepareAssets(topic, outputDirectory) {
       }
     } catch (error) {}
   }
-  const rank = (item) => Number.isFinite(item.articleRank) ? item.articleRank : articles.length;
-  picked.sort((a, b) => rank(a) - rank(b) || relevance(b) - relevance(a) || b.score - a.score || a.file.localeCompare(b.file));
+  orderStills(picked, articles, relevanceTerms);
 
   const stills = [];
   for (const item of picked) {
@@ -411,7 +426,7 @@ async function prepareAssets(topic, outputDirectory) {
       description: item.description,
       origin: item.origin,
       score: item.score,
-      articleRank: rank(item),
+      articleRank: Number.isFinite(item.articleRank) ? item.articleRank : articles.length,
     });
   }
   // Moving footage (core/rendering/stock-footage.js) when a Pexels key is
@@ -456,7 +471,7 @@ function attributionLines(stills, clips = []) {
 }
 
 module.exports = {
-  loopBack,
+  loopBack, orderStills,
   CACHE_SCHEMA, MAX_HOLD_SECONDS, numberTokens, stillKind, cardTokens, openingVariant, buildVisualPlan, visualMetrics, evaluateVisualQuality,
   wikiTitles, prepareAssets, prepareAssetsSync, loadManifest, attributionLines,
 };

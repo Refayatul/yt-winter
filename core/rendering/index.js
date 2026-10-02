@@ -76,8 +76,9 @@ function probe(file) {
 // Natural documentary pace (~150-160 words per minute with Edge neural voices).
 const DEFAULT_VOICE_RATE = "-6%";
 // Breath between narration lines; part of each line's measured duration, so
-// captions and cuts stay aligned.
-const LINE_PAUSE_SECONDS = 0.28;
+// captions and cuts stay aligned. Kept short: on Shorts a gap reads as an
+// exit point (8 lines x 0.28 s was over two seconds of silence).
+const LINE_PAUSE_SECONDS = 0.18;
 // Retiming is a last resort for a script slightly over the channel maximum;
 // beyond this the voice audibly rushes, and the duration check decides instead.
 const MAX_TEMPO = 1.08;
