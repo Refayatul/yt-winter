@@ -19,7 +19,7 @@ node post-publish-analyzer.js --channel impossible-brief --due
 node channel-plan.js --channel impossible-brief
 node portfolio-scheduler.js
 node portfolio-dashboard.js
-node daily-operations-report.js              # üç kanal + TikTok tek rapor
+node daily-operations-report.js              # üç kanal tek rapor (TikTok emekli)
 node production-sla-check.js --channel failure-reconstructed
 node e2e-impossible-brief.js --render       # yerel kuru çalışma; upload yok
 node e2e-critical-thread.js --render        # gerçek kuru render; upload yok

@@ -81,13 +81,7 @@ jobs:
       FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
       FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
       FR_YT_CHANNEL_ID: ${{ vars.FR_YT_CHANNEL_ID }}
-      # TikTok (istege bagli): yoksa TikTok adimi sessizce atlanir, YouTube etkilenmez.
-      TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
-      TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
-      TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
-      # Non-secret SHA-256 pin of the authorized TikTok open_id. Uploads stop
       # if the refresh token later points at a different creator account.
-      TT_EXPECTED_OPEN_ID_SHA256: ${{ vars.TT_EXPECTED_OPEN_ID_SHA256 }}
       # Stok konular (tur: stok) icin Pexels anahtari — yoksa stok-bul.js calismaz.
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
       # Yukleme yalnizca PUBLISH=1 iken (repo Variables). Yoksa uretir, yuklemez.
@@ -141,24 +135,6 @@ jobs:
           node shorts-sira.js "$SLUG"
           node e2e-kontrol.js "$SLUG"
           node bildirim.js --kuru
-
-      # Bugunun slug'i "son konu" tahminiyle secilmez. shorts-sira yalnizca basarili
-      # YouTube sonucunu bu dosyaya yazar; TikTok ayni MP4 ve SHA-256'yi dogrular.
-      - name: Bugunun YouTube Short'unu TikTok inbox'a gonder
-        if: ${{ success() && !inputs.kuru }}
-        run: |
-          RESULT="${{ runner.temp }}/production-result.json"
-          if [ ! -s "$RESULT" ]; then echo "Basarili yeni YouTube sonucu yok — bugunun TikTok gonderimi yok."; exit 0; fi
-          READY=$(node -e 'const r=require(process.argv[1]);process.stdout.write(String(!!(r.uploaded&&r.videoId&&r.publishAt&&r.mp4Sha256)))' "$RESULT")
-          if [ "$READY" != "true" ]; then echo "YouTube uretimi yuklenmedi/zamanlanmadi — TikTok gonderimi yok."; exit 0; fi
-          SLUG=$(node -pe 'require(process.argv[1]).slug' "$RESULT")
-          node tiktok-yukle.js "$SLUG" --source-result="$RESULT" --result-file="${{ runner.temp }}/tiktok-today.json"
-
-      # Bugunun videosundan BAGIMSIZ duplicate korumasi ile, YouTube'da olup
-      # TikTok'ta olmayan en eski videodan yalnizca bir tane daha gonderilir.
-      - name: TikTok gecmisini kapat (gunde 1 eski video)
-        if: ${{ always() && !inputs.kuru }}
-        run: node tiktok-yukle.js --gecmis || echo "TikTok gecmis adimi atlandi"
 
       - name: Bildirim (her adim -> GitHub issue/yorum)
         if: ${{ always() && !inputs.kuru }}

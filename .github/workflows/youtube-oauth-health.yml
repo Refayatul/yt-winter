@@ -25,9 +25,6 @@ jobs:
       YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
       YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
       YT_CHANNEL_ID: ${{ vars.YT_CHANNEL_ID }}
-      TT_CLIENT_KEY: ${{ secrets.TT_CLIENT_KEY }}
-      TT_CLIENT_SECRET: ${{ secrets.TT_CLIENT_SECRET }}
-      TT_REFRESH_TOKEN: ${{ secrets.TT_REFRESH_TOKEN }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
