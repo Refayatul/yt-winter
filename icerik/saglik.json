@@ -1,20 +1,30 @@
 {
   "channel": "failure-reconstructed",
   "channelName": "Failure Reconstructed",
-  "tarih": "2026-10-02T17:55:12.092Z",
-  "yuklemeUygun": false,
+  "tarih": "2026-10-02T18:30:30.779Z",
+  "aggregateManaged": true,
+  "yuklemeUygun": true,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "kritik",
-      "mesaj": "YOUTUBE_AUTH_FAILURE channel=failure-reconstructed reason=UNKNOWN_AUTH_ERROR",
-      "cozum": "Yerelde `node youtube-yetki.js --channel failure-reconstructed --github` çalıştır. Kalıcı çözüm: Google Auth Platform → Audience → In production."
+      "durum": "ok",
+      "mesaj": "refresh token çalışıyor"
     },
     {
-      "ad": "yetki-yasi",
+      "ad": "youtube-kapsam",
+      "durum": "ok",
+      "mesaj": "gerekli kapsamlar tamam"
+    },
+    {
+      "ad": "youtube-kanal",
+      "durum": "ok",
+      "mesaj": "doğru kanal doğrulandı (UC2ruKNeR_C9JEpjWJGWbFYg)"
+    },
+    {
+      "ad": "oauth-reauth-deadline",
       "durum": "uyari",
-      "mesaj": "YouTube yetkisi 3 Ekim 21:19 (TR) tarihinde bitecek (1.0 gün kaldı)",
-      "cozum": "Bitmeden `node youtube-yetki.js` ile yenile ya da Google Cloud'da Publish app yap."
+      "mesaj": "Testing-mode re-authorization is recommended within 7.0 days",
+      "cozum": "Run `node youtube-yetki.js --channel failure-reconstructed --oauth-mode=production --github` after confirming Google Auth Platform → Audience is In production."
     },
     {
       "ad": "tiktok",
