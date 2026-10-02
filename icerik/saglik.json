@@ -1,28 +1,19 @@
 {
   "channel": "failure-reconstructed",
   "channelName": "Failure Reconstructed",
-  "tarih": "2026-10-02T16:41:34.491Z",
-  "yuklemeUygun": true,
+  "tarih": "2026-10-02T17:55:12.092Z",
+  "yuklemeUygun": false,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "ok",
-      "mesaj": "refresh token çalışıyor"
-    },
-    {
-      "ad": "youtube-kapsam",
-      "durum": "ok",
-      "mesaj": "gerekli kapsamlar tamam"
-    },
-    {
-      "ad": "youtube-kanal",
-      "durum": "ok",
-      "mesaj": "doğru kanal doğrulandı (UC2ruKNeR_C9JEpjWJGWbFYg)"
+      "durum": "kritik",
+      "mesaj": "YOUTUBE_AUTH_FAILURE channel=failure-reconstructed reason=UNKNOWN_AUTH_ERROR",
+      "cozum": "Yerelde `node youtube-yetki.js --channel failure-reconstructed --github` çalıştır. Kalıcı çözüm: Google Auth Platform → Audience → In production."
     },
     {
       "ad": "yetki-yasi",
       "durum": "uyari",
-      "mesaj": "YouTube yetkisi 3 Ekim 21:19 (TR) tarihinde bitecek (1.1 gün kaldı)",
+      "mesaj": "YouTube yetkisi 3 Ekim 21:19 (TR) tarihinde bitecek (1.0 gün kaldı)",
       "cozum": "Bitmeden `node youtube-yetki.js` ile yenile ya da Google Cloud'da Publish app yap."
     },
     {
