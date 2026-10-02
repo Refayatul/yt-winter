@@ -485,3 +485,36 @@ test("IB/CT research builder lint: opening budget, word range, layers and fact c
   assert.ok(bad.errors.some((e) => /layer/.test(e)));
   assert.ok(bad.errors.some((e) => /sourced facts/.test(e)));
 });
+
+test("titles: a pattern used in the last three published titles loses points", () => {
+  const topic = frTopic("challenger-1986");
+  const config = Config.forChannel(FR());
+  const colon = { title: "Challenger: The Seal That Failed", source: "editorial", pattern: Titles.pattern("Challenger: The Seal That Failed") };
+  assert.equal(colon.pattern, "label-colon");
+  const recent = ["Vesuvius 1944: An Eruption in the Middle of a War", "28 Volts vs 65: Apollo 13's Hidden Flaw", "General Slocum: The Inspection That Killed",
+    "Eastern 212: What Failed First", "Inside Van Norman Dam: The Failure Chain"];
+  assert.deepEqual(recent.slice(-3).map(Titles.pattern), ["label-colon", "label-colon", "inside"]);
+  const fresh = Titles.scoreOne(colon, topic, config, "short", { publishedTitles: [] });
+  const stale = Titles.scoreOne(colon, topic, config, "short", { publishedTitles: recent.slice(0, 4) });
+  assert.equal(fresh.patternPenalty, 0);
+  assert.equal(stale.patternPenalty, 11, "used 2x in the last three, and last");
+  assert.equal(stale.adjustedTotal, Math.max(0, stale.total - 11), "the penalty comes off the same score");
+  const why = { title: "Why Challenger Broke Apart 73 Seconds After Launch", source: "editorial", pattern: "why" };
+  assert.equal(Titles.scoreOne(why, topic, config, "short", { publishedTitles: recent.slice(0, 4) }).patternPenalty, 0);
+});
+
+test("captions: each isolated channel keeps its own look, and CriticalThread has its own voice", () => {
+  const Pacing = require("../../core/growth/pacing");
+  const claims = [{ text: "A truck fire shut Mont Blanc for 3 years.", start: 0, end: 3 }];
+  const ib = Pacing.ass(claims, Config.forChannel(ch("impossible-brief")).captions);
+  const ct = Pacing.ass(claims, Config.forChannel(ch("critical-thread")).captions);
+  assert.match(ib, /Style: Caption,DejaVu Sans,/);
+  assert.match(ct, /Style: Caption,Liberation Sans Narrow,/);
+  assert.match(ct, /Dialogue: .*A TRUCK FIRE/, "CriticalThread captions are capitals");
+  assert.doesNotMatch(ib, /A TRUCK FIRE/);
+  assert.match(ib, /\\c&HFFD200&/, "ImpossibleBrief cyan numbers");
+  assert.match(ct, /\\c&H00B0FF&/, "CriticalThread amber numbers");
+  assert.notEqual(ib.split("\n").find((line) => line.startsWith("Style:")), ct.split("\n").find((line) => line.startsWith("Style:")));
+  const voices = ["failure-reconstructed", "impossible-brief", "critical-thread"].map((slug) => ch(slug).config.voice.voice);
+  assert.equal(new Set(voices).size, 3, `three distinct narrators: ${voices.join(", ")}`);
+});

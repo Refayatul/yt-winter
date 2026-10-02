@@ -119,9 +119,15 @@ function srt(claims, captionConfig) {
   return captionRows(claims, captionConfig).map((row, index) => `${index + 1}\n${srtTime(row.start)} --> ${srtTime(row.end)}\n${wrap(row.text, captionConfig.maxCharsPerLine).join("\n")}\n`).join("\n");
 }
 
+// Each channel keeps its own caption look (channels/<slug>/growth-engine.json
+// "captions"): one shared template across channels reads as mass-produced.
 function ass(claims, captionConfig) {
-  const rows = captionRows(claims, captionConfig);
-  const header = `[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 2\n\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: Caption,Arial,${captionConfig.fontSize},&H00FFFFFF,&H000000FF,&H00101824,&H90000000,-1,0,0,0,100,100,0,0,1,5,0,2,120,120,${captionConfig.marginV},1\n\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n`;
+  const rows = captionRows(claims, captionConfig).map((row) => captionConfig.uppercase ? { ...row, text: row.text.toUpperCase() } : row);
+  const font = String(captionConfig.font || "Arial").replace(/,/g, " ");
+  const outline = Number.isFinite(captionConfig.outline) ? captionConfig.outline : 5;
+  const spacing = Number.isFinite(captionConfig.spacing) ? captionConfig.spacing : 0;
+  const scaleX = Number.isFinite(captionConfig.scaleX) ? captionConfig.scaleX : 100;
+  const header = `[Script Info]\nScriptType: v4.00+\nPlayResX: 1080\nPlayResY: 1920\nWrapStyle: 2\n\n[V4+ Styles]\nFormat: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding\nStyle: Caption,${font},${captionConfig.fontSize},&H00FFFFFF,&H000000FF,${captionConfig.outlineColor || "&H00101824"},&H90000000,-1,0,0,0,${scaleX},100,${spacing},0,1,${outline},0,2,120,120,${captionConfig.marginV},1\n\n[Events]\nFormat: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text\n`;
   const highlight = (text) => captionConfig.highlightNumbers ? text.replace(/(\d[\d.,]*\s?(?:%|V|nm|km|mph|seconds?|minutes?)?)/g, `{\\c${captionConfig.highlightColor}}$1{\\c&HFFFFFF&}`) : text;
   return header + rows.map((row) => `Dialogue: 0,${assTime(row.start)},${assTime(row.end)},Caption,,0,0,0,,${wrap(row.text.replace(/[{}]/g, ""), captionConfig.maxCharsPerLine).map(highlight).join("\\N")}`).join("\n") + "\n";
 }

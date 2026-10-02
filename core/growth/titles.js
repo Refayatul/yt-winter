@@ -23,6 +23,7 @@ const TEMPLATE_WORDS = new Set(("the a an of in on to and how why what that this
   "bottleneck dependency critical infrastructure matters think backup plan who makes few can can't doesn't wouldn't would could should never-happened").split(/\s+/));
 
 const clamp = (value) => Math.max(0, Math.min(100, Math.round(value)));
+const RECENT_PATTERN_WINDOW = 3;
 
 function pattern(title) {
   const t = title.toLowerCase();
@@ -253,7 +254,15 @@ function scoreOne(candidate, topic, config, kind, context = {}) {
   const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
   const total = Math.round(Object.entries(weights).reduce((sum, [key, weight]) => sum + (s[key] || 0) * weight, 0) / totalWeight);
   const learnedBonus = (context.learnedPatternBonus || {})[candidate.pattern] || 0;
-  return { ...candidate, scores: s, total, adjustedTotal: Math.min(100, total + learnedBonus), unsupportedWords: unsupported, misleading: s.truthfulness < 60 };
+  // Pattern freshness: word similarity alone let four titles in a row share
+  // one shape ("Eastern 212: What Failed First", "Inside Van Norman Dam: The
+  // Failure Chain"...). A pattern used in the last three published titles
+  // loses up to 12 points, a little more if it was the very last one.
+  const recentPatterns = (context.publishedTitles || []).slice(-RECENT_PATTERN_WINDOW).map(pattern);
+  const repeats = recentPatterns.filter((item) => item === candidate.pattern).length;
+  const patternPenalty = Math.min(12, repeats * 4 + (recentPatterns[recentPatterns.length - 1] === candidate.pattern ? 3 : 0));
+  s.patternFreshness = clamp(100 - repeats * 30);
+  return { ...candidate, scores: s, total, patternPenalty, adjustedTotal: Math.max(0, Math.min(100, total + learnedBonus - patternPenalty)), unsupportedWords: unsupported, misleading: s.truthfulness < 60 };
 }
 
 function generate(topic, config, kind = "short", context = {}) {
@@ -280,4 +289,4 @@ function generate(topic, config, kind = "short", context = {}) {
   };
 }
 
-module.exports = { generate, scoreOne, shortCandidates, longCandidates, pattern };
+module.exports = { RECENT_PATTERN_WINDOW, generate, scoreOne, shortCandidates, longCandidates, pattern };
