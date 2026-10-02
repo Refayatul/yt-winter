@@ -1,10 +1,10 @@
 # Quality gate — how-avalanches-start (pre)
 
-**PUBLISH** — 85/100 (PUBLISH ≥ 85, REVIEW ≥ 70)
+**PUBLISH** — 89/100 (PUBLISH ≥ 85, REVIEW ≥ 70)
 
 | Component | Score | Notes |
 |---|---:|---|
-| TITLE | 30 | "The Hidden Layer That Makes Snow Slide" (engine 34.9) |
+| TITLE | 63 | "How Avalanches Really Failed" (engine 51.6) |
 | THUMBNAIL | 100 |  |
 | HOOK | 100 |  |
 | SCRIPT | 100 |  |
