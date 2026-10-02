@@ -272,7 +272,7 @@ function main() {
   // Saglik: yukleme yapilacaksa once YouTube yetkisi dogrulanir. Yetki yoksa hicbir konu
   // uretilmez (eskiden konu uretilip yuklenemeden "uretildi" sayiliyordu).
   if (!hepsi && process.env.PUBLISH === "1" && !process.env.SAGLIK_ATLA) {
-    const sg = cp.spawnSync("node", ["saglik.js"], { cwd: KOK, stdio: "inherit" });
+    const sg = cp.spawnSync(process.execPath, ["saglik.js", "--channel", CHANNEL.slug], { cwd: KOK, stdio: "inherit" });
     if (sg.status === 5) { console.error("⛔ Saglik kontrolu: YouTube'a yukleme yapilamaz — uretim atlandi, konu harcanmadi (bkz. icerik/saglik.json)."); return 0; }
   }
 

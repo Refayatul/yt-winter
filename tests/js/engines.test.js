@@ -262,17 +262,19 @@ test("yukleme meta dogrulama: YouTube sinirlari", () => {
   assert.ok(metaDogrula(iyi, { privacyStatus: "private", publishAt: "2020-01-01T00:00:00Z" }).length);
 });
 
-test("saglik: gecersiz yetki kritik (konu harcanmaz), yetki yasi uyarisi", async () => {
+test("saglik: gecersiz yetki kritik; production modunda sabit OAuth bitisi varsayilmaz", async () => {
   const S = require("../../saglik");
   const env = { YT_CLIENT_ID: process.env.YT_CLIENT_ID, YT_CLIENT_SECRET: process.env.YT_CLIENT_SECRET, YT_REFRESH_TOKEN: process.env.YT_REFRESH_TOKEN, YT_CHANNEL_ID: process.env.YT_CHANNEL_ID };
   process.env.YT_CLIENT_ID = "a"; process.env.YT_CLIENT_SECRET = "b"; process.env.YT_REFRESH_TOKEN = "c";
   process.env.YT_CHANNEL_ID = "UC_FAILURE_RECONSTRUCTED";
   try {
-    const kotu = await S.denetle({ publish: "1", token: async () => { throw new Error("invalid_grant"); }, pexels: async () => 200, kalan: 20 });
+    const kotu = await S.denetle({ publish: "1", token: async () => { throw new Error("invalid_grant"); }, pexels: async () => 200, kalan: 20,
+      authorizationState: { oauthMode: "production" } });
     assert.equal(kotu.yuklemeUygun, false);
     assert.equal(kotu.bulgular.find((b) => b.ad === "youtube-yetki").durum, "kritik");
     const iyi = await S.denetle({ publish: "1", token: async () => ({ kapsam: S.GEREKLI_KAPSAM.join(" ") }),
-      identity: async () => ({ actual: "UC_FAILURE_RECONSTRUCTED" }), pexels: async () => 200, kalan: 3 });
+      identity: async () => ({ actual: "UC_FAILURE_RECONSTRUCTED" }), pexels: async () => 200, kalan: 3,
+      authorizationState: { oauthMode: "production" } });
     assert.equal(iyi.yuklemeUygun, true);
     assert.equal(iyi.bulgular.find((b) => b.ad === "youtube-kanal").durum, "ok");
     assert.equal(iyi.bulgular.find((b) => b.ad === "kutuphane").durum, "uyari");
@@ -285,7 +287,7 @@ test("bildirim: yasam dongusu mesajlari eksiksiz, dusus noktasi dogru", () => {
   assert.match(h.govde, /youtube-yetki\.js/);
   assert.match(h.govde, /Konu harcanmadı/);
   assert.equal(B.saglikMesaji({ tarih: "2026-09-26T10:00:00Z", bulgular: [{ ad: "a", durum: "ok", mesaj: "x" }] }), null);
-  const s = B.saglikMesaji({ tarih: "2026-09-26T10:00:00Z", bulgular: [{ ad: "yetki-yasi", durum: "uyari", mesaj: "2 gün kaldı", cozum: "yenile" }] });
+  const s = B.saglikMesaji({ tarih: "2026-09-26T10:00:00Z", bulgular: [{ ad: "oauth-reauth-deadline", durum: "uyari", mesaj: "2 gün kaldı", cozum: "yenile" }] });
   assert.match(s.govde, /2 gün kaldı/);
   const t = [0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.5].map((o, i) => ({ oran: o, izleme: [1.3, 1.25, 1.2, 1.0, 0.85, 0.8, 0.7][i] }));
   assert.equal(B.dususNoktasi(t, 38).sn, 8);

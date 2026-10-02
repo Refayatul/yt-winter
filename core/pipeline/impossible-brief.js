@@ -110,6 +110,16 @@ function runChannel(slug, argv = []) {
   const channel = Channel.getChannel(slug);
   if (channel.config.pathMode === "legacy-adapter") throw new Error(`Isolated documentary pipeline cannot run legacy channel: ${slug}`);
   const explicit = argv.find((arg) => !arg.startsWith("--"));
+  if (process.env.PUBLISH === "1" && !process.env.SAGLIK_ATLA) {
+    const health = cp.spawnSync(process.execPath, [path.join(Channel.ROOT, "saglik.js"), "--channel", channel.slug, "--sessiz"], {
+      cwd: Channel.ROOT, stdio: "inherit", env: process.env,
+    });
+    if (health.status === 5) {
+      console.error(`[${channel.name}] OAuth pre-flight failed; this channel was skipped before render/upload and other channels may continue.`);
+      return 0;
+    }
+    if (health.status !== 0) throw new Error(`${channel.name} health pre-flight could not complete safely`);
+  }
   if (!explicit && process.env.PUBLISH === "1") {
     const due = require("../scheduling").channelPlan(channel).short;
     if (!due.due) { console.log(`[${channel.name}] Takvim: henuz degil — ${due.reason}`); return 0; }

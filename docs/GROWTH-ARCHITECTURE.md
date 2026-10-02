@@ -114,7 +114,7 @@ Any critical finding (text still overflowing, A/V mismatch, >1.5 s of black) mak
 
 ## 8. Daily GitHub Actions run (`.github/workflows/uretim.yml`)
 
-1. `saglik.js` (health check): YouTube token works, scopes present, token age in Testing mode (`config/yetki.json`: warning on day 5, critical on day 7), Pexels key, days of library left. Output: `icerik/saglik.json`.
+1. `saglik.js` (per-channel upload gate): live YouTube refresh, exact scopes and expected identity, recorded Testing-mode re-authorization deadline (warning ≤7 days, critical ≤48 hours, expired after deadline), channel-appropriate services, and channel-specific inventory. `oauth-health.js --check-all` is the aggregate report; a production OAuth app has no invented fixed deadline.
 2. `shorts-sira.js`: cadence → health gate → pre gate → footage (licence-checked) → render → final gate → private upload with `publishAt`.
    - If the upload is impossible (token expired), **no topic is consumed**.
    - A failed upload leaves the topic in the queue and writes `YUKLEME-HATASI.json`.

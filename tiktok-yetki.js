@@ -61,7 +61,9 @@ function envYaz(ad, deger) {
   if (!kod) { console.error("Kod okunamadi."); process.exit(1); }
 
   const j = await TT.koddanJeton(kod, redirect);
-  if (!j.refresh_token) { console.error("Yanitta refresh_token yok: " + JSON.stringify(j).slice(0, 300)); process.exit(1); }
+  // The error response can still contain a short-lived access token. Report
+  // only safe metadata; never serialize the provider response to the terminal.
+  if (!j.refresh_token) { console.error("Yanitta refresh_token yok; hata kodu: " + String(j.error || j.error_code || "TOKEN_RESPONSE_INCOMPLETE")); process.exit(1); }
 
   envYaz("TT_REFRESH_TOKEN", j.refresh_token);
   try {

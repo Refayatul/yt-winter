@@ -7,7 +7,7 @@
 // Kontroller (her biri: ok | uyari | kritik):
 //   youtube-yetki   refresh token calisiyor mu (invalid_grant = suresi dolmus/iptal)
 //   youtube-kapsam  youtube.force-ssl + yt-analytics.readonly var mi
-//   yetki-yasi      config/yetki.json — Test modunda 5. gunde uyari, 7. gunde kritik
+//   oauth-reauth-deadline — yalniz Testing/explicit deadline icin esik uyarisi
 //   pexels          PEXELS_KEY calisiyor mu (stok konular icin)
 //   kutuphane       kac gunluk uretilmemis konu kaldi (<7 uyari, 0 kritik)
 //
@@ -22,8 +22,9 @@ const { KOK, jsonOku, jsonYaz, env } = require("./lib/ortak");
 const SELECTED = require("./core/channel-context").selectFromArgv(process.argv.slice(2));
 const CHANNEL = SELECTED.channel;
 const yt = require("./lib/yt");
+const OAuthHealth = require("./oauth-health");
 
-const GEREKLI_KAPSAM = ["youtube.force-ssl", "yt-analytics.readonly"];
+const GEREKLI_KAPSAM = yt.REQUIRED_SCOPES;
 
 function getir(url, basliklar = {}) {
   return new Promise((coz) => {
@@ -57,7 +58,8 @@ async function denetle(ops = {}) {
     try {
       const t = await (ops.token || yt.token)();
       ekle("youtube-yetki", "ok", "refresh token çalışıyor");
-      const eksik = GEREKLI_KAPSAM.filter((k) => !t.kapsam.includes(k));
+      const kapsamlar = new Set(String(t.kapsam || "").split(/\s+/).filter(Boolean));
+      const eksik = GEREKLI_KAPSAM.filter((k) => !kapsamlar.has(k));
       ekle("youtube-kapsam", eksik.length ? "uyari" : "ok", eksik.length ? "eksik yetki kapsamı: " + eksik.join(", ") : "gerekli kapsamlar tamam",
         eksik.length ? `Yerelde \`node youtube-yetki.js --channel ${CHANNEL.slug} --github\` çalıştır; yeni token ${CHANNEL.credentialNames.refreshToken[0]} secret'ına güvenle kaydedilir.` : null);
       if (!CHANNEL.expectedChannelId()) {
@@ -78,18 +80,17 @@ async function denetle(ops = {}) {
     }
   }
 
-  // 2) Yetki yasi (Test modunda Google jetonu 7 gunde iptal eder)
-  const y = jsonOku(CHANNEL.config.pathMode === "legacy-adapter" ? path.join(KOK, "config", "yetki.json") : path.join(CHANNEL.paths.state, "auth-state.json"), null);
-  if (y && y.mod === "testing" && y.yetkiTarihi) {
-    const gun = (Date.now() - Date.parse(y.yetkiTarihi)) / 86400000;
-    const bitis = new Date(Date.parse(y.yetkiTarihi) + 7 * 86400000);
-    const tr = require("./lib/zamanlama").trSaat(bitis);
-    if (gun >= 7) ekle("yetki-yasi", "kritik", `Test modundaki YouTube yetkisinin süresi doldu (${tr})`,
-      "`node youtube-yetki.js` ile yenile ya da uygulamayı Production'a al (Publish app).");
-    else if (gun >= 5) ekle("yetki-yasi", "uyari", `YouTube yetkisi ${tr} tarihinde bitecek (${(7 - gun).toFixed(1)} gün kaldı)`,
-      "Bitmeden `node youtube-yetki.js` ile yenile ya da Google Cloud'da Publish app yap.");
-    else ekle("yetki-yasi", "ok", `yetki ${tr} tarihine kadar geçerli`);
-  }
+  // 2) Re-authorization deadline (advisory; it alerts but never blocks an
+  // upload whose live refresh and identity checks passed). This is not a universal refresh-token
+  // expiry: it is derived only for a recorded Testing-mode authorization or
+  // an explicit operator deadline. Live refresh validation above remains the
+  // authoritative proof that the token works now.
+  const deadline = OAuthHealth.authorizationDeadline(CHANNEL, {
+    ...(ops.now ? { now: ops.now } : {}),
+    ...(Object.prototype.hasOwnProperty.call(ops, "authorizationState") ? { authorizationState: ops.authorizationState } : {}),
+  });
+  ekle("oauth-reauth-deadline", { PASS: "ok", WARNING: "uyari", ERROR: "uyari", CRITICAL: "kritik" }[deadline.status], deadline.message,
+    deadline.status === "PASS" ? null : `Run \`node youtube-yetki.js --channel ${CHANNEL.slug} --oauth-mode=production --github\` after confirming Google Auth Platform → Audience is In production.`);
 
   // 2b) TikTok (istege bagli — kimlik yoksa hic bahsedilmez)
   if (CHANNEL.config.platforms.tiktok.enabled && ["TT_CLIENT_KEY", "TT_CLIENT_SECRET", "TT_REFRESH_TOKEN"].some((k) => env(k))) {
@@ -132,8 +133,8 @@ async function denetle(ops = {}) {
   ekle("kutuphane", n === 0 ? "kritik" : n < 7 ? "uyari" : "ok", `${n} günlük üretilmemiş konu var`,
     n < 7 ? "Kütüphaneye yeni konu eklenmeli (icerik/konular/)." : null);
 
-  const kritik = b.some((x) => x.durum === "kritik" && ["youtube-yetki", "youtube-kanal", "yetki-yasi"].includes(x.ad));
-  return { channel: CHANNEL.slug, channelName: CHANNEL.name, tarih: new Date().toISOString(), yuklemeUygun: !kritik || !publish, bulgular: b };
+  const kritik = b.some((x) => x.durum === "kritik" && ["youtube-yetki", "youtube-kanal"].includes(x.ad));
+  return { channel: CHANNEL.slug, channelName: CHANNEL.name, tarih: new Date().toISOString(), aggregateManaged: true, yuklemeUygun: !kritik || !publish, bulgular: b };
 }
 
 module.exports = { denetle, GEREKLI_KAPSAM };
