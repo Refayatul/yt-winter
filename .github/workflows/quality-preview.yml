@@ -71,3 +71,20 @@ jobs:
           path: preview/
           if-no-files-found: warn
           retention-days: 14
+
+  voice-samples:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --no-audit --no-fund
+      - name: Read one line in each free Edge voice
+        run: node scripts/voice-samples.js voice-samples
+      - uses: actions/upload-artifact@v4
+        with:
+          name: voice-samples
+          path: voice-samples/
+          retention-days: 14
