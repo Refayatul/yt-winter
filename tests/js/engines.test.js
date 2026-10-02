@@ -420,9 +420,11 @@ test("shorts-yap: fotograf kaynagi hareketli islenir (durgun kare yok)", () => {
   const fs = require("fs"), path = require("path");
   const src = fs.readFileSync(path.join(require("../../lib/ortak").KOK, "shorts-yap.js"), "utf8");
   assert.match(src, /const FOTO = /, "fotograf tanima yok");
-  assert.match(src, /fotoHareket/, "fotografa hareket uygulanmiyor");
+  assert.match(src, /Kadraj\.fotoFiltre\(/, "fotografa hareket uygulanmiyor");
   assert.match(src, /foto \? \["-loop", "1"/, "fotograf -loop 1 ile beslenmeli");
-  assert.match(src, /zoompan/, "Ken Burns hareketi yok");
+  const kadraj = fs.readFileSync(path.join(require("../../lib/ortak").KOK, "lib", "dikey-kadraj.js"), "utf8");
+  assert.match(kadraj, /zoompan/, "Ken Burns hareketi yok");
+  assert.match(kadraj, /crop=\$\{W \* 2\}:\$\{H \* 2\}:x=/, "yatay fotografta pan yok");
 });
 
 test("aday-gorsel: lisans/cozunurluk/aci teshiri elemesi", () => {
