@@ -8,6 +8,7 @@ const Scripting = require("../scripting");
 const Visuals = require("../visuals");
 const Quality = require("../quality");
 const TopicVisuals = require("./topic-visuals");
+const Hashtags = require("../hashtags");
 const { ROOT } = require("../channel-context");
 
 function write(file, value) {
@@ -640,6 +641,14 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   let visuals = Visuals.plan(topic, script);
   const thumbnail = Visuals.thumbnail(topic);
   const isCriticalThread = channel.slug === "critical-thread";
+  // Hashtags stay on the description's last line; visual credits added after
+  // render are inserted above them (see describe()).
+  const hashtags = Hashtags.forTopic(channel.slug, topic, { format: "short" });
+  const subject = Hashtags.subjectPhrase(topic);
+  const descriptionBody = `${topic.coreQuestion}\n\nSources:\n${topic.sources.map((source) => `- ${source.name}: ${source.url}`).join("\n")}\n\n${isCriticalThread ? "Technical illustrations and dependency models are labelled. Estimates and industry claims are attributed; modeled consequences are not presented as observed fact." : "Illustrative visuals are labelled. Speculative outcomes are not presented as measured fact."}`;
+  const describe = (credits = []) => [descriptionBody, credits.length ? `Visual credits:\n${credits.join("\n")}` : null, hashtags.join(" ")]
+    .filter(Boolean).join("\n\n");
+  const baseTags = isCriticalThread ? ["infrastructure", "engineering", "supply chain", topic.category.toLowerCase(), "CriticalThread"] : ["science", "what if", topic.category.toLowerCase(), "ImpossibleBrief"];
   const metadata = {
     uploadChannel: channel.slug,
     expectedYouTubeChannelId: channel.expectedChannelId() || "MANUAL_CONFIGURATION_REQUIRED",
@@ -647,8 +656,9 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     privacy: "private",
     categoryId: isCriticalThread ? "27" : "28",
     title: titles[0],
-    description: `${topic.coreQuestion}\n\nSources:\n${topic.sources.map((source) => `- ${source.name}: ${source.url}`).join("\n")}\n\n${isCriticalThread ? "Technical illustrations and dependency models are labelled. Estimates and industry claims are attributed; modeled consequences are not presented as observed fact." : "Illustrative visuals are labelled. Speculative outcomes are not presented as measured fact."}`,
-    tags: isCriticalThread ? ["infrastructure", "engineering", "supply chain", topic.category.toLowerCase(), "CriticalThread"] : ["science", "what if", topic.category.toLowerCase(), "ImpossibleBrief"],
+    description: describe(),
+    hashtags,
+    tags: subject ? [subject, ...baseTags.filter((tag) => tag.toLowerCase() !== subject.toLowerCase())] : baseTags,
   };
   const pkg = { channel: channel.slug, topic, script, titles, visuals, thumbnail, sources: topic.sources, metadata };
   pkg.qualityGate = Quality.evaluatePackage(pkg);
@@ -682,7 +692,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     const assets = TopicVisuals.prepareAssetsSync(path.join(outputDirectory, "topic.json"), outputDirectory);
     const attribution = TopicVisuals.attributionLines(assets.stills, assets.clips);
     if (attribution.length) {
-      metadata.description += `\n\nVisual credits:\n${attribution.join("\n")}`;
+      metadata.description = describe(attribution);
       write(path.join(outputDirectory, "metadata.json"), metadata);
       write(path.join(outputDirectory, "description.txt"), metadata.description + "\n");
     }
