@@ -371,10 +371,16 @@ async function prepareAssets(topic, outputDirectory) {
   }
   // Moving footage (core/rendering/stock-footage.js) when a Pexels key is
   // configured; without one, or when Pexels fails, the Short uses stills only.
+  // NASA visualizations first (real data, public domain, no key), then Pexels
+  // for the remaining clip slots.
   let clips = [];
+  if (process.env.NASA_VIDEOS !== "0") {
+    try { clips = await require("./nasa-videos").search(topic, directory); } catch (error) { clips = []; }
+  }
   const pexelsKey = process.env.PEXELS_KEY;
-  if (pexelsKey && process.env.STOCK_FOOTAGE !== "0") {
-    try { clips = await require("./stock-footage").search(topic, directory, pexelsKey); } catch (error) { clips = []; }
+  const StockFootage = require("./stock-footage");
+  if (pexelsKey && process.env.STOCK_FOOTAGE !== "0" && clips.length < StockFootage.MAX_CLIPS) {
+    try { clips = clips.concat(await StockFootage.search(topic, directory, pexelsKey, { limit: StockFootage.MAX_CLIPS - clips.length })); } catch (error) {}
   }
   const manifest = { schemaVersion: CACHE_SCHEMA, topicId: topic.id, stills, clips };
   fs.writeFileSync(manifestPath(outputDirectory), JSON.stringify(manifest, null, 2) + "\n");
@@ -398,7 +404,9 @@ function prepareAssetsSync(topicFile, outputDirectory) {
 function attributionLines(stills, clips = []) {
   return [
     ...(stills || []).map((still) => `- ${still.file} — ${still.author}; ${still.licence}; ${still.sourceUrl}`),
-    ...(clips || []).map((clip) => `- Stock footage: Pexels / ${clip.author}; ${clip.licence}; ${clip.sourceUrl}`),
+    ...(clips || []).map((clip) => clip.origin === "nasa-video"
+      ? `- NASA video: ${clip.file} — ${clip.author}; ${clip.licence}; ${clip.sourceUrl}`
+      : `- Stock footage: Pexels / ${clip.author}; ${clip.licence}; ${clip.sourceUrl}`),
   ];
 }
 

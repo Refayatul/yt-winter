@@ -20,7 +20,7 @@ const Nasa = require("./nasa-images");
 // Pexels needs an Authorization header and its file links redirect to a CDN.
 function httpGet(url, options = {}, redirects = 5) {
   return new Promise((resolve) => {
-    const request = https.get(url, { headers: { "User-Agent": "youtube-otomasyon/1.0", ...(options.headers || {}) }, timeout: 60000 }, (response) => {
+    const request = https.request(url, { method: options.method || "GET", headers: { "User-Agent": "youtube-otomasyon/1.0", ...(options.headers || {}) }, timeout: 120000 }, (response) => {
       if ([301, 302, 303, 307, 308].includes(response.statusCode) && response.headers.location && redirects > 0) {
         response.resume();
         // The key is for api.pexels.com only; never forward it to a CDN.
@@ -28,8 +28,9 @@ function httpGet(url, options = {}, redirects = 5) {
       }
       const parts = [];
       response.on("data", (chunk) => parts.push(chunk));
-      response.on("end", () => { const buffer = Buffer.concat(parts); resolve({ status: response.statusCode, body: options.binary ? buffer : buffer.toString("utf8") }); });
+      response.on("end", () => { const buffer = Buffer.concat(parts); resolve({ status: response.statusCode, headers: response.headers, body: options.binary ? buffer : buffer.toString("utf8") }); });
     });
+    request.end();
     request.on("timeout", () => request.destroy(new Error("timeout")));
     request.on("error", () => resolve({ status: 0, body: options.binary ? Buffer.alloc(0) : "" }));
   });
@@ -96,12 +97,16 @@ function pickFile(video) {
 // Luma of the darkest half-second in the middle four seconds: a shot always
 // uses the middle of its clip (core/rendering renderVideo), and a train
 // entering a tunnel is bright first, then black.
-function brightness(file, duration = 0) {
+function lumaStats(file, duration = 0) {
   const { ffmpeg } = require("../../ff-yol");
   const start = Math.max(0, duration / 2 - 2);
   const out = cp.spawnSync(ffmpeg, ["-hide_banner", "-ss", start.toFixed(2), "-t", "4", "-i", file, "-vf", "fps=2,scale=64:-1,signalstats,metadata=print:key=lavfi.signalstats.YAVG", "-f", "null", "-"], { encoding: "utf8", timeout: 90000 });
   const values = [...String(out.stderr || "").matchAll(/YAVG=([\d.]+)/g)].map((match) => Number(match[1]));
-  return values.length ? Math.min(...values) : 0;
+  return values.length ? { min: Math.min(...values), mean: values.reduce((sum, value) => sum + value, 0) / values.length } : { min: 0, mean: 0 };
+}
+
+function brightness(file, duration = 0) {
+  return lumaStats(file, duration).min;
 }
 
 async function search(topic, directory, key, options = {}) {
@@ -154,4 +159,4 @@ async function search(topic, directory, key, options = {}) {
   return clips;
 }
 
-module.exports = { API, LICENCE, MAX_CLIPS, httpGet, slugWords, subjectTerms, modeConflict, queries, accept, pickFile, brightness, search };
+module.exports = { API, LICENCE, MAX_CLIPS, httpGet, lumaStats, slugWords, subjectTerms, modeConflict, queries, accept, pickFile, brightness, search };
