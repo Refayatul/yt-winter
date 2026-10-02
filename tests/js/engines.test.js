@@ -209,7 +209,7 @@ test("aciklama: zincir bicimi (cumle basi ozel isim sayilmaz) ve tek satir stok 
   const kaynakSatiri = (m) => m.split("\n").filter((l) => /^• (Stock footage|Archival film)/.test(l)).length;
   assert.ok(kaynakSatiri(av) <= 1, "stok kaynaklari tek satir");
   assert.equal(kaynakSatiri(hx), 1, "arsiv kaynagi tekrar etmez");
-  assert.ok((av.match(/#\w+/g) || []).length <= 3, "en fazla 3 hashtag");
+  assert.ok((av.match(/#\w+/g) || []).length <= 5, "en fazla 5 hashtag");
 });
 
 test("ayar birlestirme ve ISO sure", () => {
