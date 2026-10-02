@@ -546,7 +546,14 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
     const shot = plan[index];
     const frames = Math.max(1, Math.ceil(shot.duration * FPS));
     let chain;
-    if (shot.type === "stock-video") {
+    if (shot.type === "stock-video" && shot.clip.landscape) {
+      // Landscape NASA visualization: full width above the caption band, over
+      // its own blur, with its scientific colours untouched.
+      chain = `[${index}:v]fps=${FPS},split=2[vbg${index}][vfg${index}];`
+        + `[vbg${index}]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,gblur=sigma=30,eq=brightness=-0.25:saturation=0.8[vbgb${index}];`
+        + `[vfg${index}]scale=1080:-2[vfgs${index}];`
+        + `[vbgb${index}][vfgs${index}]overlay=0:(H-h)/2-170`;
+    } else if (shot.type === "stock-video") {
       chain = `[${index}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=${FPS}${colourGrade(topic)}`;
     } else if (shot.type === "licensed-still" && shot.kind === "diagram") {
       // Whole figure, readable, above the caption band, over its own blur.
@@ -563,7 +570,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
     }
     // Disclosure stays, as a small corner tag: stills are context for the
     // topic, not footage of the scenario; procedural frames are illustrations.
-    const tag = shot.type === "licensed-still" ? "CONTEXT IMAGE" : shot.type === "stock-video" ? "STOCK FOOTAGE" : shot.type === "procedural" ? "ILLUSTRATION" : null;
+    const tag = shot.type === "licensed-still" ? "CONTEXT IMAGE" : shot.type === "stock-video" ? (shot.clip.origin === "nasa-video" ? "NASA VISUALIZATION" : "STOCK FOOTAGE") : shot.type === "procedural" ? "ILLUSTRATION" : null;
     if (tag) chain += `,drawtext=expansion=none:text='${tag}':fontcolor=white@0.78:fontsize=26:box=1:boxcolor=0x000000@0.45:boxborderw=10:x=48:y=84`;
     filters.push(`${chain},setsar=1,trim=duration=${shot.duration.toFixed(3)},setpts=PTS-STARTPTS[v${index}]`);
   }
