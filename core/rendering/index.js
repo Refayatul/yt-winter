@@ -444,32 +444,23 @@ function renderNumberCard(output, shot, topic) {
 
 const FPS = 30;
 
-// On-screen words above the caption band: the hook's thumbnail words for the
-// first 1.8 s of a motion opening, and the comment prompt for the last 2.6 s.
-const COMMENT_PROMPTS = {
-  "impossible-brief": "WHAT SHOULD WE TEST NEXT?",
-  "critical-thread": "WHAT SHOULD WE TRACE NEXT?",
-};
+// On-screen words above the caption band: the hook's thumbnail words from the
+// very first frame for 2 s, unless the first shot is already a number card
+// (which is the hook). There is no end card: a dimmed "comment below" screen
+// stopped the loop, so the last shot returns to the opening picture instead
+// (TopicVisuals.buildVisualPlan) and the question lives in the pinned comment.
+const HOOK_SECONDS = 2;
 // Font size that keeps capitals inside a 960 px line (DejaVu Sans capitals are
 // up to ~0.72 em wide).
 function fitFontSize(text, maximum) {
   return Math.max(36, Math.min(maximum, Math.floor(960 / (Math.max(1, String(text).length) * 0.72))));
 }
 
-function overlayText(topic, duration, opening) {
+function overlayText(topic, duration, opening, firstShotType = null) {
   const parts = [];
-  const hook = opening === "motion" ? drawtextSafe(String(topic.thumbnailText || "").toUpperCase()) : "";
-  if (hook) parts.push(`drawtext=expansion=none:text='${hook}':fontcolor=white:fontsize=${fitFontSize(hook, 100)}:borderw=7:bordercolor=0x000000@0.7:x=(w-text_w)/2:y=330:enable='lt(t,1.8)'`);
-  const prompt = COMMENT_PROMPTS[topic.channel];
-  if (prompt && duration > 8) {
-    // End card: the picture dims and the prompt sits mid-screen, above the
-    // caption band, whatever visual is underneath.
-    const start = (duration - 2.6).toFixed(2);
-    const on = `enable='gte(t,${start})'`;
-    parts.push(`drawbox=x=0:y=0:w=iw:h=ih:color=0x000000@0.55:t=fill:${on}`);
-    parts.push(`drawtext=expansion=none:text='${drawtextSafe(prompt)}':fontcolor=white:fontsize=${fitFontSize(prompt, 72)}:box=1:boxcolor=${channelAccent(topic)}@0.92:boxborderw=24:x=(w-text_w)/2:y=760:${on}`);
-    parts.push(`drawtext=expansion=none:text='COMMENT BELOW':fontcolor=white:fontsize=46:borderw=4:bordercolor=0x000000@0.6:x=(w-text_w)/2:y=900:${on}`);
-  }
+  const showHook = opening === "motion" || (firstShotType && firstShotType !== "number-card");
+  const hook = showHook ? drawtextSafe(String(topic.thumbnailText || "").toUpperCase()) : "";
+  if (hook) parts.push(`drawtext=expansion=none:text='${hook}':fontcolor=white:fontsize=${fitFontSize(hook, 112)}:borderw=8:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=330:enable='lt(t,${HOOK_SECONDS})'`);
   return parts.length ? "," + parts.join(",") : "";
 }
 
@@ -577,7 +568,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   }
   const concatInputs = plan.map((_, index) => `[v${index}]`).join("");
   const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
-  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening)}[v]`);
+  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening, plan[0] && plan[0].type)}[v]`);
   const filterFile = path.join(path.dirname(output), ".visual-filter.txt");
   fs.writeFileSync(filterFile, filters.join(";\n") + "\n");
   args.push(ff.filtreBayragi, filterFile, "-map", "[v]", "-map", `${plan.length}:a`, "-t", String(duration), "-r", String(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);

@@ -43,13 +43,38 @@ test("opening experiment: deterministic 50/50 and a motion opening leads with fo
   assert.equal(TopicVisuals.evaluateVisualQuality(TopicVisuals.visualMetrics(motion)).reasons.includes("first visual does not cover the opening hook"), false);
 });
 
-test("on-screen words: hook words open a motion variant; IB/CT end on a comment prompt", () => {
+test("on-screen words: the hook is up from the first frame; no dimmed end card stops the loop", () => {
   const motion = Rendering.overlayText({ channel: "impossible-brief", thumbnailText: "Atlantic current stops" }, 30, "motion");
-  assert.match(motion, /text='ATLANTIC CURRENT STOPS'.*enable='lt\(t,1\.8\)'/);
-  assert.match(motion, /WHAT SHOULD WE TEST NEXT\?.*enable='gte\(t,27\.40\)'/);
-  assert.doesNotMatch(Rendering.overlayText({ channel: "critical-thread", thumbnailText: "ONE MACHINE" }, 30, "number"), /ONE MACHINE/);
-  assert.match(Rendering.overlayText({ channel: "critical-thread" }, 30, "number"), /WHAT SHOULD WE TRACE NEXT\?/);
+  assert.match(motion, /text='ATLANTIC CURRENT STOPS'.*enable='lt\(t,2\)'/);
+  // A photo opening on the "number" variant still shows the hook words.
+  assert.match(Rendering.overlayText({ channel: "critical-thread", thumbnailText: "TUNNEL FIRE" }, 30, "number", "licensed-still"), /TUNNEL FIRE/);
+  // A number-card opening already is the hook.
+  assert.doesNotMatch(Rendering.overlayText({ channel: "critical-thread", thumbnailText: "ONE MACHINE" }, 30, "number", "number-card"), /ONE MACHINE/);
+  for (const channel of ["impossible-brief", "critical-thread"]) {
+    const text = Rendering.overlayText({ channel, thumbnailText: "X" }, 30, "motion");
+    assert.doesNotMatch(text, /COMMENT BELOW|NEXT\?|drawbox/, channel);
+  }
   assert.equal(Rendering.overlayText({ channel: "failure-reconstructed" }, 30, "number"), "");
+});
+
+test("loop ending: the last shot returns to the opening picture", () => {
+  const stills = ["Portal.jpg", "Entrance.jpg", "Valley.jpg", "Ticket.jpg", "Ridge.jpg", "Fans.jpg", "Shelter.jpg"].map((file) => ({ file }));
+  const claims = Array.from({ length: 7 }, (_, index) => ({ text: `Line ${index}.`, start: index * 3, end: index * 3 + 3 }));
+  const plan = TopicVisuals.buildVisualPlan({ id: "CT-LOOP" }, { targetSeconds: 21, claims }, stills, Array(7).fill(3), 21, [], { opening: "motion" });
+  const first = plan[0], last = plan[plan.length - 1];
+  assert.equal(first.type, "licensed-still");
+  assert.equal(last.loopBack, true);
+  assert.equal(last.still, first.still);
+  assert.notEqual(last.motion, first.motion, "a different camera move");
+  assert.equal(TopicVisuals.evaluateVisualQuality(TopicVisuals.visualMetrics(plan)).decision, "PUBLISH");
+  // Diagram or number-card openings are not echoed.
+  const card = TopicVisuals.buildVisualPlan({ id: "CT-LOOP" }, { targetSeconds: 21, claims: [{ text: "It is 11.6 kilometres long.", start: 0, end: 3 }, ...claims.slice(1)] }, stills, Array(7).fill(3), 21, [], { opening: "number" });
+  assert.equal(card[0].type, "number-card");
+  assert.notEqual(card[card.length - 1].loopBack, true);
+  // Too few pictures: variety wins over the loop.
+  const few = TopicVisuals.buildVisualPlan({ id: "CT-LOOP" }, { targetSeconds: 15, claims: claims.slice(0, 5) }, stills.slice(0, 5), Array(5).fill(3), 15, [], { opening: "motion" });
+  assert.notEqual(few[few.length - 1].loopBack, true);
+  assert.equal(TopicVisuals.evaluateVisualQuality(TopicVisuals.visualMetrics(few)).decision, "PUBLISH");
 });
 
 function fakeYouTube({ privacy = "public", ownComment = false, readable = true } = {}) {

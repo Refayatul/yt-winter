@@ -148,3 +148,26 @@ test("ImpossibleBrief records render with their channel's look and music", () =>
   assert.match(source, /const renderTopic = topic\.channel \? topic : \{ \.\.\.topic, channel: channel\.slug \}/);
   assert.notEqual(Rendering.musicMood({ ...topic, channel: "impossible-brief" }), "structural-failures");
 });
+
+test("a still comes back only when the previous shot cannot hold longer", () => {
+  const stills = [{ file: "Tunnel entrance.jpg" }, { file: "Portal.jpg" }];
+  const claims = Array.from({ length: 4 }, (_, index) => ({ text: `Line ${index} without values.`, start: index * 4, end: index * 4 + 4 }));
+  const plan = TopicVisuals.buildVisualPlan({ id: "CT-HOLD" }, { targetSeconds: 16, claims }, stills, Array(16).fill(1), 16);
+  for (const [index, shot] of plan.entries()) {
+    if (shot.type !== "licensed-still" || !(shot.motion > 0)) continue;
+    const previous = plan[index - 1];
+    assert.ok(!previous || !["licensed-still", "stock-video"].includes(previous.type) || previous.duration + shot.duration > 3.75,
+      `shot ${shot.shot} reuses a still although shot ${previous.shot} could have held`);
+  }
+  assert.ok(plan.every((shot) => shot.duration <= 4.001), "static-hold limit kept");
+  assert.equal(plan[0].start, 0);
+  assert.ok(Math.abs(plan[plan.length - 1].end - 16) < 0.001, "timeline still covers the whole narration");
+  assert.ok(plan.every((shot, index) => !index || Math.abs(shot.start - plan[index - 1].end) < 0.001), "no gaps after holding longer");
+  const old = plan.filter((shot) => shot.type === "licensed-still").length;
+  assert.ok(old < 16, `fewer cuts than pacing segments when pictures run out (${old})`);
+});
+
+test("artist's illustrations and cutaways never count as photographs", () => {
+  assert.equal(TopicVisuals.stillKind({ file: "Plate Tectonics on Europa.jpg", description: "Artist's illustration of subduction" }), "diagram");
+  assert.equal(TopicVisuals.stillKind({ file: "Europa-moon.jpg", description: "Europa imaged by Galileo" }), "photo");
+});
