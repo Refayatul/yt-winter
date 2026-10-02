@@ -352,9 +352,11 @@ async function gunKontrol(d) {
   // Alarm yalnizca uretim SLA son saatinden sonra: sabah slotlari (09:00/09:30/10:00 TR)
   // ile son saat arasinda saatlik yeniden denemeler hala bugunun Short'unu uretebilir.
   const sonSaat = process.env.PRODUCTION_DEADLINE_UTC || "16:30";
-  if (Date.now() < Date.parse(`${new Date().toISOString().slice(0, 10)}T${sonSaat}:00Z`)) { console.log(`Uretim son saati (${sonSaat} UTC) henuz gelmedi — bos gun kontrolu atlandi.`); return; }
+  // Son saat, kontrol edilen Istanbul gununun (g) son saatidir; UTC tarihi degil. Gece
+  // 22:27 UTC kontrolu Istanbul'da ertesi gune denk gelir ve o gunun uretimi henuz baslamamistir.
+  if (Date.now() < Date.parse(`${g}T${sonSaat}:00Z`)) { console.log(`Uretim son saati (${sonSaat} UTC) henuz gelmedi — bos gun kontrolu atlandi.`); return; }
   // Bugun (Europe/Istanbul takvim gunu) URETILDI mi ya da bugune PLANLANDI mi — ikisi de "gun dolu" sayilir
-  const bugunVar = !!Calendar.shortForDay(K.yayinlananlar(), g, tz);
+  const bugunVar = !!Calendar.shortForDay(K.yayinlananlar(), g, tz, Calendar.shortSchedule(CHANNEL).publishTimeZone);
   const m = bosGunMesaji({ tarih: g, bugunVar, kalanKonu: K.kuyruk().length, sunucu: process.env.GITHUB_SERVER_URL || "https://github.com" });
   if (!m) { console.log(bugunVar ? "Bugun video uretildi — alarm yok." : "Kuyruk bos — alarm yok."); return; }
   await issueAc(m);

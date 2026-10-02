@@ -46,9 +46,9 @@
     "stretchWhenRecentBlocks": 2,
     "stretchOnReview": false,
     "schedule": {
-      "_comment": "Auto-publish at a fixed hour. Audience is ~93% US (analytics 2026-09-25): 18:00 UTC = 21:00 TR = 14:00 ET = 11:00 PT. Only PUBLISH is uploadable and scheduled; REVIEW/BLOCK never leave the runner.",
+      "_comment": "Fallback only: channels set publishTime 18:00 in publishTimeZone America/New_York (US evening; audience ~93% US, analytics 2026-09-25), which core/scheduling/calendar.js converts with DST. hourUTC approximates it for legacy helpers. Only PUBLISH is uploadable and scheduled; REVIEW/BLOCK never leave the runner.",
       "enabled": true,
-      "hourUTC": 18,
+      "hourUTC": 22,
       "minLeadHours": 1,
       "gates": [
         "PUBLISH"

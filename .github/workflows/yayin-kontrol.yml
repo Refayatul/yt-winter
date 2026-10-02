@@ -3,7 +3,7 @@ name: Gunluk kontrol (yayin + bos gun)
 # Iki soruyu yanitlar, ikisi de sadece OKUR (videoya dokunmaz):
 #   1) Bugun hic video uretildi mi? Uretilmediyse (GitHub gunun 10 zamanlanmis
 #      denemesini de atladiysa) "🚨 Bugün video üretilmedi" issue'su acilir. 16:47'de.
-#   2) Zamanlanmis video (publishAt 18:00 UTC) gercekten Public oldu mu? Olduysa
+#   2) Zamanlanmis video (publishAt 18:00 New York) gercekten Public oldu mu? Olduysa
 #      videonun bildirim issue'suna "✅ Yayina girdi" yorumu duser; bir saat gectigi
 #      halde olmadiysa "❌ Otomatik yayin gerceklesmedi" issue'su acilir.
 # GitHub zamanlanmis isleri geciktirebildigi/atlayabildigi icin ucer saat.
@@ -18,6 +18,12 @@ on:
     - cron: '47 16 * * *'
     - cron: '27 18 * * *'
     - cron: '53 19 * * *'
+    # Shorts go public at 18:00 America/New_York (22:00 UTC in summer time,
+    # 23:00 UTC in winter time). These runs confirm the publish and raise the
+    # "not published" alarm once it is more than an hour late in either season.
+    - cron: '27 22 * * *'
+    - cron: '17 0 * * *'
+    - cron: '43 1 * * *'
   workflow_dispatch:
 
 # Uretimle ayni grup: ayni anda iki is depoya yazmasin.

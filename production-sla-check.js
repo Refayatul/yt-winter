@@ -29,10 +29,12 @@ function ids(rows) {
 }
 
 // "Today" is the channel's local calendar day (Europe/Istanbul), never a
-// rolling 24-hour window and never the runner's time zone.
-function recordForDate(records, date, timeZone = Calendar.DEFAULT_TIME_ZONE) {
+// rolling 24-hour window and never the runner's time zone. A publish instant
+// is read in the publish zone: 18:00 New York on D is 01:00 Istanbul on D+1
+// but still belongs to production day D.
+function recordForDate(records, date, timeZone = Calendar.DEFAULT_TIME_ZONE, publishTimeZone = timeZone) {
   const rows = (Array.isArray(records) ? records : []).filter((item) => item && item.format !== "long");
-  const scheduled = rows.filter((item) => Calendar.dayKey(item.publishAt, timeZone) === date);
+  const scheduled = rows.filter((item) => Calendar.dayKey(item.publishAt, publishTimeZone) === date);
   const produced = rows.filter((item) => Calendar.dayKey(item.tarih || item.generatedAt, timeZone) === date);
   return (scheduled.length ? scheduled : produced).sort((a, b) => String(a.tarih || "").localeCompare(String(b.tarih || ""))).pop() || null;
 }
@@ -56,13 +58,13 @@ function durationSeconds(value) {
 // duplicate-prevention authority: an upload may have succeeded immediately
 // before its state commit failed. The authenticated YouTube channel is the
 // source of truth for whether today's Short slot is already occupied.
-function youtubeVideoForDate(videos, date, timeZone = Calendar.DEFAULT_TIME_ZONE) {
+function youtubeVideoForDate(videos, date, timeZone = Calendar.DEFAULT_TIME_ZONE, publishTimeZone = timeZone) {
   return (Array.isArray(videos) ? videos : [])
     .filter((video) => {
       const seconds = durationSeconds(video && video.contentDetails && video.contentDetails.duration);
       const short = seconds != null && seconds <= 180;
-      const day = isoDay(video && video.status && video.status.publishAt, timeZone)
-        || isoDay(video && video.snippet && video.snippet.publishedAt, timeZone);
+      const day = isoDay(video && video.status && video.status.publishAt, publishTimeZone)
+        || isoDay(video && video.snippet && video.snippet.publishedAt, publishTimeZone);
       return short && day === date;
     })
     .sort((a, b) => String((a.status && a.status.publishAt) || (a.snippet && a.snippet.publishedAt) || "")
@@ -72,7 +74,7 @@ function youtubeVideoForDate(videos, date, timeZone = Calendar.DEFAULT_TIME_ZONE
 
 function evaluateSnapshot(snapshot) {
   const timeZone = snapshot.timeZone || Calendar.DEFAULT_TIME_ZONE;
-  const record = recordForDate(snapshot.published, snapshot.date, timeZone);
+  const record = recordForDate(snapshot.published, snapshot.date, timeZone, snapshot.publishTimeZone || timeZone);
   const slug = record && record.slug || null;
   const quality = snapshot.quality || null;
   const decision = quality && (quality.karar || quality.decision) || record && record.kalite || null;
@@ -83,8 +85,9 @@ function evaluateSnapshot(snapshot) {
   const videoId = record && record.videoId || remoteTodayVideo && remoteTodayVideo.id || null;
   const uploaded = !!(videoId && videoIdGecerli(videoId));
   const remotePublishAt = remoteTodayVideo && remoteTodayVideo.status && remoteTodayVideo.status.publishAt || null;
-  const scheduled = !!((record && record.publishAt && isoDay(record.publishAt, timeZone) === snapshot.date)
-    || (remotePublishAt && isoDay(remotePublishAt, timeZone) === snapshot.date));
+  const publishTimeZone = snapshot.publishTimeZone || timeZone;
+  const scheduled = !!((record && record.publishAt && isoDay(record.publishAt, publishTimeZone) === snapshot.date)
+    || (remotePublishAt && isoDay(remotePublishAt, publishTimeZone) === snapshot.date));
   const qualityPassed = !!(decision && decision !== "BLOCK" && finalGate);
   const notificationExists = !!(videoId && snapshot.notifications && snapshot.notifications["video:" + videoId]);
   const videoIdExists = uploaded && snapshot.remoteVideoExists !== false;
@@ -133,13 +136,14 @@ async function check(options = {}) {
   const channel = options.channel || Channel.getChannel();
   const legacy = channel.config.pathMode === "legacy-adapter";
   const timeZone = channel.config.timezone || Calendar.DEFAULT_TIME_ZONE;
+  const publishTimeZone = Calendar.shortSchedule(channel).publishTimeZone;
   const date = options.date || Calendar.dayKey(new Date(), timeZone);
   const deadlineUtc = options.deadlineUtc || process.env.PRODUCTION_DEADLINE_UTC || "16:30";
   if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(deadlineUtc)) throw new Error("PRODUCTION_DEADLINE_UTC must be HH:MM");
   const published = jsonOku(path.join(channel.paths.state, legacy ? "yayinlananlar.json" : "published.json"), []);
   const generated = jsonOku(path.join(channel.paths.state, legacy ? "uretilenler.json" : "generated.json"), []);
   const notificationsState = jsonOku(path.join(channel.paths.state, legacy ? "bildirim-durum.json" : "notification-state.json"), { gonderilen: {} });
-  const record = recordForDate(published, date, timeZone);
+  const record = recordForDate(published, date, timeZone, publishTimeZone);
   let remoteVideoExists;
   let remoteTodayVideo = null;
   let youtubeVerified = false;
@@ -153,13 +157,13 @@ async function check(options = {}) {
       const uploads = await yt.yuklemeler(api, 100);
       const idsToRead = [...new Set([...(uploads.ids || []), record && record.videoId].filter(Boolean))];
       const videos = idsToRead.length ? await yt.videolar(api, idsToRead) : [];
-      remoteTodayVideo = youtubeVideoForDate(videos, date, timeZone);
+      remoteTodayVideo = youtubeVideoForDate(videos, date, timeZone, publishTimeZone);
       const recordedRemoteVideo = record && record.videoId ? videos.find((item) => item.id === record.videoId) : null;
       remoteVideoExists = record && record.videoId ? !!recordedRemoteVideo : !!remoteTodayVideo;
       // YouTube can omit status.publishAt after a scheduled video becomes
       // public. If the authenticated API still proves the exact registry ID
       // exists and the registry slot is today, prefer skipping to a duplicate.
-      if (!remoteTodayVideo && recordedRemoteVideo && isoDay(record.publishAt, timeZone) === date) remoteTodayVideo = recordedRemoteVideo;
+      if (!remoteTodayVideo && recordedRemoteVideo && isoDay(record.publishAt, publishTimeZone) === date) remoteTodayVideo = recordedRemoteVideo;
       youtubeVerified = true;
     } catch (error) {
       remoteVideoExists = false;
@@ -169,6 +173,7 @@ async function check(options = {}) {
   const result = evaluateSnapshot({
     date,
     timeZone,
+    publishTimeZone,
     deadlineUtc,
     channel: channel.slug,
     published,
