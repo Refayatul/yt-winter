@@ -36,7 +36,7 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 48.51,
+      "ageHours": 49.39,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -58,10 +58,10 @@
         "views": null
       },
       "baselines": {
-        "views": null,
-        "viewsPerHour": null,
+        "views": 36,
+        "viewsPerHour": 36,
         "averagePercentageViewed": null,
-        "engagementRate": null,
+        "engagementRate": 0.05556,
         "subscriberConversion": null
       },
       "missing": [
@@ -78,7 +78,108 @@
     }
   },
   {
-    "checkpoints": {},
+    "checkpoints": {
+      "1h": {
+        "collectedAt": "2026-10-02T19:23:07.595Z",
+        "metrics": {
+          "views": {
+            "value": 36,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 2,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 55.56,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      }
+    },
     "hookType": "visual_first_reveal",
     "hookScore": 76,
     "selectedHook": "Europa hides more water than all Earth's oceans.",
@@ -208,49 +309,68 @@
     "channel": "impossible-brief",
     "contentType": "short",
     "title": "The Hidden Ocean on Jupiter's Moon",
-    "publishAt": "2026-10-02T18:00:00.000Z",
+    "publishAt": "2026-10-02T18:00:21Z",
     "publishHourUTC": 18,
     "readiness": 89,
     "normalized": {
       "ageHours": 1,
-      "viewsPerHour": null,
+      "viewsPerHour": 36,
       "recentViewVelocity": null,
-      "likeRate": null,
-      "commentRate": null,
+      "likeRate": 0.05556,
+      "commentRate": 0,
       "shareRate": null,
-      "engagementRate": null,
+      "engagementRate": 0.05556,
       "engagedViewRate": null,
       "subscriberConversion": null,
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": null,
+      "growthScore": 50,
       "classification": "NORMAL",
       "percentiles": {
-        "viewVelocity": null,
+        "viewVelocity": 50,
         "retention": null,
-        "engagement": null,
+        "engagement": 50,
         "subscriberConversion": null,
-        "views": null
+        "views": 50
       },
       "baselines": {
-        "views": null,
-        "viewsPerHour": null,
+        "views": 36,
+        "viewsPerHour": 36,
         "averagePercentageViewed": null,
-        "engagementRate": null,
+        "engagementRate": 0.05556,
         "subscriberConversion": null
       },
       "missing": [
-        "viewVelocity",
         "retention",
-        "engagement",
-        "subscriberConversion",
-        "views"
+        "subscriberConversion"
       ],
       "plateau": null,
       "breakout": null,
       "probableCauses": [],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
-    }
+    },
+    "durationSeconds": 35,
+    "registeredBy": "analytics-pass",
+    "metrics": {
+      "views": 36,
+      "averagePercentageViewed": null,
+      "averageViewDuration": null,
+      "likes": 2,
+      "comments": 0,
+      "shares": null,
+      "subscribersGained": null,
+      "engagedViews": null,
+      "subscribersLost": null,
+      "netSubscribers": null,
+      "subscribersPer1000Views": null,
+      "netSubscribersPer1000Views": null,
+      "engagementPer1000Views": 55.56,
+      "watchHoursPer1000Views": null,
+      "ctr": null,
+      "first30sRetention": null,
+      "shortsFeedShare": null
+    },
+    "latestCheckpoint": "1h"
   }
 ]
