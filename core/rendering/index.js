@@ -9,6 +9,7 @@ const Visuals = require("../visuals");
 const Quality = require("../quality");
 const TopicVisuals = require("./topic-visuals");
 const Hashtags = require("../hashtags");
+const Series = require("../series");
 const { ROOT } = require("../channel-context");
 
 function write(file, value) {
@@ -457,11 +458,15 @@ function fitFontSize(text, maximum) {
   return Math.max(36, Math.min(maximum, Math.floor(960 / (Math.max(1, String(text).length) * 0.72))));
 }
 
-function overlayText(topic, duration, opening, firstShotType = null) {
+function overlayText(topic, duration, opening, firstShotType = null, seriesLabel = null) {
   const parts = [];
+  const on = `enable='lt(t,${HOOK_SECONDS})'`;
+  // Series tag ("CRITICAL THREAD #3") sits above the hook in the channel accent:
+  // a numbered, recurring format is a reason to subscribe.
+  if (seriesLabel) parts.push(`drawtext=expansion=none:text='${drawtextSafe(seriesLabel)}':fontcolor=${channelAccent(topic)}:fontsize=44:borderw=4:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=262:${on}`);
   const showHook = opening === "motion" || (firstShotType && firstShotType !== "number-card");
   const hook = showHook ? drawtextSafe(String(topic.thumbnailText || "").toUpperCase()) : "";
-  if (hook) parts.push(`drawtext=expansion=none:text='${hook}':fontcolor=white:fontsize=${fitFontSize(hook, 112)}:borderw=8:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=330:enable='lt(t,${HOOK_SECONDS})'`);
+  if (hook) parts.push(`drawtext=expansion=none:text='${hook}':fontcolor=white:fontsize=${fitFontSize(hook, 112)}:borderw=8:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=330:${on}`);
   return parts.length ? "," + parts.join(",") : "";
 }
 
@@ -569,7 +574,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   }
   const concatInputs = plan.map((_, index) => `[v${index}]`).join("");
   const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
-  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening, plan[0] && plan[0].type)}[v]`);
+  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening, plan[0] && plan[0].type, options.seriesLabel || null)}[v]`);
   const filterFile = path.join(path.dirname(output), ".visual-filter.txt");
   fs.writeFileSync(filterFile, filters.join(";\n") + "\n");
   args.push(ff.filtreBayragi, filterFile, "-map", "[v]", "-map", `${plan.length}:a`, "-t", String(duration), "-r", String(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
@@ -638,7 +643,8 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   const hashtags = Hashtags.forTopic(channel.slug, topic, { format: "short" });
   const subject = Hashtags.subjectPhrase(topic);
   const descriptionBody = `${topic.coreQuestion}\n\nSources:\n${topic.sources.map((source) => `- ${source.name}: ${source.url}`).join("\n")}\n\n${isCriticalThread ? "Technical illustrations and dependency models are labelled. Estimates and industry claims are attributed; modeled consequences are not presented as observed fact." : "Illustrative visuals are labelled. Speculative outcomes are not presented as measured fact."}`;
-  const describe = (credits = []) => [descriptionBody, credits.length ? `Visual credits:\n${credits.join("\n")}` : null, hashtags.join(" ")]
+  const seriesLine = Series.descriptionLine(channel, topic.slug);
+  const describe = (credits = []) => [descriptionBody, seriesLine, credits.length ? `Visual credits:\n${credits.join("\n")}` : null, hashtags.join(" ")]
     .filter(Boolean).join("\n\n");
   const baseTags = isCriticalThread ? ["infrastructure", "engineering", "supply chain", topic.category.toLowerCase(), "CriticalThread"] : ["science", "what if", topic.category.toLowerCase(), "ImpossibleBrief"];
   const metadata = {
@@ -707,7 +713,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     const renderTopic = topic.channel ? topic : { ...topic, channel: channel.slug };
     const music = channel.config.music && channel.config.music.enabled === false || process.env.MUSIC === "0" ? null : mixMusicBed(voice.file, duration, renderTopic, outputDirectory);
     const visualRender = renderVideo(music ? music.file : voice.file, duration, video, path.join(outputDirectory, "captions.ass"), renderTopic,
-      { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [] });
+      { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [], seriesLabel: Series.label(channel, topic.slug) });
     const thumbnailRender = renderThumbnail(image, renderTopic, assets, script);
     render.completed = true;
     render.audio = { ...voice, ...audioProbe, music: music ? { mood: music.mood, profile: music.profile } : null };

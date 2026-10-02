@@ -113,6 +113,8 @@ function olustur(konu, ops = {}) {
   if (format === "long" && Array.isArray(bolumler) && bolumler.length >= 3 && bolumler[0].t === 0)
     bl.push("Chapters:\n" + bolumler.map((c) => `${zaman(c.t)} ${c.baslik}`).join("\n"));
   if (a.disclosure.descriptionNote && a.disclosure.voiceNote) bl.push(a.disclosure.voiceNote);
+  const seri = require("./core/series").descriptionLine(require("./core/channel-context").getChannel("failure-reconstructed"), konu.slug);
+  if (seri) bl.push(seri);
   // En fazla 5 hashtag: #shorts + genis kanal etiketi + vakanin kendi adi (#VanNormanDam)
   // + kume + ikinci genis etiket. Ilk ucu basligin ustunde gorunur.
   const konuEtiketi = Hashtags.subjectHashtag({ names: [v.kisa, v.ad], references: v.kaynakca || [] });

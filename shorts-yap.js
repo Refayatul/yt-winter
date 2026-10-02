@@ -59,6 +59,7 @@ const DFONT = font(true);   // drawtext icin acik font yolu
 // Buyume: ekranda kanca (ilk ~2.5s) + sona etkilesim sorusu (yorum icin)
 const cleanTxt = (s) => String(s || "").replace(/[{}]/g, "").replace(/\\/g, "").replace(/[<>]/g, "");
 const HOOK = cleanTxt(konu.hook).toUpperCase();
+const SERI = require("./core/series").label(require("./core/channel-context").getChannel("failure-reconstructed"), IS);
 const SORU = cleanTxt(konu.soru);
 const sahneler = konu.sahneler || [];
 if (!sahneler.length) { console.error("konu.json'da sahneler[] yok."); process.exit(1); }
@@ -301,6 +302,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
       // Kanca ILK KAREDE ekranda (fade-in yok): Shorts akisinda kaydirma karari ilk karede verilir.
       ekstra.push(`Dialogue: 0,${assTime(0)},${assTime(hookSon)},Pop,,0,0,0,,` +
         `{\\an5\\pos(${cx},${y})\\fs${fs}\\bord${bord}\\shad3\\fad(0,220)}${satirlar.map(assKacis).join("\\N")}`);
+      // Seri etiketi ("FAILURE FILE #13") kancanin hemen ustunde, kanal turuncusuyla:
+      // numarali, tekrar eden bir format abone olmak icin bir sebeptir (core/series.js).
+      if (SERI) {
+        const sfs = Math.round(W * 0.040 * k);
+        const sy = Math.round(y - (satirlar.length * fs) / 2 - sfs * 0.9);
+        ekstra.push(`Dialogue: 0,${assTime(0)},${assTime(hookSon)},Pop,,0,0,0,,` +
+          `{\\an5\\pos(${cx},${sy})\\fs${sfs}\\bord${Math.max(3, bord - 2)}\\shad2\\1c&H3687D8&\\fad(0,220)}${assKacis(SERI)}`);
+      }
     }
     // Tarih/yer damgasi (yalnizca belirli bir olay/vaka ise) — baglam sahnesinde
     const v = konu.vaka || {};
