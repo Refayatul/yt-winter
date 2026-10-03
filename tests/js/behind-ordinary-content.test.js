@@ -108,3 +108,17 @@ test("the evidence-gated channel selects from its verified pool; other channels 
   assert.equal(pick.selected.topic.channel, "behind-the-ordinary");
   assert.equal(pick.selected.topic.productionReady, true);
 });
+
+test("every production-ready BTO record yields at least 20 truthful title candidates (package gate)", () => {
+  const os = require("node:os");
+  const saved = process.env.GROWTH_STATE_ROOT;
+  process.env.GROWTH_STATE_ROOT = fs.mkdtempSync(path.join(os.tmpdir(), "bto-titles-"));
+  try {
+    const Growth = require("../../core/growth");
+    const bto = Channel.getChannel("behind-the-ordinary");
+    for (const topic of universe().topics.filter((item) => item.productionReady === true)) {
+      const plan = Growth.planShort(bto, topic.id, { skipDuplicate: true });
+      assert.ok(plan.titles.candidates.filter((item) => !item.misleading).length >= 20, topic.slug);
+    }
+  } finally { if (saved === undefined) delete process.env.GROWTH_STATE_ROOT; else process.env.GROWTH_STATE_ROOT = saved; }
+});

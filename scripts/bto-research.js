@@ -182,7 +182,7 @@ const SYSTEM = [
   "Every narration line lists the fact ids it is based on and must not add any detail that is not in those facts. Only use numbers that appear in a cited fact.",
   "thumbnailText: 1 to 3 words, capital letters, no apostrophes. Titles must be accurate and supported by the facts.",
   "Return JSON only: {\"answerable\":true,\"title\":\"...\",\"coreQuestion\":\"...?\",\"openingLine\":\"...\",\"secondBeat\":\"...\",\"mechanism\":\"...\",\"expectedConsequence\":\"...\",\"payoff\":\"...\",\"misconception\":\"...\",",
-  "\"thumbnailText\":\"...\",\"editorialTitles\":[\"...\",\"...\",\"...\"],\"visualScenes\":[5 short shot descriptions],",
+  "\"thumbnailText\":\"...\",\"editorialTitles\":[10 distinct accurate titles, each using only words supported by the facts],\"visualScenes\":[5 short shot descriptions],",
   "\"facts\":[{\"id\":\"F1\",\"role\":\"origin|context|problem|explanation|surprising-detail|consequence|payoff\",\"claim\":\"...\",\"quote\":\"exact words\",\"sourceId\":\"S1\"}],",
   "\"narration\":[{\"role\":\"VISUAL_MYSTERY|CLEAR_PROMISE|ORIGIN|EXPLANATION|SURPRISING_DETAIL|CONSEQUENCE|PAYOFF\",\"text\":\"...\",\"facts\":[\"F1\"]}]}",
 ].join("\n");
@@ -230,7 +230,9 @@ function toSeedRecord(topic, draft, sources) {
     misconception: draft.misconception || undefined,
     payoff: draft.payoff || (narration[narration.length - 1] || {}).text,
     thumbnailText: String(draft.thumbnailText || "").toUpperCase().replace(/['\\]/g, "").trim(),
-    editorialTitles: (Array.isArray(draft.editorialTitles) ? draft.editorialTitles : [title]).map(String).slice(0, 3),
+    // Ten fact-worded titles: the template titles alone can fall under the
+    // 20 truthful candidates the package gate requires.
+    editorialTitles: [...new Set((Array.isArray(draft.editorialTitles) ? draft.editorialTitles : [title]).map(String))].slice(0, 10),
     visualScenes: (Array.isArray(draft.visualScenes) ? draft.visualScenes : []).map(String).slice(0, 5),
     narration: narration.map(({ facts: cited, ...line }) => ({ ...line, factIds: cited })),
     facts: facts.map((fact) => ({ role: fact.role || "evidence", layer: "VERIFIED FACT", claim: String(fact.claim).trim(), quote: String(fact.quote).trim(),
