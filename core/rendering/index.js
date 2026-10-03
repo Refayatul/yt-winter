@@ -9,6 +9,7 @@ const Visuals = require("../visuals");
 const Quality = require("../quality");
 const TopicVisuals = require("./topic-visuals");
 const Hashtags = require("../hashtags");
+const Series = require("../series");
 const { ROOT } = require("../channel-context");
 
 function write(file, value) {
@@ -414,22 +415,42 @@ function channelAccent(topic) {
 // A sourced number over a blurred, darkened photograph from the same topic (or
 // a dark grid when the topic has no photograph), with its meaning underneath.
 // No box and no internal labels: the value and its context are the visual.
-function renderNumberCard(output, shot, topic) {
+function cardHeadline(shot) {
+  const headline = drawtextSafe(shot.numbers.slice(0, 2).join("  vs  ").toUpperCase());
+  return { headline, fontSize: Math.min(190, Math.floor(numberCardFontSize(headline) * 1.25)), y: 600 };
+}
+
+// Count-up: a single whole number with an optional unit ("39", "14,800 TONNES",
+// "45%") climbs from 0 to its value in under a second, then the card shows the
+// exact sourced text. Years, ranges, comparisons, decimals and values under 10
+// stay static: counting those up would read oddly or misstate the value.
+const COUNT_UP_SECONDS = 0.9;
+function countUp(shot) {
+  if (!shot || !Array.isArray(shot.numbers) || shot.numbers.length !== 1 || (shot.comparison && shot.comparison.length)) return null;
+  const match = String(shot.numbers[0]).match(/^(\d{1,3}(?:,\d{3})+|\d+)(\s*%|\s+[A-Za-z][A-Za-z\s-]*)?$/);
+  if (!match) return null;
+  const value = Number(match[1].replace(/,/g, ""));
+  const suffix = (match[2] || "").toUpperCase();
+  if (!Number.isFinite(value) || value < 10 || value > 10000000) return null;
+  if (!suffix && value >= 1000 && value <= 2100) return null;
+  const seconds = Math.min(COUNT_UP_SECONDS, Math.max(0.5, (shot.duration || 1.5) * 0.6));
+  return { value, suffix: drawtextSafe(suffix), seconds };
+}
+
+function renderNumberCard(output, shot, topic, options = {}) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   fs.mkdirSync(path.dirname(output), { recursive: true });
   const accent = channelAccent(topic);
-  const headline = drawtextSafe(shot.numbers.slice(0, 2).join("  vs  ").toUpperCase());
+  const { headline, fontSize } = cardHeadline(shot);
   const caption = drawtextSafe(String(shot.caption || "").toUpperCase());
-  const fontSize = Math.min(190, Math.floor(numberCardFontSize(headline) * 1.25));
   const barY = 600 + fontSize + 46;
   const backdrop = shot.backdrop && shot.backdrop.path && fs.existsSync(shot.backdrop.path) ? shot.backdrop.path : null;
   const filters = backdrop
     ? ["scale=1080:1920:force_original_aspect_ratio=increase", "crop=1080:1920", "gblur=sigma=28", "eq=brightness=-0.30:saturation=0.70"]
     : ["drawgrid=width=120:height=120:thickness=2:color=0x0d2a3d@0.55"];
-  filters.push(
-    `drawtext=expansion=none:text='${headline}':fontcolor=white:fontsize=${fontSize}:borderw=6:bordercolor=0x000000@0.55:x=(w-text_w)/2:y=600`,
-    `drawbox=x=420:y=${barY}:w=240:h=10:color=${accent}@0.95:t=fill`,
-  );
+  // An animated card draws its number in the shot itself (countUp), not here.
+  if (!options.omitHeadline) filters.push(`drawtext=expansion=none:text='${headline}':fontcolor=white:fontsize=${fontSize}:borderw=6:bordercolor=0x000000@0.55:x=(w-text_w)/2:y=600`);
+  filters.push(`drawbox=x=420:y=${barY}:w=240:h=10:color=${accent}@0.95:t=fill`);
   if (caption) filters.push(`drawtext=expansion=none:text='${caption}':fontcolor=${accent}:fontsize=${Math.max(40, Math.min(66, Math.floor(1650 / Math.max(1, caption.length))))}:borderw=4:bordercolor=0x000000@0.55:x=(w-text_w)/2:y=${barY + 52}`);
   if (shot.comparison && shot.comparison.length >= 2) {
     const values = shot.comparison.map((value) => Number((value.replace(/,/g, "").match(/\d+(?:\.\d+)?/) || [1])[0]));
@@ -457,11 +478,15 @@ function fitFontSize(text, maximum) {
   return Math.max(36, Math.min(maximum, Math.floor(960 / (Math.max(1, String(text).length) * 0.72))));
 }
 
-function overlayText(topic, duration, opening, firstShotType = null) {
+function overlayText(topic, duration, opening, firstShotType = null, seriesLabel = null) {
   const parts = [];
+  const on = `enable='lt(t,${HOOK_SECONDS})'`;
+  // Series tag ("CRITICAL THREAD #3") sits above the hook in the channel accent:
+  // a numbered, recurring format is a reason to subscribe.
+  if (seriesLabel) parts.push(`drawtext=expansion=none:text='${drawtextSafe(seriesLabel)}':fontcolor=${channelAccent(topic)}:fontsize=44:borderw=4:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=262:${on}`);
   const showHook = opening === "motion" || (firstShotType && firstShotType !== "number-card");
   const hook = showHook ? drawtextSafe(String(topic.thumbnailText || "").toUpperCase()) : "";
-  if (hook) parts.push(`drawtext=expansion=none:text='${hook}':fontcolor=white:fontsize=${fitFontSize(hook, 112)}:borderw=8:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=330:enable='lt(t,${HOOK_SECONDS})'`);
+  if (hook) parts.push(`drawtext=expansion=none:text='${hook}':fontcolor=white:fontsize=${fitFontSize(hook, 112)}:borderw=8:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=330:${on}`);
   return parts.length ? "," + parts.join(",") : "";
 }
 
@@ -503,6 +528,16 @@ function cameraMove(variant, frames) {
   return moves[variant % moves.length];
 }
 
+// The climbing number (t is the shot's own clock after zoompan), then the
+// exact sourced headline. floor(V*t/T) never exceeds V while t < T.
+function countUpFilter(shot) {
+  const { headline, fontSize, y } = cardHeadline(shot);
+  const { value, suffix, seconds } = shot.countUp;
+  const style = `fontcolor=white:fontsize=${fontSize}:borderw=6:bordercolor=0x000000@0.55:x=(w-text_w)/2:y=${y}`;
+  return `,drawtext=expansion=normal:text='%{eif\\:floor(${value}*t/${seconds})\\:d}${suffix}':${style}:enable='lt(t,${seconds})'`
+    + `,drawtext=expansion=none:text='${headline}':${style}:enable='gte(t,${seconds})'`;
+}
+
 function renderVideo(audioFile, duration, output, captionsFile, topic, options = {}) {
   const ff = require("../../ff-yol");
   const ffmpeg = ff.ffmpeg;
@@ -518,8 +553,9 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
       inputs.push({ pre: ["-ss", offset.toFixed(2), "-t", (shot.duration + 0.3).toFixed(2)], file: shot.clip.path });
     } else if (shot.type === "licensed-still") inputs.push(shot.still.path);
     else if (shot.type === "number-card") {
-      const file = path.join(cardDirectory, (shot.sourceId + (shot.backdrop ? "-" + shot.backdrop.cachedFile : "")).replace(/[^a-z0-9-]/gi, "-") + ".jpg");
-      if (!fs.existsSync(file)) renderNumberCard(file, shot, topic);
+      shot.countUp = countUp(shot);
+      const file = path.join(cardDirectory, (shot.sourceId + (shot.backdrop ? "-" + shot.backdrop.cachedFile : "") + (shot.countUp ? "-count" : "")).replace(/[^a-z0-9-]/gi, "-") + ".jpg");
+      if (!fs.existsSync(file)) renderNumberCard(file, shot, topic, { omitHeadline: !!shot.countUp });
       inputs.push(file);
     } else {
       const file = scientificFrames({ ...topic, visualScenes: [shot.scene] }, path.dirname(output), 1, shot.proceduralFrame)[0];
@@ -558,6 +594,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
       chain = `[${index}:v]scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,zoompan=${cameraMove(shot.motion || 0, frames)}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
     } else if (shot.type === "number-card") {
       chain = `[${index}:v]scale=1080:1920,zoompan=z='1+0.0006*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
+      if (shot.countUp) chain += countUpFilter(shot);
     } else {
       chain = `[${index}:v]scale=1080:1920,zoompan=z='min(zoom+0.0004,1.08)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
     }
@@ -569,7 +606,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   }
   const concatInputs = plan.map((_, index) => `[v${index}]`).join("");
   const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
-  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening, plan[0] && plan[0].type)}[v]`);
+  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening, plan[0] && plan[0].type, options.seriesLabel || null)}[v]`);
   const filterFile = path.join(path.dirname(output), ".visual-filter.txt");
   fs.writeFileSync(filterFile, filters.join(";\n") + "\n");
   args.push(ff.filtreBayragi, filterFile, "-map", "[v]", "-map", `${plan.length}:a`, "-t", String(duration), "-r", String(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
@@ -638,7 +675,8 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   const hashtags = Hashtags.forTopic(channel.slug, topic, { format: "short" });
   const subject = Hashtags.subjectPhrase(topic);
   const descriptionBody = `${topic.coreQuestion}\n\nSources:\n${topic.sources.map((source) => `- ${source.name}: ${source.url}`).join("\n")}\n\n${isCriticalThread ? "Technical illustrations and dependency models are labelled. Estimates and industry claims are attributed; modeled consequences are not presented as observed fact." : "Illustrative visuals are labelled. Speculative outcomes are not presented as measured fact."}`;
-  const describe = (credits = []) => [descriptionBody, credits.length ? `Visual credits:\n${credits.join("\n")}` : null, hashtags.join(" ")]
+  const seriesLine = Series.descriptionLine(channel, topic.slug);
+  const describe = (credits = []) => [descriptionBody, seriesLine, credits.length ? `Visual credits:\n${credits.join("\n")}` : null, hashtags.join(" ")]
     .filter(Boolean).join("\n\n");
   const baseTags = isCriticalThread ? ["infrastructure", "engineering", "supply chain", topic.category.toLowerCase(), "CriticalThread"] : ["science", "what if", topic.category.toLowerCase(), "ImpossibleBrief"];
   const metadata = {
@@ -707,7 +745,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     const renderTopic = topic.channel ? topic : { ...topic, channel: channel.slug };
     const music = channel.config.music && channel.config.music.enabled === false || process.env.MUSIC === "0" ? null : mixMusicBed(voice.file, duration, renderTopic, outputDirectory);
     const visualRender = renderVideo(music ? music.file : voice.file, duration, video, path.join(outputDirectory, "captions.ass"), renderTopic,
-      { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [] });
+      { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [], seriesLabel: Series.label(channel, topic.slug) });
     const thumbnailRender = renderThumbnail(image, renderTopic, assets, script);
     render.completed = true;
     render.audio = { ...voice, ...audioProbe, music: music ? { mood: music.mood, profile: music.profile } : null };
@@ -753,4 +791,4 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations, validationReasons };
 }
 
-module.exports = { overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
+module.exports = { countUp, countUpFilter, overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };

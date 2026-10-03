@@ -274,7 +274,39 @@ function kisaUstKatman(konu, cikti) {
   return ciz(a.tip, a.veri, cikti, "short");
 }
 
-module.exports = { ciz, adaylar, uzunIcinUret, kisaUstKatman, sar, CIZ };
+// SHORTS: ADIM ADIM zincir. Her asama bir oncekinin ustune bir kutu ekler; en son
+// eklenen kutu kirmizi vurgulanir (cizim "son adim" kuralini zaten uygular), boylece
+// izleyici arizanin nasil ilerledigini sirayla gorur. Donus: asama PNG yollari.
+function kisaZincirAsamalari(konu, klasor) {
+  const a = adaylar(konu).find((x) => x.tip === "failure-chain");
+  if (!a) return [];
+  const adimlar = a.veri.adimlar.slice(0, 6);
+  return adimlar.map((_, i) => ciz("failure-chain", { adimlar: adimlar.slice(0, i + 1) }, path.join(klasor, `zincir-${i + 1}.png`), "short"));
+}
+
+// SHORTS: zincirin ekranda kalacagi pencere. Kancadan (ilk ~2.7 sn) sonra, kapanis
+// sorusundan (son 2.8 sn) once; teknik sahne varsa onun basinda, yoksa videonun
+// ~%35'inde. Adim basina ~0.55 sn acilis + 1.3 sn tam zincir; sigmazsa adimlar
+// hizlanir (en az 0.35 sn), pencere 2.4 sn'den kisaysa zincir hic gosterilmez.
+function kisaZincirPenceresi({ adimSayisi, vodur, teknikBas = null, kancaSon = 2.7, soruPayi = 2.9 }) {
+  const n = Math.max(0, Math.min(6, adimSayisi || 0));
+  if (n < 3 || !(vodur > 0)) return null;
+  const bas0 = Math.min(kancaSon, vodur * 0.4) + 0.3;
+  const son0 = vodur - soruPayi;
+  if (son0 - bas0 < 2.4) return null;
+  const istenen = Math.min(4.6, n * 0.55 + 1.3);
+  const sure = Math.max(2.4, Math.min(istenen, son0 - bas0));
+  let a = teknikBas != null && teknikBas >= bas0 ? teknikBas : Math.max(bas0, vodur * 0.35);
+  if (a + sure > son0) a = son0 - sure;
+  a = Math.max(bas0, a);
+  const b = a + sure;
+  const acilis = Math.max(n * 0.35, sure - 1.0);
+  const adim = acilis / n;
+  const asamalar = Array.from({ length: n }, (_, i) => ({ a: +(a + i * adim).toFixed(2), b: +(i === n - 1 ? b : a + (i + 1) * adim).toFixed(2) }));
+  return { a: +a.toFixed(2), b: +b.toFixed(2), asamalar };
+}
+
+module.exports = { ciz, adaylar, uzunIcinUret, kisaUstKatman, kisaZincirAsamalari, kisaZincirPenceresi, sar, CIZ };
 
 if (require.main === module) {
   const slug = process.argv[2];

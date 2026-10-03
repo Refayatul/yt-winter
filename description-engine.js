@@ -113,10 +113,13 @@ function olustur(konu, ops = {}) {
   if (format === "long" && Array.isArray(bolumler) && bolumler.length >= 3 && bolumler[0].t === 0)
     bl.push("Chapters:\n" + bolumler.map((c) => `${zaman(c.t)} ${c.baslik}`).join("\n"));
   if (a.disclosure.descriptionNote && a.disclosure.voiceNote) bl.push(a.disclosure.voiceNote);
-  // En fazla 3 hashtag: #shorts + vakanin kendi adi (#VanNormanDam) + kume. Vaka adi
-  // turetilemezse eski genel #engineering etiketi yerini alir.
+  const seri = require("./core/series").descriptionLine(require("./core/channel-context").getChannel("failure-reconstructed"), konu.slug);
+  if (seri) bl.push(seri);
+  // En fazla 5 hashtag: #shorts + genis kanal etiketi + vakanin kendi adi (#VanNormanDam)
+  // + kume + ikinci genis etiket. Ilk ucu basligin ustunde gorunur.
   const konuEtiketi = Hashtags.subjectHashtag({ names: [v.kisa, v.ad], references: v.kaynakca || [] });
-  bl.push(Hashtags.compose({ format, subject: konuEtiketi, category: HASHTAG[kumeId] || "#disaster", theme: "#engineering" }).join(" "));
+  bl.push(Hashtags.compose({ format, subject: konuEtiketi, category: HASHTAG[kumeId] || "#disaster",
+    broad: Hashtags.BROAD["failure-reconstructed"] }).join(" "));
   const metin = bl.filter(Boolean).join("\n\n").replace(/[<>]/g, "");
   return { metin: metin.slice(0, 4900), etiketler: etiketler(konu) };
 }

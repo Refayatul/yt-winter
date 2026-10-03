@@ -31,26 +31,31 @@ test("subject comes from the short case name, then Wikipedia, preferring a lette
   assert.equal(Hashtags.subjectHashtag({ references: [{ url: "https://www.nasa.gov/" }] }), null);
 });
 
-test("at most three hashtags, no duplicates, #shorts first only for Shorts", () => {
-  assert.deepEqual(Hashtags.compose({ format: "short", subject: "#Europa", category: "#space", theme: "#science" }), ["#shorts", "#Europa", "#space"]);
-  assert.deepEqual(Hashtags.compose({ format: "long", subject: "#Europa", category: "#space", theme: "#science" }), ["#Europa", "#space", "#science"]);
-  assert.deepEqual(Hashtags.compose({ format: "short", subject: null, category: "#infrastructure", theme: "#Infrastructure" }), ["#shorts", "#infrastructure"]);
+test("at most five hashtags: #shorts, broad, subject, category, second broad; no duplicates", () => {
+  const broad = ["#science", "#whatif"];
+  assert.deepEqual(Hashtags.compose({ format: "short", subject: "#Europa", category: "#space", broad }), ["#shorts", "#science", "#Europa", "#space", "#whatif"]);
+  assert.deepEqual(Hashtags.compose({ format: "long", subject: "#Europa", category: "#space", broad }), ["#science", "#Europa", "#space", "#whatif"]);
+  assert.deepEqual(Hashtags.compose({ format: "short", subject: null, category: "#Engineering", broad: ["#engineering", "#howitworks"] }), ["#shorts", "#engineering", "#howitworks"]);
+  for (const tags of Object.values(Hashtags.BROAD)) assert.ok(tags.every((tag) => !/^#(viral|fyp|trending|foryou)/i.test(tag)), "no spam hashtags");
 });
 
-test("every researched ImpossibleBrief and CriticalThread topic gets a mapped category and at most three hashtags", () => {
+test("every ImpossibleBrief and CriticalThread topic gets a mapped category and three to five hashtags", () => {
   for (const slug of ["impossible-brief", "critical-thread"]) {
     const topics = Discovery.universe(Channel.getChannel(slug)).topics;
     for (const topic of topics) {
       assert.ok(Hashtags.CATEGORY[slug][String(topic.category).toUpperCase()], `${slug} category ${topic.category} has no hashtag`);
       const tags = Hashtags.forTopic(slug, topic);
-      assert.ok(tags.length >= 2 && tags.length <= 3, `${topic.slug}: ${tags.join(" ")}`);
-      assert.equal(tags[0], "#shorts");
+      assert.ok(tags.length >= 3 && tags.length <= Hashtags.MAX_HASHTAGS, `${topic.slug}: ${tags.join(" ")}`);
+      assert.deepEqual(tags.slice(0, 2), ["#shorts", Hashtags.BROAD[slug][0]]);
     }
   }
 });
 
 test("ImpossibleBrief and CriticalThread descriptions end with topic hashtags and carry the subject tag", () => {
-  for (const [slug, wanted] of [["impossible-brief", "what-if-we-swam-in-europas-ocean"], ["critical-thread", "inside-the-system-built-around-road-tunnel-ventilation-system"]]) {
+  for (const [slug, wanted, expected] of [
+    ["impossible-brief", "what-if-we-swam-in-europas-ocean", "#shorts #science #Europa #space #whatif"],
+    ["critical-thread", "inside-the-system-built-around-road-tunnel-ventilation-system", "#shorts #engineering #MontBlancTunnel #infrastructure #howitworks"],
+  ]) {
     const channel = Channel.getChannel(slug);
     const topic = Discovery.universe(channel).topics.find((item) => item.slug === wanted);
     assert.ok(topic, wanted);
@@ -59,19 +64,19 @@ test("ImpossibleBrief and CriticalThread descriptions end with topic hashtags an
       Rendering.buildPackage(topic, channel, temp, { render: false });
       const metadata = JSON.parse(fs.readFileSync(path.join(temp, "metadata.json"), "utf8"));
       const lastLine = metadata.description.trim().split("\n").pop();
+      assert.equal(lastLine, expected);
       assert.deepEqual(hashtagsIn(lastLine), metadata.hashtags);
-      assert.ok(hashtagsIn(metadata.description).length <= 3);
-      assert.match(lastLine, slug === "impossible-brief" ? /^#shorts #Europa #space$/ : /^#shorts #MontBlancTunnel #infrastructure$/);
+      assert.equal(hashtagsIn(metadata.description).length, 5);
       assert.equal(metadata.tags[0], slug === "impossible-brief" ? "Europa" : "Mont Blanc Tunnel");
     } finally { fs.rmSync(temp, { recursive: true, force: true }); }
   }
 });
 
-test("Failure Reconstructed descriptions name the case in a hashtag and stay within three", () => {
+test("Failure Reconstructed descriptions lead with strong tags, name the case, and stay within five", () => {
   const topic = K.konular().find((item) => item.slug === "lower-van-norman-dam-1971");
   assert.ok(topic);
   const result = Description.olustur(topic, { format: "short", plan: { kumeler: [] } });
   const lastLine = result.metin.trim().split("\n").pop();
-  assert.equal(lastLine, "#shorts #VanNormanDam #infrastructure");
-  assert.equal(hashtagsIn(result.metin).length, 3);
+  assert.equal(lastLine, "#shorts #engineering #VanNormanDam #infrastructure #history");
+  assert.equal(hashtagsIn(result.metin).length, 5);
 });
