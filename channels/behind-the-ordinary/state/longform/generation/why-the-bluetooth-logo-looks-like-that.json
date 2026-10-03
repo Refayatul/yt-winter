@@ -5,7 +5,7 @@
   "topicHash": "12370004e00f:98",
   "status": "DEFERRED",
   "createdAt": "2026-10-03T18:44:15.478Z",
-  "updatedAt": "2026-10-03T18:44:15.478Z",
+  "updatedAt": "2026-10-03T19:06:46.870Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -848,20 +848,133 @@
           "role": "evidence"
         }
       ]
+    },
+    {
+      "section": "ORIGIN_CONTEXT",
+      "paragraphs": [
+        {
+          "text": "King Harald Bluetooth Gormsson, noted for uniting Denmark and Norway in 958, earned his nickname from a dead tooth of a dark blue‑grey colour.",
+          "claims": [
+            "C12",
+            "C13"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "In 1996 Intel, Ericsson and Nokia convened to plan a short‑range radio standard, and Jim Kardach of Intel suggested Bluetooth as a temporary code name.",
+          "claims": [
+            "C14",
+            "C15"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Kardach chose the name after seeing a picture of Harald Bluetooth’s runestone in a Viking history.",
+          "claims": [
+            "C22"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "THE_PROBLEM",
+      "paragraphs": [
+        {
+          "text": "PAN already had tens of thousands of hits on the internet. A full trademark search on RadioWire could not be completed in time for launch.",
+          "claims": [
+            "C19",
+            "C20"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "THE_EXPLANATION",
+      "paragraphs": [
+        {
+          "text": "The Bluetooth emblem is a bind rune that fuses the Younger Futhark characters representing Harald Bluetooth’s initials, and its naming story likens the king’s unification of Scandinavia to the technology’s linking of computers and phones.",
+          "claims": [
+            "C2",
+            "C16"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Viewed as an outward sign, the bind rune stands for wireless linking; symbols enable layered communication, are learned rather than inherent, and their meaning shifts with culture and context. Semiotics treats symbols as signifiers paired with signifieds, linking visual marks to concepts, a process studied across linguistics and psychology. Scholars such as Heinrich Zimmer note their timeless relevance. Symbols can convey ideology, compare status, or blend seamlessly into surroundings, becoming isomorphic; examples include dress codes or greetings. A single mark may hold multiple values, be living or dead, and evolve with history. Living symbols can reveal hidden layers, while dead symbols lose power; they may be taken as reality, pointing beyond themselves to mystery. Meaning may be altered by usage, history, intent, emotive force, or context, and similar forms can differ by uniform. Map symbols illustrate categories—pictorial, functional, conceptual, conventional, abstract—showing how visual variables and learned conventions represent real‑world features. Symbolic actions, from flag burning to corporate gestures, further demonstrate how signs signal beliefs and intentions.",
+          "claims": [
+            "C30",
+            "C31",
+            "C32",
+            "C33",
+            "C34",
+            "C35",
+            "C36",
+            "C37",
+            "C38",
+            "C39",
+            "C40",
+            "C41",
+            "C42",
+            "C43",
+            "C44",
+            "C45",
+            "C46",
+            "C47",
+            "C48",
+            "C49",
+            "C50",
+            "C51",
+            "C68",
+            "C69",
+            "C70",
+            "C71",
+            "C72",
+            "C73",
+            "C74",
+            "C75",
+            "C76",
+            "C77",
+            "C78",
+            "C79",
+            "C80",
+            "C81",
+            "C82",
+            "C83",
+            "C84",
+            "C85",
+            "C86",
+            "C87",
+            "C88",
+            "C89",
+            "C90",
+            "C91",
+            "C92",
+            "C93",
+            "C94",
+            "C95",
+            "C96",
+            "C97",
+            "C98"
+          ],
+          "role": "evidence"
+        }
+      ]
     }
   ],
   "usage": {
-    "input_tokens": 5826,
-    "output_tokens": 2327
+    "input_tokens": 10476,
+    "output_tokens": 6449
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "All statements are directly supported by the supplied claim IDs; no additional facts were introduced.",
+  "depthNote": "All statements are directly supported by the supplied claim IDs; no additional facts were introduced. Only the supplied claim IDs were used; no additional facts were introduced. Paragraph uses only claims C19 and C20 as required.",
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
-    "stage": "section:ORIGIN_CONTEXT",
+    "stage": "section:SURPRISING_DETAIL",
     "retryable": true,
-    "retryAfterMs": 6000
+    "retryAfterMs": 19000
   }
 }
