@@ -215,6 +215,7 @@ function haftalikMesaj(v) {
     `- Abone: **${v.simdi?.subscribers ?? "?"}** (${fark(v.simdi?.subscribers, v.once?.subscribers)} bu hafta)`,
     `- Toplam izlenme: **${v.simdi?.views ?? "?"}** (${fark(v.simdi?.views, v.once?.views)} bu hafta)`, "",
     "**Bu haftanın videoları:**", ...(v.videolar.length ? v.videolar.map((x) => `- ${x.baslik} — ${x.izlenme ?? "?"} izlenme — https://youtu.be/${x.videoId}`) : ["- (yok)"]), "",
+    ...(v.ogrenme ? [v.ogrenme, ""] : []),
     "**Sıradaki konular:**", ...v.sira.map((s, i) => `${i + 1}. ${s}`), "",
     `🩺 Sistem: ${v.saglik}`, "",
     "Her şey otomatik. Sadece sorun olduğunda ayrı bir issue açılır."].join("\n") };
@@ -363,6 +364,20 @@ async function gunKontrol(d) {
   isaretle(d, "bosgun:" + g);
 }
 
+// Haftalik ogrenme ozeti: kanalin kendi olcumlerinden (1. gun izlenme, izlenme
+// orani) yayin saati, baslik kalibi ve konu bilinirligi karsilastirmasi +
+// ogrenme motorunun gozlem/hipotez/benimsenen bulgulari (core/growth/weekly-learning).
+function haftalikOgrenme() {
+  const Weekly = require("./core/growth/weekly-learning");
+  const Analytics = require("./core/growth/analytics");
+  const Popularity = require("./core/growth/popularity");
+  const legacy = CHANNEL.config.pathMode === "legacy-adapter";
+  const ham = legacy ? require("./lib/kutuphane").konular() : (require("./core/discovery").universe(CHANNEL).topics || []);
+  const popularityFor = (slug) => { const raw = ham.find((k) => k.slug === slug); const p = raw ? Popularity.forTopic(CHANNEL.slug, raw) : null; return p ? p.score : null; };
+  const learning = jsonOku(path.join(CHANNEL.paths.memory, "growth-learning.json"), {});
+  return Weekly.markdown(Weekly.summarize(Analytics.readAll(CHANNEL), learning, { popularityFor }));
+}
+
 async function haftalik(d) {
   const hafta = (() => { const t = new Date(); const p = new Date(Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate() - ((t.getUTCDay() + 6) % 7))); return p.toISOString().slice(0, 10); })();
   if (new Date().getUTCDay() !== 1 || d.gonderilen["hafta:" + hafta]) return;
@@ -379,7 +394,9 @@ async function haftalik(d) {
     else if (CHANNEL.config.pathMode !== "legacy-adapter") throw new Error(`${CHANNEL.prefix}_YT_CHANNEL_ID missing`);
     for (const v of await yt.videolar(api, hafta7.map((y) => y.videoId))) izl[v.id] = v.statistics.viewCount; } } catch (e) {}
   const s = jsonOku(path.join(CHANNEL.paths.state, CHANNEL.config.pathMode === "legacy-adapter" ? "saglik.json" : "health.json"), null);
-  const m = haftalikMesaj({ tarih: bugun(), simdi, once, videolar: hafta7.map((y) => ({ ...y, izlenme: izl[y.videoId] })),
+  let ogrenme = null;
+  try { ogrenme = haftalikOgrenme(); } catch (e) { console.log("Ogrenme ozeti olusturulamadi: " + e.message); }
+  const m = haftalikMesaj({ tarih: bugun(), simdi, once, ogrenme, videolar: hafta7.map((y) => ({ ...y, izlenme: izl[y.videoId] })),
     sira: K.kuyruk().slice(0, 7).map((k) => k.baslik),
     saglik: s ? (s.bulgular.every((b) => b.durum === "ok") ? "tüm kontroller geçti ✅" : s.bulgular.filter((b) => b.durum !== "ok").map((b) => b.mesaj).join("; ")) : "bilinmiyor" });
   for (const i of await etiketliIssuelar("haftalik")) if (TOKEN) await gh("PATCH", `/repos/${REPO}/issues/${i.number}`, { state: "closed" });
@@ -420,6 +437,6 @@ async function main() {
   }
 }
 
-module.exports = { videoMesaji, hataMesaji, saglikMesaji, checkpointYorumu, yayindaYorumu, haftalikMesaj, bosGunMesaji, slaHataMesaji, dususNoktasi, TESHIS_TR };
+module.exports = { haftalikOgrenme, videoMesaji, hataMesaji, saglikMesaji, checkpointYorumu, yayindaYorumu, haftalikMesaj, bosGunMesaji, slaHataMesaji, dususNoktasi, TESHIS_TR };
 
 if (require.main === module) main().catch((e) => { console.error("Hata: " + e.message); process.exit(0); });
