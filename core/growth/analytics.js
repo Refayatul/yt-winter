@@ -100,6 +100,7 @@ function flatMetrics(snap) {
     subscribersPer1000Views: pick("subscribers_per_1000_views"), netSubscribersPer1000Views: pick("net_subscribers_per_1000_views"), engagementPer1000Views: pick("engagement_per_1000_views"),
     watchHoursPer1000Views: pick("watch_hours_per_1000_views"), ctr: pick("ctr"), first30sRetention: pick("first_30s_retention"),
     shortsFeedShare: (snap.traffic.find((row) => row.source === "SHORTS") || {}).share ?? null,
+    searchShare: snap.traffic.length ? (snap.traffic.find((row) => row.source === "YT_SEARCH") || { share: 0 }).share : null,
   };
 }
 
@@ -157,7 +158,7 @@ function baselines(channel, rows = readAll(channel)) {
 
 // PHASE 14: subscribers per 1,000 views by dimension, Shorts and long separate.
 function conversionBreakdown(channel, rows = readAll(channel)) {
-  const dims = ["topicCluster", "hookType", "durationBucket", "storyStructure", "ctaStyle", "titlePattern", "contentType"];
+  const dims = ["topicCluster", "hookType", "durationBucket", "storyStructure", "ctaStyle", "titlePattern", "contentType", "popularityBand", "publishSlot", "openingVisual"];
   const out = { short: {}, long: {} };
   for (const type of ["short", "long"]) {
     for (const dim of dims) {

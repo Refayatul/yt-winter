@@ -72,13 +72,33 @@ function portfolioPlan(now = new Date()) {
   };
 }
 
+// Close tasks from earlier days: "done" when that day has a Short (or the
+// long-form lane recorded an episode), otherwise "missed". Without this every
+// task stayed "queued" forever and queue depth / job age meant nothing.
+function settle(state, channel, today, records = shortRecords(channel)) {
+  const tz = channel.config.timezone;
+  const publishTz = Calendar.shortSchedule(channel).publishTimeZone;
+  for (const item of state.queue) {
+    if (item.status !== "queued" || !item.date || item.date >= today) continue;
+    const done = item.format === "short" ? !!Calendar.shortForDay(records, item.date, tz, publishTz) : false;
+    item.status = done ? "done" : item.format === "short" ? "missed" : "expired";
+    item.settledOn = today;
+  }
+  state.queue = state.queue.slice(-60);
+  return state;
+}
+
 function enqueue(plan = portfolioPlan()) {
   for (const task of plan.queue) {
     const channel = Channel.getChannel(task.channel);
     const file = path.join(channel.paths.state, "scheduler-state.json");
     const state = read(file, { channel: task.channel, lastShort: null, lastLong: null, queue: [] });
-    if (!state.queue.some((item) => item.key === task.key && item.date === Calendar.dayKey(plan.generatedAt, channel.config.timezone))) {
-      state.queue.push({ ...task, date: Calendar.dayKey(plan.generatedAt, channel.config.timezone), status: "queued" });
+    const today = Calendar.dayKey(plan.generatedAt, channel.config.timezone);
+    const before = JSON.stringify(state.queue);
+    settle(state, channel, today);
+    const fresh = !state.queue.some((item) => item.key === task.key && item.date === today);
+    if (fresh) state.queue.push({ ...task, date: today, status: "queued" });
+    if (fresh || JSON.stringify(state.queue) !== before) {
       fs.mkdirSync(path.dirname(file), { recursive: true });
       const temporary = file + `.tmp-${process.pid}`;
       fs.writeFileSync(temporary, JSON.stringify(state, null, 2) + "\n");
@@ -88,4 +108,4 @@ function enqueue(plan = portfolioPlan()) {
   return plan;
 }
 
-module.exports = { lastPublished, shortRecords, isDue, shortPlan, channelPlan, portfolioPlan, enqueue };
+module.exports = { lastPublished, shortRecords, isDue, shortPlan, channelPlan, portfolioPlan, settle, enqueue };

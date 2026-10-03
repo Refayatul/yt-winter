@@ -216,6 +216,12 @@ function render(slug) {
     out.push(path.relative(KOK, o));
     try { fs.unlinkSync(kare); } catch (e) {}
   }
+  // Versioned variant ledger (hash, concept, layout, text length) per channel.
+  try {
+    const Channel = require("./core/channel-context");
+    require("./core/growth/thumbnails").recordVariants(Channel.getChannel(), slug, r.konseptler.map((c, i) => ({
+      file: out[i], concept: c.id, layoutType: c.duzen || c.layout || null, text: c.metin || c.yazi || null, templateVersion: "fr-thumbnail-strategy-v1", human: false, selected: i === 0 })));
+  } catch (e) {}
   return out;
 }
 

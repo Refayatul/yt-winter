@@ -751,6 +751,15 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     render.audio = { ...voice, ...audioProbe, music: music ? { mood: music.mood, profile: music.profile } : null };
     render.video = { file: video, captionsBurned: true, ...visualRender, ...probe(video) };
     render.thumbnail = { file: image, bytes: fs.statSync(image).size, ...thumbnailRender };
+    // Provenance manifest (every external + generated asset, licence, duty to
+    // attribute) and the thumbnail variant ledger.
+    require("../../lib/provenance").write(outputDirectory, require("../../lib/provenance").build({
+      channel: channel.slug, slug: topic.slug, stills: assets.stills || [], clips: assets.clips || [], voiceProvider: voice.provider, music: !!music,
+    }));
+    try {
+      require("../growth/thumbnails").recordVariants(channel, topic.slug, [{ file: path.relative(ROOT, image), sha256: require("../growth/thumbnails").sha256(image),
+        concept: thumbnailRender.sourceType || "lead-still-with-hook-text", layoutType: "full-bleed-still-text", text: topic.thumbnailText || null, templateVersion: "ib-ct-thumbnail-v1", human: false, selected: true }]);
+    } catch (error) {}
     pkg.renderVisuals = visualRender;
     pkg.qualityGate = Quality.evaluatePackage(pkg);
     write(path.join(outputDirectory, "quality-gate.json"), pkg.qualityGate);

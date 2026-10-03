@@ -325,6 +325,20 @@ async function checkpointler(d) {
 async function yayinKontrol(d) {
   const K = require("./lib/kutuphane");
   const yt = require("./lib/yt");
+  // Unexpected public publication: a video still scheduled for the future that
+  // is already public (should never happen; private + publishAt is the rule).
+  try {
+    const erken = K.yayinlananlar().filter((y) => y.publishAt && Date.parse(y.publishAt) > Date.now() + 10 * 60000 && y.videoId && !d.gonderilen["erken:" + y.videoId]);
+    if (erken.length && yt.kimlikVar()) {
+      const api0 = yt.istemci(await yt.token());
+      for (const v of await yt.videolar(api0, erken.map((y) => y.videoId))) {
+        if (v.status && v.status.privacyStatus === "public") {
+          require("./lib/ops-log").event(CHANNEL, "publish.unexpected_public", { videoId: v.id, publishAt: (erken.find((y) => y.videoId === v.id) || {}).publishAt });
+          isaretle(d, "erken:" + v.id);
+        }
+      }
+    }
+  } catch (e) {}
   const bekleyen = K.yayinlananlar().filter((y) => y.publishAt && Date.parse(y.publishAt) <= Date.now() - 5 * 60000
     && Date.now() - Date.parse(y.publishAt) < 4 * 86400000 && !d.gonderilen["yayin:" + y.videoId]);
   if (!bekleyen.length || !yt.kimlikVar()) return;
@@ -335,7 +349,11 @@ async function yayinKontrol(d) {
   for (const y of bekleyen) {
     const v = vids.find((x) => x.id === y.videoId);
     const no = await videoIssue(y.videoId);
-    if (v && v.status.privacyStatus === "public") { await yorumYaz(no, yayindaYorumu(v)); isaretle(d, "yayin:" + y.videoId); }
+    if (v && v.status.privacyStatus === "public") {
+      // Publish delay = when the scheduled video was first seen public vs its publishAt.
+      try { require("./lib/ops-log").event(CHANNEL, "publish.public", { videoId: y.videoId, publishAt: y.publishAt, delayMinutes: Math.round((Date.now() - Date.parse(y.publishAt)) / 60000) }); } catch (e) {}
+      await yorumYaz(no, yayindaYorumu(v)); isaretle(d, "yayin:" + y.videoId);
+    }
     else if (Date.now() - Date.parse(y.publishAt) > 60 * 60000) {
       await issueAc({ baslik: kanalBaslik(`❌ Otomatik yayın gerçekleşmedi: ${y.baslik}`), etiket: ["hata"], govde:
         `@${SAHIP} video ${trSaat(new Date(y.publishAt))} saatinde Public olmalıydı ama durumu: **${v ? v.status.privacyStatus : "bulunamadı"}**.\n\nStudio'dan kontrol et: https://studio.youtube.com/video/${y.videoId}/edit` });
@@ -375,7 +393,15 @@ function haftalikOgrenme() {
   const ham = legacy ? require("./lib/kutuphane").konular() : (require("./core/discovery").universe(CHANNEL).topics || []);
   const popularityFor = (slug) => { const raw = ham.find((k) => k.slug === slug); const p = raw ? Popularity.forTopic(CHANNEL.slug, raw) : null; return p ? p.score : null; };
   const learning = jsonOku(path.join(CHANNEL.paths.memory, "growth-learning.json"), {});
-  return Weekly.markdown(Weekly.summarize(Analytics.readAll(CHANNEL), learning, { popularityFor }));
+  const Store = require("./core/growth/store");
+  const records = Analytics.readAll(CHANNEL);
+  const Warehouse = require("./core/analytics/warehouse");
+  const uploads = records.filter((row) => row.contentType !== "long").map((row) => row.publishAt).filter(Boolean);
+  const cadence = require("./core/growth/diagnosis").cadenceRisk(Warehouse.readTable(CHANNEL, "channel_daily").rows, uploads, require("./core/growth/config").forChannel(CHANNEL).diagnosis.cadence);
+  return Weekly.markdown(Weekly.summarize(records, learning, { popularityFor,
+    predictions: Store.readState(CHANNEL, "growth", "predictions.json", null),
+    families: (Store.readState(CHANNEL, "growth", "topic-performance.json", { families: [] }) || {}).families,
+    conversion: Analytics.conversionBreakdown(CHANNEL, records), cadence }));
 }
 
 async function haftalik(d) {

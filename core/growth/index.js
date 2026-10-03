@@ -307,6 +307,13 @@ function planShort(channel, idOrTopic, options = {}) {
       storyStructure: (config.story && config.story.shorts || []).join(">"),
       titlePattern: titles.selected ? titles.selected.pattern : null,
       selectedTitle: titles.selected ? titles.selected.title : null,
+      // Predictions recorded at decision time, compared with outcomes later
+      // (core/growth/predictions.js). Full candidate lists stay in the plan file.
+      titleScore: titles.selectedScore,
+      titleCandidates: titles.count,
+      hookCandidates: hooks.candidateCount,
+      topicScore: evaluation.score.VideoPotentialScore,
+      popularityScore: topic.popularity ? topic.popularity.score : null,
       ctaStyle: cta.type,
       durationBucket: durationBucket(estimatedSeconds),
       openingVisual: first.First3SecondPlan ? first.First3SecondPlan.firstFrame.sourceClass : null,

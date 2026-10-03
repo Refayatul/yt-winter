@@ -104,6 +104,10 @@ function summarize(records, learning = {}, options = {}) {
     bySlot: groupBy(rows, "publishSlot"),
     byTitlePattern: groupBy(rows, "titlePattern"),
     byPopularity: groupBy(rows, "popularityBand"),
+    calibration: options.predictions && options.predictions.calibration || null,
+    families: options.families || [],
+    conversion: options.conversion || null,
+    cadence: options.cadence || null,
     findings: {
       adopted: shortsLearning.adopted || [],
       hypotheses: shortsLearning.hypotheses || [],
@@ -126,6 +130,37 @@ function finding(item) {
   return `${item.dimension} = ${item.value} (${item.sample} video, fark ${lift})`;
 }
 
+const PREDICTOR_LABEL = { topicScore: "konu puanı", viralScore: "viral puan", hookScore: "kanca puanı", titleScore: "başlık puanı", readiness: "hazırlık puanı", popularityScore: "Wikipedia bilinirliği" };
+
+// Prediction accuracy, topic families, conversion and cadence (sample-aware).
+function extraSections(summary) {
+  const lines = [];
+  const shortCal = summary.calibration && summary.calibration.short;
+  if (shortCal) {
+    const judged = Object.entries(shortCal).filter(([, item]) => item.status !== "INSUFFICIENT_SAMPLE" && item.spearman != null);
+    lines.push("**Tahmin isabeti (Shorts):**");
+    if (!judged.length) lines.push(`- Henüz yeterli örnek yok (tahmin başına en az ${shortCal.topicScore ? 5 : 5} ölçülmüş video).`);
+    else for (const [key, item] of judged) lines.push(`- ${PREDICTOR_LABEL[key] || key}: sıra korelasyonu ${item.spearman} (${item.n} video) — ${item.status === "PREDICTIVE" ? "işe yarıyor" : item.status === "INVERTED" ? "TERS çalışıyor, gözden geçirilmeli" : "zayıf"}`);
+    lines.push("");
+  }
+  const families = (summary.families || []).filter((item) => item.contentType === "short" && item.measured > 0);
+  if (families.length) {
+    lines.push("**Konu aileleri (Shorts, gerçek sonuca göre):**");
+    for (const item of families.slice(0, 4)) lines.push(`- ${item.cluster}: ${item.measured} video, büyüme puanı ${item.actualGrowthScore ?? "?"}, medyan ${item.medianViews ?? "?"} izlenme, ${item.mode}${item.fatigue ? " · ⚠ yorulma" : ""} (${item.confidence})`);
+    lines.push("");
+  }
+  const byPattern = summary.conversion && summary.conversion.short && summary.conversion.short.titlePattern;
+  const sized = byPattern ? Object.entries(byPattern).filter(([, item]) => item.n >= 3) : [];
+  if (sized.length >= 2) {
+    sized.sort((a, b) => b[1].subscribersPer1000Views - a[1].subscribersPer1000Views);
+    lines.push(`**Abone dönüşümü:** en iyi başlık kalıbı ${sized[0][0]} (${sized[0][1].subscribersPer1000Views} abone/1.000 izlenme), en zayıf ${sized[sized.length - 1][0]} (${sized[sized.length - 1][1].subscribersPer1000Views}).`, "");
+  }
+  if (summary.cadence && summary.cadence.code) {
+    lines.push(`⚠ **Yayın sıklığı riski:** son ${summary.cadence.recentUploads} video (önceki dönem ${summary.cadence.previousUploads}), video başına izlenme dakikası ${summary.cadence.watchMinutesPerUpload.previous} → ${summary.cadence.watchMinutesPerUpload.recent}. Kalite > sıklık.`, "");
+  }
+  return lines;
+}
+
 function markdown(summary) {
   const lines = ["**📈 Bu haftanın öğrenme özeti**", ""];
   if (summary.recent.length) {
@@ -140,6 +175,7 @@ function markdown(summary) {
   lines.push(...groupLines("Konu bilinirliği (Wikipedia)", summary.byPopularity));
   if (!summary.retentionAvailable) lines.push("- İzlenme oranı (%) henüz gelmedi: Analytics izni yeni token'larla açıldı, ilk ölçümler birkaç gün içinde düşer.");
   lines.push("");
+  lines.push(...extraSections(summary));
   const { adopted, hypotheses, observations } = summary.findings;
   if (adopted.length) lines.push("**Uygulanan öğrenmeler** (puanlamayı etkiliyor):", ...adopted.slice(0, 5).map((item) => `- ${finding(item)}`), "");
   if (hypotheses.length) lines.push("**Hipotezler** (izleniyor, henüz uygulanmıyor):", ...hypotheses.slice(0, 5).map((item) => `- ${finding(item)}`), "");

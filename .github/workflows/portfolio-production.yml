@@ -146,6 +146,7 @@ jobs:
         run: |
           for CHANNEL in failure-reconstructed impossible-brief critical-thread; do
             node post-publish-analyzer.js --channel "$CHANNEL" --due || true
+            node analytics-sync.js --channel "$CHANNEL" || true
             node channel-plan.js --channel "$CHANNEL" || true
             node library-health.js --channel "$CHANNEL" || true
             if [ "${{ inputs.dry_run }}" != "true" ]; then
