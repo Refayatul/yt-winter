@@ -1,0 +1,30 @@
+{
+  "channel": "behind-the-ordinary",
+  "cycles": [
+    {
+      "cycleId": "2026-W40",
+      "channel": "behind-the-ordinary",
+      "startedAt": "2026-10-03T18:44:15.478Z",
+      "status": "DEFERRED_PROVIDER",
+      "evaluated": [
+        {
+          "slug": "why-the-bluetooth-logo-looks-like-that",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 69,
+          "bucket": "B",
+          "decision": "BLOCK",
+          "score": 88,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~2.3 min; target 8–15 min — not padded",
+            "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+          ],
+          "generationStatus": "DEFERRED"
+        }
+      ],
+      "selected": null,
+      "reason": "provider deferred why-the-bluetooth-logo-looks-like-that; retry this cycle and resume its checkpoint",
+      "checkpoint": "generation/why-the-bluetooth-logo-looks-like-that.json",
+      "finishedAt": "2026-10-03T18:44:26.557Z"
+    }
+  ]
+}

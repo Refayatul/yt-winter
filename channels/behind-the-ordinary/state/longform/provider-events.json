@@ -1,0 +1,101 @@
+[
+  {
+    "at": "2026-10-03T18:44:15.478Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-03T18:44:15.478Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 5086,
+      "output_tokens": 1222
+    }
+  },
+  {
+    "at": "2026-10-03T18:44:15.478Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:THE_QUESTION",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-03T18:44:15.478Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:THE_QUESTION",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 740,
+      "output_tokens": 1105
+    }
+  },
+  {
+    "at": "2026-10-03T18:44:15.478Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:ORIGIN_CONTEXT",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-03T18:44:15.478Z",
+    "channel": "behind-the-ordinary",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:ORIGIN_CONTEXT",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 5000
+  },
+  {
+    "at": "2026-10-03T18:44:15.478Z",
+    "channel": "behind-the-ordinary",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:ORIGIN_CONTEXT",
+    "attempt": 2,
+    "delayMs": 5000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-03T18:44:15.478Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:ORIGIN_CONTEXT",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-03T18:44:15.478Z",
+    "channel": "behind-the-ordinary",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:ORIGIN_CONTEXT",
+    "attempt": 2,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 6000
+  }
+]
