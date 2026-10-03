@@ -68,16 +68,16 @@ under `icerik/`, `analytics/`); GitHub Actions is the scheduler/runtime.
 - ANALYTICS-06 Shorts vs long separate baselines — **DONE** (existing `performance`/`diagnosis`).
 
 ### Growth intelligence
-- DIAG-01 Diagnosis codes from the spec (aliases for existing, new where data exists) — TODO
-- TOPIC-01 Topic/cluster performance ledger: predicted vs actual, count, confidence, explore/exploit, fatigue — TODO
-- TOPIC-02 Topic performance feeds topic decisions — TODO (learning cluster bonus exists; wire ledger)
-- HOOK-01 Hook candidates + scores + winner + outcome traceable — TODO (candidates exist; outcome link missing)
-- TITLE-01 Title candidates + scores + winner + outcome traceable — TODO (same)
+- DIAG-01 Diagnosis codes from the spec — **DONE**. core/growth/diagnosis.js: existing codes keep their names and carry `specCode` (HOOK_WEAK, RETENTION_WEAK, PACKAGING_WEAK, SUBSCRIBER_CONVERSION_WEAK, TOPIC_REACH_LIMITED, POTENTIAL_BREAKOUT, EARLY_DISTRIBUTION_PLATEAU); new SEARCH_DEPENDENT, STRONG_TOPIC_AUDIENCE_FIT, STRONG_DISCOVERY, PROMISE_CONTENT_MISMATCH (manual CTR only), CADENCE_QUALITY_RISK (warehouse); all relative to the channel's format median with a minimum baseline sample (config/growth-engine.json). RETURNING_VIEWER_WEAK not emitted: returning viewers are not exposed per video by the API (documented). Tests: tests/js/learning-loop.test.js (6 pass).
+- TOPIC-01 Topic/cluster ledger — **DONE**. core/growth/predictions.topicPerformance → `state/growth/topic-performance.json`: publications, predicted vs actual, views, retention, conversion, confidence, explore/exploit/deprioritise, fatigue. Tests: tests/js/learning-loop.test.js (6 pass).
+- TOPIC-02 Topic performance feeds decisions — **DONE**. Existing learning cluster bonus (sample/significance-gated) + measured Wikipedia popularity (PR #94) in topic scoring; family ledger + calibration in the Monday report for inspection. Tests: tests/js/learning-loop.test.js (6 pass).
+- HOOK-01 Hook traceability — **DONE**. Candidates/scores/winner in the plan file (`state/growth/shorts/<slug>.json`); hookScore, hookCandidates, selectedHook in the video record; outcome joined in predictions.json. Tests: tests/js/learning-loop.test.js (6 pass).
+- TITLE-01 Title traceability — **DONE**. Candidates/scores/patterns in the plan file; titleScore, titleCandidates, titlePattern, selectedTitle recorded (core/growth/index.js growthMeta); outcome joined in predictions.json. Tests: tests/js/learning-loop.test.js (6 pass).
 - THUMB-01 Thumbnail variant metadata ledger (hash, template, concept, text length) — TODO
-- CONV-01 Subscriber conversion by topic, cluster, series, format, title/hook pattern — TODO
+- CONV-01 Subscriber conversion by dimension — **DONE**. Existing core/growth/analytics.conversionBreakdown (topic cluster, hook, duration, structure, CTA, title pattern, format) + popularityBand, publishSlot, openingVisual; series = channel; weekly report shows best/worst title pattern with n≥3. Tests: tests/js/learning-loop.test.js (6 pass).
 - FATIGUE-01 Near-duplicate / repeated-pattern penalties — **DONE** (title pattern freshness PR #95; topic similarity in topic-scoring).
 - EXP-01 Single-hypothesis experiment records — **DONE** (existing `experiments.js`).
-- LEARN-01 Prediction vs outcome persisted and inspectable per channel — TODO
+- LEARN-01 Prediction vs outcome persisted and inspectable — **DONE**. core/growth/predictions.js → `state/growth/predictions.json` with per-predictor Spearman calibration (INSUFFICIENT_SAMPLE under 5); refreshed after every analytics run (core/growth/runtime.js); summarised in the Monday report. Tests: tests/js/learning-loop.test.js (6 pass).
 - SERIES-01 Series identity, playlists, related links — **DONE** (`core/series.js`, funnel).
 - MONET-01 Monetization-readiness trajectories from real data only — TODO
 

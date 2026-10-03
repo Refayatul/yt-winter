@@ -109,12 +109,15 @@ async function analyticsPass(channel, videos, measure, options = {}) {
     const diagnosis = Diagnosis.diagnose(row, baselines, config, { checkpoint: label });
     if (row.performance && row.performance.plateau) diagnosis.diagnoses.unshift({ code: "EARLY_DISTRIBUTION_PLATEAU", confidence: "medium", evidence: `${row.performance.plateau.earlyViews} → ${row.performance.plateau.latestViews} views; later/early velocity ${row.performance.plateau.velocityRatio}`, recommendation: "Treat listed causes as hypotheses; change one opening, duration or topic variable on a future upload." });
     if (row.performance && row.performance.breakout) diagnosis.diagnoses.unshift({ code: "BREAKOUT", confidence: baselines.short.n >= 10 ? "medium" : "low", evidence: row.performance.breakout.signals.join("; "), recommendation: "Nominate adjacent same-cluster topics without duplicating this event." });
+    for (const item of diagnosis.diagnoses) item.specCode = item.specCode || Diagnosis.specCode(item.code);
     diagnoses.push({ ...diagnosis, at: now.toISOString() });
     console.log(analyticsSummary(channel, row, diagnosis));
   }
   Store.writeState(channel, "growth", "diagnoses.json", diagnoses.slice(-500));
   const learning = Learning.learn(channel, all, { now });
   Experiments.evaluate(channel, all);
+  // Prediction vs outcome + topic-family ledger (inspectable learning).
+  try { require("./predictions").refresh(channel, all, { now }); } catch (error) {}
   return { measured: results.length, baselines, learning: { shorts: learning.shorts.status, longform: learning.longform.status } };
 }
 

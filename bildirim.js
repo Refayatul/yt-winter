@@ -375,7 +375,15 @@ function haftalikOgrenme() {
   const ham = legacy ? require("./lib/kutuphane").konular() : (require("./core/discovery").universe(CHANNEL).topics || []);
   const popularityFor = (slug) => { const raw = ham.find((k) => k.slug === slug); const p = raw ? Popularity.forTopic(CHANNEL.slug, raw) : null; return p ? p.score : null; };
   const learning = jsonOku(path.join(CHANNEL.paths.memory, "growth-learning.json"), {});
-  return Weekly.markdown(Weekly.summarize(Analytics.readAll(CHANNEL), learning, { popularityFor }));
+  const Store = require("./core/growth/store");
+  const records = Analytics.readAll(CHANNEL);
+  const Warehouse = require("./core/analytics/warehouse");
+  const uploads = records.filter((row) => row.contentType !== "long").map((row) => row.publishAt).filter(Boolean);
+  const cadence = require("./core/growth/diagnosis").cadenceRisk(Warehouse.readTable(CHANNEL, "channel_daily").rows, uploads, require("./core/growth/config").forChannel(CHANNEL).diagnosis.cadence);
+  return Weekly.markdown(Weekly.summarize(records, learning, { popularityFor,
+    predictions: Store.readState(CHANNEL, "growth", "predictions.json", null),
+    families: (Store.readState(CHANNEL, "growth", "topic-performance.json", { families: [] }) || {}).families,
+    conversion: Analytics.conversionBreakdown(CHANNEL, records), cadence }));
 }
 
 async function haftalik(d) {

@@ -386,7 +386,12 @@
       "lowEngagementRatePer1000": 20,
       "lowSubsPer1000": 1,
       "lowDistributionViewsVsMedian": 0.5,
-      "shortsFeedShareMinimum": 0.5
+      "shortsFeedShareMinimum": 0.5,
+      "minBaselineSample": 5,
+      "strongConversionVsMedian": 1.5,
+      "strongDiscoveryVsMedian": 2,
+      "searchDependentShare": 0.5,
+      "goodCtr": 6
     },
     "longform": {
       "minViews": 150,
@@ -397,8 +402,14 @@
       "lowEngagementRatePer1000": 25,
       "lowSubsPer1000": 3,
       "lowCtr": 3.5,
-      "lowDistributionViewsVsMedian": 0.5
-    }
+      "lowDistributionViewsVsMedian": 0.5,
+      "minBaselineSample": 5,
+      "strongConversionVsMedian": 1.5,
+      "strongDiscoveryVsMedian": 2,
+      "searchDependentShare": 0.5,
+      "goodCtr": 6
+    },
+    "cadence": { "windowDays": 28, "uploadIncreaseRatio": 1.25, "watchPerUploadDropRatio": 0.8, "minimumUploads": 4 }
   },
   "learning": {
     "minimumSampleObservation": 3,
