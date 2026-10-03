@@ -3,9 +3,9 @@
   "channel": "behind-the-ordinary",
   "slug": "why-the-bluetooth-logo-looks-like-that",
   "topicHash": "12370004e00f:98",
-  "status": "DEFERRED",
+  "status": "COMPLETE",
   "createdAt": "2026-10-03T18:44:15.478Z",
-  "updatedAt": "2026-10-03T19:06:46.870Z",
+  "updatedAt": "2026-10-03T19:22:31.354Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -961,20 +961,74 @@
           "role": "evidence"
         }
       ]
+    },
+    {
+      "section": "SURPRISING_DETAIL",
+      "paragraphs": [
+        {
+          "text": "Bluetooth was coined as a placeholder, borrowing a king’s nickname rather than a technical acronym, and the intended permanent names were RadioWire or PAN.",
+          "claims": [
+            "C3",
+            "C17",
+            "C18"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "REAL_WORLD_CONSEQUENCE",
+      "paragraphs": [
+        {
+          "text": "The provisional code name was adopted as the enduring name and logo of the worldwide wireless standard, and the logo functions as a visual mark that conveys the idea of unified connectivity.",
+          "claims": [
+            "C1",
+            "C23"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FINAL_PAYOFF",
+      "paragraphs": [
+        {
+          "text": "The Bluetooth logo is a bind rune that merges the Younger Futhark runes Hagall and Bjarkan, forming King Harald’s initials.",
+          "claims": [
+            "C21"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "NEXT_CURIOSITY_BRIDGE",
+      "paragraphs": []
     }
   ],
   "usage": {
-    "input_tokens": 10476,
-    "output_tokens": 6449
+    "input_tokens": 12411,
+    "output_tokens": 7992
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "All statements are directly supported by the supplied claim IDs; no additional facts were introduced. Only the supplied claim IDs were used; no additional facts were introduced. Paragraph uses only claims C19 and C20 as required.",
+  "depthNote": "All statements are directly supported by the supplied claim IDs; no additional facts were introduced. Only the supplied claim IDs were used; no additional facts were introduced. Paragraph uses only claims C19 and C20 as required. The placeholder origin and abandoned alternatives shift the simple branding story. Evidence limited to two claims; paragraph stays concise. Only claim C21 supports this answer; evidence is limited to a single confirmed fact.",
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
     "stage": "section:SURPRISING_DETAIL",
     "retryable": true,
     "retryAfterMs": 19000
+  },
+  "quality": {
+    "duplicateSections": [],
+    "repeatedPhrases": [],
+    "weakHook": false,
+    "payoff": true,
+    "filler": [],
+    "introShare": 0.18,
+    "missingPlanSections": [],
+    "hardFails": [],
+    "notes": []
   }
 }
