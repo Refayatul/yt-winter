@@ -24,9 +24,17 @@ test("only articles named after the object count as evidence", () => {
   assert.equal(Research.relevantTitle("List of films in the Criterion Collection", "bicycle helmets"), false);
   assert.equal(Research.relevantTitle("Fallingwater", "office chairs"), false);
   assert.equal(Research.relevantTitle("Ampersand", "the ampersand"), true);
+  assert.equal(Research.relevantTitle("Barcode", "barcodes"), true);
   assert.equal(Research.relevantTitle("Windows 8", "airplane windows"), false, "one shared word is not enough for a two-word object");
   assert.equal(Research.relevantTitle("QWERTY", "QWERTY keyboards"), true);
   assert.equal(Research.relevantTitle("Road surface marking", "road markings"), true);
+});
+
+test("the object's own article is tried first", () => {
+  assert.deepEqual(Research.directTitles("barcodes"), ["Barcode", "Barcodes"]);
+  assert.deepEqual(Research.directTitles("QWERTY keyboards"), ["QWERTY keyboard", "QWERTY keyboards"]);
+  assert.deepEqual(Research.directTitles("the ampersand"), ["Ampersand"]);
+  assert.deepEqual(Research.directTitles("road reflectors"), ["Road reflector", "Road reflectors"]);
 });
 
 test("narration lines must cite facts and share their content", () => {
