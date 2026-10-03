@@ -2,24 +2,24 @@
   "channel": "failure-reconstructed",
   "status": "sample-floor-met",
   "minimumSample": 5,
-  "sampleSize": 9,
+  "sampleSize": 10,
   "learnedRules": [
     {
       "key": "hookType",
       "value": "statement",
       "weakValue": "consequence",
-      "evidenceVideos": 9,
+      "evidenceVideos": 10,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "statement",
           "sample": 7,
-          "averagePercentageViewed": 76.11
+          "averagePercentageViewed": 75.97
         },
         {
           "value": "consequence",
-          "sample": 2,
-          "averagePercentageViewed": 66.53
+          "sample": 3,
+          "averagePercentageViewed": 75.12
         }
       ]
     },
@@ -27,7 +27,7 @@
       "key": "durationRange",
       "value": "over-35s",
       "weakValue": "25-35s",
-      "evidenceVideos": 9,
+      "evidenceVideos": 10,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
@@ -37,22 +37,22 @@
         },
         {
           "value": "25-35s",
-          "sample": 7,
-          "averagePercentageViewed": 68.75
+          "sample": 8,
+          "averagePercentageViewed": 71.57
         }
       ]
     },
     {
       "key": "secondBeat",
       "value": "event",
-      "weakValue": null,
-      "evidenceVideos": 9,
+      "weakValue": "countdown",
+      "evidenceVideos": 10,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "emergency",
           "sample": 1,
-          "averagePercentageViewed": 93.43
+          "averagePercentageViewed": 92.45
         },
         {
           "value": "context",
@@ -66,8 +66,8 @@
         },
         {
           "value": "countdown",
-          "sample": 1,
-          "averagePercentageViewed": 54.35
+          "sample": 2,
+          "averagePercentageViewed": 73.33
         }
       ]
     },
@@ -75,13 +75,13 @@
       "key": "visualChangeFrequency",
       "value": "fast",
       "weakValue": "measured",
-      "evidenceVideos": 9,
+      "evidenceVideos": 10,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "fast",
-          "sample": 3,
-          "averagePercentageViewed": 78.29
+          "sample": 4,
+          "averagePercentageViewed": 81.55
         },
         {
           "value": "measured",
@@ -94,13 +94,13 @@
       "key": "questionStyle",
       "value": "question",
       "weakValue": null,
-      "evidenceVideos": 9,
+      "evidenceVideos": 10,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "question",
-          "sample": 9,
-          "averagePercentageViewed": 73.98
+          "sample": 10,
+          "averagePercentageViewed": 75.72
         }
       ]
     },
@@ -108,13 +108,18 @@
       "key": "category",
       "value": "spaceflight-disasters",
       "weakValue": "natural-hazards",
-      "evidenceVideos": 9,
+      "evidenceVideos": 10,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "nuclear-accidents",
           "sample": 1,
           "averagePercentageViewed": 109.41
+        },
+        {
+          "value": "maritime-disasters",
+          "sample": 1,
+          "averagePercentageViewed": 92.31
         },
         {
           "value": "aviation-failures",
@@ -124,7 +129,7 @@
         {
           "value": "spaceflight-disasters",
           "sample": 2,
-          "averagePercentageViewed": 73.89
+          "averagePercentageViewed": 73.4
         },
         {
           "value": "industrial-disasters",
@@ -147,17 +152,17 @@
       "key": "ctaStyle",
       "value": "adaptive after payoff",
       "weakValue": null,
-      "evidenceVideos": 9,
+      "evidenceVideos": 10,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "adaptive after payoff",
-          "sample": 9,
-          "averagePercentageViewed": 73.98
+          "sample": 10,
+          "averagePercentageViewed": 75.72
         }
       ]
     }
   ],
-  "lastUpdated": "2026-10-03T17:24:56.061Z",
+  "lastUpdated": "2026-10-03T18:00:32.181Z",
   "caveat": "Observed associations only; topic, timing and packaging can confound retention. No causal claim."
 }
