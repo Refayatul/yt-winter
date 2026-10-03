@@ -125,18 +125,6 @@ function metaDogrula(snippet, status) {
   return h;
 }
 
-// Ayni baslikta video kanalda zaten var mi? (commit-back yarisi / tekrar calisma -> cift yukleme olmasin)
-async function kanaldaVarMi(token, baslik) {
-  const bas = { Authorization: "Bearer " + token };
-  const ch = await istek({ hostname: "www.googleapis.com", path: "/youtube/v3/channels?part=contentDetails&mine=true", headers: bas });
-  const up = JSON.parse(ch.govde).items?.[0]?.contentDetails?.relatedPlaylists?.uploads;
-  if (!up) return null;
-  const pl = await istek({ hostname: "www.googleapis.com", path: "/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId=" + up, headers: bas });
-  const norm = (x) => String(x).toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
-  const bul = (JSON.parse(pl.govde).items || []).find((i) => norm(i.snippet.title) === norm(baslik));
-  return bul ? bul.snippet.resourceId.videoId : null;
-}
-
 // Yukleme hatasi kaydi — shorts-sira konuyu harcamaz, bildirim.js issue acar
 function hataYaz(BASE, IS, neden) {
   try { fs.writeFileSync(path.join(BASE, "YUKLEME-HATASI.json"), JSON.stringify({ channel: CHANNEL.slug, channelName: CHANNEL.name, slug: IS, neden: String(neden).slice(0, 600),
@@ -163,22 +151,27 @@ async function yuklemeOturumu(token, snippet, status) {
   return y.basliklar.location; // yukleme URL'si
 }
 
-function govdeyiGonder(yuklemeUrl, dosya, boyut) {
+// offset > 0 resumes an interrupted resumable session from the first byte
+// YouTube has not received (Content-Range), instead of uploading again.
+function govdeyiGonder(yuklemeUrl, dosya, boyut, offset = 0) {
   const u = new URL(yuklemeUrl);
   return new Promise((coz, red) => {
-    const r = https.request({
-      hostname: u.hostname,
-      path: u.pathname + u.search,
-      method: "PUT",
-      headers: { "Content-Length": boyut, "Content-Type": "video/*" },
-    }, (res) => {
+    const headers = { "Content-Length": boyut - offset, "Content-Type": "video/*" };
+    if (offset > 0) headers["Content-Range"] = `bytes ${offset}-${boyut - 1}/${boyut}`;
+    const r = https.request({ hostname: u.hostname, path: u.pathname + u.search, method: "PUT", headers }, (res) => {
       const parcalar = [];
       res.on("data", (d) => parcalar.push(d));
-      res.on("end", () => coz({ durum: res.statusCode, govde: Buffer.concat(parcalar).toString("utf8") }));
+      res.on("end", () => coz({ durum: res.statusCode, basliklar: res.headers, govde: Buffer.concat(parcalar).toString("utf8") }));
     });
     r.on("error", red);
-    fs.createReadStream(dosya).pipe(r);
+    fs.createReadStream(dosya, offset > 0 ? { start: offset } : {}).pipe(r);
   });
+}
+
+// Bodyless PUT to a resumable session URL (status query).
+function oturumPut(yuklemeUrl, headers) {
+  const u = new URL(yuklemeUrl);
+  return istek({ hostname: u.hostname, path: u.pathname + u.search, method: "PUT", headers });
 }
 
 // --- Ana akis -------------------------------------------------------------
@@ -290,46 +283,125 @@ async function main() {
 
   if (metaHata.length) { hataYaz(BASE, IS, "meta dogrulama: " + metaHata.join("; ")); console.error("Meta dogrulama hatasi: " + metaHata.join("; ")); process.exit(6); }
 
+  // --- Publish job / channel identity (fail closed) ---
+  const Safety = require("./lib/publish-safety");
+  const Ops = require("./lib/ops-log");
+  const Quota = require("./lib/quota");
+  const kanalKontrol = Safety.jobChannelCheck(konuVerisi, CHANNEL);
+  if (!kanalKontrol.ok) {
+    hataYaz(BASE, IS, `${kanalKontrol.code}: ${kanalKontrol.detail}`);
+    Ops.event(CHANNEL, "publish.blocked", { slug: IS, code: kanalKontrol.code });
+    console.error(`⛔ ${kanalKontrol.code}: ${kanalKontrol.detail} — yukleme YAPILMADI.`);
+    process.exit(11);
+  }
+  const mod = Safety.publishMode(process.env, argv);
+
   console.log("\nOAuth jetonu aliniyor...");
-  let token;
+  let token, api, kimlik;
   try {
     // The shared auth layer refreshes the short-lived access token, retries
     // transient failures and verifies channel identity before any mutation.
     const auth = await require("./lib/yt").getYouTubeClient(CHANNEL);
     token = auth.accessToken;
+    api = auth.api;
+    kimlik = auth.identity;
     console.log(`✓ Kanal kimligi dogrulandi: ${auth.identity.title || auth.identity.actual} (${auth.identity.actual})`);
   } catch (error) {
     hataYaz(BASE, IS, error.message);
+    Ops.event(CHANNEL, "oauth.failure", { slug: IS, code: error.code || "AUTH_FAILED" });
     console.error("⛔ " + error.message);
     process.exit(7);
   }
-  // Cift yukleme korumasi: ayni baslik kanalda varsa yukleme yapilmaz, kayit tamamlanir.
-  try {
-    const varOlan = await kanaldaVarMi(token, snippet.title);
-    if (varOlan) {
-      console.log("✓ Bu baslikta video kanalda zaten var (" + varOlan + ") — tekrar YUKLENMEDI, kayit tamamlandi.");
-      const library = require("./lib/kutuphane");
-      const previous = library.yayinBul(IS) || {};
-      library.yayinKaydet({ ...previous, channel: CHANNEL.slug, slug: IS, videoId: varOlan, baslik: snippet.title,
-        tarih: previous.tarih || new Date().toISOString(), format: videoFormat,
-        publishAt: previous.publishAt || publishAt, kalite: previous.kalite || kapiKarari, kaynak: "duplicate-guard" });
-      return;
-    }
-  } catch (e) { console.log("  (cift yukleme kontrolu yapilamadi: " + e.message + ")"); }
-  // Gecici ag/sunucu hatalarinda (5xx) oturum yenilenip 3 kez denenir.
-  let son;
-  for (let deneme = 1; deneme <= 3; deneme++) {
-    try {
-      console.log("Yukleme oturumu aciliyor..." + (deneme > 1 ? ` (deneme ${deneme}/3)` : ""));
-      const yuklemeUrl = await yuklemeOturumu(token, snippet, status);
-      console.log("Video gonderiliyor (" + (boyut / 1e6).toFixed(1) + " MB)...");
-      son = await govdeyiGonder(yuklemeUrl, dosya, boyut);
-      if (son.durum < 500) break;
-    } catch (e) { son = { durum: 0, govde: e.message }; }
-    if (deneme < 3) await new Promise((r) => setTimeout(r, 10000 * deneme));
+
+  // --- Idempotency: key, journal, remote reconciliation (fail closed) ---
+  const medyaSha = Safety.sha256File(dosya);
+  const anahtar = Safety.idempotencyKey({ channelId: kimlik.actual, mediaSha256: medyaSha, title: snippet.title, publishAt });
+  const kayitTamamla = (videoId, kaynak) => {
+    Safety.upsertIntent(CHANNEL, anahtar, { state: "COMPLETED", videoId, completedBy: kaynak });
+    const library = require("./lib/kutuphane");
+    const previous = library.yayinBul(IS) || {};
+    library.yayinKaydet({ ...previous, channel: CHANNEL.slug, slug: IS, videoId, baslik: snippet.title,
+      tarih: previous.tarih || new Date().toISOString(), format: videoFormat,
+      gizlilik, publishAt: previous.publishAt || publishAt, kalite: previous.kalite || kapiKarari, kaynak, idempotencyKey: anahtar, mediaSha256: medyaSha });
+  };
+  const onceki = Safety.findIntent(CHANNEL, anahtar);
+  if (onceki && onceki.state === "COMPLETED" && onceki.videoId) {
+    // YouTube already has it; the previous run died before the local commit.
+    kayitTamamla(onceki.videoId, "journal-reconcile");
+    Ops.event(CHANNEL, "publish.duplicate_prevented", { slug: IS, videoId: onceki.videoId, matchedBy: "journal" });
+    console.log("✓ Bu video daha once yuklenmis (" + onceki.videoId + ") — tekrar YUKLENMEDI, yerel kayit tamamlandi.");
+    return;
   }
-  if (son.durum === 200 || son.durum === 201) {
+  let devamOffset = 0, devamUrl = null;
+  if (onceki && onceki.sessionUrl) {
+    try {
+      const durum = await Safety.sessionStatus(oturumPut, onceki.sessionUrl, boyut);
+      if (durum.state === "COMPLETE" && durum.videoId) {
+        kayitTamamla(durum.videoId, "session-reconcile");
+        Ops.event(CHANNEL, "publish.duplicate_prevented", { slug: IS, videoId: durum.videoId, matchedBy: "resumable-session" });
+        console.log("✓ Onceki yukleme oturumu tamamlanmis (" + durum.videoId + ") — tekrar YUKLENMEDI.");
+        return;
+      }
+      if (durum.state === "INCOMPLETE") { devamUrl = onceki.sessionUrl; devamOffset = durum.received; }
+    } catch (e) { console.log("  (onceki oturum sorgulanamadi; uzak kontrol yapilacak)"); }
+  }
+  let uzak;
+  try {
+    uzak = Safety.matchRemote(await Safety.recentUploads(api), { title: snippet.title, publishAt });
+  } catch (e) {
+    // Fail closed: without proof the video is absent, no upload happens.
+    hataYaz(BASE, IS, "RECONCILE_UNAVAILABLE: " + (e.code || e.message));
+    Ops.event(CHANNEL, "publish.blocked", { slug: IS, code: "RECONCILE_UNAVAILABLE" });
+    console.error("⛔ Kanalin son yuklemeleri okunamadi — cift yukleme riski nedeniyle yukleme YAPILMADI (sonraki calisma tekrar dener).");
+    process.exit(9);
+  }
+  if (uzak) {
+    kayitTamamla(uzak.videoId, "duplicate-guard");
+    Ops.event(CHANNEL, "publish.duplicate_prevented", { slug: IS, videoId: uzak.videoId, matchedBy: uzak.matchedBy });
+    console.log("✓ Bu video kanalda zaten var (" + uzak.videoId + ", eslesme: " + uzak.matchedBy + ") — tekrar YUKLENMEDI, kayit tamamlandi.");
+    return;
+  }
+
+  // --- Pre-flight report ---
+  const butce = Quota.canAfford(CHANNEL, "videos.insert", require("./core/channel-context").allChannels());
+  const onKontrol = {
+    mode: mod, channel: CHANNEL.slug, authenticatedChannelId: kimlik.actual, mediaSha256: medyaSha, bytes: boyut,
+    title: snippet.title, publishAt, privacy: gizlilik, qualityGate: kapiKarari, idempotencyKey: anahtar,
+    remoteDuplicate: false, quota: { used: butce.used, needed: butce.needed, budget: butce.budget, ok: butce.ok },
+    checkedAt: new Date().toISOString(),
+  };
+  fs.writeFileSync(path.join(BASE, "PUBLISH-PREFLIGHT.json"), JSON.stringify(onKontrol, null, 2) + "\n");
+  if (mod === "shadow") {
+    Ops.event(CHANNEL, "publish.shadow", { slug: IS, title: snippet.title, publishAt });
+    console.log("✓ SHADOW: tum on kontroller gecti; yukleme oturumu ACILMADI (PUBLISH_MODE=shadow).");
+    return;
+  }
+  if (!butce.ok) {
+    hataYaz(BASE, IS, `QUOTA_EXHAUSTED: ${butce.used}+${butce.needed} > ${butce.budget}`);
+    Ops.event(CHANNEL, "quota.exhausted", { slug: IS, used: butce.used, needed: butce.needed, budget: butce.budget });
+    console.error("⛔ Gunluk API kotasi yetmiyor — yukleme ertelendi.");
+    process.exit(10);
+  }
+
+  // --- Upload (journaled, resumable, classified retries) ---
+  Safety.upsertIntent(CHANNEL, anahtar, { state: "IN_FLIGHT", slug: IS, title: snippet.title, publishAt, mediaSha256: medyaSha, bytes: boyut });
+  const sonuc = await Safety.runUpload({
+    channel: CHANNEL, key: anahtar,
+    resumeFrom: devamUrl ? { url: devamUrl, offset: devamOffset } : null,
+    openSession: () => { console.log("Yukleme oturumu aciliyor..."); return yuklemeOturumu(token, snippet, status); },
+    sendBody: (url, offset) => { console.log(`Video gonderiliyor (${(boyut / 1e6).toFixed(1)} MB${offset ? `, ${(offset / 1e6).toFixed(1)} MB'tan devam` : ""})...`); return govdeyiGonder(url, dosya, boyut, offset); },
+    statusOf: (url) => Safety.sessionStatus(oturumPut, url, boyut),
+    onRetry: (info) => { Ops.event(CHANNEL, "publish.retry", { slug: IS, ...info }); console.log(`  gecici hata (${info.kind}${info.status ? " HTTP " + info.status : ""}) — tekrar denenecek`); },
+  });
+  const sinif = sonuc.failure || null;
+  const son = sonuc.ok ? { durum: 200, govde: JSON.stringify({ id: sonuc.videoId }) } : { durum: sinif && sinif.status || 0, govde: "" };
+  if (sonuc.ok) {
     const j = JSON.parse(son.govde);
+    // Journal first: if the local commit below fails, the next run reconciles
+    // from the journal instead of uploading again.
+    Safety.upsertIntent(CHANNEL, anahtar, { state: "COMPLETED", videoId: j.id, completedBy: "upload" });
+    try { Quota.record(CHANNEL, "videos.insert"); } catch (e) {}
+    Ops.event(CHANNEL, "publish.success", { slug: IS, videoId: j.id, publishAt, privacy: gizlilik });
     console.log("\n✓ Yuklendi. Video kimligi: " + j.id);
     console.log("  https://youtu.be/" + j.id + "  (gizlilik: " + gizlilik + ")");
     if (gizlilik !== "public") {
@@ -339,7 +411,7 @@ async function main() {
     try {
       require("./lib/kutuphane").yayinKaydet({ channel: CHANNEL.slug, slug: IS, videoId: j.id, baslik: snippet.title, tarih: new Date().toISOString(),
         format: videoFormat,
-        gizlilik, publishAt, kalite: kapiKarari, kaynak: "upload" });
+        gizlilik, publishAt, kalite: kapiKarari, kaynak: "upload", idempotencyKey: anahtar, mediaSha256: medyaSha });
       // Bildirim (GitHub issue) icin ozet — bildirim.js okur
       fs.writeFileSync(path.join(BASE, "BILDIRIM.json"), JSON.stringify({ channel: CHANNEL.slug, channelName: CHANNEL.name, slug: IS, videoId: j.id, baslik: snippet.title,
         kalite: kapiKarari, publishAt, tarih: new Date().toISOString() }, null, 2));
@@ -366,9 +438,12 @@ async function main() {
       }
     } catch (e) { console.log("  (kapak: " + e.message + ")"); }
   } else {
-    console.error("\nYukleme basarisiz (HTTP " + son.durum + "): " + son.govde.slice(0, 600));
-    hataYaz(BASE, IS, "HTTP " + son.durum + ": " + son.govde.slice(0, 400));
-    process.exit(1);
+    const kod = sinif ? sinif.kind : "UNKNOWN";
+    Safety.upsertIntent(CHANNEL, anahtar, { state: "FAILED", failure: kod, failureStatus: son && son.durum || null });
+    Ops.event(CHANNEL, "publish.failure", { slug: IS, kind: kod, status: son && son.durum || null });
+    console.error("\nYukleme basarisiz (" + kod + (son && son.durum ? ", HTTP " + son.durum : "") + ").");
+    hataYaz(BASE, IS, kod + (son && son.durum ? " HTTP " + son.durum : ""));
+    process.exit(kod === "QUOTA" ? 10 : 1);
   }
 }
 

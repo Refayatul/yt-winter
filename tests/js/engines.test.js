@@ -400,9 +400,10 @@ test("TikTok gecmis adimi YouTube'a IKINCI KEZ yuklemez", () => {
   const sira = fs.readFileSync(require("path").join(require("../../lib/ortak").KOK, "shorts-sira.js"), "utf8");
   assert.match(sira, /const publish = process\.env\.PUBLISH === "1";/);
 
-  // Ucuncu savunma: yukleyicide ayni baslik kanalda varsa yukleme yapilmaz
+  // Ucuncu savunma: yukleyici idempotency anahtari + kanaldaki son yuklemelerle
+  // (baslik ya da ayni publishAt) uzlasir; uzlasamazsa yuklemez (lib/publish-safety).
   const yuk = fs.readFileSync(require("path").join(require("../../lib/ortak").KOK, "youtube-yukle.js"), "utf8");
-  assert.match(yuk, /kanaldaVarMi/, "cift yukleme korumasi kaldirilmis");
+  assert.match(yuk, /Safety\.matchRemote\(await Safety\.recentUploads\(api\)/, "cift yukleme korumasi kaldirilmis");
 });
 
 test("arsiv fotografi: acilis ani kurali fotografta gecmez, filmde gecer", () => {

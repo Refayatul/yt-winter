@@ -182,6 +182,11 @@ function selectFromArgv(argv = process.argv.slice(2), options = {}) {
   return { channel: selectChannel(parsed.slug), argv: parsed.argv };
 }
 
+// Every enabled channel (shared-quota accounting and portfolio reports).
+function allChannels() {
+  return Object.keys(registry().channels).filter((slug) => registry().channels[slug].enabled !== false).map((slug) => getChannel(slug));
+}
+
 function ensureChannelDirectories(channel = getChannel()) {
   for (const key of ["analytics", "state", "memory", "reports", "prompts", "topics", "packages", "production"]) {
     fs.mkdirSync(channel.paths[key], { recursive: true });
@@ -190,6 +195,6 @@ function ensureChannelDirectories(channel = getChannel()) {
 }
 
 module.exports = {
-  ROOT, REGISTRY_PATH, SLUG_PATTERN, registry, parseChannelArgv, selectChannel, selectFromArgv,
+  allChannels, ROOT, REGISTRY_PATH, SLUG_PATTERN, registry, parseChannelArgv, selectChannel, selectFromArgv,
   currentSlug, getChannel, ensureChannelDirectories, credentialNames,
 };
