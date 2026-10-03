@@ -13,11 +13,13 @@ const ROOT = path.resolve(__dirname, "..", "..");
 const NOW = new Date("2026-10-02T12:00:00.000Z");
 
 function fakeChannel(slug = "critical-thread", overrides = {}) {
+  const prefixes = { "failure-reconstructed": "FR", "impossible-brief": "IB", "critical-thread": "CT", "behind-the-ordinary": "BTO" };
+  const prefix = prefixes[slug];
   const names = {
-    clientId: [slug === "critical-thread" ? "CT_CLIENT_ID" : slug === "impossible-brief" ? "IB_CLIENT_ID" : "FR_YT_CLIENT_ID"],
-    clientSecret: [slug === "critical-thread" ? "CT_CLIENT_SECRET" : slug === "impossible-brief" ? "IB_CLIENT_SECRET" : "FR_YT_CLIENT_SECRET"],
-    refreshToken: [slug === "critical-thread" ? "CT_YT_REFRESH_TOKEN" : slug === "impossible-brief" ? "IB_YT_REFRESH_TOKEN" : "FR_YT_REFRESH_TOKEN"],
-    channelId: [slug === "critical-thread" ? "CT_YT_CHANNEL_ID" : slug === "impossible-brief" ? "IB_YT_CHANNEL_ID" : "FR_YT_CHANNEL_ID"],
+    clientId: [slug === "failure-reconstructed" ? "FR_YT_CLIENT_ID" : `${prefix}_YT_CLIENT_ID`.replace("IB_YT_", "IB_").replace("CT_YT_", "CT_")],
+    clientSecret: [slug === "failure-reconstructed" ? "FR_YT_CLIENT_SECRET" : `${prefix}_YT_CLIENT_SECRET`.replace("IB_YT_", "IB_").replace("CT_YT_", "CT_")],
+    refreshToken: [`${prefix}_YT_REFRESH_TOKEN`],
+    channelId: [`${prefix}_YT_CHANNEL_ID`],
   };
   const channelId = `UC_${slug.replace(/-/g, "_").toUpperCase()}`;
   const credentials = {
@@ -26,8 +28,8 @@ function fakeChannel(slug = "critical-thread", overrides = {}) {
   };
   return {
     slug,
-    name: { "failure-reconstructed": "Failure Reconstructed", "impossible-brief": "ImpossibleBrief", "critical-thread": "CriticalThread" }[slug],
-    prefix: { "failure-reconstructed": "FR", "impossible-brief": "IB", "critical-thread": "CT" }[slug],
+    name: { "failure-reconstructed": "Failure Reconstructed", "impossible-brief": "ImpossibleBrief", "critical-thread": "CriticalThread", "behind-the-ordinary": "Behind the Ordinary" }[slug],
+    prefix,
     credentialNames: names,
     credentials: () => credentials,
     expectedChannelId: () => channelId,
@@ -83,18 +85,18 @@ test("scope verification falls back to Google tokeninfo when refresh response om
   assert.equal(requests.length, 1);
 });
 
-test("all three channels healthy are independently refreshed, scoped and identity checked", async () => {
-  const channels = [fakeChannel("failure-reconstructed"), fakeChannel("impossible-brief"), fakeChannel("critical-thread")];
+test("all four channels healthy are independently refreshed, scoped and identity checked", async () => {
+  const channels = [fakeChannel("failure-reconstructed"), fakeChannel("impossible-brief"), fakeChannel("critical-thread"), fakeChannel("behind-the-ordinary")];
   const report = await OAuthHealth.checkAll({
     channels,
     now: NOW,
     channelOptions: Object.fromEntries(channels.map((channel) => [channel.slug, healthyOptions(channel)])),
     sharedFindings: [OAuthHealth.finding("pexels", "PASS", "verified", "PEXELS_OK")],
   });
-  assert.equal(report.summary.healthy, 3);
+  assert.equal(report.summary.healthy, 4);
   assert.equal(report.summary.blocked, 0);
   assert.equal(report.channels.every((item) => item.accessTokenRefresh && item.channelMatch && item.uploadAllowed), true);
-  assert.deepEqual(report.channels.map((item) => item.checks.find((check) => check.name === "topic-inventory").days), [365, 420, 387]);
+  assert.deepEqual(report.channels.map((item) => item.checks.find((check) => check.name === "topic-inventory").days), [365, 420, 387, 387]);
 });
 
 test("missing refresh token is critical and names only the missing secret", async () => {
@@ -144,14 +146,14 @@ test("missing repository-required scope is reported while force-ssl still govern
   assert.equal(result.status, "ERROR");
 });
 
-test("one broken channel never masks or blocks the other two", async () => {
-  const channels = [fakeChannel("failure-reconstructed"), fakeChannel("impossible-brief"), fakeChannel("critical-thread")];
+test("one broken channel never masks or blocks the other three", async () => {
+  const channels = [fakeChannel("failure-reconstructed"), fakeChannel("impossible-brief"), fakeChannel("critical-thread"), fakeChannel("behind-the-ordinary")];
   const options = Object.fromEntries(channels.map((channel) => [channel.slug, healthyOptions(channel)]));
   options["critical-thread"] = healthyOptions(channels[2], { token: async () => { throw new YouTube.YouTubeAuthError("TOKEN_REVOKED", "revoked"); } });
   const report = await OAuthHealth.checkAll({ channels, now: NOW, channelOptions: options, sharedFindings: [] });
-  assert.deepEqual(report.channels.map((item) => item.uploadAllowed), [true, true, false]);
+  assert.deepEqual(report.channels.map((item) => item.uploadAllowed), [true, true, false, true]);
   assert.equal(report.summary.blocked, 1);
-  assert.equal(report.summary.healthy, 2);
+  assert.equal(report.summary.healthy, 3);
 });
 
 test("authorization deadline has warning, critical and expired thresholds", () => {
@@ -188,10 +190,10 @@ test("secret masking keeps client secret, refresh token, access token and Author
 });
 
 test("TikTok is checked only for Failure Reconstructed and is N/A elsewhere", async () => {
-  const channels = [fakeChannel("failure-reconstructed"), fakeChannel("impossible-brief"), fakeChannel("critical-thread")];
+  const channels = [fakeChannel("failure-reconstructed"), fakeChannel("impossible-brief"), fakeChannel("critical-thread"), fakeChannel("behind-the-ordinary")];
   const results = await Promise.all(channels.map((channel) => OAuthHealth.check(channel, healthyOptions(channel))));
   assert.equal(results[0].checks.find((item) => item.name === "tiktok").status, "PASS");
-  assert.deepEqual(results.slice(1).map((item) => item.checks.find((check) => check.name === "tiktok").status), ["N/A", "N/A"]);
+  assert.deepEqual(results.slice(1).map((item) => item.checks.find((check) => check.name === "tiktok").status), ["N/A", "N/A", "N/A"]);
 });
 
 test("partial FR migration never mixes scoped and legacy OAuth credential bundles", () => {
@@ -283,20 +285,25 @@ test("OAuth Actions health isolates credentials, then writes one complete summar
   assert.match(source, /^  failure-reconstructed:/m);
   assert.match(source, /^  impossible-brief:/m);
   assert.match(source, /^  critical-thread:/m);
+  assert.match(source, /^  behind-the-ordinary:/m);
   assert.match(source, /^  report:/m);
   assert.match(source, /node oauth-health\.js --channel failure-reconstructed/);
   assert.match(source, /node oauth-health\.js --channel impossible-brief/);
   assert.match(source, /node oauth-health\.js --channel critical-thread/);
+  assert.match(source, /node oauth-health\.js --channel behind-the-ordinary/);
   assert.match(source, /node oauth-health\.js --combine/);
   assert.match(source, /GITHUB_STEP_SUMMARY/);
   assert.match(source, /update-oauth-health-issue\.js/);
   assert.match(source, /IB_CLIENT_ID: \$\{\{ secrets\.IB_CLIENT_ID \}\}/);
   assert.match(source, /CT_CLIENT_ID: \$\{\{ secrets\.CT_CLIENT_ID \}\}/);
+  assert.match(source, /BTO_YT_CLIENT_ID: \$\{\{ secrets\.BTO_YT_CLIENT_ID \}\}/);
   assert.doesNotMatch(source, /vars\.IB_PUBLISH|vars\.CT_PUBLISH/);
   const frJob = source.split(/^  failure-reconstructed:/m)[1].split(/^  impossible-brief:/m)[0];
   const ibJob = source.split(/^  impossible-brief:/m)[1].split(/^  critical-thread:/m)[0];
-  const ctJob = source.split(/^  critical-thread:/m)[1].split(/^  report:/m)[0];
-  assert.doesNotMatch(frJob, /IB_CLIENT_ID|CT_CLIENT_ID/);
-  assert.doesNotMatch(ibJob, /FR_YT_CLIENT_ID|CT_CLIENT_ID|\n      YT_REFRESH_TOKEN:/);
-  assert.doesNotMatch(ctJob, /FR_YT_CLIENT_ID|IB_CLIENT_ID|\n      YT_REFRESH_TOKEN:/);
+  const ctJob = source.split(/^  critical-thread:/m)[1].split(/^  behind-the-ordinary:/m)[0];
+  const btoJob = source.split(/^  behind-the-ordinary:/m)[1].split(/^  report:/m)[0];
+  assert.doesNotMatch(frJob, /IB_CLIENT_ID|CT_CLIENT_ID|BTO_YT_CLIENT_ID/);
+  assert.doesNotMatch(ibJob, /FR_YT_CLIENT_ID|CT_CLIENT_ID|BTO_YT_CLIENT_ID|\n      YT_REFRESH_TOKEN:/);
+  assert.doesNotMatch(ctJob, /FR_YT_CLIENT_ID|IB_CLIENT_ID|BTO_YT_CLIENT_ID|\n      YT_REFRESH_TOKEN:/);
+  assert.doesNotMatch(btoJob, /FR_YT_CLIENT_ID|IB_CLIENT_ID|CT_CLIENT_ID|\n      YT_REFRESH_TOKEN:/);
 });

@@ -121,7 +121,7 @@ function editorialBeats(raw) {
 }
 
 function factEvidence(raw) {
-  return (raw.facts || []).map((fact) => ({ layer: fact.layer || "VERIFIED FACT", confidence: fact.layer || "VERIFIED FACT", claim: clean(fact.claim), source: clean(fact.source), url: fact.url || null }));
+  return (raw.facts || []).map((fact) => ({ layer: fact.layer || "VERIFIED FACT", confidence: fact.layer || "VERIFIED FACT", claim: clean(fact.claim), source: clean(fact.source), url: fact.url || null, role: fact.role || null }));
 }
 
 function fromImpossibleBrief(raw) {
@@ -239,12 +239,81 @@ function fromCriticalThread(raw) {
   };
 }
 
+function fromBehindTheOrdinary(raw) {
+  const beats = editorialBeats(raw);
+  return {
+    channel: "behind-the-ordinary",
+    id: raw.id,
+    slug: raw.slug,
+    kind: "everyday-design",
+    title: clean(raw.topic || raw.title),
+    subject: clean(raw.canonicalTopic || raw.object),
+    object: clean(raw.object || raw.canonicalTopic),
+    year: null,
+    cluster: clean(raw.category),
+    category: clean(raw.category),
+    question: clean(raw.coreQuestion),
+    coreQuestion: clean(raw.coreQuestion),
+    designDetail: clean(raw.designDetail),
+    hookText: clean(raw.hook),
+    openingLine: clean(raw.openingLine),
+    secondBeat: clean(raw.secondBeat),
+    consequence: stripEnd(raw.expectedConsequence),
+    result: stripEnd(raw.expectedConsequence),
+    trigger: "",
+    mechanism: stripEnd(raw.mechanism),
+    number: clean(raw.number),
+    lesson: stripEnd(raw.payoff),
+    misconception: clean(raw.misconception),
+    debate: clean(raw.debate),
+    chain: [],
+    timeline: [],
+    warning: "",
+    dependency: "",
+    bottleneck: "",
+    resilience: "",
+    scenario: "",
+    sources: sourceList(raw.sources),
+    footageSources: [],
+    evidence: factEvidence(raw),
+    visualScenes: ((raw.visualPotential || {}).scenes || []).map((text) => ({ text: clean(text), source: null, start: null, synthetic: false })),
+    narration: beats.map((beat) => beat.text),
+    narrationBeats: beats,
+    editorialTitles: (raw.editorialTitles || [raw.topic]).map(clean),
+    thumbnailTexts: raw.thumbnailText ? [clean(raw.thumbnailText)] : [],
+    archival: false,
+    archivalFilm: false,
+    stock: false,
+    researchStatus: raw.researchStatus,
+    productionReady: raw.productionReady === true,
+    signals: {
+      priority: null,
+      curiosity: raw.curiosityScore,
+      visual: (raw.visualPotential || {}).score,
+      sourceQuality: (raw.sourceQuality || raw.sourceAvailability || {}).score,
+      evergreen: raw.evergreenScore,
+      shortPotential: (raw.shortPotential || {}).score,
+      longPotential: (raw.longFormPotential || {}).score,
+      criticality: null,
+      hookPotential: (raw.shortPotential || {}).score,
+      novelty: (raw.novelty || {}).score,
+      channelFit: (raw.quality || {}).channelFit,
+      audienceFit: (raw.audienceFit || {}).score,
+      searchDemand: null,
+      depth: (raw.longFormPotential || {}).score,
+    },
+    format: "short",
+    raw,
+  };
+}
+
 function normalize(channel, raw, slug) {
   const channelSlug = typeof channel === "string" ? channel : channel.slug;
   let topic;
   if (channelSlug === "failure-reconstructed") topic = fromFailureReconstructed(raw, slug || raw.slug);
   else if (channelSlug === "impossible-brief") topic = fromImpossibleBrief(raw);
   else if (channelSlug === "critical-thread") topic = fromCriticalThread(raw);
+  else if (channelSlug === "behind-the-ordinary") topic = fromBehindTheOrdinary(raw);
   else throw new Error("No growth topic adapter for channel: " + channelSlug);
   // Measured recognition: monthly Wikipedia pageviews of the topic's own
   // article (core/growth/popularity.js, refreshed by scripts/wiki-popularity.js).
@@ -329,7 +398,9 @@ function inventory(channel) {
     }).filter(Boolean);
   }
   const universe = readJson(channel.paths.topicUniverse, { topics: [] });
-  return (universe.topics || []).filter((topic) => topic.status === "qualified").map((raw) => normalize(channel, raw));
+  return (universe.topics || [])
+    .filter((topic) => topic.status === "qualified" && (channel.slug !== "behind-the-ordinary" || topic.productionReady === true))
+    .map((raw) => normalize(channel, raw));
 }
 
 // Discovery inventory is deliberately separate from production inventory.

@@ -20,7 +20,7 @@ const TEMPLATE_WORDS = new Set(("the a an of in on to and how why what that this
   "hard replace replacement change changes changed depends depend stop stops stopped timeline complete known speculation vs predicts predict thought experiment " +
   "minute seconds sequence cause consequence consequences reconstructing reconstructed investigation documentary modern life world key effect effects outcome " +
   "breakdown simulated every next day notice fast handle earth humanity survive last long follows led map mapping explained learned engineers solved weakness flaw " +
-  "bottleneck dependency critical infrastructure matters think backup plan who makes few can can't doesn't wouldn't would could should never-happened").split(/\s+/));
+  "bottleneck dependency critical infrastructure matters think backup plan who makes few can can't doesn't wouldn't would could should never-happened purpose ordinary object detail design origin pocket coins mystery choice familiar").split(/\s+/));
 
 const clamp = (value) => Math.max(0, Math.min(100, Math.round(value)));
 const RECENT_PATTERN_WINDOW = 3;
@@ -99,6 +99,28 @@ function shortCandidates(topic, extra = []) {
     add(list, `What If ${cap(topic.scenario)}?`, "what-if");
     if (topic.mechanism) add(list, `${cap(topic.mechanism.split(/[,;]/)[0])}: The Key to ${cap(S)}`, "mechanism-key");
     if (topic.consequence) add(list, `If ${E}, ${topic.consequence.split(/[,;]/)[0]}`, "consequence-led");
+  } else if (topic.channel === "behind-the-ordinary") {
+    const detail = topic.designDetail || "This Detail";
+    add(list, `Why ${Model.capital(S)} Have ${Model.capital(detail)}`, "why");
+    add(list, `The Hidden Purpose of ${Model.capital(detail)}`, "hidden-purpose");
+    add(list, `What ${Model.capital(detail)} Were Actually Made For`, "actual-purpose");
+    add(list, `This ${Model.capital(detail)} Wasn't Added by Accident`, "not-accident");
+    add(list, `The Design Reason Behind ${Model.capital(detail)}`, "design-reason");
+    add(list, `Why This Detail Still Exists on ${Model.capital(S)}`, "still-exists");
+    add(list, `The Original Job of ${Model.capital(detail)}`, "original-job");
+    add(list, `${Model.capital(S)}: The Detail Everyone Overlooks`, "overlooked-detail");
+    add(list, `How ${Model.capital(detail)} Became Part of ${Model.capital(S)}`, "how-became");
+    add(list, `What Problem Did ${Model.capital(detail)} Solve?`, "problem-solved");
+    add(list, `The Tiny Design Choice on ${Model.capital(S)}`, "tiny-choice");
+    add(list, `Why ${Model.capital(S)} Still Use This Old Detail`, "old-detail");
+    add(list, `${Model.capital(detail)}: Function or Leftover?`, "function-leftover");
+    add(list, `The Everyday Engineering of ${Model.capital(S)}`, "everyday-engineering");
+    add(list, `Look Closely at ${Model.capital(S)}`, "look-closely");
+    add(list, `The Reason ${Model.capital(detail)} Look Like This`, "shape-reason");
+    add(list, `${Model.capital(S)} Hide a Piece of Design History`, "design-history");
+    add(list, `Why Designers Kept ${Model.capital(detail)}`, "designers-kept");
+    add(list, `The Ordinary Detail With an Older Purpose`, "older-purpose");
+    add(list, `${Model.capital(S)} Explained Through One Small Detail`, "one-detail");
   } else {
     const target = topic.dependencyTarget || topic.category.toLowerCase();
     add(list, `The World Quietly Depends on ${S}`, "quiet-dependency");
@@ -176,6 +198,28 @@ function longCandidates(topic, extra = []) {
     add(list, `If ${E} — Simulated With Real Science`, "simulated");
     add(list, `The Day After ${cap(E)}`, "day-after");
     add(list, `What Changes — and What Doesn't — If ${E}`, "change-everything");
+  } else if (topic.channel === "behind-the-ordinary") {
+    const detail = topic.designDetail || "This Detail";
+    add(list, `Why ${Model.capital(S)} Have ${Model.capital(detail)}`, "why");
+    add(list, `The Hidden Design History of ${Model.capital(S)}`, "design-history");
+    add(list, `Inside ${Model.capital(S)}: The Purpose of ${Model.capital(detail)}`, "inside-purpose");
+    add(list, `How ${Model.capital(detail)} Became an Everyday Standard`, "became-standard");
+    add(list, `${Model.capital(S)}: Origin, Design and Hidden Purpose`, "origin-design-purpose");
+    add(list, `The Engineering Behind One Ordinary Detail`, "ordinary-engineering");
+    add(list, `What ${Model.capital(detail)} Reveal About ${Model.capital(S)}`, "detail-reveals");
+    add(list, `The Problem ${Model.capital(detail)} Were Designed to Solve`, "problem-solved");
+    add(list, `Why This Old Detail Survived on Modern ${Model.capital(S)}`, "survived");
+    add(list, `The Complete Story of ${Model.capital(detail)}`, "complete-story");
+    add(list, `How ${Model.capital(S)} Got Their Most Overlooked Detail`, "how-got-detail");
+    add(list, `${Model.capital(detail)}: Function, History and Modern Use`, "function-history-use");
+    add(list, `The Small Choice That Shaped ${Model.capital(S)}`, "small-choice");
+    add(list, `What Changed — and What Stayed — in ${Model.capital(S)}`, "changed-stayed");
+    add(list, `The Everyday Object Designed Around ${Model.capital(detail)}`, "designed-around");
+    add(list, `Why ${Model.capital(detail)} Are Still There`, "still-there");
+    add(list, `From Original Purpose to Modern ${Model.capital(S)}`, "origin-to-modern");
+    add(list, `${Model.capital(S)} and the Design Detail We Stopped Noticing`, "stopped-noticing");
+    add(list, `The Evidence Behind ${Model.capital(detail)}`, "evidence-behind");
+    add(list, `One Familiar Object, One Unexpected Design Story`, "object-story");
   } else {
     add(list, `The Hidden System Behind ${S}`, "hidden-system");
     add(list, `How the World Depends on ${S}`, "world-depends");

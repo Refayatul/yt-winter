@@ -38,6 +38,10 @@ jobs:
       CT_CLIENT_SECRET: ${{ secrets.CT_CLIENT_SECRET }}
       CT_YT_REFRESH_TOKEN: ${{ secrets.CT_YT_REFRESH_TOKEN }}
       CT_YT_CHANNEL_ID: ${{ vars.CT_YT_CHANNEL_ID }}
+      BTO_YT_CLIENT_ID: ${{ secrets.BTO_YT_CLIENT_ID }}
+      BTO_YT_CLIENT_SECRET: ${{ secrets.BTO_YT_CLIENT_SECRET }}
+      BTO_YT_REFRESH_TOKEN: ${{ secrets.BTO_YT_REFRESH_TOKEN }}
+      BTO_YT_CHANNEL_ID: ${{ vars.BTO_YT_CHANNEL_ID }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -64,6 +68,13 @@ jobs:
         run: |
           node yorum-yanitla.js --channel critical-thread --limit 4 || true
           node seed-comment.js --channel critical-thread
+
+      - name: Behind the Ordinary replies and seed comment
+        if: ${{ always() && vars.BTO_PUBLISH == '1' }}
+        continue-on-error: true
+        run: |
+          node yorum-yanitla.js --channel behind-the-ordinary --limit 4 || true
+          node seed-comment.js --channel behind-the-ordinary
 
       # Failure Reconstructed moved to the portfolio workflow, which does not
       # post its discussion comment; videos are public only from 21:00 TR.

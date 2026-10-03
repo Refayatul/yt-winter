@@ -155,6 +155,7 @@ function build(topic, config) {
   if (topic.subject) {
     const q = topic.channel === "critical-thread" ? `What stops if ${topic.subject} stops?`
       : topic.channel === "impossible-brief" ? `What changes first?`
+        : topic.channel === "behind-the-ordinary" ? `What is ${topic.designDetail || "that detail"} for?`
         : topic.kind === "case" ? `${subject}: what failed first?` : `${subject}: what fails first?`;
     add(candidate("question_gap", compress(q, max), topic, topic.channel === "impossible-brief" ? ["question"] : ["subject"]));
   }

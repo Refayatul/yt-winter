@@ -438,3 +438,137 @@ jobs:
           path: ${{ runner.temp }}/ct-sla-after.json
           if-no-files-found: error
           retention-days: 30
+
+  # Behind the Ordinary remains dormant until its own publish flag and OAuth
+  # bundle are present. Its recovery is serialized after the existing lanes.
+  bto-sla:
+    if: ${{ github.event.action != 'production-sla-watchdog-self-test' && vars.BTO_PUBLISH == '1' && inputs.simulate_missing != true }}
+    runs-on: ubuntu-latest
+    outputs:
+      healthy: ${{ steps.check.outputs.healthy }}
+      production_ready: ${{ steps.check.outputs.production_ready }}
+      youtube_verified: ${{ steps.check.outputs.youtube_verified }}
+      youtube_today_exists: ${{ steps.check.outputs.youtube_today_exists }}
+      safe_to_recover: ${{ steps.check.outputs.safe_to_recover }}
+    env:
+      BTO_YT_CLIENT_ID: ${{ secrets.BTO_YT_CLIENT_ID }}
+      BTO_YT_CLIENT_SECRET: ${{ secrets.BTO_YT_CLIENT_SECRET }}
+      BTO_YT_REFRESH_TOKEN: ${{ secrets.BTO_YT_REFRESH_TOKEN }}
+      BTO_YT_CHANNEL_ID: ${{ vars.BTO_YT_CHANNEL_ID }}
+      PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - id: check
+        name: Check Behind the Ordinary production SLA
+        run: node production-sla-check.js --channel behind-the-ordinary --verify-youtube --github-output --output="${{ runner.temp }}/bto-sla-before.json" || true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: behind-the-ordinary-sla-before
+          path: ${{ runner.temp }}/bto-sla-before.json
+          if-no-files-found: error
+          retention-days: 30
+
+  bto-recovery:
+    needs: [bto-sla, ct-verify]
+    if: ${{ always() && github.event.action != 'production-sla-watchdog-self-test' && vars.BTO_PUBLISH == '1' && inputs.simulate_missing != true && needs.bto-sla.outputs.safe_to_recover == 'true' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      BTO_YT_CLIENT_ID: ${{ secrets.BTO_YT_CLIENT_ID }}
+      BTO_YT_CLIENT_SECRET: ${{ secrets.BTO_YT_CLIENT_SECRET }}
+      BTO_YT_REFRESH_TOKEN: ${{ secrets.BTO_YT_REFRESH_TOKEN }}
+      BTO_YT_CHANNEL_ID: ${{ vars.BTO_YT_CHANNEL_ID }}
+      PUBLISH: '1'
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
+          npm install --no-audit --no-fund
+      - name: Recover one Behind the Ordinary Short
+        run: |
+          node saglik.js --channel behind-the-ordinary
+          node shorts-sira.js --channel behind-the-ordinary
+          node bildirim.js --channel behind-the-ordinary || true
+          node daily-operations-report.js
+      - name: Commit isolated Behind the Ordinary state
+        run: |
+          git config user.name "production-watchdog"
+          git config user.email "actions@users.noreply.github.com"
+          git add channels/behind-the-ordinary reports
+          if git diff --cached --quiet; then echo "Behind the Ordinary state unchanged."; exit 0; fi
+          git commit -m "chore: recover Behind the Ordinary production SLA"
+          BRANCH="$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+
+  bto-verify:
+    needs: [bto-sla, bto-recovery]
+    if: ${{ always() && github.event.action != 'production-sla-watchdog-self-test' && vars.BTO_PUBLISH == '1' && inputs.simulate_missing != true }}
+    runs-on: ubuntu-latest
+    env:
+      BTO_YT_CLIENT_ID: ${{ secrets.BTO_YT_CLIENT_ID }}
+      BTO_YT_CLIENT_SECRET: ${{ secrets.BTO_YT_CLIENT_SECRET }}
+      BTO_YT_REFRESH_TOKEN: ${{ secrets.BTO_YT_REFRESH_TOKEN }}
+      BTO_YT_CHANNEL_ID: ${{ vars.BTO_YT_CHANNEL_ID }}
+      PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Repair normal notification and verify SLA
+        id: final
+        env:
+          RECOVERY_RESULT: ${{ needs.bto-recovery.result }}
+        run: |
+          node bildirim.js --channel behind-the-ordinary || true
+          RECOVERY_ARGS=()
+          if [ "$RECOVERY_RESULT" != "skipped" ]; then RECOVERY_ARGS+=(--recovery-started); fi
+          node production-sla-check.js --channel behind-the-ordinary --verify-youtube "${RECOVERY_ARGS[@]}" --github-output --output="${{ runner.temp }}/bto-sla-after.json" || true
+      - name: Notify only after Behind the Ordinary recovery failed
+        if: ${{ steps.final.outputs.healthy != 'true' }}
+        run: node bildirim.js --channel behind-the-ordinary --sla-failure "${{ runner.temp }}/bto-sla-after.json"
+      - name: Save notification/report state
+        if: always()
+        run: |
+          node daily-operations-report.js || true
+          git config user.name "production-watchdog"
+          git config user.email "actions@users.noreply.github.com"
+          git add channels/behind-the-ordinary/state/notification-state.json reports || true
+          if git diff --cached --quiet; then echo "Behind the Ordinary verification state unchanged."; exit 0; fi
+          git commit -m "chore: record Behind the Ordinary SLA verification"
+          BRANCH="$GITHUB_REF_NAME"
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
+            sleep $((i * 5))
+          done
+          exit 1
+      - name: Behind the Ordinary SLA evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: behind-the-ordinary-sla-after
+          path: ${{ runner.temp }}/bto-sla-after.json
+          if-no-files-found: error
+          retention-days: 30

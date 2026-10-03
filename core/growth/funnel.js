@@ -163,6 +163,7 @@ function endScreenPlan(channel, longItem, next, options = {}) {
 function bridgeLine(slug, from, to) {
   if (slug === "failure-reconstructed") return `And ${from.subject || "this"} wasn't the only time a hidden weakness decided everything — ${to.title} is next.`;
   if (slug === "impossible-brief") return `That is one impossible change. The next one — ${to.title} — breaks something different.`;
+  if (slug === "behind-the-ordinary") return `That is one ordinary detail explained. ${to.title} hides the next reason in plain sight.`;
   return `And this is only one thread. ${to.title} shows what it connects to.`;
 }
 

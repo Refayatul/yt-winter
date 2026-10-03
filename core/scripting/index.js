@@ -8,6 +8,7 @@ function titleSubject(topic) {
 
 function titleCandidates(topic) {
   if (topic.channel === "critical-thread") return criticalThreadTitles(topic);
+  if (topic.channel === "behind-the-ordinary") return behindOrdinaryTitles(topic);
   const subject = titleSubject(topic);
   const base = topic.topic.replace(/\?$/, "");
   const candidates = [
@@ -31,6 +32,34 @@ function titleCandidates(topic) {
     `${subject}: From First Effect to Final Outcome`,
     `The Most Likely Outcome If ${subject}`,
     `${subject} — The Scientific Answer`,
+  ];
+  return [...new Set(candidates)].slice(0, 20);
+}
+
+function behindOrdinaryTitles(topic) {
+  const subject = topic.canonicalTopic || topic.object;
+  const detail = topic.designDetail || "This Detail";
+  const candidates = [
+    topic.topic,
+    `Why ${subject} Have ${detail}`,
+    `The Hidden Purpose of ${detail}`,
+    `What ${detail} Were Actually Made For`,
+    `This Detail Wasn't Added by Accident`,
+    `The Design Reason Behind ${detail}`,
+    `Why This Detail Still Exists on ${subject}`,
+    `The Original Job of ${detail}`,
+    `${subject}: The Detail Everyone Overlooks`,
+    `How ${detail} Became Part of ${subject}`,
+    `What Problem Did ${detail} Solve?`,
+    `The Tiny Design Choice on ${subject}`,
+    `Why ${subject} Still Use This Old Detail`,
+    `${detail}: Function or Leftover?`,
+    `The Everyday Engineering of ${subject}`,
+    `Look Closely at ${subject}`,
+    `The Reason ${detail} Look Like This`,
+    `${subject} Hide a Piece of Design History`,
+    `Why Designers Kept ${detail}`,
+    `${subject} Explained Through One Small Detail`,
   ];
   return [...new Set(candidates)].slice(0, 20);
 }
@@ -75,6 +104,20 @@ function shortScript(topic) {
     const spoken = claims.map((claim) => claim.text).join(" ");
     return { format: "short", targetSeconds: 36, spoken, claims, forbiddenOpening: FORBIDDEN_OPENINGS.test(spoken), sourceIds: topic.sources.map((source) => source.name) };
   }
+  if (topic.channel === "behind-the-ordinary") {
+    const narration = (topic.narration || []).map((item) => typeof item === "string" ? { text: item, role: "evidence" } : item).filter((item) => item && item.text);
+    const facts = topic.facts || topic.researchEvidence || [];
+    const beats = narration.length ? narration : facts.slice(0, 7).map((item) => ({ text: item.claim || item.text, role: item.role || "evidence" }));
+    let cursor = 0;
+    const claims = beats.map((beat) => {
+      const duration = Math.max(1.5, String(beat.text).split(/\s+/).filter(Boolean).length / 2.8);
+      const claim = { start: Math.round(cursor * 10) / 10, end: Math.round((cursor + duration) * 10) / 10, layer: "VERIFIED FACT", confidence: "VERIFIED FACT", role: beat.role || "evidence", text: beat.text };
+      cursor += duration;
+      return claim;
+    });
+    const spoken = claims.map((claim) => claim.text).join(" ");
+    return { format: "short", targetSeconds: Math.max(20, Math.min(45, Math.round(cursor))), spoken, claims, forbiddenOpening: FORBIDDEN_OPENINGS.test(spoken), sourceIds: (topic.sources || []).map((source) => source.name) };
+  }
   const claims = [
     { start: 0, end: 1.5, layer: "SPECULATIVE SCENARIO", confidence: "SPECULATIVE", text: topic.openingLine || topic.hook.split(/(?<=[.!?])\s+/)[0] },
     { start: 1.5, end: 5, layer: "ESTIMATED CONSEQUENCE", confidence: "SUPPORTED", text: topic.secondBeat || `The first measurable change follows ${topic.scientificMechanism.split(",")[0]}.` },
@@ -101,11 +144,31 @@ function longFormOutline(topic) {
     thumbnailConceptRequirement: "five distinct concepts in thumbnail.json",
     standaloneShorts: longToShortFactory(topic),
   };
+  if (topic.channel === "behind-the-ordinary") return {
+    format: "long",
+    targetMinutes: topic.longFormPotential.targetMinutes || [8, 15],
+    coldOpen: topic.openingLine,
+    centralQuestion: topic.coreQuestion,
+    sections: ["Cold open", "The question", "Origin and context", "The design problem", "The documented explanation", "The surprising detail", "Real-world consequence", "Final payoff", "Next curiosity bridge"]
+      .map((section, index) => ({ order: index + 1, section, evidence: index === 0 ? "VERIFIED FACT" : "CLAIM IDS REQUIRED" })),
+    sources: topic.sources,
+    evidence: topic.facts || [],
+    visualPlan: topic.visualPotential.scenes,
+    titleCandidates: behindOrdinaryTitles(topic),
+    thumbnailConceptRequirement: "one object + one highlighted detail; zero to four words; five concepts",
+    standaloneShorts: longToShortFactory(topic),
+  };
   return ["Cold open", "Scenario definition", "Initial consequence", "Science mechanism", "Simulation timeline", "Secondary consequences", "Survival and real-world implications", "Final answer"]
     .map((section, index) => ({ order: index + 1, section, evidence: index === 1 ? "SPECULATIVE SCENARIO" : index < 4 ? "KNOWN SCIENCE" : "ESTIMATED CONSEQUENCE" }));
 }
 
 function longToShortFactory(topic) {
+  if (topic.channel === "behind-the-ordinary") return [
+    { angle: "visual mystery", hook: topic.openingLine },
+    { angle: "documented origin", hook: `How ${topic.designDetail} became part of ${topic.canonicalTopic}.` },
+    { angle: "design mechanism", hook: `The problem ${topic.designDetail} were designed to solve.` },
+    { angle: "misconception", hook: topic.misconception || `What people get wrong about ${topic.designDetail}.` },
+  ];
   if (topic.channel !== "critical-thread") return [];
   return [
     { angle: "hidden dependency", hook: topic.openingLine },
@@ -115,4 +178,4 @@ function longToShortFactory(topic) {
   ];
 }
 
-module.exports = { FORBIDDEN_OPENINGS, titleCandidates, criticalThreadTitles, shortScript, longFormOutline, longToShortFactory };
+module.exports = { FORBIDDEN_OPENINGS, titleCandidates, criticalThreadTitles, behindOrdinaryTitles, shortScript, longFormOutline, longToShortFactory };

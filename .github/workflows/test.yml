@@ -38,7 +38,9 @@ jobs:
         run: node e2e-impossible-brief.js
       - name: CriticalThread complete dry render (no upload)
         run: node e2e-critical-thread.js --render
-      - name: Three-channel 30-day simulation
+      - name: Behind the Ordinary dry-run package (no upload)
+        run: node e2e-behind-the-ordinary.js
+      - name: Four-channel 30-day simulation
         run: node simulate-portfolio.js
       - name: Python testleri
         run: python -m unittest discover -s tests

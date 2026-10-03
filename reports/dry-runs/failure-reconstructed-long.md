@@ -1,6 +1,6 @@
 # Dry run — Failure Reconstructed — Long-form
 
-Sandbox state · LLM writer OFF (no ANTHROPIC_API_KEY / LONGFORM_LLM) · nothing rendered or uploaded
+Sandbox state · LLM writer OFF (no configured LONGFORM_LLM_PROVIDER / provider key) · nothing rendered or uploaded
 
 ## Candidate long-form topics
 
@@ -8,10 +8,10 @@ Sandbox state · LLM writer OFF (no ANTHROPIC_API_KEY / LONGFORM_LLM) · nothing
 |---|---|---|---|---|
 | 1 | challenger-1986 | 83 | A | A_LONG_FIRST |
 | 2 | columbia-2003 | 82 | A | A_LONG_FIRST |
-| 3 | apollo-13-1970 | 81 | A | A_LONG_FIRST |
-| 4 | chernobyl-1986 | 81 | A | A_LONG_FIRST |
-| 5 | deepwater-horizon-2010 | 80 | A | A_LONG_FIRST |
-| 6 | lahaina-fire-2023 | 80 | A | A_LONG_FIRST |
+| 3 | air-france-447-2009 | 81 | A | A_LONG_FIRST |
+| 4 | apollo-13-1970 | 81 | A | A_LONG_FIRST |
+| 5 | chernobyl-1986 | 81 | A | A_LONG_FIRST |
+| 6 | deepwater-horizon-2010 | 80 | A | A_LONG_FIRST |
 
 ## Selected topic
 
@@ -119,15 +119,15 @@ Selected: **before-after**
 ## Title candidates
 
 - Why Challenger Broke Apart 73 Seconds After Launch (85, why)
-- Challenger: What Failed, Why, and What Changed (85, label-colon)
-- Challenger: From First Warning to Final Failure (83, label-colon)
 - How Engineers Solved the Challenger Failure (83, how)
 - What Really Destroyed Challenger — The Complete Investigation (82, two-beat)
 - How Cold Weather Brought Down Challenger (81, how)
-- Inside the Engineering Failure of Challenger (81, inside)
 - The Hidden Weakness Inside Challenger (81, statement)
 - How One Weakness Brought Down Challenger (80, how)
 - How Challenger Changed Engineering Forever (80, how)
+- Why Challenger Should Never Have Happened (80, why)
+- Why Challenger Failed (79, why)
+- The Failure Chain That Destroyed Challenger (78, the-x-that)
 
 Selected title: **Why Challenger Broke Apart 73 Seconds After Launch** (85)
 
@@ -164,7 +164,7 @@ Dimensions: TopicDepth 97 · NarrativeQuality 86 · Hook 82 · ResearchQuality 8
 Hard fails: INSUFFICIENT_DEPTH: evidence supports ~2.2 min; target 8–12 min — not padded
 
 - Note: 2 sources (preferred 3): add an independent source before the next revision
-- Note: 160 deep-research claims need the LLM writer (LONGFORM_LLM=1 + ANTHROPIC_API_KEY); the deterministic writer never narrates encyclopedia text verbatim
+- Note: 160 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim
 
 Cost estimate: $0.06 (llmTokens 0, ttsMinutes 2.2, renderMinutesCpu 6.6, assets 11, youtubeQuotaUnits 1650)
 

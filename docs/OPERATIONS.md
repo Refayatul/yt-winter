@@ -15,6 +15,8 @@ Failure Reconstructed requires no manual GitHub trigger. A GitHub schedule produ
 
 ImpossibleBrief follows the same scheduled Short path only after `IB_PUBLISH=1` and its isolated OAuth values are configured. Until then, workflow steps remain skipped by design.
 
+CriticalThread and Behind the Ordinary follow the same rule through `CT_PUBLISH=1` and `BTO_PUBLISH=1`. BTO's question-only backlog must be researched before production discovery; see [BEHIND-THE-ORDINARY.md](BEHIND-THE-ORDINARY.md).
+
 ## Triage order
 
 1. Read `reports/daily-operations.md`.
@@ -36,7 +38,7 @@ ImpossibleBrief follows the same scheduled Short path only after `IB_PUBLISH=1` 
 - Complete ImpossibleBrief Google OAuth once.
 - Review/post TikTok inbox drafts.
 - Expand source-checked inventories; current targets are not met.
-- Long-form: the weekly lane runs unattended (`node growth.js longform`, see [GROWTH-ENGINE.md](GROWTH-ENGINE.md)). It stays at `QUALITY_BLOCKED` until the LLM writer is enabled (`ANTHROPIC_API_KEY` + `LONGFORM_LLM=1`), and render/upload stays off until `longform.render.enabled` + `<PREFIX>_LONGFORM_PUBLISH=1`. After each published episode, complete the `RELATED_VIDEO_MANUAL_ACTION_REQUIRED` tasks and the end-screen plan in Studio.
+- Long-form: the weekly lane runs unattended (`node growth.js longform`, see [GROWTH-ENGINE.md](GROWTH-ENGINE.md)). Configure an explicit provider (`LONGFORM_LLM_PROVIDER=groq`, `GROQ_API_KEY`, default `GROQ_MODEL=openai/gpt-oss-120b`); render/upload stays off until `longform.render.enabled` + `<PREFIX>_LONGFORM_PUBLISH=1`. A 429 safely defers from its checkpoint. After each published episode, complete the `RELATED_VIDEO_MANUAL_ACTION_REQUIRED` tasks and the end-screen plan in Studio.
 
 ## Weekly growth review
 

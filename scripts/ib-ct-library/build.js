@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-// ImpossibleBrief / CriticalThread researched-record builder.
+// ImpossibleBrief / CriticalThread / Behind the Ordinary researched-record builder.
 //
 // Upgrades existing topic-universe entries IN PLACE (same id, category and —
 // unless the seed replaces the question — same slug), so the inventory keeps
@@ -10,11 +10,14 @@
 //
 //   node scripts/ib-ct-library/build.js <seed.json> [--write] [--offline]
 //
-// seed.json: { "channel": "critical-thread" | "impossible-brief", "records": [ … ] }
+// seed.json: { "channel": "critical-thread" | "impossible-brief" | "behind-the-ordinary", "records": [ … ] }
 // record: see docs/GROWTH-ENGINE.md → "Researched IB/CT records".
 //
 // Checks (all must pass before --write):
 //   • every number in a fact appears in THAT fact's own source text
+//   • Behind the Ordinary (myth risk): every fact also carries a verbatim
+//     "quote" that must appear in that source's text, and the record becomes
+//     productionReady only when all checks pass
 //     (Wikipedia extract via API, or the primary page's visible text)
 //   • every number spoken or shown (narration, hook, opening, second beat,
 //     number, thumbnail, consequence) is traced to a fact
@@ -34,7 +37,24 @@ const Research = require(path.join(ROOT, "core", "research"));
 const LAYERS = {
   "impossible-brief": ["KNOWN SCIENCE", "ESTIMATED CONSEQUENCE", "SPECULATIVE SCENARIO"],
   "critical-thread": ["VERIFIED FACT", "INDUSTRY CLAIM", "ESTIMATE", "MODEL", "HYPOTHESIS"],
+  "behind-the-ordinary": ["VERIFIED FACT", "INDUSTRY CLAIM", "ESTIMATE"],
 };
+// Topic-level sources for Behind the Ordinary: inventors/manufacturers,
+// standards bodies, government, museums, universities and archives.
+const BTO_PRIMARY_HOSTS = [".gov", ".edu", ".ac.uk", "europa.eu", "iso.org", "iec.ch", "ieee.org", "itu.int", "gs1.org", "gs1us.org", "isbn-international.org",
+  "qrcode.com", "denso-wave.com", "bluetooth.com", "levistrauss.com", "ykk.com", "otis.com", "si.edu", "loc.gov", "sciencemuseum.org.uk",
+  "computerhistory.org", "vam.ac.uk", "ginetex.net", "unece.org", "imo.org", "who.int", "unicode.org", "okhistory.org", "mylearning.org",
+  "nationalmotormuseum.org.uk", "moma.org"];
+// "x.gov"/".gov" style entries match a domain suffix only ("www.governing.com"
+// must not pass as ".gov"); other entries match the domain or a subdomain.
+function hostAllowed(host, list) {
+  const h = String(host || "").toLowerCase();
+  return list.some((entry) => entry.startsWith(".") ? h.endsWith(entry) : h === entry || h.endsWith("." + entry));
+}
+const primaryHosts = (channelSlug) => channelSlug === "behind-the-ordinary" ? BTO_PRIMARY_HOSTS : Research.PRIMARY_HOSTS;
+// Quote matching ignores case, punctuation style and whitespace only.
+const quoteFound = (text, quote) => normalizeQuote(text).includes(normalizeQuote(quote));
+const normalizeQuote = (text) => String(text || "").toLowerCase().replace(/[‘’`´]/g, "'").replace(/[“”]/g, '"').replace(/[‐-―−]/g, "-").replace(/\s+/g, " ").trim();
 const wordCount = (text) => String(text || "").split(/\s+/).filter(Boolean).length;
 // A rounded value (29.76) is supported by a more precise source value (29.7646).
 function supportedRounded(n, values) {
@@ -96,16 +116,25 @@ function lintRecord(channelSlug, record, rules) {
 
 async function verify(channelSlug, record, options) {
   const errors = [];
-  const hosts = Research.PRIMARY_HOSTS;
+  const hosts = primaryHosts(channelSlug);
   for (const source of record.sources || []) {
     let host = "";
     try { host = new URL(source.url).hostname; } catch (error) { errors.push("invalid source URL " + source.url); continue; }
-    if (!hosts.some((allowed) => host.includes(allowed))) errors.push(`topic source ${host} is not a primary host (put encyclopedia articles on facts / researchArticles)`);
+    if (!(channelSlug === "behind-the-ordinary" ? hostAllowed(host, hosts) : hosts.some((allowed) => host.includes(allowed)))) errors.push(`topic source ${host} is not a primary host (put encyclopedia articles on facts / researchArticles)`);
   }
   // Facts: numbers must appear in the fact's own source text.
   const factNumbers = new Set();
   for (const [index, fact] of (record.facts || []).entries()) {
     if (!fact.url || !fact.source) { errors.push(`fact ${index + 1} has no source/url`); continue; }
+    if (channelSlug === "behind-the-ordinary") {
+      const words = wordCount(fact.quote);
+      if (words < 5) errors.push(`fact ${index + 1}: a verbatim source quote of at least 5 words is required`);
+      else if (!options.offline) {
+        const text = await sourceText(fact.url, options.offline);
+        if (!text) errors.push(`fact ${index + 1}: source not readable (${fact.url}) — quote cannot be verified`);
+        else if (!quoteFound(text, fact.quote)) errors.push(`fact ${index + 1}: quote not found verbatim in ${fact.source}`);
+      }
+    }
     const numbers = FR.numbersIn(fact.claim).filter((n) => !(n >= 1500 && n <= 2100 && Number.isInteger(n) && fact.allowYear !== false));
     FR.numbersIn(fact.claim).forEach((n) => factNumbers.add(n));
     if (!numbers.length || options.offline) continue;
@@ -151,15 +180,32 @@ function merge(channelSlug, existing, record) {
   } else {
     out.researchEvidence = (record.facts || []).map((fact) => ({ layer: fact.layer, claim: fact.claim, source: fact.source }));
   }
+  if (channelSlug === "behind-the-ordinary") {
+    // Only reached for a record whose sources, quotes and numbers are being
+    // verified; main() writes it only when every check passed.
+    out.question = out.coreQuestion = record.coreQuestion || record.question || existing.coreQuestion;
+    out.researchStatus = "VERIFIED";
+    out.productionReady = true;
+    out.confidence = "VERIFIED";
+    out.sourceAvailability = { score: 88, status: "verified-primary-sources" };
+    out.sourceQuality = { score: 88, grade: "primary-sources-with-verbatim-quotes", authorities: (out.sources || []).map((source) => source.name) };
+    out.quality = { ...(existing.quality || {}), sourceClaimsMapped: true, quotesVerified: true, productionReady: true };
+  }
   return out;
 }
 
 async function main() {
   const args = process.argv.slice(2);
   const file = args.find((a) => !a.startsWith("--"));
-  const write = args.includes("--write");
-  const offline = args.includes("--offline");
   const seed = JSON.parse(fs.readFileSync(file, "utf8"));
+  const { report } = await run(seed, { write: args.includes("--write"), offline: args.includes("--offline") });
+  fs.writeFileSync(file.replace(/\.json$/, ".report.json"), JSON.stringify(report, null, 2) + "\n");
+}
+
+// Verifies every seed record and, with write, upgrades the passing ones in
+// the channel's topic universe. Shared by the CLI above and by automated
+// research (scripts/bto-research.js), so both pass exactly the same checks.
+async function run(seed, { write = false, offline = false, log = console.log } = {}) {
   const channelSlug = seed.channel;
   const channel = Channel.getChannel(channelSlug);
   const universePath = universeFile(channelSlug);
@@ -186,7 +232,12 @@ async function main() {
     const index = universe.topics.findIndex((item) => item.slug === target);
     const row = { slug: record.slug, errors: [] };
     if (index < 0) { row.errors.push(`no universe entry with slug ${target}`); report.push(row); continue; }
-    const clash = universe.topics.find((item, i) => i !== index && (item.slug === record.slug || (record.topic && item.topic.toLowerCase() === record.topic.toLowerCase()) || (record.canonicalTopic && item.canonicalTopic && item.canonicalTopic.toLowerCase() === record.canonicalTopic.toLowerCase())));
+    // Behind the Ordinary keeps several questions per object (one per design
+    // detail), so its identity is object + detail rather than the object alone.
+    const sameSubject = (item) => channelSlug === "behind-the-ordinary"
+      ? !!(item.canonicalTopic && item.designDetail && item.canonicalTopic === (record.canonicalTopic || universe.topics[index].canonicalTopic) && item.designDetail === (record.designDetail || universe.topics[index].designDetail))
+      : !!(record.canonicalTopic && item.canonicalTopic && item.canonicalTopic.toLowerCase() === record.canonicalTopic.toLowerCase());
+    const clash = universe.topics.find((item, i) => i !== index && (item.slug === record.slug || (record.topic && item.topic.toLowerCase() === record.topic.toLowerCase()) || sameSubject(item)));
     if (clash) row.errors.push(`duplicate of ${clash.slug}`);
     if (record.category && universe.topics[index].category !== record.category) row.errors.push(`category ${record.category} ≠ replaced entry's ${universe.topics[index].category}`);
     const lint = lintRecord(channelSlug, record, channel.config.retentionRules);
@@ -194,9 +245,11 @@ async function main() {
     row.words = lint.words;
     row.errors.push(...await verify(channelSlug, record, { offline }));
     const upgraded = merge(channelSlug, universe.topics[index], record);
-    const audit = Research.auditTopic(upgraded);
-    if (!audit.pass) row.errors.push("legacy research audit: " + audit.errors.join("; "));
-    const Quality = require(path.join(ROOT, "core", "quality", channelSlug === "critical-thread" ? "critical-thread" : "impossible-brief"));
+    if (channelSlug !== "behind-the-ordinary") {
+      const audit = Research.auditTopic(upgraded);
+      if (!audit.pass) row.errors.push("legacy research audit: " + audit.errors.join("; "));
+    }
+    const Quality = require(path.join(ROOT, "core", "quality", channelSlug));
     const legacy = Quality.evaluateTopic(upgraded, universe.topics.map((item, i) => (i === index ? upgraded : item)));
     if (legacy.decision === "BLOCK") row.errors.push("legacy quality BLOCK: " + legacy.blockers.join("; "));
     // PHASE 5: at least 10 meaningful hook candidates from the record itself.
@@ -210,7 +263,7 @@ async function main() {
     if (!hooks.selected || hooks.selected.spoken !== (/[.!?]$/.test(record.openingLine) ? record.openingLine : record.openingLine + ".")) row.errors.push("the spoken opening is not a valid hook candidate (blocked or too long)");
     if (!row.errors.length) { universe.topics[index] = upgraded; changed += 1; }
     report.push(row);
-    console.log(`${row.errors.length ? "✗" : "✓"} ${record.slug}${record.replaces ? ` (replaces ${record.replaces})` : ""} · ${lint.words} words · ${row.hooks} hooks · opening hook ${row.hookScore}${row.errors.length ? "\n    - " + row.errors.join("\n    - ") : ""}`);
+    log(`${row.errors.length ? "✗" : "✓"} ${record.slug}${record.replaces ? ` (replaces ${record.replaces})` : ""} · ${lint.words} words · ${row.hooks} hooks · opening hook ${row.hookScore}${row.errors.length ? "\n    - " + row.errors.join("\n    - ") : ""}`);
   }
   if (write && changed) {
     fs.writeFileSync(universePath, JSON.stringify(universe, null, 2) + "\n");
@@ -221,12 +274,12 @@ async function main() {
     for (const row of report.filter((r) => !r.errors.length)) {
       const plan = Growth.planShort(channel, row.slug, { context: ctx, skipDuplicate: true });
       row.growth = { bucket: plan.topicScore.bucket, potential: plan.topicScore.VideoPotentialScore, readiness: plan.readiness.ProductionReadinessScore, decision: plan.readiness.decision, hooks: plan.hooks.candidateCount, hardFails: plan.readiness.hardFails, templated: plan.topicScore.reasons.filter((r) => /boilerplate|template/.test(r)) };
-      console.log(`  growth ${row.slug}: bucket ${row.growth.bucket} ${row.growth.potential} · readiness ${row.growth.readiness} ${row.growth.decision} · ${row.growth.hooks} hooks${row.growth.hardFails.length ? " · " + row.growth.hardFails.join("; ") : ""}${row.growth.templated.length ? " · " + row.growth.templated.join("; ") : ""}`);
+      log(`  growth ${row.slug}: bucket ${row.growth.bucket} ${row.growth.potential} · readiness ${row.growth.readiness} ${row.growth.decision} · ${row.growth.hooks} hooks${row.growth.hardFails.length ? " · " + row.growth.hardFails.join("; ") : ""}${row.growth.templated.length ? " · " + row.growth.templated.join("; ") : ""}`);
     }
   }
-  fs.writeFileSync(file.replace(/\.json$/, ".report.json"), JSON.stringify(report, null, 2) + "\n");
-  console.log(`\n${report.filter((r) => !r.errors.length).length}/${report.length} passed${write ? `, ${changed} written` : " (dry run; add --write)"}`);
+  log(`\n${report.filter((r) => !r.errors.length).length}/${report.length} passed${write ? `, ${changed} written` : " (dry run; add --write)"}`);
+  return { report, changed };
 }
 
 if (require.main === module) main().catch((error) => { console.error(error); process.exit(1); });
-module.exports = { lintRecord, verify, merge, LAYERS };
+module.exports = { run, lintRecord, verify, merge, LAYERS, BTO_PRIMARY_HOSTS, hostAllowed, normalizeQuote, quoteFound };

@@ -56,15 +56,15 @@ select channel
       match            → duplicate guard → resumable upload → channel state
 ```
 
-Prefixes are `FR`, `IB` and `CT`. The live IB/CT client-pair names are `IB_CLIENT_ID`/`IB_CLIENT_SECRET` and `CT_CLIENT_ID`/`CT_CLIENT_SECRET`; refresh secrets remain `IB_YT_REFRESH_TOKEN` and `CT_YT_REFRESH_TOKEN`. Token files are not shared. `secrets/<slug>/` is reserved and gitignored through the repository-wide secret rules; production uses environment/GitHub secrets.
+Prefixes are `FR`, `IB`, `CT`, and `BTO`. BTO uses `BTO_YT_CLIENT_ID`, `BTO_YT_CLIENT_SECRET`, `BTO_YT_REFRESH_TOKEN`, and `BTO_YT_CHANNEL_ID`, with no legacy fallback. Token files are not shared. `secrets/<slug>/` is reserved and gitignored through the repository-wide secret rules; production uses environment/GitHub secrets.
 
 `.github/workflows/youtube-oauth-health.yml` runs before the first production slot and always validates all enabled YouTube channels, regardless of their publish flags. It writes one table to the job summary and reuses the persistent `saglik` issue. Issue comments key off status/error-code transitions, not changing countdown or inventory numbers.
 
 ## Scheduling and failure isolation
 
-`portfolio-scheduler.js` reads all three channel cadences and emits an ordered queue. The priority includes FR/IB/CT Shorts and each channel's long-form due item. Only due work appears. `--enqueue` atomically updates each channel's own scheduler file.
+`portfolio-scheduler.js` reads all four channel cadences and emits an ordered queue. The priority includes FR/IB/CT/BTO Shorts and each channel's long-form due item. Only due work appears. `--enqueue` atomically updates each channel's own scheduler file.
 
-`.github/workflows/portfolio-production.yml` runs channel steps sequentially in one job. This physically enforces one render/upload at a time. ImpossibleBrief remains disabled until `IB_PUBLISH=1`; CriticalThread remains disabled until `CT_PUBLISH=1`. This prevents a channel without a verified OAuth identity from consuming its queue. Failure Reconstructed also has a primary daily schedule in `uretim.yml`.
+`.github/workflows/portfolio-production.yml` runs channel steps sequentially in one job. This physically enforces one render/upload at a time. ImpossibleBrief, CriticalThread, and Behind the Ordinary remain disabled until their `IB_PUBLISH`, `CT_PUBLISH`, or `BTO_PUBLISH` variable is `1`. This prevents a channel without a verified OAuth identity from consuming its queue. Failure Reconstructed also has a primary daily schedule in `uretim.yml`.
 
 At the configured 16:30 UTC deadline, `production-sla-check.js` verifies repository state, the real YouTube video ID, `publishAt`, final quality gate and notification state. A deployed Cloudflare Worker cron independently sends `repository_dispatch: production-sla-watchdog` at 16:35 UTC. The receiving workflow starts channel-scoped production only after YouTube positively confirms absence, then verifies the SLA again. A human issue is created only if recovery fails. GitHub's own 17:07 watchdog cron is a secondary fallback, not an independent scheduler. Deployment and dispatch self-tests are green; evidence and rotation procedures are in [SCHEDULER-RECOVERY.md](SCHEDULER-RECOVERY.md).
 

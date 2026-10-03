@@ -2,10 +2,13 @@
 
 const impossibleBrief = require("./impossible-brief");
 const criticalThread = require("./critical-thread");
+const behindTheOrdinary = require("./behind-the-ordinary");
 
 function engineFor(channelOrTopic) {
   const slug = typeof channelOrTopic === "string" ? channelOrTopic : channelOrTopic && (channelOrTopic.channel || channelOrTopic.slug);
-  return slug === "critical-thread" ? criticalThread : impossibleBrief;
+  if (slug === "critical-thread") return criticalThread;
+  if (slug === "behind-the-ordinary") return behindTheOrdinary;
+  return impossibleBrief;
 }
 
 function evaluateTopic(topic, allTopics = []) { return engineFor(topic).evaluateTopic(topic, allTopics); }

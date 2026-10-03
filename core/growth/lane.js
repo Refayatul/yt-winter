@@ -120,9 +120,14 @@ async function runCycle(channel, options = {}) {
   }
   const limit = options.maxCandidates || 3;
   let review = null;
+  let deferred = null;
   for (const row of list.slice(0, limit)) {
-    const pkg = await Longform.buildPackage(channel, row.topic, { context: ctx, potential: row.potential, llm: options.llm, research: options.research, offline: options.offline, write: options.write, now });
-    cycle.evaluated.push({ slug: row.topic.slug, mode: row.mode, LongFormPotentialScore: row.potential.LongFormPotentialScore, bucket: row.potential.bucket, decision: pkg.readiness.decision, score: pkg.readiness.LongFormProductionReadinessScore, hardFails: pkg.readiness.hardFails });
+    const pkg = await Longform.buildPackage(channel, row.topic, { context: ctx, potential: row.potential, llm: options.llm, research: options.research, offline: options.offline, write: options.write, now, providerDependencies: options.providerDependencies });
+    cycle.evaluated.push({ slug: row.topic.slug, mode: row.mode, LongFormPotentialScore: row.potential.LongFormPotentialScore, bucket: row.potential.bucket, decision: pkg.readiness.decision, score: pkg.readiness.LongFormProductionReadinessScore, hardFails: pkg.readiness.hardFails, generationStatus: pkg.script.status });
+    if (pkg.script.status === "DEFERRED") {
+      deferred = { slug: row.topic.slug, pkg };
+      break;
+    }
     if (pkg.readiness.decision === "PUBLISH") { cycle.selected = row.topic.slug; cycle.package = pkg; break; }
     if (pkg.readiness.decision === "REVIEW" && !review) review = { slug: row.topic.slug, pkg };
   }
@@ -137,6 +142,10 @@ async function runCycle(channel, options = {}) {
       cycle.status = "READY_FOR_RENDER";
       cycle.reason = options.dryRun ? "dry run" : "render disabled for this channel (longform.render.enabled / LONGFORM_PUBLISH)";
     }
+  } else if (deferred) {
+    cycle.status = "DEFERRED_PROVIDER";
+    cycle.reason = `provider deferred ${deferred.slug}; retry this cycle and resume its checkpoint`;
+    cycle.checkpoint = deferred.pkg.script.checkpoint;
   } else if (list.length) {
     cycle.status = review ? "REVIEW_REQUIRED" : "QUALITY_BLOCKED";
     cycle.reason = review ? `best candidate ${review.slug} is REVIEW (${review.pkg.readiness.LongFormProductionReadinessScore})` : "no candidate passed the long-form quality gate; cadence does not override quality";

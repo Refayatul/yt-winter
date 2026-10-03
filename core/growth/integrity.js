@@ -17,6 +17,7 @@ function classifyScene(topic, scene, index, context = {}) {
     return "LICENSED_STOCK";
   }
   if (topic.channel === "critical-thread") return /\b(map|diagram|chart|cross-section|timeline|graph)\b/i.test(scene.text || "") ? "PROCESS_DIAGRAM" : "TECHNICAL_ILLUSTRATION";
+  if (topic.channel === "behind-the-ordinary") return /\b(diagram|cutaway|cross-section|comparison)\b/i.test(scene.text || "") ? "TECHNICAL_ILLUSTRATION" : /\barchive|source document\b/i.test(scene.text || "") ? "MUSEUM_ARCHIVE" : /\bmacro|detail\b/i.test(scene.text || "") ? "MACRO_DETAIL" : "REAL_OBJECT";
   return /diagram|comparison|map/i.test(scene.text || "") ? "DIAGRAM" : "ILLUSTRATION";
 }
 

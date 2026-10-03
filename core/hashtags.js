@@ -33,6 +33,10 @@ const CATEGORY = Object.freeze({
     STANDARDS: "#standards", "FINANCIAL INFRASTRUCTURE": "#fintech", "DATA CENTERS": "#datacenters",
     "HEALTH INFRASTRUCTURE": "#healthcare", "WASTE AND RECYCLING": "#recycling",
   },
+  "behind-the-ordinary": {
+    "EVERYDAY MYSTERIES": "#everydayobjects", "HIDDEN ENGINEERING": "#engineering",
+    "STRANGE ORIGINS": "#designhistory", "DESIGN DECISIONS": "#design", "ORDINARY SYSTEMS": "#howitworks",
+  },
 });
 
 // High-volume hashtags that describe each channel's whole catalogue.
@@ -40,6 +44,7 @@ const BROAD = Object.freeze({
   "failure-reconstructed": ["#engineering", "#history"],
   "impossible-brief": ["#science", "#whatif"],
   "critical-thread": ["#engineering", "#howitworks"],
+  "behind-the-ordinary": ["#design", "#howitworks"],
 });
 
 // "Lower Van Norman Dam" -> "#LowerVanNormanDam"; "Europa (moon)" -> "#Europa".
@@ -95,7 +100,7 @@ function compose({ format = "short", subject = null, category = null, broad = []
 
 // IB/CT documentary topics (topic-universe.json entries).
 function forTopic(channelSlug, topic = {}, options = {}) {
-  const subject = subjectHashtag({ references: [...(topic.facts || []), ...(topic.researchEvidence || []), ...(topic.sources || [])] });
+  const subject = subjectHashtag({ names: channelSlug === "behind-the-ordinary" ? [topic.canonicalTopic || topic.object || ""] : [], references: [...(topic.facts || []), ...(topic.researchEvidence || []), ...(topic.sources || [])] });
   const category = (CATEGORY[channelSlug] || {})[String(topic.category || "").toUpperCase()] || null;
   return compose({ format: options.format || "short", subject, category, broad: BROAD[channelSlug] || [] });
 }
@@ -105,7 +110,7 @@ function subjectPhrase(topic = {}) {
   const title = wikipediaTitles([...(topic.facts || []), ...(topic.researchEvidence || []), ...(topic.sources || [])])
     .map((value) => value.replace(/\s*\(.*?\)\s*/g, " ").replace(/[,<>"]/g, " ").replace(/\s+/g, " ").trim())
     .find((value) => value.length >= 3 && value.length <= 60);
-  return title || null;
+  return title || topic.canonicalTopic || topic.object || null;
 }
 
 module.exports = { MAX_HASHTAGS, CATEGORY, BROAD, toHashtag, wikipediaTitles, subjectHashtag, compose, forTopic, subjectPhrase };

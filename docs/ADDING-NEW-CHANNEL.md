@@ -1,4 +1,4 @@
-# Adding channel #3
+# Adding another channel
 
 Do not copy the application. Add data and registry entries around the shared core.
 

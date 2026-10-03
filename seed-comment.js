@@ -28,6 +28,11 @@ const CLOSINGS = {
     "What everyday thing do you think has the most fragile supply chain?",
     "Name a system you rely on daily, and we'll follow the thread.",
   ],
+  "behind-the-ordinary": [
+    "Which ordinary object should we look at next?",
+    "Name a tiny design detail you have always wondered about.",
+    "What everyday thing deserves a closer look?",
+  ],
 };
 
 function pick(list, key) {

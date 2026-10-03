@@ -85,7 +85,7 @@ async function longReport(channel, options = {}) {
   const Longform = require("./longform");
   const ctx = Context.build(channel);
   const candidates = Lane.candidates(channel, ctx);
-  const out = [`# Dry run — ${channel.name} — Long-form`, "", `Sandbox state · LLM writer ${options.llm ? "ON" : "OFF (no ANTHROPIC_API_KEY / LONGFORM_LLM)"} · nothing rendered or uploaded`, ""];
+  const out = [`# Dry run — ${channel.name} — Long-form`, "", `Sandbox state · LLM writer ${options.llm ? "ON" : "OFF (no configured LONGFORM_LLM_PROVIDER / provider key)"} · nothing rendered or uploaded`, ""];
   out.push("## Candidate long-form topics", "", "| # | Topic | LongFormPotential | Bucket | Mode |", "|---|---|---|---|---|");
   candidates.slice(0, 6).forEach((row, index) => out.push(`| ${index + 1} | ${cell(row.topic.slug)} | ${row.potential.LongFormPotentialScore} | ${row.potential.bucket} | ${row.mode} |`));
   if (!candidates.length) { out.push("", "No candidate above bucket D.", ""); return { markdown: out.join("\n") + "\n", pkg: null }; }
