@@ -87,6 +87,10 @@ function derive(row) {
     engagedViewRate: round(divide(current.engagedViews, views), 5),
     subscriberConversion: round(divide(subscribersGained, views), 5),
     subscribersPer1000Views: round(divide(subscribersGained, views) == null ? null : subscribersGained / views * 1000),
+    // Spec-named derived metrics (NULL when an input is missing).
+    netSubscribers: Number.isFinite(subscribersGained) && Number.isFinite(current.subscribersLost) ? subscribersGained - current.subscribersLost : null,
+    engagementPer1kViews: engagementCount.length === 3 && Number.isFinite(views) && views > 0 ? round(engagementTotal / views * 1000, 2) : null,
+    watchMinutesPerView: round(divide(current.watchTimeMinutes ?? (row.metrics || {}).watchTimeMinutes, views), 3),
     averagePercentageViewed: current.averagePercentageViewed ?? (row.metrics || {}).averagePercentageViewed ?? null,
     averageViewDuration: current.averageViewDuration ?? (row.metrics || {}).averageViewDuration ?? null,
     series,

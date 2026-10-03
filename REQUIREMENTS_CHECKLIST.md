@@ -60,11 +60,11 @@ under `icerik/`, `analytics/`); GitHub Actions is the scheduler/runtime.
 - PUBLISH-08 Pre-flight — **DONE**. `PUBLISH-PREFLIGHT.json`: channel + authenticated ID, media SHA-256 + bytes, title, schedule, privacy, quality gate, idempotency key, duplicate state, quota. Existing metadata validation + quality gate kept. Files: lib/publish-safety.js, youtube-yukle.js, core/channel-context.js (allChannels), .gitignore. Tests: tests/js/publish-safety.test.js (14 pass), npm test 225 pass.
 
 ### Analytics
-- ANALYTICS-01 Warehouse tables channel_daily, video_daily, traffic_daily per channel — TODO
-- ANALYTICS-02 Incremental load + 12-month backfill, freshness state — TODO
-- ANALYTICS-03 Only real API metrics; unavailable ones explicit (impressions/CTR) — TODO
+- ANALYTICS-01 Warehouse tables per channel — **DONE**. core/analytics/warehouse.js: channel_daily, channel_type_daily (creatorContentType: Shorts vs long), traffic_daily, video_daily under `<channel analytics>/warehouse/`. analytics-sync.js (identity-verified, read-only) runs in portfolio-production's daily analytics loop. Tests: tests/js/warehouse.test.js.
+- ANALYTICS-02 Incremental load + 12-month backfill + freshness — **DONE**. First run 365 days in ≤90-day chunks; later runs re-read 3 trailing days and upsert; state.json freshness; at most one sync per 20 h. Tests: warehouse.test.js.
+- ANALYTICS-03 Only real API metrics — **DONE**. CORE_METRICS from the Analytics API v2; impressions / impression CTR recorded as unavailable (Studio-only), optional dimension failures recorded, never estimated. Test: warehouse.test.js.
 - ANALYTICS-04 Publish-relative windows 1h…28d with actual observation time — **DONE** (existing checkpoints + `collectedAt`).
-- ANALYTICS-05 Derived: net subscribers, subscriber conversion, engagement/1k, watch-minutes/view, velocity — TODO (partial existing)
+- ANALYTICS-05 Derived metrics — **DONE**. net subscribers, subscriber conversion, engagement/1k, watch-minutes/view in warehouse rows and core/growth/performance.derive (velocity existed). Tests: warehouse.test.js.
 - ANALYTICS-06 Shorts vs long separate baselines — **DONE** (existing `performance`/`diagnosis`).
 
 ### Growth intelligence
@@ -84,14 +84,14 @@ under `icerik/`, `analytics/`); GitHub Actions is the scheduler/runtime.
 ### Operations
 - QUOTA-01 Central configurable cost policy — **DONE**. config/quota.json + lib/quota.js; no call-site constants. Tests: tests/js/quota-ops.test.js.
 - QUOTA-02 Per-channel ledger + graceful exhaustion — **DONE**. `<state>/quota-ledger.json` per channel, budget summed per Google project, Pacific-day reset; every lib/yt Data API call charged; upload deferred (exit 10) when the budget is short. Tests: tests/js/quota-ops.test.js.
-- OBS-01 Structured per-channel ops event log — **IN PROGRESS**. lib/ops-log.js (`<state>/ops/events.jsonl`, `OPS {...}` lines): publish.success/failure/retry/blocked/shadow/duplicate_prevented, quota.exhausted, oauth.failure. Analytics freshness pending.
+- OBS-01 Structured per-channel ops event log — **DONE**. lib/ops-log.js events: publish.success/failure/retry/blocked/shadow/duplicate_prevented, quota.exhausted, oauth.failure, analytics.load/partial/failure (+ freshness day). Tests: quota-ops.test.js.
 - PROV-01 Per-video provenance manifest (source, URL, licence, attribution, channel) — TODO
 - REPORT-01 Report sections: operations, quota, analytics freshness, conversion — TODO
 
 ### Tests / docs
 - TEST-01 Wrong channel/token fails closed — **DONE** (existing) + publish-job check — TODO
 - TEST-02 Upload retry never duplicates — **DONE**. publish-safety.test.js: network drop after full receipt, unknown session state, expired session.
-- TEST-03 Analytics + learned weights isolated per channel — TODO (extend for warehouse)
+- TEST-03 Analytics + learned weights isolated per channel — **DONE**. warehouse partition test (warehouse.test.js); learned weights/state isolation existing (growth.test.js, multi-channel.test.js).
 - TEST-04 Scheduler timezone — **DONE** (`calendar-scheduling.test.js`).
 - TEST-05 Partial failure resumes — **DONE**. publish-safety.test.js: resume from received byte; journal-completed intent re-committed without upload.
 - TEST-06 No secrets in logs — **DONE** (ops log redaction test; journal excludes session URLs).
