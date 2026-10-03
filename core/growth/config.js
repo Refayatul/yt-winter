@@ -36,7 +36,10 @@ const cache = new Map();
 
 function validate(config) {
   const fail = (message) => { throw new Error(`INVALID_GROWTH_CONFIG: ${message}`); };
-  if (!config.candidatePool || config.candidatePool.minimum < 20 || config.candidatePool.target < config.candidatePool.minimum || config.candidatePool.target > 50) fail("candidatePool must select 20–50 topics");
+  // An evidence-gated channel (only researched records are eligible) may run
+  // a smaller pool; every other channel keeps the 20-topic minimum.
+  const poolFloor = config.candidatePool && config.candidatePool.evidenceGated === true ? 1 : 20;
+  if (!config.candidatePool || config.candidatePool.minimum < poolFloor || config.candidatePool.target < config.candidatePool.minimum || config.candidatePool.target > 50) fail("candidatePool must select 20–50 topics (evidence-gated channels: 1–50)");
   if (Math.abs(config.candidatePool.videoPotentialWeight + config.candidatePool.viralPotentialWeight - 1) > 1e-9) fail("candidatePool scoring weights must equal 1");
   const exploit = config.selection && config.selection.exploitRatio;
   const explore = config.selection && config.selection.exploreRatio;
