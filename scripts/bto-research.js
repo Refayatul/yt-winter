@@ -37,7 +37,13 @@ const FR = require(path.join(ROOT, "scripts", "fr-library", "build"));
 
 const SLUG = "behind-the-ordinary";
 const RETRY_AFTER_DAYS = 60;
-const MAX_EXCERPT_CHARS = 9000;
+// Groq's free tier allows ~8,000 tokens per minute for openai/gpt-oss-120b
+// and counts the requested completion budget too. Excerpts share one budget
+// (~10,000 characters ≈ 2,500 tokens) and questions are spaced apart.
+const EXCERPT_BUDGET_CHARS = Number(process.env.BTO_RESEARCH_EXCERPT_CHARS) || 10000;
+const MAX_EXCERPT_CHARS = EXCERPT_BUDGET_CHARS;
+const COMPLETION_TOKENS = Number(process.env.BTO_RESEARCH_MAX_TOKENS) || 3000;
+const PAUSE_MS = process.env.BTO_RESEARCH_PAUSE_MS != null ? Number(process.env.BTO_RESEARCH_PAUSE_MS) : 65000;
 const STOP = new Set(("that this with from were was have has had they them their there which what when where while would could should about into than then " +
   "also because these those every only just more most some such very been being over under after before other its it's your you are the and for but not " +
   "can get got has had all any one two how why who out use now new old yet way may did does let own off too")
@@ -89,8 +95,13 @@ async function wikiJson(get, params) {
 function relevantTitle(title, object) {
   if (/^(list|lists|timeline|index|outline|glossary) of\b/i.test(title)) return false;
   const stem = (word) => word.toLowerCase().replace(/(es|s)$/, "");
-  const own = new Set(String(title).split(/[\s(),-]+/).map(stem));
-  return words(String(object).replace(/^the\s+/i, "")).map(stem).filter((word) => word.length >= 3).some((word) => own.has(word));
+  const titleWords = String(title).split(/[\s(),-]+/).filter(Boolean);
+  const own = new Set(titleWords.map(stem));
+  const objectWords = words(String(object).replace(/^the\s+/i, "")).map(stem).filter((word) => word.length >= 3);
+  const hits = objectWords.filter((word) => own.has(word)).length;
+  // A two-word object needs both words unless the title is one matching word
+  // ("QWERTY" for QWERTY keyboards): "Windows 8" is not about airplane windows.
+  return hits >= Math.min(2, objectWords.length) || (titleWords.length === 1 && hits === 1);
 }
 
 async function articles(topic, get) {
@@ -234,13 +245,15 @@ async function researchOne(topic, deps) {
   // An article that never mentions the design detail cannot answer the question.
   const detailWords = contentWords(topic.designDetail).map((word) => word.replace(/(es|s)$/, "")).filter((word) => word.length >= 4);
   const mentionsDetail = (doc) => !detailWords.length || detailWords.some((word) => doc.text.toLowerCase().includes(word));
-  const sources = docs.filter(mentionsDetail).map((doc) => ({ title: doc.title, url: doc.url, text: excerpt(doc.text, keys), links: doc.links }));
+  const relevant = docs.filter(mentionsDetail);
+  const share = Math.floor(EXCERPT_BUDGET_CHARS / Math.max(1, relevant.length));
+  const sources = relevant.map((doc) => ({ title: doc.title, url: doc.url, text: excerpt(doc.text, keys, share), links: doc.links }));
   if (!sources.length) return { status: "NO_SOURCE", reason: `no article mentions "${topic.designDetail}"` };
   const user = { question: topic.coreQuestion, object: topic.object, designDetail: topic.designDetail, pillar: topic.category,
     sources: sources.map((source, index) => ({ id: `S${index + 1}`, title: source.title, excerpt: source.text })) };
   let feedback = null;
   for (let round = 0; round < 2; round += 1) {
-    const response = await deps.generate({ stage: "bto-research", maxTokens: 3500, system: SYSTEM,
+    const response = await deps.generate({ stage: "bto-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM,
       user: JSON.stringify(feedback ? { ...user, previous_errors: feedback } : user) });
     const built = toSeedRecord(topic, response.json, sources);
     if (built.skip) return { status: "NOT_ANSWERABLE", reason: String(built.skip).slice(0, 200) };
@@ -270,13 +283,18 @@ async function main(argv = process.argv.slice(2), deps = {}) {
   const generate = deps.generate || ((input) => Provider.generateJson(input));
   const verify = deps.verify || ((seed) => Builder.run(seed, { write: false, log: () => {} }));
   const outcomes = [];
-  for (const topic of list) {
+  for (const [index, topic] of list.entries()) {
+    // Space provider calls so one run stays inside the per-minute token limit.
+    if (index > 0 && PAUSE_MS > 0 && !deps.generate) await new Promise((resolve) => setTimeout(resolve, PAUSE_MS));
     let outcome;
     try { outcome = await researchOne(topic, { get, generate, verify }); }
     catch (error) {
       // A provider rate limit or outage defers the batch; attempts are not
       // recorded, so the same questions are tried on the next run.
-      if (error instanceof Provider.LongformProviderError && error.defer) { console.log(`provider deferred (${error.code}); stopping this batch`); break; }
+      if (error instanceof Provider.LongformProviderError && error.defer) {
+        console.log(`provider deferred (${error.code}${error.status ? ` HTTP ${error.status}` : ""}${error.retryAfterMs ? `, retry after ${Math.round(error.retryAfterMs / 1000)}s` : ""}); stopping this batch`);
+        break;
+      }
       outcome = { status: "ERROR", reason: String(error.code || error.message).slice(0, 200) };
     }
     outcomes.push({ question: topic.slug, ...outcome });
