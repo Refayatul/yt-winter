@@ -10,7 +10,7 @@ Variable: title pattern · metric: `views_7d` · start: 2026-09-24
 | Arm | Meaning | Videos |
 |---|---|---|
 | TITLE_STYLE_A | object-that / two-beat story title | PGOKZhPYo7c, DLYpmaQ-EVw, aScjSrwqeRk, I86SnrokHMk, uqoAjXMbbls, M4rr4aVc4Uc, NnGoWJOdaW0, 7q3E09HMIGI, rgSsk8q6eyM, WlZ2z90pqx8, 5yPoQCElJuk, fGE8kZOaQZ4 |
-| TITLE_STYLE_B | why/how question title | qkzRUqlEy5I, X0jw78mIGdk, ODZ7y6r1o6o, bqTpdauhlHo, tIXvjbAXStw, NobEECFBrwo, 4Mo58FxCr4A, u0iftg8gF5w, hsuWhB8lCvU |
+| TITLE_STYLE_B | why/how question title | qkzRUqlEy5I, X0jw78mIGdk, ODZ7y6r1o6o, bqTpdauhlHo, tIXvjbAXStw, NobEECFBrwo, 4Mo58FxCr4A, u0iftg8gF5w, hsuWhB8lCvU, I9Lcpi9kPYs |
 
 Result (insufficient data confidence): Not enough videos per arm (need ≥5; have TITLE_STYLE_A=2, TITLE_STYLE_B=4). No conclusion — and no causal claim.
 
