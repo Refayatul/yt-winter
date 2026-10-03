@@ -129,6 +129,31 @@ async function check(channel = Channel.getChannel(), options = {}) {
     !credentials.refreshToken && requiredNames.refreshToken,
     !expectedChannelId && requiredNames.channelId,
   ].filter(Boolean);
+  // A channel still being onboarded (config "onboarding": true) with NO
+  // credential or channel ID configured yet is reported as pending setup, not
+  // as a failure, so the portfolio health stays green until the owner connects
+  // it. Uploads stay blocked. Any partial configuration is checked normally.
+  if (channel.config.onboarding === true && missing.length === Object.keys(requiredNames).length) {
+    return {
+      channel: channel.slug,
+      channelName: channel.name,
+      checkedAt: (options.now instanceof Date ? options.now : new Date(options.now || Date.now())).toISOString(),
+      credentialNames: requiredNames,
+      checks: [finding("config", "N/A", `setup pending: connect the channel by configuring ${missing.join(", ")}`, "NOT_CONFIGURED", { missing })],
+      status: "NOT_CONFIGURED",
+      severity: "INFO",
+      uploadAllowed: false,
+      healthy: false,
+      notConfigured: true,
+      credentialsPresent: false,
+      refreshTokenPresent: false,
+      accessTokenRefresh: false,
+      authenticatedChannelId: null,
+      expectedChannelId: null,
+      channelMatch: false,
+      error: null,
+    };
+  }
   const checks = [];
   checks.push(finding("config", missing.length ? "CRITICAL" : "PASS",
     missing.length ? `missing required configuration: ${missing.join(", ")}` : "all channel-scoped OAuth configuration is present",
@@ -365,7 +390,7 @@ async function main(argv = process.argv.slice(2), options = {}) {
   const selected = Channel.selectFromArgv(argv);
   const result = await check(selected.channel, options);
   process.stdout.write(JSON.stringify(result, null, 2) + "\n");
-  if (!result.uploadAllowed) process.exitCode = 4;
+  if (!result.uploadAllowed && !result.notConfigured) process.exitCode = 4;
   return result;
 }
 

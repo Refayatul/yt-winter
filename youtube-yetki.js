@@ -96,6 +96,19 @@ if (!EXPECTED_CHANNEL_ID && !SELECTED.argv.includes("--new-channel")) {
 }
 if (EXPECTED_CHANNEL_ID) console.log(`[${CHANNEL.name}] Beklenen YouTube kanali: ${EXPECTED_CHANNEL_ID} — onay ekraninda bu kanali sec.`);
 
+// A first-time (--new-channel) authorization records whichever channel the
+// owner picks. It must never be a channel that already belongs to another
+// configured channel, or this channel's uploads would land on that one.
+const Registry = require("./core/channel-context");
+const OTHER_CHANNEL_IDS = new Map();
+for (const other of Registry.allChannels().filter((item) => item.slug !== CHANNEL.slug)) {
+  const id = other.expectedChannelId() || (SAVE_TO_GITHUB ? githubVariable(other.credentialNames.channelId[0]) : "");
+  if (id) OTHER_CHANNEL_IDS.set(id, other.name);
+}
+if (!EXPECTED_CHANNEL_ID && !SAVE_TO_GITHUB && !OTHER_CHANNEL_IDS.size) {
+  console.log("⚠ Diger kanallarin kimlikleri okunamadi; yanlis kanal korumasi icin --github ile calistirman onerilir.");
+}
+
 const credentials = CHANNEL.credentials();
 const clientId = credentials.clientId;
 const clientSecret = credentials.clientSecret;
@@ -155,6 +168,7 @@ const sunucu = http.createServer(async (req, res) => {
       actual = await yt.authenticatedChannel(yt.istemci({ erisim: j.access_token, kapsam: String(j.scope || "") }));
       const expected = EXPECTED_CHANNEL_ID;
       if (expected && actual.id !== expected) throw new Error(`CHANNEL_ID_MISMATCH: authenticated ${actual.id} (${actual.title || "unknown"}), expected ${expected}`);
+      if (OTHER_CHANNEL_IDS.has(actual.id)) throw new Error(`CHANNEL_ALREADY_ASSIGNED: ${actual.title || actual.id} (${actual.id}) belongs to ${OTHER_CHANNEL_IDS.get(actual.id)}; choose the ${CHANNEL.name} channel on the consent screen`);
     } catch (error) {
       res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
       res.end("<h2>Yanlış YouTube kanalı. Jeton kaydedilmedi.</h2>");

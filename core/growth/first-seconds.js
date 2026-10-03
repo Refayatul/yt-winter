@@ -27,10 +27,12 @@ function firstFrame(topic, hook) {
   return {
     description: topic.channel === "critical-thread"
       ? `${topic.subject} isolated, dependency lines to what fails without it`
+      : topic.channel === "behind-the-ordinary"
+        ? `${topic.subject} fills the frame; one marker isolates ${topic.designDetail || "the unusual detail"}`
       : `${subject} at the moment the impossible change begins`,
     source: "procedural render",
     startAtSeconds: 0,
-    sourceClass: topic.channel === "critical-thread" ? "TECHNICAL_ILLUSTRATION" : "ILLUSTRATION",
+    sourceClass: topic.channel === "critical-thread" ? "TECHNICAL_ILLUSTRATION" : topic.channel === "behind-the-ordinary" ? "REAL_OBJECT" : "ILLUSTRATION",
     communicates: topic.channel === "critical-thread" ? "dependency" : "mystery",
     rule: "labelled illustration; no logo, no establishing shot",
   };
@@ -47,14 +49,16 @@ function plan(topic, hookBundle, config, options = {}) {
   const soundCue = config.firstSeconds.soundCue ? (typeof config.firstSeconds.soundCue === "string" ? config.firstSeconds.soundCue : "single low hit on the first cut") : null;
   const motion = topic.channel === "failure-reconstructed"
     ? (topic.archivalFilm ? "no zoom on moving film; punch-in crop 100→108% at the first cut" : "slow push-in 100→112% on the still, hard cut at the first beat")
-    : topic.channel === "critical-thread" ? "dependency lines draw outward in 0.6 s, then hard cut" : "scale shift: object shrinks/grows in 0.8 s, then hard cut";
+    : topic.channel === "critical-thread" ? "dependency lines draw outward in 0.6 s, then hard cut"
+      : topic.channel === "behind-the-ordinary" ? "macro push toward the highlighted detail in 0.7 s, then cut to source evidence"
+        : "scale shift: object shrinks/grows in 0.8 s, then hard cut";
   const blockers = [];
   const notes = [];
   if (GENERIC_FRAME.test(frame.description)) blockers.push("generic establishing/logo first frame");
   if (/^VIOLATION/.test(frame.rule)) blockers.push(frame.rule);
   if (onScreenWords > config.firstSeconds.maxOnScreenWords) notes.push(`on-screen text ${onScreenWords} words > ${config.firstSeconds.maxOnScreenWords}`);
   if (narrationSeconds > openingMax * 1.6) notes.push(`hook narration ~${narrationSeconds}s; opening window ${openingMax}s`);
-  const frameScore = frame.sourceClass === "REAL_ARCHIVAL" ? 95 : frame.sourceClass === "LICENSED_STOCK" ? 65 : 78;
+  const frameScore = frame.sourceClass === "REAL_ARCHIVAL" ? 95 : frame.sourceClass === "REAL_OBJECT" ? 92 : frame.sourceClass === "LICENSED_STOCK" ? 65 : 78;
   const score = clamp(
     hook.scores.SwipeStoppingPower * 0.4 +
     frameScore * 0.25 +

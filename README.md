@@ -2,39 +2,43 @@
 
 ## Multi-channel YouTube Growth OS
 
-Tek kod tabanı üç bağımsız kanalı çalıştırır:
+Tek kod tabanı dört bağımsız kanalı çalıştırır:
 
 - **Failure Reconstructed** — mevcut davranış ve eski `icerik/`, `analytics/`, `channel/` yolları geriye uyumlu adaptörle korunur.
 - **ImpossibleBrief** — what-if science, space, physics, Earth, humanity and future technology; tüm konu, durum, bellek, analiz ve kimlik bilgileri `channels/impossible-brief/` altında izole edilir.
 - **CriticalThread** — modern dünyayı ayakta tutan görünmez makineler, malzemeler ve altyapı; konu, durum, bellek, analiz ve kimlik bilgileri `channels/critical-thread/` altında izole edilir. Başlangıç kütüphanesi 522 nitelikli konudur.
+- **The Hidden Logic of Things** — gündelik nesnelerdeki gizli tasarım, mühendislik ve tarih; `channels/behind-the-ordinary/` altında izole edilir. 525 doğrulanmış araştırma sorusu vardır; yalnız kaynak/fakt paketi tamamlanan kayıtlar üretime girer.
 
 Her büyük komut `--channel` kabul eder. Bayrak verilmezse güvenli geriye uyumluluk için `failure-reconstructed` seçilir.
 
 ```bash
 node shorts-sira.js --channel impossible-brief --no-render
 node shorts-sira.js --channel critical-thread --no-render
+node shorts-sira.js --channel behind-the-ordinary --no-render
 node library-health.js --channel impossible-brief
 node library-health.js --channel critical-thread
+node library-health.js --channel behind-the-ordinary
 node post-publish-analyzer.js --channel impossible-brief --due
 node channel-plan.js --channel impossible-brief
 node portfolio-scheduler.js
 node portfolio-dashboard.js
-node daily-operations-report.js              # üç kanal tek rapor (TikTok emekli)
+node daily-operations-report.js              # dört kanal tek rapor (TikTok emekli)
 node production-sla-check.js --channel failure-reconstructed
 node e2e-impossible-brief.js --render       # yerel kuru çalışma; upload yok
 node e2e-critical-thread.js --render        # gerçek kuru render; upload yok
+node e2e-behind-the-ordinary.js             # paket kuru çalışma; upload yok
 node oauth-health.js --channel critical-thread
-node oauth-health.js --check-all            # üç kimlik + kapsam + kanal ID + deadline + envanter
-node simulate-portfolio.js                  # üç kanal / 30 gün + enjekte hatalar
+node oauth-health.js --check-all            # dört kimlik + kapsam + kanal ID + deadline + envanter
+node simulate-portfolio.js                  # dört kanal / 30 gün + enjekte hatalar
 ```
 
-YouTube sırları kanal bazında tutulur. Failure Reconstructed için tercih edilen adlar `FR_YT_*`; mevcut `YT_*` değerleri yalnız tam-bundle geçiş fallback'idir ve `FR_*` ile karıştırılmaz. ImpossibleBrief adları `IB_CLIENT_ID`, `IB_CLIENT_SECRET`, `IB_YT_REFRESH_TOKEN`; CriticalThread adları `CT_CLIENT_ID`, `CT_CLIENT_SECRET`, `CT_YT_REFRESH_TOKEN`'dır. Her YouTube yazma işleminden önce ortak OAuth katmanı erişim token'ını otomatik yeniler, upload kapsamını doğrular ve authenticated kanal kimliğini `FR_YT_CHANNEL_ID`, `IB_YT_CHANNEL_ID` veya `CT_YT_CHANNEL_ID` ile karşılaştırır. Eksik/farklı kimlikte yalnız ilgili kanal bloklanır.
+YouTube sırları kanal bazında tutulur. Failure Reconstructed için tercih edilen adlar `FR_YT_*`; mevcut `YT_*` değerleri yalnız tam-bundle geçiş fallback'idir ve `FR_*` ile karıştırılmaz. ImpossibleBrief adları `IB_CLIENT_ID`, `IB_CLIENT_SECRET`, `IB_YT_REFRESH_TOKEN`; CriticalThread adları `CT_CLIENT_ID`, `CT_CLIENT_SECRET`, `CT_YT_REFRESH_TOKEN`; The Hidden Logic of Things adları `BTO_YT_CLIENT_ID`, `BTO_YT_CLIENT_SECRET`, `BTO_YT_REFRESH_TOKEN`'dır. Ortak OAuth katmanı kimliği ilgili `*_YT_CHANNEL_ID` değeriyle karşılaştırır; eksik/farklı kimlikte yalnız ilgili kanal bloklanır.
 
-Failure Reconstructed otomatik Short üretimi açıktır. ImpossibleBrief yalnız `IB_PUBLISH=1`, CriticalThread yalnız `CT_PUBLISH=1` olduğunda schedule/watchdog yayın hattına girer. Her bayrağı yalnız o kanalın OAuth health sonucu yeşil olduğunda açın. `youtube-oauth-health.yml` altı saatte bir (ilki üretimden önce, 05:30 UTC) üç kanalı da bağımsız kontrol eder, Actions summary yazar ve mevcut `saglik` issue'sunu durum değişmedikçe yorum atmadan günceller; her şey sağlıklı olunca issue kendiliğinden kapanır. Elle: `npm run oauth:health` (= `node oauth-health.js --check-all`). Tek seferlik güvenli kurulum ve acil kurtarma: [üç kanal OAuth runbook'u](docs/OAUTH-THREE-CHANNELS.md). Ölçüm → teşhis → öğrenme döngüsü, güvenli/idempotent yükleme, kota ve analitik ambarı: [büyüme platformu](docs/GROWTH-PLATFORM.md) · gereksinim durumu: [REQUIREMENTS_CHECKLIST.md](REQUIREMENTS_CHECKLIST.md). Güncel mimari/bulgu durumu: [üç kanal audit'i](docs/THREE-CHANNEL-AUDIT.md). Cloudflare watchdog production'da dağıtılmış ve HTTP 204 dispatch self-test'i geçmiştir. Haftalık uzun video hattı (`node growth.js longform`) production workflow'una bağlıdır: her hafta konu seçer, araştırır, senaryo ve kalite kapısını çalıştırır; render/yükleme kanal bazında `longform.render.enabled` + `<PREFIX>_LONGFORM_PUBLISH=1` açılana kadar kapalıdır. Ayrıntı: [docs/GROWTH-ENGINE.md](docs/GROWTH-ENGINE.md).
+Failure Reconstructed otomatik Short üretimi açıktır. Diğer kanallar yalnız kendi yayın bayrağıyla schedule/watchdog hattına girer; The Hidden Logic of Things için bu `BTO_PUBLISH=1`'dir. `youtube-oauth-health.yml` dört kimliği bağımsız kontrol eder. BTO kurulumu, Groq ayarları ve güvenli açılış sırası: [The Hidden Logic of Things runbook](docs/BEHIND-THE-ORDINARY.md). Genel OAuth işlemleri: [OAuth runbook](docs/OAUTH-THREE-CHANNELS.md). Haftalık uzun video hattı (`node growth.js longform`) kanal bazında `longform.render.enabled` + `<PREFIX>_LONGFORM_PUBLISH=1` açılana kadar render/yükleme yapmaz.
 
 ## Production watchdog kurulumu ve doğrulaması
 
-Cloudflare Cron Worker her gün `16:35 UTC`'de, `16:30 UTC` üretim SLA'ından beş dakika sonra `production-sla-watchdog` olayı gönderir. GitHub-native `17:07 UTC` cron yedeği korunur. Recovery önce kimliği doğrulanmış YouTube kanalını API ile tarar; bugünün Short'u uzakta da yoksa üretime izin verir. API/OAuth doğrulanamazsa duplicate riski almak yerine fail-closed durur ve issue açar. ImpossibleBrief yalnız `IB_PUBLISH=1`, CriticalThread yalnız `CT_PUBLISH=1` olduğunda kendi izole SLA/recovery hattına girer.
+Cloudflare Cron Worker her gün `16:35 UTC`'de, `16:30 UTC` üretim SLA'ından beş dakika sonra `production-sla-watchdog` olayı gönderir. GitHub-native `17:07 UTC` cron yedeği korunur. Recovery önce kimliği doğrulanmış YouTube kanalını API ile tarar; bugünün Short'u uzakta da yoksa üretime izin verir. API/OAuth doğrulanamazsa duplicate riski almak yerine fail-closed durur ve issue açar. ImpossibleBrief, CriticalThread ve The Hidden Logic of Things yalnız kendi `IB_PUBLISH`, `CT_PUBLISH`, `BTO_PUBLISH` bayrakları `1` olduğunda izole SLA/recovery hattına girer.
 
 Gerekli repository secrets:
 
@@ -98,7 +102,7 @@ Bu depo artık **veriye dayalı bir adli mühendislik belgeseli üretim ve büy�
 | Paketleme | başlık · kapak · hook · tempo · hikâye yapısı · açıklama · sabit yorum · telaffuz | `icerik/paket/<slug>/` |
 | Kalite | `quality-gate.js`: 9 bileşen, PUBLISH ≥85 / REVIEW 70–84 / BLOCK <70 · yalnızca PUBLISH yüklenebilir | [config/growth.json](config/growth.json) |
 | Mevcut videolar | `node existing-video-optimizer.js --all` → `analysis/<id>/` + `migration/` | [migration/EXISTING-VIDEOS-PLAN.md](migration/EXISTING-VIDEOS-PLAN.md) |
-| Büyüme motoru (3 kanal) | her slotta 20–50 aday · şeffaf viral puan · 75/25 explore/exploit · 10+ kanca · 20+ başlık · retention kapısı · yaş-normalize performans/plato/breakout · haftalık uzun video · kanal-izole öğrenme · `npm run growth:report` | [docs/GROWTH-ENGINE.md](docs/GROWTH-ENGINE.md) |
+| Büyüme motoru (4 kanal) | her slotta 20–50 aday · şeffaf viral puan · 75/25 explore/exploit · 10+ kanca · 20+ başlık · retention kapısı · yaş-normalize performans/plato/breakout · haftalık uzun video · kanal-izole öğrenme · `npm run growth:report` | [docs/GROWTH-ENGINE.md](docs/GROWTH-ENGINE.md) |
 | Yayın sonrası | `post-publish-analyzer.js --due` (24 s/72 s/7 g/14 g/30 g) · panel → **📈 Büyüme** · `experiments.js` | [docs/GROWTH-ARCHITECTURE.md](docs/GROWTH-ARCHITECTURE.md) |
 | Konu seçimi | `node konu-puan.js "<konu>"` / `--adaylar` (11 ölçüt, ücretsiz sinyaller) | [icerik/aday-konular-puan.md](icerik/aday-konular-puan.md) |
 | Kurallar | sahte etkileşim yok, yanıltıcı başlık/kapak yok, kopya yükleme yok, sentetik içerik beyan edilir | [docs/YOUTUBE-CONTENT-QUALITY.md](docs/YOUTUBE-CONTENT-QUALITY.md) |

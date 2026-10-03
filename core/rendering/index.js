@@ -177,6 +177,8 @@ const MUSIC_MOODS = {
     MANUFACTURING: "industrial-disasters", "CRITICAL MINERALS": "industrial-disasters", SHIPPING: "maritime-disasters", PORTS: "maritime-disasters",
     "SUBMARINE CABLES": "maritime-disasters", "GLOBAL CHOKEPOINTS": "maritime-disasters", AVIATION: "aviation-failures", SATELLITES: "aviation-failures",
     "GPS AND TIMING": "aviation-failures", default: "infrastructure-failures" },
+  "behind-the-ordinary": { "EVERYDAY MYSTERIES": "everyday-curious", "HIDDEN ENGINEERING": "everyday-curious", "STRANGE ORIGINS": "everyday-warm",
+    "DESIGN DECISIONS": "everyday-warm", "ORDINARY SYSTEMS": "everyday-curious", default: "everyday-curious" },
 };
 
 function musicMood(topic) {
@@ -409,7 +411,7 @@ function numberCardFontSize(text) {
 }
 
 function channelAccent(topic) {
-  return topic && topic.channel === "critical-thread" ? "0xffb347" : "0x25d9ff";
+  return topic && topic.channel === "critical-thread" ? "0xffb347" : topic && topic.channel === "behind-the-ordinary" ? "0x45adf2" : "0x25d9ff";
 }
 
 // A sourced number over a blurred, darkened photograph from the same topic (or
@@ -496,6 +498,7 @@ function overlayText(topic, duration, opening, firstShotType = null, seriesLabel
 const COLOUR_GRADES = {
   "impossible-brief": "eq=contrast=1.06:saturation=1.10:gamma=0.98,colorbalance=bs=0.05:bm=0.02:rh=0.03,vignette=angle=PI/5,noise=alls=3:allf=t",
   "critical-thread": "eq=contrast=1.08:saturation=0.90:gamma=0.97,colorbalance=rs=-0.02:bs=0.04:rh=0.05:gh=0.02,vignette=angle=PI/5,noise=alls=3:allf=t",
+  "behind-the-ordinary": "eq=contrast=1.06:saturation=0.96:gamma=1.02,colorbalance=rs=0.035:gs=0.015:bh=-0.025,vignette=angle=PI/5,noise=alls=2:allf=t",
 };
 function colourGrade(topic) {
   const grade = topic.colorGrade != null ? topic.colorGrade : COLOUR_GRADES[topic.channel] || "";
@@ -670,21 +673,29 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   let visuals = Visuals.plan(topic, script);
   const thumbnail = Visuals.thumbnail(topic);
   const isCriticalThread = channel.slug === "critical-thread";
+  const isBehindOrdinary = channel.slug === "behind-the-ordinary";
   // Hashtags stay on the description's last line; visual credits added after
   // render are inserted above them (see describe()).
   const hashtags = Hashtags.forTopic(channel.slug, topic, { format: "short" });
   const subject = Hashtags.subjectPhrase(topic);
-  const descriptionBody = `${topic.coreQuestion}\n\nSources:\n${topic.sources.map((source) => `- ${source.name}: ${source.url}`).join("\n")}\n\n${isCriticalThread ? "Technical illustrations and dependency models are labelled. Estimates and industry claims are attributed; modeled consequences are not presented as observed fact." : "Illustrative visuals are labelled. Speculative outcomes are not presented as measured fact."}`;
+  const disclosure = isCriticalThread
+    ? "Technical illustrations and dependency models are labelled. Estimates and industry claims are attributed; modeled consequences are not presented as observed fact."
+    : isBehindOrdinary
+      ? "Historical and engineering claims are mapped to the sources above. Illustrations and reconstructions are labelled."
+      : "Illustrative visuals are labelled. Speculative outcomes are not presented as measured fact.";
+  const descriptionBody = `${topic.coreQuestion}\n\nSources:\n${topic.sources.map((source) => `- ${source.name}: ${source.url}`).join("\n")}\n\n${disclosure}`;
   const seriesLine = Series.descriptionLine(channel, topic.slug);
   const describe = (credits = []) => [descriptionBody, seriesLine, credits.length ? `Visual credits:\n${credits.join("\n")}` : null, hashtags.join(" ")]
     .filter(Boolean).join("\n\n");
-  const baseTags = isCriticalThread ? ["infrastructure", "engineering", "supply chain", topic.category.toLowerCase(), "CriticalThread"] : ["science", "what if", topic.category.toLowerCase(), "ImpossibleBrief"];
+  const baseTags = isCriticalThread ? ["infrastructure", "engineering", "supply chain", topic.category.toLowerCase(), "CriticalThread"]
+    : isBehindOrdinary ? ["design", "how things work", "everyday objects", topic.category.toLowerCase(), "The Hidden Logic of Things"]
+      : ["science", "what if", topic.category.toLowerCase(), "ImpossibleBrief"];
   const metadata = {
     uploadChannel: channel.slug,
     expectedYouTubeChannelId: channel.expectedChannelId() || "MANUAL_CONFIGURATION_REQUIRED",
     uploadEnabled: false,
     privacy: "private",
-    categoryId: isCriticalThread ? "27" : "28",
+    categoryId: isCriticalThread || isBehindOrdinary ? "27" : "28",
     title: titles[0],
     description: describe(),
     hashtags,
@@ -713,7 +724,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   }
   write(path.join(outputDirectory, "metadata.json"), metadata);
   write(path.join(outputDirectory, "quality-gate.json"), pkg.qualityGate);
-  if (isCriticalThread) {
+  if (isCriticalThread || isBehindOrdinary) {
     write(path.join(outputDirectory, "long-form-outline.json"), Scripting.longFormOutline(topic));
     write(path.join(outputDirectory, "short-factory.json"), Scripting.longToShortFactory(topic));
   }
@@ -774,9 +785,10 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   const secondBeatMax = Number(retention.secondBeatMaxSeconds || 6.2);
   const durationRange = channel.config.publishingCadence.shorts.targetDurationSeconds || [18, 35.2];
   const visualQuality = options.render ? render.video.visualQuality : { decision: "PUBLISH", reasons: [] };
+  const evidenceRows = topic.claimFramework || topic.facts || topic.researchEvidence || [];
   const validations = {
     script: !!script.spoken,
-    science: topic.claimFramework.length >= 3,
+    science: evidenceRows.length >= 3,
     sources: topic.sources.length >= 2,
     hook: !script.forbiddenOpening,
     // Natural-pace narration: the hook line must still land quickly, but it is
@@ -787,7 +799,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     visuals: visuals.length >= 5 && (!options.render || visualQuality.decision === "PUBLISH"),
     video: !options.render || (render.video.width === 1080 && render.video.height === 1920 && render.video.durationSeconds >= durationRange[0] && render.video.durationSeconds <= durationRange[1] + 0.2),
     titles: titles.length >= 20,
-    thumbnail: !options.render || (render.thumbnail.bytes > 0 && ["licensed-still", "number-card"].includes(render.thumbnail.sourceType) && render.thumbnail.textWords <= 3),
+    thumbnail: !options.render || (render.thumbnail.bytes > 0 && ["licensed-still", "number-card"].includes(render.thumbnail.sourceType) && render.thumbnail.textWords <= (isBehindOrdinary ? 4 : 3)),
     description: metadata.description.includes("Sources:"),
     qualityGate: pkg.qualityGate.decision === "PUBLISH",
     metadata: metadata.uploadChannel === channel.slug && metadata.uploadEnabled === false,

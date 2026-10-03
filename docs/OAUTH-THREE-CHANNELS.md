@@ -1,4 +1,4 @@
-# Three-channel YouTube OAuth operations
+# Four-channel YouTube OAuth operations
 
 ## Architecture and isolation
 
@@ -11,6 +11,7 @@ All upload and write entry points use `lib/yt.js`. `youtube-yukle.js` performs t
 | Failure Reconstructed | `FR_YT_CLIENT_ID` | `FR_YT_CLIENT_SECRET` | `FR_YT_REFRESH_TOKEN` | `FR_YT_CHANNEL_ID` |
 | ImpossibleBrief | `IB_CLIENT_ID` | `IB_CLIENT_SECRET` | `IB_YT_REFRESH_TOKEN` | `IB_YT_CHANNEL_ID` |
 | CriticalThread | `CT_CLIENT_ID` | `CT_CLIENT_SECRET` | `CT_YT_REFRESH_TOKEN` | `CT_YT_CHANNEL_ID` |
+| The Hidden Logic of Things | `BTO_YT_CLIENT_ID` | `BTO_YT_CLIENT_SECRET` | `BTO_YT_REFRESH_TOKEN` | `BTO_YT_CHANNEL_ID` |
 
 `IB_YT_CLIENT_ID`/`IB_YT_CLIENT_SECRET` and `CT_YT_CLIENT_ID`/`CT_YT_CLIENT_SECRET` remain accepted channel-local aliases. Failure Reconstructed alone accepts `YT_CLIENT_ID`, `YT_CLIENT_SECRET`, `YT_REFRESH_TOKEN`, and `YT_CHANNEL_ID` as a migration fallback. If any preferred `FR_YT_*` OAuth credential exists, the resolver requires the complete preferred bundle and will not mix missing values from `YT_*`.
 
@@ -90,13 +91,23 @@ node youtube-yetki.js --channel critical-thread --oauth-mode=production --github
 unset CT_CLIENT_ID CT_CLIENT_SECRET
 ```
 
+The Hidden Logic of Things (first authorization; omit `--new-channel` after its expected ID is stored):
+
+```bash
+export BTO_YT_CLIENT_ID='copy locally from Google Cloud'
+read -r -s -p 'BTO client secret: ' BTO_YT_CLIENT_SECRET; printf '\n'
+export BTO_YT_CLIENT_SECRET
+node youtube-yetki.js --channel behind-the-ordinary --oauth-mode=production --new-channel --github --repo=eyazan/youtube-otomasyon
+unset BTO_YT_CLIENT_ID BTO_YT_CLIENT_SECRET
+```
+
 The success output identifies the authenticated channel name/ID and the exact refresh-token secret/channel-ID variable that were updated. If the expected ID was already configured and does not match, the token is discarded.
 
 If the app really remains in Testing, use `--oauth-mode=testing`; the health checker will record the seven-day re-authorization window accurately.
 
 ## Test health manually
 
-All three channels, including inventory and channel capabilities:
+All four channels, including inventory and channel capabilities:
 
 ```bash
 node oauth-health.js --check-all
@@ -136,13 +147,13 @@ The scheduled workflow runs every six hours (05:30, 11:30, 17:30, 23:30 UTC; the
 
 ## Emergency recovery
 
-1. Set only the affected channel's publish variable to `0` (`FR_PUBLISH`, `IB_PUBLISH`, or `CT_PUBLISH`; legacy FR may also use `PUBLISH`).
+1. Set only the affected channel's publish variable to `0` (`FR_PUBLISH`, `IB_PUBLISH`, `CT_PUBLISH`, or `BTO_PUBLISH`; legacy FR may also use `PUBLISH`).
 2. Run the single-channel health command and save only the safe code/expected/authenticated IDs.
 3. In Google Auth Platform, confirm the correct project/client, Audience status, APIs, and scopes.
 4. Revoke the suspect grant if compromise or cross-channel reuse is possible.
 5. Run the channel-specific authorization command above.
 6. Run `node oauth-health.js --check-all` locally, then dispatch the GitHub health workflow.
-7. Confirm refresh, scopes, and channel ID are PASS for the affected channel; confirm the other two remained healthy.
+7. Confirm refresh, scopes, and channel ID are PASS for the affected channel; confirm the other three remained healthy.
 8. Re-enable only that channel's publish variable.
 
 If any client secret or refresh token ever entered Git history, an issue, an artifact, or a log, deleting the visible file is insufficient: revoke/rotate the credential and consider history remediation.

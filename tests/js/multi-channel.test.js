@@ -13,6 +13,7 @@ const Research = require("../../core/research");
 const Scripting = require("../../core/scripting");
 const Quality = require("../../core/quality/impossible-brief");
 const CriticalQuality = require("../../core/quality/critical-thread");
+const BehindQuality = require("../../core/quality/behind-the-ordinary");
 const SharedQuality = require("../../core/quality");
 const Discovery = require("../../core/discovery");
 const Library = require("../../core/analytics/library-health");
@@ -27,26 +28,27 @@ const ROOT = path.resolve(__dirname, "..", "..");
 test("channel registry defaults safely and parses --channel in both forms", () => {
   const registry = Channel.registry();
   assert.equal(registry.defaultChannel, "failure-reconstructed");
-  assert.deepEqual(Object.keys(registry.channels).sort(), ["critical-thread", "failure-reconstructed", "impossible-brief"]);
+  assert.deepEqual(Object.keys(registry.channels).sort(), ["behind-the-ordinary", "critical-thread", "failure-reconstructed", "impossible-brief"]);
   assert.deepEqual(Channel.parseChannelArgv(["--channel", "impossible-brief", "--due"]), { slug: "impossible-brief", argv: ["--due"] });
   assert.deepEqual(Channel.parseChannelArgv(["--channel=failure-reconstructed", "x"]), { slug: "failure-reconstructed", argv: ["x"] });
   assert.throws(() => Channel.parseChannelArgv(["--channel", "unknown"]), /Unknown channel/);
 });
 
 test("channel data roots, analytics, memory, production, and state never overlap", () => {
-  const channels = ["failure-reconstructed", "impossible-brief", "critical-thread"].map(Channel.getChannel);
+  const channels = ["failure-reconstructed", "impossible-brief", "critical-thread", "behind-the-ordinary"].map(Channel.getChannel);
   for (const key of ["topics", "analytics", "state", "memory", "reports", "packages", "production", "secrets"]) {
-    assert.equal(new Set(channels.map((channel) => channel.paths[key])).size, 3, key);
+    assert.equal(new Set(channels.map((channel) => channel.paths[key])).size, 4, key);
   }
   const ib = channels[1];
   const ct = channels[2];
   assert.ok(ib.paths.state.startsWith(path.join(ROOT, "channels", "impossible-brief")));
   assert.ok(!ib.paths.state.includes(path.join(ROOT, "icerik")));
   assert.ok(ct.paths.state.startsWith(path.join(ROOT, "channels", "critical-thread")));
+  assert.ok(channels[3].paths.state.startsWith(path.join(ROOT, "channels", "behind-the-ordinary")));
 });
 
 test("YouTube credentials are namespaced; isolated channels cannot inherit legacy secrets", () => {
-  const keys = ["YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN", "FR_YT_CLIENT_ID", "FR_YT_CLIENT_SECRET", "FR_YT_REFRESH_TOKEN", "IB_CLIENT_ID", "IB_CLIENT_SECRET", "IB_YT_REFRESH_TOKEN", "CT_CLIENT_ID", "CT_CLIENT_SECRET", "CT_YT_REFRESH_TOKEN"];
+  const keys = ["YT_CLIENT_ID", "YT_CLIENT_SECRET", "YT_REFRESH_TOKEN", "FR_YT_CLIENT_ID", "FR_YT_CLIENT_SECRET", "FR_YT_REFRESH_TOKEN", "IB_CLIENT_ID", "IB_CLIENT_SECRET", "IB_YT_REFRESH_TOKEN", "CT_CLIENT_ID", "CT_CLIENT_SECRET", "CT_YT_REFRESH_TOKEN", "BTO_YT_CLIENT_ID", "BTO_YT_CLIENT_SECRET", "BTO_YT_REFRESH_TOKEN"];
   const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
   try {
     process.env.YT_CLIENT_ID = "legacy-id";
@@ -58,29 +60,37 @@ test("YouTube credentials are namespaced; isolated channels cannot inherit legac
     process.env.CT_CLIENT_ID = "ct-id";
     process.env.CT_CLIENT_SECRET = "ct-secret";
     process.env.CT_YT_REFRESH_TOKEN = "ct-token";
+    process.env.BTO_YT_CLIENT_ID = "bto-id";
+    process.env.BTO_YT_CLIENT_SECRET = "bto-secret";
+    process.env.BTO_YT_REFRESH_TOKEN = "bto-token";
     const fr = Channel.getChannel("failure-reconstructed").credentials();
     const ib = Channel.getChannel("impossible-brief").credentials();
     const ct = Channel.getChannel("critical-thread").credentials();
+    const bto = Channel.getChannel("behind-the-ordinary").credentials();
     assert.equal(fr.clientId, "legacy-id", "legacy fallback remains only for original channel");
     assert.equal(ib.clientId, "ib-id");
     assert.equal(ct.clientId, "ct-id");
+    assert.equal(bto.clientId, "bto-id");
     delete process.env.IB_CLIENT_ID;
     assert.equal(Channel.getChannel("impossible-brief").credentials().clientId, "", "no fallback to shared credential");
     delete process.env.CT_CLIENT_ID;
     assert.equal(Channel.getChannel("critical-thread").credentials().clientId, "", "CriticalThread cannot inherit another identity");
+    delete process.env.BTO_YT_CLIENT_ID;
+    assert.equal(Channel.getChannel("behind-the-ordinary").credentials().clientId, "", "The Hidden Logic of Things cannot inherit another identity");
   } finally {
     for (const key of keys) saved[key] == null ? delete process.env[key] : process.env[key] = saved[key];
   }
 });
 
-test("all six wrong-channel upload directions are blocked before mutation", async () => {
-  const keys = ["FR_YT_CHANNEL_ID", "IB_YT_CHANNEL_ID", "CT_YT_CHANNEL_ID"];
+test("all twelve wrong-channel upload directions are blocked before mutation", async () => {
+  const keys = ["FR_YT_CHANNEL_ID", "IB_YT_CHANNEL_ID", "CT_YT_CHANNEL_ID", "BTO_YT_CHANNEL_ID"];
   const saved = Object.fromEntries(keys.map((key) => [key, process.env[key]]));
   process.env.FR_YT_CHANNEL_ID = "UC_FAILURE_RECONSTRUCTED";
   process.env.IB_YT_CHANNEL_ID = "UC_IMPOSSIBLE_BRIEF";
   process.env.CT_YT_CHANNEL_ID = "UC_CRITICAL_THREAD";
+  process.env.BTO_YT_CHANNEL_ID = "UC_BEHIND_THE_ORDINARY";
   try {
-    const channels = ["failure-reconstructed", "impossible-brief", "critical-thread"].map(Channel.getChannel);
+    const channels = ["failure-reconstructed", "impossible-brief", "critical-thread", "behind-the-ordinary"].map(Channel.getChannel);
     for (const target of channels) {
       assert.equal(Publishing.assertUploadTarget(target.expectedChannelId(), target).ok, true);
       for (const source of channels.filter((channel) => channel.slug !== target.slug)) {
@@ -157,6 +167,33 @@ test("CriticalThread has 500+ distinct sourced topics and an isolated launch pac
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 });
 
+test("The Hidden Logic of Things has 500+ unique research questions and an evidence-gated launch batch", () => {
+  const channel = Channel.getChannel("behind-the-ordinary");
+  const universe = Discovery.universe(channel);
+  assert.equal(universe.stats.total, 525);
+  assert.equal(universe.stats.validated_candidates, 525);
+  assert.equal(new Set(universe.topics.map((topic) => topic.question.toLowerCase())).size, 525);
+  assert.deepEqual(universe.stats.categories, {
+    "EVERYDAY MYSTERIES": 105, "HIDDEN ENGINEERING": 105, "STRANGE ORIGINS": 105, "DESIGN DECISIONS": 105, "ORDINARY SYSTEMS": 105,
+  });
+  for (const topic of universe.topics) assert.notEqual(BehindQuality.evaluateTopic(topic, universe.topics).decision, "BLOCK", topic.id);
+  const discovered = Discovery.discover(channel, { limit: 50 });
+  assert.equal(discovered.length, universe.topics.filter((item) => item.productionReady === true).length, "unresearched questions cannot enter production discovery");
+  assert.ok(discovered.every((item) => item.researchStatus === "VERIFIED"));
+  const topic = universe.topics.find((item) => item.slug === "why-jeans-have-a-tiny-pocket");
+  const temp = fs.mkdtempSync(path.join(os.tmpdir(), "bto-e2e-"));
+  try {
+    const plan = require("../../core/growth").planShort(channel, topic.id, { skipDuplicate: true });
+    const result = Rendering.buildPackage(topic, channel, temp, { render: false, growthPlan: plan });
+    assert.ok(Object.values(result.validations).every(Boolean));
+    assert.equal(SharedQuality.engineFor("behind-the-ordinary"), BehindQuality);
+    assert.equal(Scripting.titleCandidates(topic).length, 20);
+    assert.equal(Scripting.longToShortFactory(topic).length, 4);
+    assert.equal(JSON.parse(fs.readFileSync(path.join(temp, "thumbnail.json"), "utf8")).maxWords, 4);
+    assert.equal(JSON.parse(fs.readFileSync(path.join(temp, "metadata.json"), "utf8")).uploadChannel, "behind-the-ordinary");
+  } finally { fs.rmSync(temp, { recursive: true, force: true }); }
+});
+
 test("ImpossibleBrief pipeline persists named validation evidence", () => {
   const channel = Channel.getChannel("impossible-brief");
   const topic = Discovery.universe(channel).topics.find((item) => item.topic === "What If Gravity Doubled Tomorrow?");
@@ -172,7 +209,7 @@ test("ImpossibleBrief pipeline persists named validation evidence", () => {
 
 test("portfolio scheduling serializes shared render/upload resources", () => {
   const plan = Scheduler.portfolioPlan(new Date("2030-01-01T12:00:00Z"));
-  assert.equal(plan.channels.length, 3);
+  assert.equal(plan.channels.length, 4);
   assert.equal(plan.resourceLimits.maxConcurrentRenders, 1);
   assert.equal(plan.resourceLimits.maxConcurrentUploads, 1);
   assert.ok(plan.queue.every((task) => task.renderLane === 0 && task.uploadLane === 0));
@@ -213,14 +250,22 @@ test("retention learning waits for a sample floor and aggregates repeated patter
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 });
 
-test("30-day failure simulation preserves three channels and blocks every wrong target", () => {
+test("30-day failure simulation preserves four channels and blocks every wrong target", () => {
   const result = Simulation.simulate30Days();
   assert.equal(result.pass, true);
   assert.equal(result.channels["failure-reconstructed"].shorts, 30);
   assert.equal(result.channels["impossible-brief"].shorts, 30);
   assert.equal(result.channels["critical-thread"].shorts, 30);
-  assert.equal(result.injectedFailures.length, 11);
-  assert.equal(result.wrongChannelGuards.length, 6);
+  // Seven verified records, one quality-blocked: six Shorts, then research
+  // gaps; question-only records are never published to fill the slot.
+  assert.equal(result.channels["behind-the-ordinary"].shorts, 6);
+  assert.equal(result.channels["behind-the-ordinary"].researchGapDays, 24);
+  assert.equal(result.checks.behindOrdinaryEvidenceGate, true);
+  assert.equal(result.productionReadiness.behindOrdinaryVerifiedInventoryForWindow, false);
+  const researched = Simulation.simulate30Days({ initialInventory: { "failure-reconstructed": 38, "impossible-brief": 499, "critical-thread": 522, "behind-the-ordinary": 40 } });
+  assert.equal(researched.channels["behind-the-ordinary"].shorts, 30, "a researched pool fills every day");
+  assert.equal(result.injectedFailures.length, 13);
+  assert.equal(result.wrongChannelGuards.length, 12);
   assert.ok(result.wrongChannelGuards.every((guard) => guard.blocked && !guard.mutationOccurred));
   assert.equal(result.tiktok.endingBacklog, 0);
   assert.equal(result.checks.schedulerRecovery, true);
@@ -240,7 +285,9 @@ test("every notification title carries an unambiguous channel name", () => {
   const fr = Channel.getChannel("failure-reconstructed");
   const ib = Channel.getChannel("impossible-brief");
   const ct = Channel.getChannel("critical-thread");
+  const bto = Channel.getChannel("behind-the-ordinary");
   assert.equal(Notifications.prefix("Short scheduled", fr), "[Failure Reconstructed] Short scheduled");
   assert.equal(Notifications.prefix("Short scheduled", ib), "[ImpossibleBrief] Short scheduled");
   assert.equal(Notifications.prefix("Short scheduled", ct), "[CriticalThread] Short scheduled");
+  assert.equal(Notifications.prefix("Short scheduled", bto), "[The Hidden Logic of Things] Short scheduled");
 });

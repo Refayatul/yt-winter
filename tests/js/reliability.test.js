@@ -102,7 +102,7 @@ test("TikTok is retired: no workflow sends to it and no channel enables it", () 
     const workflow = fs.readFileSync(path.join(KOK, ".github", "workflows", file), "utf8");
     assert.doesNotMatch(workflow, /tiktok-yukle\.js|TT_REFRESH_TOKEN|TT_CLIENT_SECRET/, file);
   }
-  for (const slug of ["failure-reconstructed", "impossible-brief", "critical-thread"]) {
+  for (const slug of ["failure-reconstructed", "impossible-brief", "critical-thread", "behind-the-ordinary"]) {
     assert.equal(jsonOku(path.join(KOK, "channels", slug, "config.json"), {}).platforms.tiktok.enabled, false, slug);
   }
   const source = fs.readFileSync(path.join(KOK, ".github", "workflows", "uretim-is.yml"), "utf8");
@@ -126,11 +126,13 @@ test("comment replies run independently every four hours with a conservative cap
   // State files are staged one at a time (git add stages nothing if any path is missing).
   assert.match(replies, /for STATE in icerik\/yanitlanan\.json icerik\/sabit-yorumlar\.json channels\/\*\/state\/replied-comments\.json channels\/\*\/state\/seeded-comments\.json/);
   assert.match(replies, /if \[ -e "\$STATE" \]; then git add "\$STATE"; fi/);
-  // ImpossibleBrief / CriticalThread reply and seed with their own identities, only when publishing.
+  // Every isolated channel replies and seeds with its own identity, only when publishing.
   assert.match(replies, /if: \$\{\{ always\(\) && vars\.IB_PUBLISH == '1' \}\}[\s\S]*?node yorum-yanitla\.js --channel impossible-brief --limit 4[\s\S]*?node seed-comment\.js --channel impossible-brief/);
   assert.match(replies, /if: \$\{\{ always\(\) && vars\.CT_PUBLISH == '1' \}\}[\s\S]*?node yorum-yanitla\.js --channel critical-thread --limit 4[\s\S]*?node seed-comment\.js --channel critical-thread/);
+  assert.match(replies, /if: \$\{\{ always\(\) && vars\.BTO_PUBLISH == '1' \}\}[\s\S]*?node yorum-yanitla\.js --channel behind-the-ordinary --limit 4[\s\S]*?node seed-comment\.js --channel behind-the-ordinary/);
   assert.match(replies, /IB_YT_REFRESH_TOKEN: \$\{\{ secrets\.IB_YT_REFRESH_TOKEN \}\}/);
   assert.match(replies, /CT_YT_REFRESH_TOKEN: \$\{\{ secrets\.CT_YT_REFRESH_TOKEN \}\}/);
+  assert.match(replies, /BTO_YT_REFRESH_TOKEN: \$\{\{ secrets\.BTO_YT_REFRESH_TOKEN \}\}/);
   assert.match(replies, /node pinned-comment\.js --post-pending/);
   assert.match(replies, /Persist processed comment IDs\s+if: always\(\)/);
   assert.match(replies, /git push origin HEAD:main/);
@@ -208,6 +210,8 @@ test("watchdog workflows enforce safe recovery, deployment evidence and no-produ
   assert.match(production, /needs\.ib-sla\.outputs\.safe_to_recover == 'true'/);
   assert.match(production, /vars\.CT_PUBLISH == '1'/);
   assert.match(production, /needs\.ct-sla\.outputs\.safe_to_recover == 'true'/);
+  assert.match(production, /vars\.BTO_PUBLISH == '1'/);
+  assert.match(production, /needs\.bto-sla\.outputs\.safe_to_recover == 'true'/);
   assert.match(deploy, /CLOUDFLARE_ACCOUNT_ID is required/);
   assert.match(deploy, /watchdog-deployment-evidence/);
   assert.match(deploy, /\.tokenConfigured == true/);
@@ -219,16 +223,19 @@ test("watchdog workflows enforce safe recovery, deployment evidence and no-produ
 
 test("daily operations report covers all channels and TikTok only for Failure Reconstructed", () => {
   const report = DailyReport.build(new Date("2026-09-27T17:10:00.000Z"));
-  assert.deepEqual(report.channels.map((row) => row.channel).sort(), ["critical-thread", "failure-reconstructed", "impossible-brief"]);
+  assert.deepEqual(report.channels.map((row) => row.channel).sort(), ["behind-the-ordinary", "critical-thread", "failure-reconstructed", "impossible-brief"]);
   const fr = report.channels.find((row) => row.channel === "failure-reconstructed");
   const ib = report.channels.find((row) => row.channel === "impossible-brief");
   const ct = report.channels.find((row) => row.channel === "critical-thread");
+  const bto = report.channels.find((row) => row.channel === "behind-the-ordinary");
   assert.ok(fr.tiktok);
   assert.equal(ib.tiktok, null);
   assert.equal(ct.tiktok, null);
+  assert.equal(bto.tiktok, null);
   assert.equal(typeof fr.inventory.duplicateRate, "number");
   assert.equal(fr.inventory.acceptance.minimumQualifiedTopics, 500);
   assert.equal(ib.inventory.acceptance.minimumQualifiedTopics, 1000);
   assert.equal(ct.inventory.acceptance.minimumQualifiedTopics, 500);
+  assert.equal(bto.inventory.acceptance.minimumQualifiedTopics, 500);
   assert.match(DailyReport.markdown(report), /TikTok backlog/);
 });

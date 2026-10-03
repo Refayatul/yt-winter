@@ -111,8 +111,39 @@ jobs:
           HEALTH_EXIT_CODE="${{ steps.health.outputs.exit_code }}"
           exit "${HEALTH_EXIT_CODE:-1}"
 
+  behind-the-ordinary:
+    runs-on: ubuntu-latest
+    env:
+      BTO_YT_CLIENT_ID: ${{ secrets.BTO_YT_CLIENT_ID }}
+      BTO_YT_CLIENT_SECRET: ${{ secrets.BTO_YT_CLIENT_SECRET }}
+      BTO_YT_REFRESH_TOKEN: ${{ secrets.BTO_YT_REFRESH_TOKEN }}
+      BTO_YT_CHANNEL_ID: ${{ vars.BTO_YT_CHANNEL_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - id: health
+        run: |
+          set +e
+          node oauth-health.js --channel behind-the-ordinary > "$RUNNER_TEMP/behind-the-ordinary.json"
+          HEALTH_EXIT_CODE=$?
+          set -e
+          echo "exit_code=$HEALTH_EXIT_CODE" >> "$GITHUB_OUTPUT"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: oauth-health-behind-the-ordinary
+          path: ${{ runner.temp }}/behind-the-ordinary.json
+          if-no-files-found: error
+          retention-days: 30
+      - if: always() && steps.health.outputs.exit_code != '0'
+        run: |
+          HEALTH_EXIT_CODE="${{ steps.health.outputs.exit_code }}"
+          exit "${HEALTH_EXIT_CODE:-1}"
+
   report:
-    needs: [failure-reconstructed, impossible-brief, critical-thread]
+    needs: [failure-reconstructed, impossible-brief, critical-thread, behind-the-ordinary]
     if: always()
     runs-on: ubuntu-latest
     env:
@@ -131,7 +162,7 @@ jobs:
           path: ${{ runner.temp }}/channel-health
           merge-multiple: true
       - id: aggregate
-        name: Build the complete three-channel report
+        name: Build the complete four-channel report
         if: always()
         run: |
           mkdir -p "$RUNNER_TEMP/channel-health"

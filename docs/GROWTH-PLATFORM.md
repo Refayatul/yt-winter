@@ -10,14 +10,14 @@ This document describes what is implemented today. Requirement-level status and 
 | `lib/yt.js` OAuth + API client, `lib/publish-safety.js`, `lib/quota.js`, `lib/ops-log.js`, `lib/provenance.js` | Topic inventory, growth-engine overrides (`channels/<slug>/growth-engine.json`: weights, hooks, captions) |
 | GitHub Actions workflows | State: `channels/<slug>/state/` (Failure Reconstructed: `icerik/`), learning `channels/<slug>/memory/`, analytics `channels/<slug>/analytics/` (FR: `analytics/`) |
 
-Every state path is derived from one channel slug (`core/channel-context.js`, `core/growth/store.js`). Channels: Failure Reconstructed (`failure-reconstructed`, legacy paths), ImpossibleBrief (`impossible-brief`), CriticalThread (`critical-thread`). Adding a channel: [`docs/ADDING-NEW-CHANNEL.md`](ADDING-NEW-CHANNEL.md).
+Every state path is derived from one channel slug (`core/channel-context.js`, `core/growth/store.js`). Channels: Failure Reconstructed (`failure-reconstructed`, legacy paths), ImpossibleBrief (`impossible-brief`), CriticalThread (`critical-thread`), and The Hidden Logic of Things (`behind-the-ordinary`). Adding a channel: [`docs/ADDING-NEW-CHANNEL.md`](ADDING-NEW-CHANNEL.md).
 
 ## Identity and OAuth
 
 - Each channel has its own client/refresh-token secrets and a `<PREFIX>_YT_CHANNEL_ID` variable; see [`docs/OAUTH-THREE-CHANNELS.md`](OAUTH-THREE-CHANNELS.md).
 - Before any write, `lib/yt.getYouTubeClient` refreshes the token, checks the upload scope and verifies that the authenticated channel equals the configured UC… ID.
 - The uploader also checks that the publish job belongs to the channel whose credentials are loaded (`Safety.jobChannelCheck`). Any mismatch fails closed.
-- `youtube-oauth-health.yml` validates all three identities every 6 hours.
+- `youtube-oauth-health.yml` validates all four identities every 6 hours.
 
 ## Scheduling
 

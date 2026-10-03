@@ -14,7 +14,8 @@ const Sla = require("../../production-sla-check");
 const FR = Channel.getChannel("failure-reconstructed");
 const IB = Channel.getChannel("impossible-brief");
 const CT = Channel.getChannel("critical-thread");
-const SLOTS = [[FR, "09:00", "06:00"], [IB, "09:30", "06:30"], [CT, "10:00", "07:00"]];
+const BTO = Channel.getChannel("behind-the-ordinary");
+const SLOTS = [[FR, "09:00", "06:00"], [IB, "09:30", "06:30"], [CT, "10:00", "07:00"], [BTO, "10:30", "07:30"]];
 const DAY = "2026-10-02";
 const at = (utc) => new Date(`${DAY}T${utc}:00Z`);
 const yesterdays = [{ format: "short", slug: "yesterday", videoId: "AAAAAAAAAAA", tarih: "2026-10-01T06:20:00Z", publishAt: "2026-10-01T18:00:00.000Z" }];
@@ -32,7 +33,7 @@ test("each channel is not due before its Istanbul production slot and due at/aft
   }
 });
 
-test("all three channels schedule the public release for 18:00 New York on the production date", () => {
+test("all four channels schedule the public release for 18:00 New York on the production date", () => {
   for (const [channel, , utc] of SLOTS) {
     assert.equal(Calendar.shortSchedule(channel).publishTimeZone, "America/New_York");
     const decision = Calendar.shortDecision(channel, yesterdays, at(utc));
@@ -175,6 +176,7 @@ test("calendar scheduling stays channel-isolated", () => {
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
   assert.notEqual(Calendar.shortSchedule(FR).productionTime, Calendar.shortSchedule(IB).productionTime);
   assert.notEqual(Calendar.shortSchedule(IB).productionTime, Calendar.shortSchedule(CT).productionTime);
+  assert.notEqual(Calendar.shortSchedule(CT).productionTime, Calendar.shortSchedule(BTO).productionTime);
 });
 
 test("watchdog checks today's Istanbul calendar day, not a rolling interval", () => {

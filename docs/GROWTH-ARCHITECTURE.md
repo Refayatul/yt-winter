@@ -1,6 +1,6 @@
 # Growth architecture
 
-> The three-channel growth engine (topic buckets, hooks, first 3 s, readiness gates, weekly long-form lane, Short→Long funnel, channel-isolated analytics and learning) is described in [GROWTH-ENGINE.md](GROWTH-ENGINE.md). This page covers the Failure Reconstructed packaging engines.
+> The four-channel growth engine (topic buckets, hooks, first 3 s, readiness gates, weekly long-form lane, Short→Long funnel, channel-isolated analytics and learning) is described in [GROWTH-ENGINE.md](GROWTH-ENGINE.md). This page covers the Failure Reconstructed packaging engines.
 
 Failure Reconstructed is a **data-driven forensic engineering documentary production and growth system**. Automation handles the tedious parts (footage, voice, render, packaging, measurement). Quality and editorial value decide what gets published.
 

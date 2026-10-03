@@ -8,9 +8,11 @@
       "failure-reconstructed:short",
       "impossible-brief:short",
       "critical-thread:short",
+      "behind-the-ordinary:short",
       "failure-reconstructed:long",
       "impossible-brief:long",
-      "critical-thread:long"
+      "critical-thread:long",
+      "behind-the-ordinary:long"
     ]
   },
   "channels": {
@@ -31,6 +33,12 @@
       "enabled": true,
       "config": "channels/critical-thread/config.json",
       "brand": "channels/critical-thread/brand.json"
+    },
+    "behind-the-ordinary": {
+      "name": "The Hidden Logic of Things",
+      "enabled": true,
+      "config": "channels/behind-the-ordinary/config.json",
+      "brand": "channels/behind-the-ordinary/brand.json"
     }
   }
 }

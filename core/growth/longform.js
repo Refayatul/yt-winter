@@ -24,6 +24,7 @@ const FirstSeconds = require("./first-seconds");
 const Funnel = require("./funnel");
 const Readiness = require("./readiness");
 const Research = require("./research");
+const Provider = require("../llm/longform-provider");
 
 const clamp = (value) => Math.max(0, Math.min(100, Math.round(value)));
 const words = (text) => String(text || "").split(/\s+/).filter(Boolean).length;
@@ -65,7 +66,7 @@ function researchPackage(channel, topic, options = {}) {
   for (const [index, step] of (topic.chain || []).entries()) add(`Step ${index + 1} of the failure chain: ${Model.lower(Hooks.sentenceCase(step))}`, "CONFIRMED FACT", primary, "chain");
   for (const item of topic.timeline || []) add(`${item.t}: ${item.event}`, "CONFIRMED FACT", primary, "timeline");
   for (const line of topic.narration || []) add(line, "CONFIRMED FACT", "editorial narration (case file)", "narration");
-  for (const item of topic.evidence || []) if (item.source !== "editorial narration" && item.source !== "case file") add(item.claim, item.layer || item.confidence, item.source, "evidence");
+  for (const item of topic.evidence || []) if (item.source !== "editorial narration" && item.source !== "case file") add(item.claim, item.layer || item.confidence, item.source, item.role || "evidence", { url: item.url || null });
   if (topic.dependency) add(topic.dependency, "VERIFIED FACT", primary, "dependency");
   if (topic.bottleneck) add(topic.bottleneck, "MODEL", primary, "bottleneck");
   if (topic.channel === "critical-thread" && topic.consequence) add(topic.raw.failureConsequence, "MODEL", "CriticalThread bounded dependency model", "failure-scenario");
@@ -122,6 +123,8 @@ const SECTION_ROLES = {
   INVISIBLE_SYSTEM: ["dependency", "evidence", "background"], WHERE_IT_EXISTS: ["evidence", "event"], HOW_IT_WORKS: ["mechanism", "evidence", "cause"], WHAT_DEPENDS_ON_IT: ["dependency"],
   BOTTLENECK: ["bottleneck", "evidence"], WHY_THE_BOTTLENECK_EXISTS: ["bottleneck"], FAILURE_SCENARIO: ["failure-scenario"], CASCADING_CONSEQUENCES: ["failure-scenario", "consequence", "aftermath"],
   REDUNDANCY_ALTERNATIVES: ["resilience"], FINAL_SYSTEM_INSIGHT: ["resilience"],
+  THE_QUESTION: ["question", "narration"], ORIGIN_CONTEXT: ["origin", "context"], THE_PROBLEM: ["problem"], THE_EXPLANATION: ["explanation", "mechanism", "evidence"],
+  SURPRISING_DETAIL: ["surprising-detail", "misconception"], REAL_WORLD_CONSEQUENCE: ["consequence"], FINAL_PAYOFF: ["payoff", "lesson"], NEXT_CURIOSITY_BRIDGE: ["payoff"],
 };
 
 const SECTION_QUESTION = {
@@ -135,6 +138,9 @@ const SECTION_QUESTION = {
   INVISIBLE_SYSTEM: "What is it?", WHERE_IT_EXISTS: "Where is it?", HOW_IT_WORKS: "How does it work?", WHAT_DEPENDS_ON_IT: "What depends on it?",
   BOTTLENECK: "Where is the chokepoint?", WHY_THE_BOTTLENECK_EXISTS: "Why can't it be replaced quickly?", FAILURE_SCENARIO: "What if it fails?",
   CASCADING_CONSEQUENCES: "What fails next?", REDUNDANCY_ALTERNATIVES: "What protects the system?", FINAL_SYSTEM_INSIGHT: "What does this reveal about the modern world?",
+  THE_QUESTION: "What familiar detail are we actually explaining?", ORIGIN_CONTEXT: "Where did this design come from?", THE_PROBLEM: "What practical problem shaped it?",
+  THE_EXPLANATION: "What does the documented evidence show?", SURPRISING_DETAIL: "Which detail changes the obvious explanation?", REAL_WORLD_CONSEQUENCE: "How did the design persist or change?",
+  FINAL_PAYOFF: "What is the precise answer to the opening question?", NEXT_CURIOSITY_BRIDGE: "Which related ordinary detail follows naturally?",
 };
 
 function outline(channel, topic, pkg, config) {
@@ -173,6 +179,7 @@ const BRIDGES = {
   "failure-reconstructed": ["But that was only the visible part.", "To see why, look at the structure itself.", "And the warning signs were already there.", "Then the chain began.", "This is the moment it could no longer be stopped.", "So what actually failed?", "The consequences didn't end there.", "Engineers did not forget it.", "Which leaves one question."],
   "impossible-brief": ["Start with the assumption.", "That is the first effect — but not the biggest.", "The second-order effect is stranger.", "Now zoom out.", "Here is the physics underneath it.", "And here is where science stops being certain.", "So what is the answer?"],
   "critical-thread": ["Most people never see it.", "Here is where it sits.", "Here is how it works.", "And here is what depends on it.", "That is the bottleneck.", "Why can't it be replaced quickly?", "Now imagine it fails.", "The failure would not stay contained.", "So what protects the system?", "Which says something bigger about the modern world."],
+  "behind-the-ordinary": ["Start with the detail itself.", "Its history begins with a practical problem.", "That problem shaped the design.", "The documentation makes the purpose clearer.", "But one detail complicates the familiar story.", "The design did not stop changing there.", "Now the opening question has a precise answer.", "And it points to another ordinary mystery."],
 };
 
 function deterministicScript(channel, topic, pkg, plan, cold, config) {
@@ -192,56 +199,199 @@ function deterministicScript(channel, topic, pkg, plan, cold, config) {
   return { generator: "deterministic-evidence", sections };
 }
 
-// Optional LLM writer — only when ANTHROPIC_API_KEY (or an ant profile) is
-// available and LONGFORM_LLM=1. Claude may use ONLY the package's claims and
-// must cite claim ids per paragraph; the verifier below re-checks every number.
-// Same key/model convention as senaryo-claude.js: ANTHROPIC_API_KEY and
-// ANTHROPIC_MODEL from the environment or the local .env; LONGFORM_MODEL
-// overrides the model for this lane only.
-function envValue(name) {
-  if (process.env[name]) return process.env[name];
-  try {
-    for (const line of require("fs").readFileSync(require("path").join(__dirname, "..", "..", ".env"), "utf8").split(/\r?\n/)) {
-      const match = line.match(/^([A-Z0-9_]+)=(.*)$/);
-      if (match && match[1] === name) return match[2].trim();
+// ---------------------------------------------------------------------------
+// STRUCTURED CLOUD WRITER. The provider boundary supports Groq and the existing
+// Anthropic provider. The pipeline checkpoints the fact pack, angle, section
+// plan and every completed section so a quota pause never discards prior work.
+function llmAvailable() { return Provider.available(); }
+
+function providerEvent(channel, event, options = {}) {
+  if (options.write === false) return;
+  const rows = Store.readState(channel, "longform", "provider-events.json", []);
+  rows.push({ at: (options.now || new Date()).toISOString(), channel: channel.slug, ...event });
+  Store.writeState(channel, "longform", "provider-events.json", rows.slice(-500));
+}
+
+function generationFile(topic) { return `generation/${topic.slug}.json`; }
+
+function writeGeneration(channel, topic, value, options = {}) {
+  if (options.write !== false) Store.writeState(channel, "longform", generationFile(topic), value);
+  return value;
+}
+
+function factPack(topic, pkg) {
+  return {
+    topic: topic.title,
+    central_question: topic.question || topic.coreQuestion || topic.title,
+    audience_promise: `Answer one precise question about ${topic.subject} using only documented evidence.`,
+    verified_facts: pkg.claims.filter((claim) => claim.class === "CONFIRMED_FACT").map((claim) => ({ id: claim.id, text: claim.text, source: claim.source, rewrite: claim.verbatim === false })),
+    bounded_interpretations: pkg.claims.filter((claim) => claim.class !== "CONFIRMED_FACT").map((claim) => ({ id: claim.id, text: claim.text, class: claim.class, source: claim.source })),
+    uncertain_claims: [],
+    visual_leads: pkg.visualLeads.slice(0, 20),
+  };
+}
+
+function validateBlueprint(json, plan, cold, topic) {
+  const hooks = Array.isArray(json.hook_candidates) ? json.hook_candidates.map(finish).filter(Boolean).slice(0, 8) : [];
+  const beats = Array.isArray(json.retention_beats) ? json.retention_beats.map(finish).filter(Boolean).slice(0, 20) : [];
+  return {
+    central_question: finish(json.central_question || topic.question || topic.title),
+    audience_promise: finish(json.audience_promise || `Answer the central question about ${topic.subject}.`),
+    narrative_angle: finish(json.narrative_angle || "Move from the visible mystery to the documented design reason and a precise payoff."),
+    hook_candidates: hooks.length ? hooks : [cold.selected && cold.selected.text].filter(Boolean),
+    retention_beats: beats,
+    uncertain_claims: Array.isArray(json.uncertain_claims) ? json.uncertain_claims.map(String).slice(0, 20) : [],
+    section_plan: plan.sections.map((section) => ({ section: section.section, question: section.question, claimIds: section.claimIds })),
+  };
+}
+
+function validateGeneratedSection(json, section) {
+  const allowed = new Set(section.claimIds || []);
+  const body = json && json.section && typeof json.section === "object" ? json.section : json;
+  const paragraphs = (body && Array.isArray(body.paragraphs) ? body.paragraphs : []).map((paragraph) => ({
+    text: finish(paragraph && paragraph.text),
+    claims: [...new Set((paragraph && Array.isArray(paragraph.claims) ? paragraph.claims : []).filter((id) => allowed.has(id)))],
+    role: "evidence",
+  })).filter((paragraph) => paragraph.text && paragraph.claims.length);
+  if (section.claimIds.length && !paragraphs.length) throw new Provider.LongformProviderError("INVALID_SECTION", `provider returned no claim-mapped paragraphs for ${section.section}`, { stage: `section:${section.section}`, retryable: true, defer: true });
+  return { section: section.section, paragraphs };
+}
+
+function continuityAndRetention(sections, plan, config) {
+  const seenText = new Set();
+  const duplicateSections = [];
+  const repeatedPhrases = [];
+  const cleaned = [];
+  const sectionNames = new Set();
+  for (const section of sections) {
+    if (sectionNames.has(section.section)) { duplicateSections.push(section.section); continue; }
+    sectionNames.add(section.section);
+    const paragraphs = [];
+    for (const paragraph of section.paragraphs || []) {
+      const key = paragraph.text.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+      if (!key || seenText.has(key)) { if (key) repeatedPhrases.push(paragraph.text.slice(0, 80)); continue; }
+      seenText.add(key);
+      paragraphs.push(paragraph);
     }
-  } catch (error) { /* no .env */ }
-  return "";
+    cleaned.push({ section: section.section, paragraphs });
+  }
+  const text = cleaned.flatMap((section) => section.paragraphs.map((paragraph) => paragraph.text)).join(" ");
+  const first = cleaned.flatMap((section) => section.paragraphs).find(Boolean);
+  const wordsTotal = words(text);
+  const introWords = cleaned.slice(0, 2).flatMap((section) => section.paragraphs).reduce((sum, paragraph) => sum + words(paragraph.text), 0);
+  const filler = (text.match(/\b(in today'?s video|as you can see|needless to say|it is important to note|in conclusion|let'?s dive in)\b/gi) || []);
+  const payoff = cleaned.filter((section) => /PAYOFF|TAKEAWAY|INSIGHT|ANSWER/.test(section.section)).some((section) => section.paragraphs.length);
+  const weakHook = !first || Hooks.FORBIDDEN.test(first.text) || words(first.text) > 55;
+  const missingPlanSections = plan.sections.filter((section) => section.claimIds.length && !cleaned.some((item) => item.section === section.section && item.paragraphs.length)).map((section) => section.section);
+  const hardFails = [];
+  if (duplicateSections.length) hardFails.push(`duplicate sections: ${duplicateSections.join(", ")}`);
+  if (weakHook) hardFails.push("weak or excessive cold open");
+  if (!payoff) hardFails.push("missing final payoff");
+  if (/\b(impossible scenario|global infrastructure collapse|disaster reconstruction)\b/i.test(text) && config.channel === "behind-the-ordinary") hardFails.push("incorrect channel identity");
+  if (missingPlanSections.length) hardFails.push(`missing evidence sections: ${missingPlanSections.join(", ")}`);
+  const notes = [];
+  if (wordsTotal && introWords / wordsTotal > 0.25) notes.push("introduction exceeds 25% of the script");
+  if (filler.length) notes.push(`generic filler: ${[...new Set(filler)].join(", ")}`);
+  if (repeatedPhrases.length) notes.push(`${repeatedPhrases.length} repeated paragraph(s) removed`);
+  return { sections: cleaned, quality: { duplicateSections, repeatedPhrases, weakHook, payoff, filler, introShare: wordsTotal ? Math.round(introWords / wordsTotal * 100) / 100 : 0, missingPlanSections, hardFails, notes } };
 }
 
-function llmAvailable() {
-  return envValue("LONGFORM_LLM") === "1" && !!envValue("ANTHROPIC_API_KEY");
-}
-
-async function llmScript(channel, topic, pkg, plan, cold, config) {
-  const Anthropic = require("@anthropic-ai/sdk");
-  const client = new Anthropic({ apiKey: envValue("ANTHROPIC_API_KEY") });
-  const target = config.longform.targetMinutes;
-  const system = [
-    `You write narration for ${channel.name}, a ${config.identity}.`,
-    "Use only the numbered claims provided. Do not add facts, numbers, dates, quotes, causes or dependencies that are not in a claim.",
-    "Claims marked rewrite:true come from an encyclopedia (CC BY-SA): use the facts, but write every sentence in your own words — never copy a phrase of eight or more words.",
-    "Keep the claim's confidence: SPECULATION and MODEL claims must be narrated as scenario/model, never as observed fact.",
-    `Structure: follow the section list in order. Open with a cold open under 20 seconds. Introduce new evidence, a new question or a new consequence every 20–60 seconds. No filler, no biographies, no sponsor-style transitions, no 'like and subscribe'.`,
-    `Length: aim for ${target[0]}–${target[1]} minutes at ${config.longform.wordsPerMinute} words per minute ONLY if the claims support it. If they do not, write less and say so in "depthNote" — never pad.`,
-    'Return JSON only: {"sections":[{"section":"NAME","paragraphs":[{"text":"...","claims":["C1","C4"]}]}],"depthNote":"..."}',
-  ].join("\n");
-  const user = JSON.stringify({ topic: topic.title, sections: plan.sections.map((s) => ({ section: s.section, question: s.question, claimIds: s.claimIds })), coldOpen: cold.selected && cold.selected.text, claims: pkg.claims.map((c) => ({ id: c.id, text: c.text, class: c.class, section: c.section || c.role, rewrite: c.verbatim === false })) });
-  // Streamed (long output); server-side fallback in the Opus 5 "default" form.
-  const response = await client.beta.messages.stream({
-    model: envValue("LONGFORM_MODEL") || envValue("ANTHROPIC_MODEL") || "claude-opus-5",
-    max_tokens: 32000,
-    thinking: { type: "adaptive" },
-    betas: ["server-side-fallback-2026-07-01"],
-    fallbacks: "default",
-    system,
-    messages: [{ role: "user", content: user }],
-  }).finalMessage();
-  if (response.stop_reason === "refusal") throw new Error("LLM_REFUSAL: long-form script not generated");
-  if (response.stop_reason === "max_tokens") throw new Error("LLM_TRUNCATED: long-form script hit max_tokens");
-  const text = response.content.filter((block) => block.type === "text").map((block) => block.text).join("");
-  const json = JSON.parse(text.slice(text.indexOf("{"), text.lastIndexOf("}") + 1));
-  return { generator: `llm:${response.model}`, sections: json.sections || [], depthNote: json.depthNote || null, usage: response.usage || null };
+async function llmScript(channel, topic, pkg, plan, cold, config, options = {}) {
+  const configured = Provider.configuration();
+  const hash = topicHash(topic) + `:${pkg.claims.length}`;
+  const existing = Store.readState(channel, "longform", generationFile(topic), null);
+  const state = existing && existing.channel === channel.slug && existing.topicHash === hash ? existing : {
+    schema: "longform-generation/2",
+    channel: channel.slug,
+    slug: topic.slug,
+    topicHash: hash,
+    status: "RUNNING",
+    createdAt: (options.now || new Date()).toISOString(),
+    updatedAt: (options.now || new Date()).toISOString(),
+    provider: { primary: configured.primary.name, fallback: configured.fallback && configured.fallback.name || null },
+    factPack: factPack(topic, pkg),
+    blueprint: null,
+    sections: [],
+    usage: { input_tokens: 0, output_tokens: 0 },
+  };
+  const onEvent = (event) => providerEvent(channel, event, options);
+  const call = async (input) => {
+    const response = await Provider.generateJson(input, { config: configured, onEvent, dependencies: options.providerDependencies || {} });
+    state.providerUsed = response.provider;
+    state.model = response.model;
+    state.usage.input_tokens += response.usage && response.usage.input_tokens || 0;
+    state.usage.output_tokens += response.usage && response.usage.output_tokens || 0;
+    return response.json;
+  };
+  try {
+    if (!state.blueprint) {
+      const json = await call({
+        stage: "narrative-angle",
+        maxTokens: 3000,
+        system: [
+          `You plan evidence-led narration for ${channel.name}, a ${config.identity}.`,
+          "Use only the supplied claims. Do not answer with outside knowledge. Put anything unsupported in uncertain_claims.",
+          "Return JSON only with central_question, audience_promise, narrative_angle, hook_candidates, retention_beats, uncertain_claims.",
+        ].join("\n"),
+        user: JSON.stringify({ fact_pack: state.factPack, outline: plan.sections, selected_cold_open: cold.selected && cold.selected.text }),
+      });
+      state.blueprint = validateBlueprint(json, plan, cold, topic);
+      state.updatedAt = (options.now || new Date()).toISOString();
+      writeGeneration(channel, topic, state, options);
+    }
+    for (const section of plan.sections) {
+      if (state.sections.some((item) => item.section === section.section)) continue;
+      if (section.section === "COLD_OPEN") {
+        state.sections.push({ section: section.section, paragraphs: cold.selected ? [{ text: finish(cold.selected.text), claims: [], role: "cold-open" }] : [] });
+      } else if (!section.claimIds.length) state.sections.push({ section: section.section, paragraphs: [] });
+      else {
+        const claims = pkg.claims.filter((claim) => section.claimIds.includes(claim.id)).map((claim) => ({ id: claim.id, text: claim.text, class: claim.class, rewrite: claim.verbatim === false, source: claim.source }));
+        const targetWords = Math.max(90, Math.round(config.longform.targetMinutes[0] * config.longform.wordsPerMinute / Math.max(1, plan.sections.filter((item) => item.claimIds.length).length)));
+        const json = await call({
+          stage: `section:${section.section}`,
+          maxTokens: 5000,
+          system: [
+            `Write one section for ${channel.name}. Use only the claim IDs provided for this section.`,
+            "Every paragraph must list the claim IDs that support it. Never add an unsupported fact, number, date, quote, cause, or purpose.",
+            "Rewrite claims marked rewrite:true; do not copy an eight-word phrase. Preserve MODEL/SPECULATION labels. No filler, recap, CTA, or invented connective fact.",
+            `Aim for at most ${targetWords} words, and write less when evidence is thin.`,
+            'Return JSON only: {"section":{"name":"SECTION_NAME","paragraphs":[{"text":"...","claims":["C1"]}]},"depth_note":"..."}',
+          ].join("\n"),
+          user: JSON.stringify({ topic: topic.title, narrative_angle: state.blueprint.narrative_angle, section, claims, previous_section: state.sections[state.sections.length - 1] || null }),
+        });
+        state.sections.push(validateGeneratedSection(json, section));
+        if (json.depth_note) state.depthNote = [state.depthNote, String(json.depth_note)].filter(Boolean).join(" ");
+      }
+      state.updatedAt = (options.now || new Date()).toISOString();
+      writeGeneration(channel, topic, state, options);
+    }
+    const checked = continuityAndRetention(state.sections, plan, config);
+    state.sections = checked.sections;
+    state.quality = checked.quality;
+    state.status = checked.quality.hardFails.length ? "QUALITY_REVIEW" : "COMPLETE";
+    state.updatedAt = (options.now || new Date()).toISOString();
+    writeGeneration(channel, topic, state, options);
+    return {
+      generator: `llm:${state.providerUsed || configured.primary.name}:${state.model || configured.primary.model}`,
+      provider: state.providerUsed || configured.primary.name,
+      model: state.model || configured.primary.model,
+      status: state.status,
+      pipeline: ["TOPIC", "RESEARCH_EVIDENCE", "FACT_PACK", "NARRATIVE_ANGLE", "OUTLINE", "SECTION_PLAN", "SECTION_GENERATION", "CONTINUITY_PASS", "RETENTION_PASS", "FACTUAL_CONSISTENCY_CHECK", "FINAL_VOICEOVER_SCRIPT"],
+      factPack: state.factPack,
+      blueprint: state.blueprint,
+      sections: state.sections,
+      quality: state.quality,
+      depthNote: state.depthNote || null,
+      usage: state.usage,
+      checkpoint: generationFile(topic),
+    };
+  } catch (error) {
+    state.status = error.defer ? "DEFERRED" : "FAILED";
+    state.error = { code: error.code || "UNKNOWN", provider: error.provider || configured.primary.name, stage: error.stage || null, retryable: !!error.retryable, retryAfterMs: error.retryAfterMs || null };
+    state.updatedAt = (options.now || new Date()).toISOString();
+    writeGeneration(channel, topic, state, options);
+    throw error;
+  }
 }
 
 function claimSourceMap(script, pkg, topic) {
@@ -277,6 +427,12 @@ function scriptStats(script, config) {
 // ---------------------------------------------------------------------------
 // SCENE + ASSET PLAN (PHASE 32L).
 function visualTypeFor(section, channelSlug) {
+  if (channelSlug === "behind-the-ordinary") {
+    if (/EXPLANATION|PROBLEM/.test(section)) return "TECHNICAL_ILLUSTRATION";
+    if (/ORIGIN|CONTEXT/.test(section)) return "MUSEUM_ARCHIVE";
+    if (/SURPRISING_DETAIL|QUESTION|COLD_OPEN/.test(section)) return "REAL_OBJECT";
+    return "MACRO_DETAIL";
+  }
   if (/CHAIN|MECHANISM|EXPLANATION|HOW_IT_WORKS|SCIENCE/.test(section)) return channelSlug === "critical-thread" ? "PROCESS_DIAGRAM" : "DIAGRAM";
   if (/WHERE|DEPENDS|CASCADING/.test(section)) return "MAP";
   if (/CONSEQUENCE|WHAT_HAPPENED|CRITICAL|AFTERMATH|COLD_OPEN/.test(section)) return channelSlug === "failure-reconstructed" ? "REAL_ARCHIVAL" : channelSlug === "critical-thread" ? "REAL_INFRASTRUCTURE" : "SIMULATION";
@@ -349,6 +505,12 @@ function thumbnails(channel, topic, config) {
     const Visuals = require("../visuals");
     const concepts = (Visuals.thumbnail(topic.raw).concepts || []);
     for (const concept of concepts) base.push({ id: concept.id, primarySubject: topic.subject, background: concept.consequence, visualHierarchy: concept.composition, emotion: "quiet tension / dependency", text: texts[0] || "ONE MACHINE" });
+  } else if (channel.slug === "behind-the-ordinary") {
+    base.push({ id: "single-object-detail", primarySubject: topic.subject, background: "warm charcoal field", visualHierarchy: `one object, one amber marker on ${topic.designDetail || "the detail"}`, emotion: "curiosity", text: texts[0] || "HIDDEN PURPOSE" });
+    base.push({ id: "macro-detail", primarySubject: topic.designDetail || topic.subject, background: "softly blurred object", visualHierarchy: "macro detail fills 70% of frame", emotion: "discovery", text: texts[1] || "LOOK CLOSER" });
+    base.push({ id: "then-now", primarySubject: topic.subject, background: "restrained historical-modern split", visualHierarchy: "same detail aligned across both halves", emotion: "continuity", text: texts[2] || "STILL HERE" });
+    base.push({ id: "purpose-callout", primarySubject: topic.subject, background: "clean cutaway", visualHierarchy: "one teal arrow to the functional element", emotion: "explanation", text: "WHY THIS?" });
+    base.push({ id: "misconception", primarySubject: topic.subject, background: "warm neutral surface", visualHierarchy: "assumed use dimmed; documented purpose highlighted", emotion: "reversal", text: "NOT WHAT YOU THINK" });
   } else if (channel.slug === "failure-reconstructed") {
     base.push({ id: "evidence-frame", primarySubject: topic.object || topic.subject, background: "real archival frame of the failure", visualHierarchy: "subject 60% of frame, text top-left", emotion: "consequence", text: texts[0] || shortSubject });
     base.push({ id: "mechanism-callout", primarySubject: topic.object || topic.subject, background: "desaturated archival still", visualHierarchy: "one amber arrow to the failed component", emotion: "hidden cause", text: texts[1] || "THE FLAW" });
@@ -373,7 +535,7 @@ function thumbnails(channel, topic, config) {
       TopicRecognition: clamp(55 + (M.icerikKelimeleri(concept.primarySubject).some((word) => M.icerikKelimeleri(topic.subject).includes(word)) ? 35 : 10)),
       MobileReadability: clamp(100 - Math.max(0, textWords - 3) * 20 - Math.max(0, concept.text.length - 14) * 3),
       Truthfulness: clamp(100 - (supported ? 0 : 60) - (misleading ? 60 : 0)),
-      ChannelFit: clamp(80 + (channel.slug === "failure-reconstructed" && /archival|technical/.test(concept.background) ? 12 : 6)),
+      ChannelFit: clamp(80 + (channel.slug === "failure-reconstructed" && /archival|technical/.test(concept.background) ? 12 : channel.slug === "behind-the-ordinary" && /object|macro|neutral|charcoal|cutaway/.test(concept.background + " " + concept.visualHierarchy) ? 12 : 6)),
     };
     const total = Math.round(Object.values(scores).reduce((a, b) => a + b, 0) / Object.keys(scores).length);
     return { ...concept, textLength: concept.text.length, textWords, contrast: "light subject on dark field; single accent colour", truthfulness: scores.Truthfulness >= 80 ? "evidence-consistent" : "REJECT — misleading", mobileReadability: scores.MobileReadability, scores, total };
@@ -468,7 +630,12 @@ function gate(inputs, config) {
     ShortFunnelPotential: clamp(40 + derived.count * 10),
   };
   const rewriteOnly = pkg.claims.filter((claim) => claim.verbatim === false).length;
-  if (rewriteOnly && script.generator === "deterministic-evidence") notes.push(`${rewriteOnly} deep-research claims need the LLM writer (LONGFORM_LLM=1 + ANTHROPIC_API_KEY); the deterministic writer never narrates encyclopedia text verbatim`);
+  if (rewriteOnly && script.generator === "deterministic-evidence") notes.push(`${rewriteOnly} deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim`);
+  if (script.llmStatus === "DEFERRED") {
+    hardFails.push(`LLM generation deferred safely (${script.llmErrorCode || "TRANSIENT"}); do not render or publish until the checkpoint resumes`);
+    notes.push(`LLM generation safely deferred at ${script.llmErrorStage || "an intermediate stage"}; resume from ${script.checkpoint || "the channel checkpoint"}`);
+  }
+  if (script.llmStatus === "FAILED") hardFails.push(`LLM generation failed safely (${script.llmErrorCode || "UNKNOWN"}); deterministic evidence draft retained`);
   if (!endScreen.primary_next_video) notes.push("no same-channel next episode yet; end screen points to playlist + subscribe");
   return Readiness.longform({ dimensions: d, hardFails, notes }, config);
 }
@@ -492,8 +659,25 @@ async function buildPackage(channel, topicOrId, options = {}) {
   if (options.llm) {
     // options.llm may be a writer function (tests, alternative writers) with
     // the same contract as llmScript: { generator, sections:[{section, paragraphs:[{text, claims}]}] }.
-    try { script = typeof options.llm === "function" ? await options.llm({ channel, topic, pkg, plan, cold, config }) : await llmScript(channel, topic, pkg, plan, cold, config); llmUsage = script.usage || null; }
-    catch (error) { script.llmError = error.message; }
+    try {
+      script = typeof options.llm === "function"
+        ? await options.llm({ channel, topic, pkg, plan, cold, config })
+        : await llmScript(channel, topic, pkg, plan, cold, config, {
+          write: options.write,
+          now: options.now,
+          providerDependencies: options.providerDependencies,
+        });
+      llmUsage = script.usage || null;
+    } catch (error) {
+      // Keep the deterministic, claim-mapped script as a safe preview. The
+      // checkpoint records every completed cloud stage and is resumed later.
+      script.llmError = error.message;
+      script.llmStatus = error.defer ? "DEFERRED" : "FAILED";
+      script.llmErrorCode = error.code || "UNKNOWN";
+      script.llmErrorStage = error.stage || null;
+      script.provider = error.provider || null;
+      script.checkpoint = generationFile(topic);
+    }
   }
   const stats = scriptStats(script, config);
   const map = claimSourceMap(script, pkg, topic);
@@ -529,7 +713,23 @@ async function buildPackage(channel, topicOrId, options = {}) {
     researchPackage: { id: pkg.id, sources: pkg.sources, claims: pkg.claims.length, deepResearch: pkg.deepResearch || null, gaps: pkg.gaps, reuseCount: pkg.reuseCount },
     outline: plan,
     coldOpens: { candidates: cold.candidates, selected: cold.selected },
-    script: { generator: script.generator, llmError: script.llmError || null, depthNote: script.depthNote || null, sections: script.sections, ...stats, text: undefined },
+    script: {
+      generator: script.generator,
+      provider: script.provider || null,
+      model: script.model || null,
+      status: script.status || script.llmStatus || "DETERMINISTIC_PREVIEW",
+      pipeline: script.pipeline || null,
+      blueprint: script.blueprint || null,
+      quality: script.quality || null,
+      checkpoint: script.checkpoint || null,
+      llmError: script.llmError || null,
+      llmErrorCode: script.llmErrorCode || null,
+      llmErrorStage: script.llmErrorStage || null,
+      depthNote: script.depthNote || null,
+      sections: script.sections,
+      ...stats,
+      text: undefined,
+    },
     claimSourceMap: map,
     scenePlan: scenes.scenes,
     assetPlan: scenes.assetPlan,

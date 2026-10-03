@@ -51,7 +51,7 @@ function calculate(channel = getChannel()) {
     ? topics.map(() => ({ decision: "PUBLISH", blockers: [] }))
     : topics.map((topic) => Quality.evaluateTopic(topic, topics));
   const qualified = topics.filter((topic, index) => topic.status === "qualified" && audits[index].decision !== "BLOCK");
-  const readyShorts = qualified.filter((topic) => !used.has(topic.id) && !used.has(topic.slug) && !blockedObject[topic.id]);
+  const readyShorts = qualified.filter((topic) => topic.productionReady !== false && !used.has(topic.id) && !used.has(topic.slug) && !blockedObject[topic.id]);
   const readyLong = readyShorts.filter((topic) => topic.longFormPotential && topic.longFormPotential.score >= 75);
   const categories = {};
   for (const topic of qualified) categories[topic.category] = (categories[topic.category] || 0) + 1;
@@ -60,7 +60,7 @@ function calculate(channel = getChannel()) {
   const cadence = channel.config.publishingCadence.shorts.everyDays || 1;
   const days = readyShorts.length * cadence;
   const minimumDays = 365;
-  const minimumQualifiedTopics = channel.slug === "failure-reconstructed" ? 500 : channel.slug === "critical-thread" ? 500 : 1000;
+  const minimumQualifiedTopics = channel.slug === "impossible-brief" ? 1000 : 500;
   const sourceReady = qualified.filter((topic) => topic.sourceReady !== false && (topic.sources || []).length >= 2).length;
   const visualReady = qualified.filter((topic) => topic.visualReady === true || (topic.visualPotential && topic.visualPotential.score >= 70)).length;
   const duplicateTopics = audits.filter((audit) => audit.blockers.includes("exact duplicate topic")).length;
@@ -69,6 +69,8 @@ function calculate(channel = getChannel()) {
     channelName: channel.name,
     calculatedAt: new Date().toISOString(),
     qualifiedTopics: qualified.length,
+    validatedCandidates: qualified.filter((topic) => topic.quality && topic.quality.validatedCandidate).length,
+    researchBacklog: qualified.filter((topic) => topic.productionReady === false).length,
     readyShorts: readyShorts.length,
     readyLongForm: readyLong.length,
     daysOfInventory: days,

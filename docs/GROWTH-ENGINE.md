@@ -1,4 +1,4 @@
-# Growth engine — three channels, Shorts + weekly long-form
+# Growth engine — four channels, Shorts + weekly long-form
 
 The growth engine is a **shared algorithm with channel-isolated memory**. It
 decides *what* each channel produces and *whether it is good enough*, then
@@ -8,15 +8,14 @@ application, never blends channels, and never lets cadence override quality.
 ```
                 SHARED CORE (core/growth/*)
                     │
-      ┌─────────────┼─────────────┐
-      │             │             │
- Failure Recon.  ImpossibleBrief  CriticalThread
-      │             │             │
-   ┌──┴──┐        ┌─┴──┐        ┌─┴──┐
- SHORT  LONG    SHORT LONG    SHORT LONG
-   └──┬──┘        └─┬──┘        └─┬──┘
-   ANALYTICS     ANALYTICS     ANALYTICS
-   LEARNING      LEARNING      LEARNING
+      ┌─────────────┼─────────────┬──────────────────┐
+      │             │             │                  │
+ Failure Recon.  ImpossibleBrief  CriticalThread  Behind Ordinary
+      │             │             │                  │
+   SHORT/LONG     SHORT/LONG    SHORT/LONG         SHORT/LONG
+      │             │             │                  │
+  OWN ANALYTICS  OWN ANALYTICS  OWN ANALYTICS     OWN ANALYTICS
+  OWN LEARNING   OWN LEARNING   OWN LEARNING      OWN LEARNING
 ```
 
 Shared infrastructure: yes · shared performance memory: **no** · same-channel funnel: yes · cross-channel funnel: **no**.
@@ -27,7 +26,7 @@ Shared infrastructure: yes · shared performance memory: **no** · same-channel 
 |---|---|
 | `config.js` | `config/growth-engine.json` defaults deep-merged with `channels/<slug>/growth-engine.json` |
 | `store.js` | the only path builder: `channels/<slug>/state/{growth,longform}`, `…/memory`; `GROWTH_STATE_ROOT` sandboxes tests, dry runs and the simulation; `assertSameChannel` blocks foreign records |
-| `topic-model.js` | normalises the three production inventories; exposes FR's separate 500-record durable discovery inventory; boilerplate/template detection |
+| `topic-model.js` | normalises the four production inventories; exposes durable question/backlog inventories separately from production-ready records; boilerplate/template detection |
 | `sources.js` | source tiers (government, investigation, academic, standards, manufacturer, encyclopedia…), numeric support, superlative checks |
 | `topic-scoring.js`, `context.js` | transparent ViralPotentialScore (17 positive factors + 4 risk penalties), VideoPotentialScore and combined SelectionScore → A/B/C/D; own-channel history and duplicate detection |
 | `performance.js` | age-normalized velocity/rates, channel percentiles, subscriber-weighted growth score, BREAKOUT/STRONG/NORMAL/WEAK/FAILED_TEST, explicit 1K–2K plateau and cluster statistics |
@@ -50,7 +49,7 @@ Shared infrastructure: yes · shared performance memory: **no** · same-channel 
 ## 2. Daily Short (unchanged pipelines, new decisions)
 
 `shorts-sira.js` (Failure Reconstructed) and `core/pipeline/impossible-brief.js`
-(ImpossibleBrief, CriticalThread) call the engine:
+(ImpossibleBrief, CriticalThread, The Hidden Logic of Things) call the engine:
 
 1. **Select** — rank a logged pool of 20–50 source-backed, unused production topics. A deterministic 75/25 exploit/explore allocator chooses the highest SelectionScore or an under-sampled cluster. C remains channel-policy fallback only; **D is never produced**. The complete pool, factor breakdowns, chosen mode, rejected rows and reason are stored in `latest-decision.json` / `decisions.json`.
 2. **Pre-render gate** — `planShort`: ≥10 competing hooks, ≥20 competing titles, first 3 s, 13-part retention lint, CTA, integrity, factual and pacing checks → ProductionReadinessScore. BLOCK stops the topic before any render cost.
@@ -69,13 +68,13 @@ node growth.js longform --channel <slug> [--dry-run] [--force]
 - Terminal states: `PUBLISHED`, `READY_FOR_RENDER`, `REVIEW_REQUIRED`, `QUALITY_BLOCKED`, `NO_CANDIDATE`. A cycle left `RUNNING` by a crash is re-run on the next invocation.
 - **Quality over cadence**: `QUALITY_BLOCKED` is expected behaviour and exits 0. The gate never relaxes because seven days passed.
 - **Research deepening** (`research.js`): the topic's cited Wikipedia article (or an exact/redirect title match on the subject — never a fuzzy search) becomes up to 160 sentence-level claims with section, role, URL and licence, plus the article's images as visual-lead candidates. Wikipedia text is **CC BY-SA**: these claims are `verbatim:false` — the deterministic writer never narrates them, the LLM writer must rewrite them, and any paragraph that repeats 9+ consecutive source words is a hard `COPY_RISK` block.
-- **Writer**: deterministic (claims from the case file, one paragraph per section) unless `LONGFORM_LLM=1` and `ANTHROPIC_API_KEY` are set; then Claude (`ANTHROPIC_MODEL`, `LONGFORM_MODEL` override; default `claude-opus-5`, streamed, server-side fallback `default`) writes from the claim list only, citing claim ids. Numbers are re-verified against the claims.
+- **Writer**: deterministic evidence preview by default. `LONGFORM_LLM_PROVIDER=groq` + `GROQ_API_KEY` selects Groq's OpenAI-compatible endpoint; `GROQ_MODEL` defaults to `openai/gpt-oss-120b`. The existing Anthropic path remains compatible when explicitly selected (the legacy `LONGFORM_LLM=1` behavior is retained). `LONGFORM_LLM_FALLBACK_PROVIDER` is the only way to allow fallback; there is no silent paid switch. The structured writer checkpoints fact pack, angle/blueprint and each section, cites claim IDs, and resumes after a bounded 429 deferral.
 - **Gate hard fails**: bucket D, fewer than 2 sources or no primary/authoritative source (3 preferred), unsupported number, `COPY_RISK`, `INSUFFICIENT_DEPTH` (evidence < 85 % of the 8-minute minimum — never padded), duplicate episode, no truthful thumbnail, visual-integrity failures, render failure.
-- **Render/upload** only when the channel's `growth-engine.json` sets `longform.render.enabled: true` **and** the repository variable `<PREFIX>_LONGFORM_PUBLISH=1` (`FR_`, `IB_`, `CT_`). Otherwise an approved package stops at `READY_FOR_RENDER`. Rendering reuses `seslendir.js → gorsel-bul.js → video-yap.js`, upload reuses `youtube-yukle.js --channel`.
+- **Render/upload** only when the channel's `growth-engine.json` sets `longform.render.enabled: true` **and** the repository variable `<PREFIX>_LONGFORM_PUBLISH=1` (`FR_`, `IB_`, `CT_`, `BTO_`). Otherwise an approved package stops at `READY_FOR_RENDER`. Rendering reuses `seslendir.js → gorsel-bul.js → video-yap.js`, upload reuses `youtube-yukle.js --channel`.
 
 ### Enabling long-form for a channel
 
-1. Add the `ANTHROPIC_API_KEY` secret and set `LONGFORM_LLM=1` (optionally `ANTHROPIC_MODEL`).
+1. Configure an explicit writer, normally `LONGFORM_LLM_PROVIDER=groq`, `GROQ_API_KEY`, and `GROQ_MODEL=openai/gpt-oss-120b`. Configure a fallback only when its cost is intentionally accepted.
 2. Watch a few weekly cycles in dry-run mode (`workflow_dispatch` with `dry_run: true`) and review `channels/<slug>/state/longform/packages/*.json`.
 3. Set `longform.render.enabled: true` in `channels/<slug>/growth-engine.json` and `<PREFIX>_LONGFORM_PUBLISH=1`.
 4. After each episode: do the listed `RELATED_VIDEO_MANUAL_ACTION_REQUIRED` tasks and the end-screen plan in YouTube Studio (no API exists for either).
@@ -129,6 +128,7 @@ npm run library:failure-reconstructed:inventory # rebuild 500 source-verified re
 npm run growth:dry-run     # reports/dry-runs/<channel>-{short,long}.md (sandbox)
 npm run growth:simulate    # reports/growth-system-30d-simulation.md (sandbox)
 npm run test:growth        # growth engine tests
+node e2e-behind-the-ordinary.js # BTO no-upload package E2E
 node growth.js longform --channel failure-reconstructed --dry-run
 node growth.js research --channel impossible-brief --topic what-if-the-moon-disappeared-tonight
 node scripts/ib-ct-library/build.js channels/<slug>/topics/research-seeds/batch-NN.json          # verify only

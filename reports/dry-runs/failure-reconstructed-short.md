@@ -1,141 +1,143 @@
 # Dry run — Failure Reconstructed — Short
 
-Date: 2026-09-30 · sandbox state · nothing rendered or uploaded
+Date: 2026-10-03 · sandbox state · nothing rendered or uploaded
 
 ## Candidate topics
 
 | # | Topic | Bucket | VideoPotential | Hook | Why |
 |---|---|---|---|---|---|
-| 1 | silver-bridge-1967 | A | 88 | 76 | VideoPotential 88 ≥ 80; hook 76; sources 78 |
-| 2 | delta-1288-1996 | A | 87 | 79 | VideoPotential 87 ≥ 80; hook 79; sources 78 |
-| 3 | air-france-447-2009 | A | 86 | 79 | VideoPotential 86 ≥ 80; hook 79; sources 78 |
-| 4 | saudia-163-1980 | A | 86 | 80 | VideoPotential 86 ≥ 80; hook 80; sources 75 |
-| 5 | chernobyl-1986 | A | 90 | 84 | VideoPotential 90 ≥ 80; hook 84; sources 100 |
-| 6 | american-191-1979 | A | 86 | 80 | VideoPotential 86 ≥ 80; hook 80; sources 78 |
-| 7 | comet-g-alyp-1954 | A | 86 | 76 | VideoPotential 86 ≥ 80; hook 76; sources 75 |
-| 8 | fiu-pedestrian-bridge-2018 | A | 86 | 80 | VideoPotential 86 ≥ 80; hook 80; sources 78 |
+| 1 | chernobyl-1986 | A | 90 | 84 | VideoPotential 90 ≥ 80; hook 84; sources 100 |
+| 2 | mount-st-helens-1980 | A | 84 | 78 | VideoPotential 84 ≥ 80; hook 78; sources 75 |
+| 3 | three-mile-island-1979 | A | 87 | 79 | VideoPotential 87 ≥ 80; hook 79; sources 78 |
+| 4 | titanic-1912 | A | 87 | 81 | VideoPotential 87 ≥ 80; hook 81; sources 75 |
+| 5 | united-232-1989 | A | 87 | 83 | VideoPotential 87 ≥ 80; hook 83; sources 78 |
+| 6 | columbia-2003 | A | 87 | 82 | VideoPotential 87 ≥ 80; hook 82; sources 78 |
+| 7 | i-35w-bridge-2007 | A | 86 | 78 | VideoPotential 86 ≥ 80; hook 78; sources 78 |
+| 8 | san-bruno-pipeline-2010 | A | 86 | 78 | VideoPotential 86 ≥ 80; hook 78; sources 78 |
 
-Inventory (unused): A 252 · B 50 · C 64 · D 0
+Inventory (unused): A 204 · B 96 · C 64 · D 0
 
 ## Selected topic
 
-**silver-bridge-1967** — EXPLOIT (0.75): best A topic by SelectionScore
+**i-95-philadelphia-collapse-2023** — EXPLORE (0.25): under-sampled cluster infrastructure-failures
 
 ## Topic score
 
-VideoPotentialScore **88** · bucket **A**
+VideoPotentialScore **85** · bucket **A**
 
-TopicDemand 90 · Curiosity 98 · HookPotential 76 · VisualImpact 78 · EmotionalImpact 97 · StoryCompression 100 · RewatchPotential 79 · SharePotential 97 · CommentPotential 83 · SubscriberConversionPotential 88 · Novelty 75 · AudienceFit 85 · SourceQuality 78 · ChannelFit 100
+TopicDemand 42 · Curiosity 84 · HookPotential 85 · VisualImpact 78 · EmotionalImpact 97 · StoryCompression 100 · RewatchPotential 79 · SharePotential 92 · CommentPotential 83 · SubscriberConversionPotential 88 · Novelty 80 · AudienceFit 85 · SourceQuality 78 · ChannelFit 100
 
 ## Hook candidates (top 10)
 
 | # | Family | Spoken | On-screen | Score | Blocked |
 |---|---|---|---|---|---|
-| 1 | countdown | It collapsed in under a minute, and forty six people died. | ONE LINK | 76 | — |
-| 2 | tiny_cause_massive_consequence | It took only a tiny crack in one eyebar. | ONE LINK | 75 | — |
-| 3 | hidden_cause | The bridge had no backup path. | ONE LINK | 75 | — |
-| 4 | hidden_cause | The cause was a crack you could barely see. | ONE LINK | 74 | — |
-| 5 | before_after_consequence | That's why American bridges now get mandatory inspections. | ONE LINK | 74 | — |
-| 6 | shocking_consequence | The Silver Bridge fell into the Ohio River at rush hour. | ONE LINK | 73 | — |
-| 7 | hidden_cause | It wasn't overloaded by one heavy truck. | ONE LINK | 73 | — |
-| 8 | hidden_cause | It hid inside one eyebar in the suspension chain. | ONE LINK | 72 | — |
-| 9 | hidden_cause | Corrosion and stress slowly grew it deeper. | ONE LINK | 72 | — |
-| 10 | scarcity_bottleneck | When that single link snapped, nothing else could hold the load. | ONE LINK | 70 | — |
+| 1 | shocking_consequence | The I-95 collapse collapsed after a tanker fire underneath. | TANKER FIRE | 85 | — |
+| 2 | hidden_cause | The tank ruptured under the overpass. | TANKER FIRE | 78 | — |
+| 3 | mechanism_reveal | I-95 Philadelphia failed because extreme heat from burning gasoline weakening the overpass. | TANKER FIRE | 78 | — |
+| 4 | hidden_cause | Its driver lost control on a curve. | TANKER FIRE | 77 | — |
+| 5 | impossible_sounding_fact | A tanker truck crashed and caught fire under Interstate 95 in Philadelphia. | TANKER FIRE | 76 | — |
+| 6 | hidden_cause | It recalled similar collapses elsewhere. | TANKER FIRE | 76 | — |
+| 7 | impossible_sounding_fact | A temporary road reopened I-95 in under two weeks. | TANKER FIRE | 74 | — |
+| 8 | hidden_cause | It wasn't a structural flaw. | TANKER FIRE | 73 | — |
+| 9 | countdown | Within minutes, the heat caused the northbound lanes to collapse. | TANKER FIRE | 73 | — |
+| 10 | unexpected_chain_reaction | It started with tanker on curve. It ended with lanes collapse. | TANKER FIRE | 73 | — |
 
-Selected hook: **It collapsed in under a minute, and forty six people died.** (countdown, 76) · 12 candidates / 8 families
+Selected hook: **The I-95 collapse collapsed after a tanker fire underneath.** (shocking_consequence, 85) · 14 candidates / 8 families
 
 ## First 3 seconds
 
-- Narration: It collapsed in under a minute, and forty six people died.
-- First frame: Evidence frame for: "At rush hour, an entire bridge fell into the Ohio River." (REAL_ARCHIVAL, Footage/silver-bridge-1.jpg)
-- On-screen text: ONE LINK
+- Narration: The I-95 collapse collapsed after a tanker fire underneath.
+- First frame: Evidence frame for: "A tanker truck crashed and caught fire under Interstate 95 in Philadelphia." (REAL_ARCHIVAL, Footage/i-95-philadelphia-collap-1.jpg)
+- On-screen text: TANKER FIRE
 - Motion: slow push-in 100→112% on the still, hard cut at the first beat
-- Cut timing (s): 0, 1.5, 3
+- Cut timing (s): 0, 1.4, 2.8
 - Sound cue: low impact hit under the first cut
-- First3SecondScore: **90**
+- First3SecondScore: **93**
 
 ## Script
 
-Generator: editorial case file + selected hook · ~25.7s
+Generator: editorial case file + selected hook · ~20.4s
 
-1. It collapsed in under a minute, and forty six people died.  _[CONSEQUENCE]_
-2. At rush hour, an entire bridge fell into the Ohio River.  _[FAILURE]_
-3. The cause was a crack you could barely see.  _[FAILURE]_
-4. It hid inside one eyebar in the suspension chain.  _[ESCALATION]_
-5. Corrosion and stress slowly grew it deeper.  _[ESCALATION]_
-6. When that single link snapped, nothing else could hold the load.  _[CAUSE]_
-7. The bridge had no backup path.  _[ESCALATION]_
-8. That's why American bridges now get mandatory inspections.  _[ENGINEERING_REVEAL]_
+1. The I-95 collapse collapsed after a tanker fire underneath.  _[CONSEQUENCE]_
+2. Within minutes, the heat caused the northbound lanes to collapse.  _[CAUSE]_
+3. The truck was carrying gasoline.  _[FAILURE]_
+4. Its driver lost control on a curve.  _[ESCALATION]_
+5. The tank ruptured under the overpass.  _[ESCALATION]_
+6. The heat weakened the structure above.  _[ESCALATION]_
+7. It recalled similar collapses elsewhere.  _[ESCALATION]_
+8. A temporary road reopened I-95 in under two weeks.  _[ENGINEERING_REVEAL]_
 
-Retention lint: score 100
+Retention lint: score 85
 
 ## Scene plan
 
 | # | Narration | Visual source class | Label |
 |---|---|---|---|
-| 1 | At rush hour, an entire bridge fell into the Ohio River. | REAL_ARCHIVAL | n/a |
-| 2 | It collapsed in under a minute, and forty six people died. | REAL_ARCHIVAL | n/a |
-| 3 | The cause was a crack you could barely see. | REAL_ARCHIVAL | n/a |
-| 4 | It hid inside one eyebar in the suspension chain. | REAL_ARCHIVAL | n/a |
-| 5 | Corrosion and stress slowly grew it deeper. | REAL_ARCHIVAL | n/a |
-| 6 | When that single link snapped, nothing else could hold the load. | REAL_ARCHIVAL | n/a |
-| 7 | The bridge had no backup path. | REAL_ARCHIVAL | n/a |
-| 8 | That's why American bridges now get mandatory inspections. | REAL_ARCHIVAL | n/a |
+| 1 | A tanker truck crashed and caught fire under Interstate 95 in Philadelphia. | REAL_ARCHIVAL | n/a |
+| 2 | Within minutes, the heat caused the northbound lanes to collapse. | REAL_ARCHIVAL | n/a |
+| 3 | The truck was carrying gasoline. | REAL_ARCHIVAL | n/a |
+| 4 | Its driver lost control on a curve. | REAL_ARCHIVAL | n/a |
+| 5 | The tank ruptured under the overpass. | REAL_ARCHIVAL | n/a |
+| 6 | The heat weakened the structure above. | REAL_ARCHIVAL | n/a |
+| 7 | It recalled similar collapses elsewhere. | REAL_ARCHIVAL | n/a |
+| 8 | A temporary road reopened I-95 in under two weeks. | REAL_ARCHIVAL | n/a |
 
-Pacing: 12 segments, 3 cuts in first 3 s, average 2.14s, longest 3.478s
+Pacing: 10 segments, 3 cuts in first 3 s, average 2.04s, longest 3.225s
 
 ## Captions
 
 ```
 1
-00:00:00,000 --> 00:00:01,063
-It collapsed in
+00:00:00,000 --> 00:00:00,947
+The I-95 collapse
 
 2
-00:00:01,063 --> 00:00:02,127
-under a minute,
+00:00:00,947 --> 00:00:01,895
+collapsed after a
 
 3
-00:00:02,127 --> 00:00:03,027
-and forty six
+00:00:01,895 --> 00:00:03,221
+tanker
+fire underneath.
 
 4
-00:00:03,027 --> 00:00:03,926
-people died.
+00:00:03,221 --> 00:00:04,116
+Within minutes,
 
 5
-00:00:03,926 --> 00:00:04,865
-At rush hour,
+00:00:04,116 --> 00:00:04,947
+the heat caused
 
 6
-00:00:04,865 --> 00:00:06,060
-an entire bridge
+00:00:04,947 --> 00:00:06,097
+the
+northbound lanes
 
 7
-00:00:06,060 --> 00:00:06,999
-fell into the
+00:00:06,097 --> 00:00:06,800
+to collapse.
 
 8
-00:00:06,999 --> 00:00:07,853
-Ohio River.
+00:00:06,800 --> 00:00:07,503
+The truck was
 ```
 
-Audit: 25 events · max 4 words · 2 lines · too fast 0 · PASS
+Audit: 20 events · max 4 words · 2 lines · too fast 0 · PASS
 
 ## Metadata
 
-- Title: **Silver Bridge: What Failed First** (88; 23 candidates)
-- Other titles: Why the Silver Bridge Collapsed · Inside Silver Bridge: The Failure Chain · How Silver Bridge Really Failed · The Hidden Flaw Inside Silver Bridge
-- CTA: COMMENT_PROMPT — "Which engineering failure should we take apart next?" (on-screen)
-- Loop: LoopPotentialScore 55 · not applied
+- Title: **Why I-95 Collapsed in Philadelphia** (90; 23 candidates)
+- Other titles: Why I-95 Philadelphia Collapsed After a Tanker Fire Underneath · How I-95 Philadelphia Really Failed · What Really Happened to I-95 Philadelphia · What Engineers Changed After I-95 Philadelphia
+- CTA: NONE (—)
+- Loop: LoopPotentialScore 53 · not applied
 - Related long video: none published yet (Shorts Related Video is set manually — no API field)
 - Factual check: 100 · unsupported numbers 0
 
 ## ProductionReadinessScore
 
-**90 → PUBLISH** (stage pre; publish ≥ 85, review ≥ 70)
+**89 → PUBLISH** (stage pre; publish ≥ 85, review ≥ 70)
 
-Dimensions: topicPotential 88 · hook 76 · title 88 · script 100 · firstSeconds 90 · factual 100 · visualRelevance 90 · sources 78 · metadata 100 · visualQuality n/m · audio n/m · captions n/m · duration n/m · pacing 92 · render n/m
+Dimensions: topicPotential 85 · hook 85 · title 90 · script 85 · firstSeconds 93 · factual 100 · visualRelevance 90 · sources 78 · metadata 100 · visualQuality n/m · audio n/m · captions n/m · duration n/m · pacing 92 · render n/m
 
 Hard fails: none
 

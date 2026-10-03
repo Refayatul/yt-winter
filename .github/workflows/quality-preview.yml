@@ -17,6 +17,9 @@ on:
       ct_slug:
         description: CriticalThread topic slug
         default: inside-the-system-built-around-road-tunnel-ventilation-system
+      bto_slug:
+        description: The Hidden Logic of Things topic slug
+        default: why-jeans-have-a-tiny-pocket
 
 permissions:
   contents: read
@@ -28,12 +31,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        channel: [failure-reconstructed, impossible-brief, critical-thread]
+        channel: [failure-reconstructed, impossible-brief, critical-thread, behind-the-ordinary]
     env:
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
       FR_SLUG: ${{ inputs.fr_slug || 'lower-van-norman-dam-1971' }}
       IB_SLUG: ${{ inputs.ib_slug || 'what-if-we-swam-in-europas-ocean' }}
       CT_SLUG: ${{ inputs.ct_slug || 'inside-the-system-built-around-road-tunnel-ventilation-system' }}
+      BTO_SLUG: ${{ inputs.bto_slug || 'why-jeans-have-a-tiny-pocket' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -57,7 +61,13 @@ jobs:
             cp "icerik/paket/$FR_SLUG/quality-gate.json" "preview/$FR_SLUG.quality-gate.json" 2>/dev/null || true
             cp "uretim/$FR_SLUG/Videos/denetim.json" "preview/$FR_SLUG.denetim.json" 2>/dev/null || true
           else
-            if [ "$CHANNEL" = "impossible-brief" ]; then SLUG="$IB_SLUG"; else SLUG="$CT_SLUG"; fi
+            if [ "$CHANNEL" = "impossible-brief" ]; then
+              SLUG="$IB_SLUG"
+            elif [ "$CHANNEL" = "critical-thread" ]; then
+              SLUG="$CT_SLUG"
+            else
+              SLUG="$BTO_SLUG"
+            fi
             node scripts/quality-preview.js --channel "$CHANNEL" "$SLUG"
             DIR="channels/$CHANNEL/reports/previews/$SLUG"
             cp "$DIR/$SLUG.mp4" preview/

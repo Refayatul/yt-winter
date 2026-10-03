@@ -107,7 +107,8 @@ function factors(topic, context) {
 
   const required = topic.channel === "failure-reconstructed" ? [topic.mechanism, topic.consequence]
     : topic.channel === "impossible-brief" ? [topic.mechanism, topic.scenario, topic.consequence]
-      : [topic.dependency, topic.bottleneck, topic.consequence];
+      : topic.channel === "behind-the-ordinary" ? [topic.mechanism, topic.question, topic.consequence]
+        : [topic.dependency, topic.bottleneck, topic.consequence];
   f.ChannelFitScore = factor(45 + Math.min(5, lexHits) * 6 + required.filter(Boolean).length / required.length * 25 - generic * 10, "derived");
   return { factors: f, evidenceCount, similarity };
 }
@@ -203,6 +204,7 @@ function bucket(score, parts, topic, context) {
   const reasons = [];
   const rejects = [];
   if (!topic.mechanism && topic.channel !== "critical-thread") rejects.push("no mechanism in the topic record");
+  if (topic.channel === "behind-the-ordinary" && topic.productionReady !== true) rejects.push("research question is not production-ready");
   if (topic.channel === "critical-thread" && !topic.dependency) rejects.push("no dependency statement");
   const sourceCount = (topic.sources || []).length;
   if (sourceCount < config.topic.minimumSourcesForProduction) rejects.push(`only ${sourceCount} source(s); minimum ${config.topic.minimumSourcesForProduction}`);

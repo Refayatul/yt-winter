@@ -26,6 +26,7 @@ function discover(channel = getChannel(), options = {}) {
   const used = usedIds(channel);
   return universe(channel).topics
     .filter((topic) => topic.status === "qualified" && !used.has(topic.id))
+    .filter((topic) => channel.slug !== "behind-the-ordinary" || topic.productionReady === true)
     .filter((topic) => !options.category || topic.category === options.category)
     .sort((a, b) => b.curiosityScore + b.visualPotential.score - a.curiosityScore - a.visualPotential.score)
     .slice(0, options.limit || 20);

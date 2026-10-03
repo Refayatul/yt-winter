@@ -7,9 +7,9 @@
 // numbers — they exercise the code paths, they are NOT forecasts.
 //
 // Two long-form scenarios:
-//   A  current configuration — deterministic writer only (no ANTHROPIC_API_KEY)
+//   A  current configuration — deterministic writer only (no cloud provider)
 //   B  LLM writer enabled — a simulated writer that paraphrases the deep
-//      research package (stands in for Claude); episodes "upload" as SIM ids
+//      research package (provider-neutral); episodes "upload" as SIM ids
 
 const fs = require("fs");
 const os = require("os");
@@ -232,7 +232,7 @@ function markdown(results) {
     "**What is real and what is simulated.** Topic selection, Short planning, hooks, first-3-seconds, readiness gates, the weekly long-form lane and its quality gate, the Short→Long / Long→Long funnel, analytics checkpoints, diagnosis, learning and experiments all run the production code. Uploads (SIM-* ids), render, and every metric are simulated; metrics are deterministic pseudo-random numbers used only to exercise the analytics and learning code — they are not forecasts. All state lives in a temporary GROWTH_STATE_ROOT sandbox; production state was not touched.", "",
     "A blocked weak long-form candidate is expected quality behaviour and is not counted as a production failure.", ""];
   for (const result of results) {
-    out.push(`## Scenario ${result.scenario} — ${result.scenario === "A" ? "current configuration (no LLM writer: ANTHROPIC_API_KEY not configured)" : "LLM long-form writer enabled (simulated writer paraphrasing the deep ResearchPackage)"}`, "");
+    out.push(`## Scenario ${result.scenario} — ${result.scenario === "A" ? "current configuration (no configured long-form LLM provider)" : "LLM long-form writer enabled (provider-neutral simulated writer paraphrasing the deep ResearchPackage)"}`, "");
     out.push("| Channel | Shorts published | Short quality blocks | Skipped days (no qualified topic) | Long-form cycles | Episodes | Cycle outcomes | Short→Long links | Long→Long links |", "|---|---|---|---|---|---|---|---|---|");
     for (const slug of result.channels) {
       const s = result.state[slug];
