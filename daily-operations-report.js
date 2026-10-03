@@ -145,6 +145,7 @@ function channelReport(channel, date, now) {
     errors: failures,
     inventory,
     scorecard: { youtubeShorts: performance(analytics, "short"), youtubeLong: performance(analytics, "long") },
+    platform: platformStatus(channel, now),
     tiktok,
     stateCounts: { generated: generated.length, published: published.length, failed: Array.isArray(failed) ? failed.length : Object.keys(failed || {}).length },
   };
@@ -154,6 +155,22 @@ function build(now = new Date()) {
   const date = Calendar.dayKey(now);
   const channels = Object.keys(Channel.registry().channels).map((slug) => channelReport(Channel.getChannel(slug), date, now));
   return { generatedAt: now.toISOString(), date, channels };
+}
+
+// Operations, quota, analytics freshness and monetization readiness (all
+// from the channel's own state; nothing estimated beyond what is labelled).
+function platformStatus(channel, now) {
+  const Ops = require("./lib/ops-log");
+  const Quota = require("./lib/quota");
+  const ops = Ops.summary(channel, { hours: 24, now });
+  let quota = null;
+  try { quota = Quota.canAfford(channel, "videos.insert", Channel.allChannels(), { now }); } catch (error) {}
+  return {
+    analyticsFreshness: require("./core/analytics/warehouse").freshness(channel, now),
+    ops24h: ops.counts,
+    quota: quota ? { usedToday: quota.used, budget: quota.budget, project: quota.project } : null,
+    monetization: require("./core/analytics/monetization").progress(channel, { now }),
+  };
 }
 
 function cell(value) { return value == null ? "unavailable" : String(value); }
@@ -168,6 +185,16 @@ function markdown(report) {
       `| Publish time | ${cell(row.publishTime)} |`, `| Video ID | ${cell(row.videoId)} |`, `| Analytics | ${row.analyticsHealth} |`,
       `| Scheduler | ${row.schedulerHealth} |`, `| Ready topic backlog | ${row.backlog} |`, `| Errors/review/blocks | ${row.errors} |`);
     if (row.tiktok) lines.push(`| TikTok today | ${row.tiktok.todayStatus} |`, `| TikTok backlog | ${row.tiktok.backlog} |`);
+    const p = row.platform;
+    if (p) {
+      const fresh = p.analyticsFreshness;
+      const ops = Object.entries(p.ops24h || {}).map(([type, count]) => `${type} ${count}`).join(", ") || "no events";
+      const m = p.monetization;
+      lines.push(`| Analytics warehouse | ${fresh.newestDay ? `through ${fresh.newestDay} (lag ${fresh.lagDays} d)` : "not loaded yet"}${fresh.errors.length ? ` · ${fresh.errors.length} table error(s)` : ""} |`,
+        `| Ops (24 h) | ${ops} |`,
+        `| API quota today | ${p.quota ? `${p.quota.usedToday} / ${p.quota.budget} units (project ${p.quota.project})` : "unavailable"} |`,
+        `| YPP readiness (estimate) | subs ${cell(m.subscribers)}/1,000 · long-form watch h (365 d) ${cell(m.longWatchHours365)}/4,000 · Shorts views (90 d) ${cell(m.shortsViews90)}/10M |`);
+    }
     lines.push("");
   }
   return lines.join("\n");

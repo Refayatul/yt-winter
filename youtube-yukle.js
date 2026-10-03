@@ -363,11 +363,16 @@ async function main() {
   }
 
   // --- Pre-flight report ---
+  // Licensing gate (opt-in: PROVENANCE_REQUIRED=1): every external asset must
+  // carry a licence, be cleared for this channel and be credited when required.
+  const Provenance = require("./lib/provenance");
+  const kaynakSorunlari = Provenance.check(Provenance.read(path.dirname(require("./lib/kutuphane").paketYolu(IS, "provenance.json"))), { channel: CHANNEL.slug, description: snippet.description });
   const butce = Quota.canAfford(CHANNEL, "videos.insert", require("./core/channel-context").allChannels());
   const onKontrol = {
     mode: mod, channel: CHANNEL.slug, authenticatedChannelId: kimlik.actual, mediaSha256: medyaSha, bytes: boyut,
     title: snippet.title, publishAt, privacy: gizlilik, qualityGate: kapiKarari, idempotencyKey: anahtar,
     remoteDuplicate: false, quota: { used: butce.used, needed: butce.needed, budget: butce.budget, ok: butce.ok },
+    provenance: { required: process.env.PROVENANCE_REQUIRED === "1", problems: kaynakSorunlari },
     checkedAt: new Date().toISOString(),
   };
   fs.writeFileSync(path.join(BASE, "PUBLISH-PREFLIGHT.json"), JSON.stringify(onKontrol, null, 2) + "\n");
@@ -375,6 +380,12 @@ async function main() {
     Ops.event(CHANNEL, "publish.shadow", { slug: IS, title: snippet.title, publishAt });
     console.log("✓ SHADOW: tum on kontroller gecti; yukleme oturumu ACILMADI (PUBLISH_MODE=shadow).");
     return;
+  }
+  if (process.env.PROVENANCE_REQUIRED === "1" && kaynakSorunlari.length) {
+    hataYaz(BASE, IS, "PROVENANCE_INCOMPLETE: " + kaynakSorunlari.slice(0, 3).join("; "));
+    Ops.event(CHANNEL, "publish.blocked", { slug: IS, code: "PROVENANCE_INCOMPLETE", problems: kaynakSorunlari.length });
+    console.error("⛔ Kaynak/lisans kaydi eksik — yukleme YAPILMADI: " + kaynakSorunlari[0]);
+    process.exit(12);
   }
   if (!butce.ok) {
     hataYaz(BASE, IS, `QUOTA_EXHAUSTED: ${butce.used}+${butce.needed} > ${butce.budget}`);
@@ -435,6 +446,10 @@ async function main() {
         const r = await istek({ hostname: "www.googleapis.com", path: "/upload/youtube/v3/thumbnails/set?videoId=" + j.id, method: "POST",
           headers: { Authorization: "Bearer " + token, "Content-Type": "image/jpeg", "Content-Length": veri.length } }, veri);
         console.log(r.durum === 200 ? "  ✓ kapak yuklendi: " + jpg : "  (kapak yuklenemedi HTTP " + r.durum + " — kanal dogrulamasi gerekebilir)");
+        if (r.durum === 200) {
+          try { require("./lib/quota").record(CHANNEL, "thumbnails.set"); } catch (e) {}
+          try { require("./core/growth/thumbnails").markSelected(CHANNEL, IS, path.relative(KOK, path.join(td, jpg)), j.id); } catch (e) {}
+        }
       }
     } catch (e) { console.log("  (kapak: " + e.message + ")"); }
   } else {

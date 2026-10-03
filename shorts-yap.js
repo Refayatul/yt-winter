@@ -433,6 +433,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 
   try { K.defterYaz(IS, { muzik: mp, render: { sure: sure(cikti), tarih: new Date().toISOString(), ustKatman: !!ustKatman } }); }
   catch (e) { console.log("  (kaynak defteri yazilamadi: " + e.message + ")"); }
+  // Provenance manifest from the source ledger's credit lines (licence + URL
+  // per asset) plus the generated voice, music and graphics.
+  try {
+    const P = require("./lib/provenance");
+    const krediler = ((K.defter() || {})[IS] || {}).krediler || [];
+    P.write(path.dirname(K.paketYolu(IS, "provenance.json")), P.build({ channel: "failure-reconstructed", slug: IS,
+      extra: krediler.map(P.fromCreditLine), voiceProvider: "Microsoft Edge neural TTS (" + SES + ")", music: true }));
+  } catch (e) { console.log("  (provenance yazilamadi: " + e.message.slice(0, 120) + ")"); }
   console.log(`✓ Bitti: ${path.relative(KOK, cikti)}  (${sure(cikti).toFixed(1)}s, ${W}x${H}${ustKatman ? ", failure-chain katmani" : ""})`);
   if (!process.env.SHORTS_TMP_SAKLA) { try { fs.rmSync(TMP, { recursive: true, force: true }); } catch (e) {} } else console.log("  (ara dosyalar: " + TMP + ")");
 })().catch(e => { console.error("\nHata: " + e.message); try { fs.rmSync(TMP, { recursive: true, force: true }); } catch (_) {} process.exit(1); });

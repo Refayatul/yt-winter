@@ -73,28 +73,28 @@ under `icerik/`, `analytics/`); GitHub Actions is the scheduler/runtime.
 - TOPIC-02 Topic performance feeds decisions — **DONE**. Existing learning cluster bonus (sample/significance-gated) + measured Wikipedia popularity (PR #94) in topic scoring; family ledger + calibration in the Monday report for inspection. Tests: tests/js/learning-loop.test.js (6 pass).
 - HOOK-01 Hook traceability — **DONE**. Candidates/scores/winner in the plan file (`state/growth/shorts/<slug>.json`); hookScore, hookCandidates, selectedHook in the video record; outcome joined in predictions.json. Tests: tests/js/learning-loop.test.js (6 pass).
 - TITLE-01 Title traceability — **DONE**. Candidates/scores/patterns in the plan file; titleScore, titleCandidates, titlePattern, selectedTitle recorded (core/growth/index.js growthMeta); outcome joined in predictions.json. Tests: tests/js/learning-loop.test.js (6 pass).
-- THUMB-01 Thumbnail variant metadata ledger (hash, template, concept, text length) — TODO
+- THUMB-01 Thumbnail variant ledger — **DONE**. core/growth/thumbnails.js → `state/growth/thumbnails.json` (sha256, concept, layout, text/textLength, template version, human, experiment, selected, videoId); IB/CT render and FR long-form concepts recorded, uploaded concept marked selected; evaluate() judges on retention/watch/conversion, CTR only when entered from Studio (no thumbnail A/B API). Tests: provenance-thumbnails.test.js.
 - CONV-01 Subscriber conversion by dimension — **DONE**. Existing core/growth/analytics.conversionBreakdown (topic cluster, hook, duration, structure, CTA, title pattern, format) + popularityBand, publishSlot, openingVisual; series = channel; weekly report shows best/worst title pattern with n≥3. Tests: tests/js/learning-loop.test.js (6 pass).
 - FATIGUE-01 Near-duplicate / repeated-pattern penalties — **DONE** (title pattern freshness PR #95; topic similarity in topic-scoring).
 - EXP-01 Single-hypothesis experiment records — **DONE** (existing `experiments.js`).
 - LEARN-01 Prediction vs outcome persisted and inspectable — **DONE**. core/growth/predictions.js → `state/growth/predictions.json` with per-predictor Spearman calibration (INSUFFICIENT_SAMPLE under 5); refreshed after every analytics run (core/growth/runtime.js); summarised in the Monday report. Tests: tests/js/learning-loop.test.js (6 pass).
 - SERIES-01 Series identity, playlists, related links — **DONE** (`core/series.js`, funnel).
-- MONET-01 Monetization-readiness trajectories from real data only — TODO
+- MONET-01 Monetization readiness from real data — **DONE**. core/analytics/monetization.js: subscribers (Data API snapshot), long-form watch hours 365 d and Shorts views 90 d (warehouse channel_type_daily); labelled estimate, nulls never extrapolated. Tests: platform-invariants.test.js.
 
 ### Operations
 - QUOTA-01 Central configurable cost policy — **DONE**. config/quota.json + lib/quota.js; no call-site constants. Tests: tests/js/quota-ops.test.js.
 - QUOTA-02 Per-channel ledger + graceful exhaustion — **DONE**. `<state>/quota-ledger.json` per channel, budget summed per Google project, Pacific-day reset; every lib/yt Data API call charged; upload deferred (exit 10) when the budget is short. Tests: tests/js/quota-ops.test.js.
 - OBS-01 Structured per-channel ops event log — **DONE**. lib/ops-log.js events: publish.success/failure/retry/blocked/shadow/duplicate_prevented, quota.exhausted, oauth.failure, analytics.load/partial/failure (+ freshness day). Tests: quota-ops.test.js.
-- PROV-01 Per-video provenance manifest (source, URL, licence, attribution, channel) — TODO
-- REPORT-01 Report sections: operations, quota, analytics freshness, conversion — TODO
+- PROV-01 Per-video provenance manifest — **DONE**. lib/provenance.js → `<package>/provenance.json` (source, URL, licence, licence evidence, attribution duty, allowedChannels, expiry, generated voice/music/graphics); IB/CT from visual-attribution data, FR from source-ledger credit lines (licence never guessed); opt-in pre-flight gate PROVENANCE_REQUIRED=1 (exit 12). Tests: provenance-thumbnails.test.js.
+- REPORT-01 Report sections — **DONE**. daily-operations-report: analytics warehouse freshness, ops events (24 h), API quota today per project, YPP readiness; Monday issue: calibration, topic families, conversion, cadence (Phase 3). Tests: platform-invariants.test.js.
 
 ### Tests / docs
-- TEST-01 Wrong channel/token fails closed — **DONE** (existing) + publish-job check — TODO
+- TEST-01 Wrong channel/token fails closed — **DONE** (existing oauth.test.js) + publish-job check (publish-safety.test.js ID-02).
 - TEST-02 Upload retry never duplicates — **DONE**. publish-safety.test.js: network drop after full receipt, unknown session state, expired session.
 - TEST-03 Analytics + learned weights isolated per channel — **DONE**. warehouse partition test (warehouse.test.js); learned weights/state isolation existing (growth.test.js, multi-channel.test.js).
 - TEST-04 Scheduler timezone — **DONE** (`calendar-scheduling.test.js`).
 - TEST-05 Partial failure resumes — **DONE**. publish-safety.test.js: resume from received byte; journal-completed intent re-committed without upload.
 - TEST-06 No secrets in logs — **DONE** (ops log redaction test; journal excludes session URLs).
-- TEST-07 Three-channel workflow intact; production behaviour unchanged by default — TODO
+- TEST-07 Three-channel workflow intact; production behaviour unchanged by default — **DONE**. platform-invariants.test.js: live publish mode default, all three channels still produced with their PUBLISH vars, new gates opt-in, privacy/slot logic unchanged; full suite 250 pass.
 - TIKTOK-01 Preserve TikTok — **BLOCKED**: retired by the owner on 2026-10-02 (PR #93). Code kept dormant and untouched; re-enable needs the owner's decision.
 - DOC-01 Documentation of the real implementation — TODO
