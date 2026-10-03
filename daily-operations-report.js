@@ -165,7 +165,11 @@ function platformStatus(channel, now) {
   const ops = Ops.summary(channel, { hours: 24, now });
   let quota = null;
   try { quota = Quota.canAfford(channel, "videos.insert", Channel.allChannels(), { now }); } catch (error) {}
+  // Scheduler queue: depth and age of the oldest still-queued task.
+  const queue = (read(path.join(channel.paths.state, "scheduler-state.json"), { queue: [] }).queue || []).filter((item) => item.status === "queued");
+  const oldest = queue.map((item) => item.date).filter(Boolean).sort()[0] || null;
   return {
+    queue: { depth: queue.length, oldestDate: oldest, oldestAgeDays: oldest ? Math.round((Date.parse(now.toISOString().slice(0, 10)) - Date.parse(oldest)) / 86400000) : null },
     analyticsFreshness: require("./core/analytics/warehouse").freshness(channel, now),
     ops24h: ops.counts,
     quota: quota ? { usedToday: quota.used, budget: quota.budget, project: quota.project } : null,
@@ -192,6 +196,7 @@ function markdown(report) {
       const m = p.monetization;
       lines.push(`| Analytics warehouse | ${fresh.newestDay ? `through ${fresh.newestDay} (lag ${fresh.lagDays} d)` : "not loaded yet"}${fresh.errors.length ? ` · ${fresh.errors.length} table error(s)` : ""} |`,
         `| Ops (24 h) | ${ops} |`,
+        `| Scheduler queue | ${p.queue ? `${p.queue.depth} queued${p.queue.oldestDate ? `, oldest ${p.queue.oldestDate} (${p.queue.oldestAgeDays} d)` : ""}` : "unavailable"} |`,
         `| API quota today | ${p.quota ? `${p.quota.usedToday} / ${p.quota.budget} units (project ${p.quota.project})` : "unavailable"} |`,
         `| YPP readiness (estimate) | subs ${cell(m.subscribers)}/1,000 · long-form watch h (365 d) ${cell(m.longWatchHours365)}/4,000 · Shorts views (90 d) ${cell(m.shortsViews90)}/10M |`);
     }

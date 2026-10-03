@@ -36,6 +36,10 @@ under `icerik/`, `analytics/`); GitHub Actions is the scheduler/runtime.
 | Reporting | growth dashboard, daily ops report, weekly learning | Good | analytics freshness / ops / quota sections | EXTEND |
 | TikTok | retired by owner on 2026-10-02 (PR #93); code dormant | — | spec says "preserve TikTok" — conflicts with the owner's decision | BLOCKED (owner decision) |
 
+## Reconciliation (2026-10-03)
+
+Every non-blocked item below is DONE with files, tests and evidence. Full suite: JS 253 (252 pass, 1 environment skip), Python 24/24, actionlint clean. Real render on GitHub Actions (quality-preview run 37100161888, no upload): FR / IB / CT PASS with the new render-path code. Spec phases with no separate ID map as follows: hook ≥10 / title ≥20 candidates already met (FR 13/23, IB 19/24, CT 11/22 per plan); script/retention structure (story configs + storyStructure in every record); long-form → Shorts factory and parent/child links (existing lane, short-factory, funnel); experiments (existing single-variable engine); fatigue (title pattern freshness, topic similarity, family fatigue). One item is BLOCKED by an owner decision: TIKTOK-01.
+
 ## Checklist
 
 ### Architecture / audit
@@ -84,7 +88,7 @@ under `icerik/`, `analytics/`); GitHub Actions is the scheduler/runtime.
 ### Operations
 - QUOTA-01 Central configurable cost policy — **DONE**. config/quota.json + lib/quota.js; no call-site constants. Tests: tests/js/quota-ops.test.js.
 - QUOTA-02 Per-channel ledger + graceful exhaustion — **DONE**. `<state>/quota-ledger.json` per channel, budget summed per Google project, Pacific-day reset; every lib/yt Data API call charged; upload deferred (exit 10) when the budget is short. Tests: tests/js/quota-ops.test.js.
-- OBS-01 Structured per-channel ops event log — **DONE**. lib/ops-log.js events: publish.success/failure/retry/blocked/shadow/duplicate_prevented, quota.exhausted, oauth.failure, analytics.load/partial/failure (+ freshness day). Tests: quota-ops.test.js.
+- OBS-01 Structured per-channel ops event log — **DONE**. lib/ops-log.js events: publish.success/failure/retry/blocked/shadow/duplicate_prevented/public (+ publish delay)/unexpected_public, quota.exhausted, oauth.failure, analytics.load/partial/failure, growth.decision; daily report adds scheduler queue depth + oldest job age (stale tasks now settled done/missed — previously every task stayed queued forever). Tests: quota-ops.test.js, platform-invariants.test.js.
 - PROV-01 Per-video provenance manifest — **DONE**. lib/provenance.js → `<package>/provenance.json` (source, URL, licence, licence evidence, attribution duty, allowedChannels, expiry, generated voice/music/graphics); IB/CT from visual-attribution data, FR from source-ledger credit lines (licence never guessed); opt-in pre-flight gate PROVENANCE_REQUIRED=1 (exit 12). Tests: provenance-thumbnails.test.js.
 - REPORT-01 Report sections — **DONE**. daily-operations-report: analytics warehouse freshness, ops events (24 h), API quota today per project, YPP readiness; Monday issue: calibration, topic families, conversion, cadence (Phase 3). Tests: platform-invariants.test.js.
 
@@ -97,4 +101,4 @@ under `icerik/`, `analytics/`); GitHub Actions is the scheduler/runtime.
 - TEST-06 No secrets in logs — **DONE** (ops log redaction test; journal excludes session URLs).
 - TEST-07 Three-channel workflow intact; production behaviour unchanged by default — **DONE**. platform-invariants.test.js: live publish mode default, all three channels still produced with their PUBLISH vars, new gates opt-in, privacy/slot logic unchanged; full suite 250 pass.
 - TIKTOK-01 Preserve TikTok — **BLOCKED**: retired by the owner on 2026-10-02 (PR #93). Code kept dormant and untouched; re-enable needs the owner's decision.
-- DOC-01 Documentation of the real implementation — TODO
+- DOC-01 Documentation of the real implementation — **DONE**. docs/GROWTH-PLATFORM.md (architecture, isolation, OAuth, scheduler, upload lifecycle + exit codes, quota, analytics + unavailable metrics, growth/learning loop, diagnosis codes, provenance, observability, troubleshooting/recovery, TikTok status); README link. Existing OAuth/onboarding/TikTok docs referenced, not duplicated.

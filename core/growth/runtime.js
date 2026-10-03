@@ -51,6 +51,12 @@ function afterUpload(channel, slug, plan) {
       popularityBand: WeeklyLearning.popularityBand(plan && plan.topic && plan.topic.popularity ? plan.topic.popularity.score : null),
       readiness: plan ? plan.readiness.ProductionReadinessScore : null,
     });
+    // Growth-engine decision trail (inspectable next to the prediction ledger).
+    try {
+      require("../../lib/ops-log").event(channel, "growth.decision", { slug, videoId: row.videoId, bucket: plan && plan.growthMeta.bucket, cluster: plan && plan.growthMeta.topicCluster,
+        hookType: plan && plan.growthMeta.hookType, titlePattern: plan && plan.growthMeta.titlePattern, topicScore: plan && plan.growthMeta.topicScore,
+        hookScore: plan && plan.growthMeta.hookScore, titleScore: plan && plan.growthMeta.titleScore, experiment: plan && plan.growthMeta.experimentVariant || null });
+    } catch (error) {}
     if (plan && plan.experiment) Experiments.attachVideo(channel, slug, row.videoId);
     if (plan) Funnel.updateCluster(channel, plan.topic.cluster || "uncategorized", { type: "short", slug, videoId: row.videoId, title: row.baslik, channel: channel.slug });
     if (plan && plan.relatedLong && plan.relatedLong.videoId) {

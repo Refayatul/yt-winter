@@ -61,3 +61,17 @@ test("TIKTOK-01 (blocked): TikTok stays retired by the owner's decision, its cod
   }
   for (const file of ["tiktok-yukle.js", "tiktok-yetki.js", "lib/tiktok.js"]) assert.ok(fs.existsSync(path.join(ROOT, file)), `${file} kept`);
 });
+
+test("OBS: scheduler tasks from earlier days are settled, so queue depth and job age are meaningful", () => {
+  const Scheduler = require("../../core/scheduling");
+  const channel = require("../../core/channel-context").getChannel("impossible-brief");
+  const state = { queue: [
+    { key: "ib:short", format: "short", date: "2026-10-01", status: "queued" },
+    { key: "ib:short", format: "short", date: "2026-10-02", status: "queued" },
+    { key: "ib:long", format: "long", date: "2026-10-01", status: "queued" },
+    { key: "ib:short", format: "short", date: "2026-10-03", status: "queued" },
+  ] };
+  const records = [{ format: "short", slug: "x", tarih: "2026-10-02T06:30:00Z", publishAt: "2026-10-02T22:00:00Z", videoId: "V" }];
+  Scheduler.settle(state, channel, "2026-10-03", records);
+  assert.deepEqual(state.queue.map((item) => item.status), ["missed", "done", "expired", "queued"], "today's task stays queued");
+});
