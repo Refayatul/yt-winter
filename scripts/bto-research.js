@@ -94,7 +94,8 @@ async function wikiJson(get, params) {
 // then answer "not answerable") never contribute sources on their own.
 function relevantTitle(title, object) {
   if (/^(list|lists|timeline|index|outline|glossary) of\b/i.test(title)) return false;
-  const stem = (word) => word.toLowerCase().replace(/(es|s)$/, "");
+  // "barcodes" and "Barcode" must meet: drop a plural ending, then a final e.
+  const stem = (word) => word.toLowerCase().replace(/(es|s)$/, "").replace(/e$/, "");
   const titleWords = String(title).split(/[\s(),-]+/).filter(Boolean);
   const own = new Set(titleWords.map(stem));
   const objectWords = words(String(object).replace(/^the\s+/i, "")).map(stem).filter((word) => word.length >= 3);
@@ -104,14 +105,29 @@ function relevantTitle(title, object) {
   return hits >= Math.min(2, objectWords.length) || (titleWords.length === 1 && hits === 1);
 }
 
+// The object's own article first ("barcodes" → Barcode, "QWERTY keyboards" →
+// QWERTY keyboard → redirect QWERTY), then search hits for object + detail.
+function directTitles(object) {
+  const base = String(object).replace(/^the\s+/i, "").trim();
+  const singular = base.replace(/(ch|sh|x|ss)es$/i, "$1").replace(/ies$/i, "y").replace(/([^s])s$/i, "$1");
+  const cap = (text) => text.charAt(0).toUpperCase() + text.slice(1);
+  return [...new Set([cap(singular), cap(base)])];
+}
+
 async function articles(topic, get) {
   const search = await wikiJson(get, { action: "query", list: "search", srsearch: `${topic.object} ${topic.designDetail}`, srlimit: 5 });
-  const titles = ((search && search.query && search.query.search) || []).map((hit) => hit.title).filter((title) => relevantTitle(title, topic.object)).slice(0, 2);
+  const hits = ((search && search.query && search.query.search) || []).map((hit) => hit.title).filter((title) => relevantTitle(title, topic.object));
+  const titles = [...new Set([...directTitles(topic.object), ...hits])].slice(0, 4);
   const out = [];
   for (const title of titles) {
     const data = await wikiJson(get, { action: "query", prop: "extracts", explaintext: 1, redirects: 1, titles: title });
     const page = data && data.query && Object.values(data.query.pages || {})[0];
-    if (page && page.extract && page.extract.length > 500) out.push({ title: page.title, url: `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, "_"))}`, text: page.extract });
+    // A direct title can redirect to a disambiguation or unrelated page; the
+    // resolved title must still name the object.
+    if (page && page.extract && page.extract.length > 500 && relevantTitle(page.title, topic.object) && !out.some((doc) => doc.title === page.title) && !/may refer to/i.test(page.extract.slice(0, 300))) {
+      out.push({ title: page.title, url: `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, "_"))}`, text: page.extract });
+    }
+    if (out.length >= 2) break;
   }
   return out;
 }
@@ -316,4 +332,4 @@ async function main(argv = process.argv.slice(2), deps = {}) {
 
 if (require.main === module) main().catch((error) => { console.error(error.message); process.exitCode = 1; });
 
-module.exports = { relevantTitle, candidates, excerpt, primaryLinks, reachableLinks, narrationSupport, toSeedRecord, researchOne, main, SYSTEM, RETRY_AFTER_DAYS };
+module.exports = { relevantTitle, directTitles, articles, candidates, excerpt, primaryLinks, reachableLinks, narrationSupport, toSeedRecord, researchOne, main, SYSTEM, RETRY_AFTER_DAYS };
