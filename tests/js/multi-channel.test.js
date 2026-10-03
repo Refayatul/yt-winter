@@ -76,7 +76,7 @@ test("YouTube credentials are namespaced; isolated channels cannot inherit legac
     delete process.env.CT_CLIENT_ID;
     assert.equal(Channel.getChannel("critical-thread").credentials().clientId, "", "CriticalThread cannot inherit another identity");
     delete process.env.BTO_YT_CLIENT_ID;
-    assert.equal(Channel.getChannel("behind-the-ordinary").credentials().clientId, "", "Behind the Ordinary cannot inherit another identity");
+    assert.equal(Channel.getChannel("behind-the-ordinary").credentials().clientId, "", "The Hidden Logic of Things cannot inherit another identity");
   } finally {
     for (const key of keys) saved[key] == null ? delete process.env[key] : process.env[key] = saved[key];
   }
@@ -167,7 +167,7 @@ test("CriticalThread has 500+ distinct sourced topics and an isolated launch pac
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 });
 
-test("Behind the Ordinary has 500+ unique research questions and an evidence-gated launch batch", () => {
+test("The Hidden Logic of Things has 500+ unique research questions and an evidence-gated launch batch", () => {
   const channel = Channel.getChannel("behind-the-ordinary");
   const universe = Discovery.universe(channel);
   assert.equal(universe.stats.total, 525);
@@ -289,5 +289,5 @@ test("every notification title carries an unambiguous channel name", () => {
   assert.equal(Notifications.prefix("Short scheduled", fr), "[Failure Reconstructed] Short scheduled");
   assert.equal(Notifications.prefix("Short scheduled", ib), "[ImpossibleBrief] Short scheduled");
   assert.equal(Notifications.prefix("Short scheduled", ct), "[CriticalThread] Short scheduled");
-  assert.equal(Notifications.prefix("Short scheduled", bto), "[Behind the Ordinary] Short scheduled");
+  assert.equal(Notifications.prefix("Short scheduled", bto), "[The Hidden Logic of Things] Short scheduled");
 });

@@ -12,7 +12,7 @@ const inventories = Object.fromEntries(Object.keys(Channel.registry().channels).
   return [slug, health];
 }));
 const result = Simulation.simulate30Days({
-  // Behind the Ordinary starts from its evidence-verified records only; its
+  // The Hidden Logic of Things starts from its evidence-verified records only; its
   // question-only research backlog is never counted as publishable inventory.
   initialInventory: Object.fromEntries(Object.entries(inventories).map(([slug, value]) => [slug, value.readyShorts])),
   qualifiedInventory: Object.fromEntries(Object.entries(inventories).map(([slug, value]) => [slug, value.qualifiedTopics])),
@@ -39,5 +39,5 @@ console.log(`Production readiness: ${result.productionReady ? "READY" : "NOT REA
 console.log(`Failure Reconstructed: ${result.channels["failure-reconstructed"].shorts} Shorts, ${result.channels["failure-reconstructed"].longForm} long-form`);
 console.log(`ImpossibleBrief: ${result.channels["impossible-brief"].shorts} Shorts, ${result.channels["impossible-brief"].longForm} long-form`);
 console.log(`CriticalThread: ${result.channels["critical-thread"].shorts} Shorts, ${result.channels["critical-thread"].longForm} long-form`);
-console.log(`Behind the Ordinary: ${result.channels["behind-the-ordinary"].shorts} Shorts, ${result.channels["behind-the-ordinary"].longForm} long-form, ${result.channels["behind-the-ordinary"].researchGapDays} research-gap day(s)`);
+console.log(`The Hidden Logic of Things: ${result.channels["behind-the-ordinary"].shorts} Shorts, ${result.channels["behind-the-ordinary"].longForm} long-form, ${result.channels["behind-the-ordinary"].researchGapDays} research-gap day(s)`);
 if (!result.pass) process.exitCode = 4;

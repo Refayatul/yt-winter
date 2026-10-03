@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-// Behind the Ordinary end-to-end package dry run. It follows the same shared
+// The Hidden Logic of Things end-to-end package dry run. It follows the same shared
 // discovery → growth → render-package path as the other isolated channels and
 // deliberately never calls the uploader.
 
@@ -17,7 +17,7 @@ const channel = Channel.getChannel("behind-the-ordinary");
 const render = process.argv.includes("--render");
 const requested = process.argv.slice(2).find((arg) => !arg.startsWith("--"));
 const topic = Discovery.discover(channel, { limit: 50 }).find((item) => !requested || item.slug === requested || item.id === requested);
-if (!topic) throw new Error(`Missing production-ready Behind the Ordinary topic: ${requested || "launch topic"}`);
+if (!topic) throw new Error(`Missing production-ready The Hidden Logic of Things topic: ${requested || "launch topic"}`);
 
 const plan = Growth.planShort(channel, topic.id, {
   legacyTitles: Scripting.titleCandidates(topic),
@@ -46,7 +46,7 @@ const report = {
 };
 fs.mkdirSync(channel.paths.reports, { recursive: true });
 fs.writeFileSync(path.join(channel.paths.reports, "e2e-results.json"), JSON.stringify(report, null, 2) + "\n");
-console.log(`Behind the Ordinary E2E: ${report.pass ? "PASS" : "FAIL"} — ${topic.topic}${render ? " (rendered)" : " (package)"}; upload disabled`);
+console.log(`The Hidden Logic of Things E2E: ${report.pass ? "PASS" : "FAIL"} — ${topic.topic}${render ? " (rendered)" : " (package)"}; upload disabled`);
 if (failed.length) {
   console.error(`Failed validations: ${failed.join(", ")}`);
   process.exitCode = 4;

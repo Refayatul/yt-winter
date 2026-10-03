@@ -439,7 +439,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  # Behind the Ordinary remains dormant until its own publish flag and OAuth
+  # The Hidden Logic of Things remains dormant until its own publish flag and OAuth
   # bundle are present. Its recovery is serialized after the existing lanes.
   bto-sla:
     if: ${{ github.event.action != 'production-sla-watchdog-self-test' && vars.BTO_PUBLISH == '1' && inputs.simulate_missing != true }}
@@ -464,7 +464,7 @@ jobs:
         with:
           node-version: '20'
       - id: check
-        name: Check Behind the Ordinary production SLA
+        name: Check The Hidden Logic of Things production SLA
         run: node production-sla-check.js --channel behind-the-ordinary --verify-youtube --github-output --output="${{ runner.temp }}/bto-sla-before.json" || true
       - uses: actions/upload-artifact@v4
         with:
@@ -498,19 +498,19 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation
           npm install --no-audit --no-fund
-      - name: Recover one Behind the Ordinary Short
+      - name: Recover one The Hidden Logic of Things Short
         run: |
           node saglik.js --channel behind-the-ordinary
           node shorts-sira.js --channel behind-the-ordinary
           node bildirim.js --channel behind-the-ordinary || true
           node daily-operations-report.js
-      - name: Commit isolated Behind the Ordinary state
+      - name: Commit isolated The Hidden Logic of Things state
         run: |
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
           git add channels/behind-the-ordinary reports
-          if git diff --cached --quiet; then echo "Behind the Ordinary state unchanged."; exit 0; fi
-          git commit -m "chore: recover Behind the Ordinary production SLA"
+          if git diff --cached --quiet; then echo "The Hidden Logic of Things state unchanged."; exit 0; fi
+          git commit -m "chore: recover The Hidden Logic of Things production SLA"
           BRANCH="$GITHUB_REF_NAME"
           for i in 1 2 3 4 5; do
             git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
@@ -546,7 +546,7 @@ jobs:
           RECOVERY_ARGS=()
           if [ "$RECOVERY_RESULT" != "skipped" ]; then RECOVERY_ARGS+=(--recovery-started); fi
           node production-sla-check.js --channel behind-the-ordinary --verify-youtube "${RECOVERY_ARGS[@]}" --github-output --output="${{ runner.temp }}/bto-sla-after.json" || true
-      - name: Notify only after Behind the Ordinary recovery failed
+      - name: Notify only after The Hidden Logic of Things recovery failed
         if: ${{ steps.final.outputs.healthy != 'true' }}
         run: node bildirim.js --channel behind-the-ordinary --sla-failure "${{ runner.temp }}/bto-sla-after.json"
       - name: Save notification/report state
@@ -556,15 +556,15 @@ jobs:
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
           git add channels/behind-the-ordinary/state/notification-state.json reports || true
-          if git diff --cached --quiet; then echo "Behind the Ordinary verification state unchanged."; exit 0; fi
-          git commit -m "chore: record Behind the Ordinary SLA verification"
+          if git diff --cached --quiet; then echo "The Hidden Logic of Things verification state unchanged."; exit 0; fi
+          git commit -m "chore: record The Hidden Logic of Things SLA verification"
           BRANCH="$GITHUB_REF_NAME"
           for i in 1 2 3 4 5; do
             git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
             sleep $((i * 5))
           done
           exit 1
-      - name: Behind the Ordinary SLA evidence
+      - name: The Hidden Logic of Things SLA evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:

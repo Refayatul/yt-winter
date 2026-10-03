@@ -49,7 +49,7 @@ Shared infrastructure: yes · shared performance memory: **no** · same-channel 
 ## 2. Daily Short (unchanged pipelines, new decisions)
 
 `shorts-sira.js` (Failure Reconstructed) and `core/pipeline/impossible-brief.js`
-(ImpossibleBrief, CriticalThread, Behind the Ordinary) call the engine:
+(ImpossibleBrief, CriticalThread, The Hidden Logic of Things) call the engine:
 
 1. **Select** — rank a logged pool of 20–50 source-backed, unused production topics. A deterministic 75/25 exploit/explore allocator chooses the highest SelectionScore or an under-sampled cluster. C remains channel-policy fallback only; **D is never produced**. The complete pool, factor breakdowns, chosen mode, rejected rows and reason are stored in `latest-decision.json` / `decisions.json`.
 2. **Pre-render gate** — `planShort`: ≥10 competing hooks, ≥20 competing titles, first 3 s, 13-part retention lint, CTA, integrity, factual and pacing checks → ProductionReadinessScore. BLOCK stops the topic before any render cost.

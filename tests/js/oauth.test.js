@@ -28,7 +28,7 @@ function fakeChannel(slug = "critical-thread", overrides = {}) {
   };
   return {
     slug,
-    name: { "failure-reconstructed": "Failure Reconstructed", "impossible-brief": "ImpossibleBrief", "critical-thread": "CriticalThread", "behind-the-ordinary": "Behind the Ordinary" }[slug],
+    name: { "failure-reconstructed": "Failure Reconstructed", "impossible-brief": "ImpossibleBrief", "critical-thread": "CriticalThread", "behind-the-ordinary": "The Hidden Logic of Things" }[slug],
     prefix,
     credentialNames: names,
     credentials: () => credentials,

@@ -239,7 +239,7 @@ function fromCriticalThread(raw) {
   };
 }
 
-function fromBehindTheOrdinary(raw) {
+function fromHiddenLogicOfThings(raw) {
   const beats = editorialBeats(raw);
   return {
     channel: "behind-the-ordinary",
@@ -313,7 +313,7 @@ function normalize(channel, raw, slug) {
   if (channelSlug === "failure-reconstructed") topic = fromFailureReconstructed(raw, slug || raw.slug);
   else if (channelSlug === "impossible-brief") topic = fromImpossibleBrief(raw);
   else if (channelSlug === "critical-thread") topic = fromCriticalThread(raw);
-  else if (channelSlug === "behind-the-ordinary") topic = fromBehindTheOrdinary(raw);
+  else if (channelSlug === "behind-the-ordinary") topic = fromHiddenLogicOfThings(raw);
   else throw new Error("No growth topic adapter for channel: " + channelSlug);
   // Measured recognition: monthly Wikipedia pageviews of the topic's own
   // article (core/growth/popularity.js, refreshed by scripts/wiki-popularity.js).

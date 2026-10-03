@@ -11,7 +11,7 @@ All upload and write entry points use `lib/yt.js`. `youtube-yukle.js` performs t
 | Failure Reconstructed | `FR_YT_CLIENT_ID` | `FR_YT_CLIENT_SECRET` | `FR_YT_REFRESH_TOKEN` | `FR_YT_CHANNEL_ID` |
 | ImpossibleBrief | `IB_CLIENT_ID` | `IB_CLIENT_SECRET` | `IB_YT_REFRESH_TOKEN` | `IB_YT_CHANNEL_ID` |
 | CriticalThread | `CT_CLIENT_ID` | `CT_CLIENT_SECRET` | `CT_YT_REFRESH_TOKEN` | `CT_YT_CHANNEL_ID` |
-| Behind the Ordinary | `BTO_YT_CLIENT_ID` | `BTO_YT_CLIENT_SECRET` | `BTO_YT_REFRESH_TOKEN` | `BTO_YT_CHANNEL_ID` |
+| The Hidden Logic of Things | `BTO_YT_CLIENT_ID` | `BTO_YT_CLIENT_SECRET` | `BTO_YT_REFRESH_TOKEN` | `BTO_YT_CHANNEL_ID` |
 
 `IB_YT_CLIENT_ID`/`IB_YT_CLIENT_SECRET` and `CT_YT_CLIENT_ID`/`CT_YT_CLIENT_SECRET` remain accepted channel-local aliases. Failure Reconstructed alone accepts `YT_CLIENT_ID`, `YT_CLIENT_SECRET`, `YT_REFRESH_TOKEN`, and `YT_CHANNEL_ID` as a migration fallback. If any preferred `FR_YT_*` OAuth credential exists, the resolver requires the complete preferred bundle and will not mix missing values from `YT_*`.
 
@@ -91,7 +91,7 @@ node youtube-yetki.js --channel critical-thread --oauth-mode=production --github
 unset CT_CLIENT_ID CT_CLIENT_SECRET
 ```
 
-Behind the Ordinary (first authorization; omit `--new-channel` after its expected ID is stored):
+The Hidden Logic of Things (first authorization; omit `--new-channel` after its expected ID is stored):
 
 ```bash
 export BTO_YT_CLIENT_ID='copy locally from Google Cloud'

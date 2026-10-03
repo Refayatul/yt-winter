@@ -69,7 +69,7 @@ jobs:
           node yorum-yanitla.js --channel critical-thread --limit 4 || true
           node seed-comment.js --channel critical-thread
 
-      - name: Behind the Ordinary replies and seed comment
+      - name: The Hidden Logic of Things replies and seed comment
         if: ${{ always() && vars.BTO_PUBLISH == '1' }}
         continue-on-error: true
         run: |

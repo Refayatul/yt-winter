@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-// ImpossibleBrief / CriticalThread / Behind the Ordinary researched-record builder.
+// ImpossibleBrief / CriticalThread / The Hidden Logic of Things researched-record builder.
 //
 // Upgrades existing topic-universe entries IN PLACE (same id, category and —
 // unless the seed replaces the question — same slug), so the inventory keeps
@@ -15,7 +15,7 @@
 //
 // Checks (all must pass before --write):
 //   • every number in a fact appears in THAT fact's own source text
-//   • Behind the Ordinary (myth risk): every fact also carries a verbatim
+//   • The Hidden Logic of Things (myth risk): every fact also carries a verbatim
 //     "quote" that must appear in that source's text, and the record becomes
 //     productionReady only when all checks pass
 //     (Wikipedia extract via API, or the primary page's visible text)
@@ -39,7 +39,7 @@ const LAYERS = {
   "critical-thread": ["VERIFIED FACT", "INDUSTRY CLAIM", "ESTIMATE", "MODEL", "HYPOTHESIS"],
   "behind-the-ordinary": ["VERIFIED FACT", "INDUSTRY CLAIM", "ESTIMATE"],
 };
-// Topic-level sources for Behind the Ordinary: inventors/manufacturers,
+// Topic-level sources for The Hidden Logic of Things: inventors/manufacturers,
 // standards bodies, government, museums, universities and archives.
 const BTO_PRIMARY_HOSTS = [".gov", ".edu", ".ac.uk", "europa.eu", "iso.org", "iec.ch", "ieee.org", "itu.int", "gs1.org", "gs1us.org", "isbn-international.org",
   "qrcode.com", "denso-wave.com", "bluetooth.com", "levistrauss.com", "ykk.com", "otis.com", "si.edu", "loc.gov", "sciencemuseum.org.uk",
@@ -232,7 +232,7 @@ async function run(seed, { write = false, offline = false, log = console.log } =
     const index = universe.topics.findIndex((item) => item.slug === target);
     const row = { slug: record.slug, errors: [] };
     if (index < 0) { row.errors.push(`no universe entry with slug ${target}`); report.push(row); continue; }
-    // Behind the Ordinary keeps several questions per object (one per design
+    // The Hidden Logic of Things keeps several questions per object (one per design
     // detail), so its identity is object + detail rather than the object alone.
     const sameSubject = (item) => channelSlug === "behind-the-ordinary"
       ? !!(item.canonicalTopic && item.designDetail && item.canonicalTopic === (record.canonicalTopic || universe.topics[index].canonicalTopic) && item.designDetail === (record.designDetail || universe.topics[index].designDetail))

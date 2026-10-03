@@ -10,7 +10,7 @@ This document describes what is implemented today. Requirement-level status and 
 | `lib/yt.js` OAuth + API client, `lib/publish-safety.js`, `lib/quota.js`, `lib/ops-log.js`, `lib/provenance.js` | Topic inventory, growth-engine overrides (`channels/<slug>/growth-engine.json`: weights, hooks, captions) |
 | GitHub Actions workflows | State: `channels/<slug>/state/` (Failure Reconstructed: `icerik/`), learning `channels/<slug>/memory/`, analytics `channels/<slug>/analytics/` (FR: `analytics/`) |
 
-Every state path is derived from one channel slug (`core/channel-context.js`, `core/growth/store.js`). Channels: Failure Reconstructed (`failure-reconstructed`, legacy paths), ImpossibleBrief (`impossible-brief`), CriticalThread (`critical-thread`), and Behind the Ordinary (`behind-the-ordinary`). Adding a channel: [`docs/ADDING-NEW-CHANNEL.md`](ADDING-NEW-CHANNEL.md).
+Every state path is derived from one channel slug (`core/channel-context.js`, `core/growth/store.js`). Channels: Failure Reconstructed (`failure-reconstructed`, legacy paths), ImpossibleBrief (`impossible-brief`), CriticalThread (`critical-thread`), and The Hidden Logic of Things (`behind-the-ordinary`). Adding a channel: [`docs/ADDING-NEW-CHANNEL.md`](ADDING-NEW-CHANNEL.md).
 
 ## Identity and OAuth
 

@@ -688,7 +688,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   const describe = (credits = []) => [descriptionBody, seriesLine, credits.length ? `Visual credits:\n${credits.join("\n")}` : null, hashtags.join(" ")]
     .filter(Boolean).join("\n\n");
   const baseTags = isCriticalThread ? ["infrastructure", "engineering", "supply chain", topic.category.toLowerCase(), "CriticalThread"]
-    : isBehindOrdinary ? ["design", "how things work", "everyday objects", topic.category.toLowerCase(), "Behind the Ordinary"]
+    : isBehindOrdinary ? ["design", "how things work", "everyday objects", topic.category.toLowerCase(), "The Hidden Logic of Things"]
       : ["science", "what if", topic.category.toLowerCase(), "ImpossibleBrief"];
   const metadata = {
     uploadChannel: channel.slug,

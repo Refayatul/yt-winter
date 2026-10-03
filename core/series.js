@@ -16,7 +16,7 @@ const SERIES = Object.freeze({
   "failure-reconstructed": { name: "FAILURE FILE", tagline: "A new engineering failure, reconstructed every day." },
   "impossible-brief": { name: "IMPOSSIBLE BRIEF", tagline: "One impossible scenario, worked through with real science, every day." },
   "critical-thread": { name: "CRITICAL THREAD", tagline: "One hidden system the modern world depends on, every day." },
-  "behind-the-ordinary": { name: "ORDINARY DETAIL", tagline: "One familiar object, one documented reason hidden in plain sight." },
+  "behind-the-ordinary": { name: "HIDDEN LOGIC", tagline: "One familiar object, one documented reason hidden in plain sight." },
 });
 
 function publishedShorts(channel) {

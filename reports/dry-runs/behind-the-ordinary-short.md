@@ -1,4 +1,4 @@
-# Dry run — Behind the Ordinary — Short
+# Dry run — The Hidden Logic of Things — Short
 
 Date: 2026-10-03 · sandbox state · nothing rendered or uploaded
 

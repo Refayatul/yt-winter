@@ -312,7 +312,7 @@ function main() {
   try { previous = JSON.parse(fs.readFileSync(output, "utf8")); } catch (error) { /* first run */ }
   const universe = generate(previous);
   fs.writeFileSync(output, JSON.stringify(universe, null, 2) + "\n");
-  console.log(`Behind the Ordinary: ${universe.stats.total} validated questions; ${universe.stats.production_ready} production-ready evidence pack → ${path.relative(ROOT, output)}`);
+  console.log(`The Hidden Logic of Things: ${universe.stats.total} validated questions; ${universe.stats.production_ready} production-ready evidence pack → ${path.relative(ROOT, output)}`);
 }
 
 if (require.main === module) main();

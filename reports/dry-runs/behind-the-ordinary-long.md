@@ -1,4 +1,4 @@
-# Dry run — Behind the Ordinary — Long-form
+# Dry run — The Hidden Logic of Things — Long-form
 
 Sandbox state · LLM writer OFF (no configured LONGFORM_LLM_PROVIDER / provider key) · nothing rendered or uploaded
 

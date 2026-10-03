@@ -66,7 +66,7 @@ test("an onboarding channel with no credentials is 'setup pending', not a failur
   assert.notEqual(established.config.onboarding, true, "existing channels are never treated as onboarding");
 });
 
-test("Behind the Ordinary uses its own light music moods, not the disaster beds", () => {
+test("The Hidden Logic of Things uses its own light music moods, not the disaster beds", () => {
   const Muzik = require("../../lib/muzik");
   const source = fs.readFileSync(path.join(ROOT, "core/rendering/index.js"), "utf8");
   const block = source.slice(source.indexOf('"behind-the-ordinary": {'), source.indexOf("};", source.indexOf('"behind-the-ordinary": {')));

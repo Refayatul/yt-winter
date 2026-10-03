@@ -147,7 +147,7 @@ function excerpt(text, keywords, maxChars = MAX_EXCERPT_CHARS) {
 }
 
 const SYSTEM = [
-  "You research one question for Behind the Ordinary, a channel explaining the documented reason behind one ordinary object or design detail.",
+  "You research one question for The Hidden Logic of Things, a channel explaining the documented reason behind one ordinary object or design detail.",
   "Use ONLY the supplied source excerpts. Never use outside knowledge. If the excerpts do not clearly answer the question, return {\"answerable\":false,\"reason\":\"...\"}.",
   "Every fact needs a quote copied EXACTLY, character for character, from its source excerpt (at least 6 consecutive words), and the sourceId it came from.",
   "Narration: 5 to 8 short spoken lines, 55 to 90 words in total, no sentence longer than 16 words, plain English, curious and precise, no filler, no 'Did you know'.",
@@ -259,7 +259,7 @@ async function main(argv = process.argv.slice(2), deps = {}) {
   const valueAfter = (flag) => { const index = argv.indexOf(flag); return index >= 0 ? argv[index + 1] : null; };
   const write = argv.includes("--write");
   if (!deps.generate && !Provider.available()) {
-    console.log("Behind the Ordinary research: no long-form provider configured (LONGFORM_LLM_PROVIDER + its key); nothing to do.");
+    console.log("The Hidden Logic of Things research: no long-form provider configured (LONGFORM_LLM_PROVIDER + its key); nothing to do.");
     return { skipped: true };
   }
   const universePath = channel.paths.topicUniverse;

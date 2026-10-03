@@ -20,7 +20,7 @@ function taskId(channel, format, day, sequence = 1) { return `${channel}:${forma
 
 function simulate30Days(options = {}) {
   const start = new Date(options.start || "2026-10-01T00:00:00.000Z");
-  // Behind the Ordinary's default is its evidence-verified launch batch, not
+  // The Hidden Logic of Things's default is its evidence-verified launch batch, not
   // its 525 research questions.
   const initialInventory = options.initialInventory || { "failure-reconstructed": 38, "impossible-brief": 499, "critical-thread": 522, "behind-the-ordinary": 7 };
   const states = {
@@ -37,7 +37,7 @@ function simulate30Days(options = {}) {
     const date = new Date(start.getTime() + (day - 1) * 86400000).toISOString().slice(0, 10);
     for (const channel of Object.keys(states)) {
       const state = states[channel];
-      // Behind the Ordinary publishes only evidence-verified records. When the
+      // The Hidden Logic of Things publishes only evidence-verified records. When the
       // verified pool is used up the day is recorded as a research gap: nothing
       // is published and no question-only record is promoted to fill the slot.
       if (channel === "behind-the-ordinary" && state.shorts.length + state.blockedTopics >= state.initialInventory) {
@@ -145,7 +145,7 @@ function markdown(result) {
   const lines = ["# Four-channel autonomy — 30-day simulation", "", `Result: **${result.pass ? "PASS" : "FAIL"}**`, "", `Window: ${result.start} for ${result.days} days. Uploads and renders were simulated; no external publish occurred.`, "", "## Output", "", "| Channel | Shorts | Long-form | Unique topics | Recovered failures |", "|---|---:|---:|---:|---:|"];
   for (const [channel, state] of Object.entries(result.channels)) lines.push(`| ${channel} | ${state.shorts} | ${state.longForm} | ${state.uniqueTopics} | ${state.failuresRecovered} |`);
   const gap = result.channels["behind-the-ordinary"] && result.channels["behind-the-ordinary"].researchGapDays;
-  if (gap) lines.push("", `Behind the Ordinary publishes only evidence-verified records: its ${result.channels["behind-the-ordinary"].inventoryStart} verified topic(s) cover ${30 - gap} day(s); the other ${gap} day(s) are research gaps where nothing is published. Research more records with \`scripts/ib-ct-library/build.js\` to close the gap.`);
+  if (gap) lines.push("", `The Hidden Logic of Things publishes only evidence-verified records: its ${result.channels["behind-the-ordinary"].inventoryStart} verified topic(s) cover ${30 - gap} day(s); the other ${gap} day(s) are research gaps where nothing is published. Research more records with \`scripts/ib-ct-library/build.js\` to close the gap.`);
   lines.push("", "## TikTok model", "", `Today's exact YouTube MP4 deliveries: ${result.tiktok.todaySent.length}.`, `Historical backlog: ${result.tiktok.initialBacklog} → ${result.tiktok.endingBacklog}.`, "");
   lines.push("", "## Injected failures", "");
   for (const failure of result.injectedFailures) lines.push(`- Day ${failure.day}, ${failure.channel}: **${failure.type}** → ${failure.recovery}.`);

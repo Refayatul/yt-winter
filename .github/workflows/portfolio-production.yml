@@ -6,7 +6,7 @@ name: Multi-channel portfolio production
 #
 # Shorts production slots (Europe/Istanbul, UTC+3; each channel's config.json
 # publishingCadence.shorts.productionTime): Failure Reconstructed 09:00,
-# ImpossibleBrief 09:30, CriticalThread 10:00, Behind the Ordinary 10:30. Every uploaded Short is scheduled
+# ImpossibleBrief 09:30, CriticalThread 10:00, The Hidden Logic of Things 10:30. Every uploaded Short is scheduled
 # to go public at 18:00 America/New_York on the production date (01:00 TR next
 # day in US summer time, 02:00 TR in winter). Eligibility is one Short
 # per channel per Istanbul calendar day, so the hourly retries below only
@@ -122,7 +122,7 @@ jobs:
           node saglik.js --channel critical-thread || true
           node shorts-sira.js --channel critical-thread
 
-      - name: Behind the Ordinary Short
+      - name: The Hidden Logic of Things Short
         if: ${{ always() && ((github.event_name == 'schedule' && vars.BTO_PUBLISH == '1') || inputs.channel == 'all' || inputs.channel == 'behind-the-ordinary') }}
         continue-on-error: true
         env:

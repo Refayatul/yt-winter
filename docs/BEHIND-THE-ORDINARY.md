@@ -1,6 +1,6 @@
-# Behind the Ordinary operations and setup
+# The Hidden Logic of Things operations and setup
 
-Behind the Ordinary (`behind-the-ordinary`, prefix `BTO`) is the fourth channel on the shared growth platform. It explains one documented reason, history, mechanism, or design decision behind one familiar object or system. It is not a generic-facts feed.
+The Hidden Logic of Things (`behind-the-ordinary`, prefix `BTO`) is the fourth channel on the shared growth platform. It explains one documented reason, history, mechanism, or design decision behind one familiar object or system. It is not a generic-facts feed.
 
 ## What was added
 
@@ -102,8 +102,8 @@ npm test
 These steps need the owner's Google account and cannot be done by the repository.
 
 1. **Create the channel.**
-   - In YouTube, create a new channel (Brand Account) named **Behind the Ordinary**.
-   - Set its handle; `@BehindTheOrdinary` is proposed if free.
+   - In YouTube, create a new channel (Brand Account) named **The Hidden Logic of Things**.
+   - Set its handle; `@HiddenLogicOfThings` is proposed if free.
    - Under audience, choose "not made for kids".
 2. **Reuse the existing OAuth client.** The Failure Reconstructed Desktop client in the existing Google Cloud project works for any channel. Quota is shared per project: four daily uploads are about 6,600 of the 10,000 daily units, which the quota ledger accounts for.
    - Keep the app's Audience in mind: while it is **Testing**, refresh tokens expire after 7 days. Completing Branding and **Publish app** removes that limit for all channels.
@@ -117,7 +117,7 @@ node youtube-yetki.js --channel behind-the-ordinary --oauth-mode=testing --new-c
 unset BTO_YT_CLIENT_ID BTO_YT_CLIENT_SECRET
 ```
 
-   - On Google's screen pick **Behind the Ordinary**.
+   - On Google's screen pick **The Hidden Logic of Things**.
    - The helper verifies the authenticated channel and refuses (`CHANNEL_ALREADY_ASSIGNED`) if you pick a channel that already belongs to FR, IB or CT.
    - It then stores the BTO secrets and the `BTO_YT_CHANNEL_ID` variable without printing the token.
    - Use `--oauth-mode=testing` while the Google app is in Testing, so the health check warns before the 7-day expiry. Use `production` once the app is published.

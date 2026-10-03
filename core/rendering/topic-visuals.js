@@ -281,7 +281,7 @@ const PERSON_FILE = /\b(Miss|Mrs?|Ms|Mme|Mlle|Dr|Sir|Lady|Lord|portrait|gagnante
 function wikiTitles(topic) {
   const titles = [];
   // A researched record may name the articles its pictures should come from
-  // (Behind the Ordinary: facts cite a manufacturer archive, not Wikipedia).
+  // (The Hidden Logic of Things: facts cite a manufacturer archive, not Wikipedia).
   for (const title of Array.isArray(topic.visualArticles) ? topic.visualArticles : []) if (title && !titles.includes(title)) titles.push(String(title));
   for (const fact of topic.facts || []) {
     try {
@@ -398,7 +398,7 @@ async function prepareAssets(topic, outputDirectory) {
   }
 
   // An everyday-object word can be a surname ("Miss Constance Jeans" for
-  // jeans). Outside the topic's own articles, Behind the Ordinary drops
+  // jeans). Outside the topic's own articles, The Hidden Logic of Things drops
   // portraits and honorific-titled files.
   if (topic.channel === "behind-the-ordinary") {
     for (let index = picked.length - 1; index >= 0; index -= 1) {

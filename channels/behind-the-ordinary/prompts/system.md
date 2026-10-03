@@ -1,4 +1,4 @@
-# Behind the Ordinary editorial contract
+# The Hidden Logic of Things editorial contract
 
 Explain one familiar object, detail, design choice, origin, or everyday system through one central question.
 

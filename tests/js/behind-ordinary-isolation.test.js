@@ -17,7 +17,7 @@ const Thumbnails = require("../../core/growth/thumbnails");
 const Learning = require("../../core/growth/learning");
 const Quota = require("../../lib/quota");
 
-test("Behind the Ordinary topics and every adaptive ledger remain channel-isolated", () => {
+test("The Hidden Logic of Things topics and every adaptive ledger remain channel-isolated", () => {
   const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), "bto-isolation-"));
   const savedRoot = process.env.GROWTH_STATE_ROOT;
   process.env.GROWTH_STATE_ROOT = sandbox;
@@ -67,7 +67,7 @@ test("Behind the Ordinary topics and every adaptive ledger remain channel-isolat
   }
 });
 
-test("Behind the Ordinary quota ledger is isolated while shared-project totals remain intentional", () => {
+test("The Hidden Logic of Things quota ledger is isolated while shared-project totals remain intentional", () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "bto-quota-isolation-"));
   try {
     const fake = (slug, directory) => ({ slug, paths: { state: path.join(root, directory) }, credentials: () => ({ clientId: "12345-shared.apps.googleusercontent.com" }) });

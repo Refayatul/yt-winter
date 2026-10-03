@@ -15,7 +15,7 @@ Failure Reconstructed requires no manual GitHub trigger. A GitHub schedule produ
 
 ImpossibleBrief follows the same scheduled Short path only after `IB_PUBLISH=1` and its isolated OAuth values are configured. Until then, workflow steps remain skipped by design.
 
-CriticalThread and Behind the Ordinary follow the same rule through `CT_PUBLISH=1` and `BTO_PUBLISH=1`. BTO's question-only backlog must be researched before production discovery; see [BEHIND-THE-ORDINARY.md](BEHIND-THE-ORDINARY.md).
+CriticalThread and The Hidden Logic of Things follow the same rule through `CT_PUBLISH=1` and `BTO_PUBLISH=1`. BTO's question-only backlog must be researched before production discovery; see [BEHIND-THE-ORDINARY.md](BEHIND-THE-ORDINARY.md).
 
 ## Triage order
 
