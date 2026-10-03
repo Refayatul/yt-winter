@@ -36,7 +36,7 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 50.85,
+      "ageHours": 65.69,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -58,10 +58,193 @@
         "views": null
       },
       "baselines": {
-        "views": 36,
-        "viewsPerHour": 36,
+        "views": 486,
+        "viewsPerHour": 40.5,
         "averagePercentageViewed": null,
-        "engagementRate": 0.05556,
+        "engagementRate": 0.02058,
+        "subscriberConversion": null
+      },
+      "missing": [
+        "viewVelocity",
+        "retention",
+        "engagement",
+        "subscriberConversion",
+        "views"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    }
+  },
+  {
+    "checkpoints": {},
+    "hookType": "visual_first_reveal",
+    "hookScore": 81,
+    "selectedHook": "One 10-kilometre asteroid ended the age of dinosaurs.",
+    "firstLine": "One 10-kilometre asteroid ended the age of dinosaurs.",
+    "firstSecondsScore": 91,
+    "topicCluster": "SPACE",
+    "bucket": "A",
+    "viralScore": 80,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 96,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 81,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 60,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 97,
+        "basis": "inventory-signal"
+      },
+      "archival_footage_potential": {
+        "value": 35,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 68,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 84,
+        "basis": "derived",
+        "note": "3 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 89,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 87,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 100,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 50,
+        "basis": "learned",
+        "note": "1 same-cluster upload(s), breakout rate 0"
+      },
+      "duplicate_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "no published-title collision"
+      },
+      "saturation_risk": {
+        "value": -2,
+        "basis": "penalty",
+        "note": "1 published / 125 inventory in cluster"
+      },
+      "source_confidence_risk": {
+        "value": -2,
+        "basis": "penalty",
+        "note": "98/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -33,
+        "basis": "penalty",
+        "note": "no archival footage confirmed"
+      }
+    },
+    "storyStructure": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
+    "titlePattern": "why",
+    "selectedTitle": "Why the Sky, Not the Crater, Killed the Dinosaurs",
+    "titleScore": 76,
+    "titleCandidates": 41,
+    "hookCandidates": 17,
+    "topicScore": 89,
+    "popularityScore": 81,
+    "ctaStyle": "COMMENT_PROMPT",
+    "durationBucket": "18-25s",
+    "openingVisual": "ILLUSTRATION",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 81,
+      "CuriosityScore": 96,
+      "HookPotentialScore": 81,
+      "VisualImpactScore": 97,
+      "EmotionalImpactScore": 97,
+      "StoryCompressionScore": 88,
+      "RewatchPotentialScore": 69,
+      "SharePotentialScore": 87,
+      "CommentPotentialScore": 71,
+      "SubscriberConversionPotential": 88,
+      "NoveltyScore": 82,
+      "AudienceFitScore": 100,
+      "SourceQualityScore": 98,
+      "ChannelFitScore": 100
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "u0iftg8gF5w",
+    "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
+    "channel": "impossible-brief",
+    "contentType": "short",
+    "title": "Why the Sky, Not the Crater, Killed the Dinosaurs",
+    "publishAt": "2026-10-03T22:00:00.000Z",
+    "publishHourUTC": 22,
+    "publishSlot": "18:00 New York",
+    "popularityBand": "unknown",
+    "readiness": 89,
+    "normalized": {
+      "ageHours": 1,
+      "viewsPerHour": null,
+      "recentViewVelocity": null,
+      "likeRate": null,
+      "commentRate": null,
+      "shareRate": null,
+      "engagementRate": null,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": null,
+      "classification": "NORMAL",
+      "percentiles": {
+        "viewVelocity": null,
+        "retention": null,
+        "engagement": null,
+        "subscriberConversion": null,
+        "views": null
+      },
+      "baselines": {
+        "views": 486,
+        "viewsPerHour": 40.5,
+        "averagePercentageViewed": null,
+        "engagementRate": 0.02058,
         "subscriberConversion": null
       },
       "missing": [
@@ -167,6 +350,106 @@
           },
           "engagement_per_1000_views": {
             "value": 55.56,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      },
+      "12h": {
+        "collectedAt": "2026-10-03T11:41:27.354Z",
+        "metrics": {
+          "views": {
+            "value": 486,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 9,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 20.58,
             "status": "DERIVED",
             "from": "likes+comments+shares / views"
           },
@@ -313,13 +596,13 @@
     "publishHourUTC": 18,
     "readiness": 89,
     "normalized": {
-      "ageHours": 1,
-      "viewsPerHour": 36,
-      "recentViewVelocity": null,
-      "likeRate": 0.05556,
-      "commentRate": 0,
+      "ageHours": 12,
+      "viewsPerHour": 40.5,
+      "recentViewVelocity": 40.91,
+      "likeRate": 0.01852,
+      "commentRate": 0.00206,
       "shareRate": null,
-      "engagementRate": 0.05556,
+      "engagementRate": 0.02058,
       "engagedViewRate": null,
       "subscriberConversion": null,
       "subscribersPer1000Views": null
@@ -335,10 +618,10 @@
         "views": 50
       },
       "baselines": {
-        "views": 36,
-        "viewsPerHour": 36,
+        "views": 486,
+        "viewsPerHour": 40.5,
         "averagePercentageViewed": null,
-        "engagementRate": 0.05556,
+        "engagementRate": 0.02058,
         "subscriberConversion": null
       },
       "missing": [
@@ -353,11 +636,11 @@
     "durationSeconds": 35,
     "registeredBy": "analytics-pass",
     "metrics": {
-      "views": 36,
+      "views": 486,
       "averagePercentageViewed": null,
       "averageViewDuration": null,
-      "likes": 2,
-      "comments": 0,
+      "likes": 9,
+      "comments": 1,
       "shares": null,
       "subscribersGained": null,
       "engagedViews": null,
@@ -365,12 +648,13 @@
       "netSubscribers": null,
       "subscribersPer1000Views": null,
       "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 55.56,
+      "engagementPer1000Views": 20.58,
       "watchHoursPer1000Views": null,
       "ctr": null,
       "first30sRetention": null,
-      "shortsFeedShare": null
+      "shortsFeedShare": null,
+      "searchShare": null
     },
-    "latestCheckpoint": "1h"
+    "latestCheckpoint": "12h"
   }
 ]

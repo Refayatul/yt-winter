@@ -1,32 +1,32 @@
 {
-  "generatedAt": "2026-10-02T21:21:06.103Z",
+  "generatedAt": "2026-10-03T11:41:40.466Z",
   "date": "2026-10-03",
   "channels": [
     {
       "channel": "failure-reconstructed",
       "name": "Failure Reconstructed",
       "date": "2026-10-03",
-      "todayTopic": null,
-      "shortStatus": "not-due",
+      "todayTopic": "rana-plaza-2013",
+      "shortStatus": "scheduled",
       "longStatus": "due-not-produced",
-      "qualityScore": null,
-      "qualityGate": null,
-      "youtubeStatus": "not-uploaded",
-      "publishTime": null,
-      "videoId": null,
+      "qualityScore": 89,
+      "qualityGate": "PUBLISH",
+      "youtubeStatus": "scheduled",
+      "publishTime": "2026-10-03T22:00:00.000Z",
+      "videoId": "4Mo58FxCr4A",
       "analyticsHealth": "measured",
-      "schedulerHealth": "pending-before-deadline",
-      "backlog": 364,
+      "schedulerHealth": "healthy",
+      "backlog": 363,
       "errors": 3,
       "inventory": {
         "channel": "failure-reconstructed",
         "channelName": "Failure Reconstructed",
-        "calculatedAt": "2026-10-02T21:21:06.144Z",
+        "calculatedAt": "2026-10-03T11:41:40.507Z",
         "qualifiedTopics": 377,
-        "readyShorts": 364,
-        "readyLongForm": 364,
-        "daysOfInventory": 364,
-        "monthsOfInventory": 12,
+        "readyShorts": 363,
+        "readyLongForm": 363,
+        "daysOfInventory": 363,
+        "monthsOfInventory": 11.9,
         "categoryDistribution": {
           "software-and-control-failures": 18,
           "industrial-disasters": 25,
@@ -817,17 +817,60 @@
           "breakoutRate": null
         }
       },
+      "platform": {
+        "queue": {
+          "depth": 2,
+          "oldestDate": "2026-10-03",
+          "oldestAgeDays": 0
+        },
+        "analyticsFreshness": {
+          "channel": "failure-reconstructed",
+          "lastSyncAt": "2026-10-03T11:41:23.711Z",
+          "newestDay": "2026-10-01",
+          "lagDays": 2,
+          "errors": []
+        },
+        "ops24h": {
+          "publish.success": 1,
+          "growth.decision": 1,
+          "analytics.load": 1
+        },
+        "quota": {
+          "usedToday": 1613,
+          "budget": 9800,
+          "project": "1012165386949"
+        },
+        "monetization": {
+          "channel": "failure-reconstructed",
+          "estimate": true,
+          "note": "Estimate from the YouTube Analytics API; YouTube decides eligibility.",
+          "subscribers": 20,
+          "subscribersAt": "2026-10-03T11:41:17.041Z",
+          "longWatchHours365": null,
+          "shortsViews90": null,
+          "percent": {
+            "subscribers": 2,
+            "longWatchHours365": null,
+            "shortsViews90": null
+          },
+          "thresholds": {
+            "subscribers": 1000,
+            "longWatchHours365": 4000,
+            "shortsViews90": 10000000
+          }
+        }
+      },
       "tiktok": {
         "mode": "SEND_TO_USER_INBOX",
-        "todayStatus": "NO_TODAY_VIDEO",
+        "todayStatus": "NOT_SENT",
         "sent": 10,
         "publicationStateAvailable": false,
-        "backlog": 2,
+        "backlog": 3,
         "failures": 0
       },
       "stateCounts": {
-        "generated": 12,
-        "published": 12,
+        "generated": 13,
+        "published": 13,
         "failed": 1
       }
     },
@@ -835,27 +878,27 @@
       "channel": "impossible-brief",
       "name": "ImpossibleBrief",
       "date": "2026-10-03",
-      "todayTopic": null,
-      "shortStatus": "not-due",
+      "todayTopic": "what-if-the-dinosaur-killing-asteroid-hit-today",
+      "shortStatus": "scheduled",
       "longStatus": "due-not-produced",
       "qualityScore": null,
-      "qualityGate": null,
-      "youtubeStatus": "not-uploaded",
-      "publishTime": null,
-      "videoId": null,
+      "qualityGate": "PUBLISH",
+      "youtubeStatus": "scheduled",
+      "publishTime": "2026-10-03T22:00:00.000Z",
+      "videoId": "u0iftg8gF5w",
       "analyticsHealth": "no-channel-measurements",
-      "schedulerHealth": "pending-before-deadline",
-      "backlog": 496,
-      "errors": 0,
+      "schedulerHealth": "healthy",
+      "backlog": 494,
+      "errors": 1,
       "inventory": {
         "channel": "impossible-brief",
         "channelName": "ImpossibleBrief",
-        "calculatedAt": "2026-10-02T21:21:06.206Z",
+        "calculatedAt": "2026-10-03T11:41:40.565Z",
         "qualifiedTopics": 500,
-        "readyShorts": 496,
+        "readyShorts": 494,
         "readyLongForm": 302,
-        "daysOfInventory": 496,
-        "monthsOfInventory": 16.3,
+        "daysOfInventory": 494,
+        "monthsOfInventory": 16.2,
         "categoryDistribution": {
           "SPACE": 125,
           "EARTH": 100,
@@ -886,7 +929,7 @@
           "National Institutes of Health": 75,
           "U.S. Department of Energy Office of Science": 50
         },
-        "blockedTopics": 0,
+        "blockedTopics": 1,
         "lowConfidenceTopics": 0,
         "duplicateTopics": 0,
         "duplicateRate": 0,
@@ -930,10 +973,53 @@
           "breakoutRate": null
         }
       },
+      "platform": {
+        "queue": {
+          "depth": 2,
+          "oldestDate": "2026-10-03",
+          "oldestAgeDays": 0
+        },
+        "analyticsFreshness": {
+          "channel": "impossible-brief",
+          "lastSyncAt": "2026-10-03T11:41:30.930Z",
+          "newestDay": "2026-10-01",
+          "lagDays": 2,
+          "errors": []
+        },
+        "ops24h": {
+          "publish.success": 1,
+          "growth.decision": 1,
+          "analytics.load": 1
+        },
+        "quota": {
+          "usedToday": 1613,
+          "budget": 9800,
+          "project": "684098966511"
+        },
+        "monetization": {
+          "channel": "impossible-brief",
+          "estimate": true,
+          "note": "Estimate from the YouTube Analytics API; YouTube decides eligibility.",
+          "subscribers": 0,
+          "subscribersAt": "2026-10-03T11:41:26.786Z",
+          "longWatchHours365": null,
+          "shortsViews90": null,
+          "percent": {
+            "subscribers": 0,
+            "longWatchHours365": null,
+            "shortsViews90": null
+          },
+          "thresholds": {
+            "subscribers": 1000,
+            "longWatchHours365": 4000,
+            "shortsViews90": 10000000
+          }
+        }
+      },
       "tiktok": null,
       "stateCounts": {
-        "generated": 4,
-        "published": 2,
+        "generated": 5,
+        "published": 3,
         "failed": 0
       }
     },
@@ -941,27 +1027,27 @@
       "channel": "critical-thread",
       "name": "CriticalThread",
       "date": "2026-10-03",
-      "todayTopic": null,
-      "shortStatus": "not-due",
+      "todayTopic": "what-quietly-depends-on-uninterruptible-power-supply",
+      "shortStatus": "scheduled",
       "longStatus": "due-not-produced",
       "qualityScore": null,
-      "qualityGate": null,
-      "youtubeStatus": "not-uploaded",
-      "publishTime": null,
-      "videoId": null,
+      "qualityGate": "PUBLISH",
+      "youtubeStatus": "scheduled",
+      "publishTime": "2026-10-03T22:00:00.000Z",
+      "videoId": "hsuWhB8lCvU",
       "analyticsHealth": "no-channel-measurements",
-      "schedulerHealth": "pending-before-deadline",
-      "backlog": 519,
+      "schedulerHealth": "healthy",
+      "backlog": 518,
       "errors": 0,
       "inventory": {
         "channel": "critical-thread",
         "channelName": "CriticalThread",
-        "calculatedAt": "2026-10-02T21:21:06.268Z",
+        "calculatedAt": "2026-10-03T11:41:40.621Z",
         "qualifiedTopics": 522,
-        "readyShorts": 519,
-        "readyLongForm": 519,
-        "daysOfInventory": 519,
-        "monthsOfInventory": 17.1,
+        "readyShorts": 518,
+        "readyLongForm": 518,
+        "daysOfInventory": 518,
+        "monthsOfInventory": 17,
         "categoryDistribution": {
           "SEMICONDUCTORS": 18,
           "ELECTRICAL GRID": 18,
@@ -1063,10 +1149,53 @@
           "breakoutRate": null
         }
       },
+      "platform": {
+        "queue": {
+          "depth": 2,
+          "oldestDate": "2026-10-03",
+          "oldestAgeDays": 0
+        },
+        "analyticsFreshness": {
+          "channel": "critical-thread",
+          "lastSyncAt": "2026-10-03T11:41:37.364Z",
+          "newestDay": "2026-10-01",
+          "lagDays": 2,
+          "errors": []
+        },
+        "ops24h": {
+          "publish.success": 1,
+          "growth.decision": 1,
+          "analytics.load": 1
+        },
+        "quota": {
+          "usedToday": 1613,
+          "budget": 9800,
+          "project": "208987599838"
+        },
+        "monetization": {
+          "channel": "critical-thread",
+          "estimate": true,
+          "note": "Estimate from the YouTube Analytics API; YouTube decides eligibility.",
+          "subscribers": 0,
+          "subscribersAt": "2026-10-03T11:41:33.080Z",
+          "longWatchHours365": null,
+          "shortsViews90": null,
+          "percent": {
+            "subscribers": 0,
+            "longWatchHours365": null,
+            "shortsViews90": null
+          },
+          "thresholds": {
+            "subscribers": 1000,
+            "longWatchHours365": 4000,
+            "shortsViews90": 10000000
+          }
+        }
+      },
       "tiktok": null,
       "stateCounts": {
-        "generated": 3,
-        "published": 2,
+        "generated": 4,
+        "published": 3,
         "failed": 0
       }
     }
