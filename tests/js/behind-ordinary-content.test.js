@@ -84,3 +84,15 @@ test("first-time authorization refuses a YouTube channel that already belongs to
   assert.ok(guard < source.indexOf("saveGitHub(tokenName"), "checked before anything is written to GitHub");
   assert.match(source, /allChannels\(\)\.filter\(\(item\) => item\.slug !== CHANNEL\.slug\)/);
 });
+
+test("BTO pictures come from the record's own articles; a surname match is not the object", () => {
+  const Visuals = require("../../core/rendering/topic-visuals");
+  assert.ok(Visuals.PERSON_FILE.test("Miss Constance Jeans, gagnante du 60 yards - btv1b530181337.jpg"));
+  assert.ok(Visuals.PERSON_FILE.test("ConstanceJeans.jpg"));
+  assert.ok(!Visuals.PERSON_FILE.test("Closeup of copper rivet on jeans.jpg"));
+  assert.ok(!Visuals.PERSON_FILE.test("Clothing Rack of Jeans.jpg"));
+  const rivets = universe().topics.find((topic) => topic.slug === "why-jeans-have-copper-rivets");
+  assert.deepEqual(rivets.visualArticles, ["Jeans"]);
+  const source = fs.readFileSync(path.join(ROOT, "core/rendering/topic-visuals.js"), "utf8");
+  assert.match(source, /topic\.visualArticles/);
+});

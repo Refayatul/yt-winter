@@ -252,6 +252,7 @@ function researchedLaunchTopic(original) {
     ],
     editorialTitles: ["Why Jeans Have a Tiny Pocket", "This Tiny Pocket Wasn't Made for Coins", "The Original Purpose of That Tiny Jeans Pocket"],
     thumbnailText: "NOT FOR COINS",
+    visualArticles: ["Jeans"],
     facts,
     sources: [
       { name: "Levi Strauss & Co. Archives — Pockets Full of History", url: urls.history, type: "manufacturer archive" },

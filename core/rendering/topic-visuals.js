@@ -276,8 +276,13 @@ function evaluateVisualQuality(metrics) {
   return { decision: reasons.length ? "BLOCK" : "PUBLISH", reasons };
 }
 
+const PERSON_FILE = /\b(Miss|Mrs?|Ms|Mme|Mlle|Dr|Sir|Lady|Lord|portrait|gagnante|winner|actress|actor|singer)\b|\b[A-Z][a-z]+[A-Z][a-z]+\.(jpe?g|png)\b/;
+
 function wikiTitles(topic) {
   const titles = [];
+  // A researched record may name the articles its pictures should come from
+  // (Behind the Ordinary: facts cite a manufacturer archive, not Wikipedia).
+  for (const title of Array.isArray(topic.visualArticles) ? topic.visualArticles : []) if (title && !titles.includes(title)) titles.push(String(title));
   for (const fact of topic.facts || []) {
     try {
       const url = new URL(fact.url || "");
@@ -392,6 +397,15 @@ async function prepareAssets(topic, outputDirectory) {
     }
   }
 
+  // An everyday-object word can be a surname ("Miss Constance Jeans" for
+  // jeans). Outside the topic's own articles, Behind the Ordinary drops
+  // portraits and honorific-titled files.
+  if (topic.channel === "behind-the-ordinary") {
+    for (let index = picked.length - 1; index >= 0; index -= 1) {
+      if (picked[index].origin !== "wikipedia-article" && PERSON_FILE.test(`${picked[index].file} ${picked[index].description || ""}`)) picked.splice(index, 1);
+    }
+  }
+
   const relevanceTerms = [...new Set(subjectPhrases(topic, articles[0] || "").join(" ").toLowerCase().split(/[^a-z0-9]+/)
     .filter((word) => word.length >= 4 && !["what", "with", "from", "into", "that", "this", "showing", "diagram", "comparison"].includes(word)))];
   // Diagrams are kept only from the topic's own Wikipedia article, where an
@@ -479,7 +493,7 @@ function attributionLines(stills, clips = []) {
   ];
 }
 
-module.exports = {
+module.exports = { PERSON_FILE,
   loopBack, orderStills,
   CACHE_SCHEMA, MAX_HOLD_SECONDS, numberTokens, stillKind, cardTokens, openingVariant, buildVisualPlan, visualMetrics, evaluateVisualQuality,
   wikiTitles, prepareAssets, prepareAssetsSync, loadManifest, attributionLines,
