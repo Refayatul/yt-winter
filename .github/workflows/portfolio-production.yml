@@ -6,11 +6,13 @@ name: Multi-channel portfolio production
 #
 # Shorts production slots (Europe/Istanbul, UTC+3; each channel's config.json
 # publishingCadence.shorts.productionTime): Failure Reconstructed 09:00,
-# ImpossibleBrief 09:30, CriticalThread 10:00, The Hidden Logic of Things 10:30. Every uploaded Short is scheduled
-# to go public at 18:00 America/New_York on the production date (01:00 TR next
-# day in US summer time, 02:00 TR in winter). Eligibility is one Short
-# per channel per Istanbul calendar day, so the hourly retries below only
-# produce for a channel whose slot has passed and whose day is still empty.
+# ImpossibleBrief 09:30, CriticalThread 10:00, The Hidden Logic of Things 10:30.
+# Every quality-approved uploaded Short is scheduled by youtube-yukle.js to go
+# public at 21:00 Europe/Istanbul on its production date. Scheduled runs enable
+# upload for all four channels; BLOCK/REVIEW still fail closed and never publish.
+# Eligibility is one Short per channel per Istanbul calendar day, so the hourly
+# retries below only produce for a channel whose slot has passed and whose day
+# is still empty.
 on:
   schedule:
     - cron: '0 6 * * *'
@@ -95,7 +97,7 @@ jobs:
         if: github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed'
         continue-on-error: true
         env:
-          PUBLISH: ${{ vars.FR_PUBLISH || vars.PUBLISH }}
+          PUBLISH: ${{ github.event_name == 'schedule' && '1' || vars.FR_PUBLISH || vars.PUBLISH }}
           PRODUCTION_RESULT_PATH: ${{ runner.temp }}/fr-production-result.json
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
@@ -103,30 +105,30 @@ jobs:
           node shorts-sira.js --channel failure-reconstructed
 
       - name: ImpossibleBrief Short
-        if: ${{ always() && ((github.event_name == 'schedule' && vars.IB_PUBLISH == '1') || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'impossible-brief') }}
+        if: ${{ always() && (github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'impossible-brief') }}
         continue-on-error: true
         env:
-          PUBLISH: ${{ vars.IB_PUBLISH }}
+          PUBLISH: ${{ github.event_name == 'schedule' && '1' || vars.IB_PUBLISH }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
           node saglik.js --channel impossible-brief || true
           node shorts-sira.js --channel impossible-brief
 
       - name: CriticalThread Short
-        if: ${{ always() && ((github.event_name == 'schedule' && vars.CT_PUBLISH == '1') || inputs.channel == 'all' || inputs.channel == 'critical-thread') }}
+        if: ${{ always() && (github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'critical-thread') }}
         continue-on-error: true
         env:
-          PUBLISH: ${{ vars.CT_PUBLISH }}
+          PUBLISH: ${{ github.event_name == 'schedule' && '1' || vars.CT_PUBLISH }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
           node saglik.js --channel critical-thread || true
           node shorts-sira.js --channel critical-thread
 
       - name: The Hidden Logic of Things Short
-        if: ${{ always() && ((github.event_name == 'schedule' && vars.BTO_PUBLISH == '1') || inputs.channel == 'all' || inputs.channel == 'behind-the-ordinary') }}
+        if: ${{ always() && (github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'behind-the-ordinary') }}
         continue-on-error: true
         env:
-          PUBLISH: ${{ vars.BTO_PUBLISH }}
+          PUBLISH: ${{ github.event_name == 'schedule' && '1' || vars.BTO_PUBLISH }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
           node saglik.js --channel behind-the-ordinary || true
