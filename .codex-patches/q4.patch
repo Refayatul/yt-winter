@@ -1,0 +1,96 @@
+diff --git a/core/growth/readiness.js b/core/growth/readiness.js
+index e1868a7..a75ae93 100644
+--- a/core/growth/readiness.js
++++ b/core/growth/readiness.js
+@@ -30,6 +30,11 @@ function shorts(inputs, config) {
+   const topic = inputs.topicScore;
+   d.topicPotential = topic.VideoPotentialScore;
+   if (topic.bucket === "D") hardFails.push("topic bucket D: " + topic.reasons.join("; "));
++  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
++  d.viralPotential = topic.ViralPotentialScore;
++  if (!Number.isFinite(topic.ViralPotentialScore) || topic.ViralPotentialScore < viralMinimum) {
++    hardFails.push(`viral potential ${Number.isFinite(topic.ViralPotentialScore) ? topic.ViralPotentialScore : "unmeasured"} < ${viralMinimum}`);
++  }
+   d.hook = inputs.hooks.selectedScore;
+   if (!inputs.hooks.selected) hardFails.push("no usable hook");
+   if (!inputs.hooks.meetsMinimum) notes.push(`only ${inputs.hooks.candidateCount} hook candidates`);
+@@ -57,7 +62,26 @@ function shorts(inputs, config) {
+   // Measured after render (null before).
+   const render = inputs.render || null;
+   const external = inputs.externalGate || null;
+-  d.visualQuality = external && external.visual != null ? external.visual : render ? (render.completed ? 82 : 0) : null;
++  const measuredVisual = render && render.visualQuality;
++  const visualEvidence = measuredVisual ? {
++    source: "render.video.visualQuality",
++    score: Number.isFinite(measuredVisual.score) ? measuredVisual.score : null,
++    decision: measuredVisual.decision || null,
++    reasons: measuredVisual.reasons || [],
++    metrics: measuredVisual.metrics || measuredVisual.semanticEvidence || null,
++  } : external && external.visual != null ? {
++    source: "externalGate.visual", score: external.visual, decision: external.visualCritical ? "BLOCK" : null,
++    reasons: external.visualCritical ? [external.visualCritical] : [], metrics: null,
++  } : null;
++  if (external && external.visual != null) d.visualQuality = external.visual;
++  else if (measuredVisual && Number.isFinite(measuredVisual.score)) d.visualQuality = measuredVisual.score;
++  else d.visualQuality = null;
++  if (render && render.completed && !visualEvidence) {
++    hardFails.push("missing measured rendered visual-quality evidence");
++  }
++  if (render && render.completed && measuredVisual && measuredVisual.decision !== "PUBLISH") {
++    hardFails.push("rendered visual quality: " + ((measuredVisual.reasons || []).join("; ") || measuredVisual.decision || "missing decision"));
++  }
+   d.audio = external && external.audio != null ? external.audio : render ? (render.completed && render.syntheticVoice ? 85 : 0) : null;
+   if (render && render.completed && render.syntheticVoice === false) hardFails.push("broken audio: non-speech fallback narration");
+   if (render && render.completed && render.hasAudio === false) hardFails.push("broken audio: no audio stream");
+@@ -72,7 +96,7 @@ function shorts(inputs, config) {
+   if (render && render.completed && render.width && (render.width !== 1080 || render.height !== 1920)) hardFails.push(`broken render: ${render.width}x${render.height}`);
+   const rules = config.readiness.shorts;
+   const result = decide(d, rules.weights, rules, hardFails);
+-  return { ProductionReadinessScore: result.score, decision: result.decision, stage: render ? "final" : "pre", dimensions: d, unmeasured: result.unmeasured, hardFails, notes, thresholds: { publish: rules.publish, review: rules.review } };
++  return { ProductionReadinessScore: result.score, decision: result.decision, stage: render && render.completed ? "final" : "pre", dimensions: d, renderedVisualQuality: visualEvidence, unmeasured: result.unmeasured, hardFails, notes, thresholds: { publish: rules.publish, review: rules.review } };
+ }
+ 
+ function longform(inputs, config) {
+diff --git a/core/growth/titles.js b/core/growth/titles.js
+index ce37c8f..0cd96a8 100644
+--- a/core/growth/titles.js
++++ b/core/growth/titles.js
+@@ -298,6 +298,13 @@ function scoreOne(candidate, topic, config, kind, context = {}) {
+   const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
+   const total = Math.round(Object.entries(weights).reduce((sum, [key, weight]) => sum + (s[key] || 0) * weight, 0) / totalWeight);
+   const learnedBonus = (context.learnedPatternBonus || {})[candidate.pattern] || 0;
++  // Generic CT templates become visibly machine-written when a long technical
++  // noun phrase is inserted verbatim (for example, "What Depends on
++  // Uninterruptible Power Supply?"). Keep them available for audit, but apply
++  // a bounded naturalness penalty so a strong researched title can win.
++  const longTechnicalSubject = topic.channel === "critical-thread" && subjectWords.length >= 3;
++  const templateNaturalnessPenalty = longTechnicalSubject && candidate.source !== "editorial" && candidate.source !== "current"
++    && String(topic.subject || "").length && title.toLowerCase().includes(String(topic.subject).toLowerCase()) ? 10 : 0;
+   // Pattern freshness: word similarity alone let four titles in a row share
+   // one shape ("Eastern 212: What Failed First", "Inside Van Norman Dam: The
+   // Failure Chain"...). A pattern used in the last three published titles
+@@ -306,7 +313,9 @@ function scoreOne(candidate, topic, config, kind, context = {}) {
+   const repeats = recentPatterns.filter((item) => item === candidate.pattern).length;
+   const patternPenalty = Math.min(12, repeats * 4 + (recentPatterns[recentPatterns.length - 1] === candidate.pattern ? 3 : 0));
+   s.patternFreshness = clamp(100 - repeats * 30);
+-  return { ...candidate, scores: s, total, patternPenalty, adjustedTotal: Math.max(0, Math.min(100, total + learnedBonus - patternPenalty)), unsupportedWords: unsupported, misleading: s.truthfulness < 60 };
++  return { ...candidate, scores: s, total, patternPenalty, templateNaturalnessPenalty,
++    adjustedTotal: Math.max(0, Math.min(100, total + learnedBonus - patternPenalty - templateNaturalnessPenalty)),
++    unsupportedWords: unsupported, misleading: s.truthfulness < 60 };
+ }
+ 
+ function generate(topic, config, kind = "short", context = {}) {
+@@ -317,9 +326,11 @@ function generate(topic, config, kind = "short", context = {}) {
+   // ("What Depends on Road Tunnel Ventilation System?") yet read as
+   // machine-made, so the best editorial title leads when one is truthful.
+   const editorialFirst = kind === "short" && (topic.narrationBeats || []).length > 0;
+-  const rank = (candidate) => (editorialFirst && candidate.source === "editorial" ? 1 : 0);
++  // Researched/editorial titles receive only a small provenance tie-break.
++  // They no longer override a materially stronger truthful title candidate.
++  const rankScore = (candidate) => candidate.adjustedTotal + (editorialFirst && candidate.source === "editorial" ? 3 : 0);
+   const scored = pool.map((candidate) => scoreOne(candidate, topic, config, kind, context))
+-    .sort((a, b) => Number(a.misleading) - Number(b.misleading) || rank(b) - rank(a) || b.adjustedTotal - a.adjustedTotal);
++    .sort((a, b) => Number(a.misleading) - Number(b.misleading) || rankScore(b) - rankScore(a) || b.adjustedTotal - a.adjustedTotal);
+   const selected = scored.find((item) => !item.misleading) || null;
+   const minimum = kind === "long" ? config.titles.longform.minimumCandidates : config.titles.shorts.minimumCandidates;
+   return {
