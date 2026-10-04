@@ -35,6 +35,7 @@ const ARALIK = {  // [min, max] saniye cekim uzunlugu
   long: { fast: [2, 3], medium: [4, 6], slow: [7, 10], diagram: [10, 15] },
   short: { fast: [1.4, 2.4], medium: [2.4, 3.6], slow: [3.2, 5.5], diagram: [4, 6] },
 };
+const SHORT_HOOK_ARALIK = [0.75, 1.1];
 
 function rolBul(metin, sira, toplam) {
   if (sira === 0) return "hook";
@@ -50,8 +51,16 @@ function rolBul(metin, sira, toplam) {
 function sahnePlani(metin, sira, toplam, sure, format, diyagram = false) {
   const rol = rolBul(metin, sira, toplam);
   const tempo = diyagram ? "diagram" : TEMPO[rol] || "medium";
-  const [a, b] = ARALIK[format][tempo];
-  const cekimSayisi = sure ? Math.max(1, Math.ceil(sure / b)) : null;
+  const openingHook = format === "short" && rol === "hook" && !diyagram;
+  const [a, b] = openingHook ? SHORT_HOOK_ARALIK : ARALIK[format][tempo];
+  let cekimSayisi = sure ? Math.max(1, Math.ceil(sure / b)) : null;
+  // The first swipe decision happens almost immediately. A 2.2–3.3 second
+  // opening therefore gets at least three distinct visual beats rather than a
+  // single documentary hold. Shorter hooks still get two beats when possible.
+  if (openingHook && sure) {
+    const minimumBeats = sure >= 2.2 ? 3 : sure >= 1.3 ? 2 : 1;
+    cekimSayisi = Math.max(minimumBeats, cekimSayisi);
+  }
   const cekimler = sure ? Array.from({ length: cekimSayisi }, () => sure / cekimSayisi) : null;
   const hareket = { fast: "punch", medium: "push", slow: "drift", diagram: "hold" }[tempo];
   const gecis = { fast: { tip: "cut", sure: format === "long" ? 0.15 : 0 }, medium: { tip: "dissolve", sure: 0.45 },
@@ -61,7 +70,7 @@ function sahnePlani(metin, sira, toplam, sure, format, diyagram = false) {
   const gorsel = { event: "archival motion / impact footage", countdown: "tight crops, time pressure",
     escalation: "wider shots showing spread", emergency: "human-scale footage", discovery: "evidence / documents",
     technical: "diagram or close-up of the failing component", evidence: "original archival material, labelled",
-    context: "establishing shot of place and era", lesson: "modern equivalent / what changed", hook: "most striking frame of the event" }[rol];
+    context: "establishing shot of place and era", lesson: "modern equivalent / what changed", hook: "most striking frame of the event; immediate visual change" }[rol];
   return { sira, rol, tempo, cekimAraligi: [a, b], cekimSayisi, cekimler, hareket, gecis, ustKatman: ust, gorselStil: gorsel };
 }
 
@@ -114,7 +123,7 @@ function calistir(slug) {
   return r;
 }
 
-module.exports = { rolBul, sahnePlani, planKisa, planUzun, sahneZamanlari, calistir, ARALIK };
+module.exports = { rolBul, sahnePlani, planKisa, planUzun, sahneZamanlari, calistir, ARALIK, SHORT_HOOK_ARALIK };
 
 if (require.main === module) {
   const slug = process.argv[2];
