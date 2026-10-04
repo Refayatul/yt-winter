@@ -5,6 +5,10 @@ name: Growth feedback loop
 # Minute 17 avoids the exact hour and captures 21:00 TR publications near
 # 1h17m, 6h17m, 12h17m, 24h17m, etc.
 on:
+  push:
+    branches: ['main']
+    paths:
+      - '.github/workflows/growth-feedback-loop.yml'
   schedule:
     - cron: '17 * * * *'
   workflow_dispatch:
