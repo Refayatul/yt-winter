@@ -181,7 +181,8 @@ test("The Hidden Logic of Things has 500+ unique research questions and an evide
   const used = Discovery.usedIds(channel);
   assert.equal(discovered.length, universe.topics.filter((item) => item.productionReady === true && !used.has(item.id)).length, "unresearched or already-used questions cannot enter production discovery");
   assert.ok(discovered.every((item) => item.researchStatus === "VERIFIED"));
-  const topic = universe.topics.find((item) => item.id === "BTO-256");
+  const topic = discovered[0];
+  assert.ok(topic, "at least one verified unused BTO topic must remain discoverable");
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), "bto-e2e-"));
   try {
     const plan = require("../../core/growth").planShort(channel, topic.id, { skipDuplicate: true });
