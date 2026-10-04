@@ -1,8 +1,8 @@
 diff --git a/tests/js/multi-channel.test.js b/tests/js/multi-channel.test.js
-index e9016d4..0c1bb46 100644
+index e9016d4..3f879e4 100644
 --- a/tests/js/multi-channel.test.js
 +++ b/tests/js/multi-channel.test.js
-@@ -178,7 +178,8 @@ test("The Hidden Logic of Things has 500+ unique research questions and an evide
+@@ -178,9 +178,10 @@ test("The Hidden Logic of Things has 500+ unique research questions and an evide
    });
    for (const topic of universe.topics) assert.notEqual(BehindQuality.evaluateTopic(topic, universe.topics).decision, "BLOCK", topic.id);
    const discovered = Discovery.discover(channel, { limit: 50 });
@@ -10,8 +10,11 @@ index e9016d4..0c1bb46 100644
 +  const used = Discovery.usedIds(channel);
 +  assert.equal(discovered.length, universe.topics.filter((item) => item.productionReady === true && !used.has(item.id)).length, "unresearched or already-used questions cannot enter production discovery");
    assert.ok(discovered.every((item) => item.researchStatus === "VERIFIED"));
-   const topic = universe.topics.find((item) => item.id === "BTO-256");
+-  const topic = universe.topics.find((item) => item.slug === "why-jeans-have-a-tiny-pocket");
++  const topic = universe.topics.find((item) => item.id === "BTO-256");
    const temp = fs.mkdtempSync(path.join(os.tmpdir(), "bto-e2e-"));
+   try {
+     const plan = require("../../core/growth").planShort(channel, topic.id, { skipDuplicate: true });
 diff --git a/tests/js/publish-safety.test.js b/tests/js/publish-safety.test.js
 index 3f0e17a..7bc9c78 100644
 --- a/tests/js/publish-safety.test.js
