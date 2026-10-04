@@ -144,7 +144,9 @@ function semanticVisualEvidence(topic, shot) {
     canonicalTopic: semanticFieldTerms(topic && topic.canonicalTopic),
     subject: semanticFieldTerms(topic && topic.subject),
     designDetail: semanticFieldTerms(topic && topic.designDetail),
-    mechanism: semanticFieldTerms(topic && topic.mechanism),
+    mechanism: semanticFieldTerms(topic && (topic.mechanism || topic.scientificMechanism)),
+    scenario: semanticFieldTerms(topic && (topic.scenario || topic.scenarioChange || topic.event)),
+    openingLine: semanticFieldTerms(topic && topic.openingLine),
     openingClaim: semanticFieldTerms(shot && (shot.claimText || shot.scene)),
   };
   const matches = Object.fromEntries(Object.entries(fields).map(([key, terms]) => [key, matcher(terms)]));
@@ -152,11 +154,11 @@ function semanticVisualEvidence(topic, shot) {
   const matchedTerms = [...new Set(Object.values(matches).flat())];
   const genericTermsIgnored = [...GENERIC_VISUAL_TERMS].filter((term) => new RegExp(`\\b${term}\\b`, "i").test(normalized));
   const unrelatedLandmark = /\boak alley\b/i.test(assetText) && /\b(?:road stud|cat['’]?s[- ]eye)\b/i.test([topic && topic.canonicalTopic, topic && topic.subject, topic && topic.topic].join(" "));
-  const subjectMatch = matches.subject.length > 0 || matches.canonicalTopic.length > 0;
+  const subjectMatch = matches.subject.length > 0 || matches.canonicalTopic.length > 0 || matches.scenario.length > 0;
   const mechanismMatch = matches.mechanism.length > 0;
   const designDetailMatch = matches.designDetail.length > 0;
-  const claimMatch = matches.openingClaim.length > 0;
-  const strongTerms = [...new Set([...matches.subject, ...matches.canonicalTopic, ...matches.mechanism, ...matches.designDetail])];
+  const claimMatch = matches.openingClaim.length > 0 || matches.openingLine.length > 0;
+  const strongTerms = [...new Set([...matches.subject, ...matches.canonicalTopic, ...matches.mechanism, ...matches.designDetail, ...matches.scenario])];
   const relevant = !unrelatedLandmark && (strongTerms.length > 0 || (claimMatch && matchedTerms.length >= 2));
   const rejectionReasons = [];
   if (unrelatedLandmark) rejectionReasons.push("Oak Alley is a generic road setting, not a road stud or reflector mechanism");
@@ -208,6 +210,7 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
   let clipIndex = 0;
   let lastClipShot = -CLIP_SPACING;
   const plan = [];
+  const distinctKeys = () => new Set(plan.map((shot) => shot.visualKey || shot.sourceId));
 
   const nextStill = () => {
     const last = plan.length ? plan[plan.length - 1].still : null;
@@ -240,6 +243,15 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     else if (ordered.length && nextStill()) type = "licensed-still";
     else if (cardAllowed) type = "number-card";
     else type = "procedural";
+
+    // A sparse licensed pool must not become an alternating two-image
+    // slideshow. Once reuse would begin, scene-specific procedural frames add
+    // genuine visual changes until the minimum variety gate can be reached.
+    if (type === "licensed-still") {
+      const candidate = nextStill();
+      const reused = candidate && (stillUses.get(candidate.file) || 0) > 0;
+      if (reused && distinctKeys().size < 5 && scenes.length) type = "procedural";
+    }
 
     // A picture the viewer has already seen reads as a slideshow. Before a
     // still comes back, the previous real shot holds a little longer instead,
@@ -300,6 +312,10 @@ function loopBack(plan) {
   // Never at the cost of variety: the visual gate needs 5 distinct visuals.
   const key = (shot) => shot.visualKey || shot.sourceId;
   if (new Set(plan.slice(0, -1).map(key)).size < 5) return plan;
+  // Do not turn the final two segments into one long static hold by looping
+  // back to the same source already used by the penultimate segment.
+  const penultimate = plan[plan.length - 2];
+  if (penultimate && key(penultimate) === key(first)) return plan;
   if (first.type === "stock-video") {
     Object.assign(last, { type: "stock-video", clip: first.clip, still: null, kind: undefined, sourceId: `${first.sourceId}#loop`, visualKey: first.visualKey, loopBack: true });
   } else {
