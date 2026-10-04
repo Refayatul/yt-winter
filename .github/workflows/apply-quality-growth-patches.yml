@@ -27,8 +27,8 @@ jobs:
             git apply --check "$p"
             git apply "$p"
           done
-      - name: Test
-        run: npm test
+      - name: Run full JavaScript regression suite
+        run: npm run test:js
       - name: Commit final source changes
         run: |
           set -euo pipefail
