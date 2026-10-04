@@ -29,15 +29,21 @@ function shorts(inputs, config) {
   const d = {};
   const topic = inputs.topicScore;
   d.topicPotential = topic.VideoPotentialScore;
-  if (topic.bucket === "D") hardFails.push("topic bucket D: " + topic.reasons.join("; "));
+  // Viral Quality v2: daily Shorts are A-grade only. This closes manual/legacy
+  // bypasses around the scheduler, which already selects only A topics.
+  if (topic.bucket !== "A") hardFails.push(`topic bucket ${topic.bucket}: Viral Quality v2 publishes A-grade Shorts only`);
   const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
   d.viralPotential = topic.ViralPotentialScore;
   if (!Number.isFinite(topic.ViralPotentialScore) || topic.ViralPotentialScore < viralMinimum) {
     hardFails.push(`viral potential ${Number.isFinite(topic.ViralPotentialScore) ? topic.ViralPotentialScore : "unmeasured"} < ${viralMinimum}`);
   }
+  const shareability = topic.viralComponents && topic.viralComponents.shareability && topic.viralComponents.shareability.value;
+  d.shareability = Number.isFinite(shareability) ? shareability : null;
+  if (Number.isFinite(shareability) && shareability < 58) hardFails.push(`shareability ${shareability} < 58`);
   d.hook = inputs.hooks.selectedScore;
   if (!inputs.hooks.selected) hardFails.push("no usable hook");
   if (!inputs.hooks.meetsMinimum) notes.push(`only ${inputs.hooks.candidateCount} hook candidates`);
+  if (inputs.hooks.targetCandidates && inputs.hooks.candidateCount < inputs.hooks.targetCandidates) notes.push(`${inputs.hooks.candidateCount}/${inputs.hooks.targetCandidates} distinct evidence-backed hook candidates available`);
   if (inputs.hooks.selected && !inputs.hooks.passes) hardFails.push(`hook score ${inputs.hooks.selectedScore} < ${config.hooks.minimumScore}`);
   d.title = inputs.titles ? inputs.titles.selectedScore : null;
   if (!inputs.titles || !inputs.titles.selected) hardFails.push("no truthful title candidate");
@@ -48,6 +54,7 @@ function shorts(inputs, config) {
   if (!inputs.script.passes && !(inputs.script.blockers || []).length) hardFails.push(`retention quality ${inputs.script.score} < ${config.script.shorts.minimumScore}`);
   d.firstSeconds = inputs.firstSeconds.score;
   for (const blocker of inputs.firstSeconds.blockers || []) hardFails.push("first 3 s: " + blocker);
+  if (inputs.firstSeconds.score < config.firstSeconds.minimumScore) hardFails.push(`first 3 s score ${inputs.firstSeconds.score} < ${config.firstSeconds.minimumScore}`);
   d.factual = inputs.factual.score;
   hardFails.push(...inputs.factual.hardFails.map((item) => "factual: " + item));
   d.visualRelevance = inputs.integrity.score;
@@ -92,6 +99,7 @@ function shorts(inputs, config) {
   const range = inputs.durationRange;
   d.duration = render && render.durationSeconds && range ? (render.durationSeconds >= range[0] - 0.5 && render.durationSeconds <= range[1] + 0.5 ? 100 : 40) : null;
   d.pacing = inputs.pacing ? (inputs.pacing.mechanical ? 50 : inputs.pacing.cutsInFirst3Seconds >= 2 ? 92 : 70) : null;
+  if (inputs.pacing && inputs.pacing.cutsInFirst3Seconds < 2) hardFails.push("opening pacing: fewer than 2 visual beats in first 3 seconds");
   d.render = render ? (render.completed && (!render.width || (render.width === 1080 && render.height === 1920)) ? 100 : 0) : null;
   if (render && render.completed && render.width && (render.width !== 1080 || render.height !== 1920)) hardFails.push(`broken render: ${render.width}x${render.height}`);
   const rules = config.readiness.shorts;
