@@ -36,7 +36,7 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 96.21,
+      "ageHours": 96.68,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -59,7 +59,7 @@
       },
       "baselines": {
         "views": 508.5,
-        "viewsPerHour": 11.035,
+        "viewsPerHour": 10.915,
         "averagePercentageViewed": null,
         "engagementRate": 0.045184999999999996,
         "subscriberConversion": null
@@ -242,7 +242,7 @@
       },
       "baselines": {
         "views": 508.5,
-        "viewsPerHour": 11.035,
+        "viewsPerHour": 10.915,
         "averagePercentageViewed": null,
         "engagementRate": 0.045184999999999996,
         "subscriberConversion": null
@@ -703,8 +703,8 @@
     "popularityBand": "unknown",
     "readiness": 88,
     "normalized": {
-      "ageHours": 12,
-      "viewsPerHour": 1.17,
+      "ageHours": 15.03,
+      "viewsPerHour": 0.93,
       "recentViewVelocity": 0,
       "likeRate": 0,
       "commentRate": 0.07143,
@@ -726,7 +726,7 @@
       },
       "baselines": {
         "views": 508.5,
-        "viewsPerHour": 11.035,
+        "viewsPerHour": 10.915,
         "averagePercentageViewed": null,
         "engagementRate": 0.045184999999999996,
         "subscriberConversion": null
@@ -1413,7 +1413,7 @@
     },
     "performance": {
       "growthScore": 72.9,
-      "classification": "FAILED_TEST",
+      "classification": "STRONG",
       "percentiles": {
         "viewVelocity": 100,
         "retention": null,
@@ -1423,7 +1423,7 @@
       },
       "baselines": {
         "views": 508.5,
-        "viewsPerHour": 11.035,
+        "viewsPerHour": 10.915,
         "averagePercentageViewed": null,
         "engagementRate": 0.045184999999999996,
         "subscriberConversion": null
@@ -1432,22 +1432,9 @@
         "retention",
         "subscriberConversion"
       ],
-      "plateau": {
-        "detected": true,
-        "code": "EARLY_DISTRIBUTION_PLATEAU",
-        "earlyCheckpoint": "12h",
-        "latestCheckpoint": "48h",
-        "earlyViews": 937,
-        "latestViews": 1003,
-        "earlyVelocity": 78.08,
-        "laterVelocity": 1.83,
-        "velocityRatio": 0.023,
-        "growthAfterEarly": 0.07
-      },
+      "plateau": null,
       "breakout": null,
-      "probableCauses": [
-        "low engagement correlation"
-      ],
+      "probableCauses": [],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
     },
     "durationSeconds": 35,
