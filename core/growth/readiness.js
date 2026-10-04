@@ -29,14 +29,21 @@ function shorts(inputs, config) {
   const d = {};
   const topic = inputs.topicScore;
   d.topicPotential = topic.VideoPotentialScore;
-  // Viral Quality v2: daily Shorts are A-grade only. This closes manual/legacy
-  // bypasses around the scheduler, which already selects only A topics.
-  if (topic.bucket !== "A") hardFails.push(`topic bucket ${topic.bucket}: Viral Quality v2 publishes A-grade Shorts only`);
-  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+
+  // Generic discovery stays A-only. A curated researched/production-ready topic
+  // already passed a separate evidence gate, so a B record may proceed only if
+  // it clears every remaining Viral Quality v2 gate and at least a 68 viral
+  // score. C/D are never eligible through this exception.
+  const curatedB = topic.curatedResearch === true && topic.bucket === "B";
+  if (topic.bucket !== "A" && !curatedB) hardFails.push(`topic bucket ${topic.bucket}: Viral Quality v2 publishes A-grade Shorts only (except separately researched B records)`);
+  const configuredViralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+  const viralMinimum = curatedB ? Math.min(configuredViralMinimum, 68) : configuredViralMinimum;
   d.viralPotential = topic.ViralPotentialScore;
   if (!Number.isFinite(topic.ViralPotentialScore) || topic.ViralPotentialScore < viralMinimum) {
     hardFails.push(`viral potential ${Number.isFinite(topic.ViralPotentialScore) ? topic.ViralPotentialScore : "unmeasured"} < ${viralMinimum}`);
   }
+  if (curatedB) notes.push("curated researched B-grade exception: all other Viral Quality v2 gates remain mandatory");
+
   const shareability = topic.viralComponents && topic.viralComponents.shareability && topic.viralComponents.shareability.value;
   d.shareability = Number.isFinite(shareability) ? shareability : null;
   if (Number.isFinite(shareability) && shareability < 58) hardFails.push(`shareability ${shareability} < 58`);
