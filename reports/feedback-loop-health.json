@@ -1,0 +1,471 @@
+{
+  "schema": "feedback-loop-health/1",
+  "generatedAt": "2026-10-04T18:23:37.576Z",
+  "verdict": "CLOSED_LOOP_WORKING",
+  "channels": [
+    {
+      "channel": "failure-reconstructed",
+      "verdict": "CLOSED_LOOP_WORKING",
+      "mode": "adaptive",
+      "publishedVideos": 14,
+      "performanceRows": 14,
+      "diagnosisRows": 19,
+      "learning": {
+        "updatedAt": "2026-10-04T18:23:34.583Z",
+        "sampleSize": 13,
+        "status": "adaptive",
+        "observations": 6,
+        "hypotheses": 0,
+        "adopted": 0,
+        "suppressed": 0
+      },
+      "metricCoverage": {
+        "views": {
+          "available": 13,
+          "total": 13,
+          "ratio": 1
+        },
+        "retention": {
+          "available": 7,
+          "total": 13,
+          "ratio": 0.538
+        },
+        "subscribersPer1000": {
+          "available": 4,
+          "total": 13,
+          "ratio": 0.308
+        },
+        "engagement": {
+          "available": 13,
+          "total": 13,
+          "ratio": 1
+        }
+      },
+      "checkpointSchedule": [
+        {
+          "label": "1h",
+          "hours": 1
+        },
+        {
+          "label": "6h",
+          "hours": 6
+        },
+        {
+          "label": "12h",
+          "hours": 12
+        },
+        {
+          "label": "24h",
+          "hours": 24
+        },
+        {
+          "label": "48h",
+          "hours": 48
+        },
+        {
+          "label": "7d",
+          "hours": 168
+        },
+        {
+          "label": "14d",
+          "hours": 336
+        },
+        {
+          "label": "30d",
+          "hours": 720
+        }
+      ],
+      "timing": {
+        "lateCheckpointCount": 51,
+        "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
+        "examples": [
+          {
+            "videoId": "rgSsk8q6eyM",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 18.53,
+            "driftHours": 6.53
+          },
+          {
+            "videoId": "rgSsk8q6eyM",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 18.93,
+            "driftHours": 12.93
+          },
+          {
+            "videoId": "4Mo58FxCr4A",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 14.64,
+            "driftHours": 8.64
+          },
+          {
+            "videoId": "4Mo58FxCr4A",
+            "label": "1h",
+            "scheduledHours": 1,
+            "collectedAgeHours": 15.04,
+            "driftHours": 14.04
+          },
+          {
+            "videoId": "WlZ2z90pqx8",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 17.68,
+            "driftHours": 5.68
+          },
+          {
+            "videoId": "WlZ2z90pqx8",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 17.86,
+            "driftHours": 11.86
+          },
+          {
+            "videoId": "aScjSrwqeRk",
+            "label": "48h",
+            "scheduledHours": 48,
+            "collectedAgeHours": 69.8,
+            "driftHours": 21.8
+          },
+          {
+            "videoId": "aScjSrwqeRk",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 70.27,
+            "driftHours": 58.27
+          },
+          {
+            "videoId": "aScjSrwqeRk",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 70.6,
+            "driftHours": 64.6
+          },
+          {
+            "videoId": "aScjSrwqeRk",
+            "label": "1h",
+            "scheduledHours": 1,
+            "collectedAgeHours": 70.87,
+            "driftHours": 69.87
+          }
+        ]
+      },
+      "consumerWiring": true,
+      "caveat": "Adoption sample floor reached; only statistically qualified patterns can nudge scoring."
+    },
+    {
+      "channel": "impossible-brief",
+      "verdict": "CLOSED_LOOP_WORKING",
+      "mode": "heuristics-only",
+      "publishedVideos": 5,
+      "performanceRows": 4,
+      "diagnosisRows": 1,
+      "learning": {
+        "updatedAt": "2026-10-04T18:23:35.561Z",
+        "sampleSize": 2,
+        "status": "heuristics-only",
+        "observations": 0,
+        "hypotheses": 0,
+        "adopted": 0,
+        "suppressed": 0
+      },
+      "metricCoverage": {
+        "views": {
+          "available": 2,
+          "total": 2,
+          "ratio": 1
+        },
+        "retention": {
+          "available": 0,
+          "total": 2,
+          "ratio": 0
+        },
+        "subscribersPer1000": {
+          "available": 0,
+          "total": 2,
+          "ratio": 0
+        },
+        "engagement": {
+          "available": 2,
+          "total": 2,
+          "ratio": 1
+        }
+      },
+      "checkpointSchedule": [
+        {
+          "label": "1h",
+          "hours": 1
+        },
+        {
+          "label": "6h",
+          "hours": 6
+        },
+        {
+          "label": "12h",
+          "hours": 12
+        },
+        {
+          "label": "24h",
+          "hours": 24
+        },
+        {
+          "label": "48h",
+          "hours": 48
+        },
+        {
+          "label": "7d",
+          "hours": 168
+        },
+        {
+          "label": "14d",
+          "hours": 336
+        },
+        {
+          "label": "30d",
+          "hours": 720
+        }
+      ],
+      "timing": {
+        "lateCheckpointCount": 4,
+        "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
+        "examples": [
+          {
+            "videoId": "u0iftg8gF5w",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 14.64,
+            "driftHours": 8.64
+          },
+          {
+            "videoId": "u0iftg8gF5w",
+            "label": "1h",
+            "scheduledHours": 1,
+            "collectedAgeHours": 15.04,
+            "driftHours": 14.04
+          },
+          {
+            "videoId": "5yPoQCElJuk",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 17.69,
+            "driftHours": 5.69
+          },
+          {
+            "videoId": "5yPoQCElJuk",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 17.86,
+            "driftHours": 11.86
+          }
+        ]
+      },
+      "consumerWiring": true,
+      "caveat": "Small-sample safety active: strategy is not allowed to adopt learned bonuses before 12 usable Shorts."
+    },
+    {
+      "channel": "critical-thread",
+      "verdict": "CLOSED_LOOP_WORKING",
+      "mode": "heuristics-only",
+      "publishedVideos": 5,
+      "performanceRows": 4,
+      "diagnosisRows": 1,
+      "learning": {
+        "updatedAt": "2026-10-04T18:23:36.486Z",
+        "sampleSize": 2,
+        "status": "heuristics-only",
+        "observations": 0,
+        "hypotheses": 0,
+        "adopted": 0,
+        "suppressed": 0
+      },
+      "metricCoverage": {
+        "views": {
+          "available": 2,
+          "total": 2,
+          "ratio": 1
+        },
+        "retention": {
+          "available": 0,
+          "total": 2,
+          "ratio": 0
+        },
+        "subscribersPer1000": {
+          "available": 0,
+          "total": 2,
+          "ratio": 0
+        },
+        "engagement": {
+          "available": 2,
+          "total": 2,
+          "ratio": 1
+        }
+      },
+      "checkpointSchedule": [
+        {
+          "label": "1h",
+          "hours": 1
+        },
+        {
+          "label": "6h",
+          "hours": 6
+        },
+        {
+          "label": "12h",
+          "hours": 12
+        },
+        {
+          "label": "24h",
+          "hours": 24
+        },
+        {
+          "label": "48h",
+          "hours": 48
+        },
+        {
+          "label": "7d",
+          "hours": 168
+        },
+        {
+          "label": "14d",
+          "hours": 336
+        },
+        {
+          "label": "30d",
+          "hours": 720
+        }
+      ],
+      "timing": {
+        "lateCheckpointCount": 4,
+        "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
+        "examples": [
+          {
+            "videoId": "hsuWhB8lCvU",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 14.63,
+            "driftHours": 8.63
+          },
+          {
+            "videoId": "hsuWhB8lCvU",
+            "label": "1h",
+            "scheduledHours": 1,
+            "collectedAgeHours": 15.03,
+            "driftHours": 14.03
+          },
+          {
+            "videoId": "fGE8kZOaQZ4",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 17.68,
+            "driftHours": 5.68
+          },
+          {
+            "videoId": "fGE8kZOaQZ4",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 17.86,
+            "driftHours": 11.86
+          }
+        ]
+      },
+      "consumerWiring": true,
+      "caveat": "Small-sample safety active: strategy is not allowed to adopt learned bonuses before 12 usable Shorts."
+    },
+    {
+      "channel": "behind-the-ordinary",
+      "verdict": "CLOSED_LOOP_WORKING",
+      "mode": "heuristics-only",
+      "publishedVideos": 3,
+      "performanceRows": 2,
+      "diagnosisRows": 0,
+      "learning": {
+        "updatedAt": "2026-10-04T18:23:37.476Z",
+        "sampleSize": 1,
+        "status": "heuristics-only",
+        "observations": 0,
+        "hypotheses": 0,
+        "adopted": 0,
+        "suppressed": 0
+      },
+      "metricCoverage": {
+        "views": {
+          "available": 1,
+          "total": 1,
+          "ratio": 1
+        },
+        "retention": {
+          "available": 0,
+          "total": 1,
+          "ratio": 0
+        },
+        "subscribersPer1000": {
+          "available": 0,
+          "total": 1,
+          "ratio": 0
+        },
+        "engagement": {
+          "available": 1,
+          "total": 1,
+          "ratio": 1
+        }
+      },
+      "checkpointSchedule": [
+        {
+          "label": "1h",
+          "hours": 1
+        },
+        {
+          "label": "6h",
+          "hours": 6
+        },
+        {
+          "label": "12h",
+          "hours": 12
+        },
+        {
+          "label": "24h",
+          "hours": 24
+        },
+        {
+          "label": "48h",
+          "hours": 48
+        },
+        {
+          "label": "7d",
+          "hours": 168
+        },
+        {
+          "label": "14d",
+          "hours": 336
+        },
+        {
+          "label": "30d",
+          "hours": 720
+        }
+      ],
+      "timing": {
+        "lateCheckpointCount": 2,
+        "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
+        "examples": [
+          {
+            "videoId": "I9Lcpi9kPYs",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 14.63,
+            "driftHours": 8.63
+          },
+          {
+            "videoId": "I9Lcpi9kPYs",
+            "label": "1h",
+            "scheduledHours": 1,
+            "collectedAgeHours": 15.03,
+            "driftHours": 14.03
+          }
+        ]
+      },
+      "consumerWiring": true,
+      "caveat": "Small-sample safety active: strategy is not allowed to adopt learned bonuses before 12 usable Shorts."
+    }
+  ]
+}
