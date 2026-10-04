@@ -1,0 +1,1464 @@
+
+> youtube-otomasyon@1.0.0 test:js
+> node --test tests/js/*.test.js
+
+TAP version 13
+# Subtest: BTO inventory: 500+ unique, grammatical research questions that never pre-claim an answer
+ok 1 - BTO inventory: 500+ unique, grammatical research questions that never pre-claim an answer
+  ---
+  duration_ms: 28.206525
+  ...
+# Subtest: BTO inventory: regenerating keeps every researched record (by inventory id)
+ok 2 - BTO inventory: regenerating keeps every researched record (by inventory id)
+  ---
+  duration_ms: 54.105193
+  ...
+# Subtest: BTO production-ready records carry primary sources and verbatim-quoted facts
+ok 3 - BTO production-ready records carry primary sources and verbatim-quoted facts
+  ---
+  duration_ms: 22.305642
+  ...
+# Subtest: the research builder's quote check tolerates typography but not paraphrase
+ok 4 - the research builder's quote check tolerates typography but not paraphrase
+  ---
+  duration_ms: 0.465722
+  ...
+# Subtest: an onboarding channel with no credentials is 'setup pending', not a failure; partial setup is still CRITICAL
+ok 5 - an onboarding channel with no credentials is 'setup pending', not a failure; partial setup is still CRITICAL
+  ---
+  duration_ms: 2.664774
+  ...
+# Subtest: The Hidden Logic of Things uses its own light music moods, not the disaster beds
+ok 6 - The Hidden Logic of Things uses its own light music moods, not the disaster beds
+  ---
+  duration_ms: 1.03869
+  ...
+# Subtest: first-time authorization refuses a YouTube channel that already belongs to another configured channel
+ok 7 - first-time authorization refuses a YouTube channel that already belongs to another configured channel
+  ---
+  duration_ms: 0.416407
+  ...
+# Subtest: BTO pictures come from the record's own articles; a surname match is not the object
+ok 8 - BTO pictures come from the record's own articles; a surname match is not the object
+  ---
+  duration_ms: 17.593046
+  ...
+# Subtest: the evidence-gated channel selects from its verified pool; other channels keep the 20-topic minimum
+ok 9 - the evidence-gated channel selects from its verified pool; other channels keep the 20-topic minimum
+  ---
+  duration_ms: 93.369783
+  ...
+# Subtest: every production-ready BTO record yields at least 20 truthful title candidates (package gate)
+ok 10 - every production-ready BTO record yields at least 20 truthful title candidates (package gate)
+  ---
+  duration_ms: 271.551615
+  ...
+# Subtest: The Hidden Logic of Things topics and every adaptive ledger remain channel-isolated
+ok 11 - The Hidden Logic of Things topics and every adaptive ledger remain channel-isolated
+  ---
+  duration_ms: 415.395462
+  ...
+# Subtest: The Hidden Logic of Things quota ledger is isolated while shared-project totals remain intentional
+ok 12 - The Hidden Logic of Things quota ledger is isolated while shared-project totals remain intentional
+  ---
+  duration_ms: 25.603098
+  ...
+# The Hidden Logic of Things research: no long-form provider configured (LONGFORM_LLM_PROVIDER + its key); nothing to do.
+# provider deferred (RATE_LIMIT); stopping this batch
+# Subtest: research candidates: question-only, one per object, recently failed questions wait 60 days
+ok 13 - research candidates: question-only, one per object, recently failed questions wait 60 days
+  ---
+  duration_ms: 15.393404
+  ...
+# Subtest: only articles named after the object count as evidence
+ok 14 - only articles named after the object count as evidence
+  ---
+  duration_ms: 0.940892
+  ...
+# Subtest: the object's own article is tried first
+ok 15 - the object's own article is tried first
+  ---
+  duration_ms: 0.507202
+  ...
+# Subtest: narration lines must cite facts and share their content
+ok 16 - narration lines must cite facts and share their content
+  ---
+  duration_ms: 0.824339
+  ...
+# Subtest: a draft becomes a seed record citing only the references of articles its facts quote
+ok 17 - a draft becomes a seed record citing only the references of articles its facts quote
+  ---
+  duration_ms: 1.319778
+  ...
+# Subtest: without a configured provider the research job changes nothing
+ok 18 - without a configured provider the research job changes nothing
+  ---
+  duration_ms: 2.333159
+  ...
+# Subtest: a provider rate limit defers the batch without recording attempts
+ok 19 - a provider rate limit defers the batch without recording attempts
+  ---
+  duration_ms: 32.129208
+  ...
+# Subtest: each channel is not due before its Istanbul production slot and due at/after it
+ok 20 - each channel is not due before its Istanbul production slot and due at/after it
+  ---
+  duration_ms: 20.756786
+  ...
+# Subtest: all four channels schedule the public release for 21:00 Europe/Istanbul without double conversion
+ok 21 - all four channels schedule the public release for 21:00 Europe/Istanbul without double conversion
+  ---
+  duration_ms: 1.111259
+  ...
+# Subtest: a Short public at 01:00 Istanbul belongs to the previous production day and never blocks the next one
+ok 22 - a Short public at 01:00 Istanbul belongs to the previous production day and never blocks the next one
+  ---
+  duration_ms: 1.830756
+  ...
+# Subtest: the 21:00 Istanbul release remains 18:00 UTC across US DST changes
+ok 23 - the 21:00 Istanbul release remains 18:00 UTC across US DST changes
+  ---
+  duration_ms: 0.578929
+  ...
+# Subtest: the switch from the 01:00 experiment back to 21:00 Istanbul neither skips nor doubles a production day
+ok 24 - the switch from the 01:00 experiment back to 21:00 Istanbul neither skips nor doubles a production day
+  ---
+  duration_ms: 1.292125
+  ...
+# Subtest: yesterday's 21:00 Short does not block this morning's production
+ok 25 - yesterday's 21:00 Short does not block this morning's production
+  ---
+  duration_ms: 4.703817
+  ...
+# Subtest: a Short already uploaded or scheduled for today prevents a second production
+ok 26 - a Short already uploaded or scheduled for today prevents a second production
+  ---
+  duration_ms: 7.272198
+  ...
+# Subtest: the production window closes one hour before 21:00 Istanbul; late uploads use the next free slot
+ok 27 - the production window closes one hour before 21:00 Istanbul; late uploads use the next free slot
+  ---
+  duration_ms: 0.777449
+  ...
+# Subtest: Europe/Istanbul handling is DST- and runner-timezone-safe
+ok 28 - Europe/Istanbul handling is DST- and runner-timezone-safe
+  ---
+  duration_ms: 282.308856
+  ...
+# Subtest: calendar scheduling stays channel-isolated
+ok 29 - calendar scheduling stays channel-isolated
+  ---
+  duration_ms: 4.059274
+  ...
+# Subtest: watchdog checks today's Istanbul calendar day, not a rolling interval
+ok 30 - watchdog checks today's Istanbul calendar day, not a rolling interval
+  ---
+  duration_ms: 0.917076
+  ...
+# Subtest: watchdog reads a 01:00 Istanbul release as today's Short, so it never recovers into a duplicate
+ok 31 - watchdog reads a 01:00 Istanbul release as today's Short, so it never recovers into a duplicate
+  ---
+  duration_ms: 0.644846
+  ...
+# Subtest: the empty-day alarm waits for the Istanbul day's deadline, not the UTC date's
+ok 32 - the empty-day alarm waits for the Istanbul day's deadline, not the UTC date's
+  ---
+  duration_ms: 0.454862
+  ...
+# Subtest: state-writing workflows check out the latest branch tip, not the trigger commit
+ok 33 - state-writing workflows check out the latest branch tip, not the trigger commit
+  ---
+  duration_ms: 0.741089
+  ...
+# Subtest: metin tasmasi: tasan yaziyi yakalar, sigan yaziyi gecirir
+ok 34 - metin tasmasi: tasan yaziyi yakalar, sigan yaziyi gecirir # SKIP ffmpeg yok
+  ---
+  duration_ms: 1.806981
+  ...
+# Subtest: photos fill the whole 9:16 frame: no blurred letterbox bands
+ok 35 - photos fill the whole 9:16 frame: no blurred letterbox bands
+  ---
+  duration_ms: 2.654555
+  ...
+# Subtest: landscape photos pan across the image and alternate direction shot by shot
+ok 36 - landscape photos pan across the image and alternate direction shot by shot
+  ---
+  duration_ms: 0.317979
+  ...
+# Subtest: near-portrait photos get a slow push; square photos still pan
+ok 37 - near-portrait photos get a slow push; square photos still pan
+  ---
+  duration_ms: 0.257463
+  ...
+# Subtest: archival tone adds contrast and sharpening to stills
+ok 38 - archival tone adds contrast and sharpening to stills
+  ---
+  duration_ms: 0.351052
+  ...
+# Subtest: landscape video fills ~60% of the frame height; portrait video fills it all
+ok 39 - landscape video fills ~60% of the frame height; portrait video fills it all
+  ---
+  duration_ms: 0.414333
+  ...
+# Subtest: Failure Reconstructed render uses the full-bleed framing and shows the hook from the first frame
+ok 40 - Failure Reconstructed render uses the full-bleed framing and shows the hook from the first frame
+  ---
+  duration_ms: 0.493255
+  ...
+# Subtest: metin: benzerlik ve baslik bicimi
+ok 41 - metin: benzerlik ve baslik bicimi
+  ---
+  duration_ms: 2.924371
+  ...
+# Subtest: title engine: >=20 meaningful candidates, scoring detail is retained
+ok 42 - title engine: >=20 meaningful candidates, scoring detail is retained
+  ---
+  duration_ms: 15.175186
+  ...
+# Subtest: every Failure Reconstructed topic has a 20+ title pool before selection
+ok 43 - every Failure Reconstructed topic has a 20+ title pool before selection
+  ---
+  duration_ms: 248.382221
+  ...
+# Subtest: title engine: anahtar kelime tekrari ve desteklenmeyen iddia cezalandirilir
+ok 44 - title engine: anahtar kelime tekrari ve desteklenmeyen iddia cezalandirilir
+  ---
+  duration_ms: 0.925653
+  ...
+# Subtest: hook engine: yasak acilis ve acilis CTA'si engelleyicidir
+ok 45 - hook engine: yasak acilis ve acilis CTA'si engelleyicidir
+  ---
+  duration_ms: 3.356318
+  ...
+# Subtest: scene pacing: rol anlamdan gelir, rastgele degil
+ok 46 - scene pacing: rol anlamdan gelir, rastgele degil
+  ---
+  duration_ms: 4.92343
+  ...
+# Subtest: scene pacing: birlesik sahnelerin ses zamanlari
+ok 47 - scene pacing: birlesik sahnelerin ses zamanlari
+  ---
+  duration_ms: 0.638012
+  ...
+# Subtest: lib/sahne: bolum basliklari seslendirilmez
+ok 48 - lib/sahne: bolum basliklari seslendirilmez
+  ---
+  duration_ms: 0.528222
+  ...
+# Subtest: telaffuz: sozluk yalnizca TTS metnine uygulanir, klise yakalanir
+ok 49 - telaffuz: sozluk yalnizca TTS metnine uygulanir, klise yakalanir
+  ---
+  duration_ms: 3.457762
+  ...
+# Subtest: originality: ayni senaryo BLOCK, farkli konu PASS
+ok 50 - originality: ayni senaryo BLOCK, farkli konu PASS
+  ---
+  duration_ms: 13.917163
+  ...
+# Subtest: story structure: bolumler kanita gore uyarlanir, donguler sonra kapanir
+ok 51 - story structure: bolumler kanita gore uyarlanir, donguler sonra kapanir
+  ---
+  duration_ms: 2.029405
+  ...
+# Subtest: analitik: veri uydurulmaz, kucuk orneklemde yetersiz veri
+ok 52 - analitik: veri uydurulmaz, kucuk orneklemde yetersiz veri
+  ---
+  duration_ms: 0.858921
+  ...
+# Subtest: analitik: bos trafik ve kucuk orneklemde abone teshisi konmaz
+ok 53 - analitik: bos trafik ve kucuk orneklemde abone teshisi konmaz
+  ---
+  duration_ms: 0.415389
+  ...
+# Subtest: yayin plani: tolerans + yalnizca gercek BLOCK'lar aralik esnetir
+ok 54 - yayin plani: tolerans + yalnizca gercek BLOCK'lar aralik esnetir
+  ---
+  duration_ms: 24.1217
+  ...
+# Subtest: zamanlama: sabit saat, en az 1 saat once; bildirim metni
+ok 55 - zamanlama: sabit saat, en az 1 saat once; bildirim metni
+  ---
+  duration_ms: 2.251832
+  ...
+# Subtest: muzik profili: deterministik ve videolar arasi farkli
+ok 56 - muzik profili: deterministik ve videolar arasi farkli
+  ---
+  duration_ms: 0.467767
+  ...
+# Subtest: muzik profili: tum konularda ffmpeg sinirlari icinde (tremolo >= 0.1 Hz)
+ok 57 - muzik profili: tum konularda ffmpeg sinirlari icinde (tremolo >= 0.1 Hz)
+  ---
+  duration_ms: 39.324529
+  ...
+# Subtest: gorsel denetim: sigdir uzun metni kucultur, kisa metni tavanda birakir
+ok 58 - gorsel denetim: sigdir uzun metni kucultur, kisa metni tavanda birakir
+  ---
+  duration_ms: 1.185693
+  ...
+# Subtest: kapak: mobil okunabilirlik ve 3 farkli konsept
+ok 59 - kapak: mobil okunabilirlik ve 3 farkli konsept
+  ---
+  duration_ms: 8.660509
+  ...
+# Subtest: konu puani: erisilemeyen sinyal 'unavailable', guven dusuk
+ok 60 - konu puani: erisilemeyen sinyal 'unavailable', guven dusuk
+  ---
+  duration_ms: 0.57053
+  ...
+# Subtest: aciklama: zincir bicimi (cumle basi ozel isim sayilmaz) ve tek satir stok atfi
+ok 61 - aciklama: zincir bicimi (cumle basi ozel isim sayilmaz) ve tek satir stok atfi
+  ---
+  duration_ms: 150.964077
+  ...
+# Subtest: ayar birlestirme ve ISO sure
+ok 62 - ayar birlestirme ve ISO sure
+  ---
+  duration_ms: 0.365786
+  ...
+# Subtest: tutunma: ikinci vurus / uzunluk / arsiv acilisi kurallari
+ok 63 - tutunma: ikinci vurus / uzunluk / arsiv acilisi kurallari
+  ---
+  duration_ms: 1.700809
+  ...
+# Subtest: tutunma: henuz uretilmemis tum Shorts konulari kurallara uyar
+ok 64 - tutunma: henuz uretilmemis tum Shorts konulari kurallara uyar
+  ---
+  duration_ms: 37.12933
+  ...
+# Subtest: zamanlama: dolu gun atlanir, plan publishAt'i yayin ani sayar (cron gecikmesi = cift yayin yok)
+ok 65 - zamanlama: dolu gun atlanir, plan publishAt'i yayin ani sayar (cron gecikmesi = cift yayin yok)
+  ---
+  duration_ms: 1.561869
+  ...
+# Subtest: yukleme meta dogrulama: YouTube sinirlari
+ok 66 - yukleme meta dogrulama: YouTube sinirlari
+  ---
+  duration_ms: 1.955266
+  ...
+# Subtest: saglik: gecersiz yetki kritik; production modunda sabit OAuth bitisi varsayilmaz
+ok 67 - saglik: gecersiz yetki kritik; production modunda sabit OAuth bitisi varsayilmaz
+  ---
+  duration_ms: 7.595352
+  ...
+# Subtest: bildirim: yasam dongusu mesajlari eksiksiz, dusus noktasi dogru
+ok 68 - bildirim: yasam dongusu mesajlari eksiksiz, dusus noktasi dogru
+  ---
+  duration_ms: 0.972804
+  ...
+# Subtest: kuyruk: once gercek arsiv filmi olan konular
+ok 69 - kuyruk: once gercek arsiv filmi olan konular
+  ---
+  duration_ms: 30.752413
+  ...
+# Subtest: etiketler: hicbir konuda virgul/<> yok, YouTube meta dogrulamasini gecer
+ok 70 - etiketler: hicbir konuda virgul/<> yok, YouTube meta dogrulamasini gecer
+  ---
+  duration_ms: 39.228796
+  ...
+# Subtest: altyazi: rakam icindeki nokta/virgul korunur
+ok 71 - altyazi: rakam icindeki nokta/virgul korunur
+  ---
+  duration_ms: 0.278432
+  ...
+# Subtest: bildirim: bos gun alarmi yalnizca gercekten bos gunde
+ok 72 - bildirim: bos gun alarmi yalnizca gercekten bos gunde
+  ---
+  duration_ms: 0.354754
+  ...
+# Subtest: tiktok: aciklama kisa ve dogru, kimlik yoksa sessiz, tekrar gonderim yok
+ok 73 - tiktok: aciklama kisa ve dogru, kimlik yoksa sessiz, tekrar gonderim yok
+  ---
+  duration_ms: 2.120756
+  ...
+# Subtest: tiktok aciklamasi: kanca, sebep, SORU, beyan, tutarli etiketler
+ok 74 - tiktok aciklamasi: kanca, sebep, SORU, beyan, tutarli etiketler
+  ---
+  duration_ms: 0.908704
+  ...
+# Subtest: tiktok gecmis kuyrugu: gonderilmemisler, eskiden yeniye
+ok 75 - tiktok gecmis kuyrugu: gonderilmemisler, eskiden yeniye
+  ---
+  duration_ms: 0.930304
+  ...
+# Subtest: TikTok gecmis adimi YouTube'a IKINCI KEZ yuklemez
+ok 76 - TikTok gecmis adimi YouTube'a IKINCI KEZ yuklemez
+  ---
+  duration_ms: 0.789731
+  ...
+# Subtest: arsiv fotografi: acilis ani kurali fotografta gecmez, filmde gecer
+ok 77 - arsiv fotografi: acilis ani kurali fotografta gecmez, filmde gecer
+  ---
+  duration_ms: 0.355787
+  ...
+# Subtest: shorts-yap: fotograf kaynagi hareketli islenir (durgun kare yok)
+ok 78 - shorts-yap: fotograf kaynagi hareketli islenir (durgun kare yok)
+  ---
+  duration_ms: 0.521365
+  ...
+# Subtest: aday-gorsel: lisans/cozunurluk/aci teshiri elemesi
+ok 79 - aday-gorsel: lisans/cozunurluk/aci teshiri elemesi
+  ---
+  duration_ms: 2.573035
+  ...
+# Subtest: aday-gorsel: ceset/cizim/belge elemesi ve kopya birlestirme
+ok 80 - aday-gorsel: ceset/cizim/belge elemesi ve kopya birlestirme
+  ---
+  duration_ms: 0.670277
+  ...
+# Subtest: arsiv-bul: stereo kart tespiti ve kirpmasi kodda duruyor
+ok 81 - arsiv-bul: stereo kart tespiti ve kirpmasi kodda duruyor
+  ---
+  duration_ms: 0.240732
+  ...
+# Subtest: the failure chain fits every normal Short: after the hook, before the closing question
+ok 82 - the failure chain fits every normal Short: after the hook, before the closing question
+  ---
+  duration_ms: 2.664664
+  ...
+# Subtest: steps reveal one after another and the full chain holds at the end
+ok 83 - steps reveal one after another and the full chain holds at the end
+  ---
+  duration_ms: 0.340082
+  ...
+# Subtest: Failure Reconstructed renders the staged chain overlay
+ok 84 - Failure Reconstructed renders the staged chain overlay
+  ---
+  duration_ms: 0.568559
+  ...
+#   - what-if-the-moon-disappeared-tonight: not public yet
+#   = what-if-the-moon-disappeared-tonight: channel comment already present
+#   - what-if-the-moon-disappeared-tonight: comments unreadable (403); skipped for safety
+#   ✓ what-if-the-moon-disappeared-tonight: comment posted — pin it in Studio: https://studio.youtube.com/video/VID00000001/comments
+# [ImpossibleBrief] no Short waiting for a seed comment
+# Subtest: researched IB/CT titles compete on quality instead of receiving an unconditional editorial lock
+ok 85 - researched IB/CT titles compete on quality instead of receiving an unconditional editorial lock
+  ---
+  duration_ms: 557.105217
+  ...
+# Subtest: opening experiment: deterministic 50/50 and a motion opening leads with footage or a photo
+ok 86 - opening experiment: deterministic 50/50 and a motion opening leads with footage or a photo
+  ---
+  duration_ms: 9.421513
+  ...
+# Subtest: on-screen words: the hook is up from the first frame; no dimmed end card stops the loop
+ok 87 - on-screen words: the hook is up from the first frame; no dimmed end card stops the loop
+  ---
+  duration_ms: 0.779572
+  ...
+# Subtest: loop ending: the last shot returns to the opening picture
+ok 88 - loop ending: the last shot returns to the opening picture
+  ---
+  duration_ms: 5.623545
+  ...
+# Subtest: seed comment: one discussion comment per public Short, never a second, never on private videos
+ok 89 - seed comment: one discussion comment per public Short, never a second, never on private videos
+  ---
+  duration_ms: 123.941629
+  ...
+# Subtest: growth config enforces candidate, experiment, hook, title and subscriber-weight invariants
+ok 90 - growth config enforces candidate, experiment, hook, title and subscriber-weight invariants
+  ---
+  duration_ms: 4.573249
+  ...
+# Subtest: multi-channel state isolation: every growth path is derived from one channel
+ok 91 - multi-channel state isolation: every growth path is derived from one channel
+  ---
+  duration_ms: 2.432459
+  ...
+# Subtest: multi-channel learning isolation: foreign records are rejected and memory is per channel
+ok 92 - multi-channel learning isolation: foreign records are rejected and memory is per channel
+  ---
+  duration_ms: 4.440666
+  ...
+# Subtest: multi-channel analytics isolation: a record stamped for another channel cannot be registered
+ok 93 - multi-channel analytics isolation: a record stamped for another channel cannot be registered
+  ---
+  duration_ms: 2.679172
+  ...
+# Subtest: wrong-channel plan protection: a topic from another channel cannot be planned
+ok 94 - wrong-channel plan protection: a topic from another channel cannot be planned
+  ---
+  duration_ms: 398.102918
+  ...
+# Subtest: duplicate production: published topics are never selected; duplicates block readiness
+ok 95 - duplicate production: published topics are never selected; duplicates block readiness
+  ---
+  duration_ms: 1329.632889
+  ...
+# Subtest: topic decision pool: 20–50 inspectable candidates and deterministic 75/25 mode
+ok 96 - topic decision pool: 20–50 inspectable candidates and deterministic 75/25 mode
+  ---
+  duration_ms: 1031.936801
+  ...
+# Subtest: topic scoring: editorial case scores A/B; templated or mechanism-less topics fall to D
+ok 97 - topic scoring: editorial case scores A/B; templated or mechanism-less topics fall to D
+  ---
+  duration_ms: 5.774638
+  ...
+# Subtest: hook scoring: ≥10 candidates across families; forbidden and date openings are blocked
+ok 98 - hook scoring: ≥10 candidates across families; forbidden and date openings are blocked
+  ---
+  duration_ms: 5.285071
+  ...
+# Subtest: first-3-sec planning: real evidence frame, on-screen text, cuts inside 3 s
+ok 99 - first-3-sec planning: real evidence frame, on-screen text, cuts inside 3 s
+  ---
+  duration_ms: 3.374567
+  ...
+# Subtest: quality block: hard fails force BLOCK regardless of the weighted score
+ok 100 - quality block: hard fails force BLOCK regardless of the weighted score
+  ---
+  duration_ms: 13.689639
+  ...
+# Subtest: final readiness requires real rendered visual evidence and honors visual BLOCK
+ok 101 - final readiness requires real rendered visual evidence and honors visual BLOCK
+  ---
+  duration_ms: 11.182789
+  ...
+# Subtest: malformed English editorial hooks cannot override a better valid candidate
+ok 102 - malformed English editorial hooks cannot override a better valid candidate
+  ---
+  duration_ms: 223.85456
+  ...
+# Subtest: Shorts regression safety: Failure Reconstructed source stays immutable while the selected factual hook is promoted
+ok 103 - Shorts regression safety: Failure Reconstructed source stays immutable while the selected factual hook is promoted
+  ---
+  duration_ms: 14.402155
+  ...
+# Subtest: missing analytics metrics stay UNAVAILABLE (never zero) and diagnosis waits for data
+ok 104 - missing analytics metrics stay UNAVAILABLE (never zero) and diagnosis waits for data
+  ---
+  duration_ms: 1.53064
+  ...
+# Subtest: legacy net subscriber snapshots are never mislabeled as gross acquisition
+ok 105 - legacy net subscriber snapshots are never mislabeled as gross acquisition
+  ---
+  duration_ms: 0.490029
+  ...
+# Subtest: age normalization, subscriber conversion, plateau and breakout classification
+ok 106 - age normalization, subscriber conversion, plateau and breakout classification
+  ---
+  duration_ms: 2.935114
+  ...
+# Subtest: historical legacy backfill imports only real files and preserves missing checkpoints
+ok 107 - historical legacy backfill imports only real files and preserves missing checkpoints
+  ---
+  duration_ms: 4.011582
+  ...
+# Subtest: Failure Reconstructed durable inventory contains 500 unique source-verified records
+ok 108 - Failure Reconstructed durable inventory contains 500 unique source-verified records
+  ---
+  duration_ms: 6.318899
+  ...
+# Subtest: diagnosis thresholds: hook and retention failures fire only on the measured metric
+ok 109 - diagnosis thresholds: hook and retention failures fire only on the measured metric
+  ---
+  duration_ms: 0.694111
+  ...
+# Subtest: Shorts and long-form analytics separation: baselines are computed per content type
+ok 110 - Shorts and long-form analytics separation: baselines are computed per content type
+  ---
+  duration_ms: 0.555672
+  ...
+# Subtest: Shorts and long-form learning separation: each block learns only from its own type
+ok 111 - Shorts and long-form learning separation: each block learns only from its own type
+  ---
+  duration_ms: 0.911048
+  ...
+# Subtest: experiment metadata: one variable, deterministic arm, idempotent assignment
+ok 112 - experiment metadata: one variable, deterministic arm, idempotent assignment
+  ---
+  duration_ms: 5.505694
+  ...
+# Subtest: LongFormPotentialScore: factors, bucket and deterministic ranking
+ok 113 - LongFormPotentialScore: factors, bucket and deterministic ranking
+  ---
+  duration_ms: 65.434218
+  ...
+# Subtest: long-form quality gate: too little evidence is blocked, never padded
+ok 114 - long-form quality gate: too little evidence is blocked, never padded
+  ---
+  duration_ms: 160.222441
+  ...
+# Subtest: long-form quality gate: encyclopedia wording copied into narration is COPY_RISK
+ok 115 - long-form quality gate: encyclopedia wording copied into narration is COPY_RISK
+  ---
+  duration_ms: 237.4502
+  ...
+# Subtest: long-form: deterministic writer never narrates verbatim:false research
+ok 116 - long-form: deterministic writer never narrates verbatim:false research
+  ---
+  duration_ms: 157.539073
+  ...
+# Subtest: ResearchPackage reuse: same topic → cached package, reuse counted
+ok 117 - ResearchPackage reuse: same topic → cached package, reuse counted
+  ---
+  duration_ms: 127.957922
+  ...
+# Subtest: research deepening: sections become roled, sourced, rewrite-only claims; reference sections dropped
+ok 118 - research deepening: sections become roled, sourced, rewrite-only claims; reference sections dropped
+  ---
+  duration_ms: 1.394715
+  ...
+# Subtest: thumbnail planning: ≥5 truthful concepts, mobile-readable text
+ok 119 - thumbnail planning: ≥5 truthful concepts, mobile-readable text
+  ---
+  duration_ms: 155.993165
+  ...
+# Subtest: long-form title engine: many candidates, truthful, no unsupported words
+ok 120 - long-form title engine: many candidates, truthful, no unsupported words
+  ---
+  duration_ms: 8.565732
+  ...
+# Subtest: end-screen planning: same-channel next video, final 20 s, subscribe element
+ok 121 - end-screen planning: same-channel next video, final 20 s, subscribe element
+  ---
+  duration_ms: 153.891091
+  ...
+# Subtest: Short → Long relationship mapping: same event, series, and unrelated → no link
+ok 122 - Short → Long relationship mapping: same event, series, and unrelated → no link
+  ---
+  duration_ms: 0.433783
+  ...
+# Subtest: cross-channel relationship blocking: links and clusters never cross channels
+ok 123 - cross-channel relationship blocking: links and clusters never cross channels
+  ---
+  duration_ms: 1.748339
+  ...
+# Subtest: content cluster integrity: members unique, anchor must be a long member
+ok 124 - content cluster integrity: members unique, anchor must be a long member
+  ---
+  duration_ms: 1.283527
+  ...
+# Subtest: long-form state isolation and scheduling isolation: lanes are per channel and idempotent per week
+ok 125 - long-form state isolation and scheduling isolation: lanes are per channel and idempotent per week
+  ---
+  duration_ms: 146.278326
+  ...
+# Subtest: scheduler recovery: a cycle interrupted mid-run (RUNNING) is retried, a finished one is not
+ok 126 - scheduler recovery: a cycle interrupted mid-run (RUNNING) is retried, a finished one is not
+  ---
+  duration_ms: 236.045296
+  ...
+# Subtest: long-form duplicate prevention: a published episode leaves the candidate list and blocks as duplicate
+ok 127 - long-form duplicate prevention: a published episode leaves the candidate list and blocks as duplicate
+  ---
+  duration_ms: 147.719479
+  ...
+# Subtest: long-form gate can PUBLISH when sourced, rewritten evidence supports the target length
+ok 128 - long-form gate can PUBLISH when sourced, rewritten evidence supports the target length
+  ---
+  duration_ms: 222.122241
+  ...
+# Subtest: long-form source policy: fewer than two sources or no primary source is a hard block
+ok 129 - long-form source policy: fewer than two sources or no primary source is a hard block
+  ---
+  duration_ms: 102.684263
+  ...
+# Subtest: researched CriticalThread record: editorial narration becomes layered, timed claims and the spoken opening is the hook
+ok 130 - researched CriticalThread record: editorial narration becomes layered, timed claims and the spoken opening is the hook
+  ---
+  duration_ms: 7.909831
+  ...
+# Subtest: researched ImpossibleBrief record keeps speculative layers and passes the gate
+ok 131 - researched ImpossibleBrief record keeps speculative layers and passes the gate
+  ---
+  duration_ms: 85.597917
+  ...
+# Subtest: hook compression never cuts numeric ranges or keeps prepositional fragments
+ok 132 - hook compression never cuts numeric ranges or keeps prepositional fragments
+  ---
+  duration_ms: 0.15458
+  ...
+# Subtest: IB/CT research builder lint: opening budget, word range, layers and fact count
+ok 133 - IB/CT research builder lint: opening budget, word range, layers and fact count
+  ---
+  duration_ms: 4.485491
+  ...
+# Subtest: titles: a pattern used in the last three published titles loses points
+ok 134 - titles: a pattern used in the last three published titles loses points
+  ---
+  duration_ms: 0.934693
+  ...
+# Subtest: captions: each isolated channel keeps its own look, and CriticalThread has its own voice
+ok 135 - captions: each isolated channel keeps its own look, and CriticalThread has its own voice
+  ---
+  duration_ms: 1.225538
+  ...
+# Subtest: subject names become clean CamelCase hashtags
+ok 136 - subject names become clean CamelCase hashtags
+  ---
+  duration_ms: 2.109305
+  ...
+# Subtest: subject comes from the short case name, then Wikipedia, preferring a letter-led tag
+ok 137 - subject comes from the short case name, then Wikipedia, preferring a letter-led tag
+  ---
+  duration_ms: 0.715512
+  ...
+# Subtest: at most five hashtags: \#shorts, broad, subject, category, second broad; no duplicates
+ok 138 - at most five hashtags: \#shorts, broad, subject, category, second broad; no duplicates
+  ---
+  duration_ms: 1.090465
+  ...
+# Subtest: every ImpossibleBrief and CriticalThread topic gets a mapped category and three to five hashtags
+ok 139 - every ImpossibleBrief and CriticalThread topic gets a mapped category and three to five hashtags
+  ---
+  duration_ms: 113.077437
+  ...
+# Subtest: ImpossibleBrief and CriticalThread descriptions end with topic hashtags and carry the subject tag
+ok 140 - ImpossibleBrief and CriticalThread descriptions end with topic hashtags and carry the subject tag
+  ---
+  duration_ms: 56.103538
+  ...
+# Subtest: Failure Reconstructed descriptions lead with strong tags, name the case, and stay within five
+ok 141 - Failure Reconstructed descriptions lead with strong tags, name the case, and stay within five
+  ---
+  duration_ms: 30.56392
+  ...
+# Subtest: LEARN-01: predictions are joined with outcomes and calibrated per predictor
+ok 142 - LEARN-01: predictions are joined with outcomes and calibrated per predictor
+  ---
+  duration_ms: 3.49878
+  ...
+# Subtest: TOPIC-01: topic families track predicted vs actual, confidence, explore/exploit and fatigue
+ok 143 - TOPIC-01: topic families track predicted vs actual, confidence, explore/exploit and fatigue
+  ---
+  duration_ms: 12.324138
+  ...
+# Subtest: TOPIC/LEARN isolation: predictions are written only to the channel's own growth state
+ok 144 - TOPIC/LEARN isolation: predictions are written only to the channel's own growth state
+  ---
+  duration_ms: 5.378514
+  ...
+# Subtest: DIAG-01: spec diagnoses are relative to the channel's own format baseline
+ok 145 - DIAG-01: spec diagnoses are relative to the channel's own format baseline
+  ---
+  duration_ms: 3.406017
+  ...
+# Subtest: CADENCE_QUALITY_RISK: more uploads while watch time per upload falls
+ok 146 - CADENCE_QUALITY_RISK: more uploads while watch time per upload falls
+  ---
+  duration_ms: 1.426745
+  ...
+# Subtest: weekly report surfaces calibration, families, conversion and cadence only with enough data
+ok 147 - weekly report surfaces calibration, families, conversion and cadence only with enough data
+  ---
+  duration_ms: 1.598958
+  ...
+# Subtest: Groq is explicit, defaults to openai/gpt-oss-120b, and has no implicit paid fallback
+ok 148 - Groq is explicit, defaults to openai/gpt-oss-120b, and has no implicit paid fallback
+  ---
+  duration_ms: 2.693811
+  ...
+# Subtest: Groq OpenAI-compatible request returns structured JSON without exposing its key
+ok 149 - Groq OpenAI-compatible request returns structured JSON without exposing its key
+  ---
+  duration_ms: 3.873544
+  ...
+# Subtest: 429 responses use bounded retry and then defer without hammering
+ok 150 - 429 responses use bounded retry and then defer without hammering
+  ---
+  duration_ms: 2.235672
+  ...
+# Subtest: a paid fallback runs only when it is explicitly configured
+ok 151 - a paid fallback runs only when it is explicitly configured
+  ---
+  duration_ms: 1.382613
+  ...
+# Subtest: long-form checkpoints a 429-deferred section and resumes without regenerating completed stages
+ok 152 - long-form checkpoints a 429-deferred section and resumes without regenerating completed stages
+  ---
+  duration_ms: 90.269105
+  ...
+# Subtest: weekly lane keeps a provider-deferred cycle retryable instead of closing the week
+ok 153 - weekly lane keeps a provider-deferred cycle retryable instead of closing the week
+  ---
+  duration_ms: 80.920972
+  ...
+# Subtest: channel registry defaults safely and parses --channel in both forms
+ok 154 - channel registry defaults safely and parses --channel in both forms
+  ---
+  duration_ms: 3.828459
+  ...
+# Subtest: channel data roots, analytics, memory, production, and state never overlap
+ok 155 - channel data roots, analytics, memory, production, and state never overlap
+  ---
+  duration_ms: 2.01027
+  ...
+# Subtest: YouTube credentials are namespaced; isolated channels cannot inherit legacy secrets
+ok 156 - YouTube credentials are namespaced; isolated channels cannot inherit legacy secrets
+  ---
+  duration_ms: 4.136065
+  ...
+# Subtest: all twelve wrong-channel upload directions are blocked before mutation
+ok 157 - all twelve wrong-channel upload directions are blocked before mutation
+  ---
+  duration_ms: 6.676669
+  ...
+# Subtest: library has 500 qualified, source-based, non-duplicate topics in the target mix
+ok 158 - library has 500 qualified, source-based, non-duplicate topics in the target mix
+  ---
+  duration_ms: 142.832192
+  ...
+# Subtest: ImpossibleBrief package enforces claims, hooks, 20 titles, visuals, metadata and no upload
+ok 159 - ImpossibleBrief package enforces claims, hooks, 20 titles, visuals, metadata and no upload
+  ---
+  duration_ms: 31.129972
+  ...
+# Subtest: CriticalThread has 500+ distinct sourced topics and an isolated launch package
+ok 160 - CriticalThread has 500+ distinct sourced topics and an isolated launch package
+  ---
+  duration_ms: 105.844429
+  ...
+# Subtest: The Hidden Logic of Things has 500+ unique research questions and an evidence-gated launch batch
+not ok 161 - The Hidden Logic of Things has 500+ unique research questions and an evidence-gated launch batch
+  ---
+  duration_ms: 163.031691
+  location: '/home/runner/work/youtube-otomasyon/youtube-otomasyon/tests/js/multi-channel.test.js:170:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    The expression evaluated to a falsy value:
+    
+      assert.ok(Object.values(result.validations).every(Boolean))
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected: true
+  actual: false
+  operator: '=='
+  stack: |-
+    TestContext.<anonymous> (/home/runner/work/youtube-otomasyon/youtube-otomasyon/tests/js/multi-channel.test.js:189:12)
+    Test.runInAsyncScope (node:async_hooks:206:9)
+    Test.run (node:internal/test_runner/test:796:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:526:18)
+    Test.postRun (node:internal/test_runner/test:889:19)
+    Test.run (node:internal/test_runner/test:835:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:526:7)
+  ...
+# Subtest: ImpossibleBrief pipeline persists named validation evidence
+ok 162 - ImpossibleBrief pipeline persists named validation evidence
+  ---
+  duration_ms: 13.547754
+  ...
+# Subtest: portfolio scheduling serializes shared render/upload resources
+ok 163 - portfolio scheduling serializes shared render/upload resources
+  ---
+  duration_ms: 22.673304
+  ...
+# Subtest: retention learning only accepts samples from the selected channel
+ok 164 - retention learning only accepts samples from the selected channel
+  ---
+  duration_ms: 1.670863
+  ...
+# Subtest: retention learning waits for a sample floor and aggregates repeated patterns
+ok 165 - retention learning waits for a sample floor and aggregates repeated patterns
+  ---
+  duration_ms: 1.228123
+  ...
+# Subtest: 30-day failure simulation preserves four channels and blocks every wrong target
+ok 166 - 30-day failure simulation preserves four channels and blocks every wrong target
+  ---
+  duration_ms: 4.533461
+  ...
+# Subtest: major CLI modules resolve channel-specific library paths
+ok 167 - major CLI modules resolve channel-specific library paths
+  ---
+  duration_ms: 56.784226
+  ...
+# Subtest: every notification title carries an unambiguous channel name
+ok 168 - every notification title carries an unambiguous channel name
+  ---
+  duration_ms: 1.071709
+  ...
+# Subtest: NASA images: the topic's own subject is accepted
+ok 169 - NASA images: the topic's own subject is accepted
+  ---
+  duration_ms: 4.724268
+  ...
+# Subtest: NASA images: namesakes and other bodies are rejected
+ok 170 - NASA images: namesakes and other bodies are rejected
+  ---
+  duration_ms: 1.655985
+  ...
+# Subtest: NASA images: rights notices, partner credits and non-scene graphics are rejected
+ok 171 - NASA images: rights notices, partner credits and non-scene graphics are rejected
+  ---
+  duration_ms: 0.536376
+  ...
+# Subtest: NASA images: queries search one-word article titles and renditions prefer ~large JPEG
+ok 172 - NASA images: queries search one-word article titles and renditions prefer ~large JPEG
+  ---
+  duration_ms: 1.717992
+  ...
+# Subtest: NASA images: search returns attributed public-domain stills and skips rejected items
+ok 173 - NASA images: search returns attributed public-domain stills and skips rejected items
+  ---
+  duration_ms: 1.2373
+  ...
+# Subtest: NASA videos: data visualizations pass, broadcasts and people stories do not
+ok 174 - NASA videos: data visualizations pass, broadcasts and people stories do not
+  ---
+  duration_ms: 4.000341
+  ...
+# Subtest: NASA videos: renditions prefer ~medium then ~small MP4 over https
+ok 175 - NASA videos: renditions prefer ~medium then ~small MP4 over https
+  ---
+  duration_ms: 0.785864
+  ...
+# Subtest: NASA videos: oversize renditions, short or black clips are skipped; credits recorded
+ok 176 - NASA videos: oversize renditions, short or black clips are skipped; credits recorded
+  ---
+  duration_ms: 13.553363
+  ...
+# Subtest: shared OAuth layer retries transient refresh and classifies failures without response bodies
+ok 177 - shared OAuth layer retries transient refresh and classifies failures without response bodies
+  ---
+  duration_ms: 4.102914
+  ...
+# Subtest: scope verification falls back to Google tokeninfo when refresh response omits scope
+ok 178 - scope verification falls back to Google tokeninfo when refresh response omits scope
+  ---
+  duration_ms: 2.716374
+  ...
+# Subtest: all four channels healthy are independently refreshed, scoped and identity checked
+ok 179 - all four channels healthy are independently refreshed, scoped and identity checked
+  ---
+  duration_ms: 2.200416
+  ...
+# Subtest: missing refresh token is critical and names only the missing secret
+ok 180 - missing refresh token is critical and names only the missing secret
+  ---
+  duration_ms: 0.685966
+  ...
+# Subtest: invalid_grant is critical and does not expose credentials
+ok 181 - invalid_grant is critical and does not expose credentials
+  ---
+  duration_ms: 0.915367
+  ...
+# Subtest: wrong authenticated channel ID is a critical per-channel upload block
+ok 182 - wrong authenticated channel ID is a critical per-channel upload block
+  ---
+  duration_ms: 0.486121
+  ...
+# Subtest: upload pre-flight rejects missing write scope and ambiguous mine=true identity before mutation
+ok 183 - upload pre-flight rejects missing write scope and ambiguous mine=true identity before mutation
+  ---
+  duration_ms: 1.32823
+  ...
+# Subtest: missing repository-required scope is reported while force-ssl still governs upload permission
+ok 184 - missing repository-required scope is reported while force-ssl still governs upload permission
+  ---
+  duration_ms: 0.519715
+  ...
+# Subtest: one broken channel never masks or blocks the other three
+ok 185 - one broken channel never masks or blocks the other three
+  ---
+  duration_ms: 1.201593
+  ...
+# Subtest: authorization deadline has warning, critical and expired thresholds
+ok 186 - authorization deadline has warning, critical and expired thresholds
+  ---
+  duration_ms: 0.487694
+  ...
+# Subtest: a near or passed re-auth deadline alerts but does not block a channel whose live refresh works
+ok 187 - a near or passed re-auth deadline alerts but does not block a channel whose live refresh works
+  ---
+  duration_ms: 0.67215
+  ...
+# Subtest: secret masking keeps client secret, refresh token, access token and Authorization header out of reports
+ok 188 - secret masking keeps client secret, refresh token, access token and Authorization header out of reports
+  ---
+  duration_ms: 1.124939
+  ...
+# Subtest: TikTok is checked only for Failure Reconstructed and is N/A elsewhere
+ok 189 - TikTok is checked only for Failure Reconstructed and is N/A elsewhere
+  ---
+  duration_ms: 1.664661
+  ...
+# Subtest: partial FR migration never mixes scoped and legacy OAuth credential bundles
+ok 190 - partial FR migration never mixes scoped and legacy OAuth credential bundles
+  ---
+  duration_ms: 1.816756
+  ...
+# Subtest: issue notification state ignores countdown text and comments only on status transitions
+ok 191 - issue notification state ignores countdown text and comments only on status transitions
+  ---
+  duration_ms: 17.926795
+  ...
+# Subtest: health issue comments once on recovery, closes when healthy, and is not created while healthy
+ok 192 - health issue comments once on recovery, closes when healthy, and is not created while healthy
+  ---
+  duration_ms: 1.742096
+  ...
+# Subtest: legacy Failure Reconstructed pre-flight passes its channel explicitly and reauth helper saves a complete bundle
+ok 193 - legacy Failure Reconstructed pre-flight passes its channel explicitly and reauth helper saves a complete bundle
+  ---
+  duration_ms: 0.756959
+  ...
+# Subtest: all YouTube write entry points use the shared channel-aware auth guard
+ok 194 - all YouTube write entry points use the shared channel-aware auth guard
+  ---
+  duration_ms: 0.944661
+  ...
+# Subtest: OAuth Actions health isolates credentials, then writes one complete summary and persistent issue
+ok 195 - OAuth Actions health isolates credentials, then writes one complete summary and persistent issue
+  ---
+  duration_ms: 0.83755
+  ...
+# Subtest: MONET-01: readiness uses only real data, labels it an estimate and never extrapolates
+ok 196 - MONET-01: readiness uses only real data, labels it an estimate and never extrapolates
+  ---
+  duration_ms: 5.60501
+  ...
+# Subtest: REPORT-01: the daily report shows warehouse freshness, ops, quota and readiness per channel
+ok 197 - REPORT-01: the daily report shows warehouse freshness, ops, quota and readiness per channel
+  ---
+  duration_ms: 10.443322
+  ...
+# Subtest: TEST-07: production behaviour is not silently altered by the platform work
+ok 198 - TEST-07: production behaviour is not silently altered by the platform work
+  ---
+  duration_ms: 10.800432
+  ...
+# Subtest: TIKTOK-01 (blocked): TikTok stays retired by the owner's decision, its code dormant and intact
+ok 199 - TIKTOK-01 (blocked): TikTok stays retired by the owner's decision, its code dormant and intact
+  ---
+  duration_ms: 0.79455
+  ...
+# Subtest: OBS: scheduler tasks from earlier days are settled, so queue depth and job age are meaningful
+ok 200 - OBS: scheduler tasks from earlier days are settled, so queue depth and job age are meaningful
+  ---
+  duration_ms: 25.986918
+  ...
+# Subtest: popularity score is log-scaled monthly pageviews
+ok 201 - popularity score is log-scaled monthly pageviews
+  ---
+  duration_ms: 2.05353
+  ...
+# Subtest: the primary article is the topic's own Wikipedia source for each channel
+ok 202 - the primary article is the topic's own Wikipedia source for each channel
+  ---
+  duration_ms: 0.508023
+  ...
+# Subtest: the committed pageview file covers the produced topics and resolves redirects
+ok 203 - the committed pageview file covers the produced topics and resolves redirects
+  ---
+  duration_ms: 2.642415
+  ...
+# Subtest: normalized topics carry measured popularity, and it drives demand and recognizability
+ok 204 - normalized topics carry measured popularity, and it drives demand and recognizability
+  ---
+  duration_ms: 28.648471
+  ...
+# Subtest: PROV-01: IB/CT manifests carry source, URL, licence, evidence and attribution duty per asset
+ok 205 - PROV-01: IB/CT manifests carry source, URL, licence, evidence and attribution duty per asset
+  ---
+  duration_ms: 3.891557
+  ...
+# Subtest: PROV-01: Failure Reconstructed credit lines become provenance entries without guessing a licence
+ok 206 - PROV-01: Failure Reconstructed credit lines become provenance entries without guessing a licence
+  ---
+  duration_ms: 1.494442
+  ...
+# Subtest: THUMB-01: thumbnail variants are versioned by hash with concept, layout, text and selection
+ok 207 - THUMB-01: thumbnail variants are versioned by hash with concept, layout, text and selection
+  ---
+  duration_ms: 15.126449
+  ...
+# Subtest: the licensing gate is opt-in and blocks before any upload session
+ok 208 - the licensing gate is opt-in and blocks before any upload session
+  ---
+  duration_ms: 0.497012
+  ...
+# Subtest: idempotency key is stable for the same upload and changes with any identity field
+ok 209 - idempotency key is stable for the same upload and changes with any identity field
+  ---
+  duration_ms: 3.206402
+  ...
+# Subtest: intentional replacements require traceable metadata and a new media identity
+ok 210 - intentional replacements require traceable metadata and a new media identity
+  ---
+  duration_ms: 0.443943
+  ...
+# Subtest: failures are classified; only transient ones are retried
+ok 211 - failures are classified; only transient ones are retried
+  ---
+  duration_ms: 1.039018
+  ...
+# Subtest: backoff is bounded exponential with full jitter
+ok 212 - backoff is bounded exponential with full jitter
+  ---
+  duration_ms: 0.279855
+  ...
+# Subtest: journal keeps resumable session URLs out of the committed file
+ok 213 - journal keeps resumable session URLs out of the committed file
+  ---
+  duration_ms: 2.337854
+  ...
+# Subtest: remote reconciliation matches by normalized title or by the scheduled slot
+ok 214 - remote reconciliation matches by normalized title or by the scheduled slot
+  ---
+  duration_ms: 0.307236
+  ...
+# Subtest: reconciliation fails closed when the channel's uploads cannot be read
+ok 215 - reconciliation fails closed when the channel's uploads cannot be read
+  ---
+  duration_ms: 1.029651
+  ...
+# Subtest: resumable session status: complete, incomplete with received bytes, expired
+ok 216 - resumable session status: complete, incomplete with received bytes, expired
+  ---
+  duration_ms: 0.481413
+  ...
+# Subtest: TEST-02: a network drop after YouTube received the whole file never opens a second session
+ok 217 - TEST-02: a network drop after YouTube received the whole file never opens a second session
+  ---
+  duration_ms: 1.217182
+  ...
+# Subtest: TEST-05: an interrupted upload resumes from the received byte instead of starting over
+ok 218 - TEST-05: an interrupted upload resumes from the received byte instead of starting over
+  ---
+  duration_ms: 0.833163
+  ...
+# Subtest: validation, auth and quota failures are not retried; unknown session state never opens a new session
+ok 219 - validation, auth and quota failures are not retried; unknown session state never opens a new session
+  ---
+  duration_ms: 3.09849
+  ...
+# Subtest: an expired session is replaced only after YouTube says it is gone
+ok 220 - an expired session is replaced only after YouTube says it is gone
+  ---
+  duration_ms: 1.197715
+  ...
+# Subtest: ID-02: a publish job can only be uploaded with its own channel's credentials
+ok 221 - ID-02: a publish job can only be uploaded with its own channel's credentials
+  ---
+  duration_ms: 0.443342
+  ...
+# Subtest: publish modes: live by default, shadow and dry-run explicit
+ok 222 - publish modes: live by default, shadow and dry-run explicit
+  ---
+  duration_ms: 0.27183
+  ...
+# Subtest: the uploader is wired fail-closed: journal before bytes, reconcile before upload, no title-only fallback
+ok 223 - the uploader is wired fail-closed: journal before bytes, reconcile before upload, no title-only fallback
+  ---
+  duration_ms: 0.395882
+  ...
+# Subtest: publish-time cohorts preserve 01:00 evidence without claiming significance
+ok 224 - publish-time cohorts preserve 01:00 evidence without claiming significance
+  ---
+  duration_ms: 28.111211
+  ...
+# Subtest: QUOTA-01: every cost comes from the policy file; unknown operations are refused
+ok 225 - QUOTA-01: every cost comes from the policy file; unknown operations are refused
+  ---
+  duration_ms: 2.444905
+  ...
+# Subtest: QUOTA-02: the budget is per Google project, shared by the channels on it, and resets on the Pacific day
+ok 226 - QUOTA-02: the budget is per Google project, shared by the channels on it, and resets on the Pacific day
+  ---
+  duration_ms: 29.925223
+  ...
+# Subtest: OBS-01 / SEC-02: ops events are structured, per channel, and never carry credentials
+ok 227 - OBS-01 / SEC-02: ops events are structured, per channel, and never carry credentials
+  ---
+  duration_ms: 2.505107
+  ...
+# Subtest: the shared API client charges quota per call, but never from tests
+ok 228 - the shared API client charges quota per call, but never from tests
+  ---
+  duration_ms: 0.514675
+  ...
+# Subtest: production SLA emits the required healthy machine-readable shape
+ok 229 - production SLA emits the required healthy machine-readable shape
+  ---
+  duration_ms: 27.856033
+  ...
+# Subtest: missed scheduler starts recovery; a human is notified only if recovery also fails
+ok 230 - missed scheduler starts recovery; a human is notified only if recovery also fails
+  ---
+  duration_ms: 0.451457
+  ...
+# Subtest: YouTube API absence is required before watchdog recovery
+ok 231 - YouTube API absence is required before watchdog recovery
+  ---
+  duration_ms: 0.820889
+  ...
+# Subtest: YouTube upload-list API errors cannot masquerade as an empty channel
+ok 232 - YouTube upload-list API errors cannot masquerade as an empty channel
+  ---
+  duration_ms: 1.874244
+  ...
+# Subtest: TikTok duplicate protection treats any durable publishId as already sent
+ok 233 - TikTok duplicate protection treats any durable publishId as already sent
+  ---
+  duration_ms: 0.251802
+  ...
+# Subtest: TikTok account pinning uses a non-reversible fingerprint and blocks a different account
+ok 234 - TikTok account pinning uses a non-reversible fingerprint and blocks a different account
+  ---
+  duration_ms: 1.173681
+  ...
+# Subtest: current historical TikTok candidate is Tacoma Narrows
+ok 235 - current historical TikTok candidate is Tacoma Narrows
+  ---
+  duration_ms: 0.39451
+  ...
+# Subtest: TikTok is retired: no workflow sends to it and no channel enables it
+ok 236 - TikTok is retired: no workflow sends to it and no channel enables it
+  ---
+  duration_ms: 1.945147
+  ...
+# Subtest: pull-request E2E recognizes safe rejections from both quality gates
+ok 237 - pull-request E2E recognizes safe rejections from both quality gates
+  ---
+  duration_ms: 0.45871
+  ...
+# Subtest: comment replies run independently every four hours with a conservative cap
+ok 238 - comment replies run independently every four hours with a conservative cap
+  ---
+  duration_ms: 0.743243
+  ...
+# Subtest: comment reply classifier remains conservative and failed writes stay retryable
+ok 239 - comment reply classifier remains conservative and failed writes stay retryable
+  ---
+  duration_ms: 3.54135
+  ...
+# Subtest: portfolio dry runs cannot upload, notify, or commit state
+ok 240 - portfolio dry runs cannot upload, notify, or commit state
+  ---
+  duration_ms: 0.422762
+  ...
+# Subtest: REVIEW content is neither uploadable nor automatically scheduled
+ok 241 - REVIEW content is neither uploadable nor automatically scheduled
+  ---
+  duration_ms: 0.781175
+  ...
+# {"event":"watchdog_dispatch_started","repository":"eyazan/youtube-otomasyon","eventType":"production-sla-watchdog","firedAt":"2026-10-04T15:26:47.468Z","version":"development","commit":"unknown"}
+# {"event":"watchdog_dispatch_succeeded","ok":true,"repository":"eyazan/youtube-otomasyon","status":204,"eventType":"production-sla-watchdog","firedAt":"2026-10-04T15:26:47.468Z","version":"development","commit":"unknown"}
+# {"event":"watchdog_dispatch_started","repository":"eyazan/youtube-otomasyon","eventType":"production-sla-watchdog","firedAt":"2026-10-04T15:26:47.499Z","version":"v-test","commit":"abc123"}
+# Subtest: Cloudflare watchdog sends the independent repository_dispatch event
+ok 242 - Cloudflare watchdog sends the independent repository_dispatch event
+  ---
+  duration_ms: 28.962768
+  ...
+# Subtest: Cloudflare watchdog exposes deployment health and detailed non-204 errors
+ok 243 - Cloudflare watchdog exposes deployment health and detailed non-204 errors
+  ---
+  duration_ms: 30.304178
+  ...
+# Subtest: watchdog workflows enforce safe recovery, deployment evidence and no-production self-test
+ok 244 - watchdog workflows enforce safe recovery, deployment evidence and no-production self-test
+  ---
+  duration_ms: 0.761308
+  ...
+# Subtest: daily operations report covers all channels and TikTok only for Failure Reconstructed
+ok 245 - daily operations report covers all channels and TikTok only for Failure Reconstructed
+  ---
+  duration_ms: 322.617379
+  ...
+# Subtest: rendered-visual gate blocks the old repeated generic composition
+ok 246 - rendered-visual gate blocks the old repeated generic composition
+  ---
+  duration_ms: 1.7603
+  ...
+# Subtest: rendered-visual gate passes varied licensed stills and sourced cards
+ok 247 - rendered-visual gate passes varied licensed stills and sourced cards
+  ---
+  duration_ms: 0.937357
+  ...
+# Subtest: opening semantic gate rejects generic roads/Oak Alley and accepts a real road-stud mechanism
+ok 248 - opening semantic gate rejects generic roads/Oak Alley and accepts a real road-stud mechanism
+  ---
+  duration_ms: 2.425057
+  ...
+# Subtest: Behind the Ordinary package gate has rendered-visual BLOCK parity
+ok 249 - Behind the Ordinary package gate has rendered-visual BLOCK parity
+  ---
+  duration_ms: 0.311353
+  ...
+# Subtest: number cards use only number-and-unit tokens present in their narration line
+ok 250 - number cards use only number-and-unit tokens present in their narration line
+  ---
+  duration_ms: 3.686835
+  ...
+# Subtest: cards only for values with a unit; bare numbers and identifiers stay off screen
+ok 251 - cards only for values with a unit; bare numbers and identifiers stay off screen
+  ---
+  duration_ms: 0.227888
+  ...
+# Subtest: visual plan leads with photographs, caps cards, and reuses stills with a new camera move
+ok 252 - visual plan leads with photographs, caps cards, and reuses stills with a new camera move
+  ---
+  duration_ms: 3.233452
+  ...
+# Subtest: number-card type scales down wide sourced values to stay inside the card
+ok 253 - number-card type scales down wide sourced values to stay inside the card
+  ---
+  duration_ms: 0.562985
+  ...
+# Subtest: pipeline skips a topic rejected only by the rendered-visual gate
+ok 254 - pipeline skips a topic rejected only by the rendered-visual gate
+  ---
+  duration_ms: 15.053126
+  ...
+# Subtest: music bed mood follows the topic category; colour grade is per channel
+ok 255 - music bed mood follows the topic category; colour grade is per channel
+  ---
+  duration_ms: 1.133295
+  ...
+# Subtest: ImpossibleBrief records render with their channel's look and music
+ok 256 - ImpossibleBrief records render with their channel's look and music
+  ---
+  duration_ms: 22.42538
+  ...
+# Subtest: a still comes back only when the previous shot cannot hold longer
+ok 257 - a still comes back only when the previous shot cannot hold longer
+  ---
+  duration_ms: 1.39687
+  ...
+# Subtest: artist's illustrations and cutaways never count as photographs
+ok 258 - artist's illustrations and cutaways never count as photographs
+  ---
+  duration_ms: 0.23516
+  ...
+# Subtest: ImpossibleBrief and CriticalThread narrate at Failure Reconstructed's brisker Shorts pace
+ok 259 - ImpossibleBrief and CriticalThread narrate at Failure Reconstructed's brisker Shorts pace
+  ---
+  duration_ms: 1.166687
+  ...
+# Subtest: multi-panel comparisons and composites are shown whole, never cropped as a photo
+ok 260 - multi-panel comparisons and composites are shown whole, never cropped as a photo
+  ---
+  duration_ms: 0.289102
+  ...
+# Subtest: stills: the story's own article leads, and within it pictures naming the subject
+ok 261 - stills: the story's own article leads, and within it pictures naming the subject
+  ---
+  duration_ms: 1.44534
+  ...
+# Subtest: visual pre-check skips picture-poor topics before a render, but never on a source outage
+ok 262 - visual pre-check skips picture-poor topics before a render, but never on a source outage
+  ---
+  duration_ms: 4.245321
+  ...
+# Subtest: multi-panel figures are detected from titles listing several features
+ok 263 - multi-panel figures are detected from titles listing several features
+  ---
+  duration_ms: 0.431319
+  ...
+# Subtest: number cards count up only for whole sourced values, then show the exact text
+ok 264 - number cards count up only for whole sourced values, then show the exact text
+  ---
+  duration_ms: 1.071529
+  ...
+# Subtest: episode numbers: next Short is published count + 1; a published topic keeps its number
+ok 265 - episode numbers: next Short is published count + 1; a published topic keeps its number
+  ---
+  duration_ms: 2.278914
+  ...
+# Subtest: the series tag sits above the hook in the channel accent for the first two seconds
+ok 266 - the series tag sits above the hook in the channel accent for the first two seconds
+  ---
+  duration_ms: 0.665277
+  ...
+# Subtest: Failure Reconstructed shows FAILURE FILE \#n above its hook and in the description
+ok 267 - Failure Reconstructed shows FAILURE FILE \#n above its hook and in the description
+  ---
+  duration_ms: 46.313773
+  ...
+# Subtest: stock footage: the page slug must name the topic, and people clips are rejected
+ok 268 - stock footage: the page slug must name the topic, and people clips are rejected
+  ---
+  duration_ms: 9.395888
+  ...
+# Subtest: stock footage: only portrait HD MP4 files are used, closest to 1920 tall
+ok 269 - stock footage: only portrait HD MP4 files are used, closest to 1920 tall
+  ---
+  duration_ms: 0.442219
+  ...
+# Subtest: stock footage: search authenticates only against the API, skips dark clips, and records credits
+ok 270 - stock footage: search authenticates only against the API, skips dark clips, and records credits
+  ---
+  duration_ms: 5.139326
+  ...
+# Subtest: visual plan places each clip once, spaced out, and counts footage as real imagery
+ok 271 - visual plan places each clip once, spaced out, and counts footage as real imagery
+  ---
+  duration_ms: 7.466099
+  ...
+# Subtest: tum .js/.cjs dosyalari derlenir
+ok 272 - tum .js/.cjs dosyalari derlenir
+  ---
+  duration_ms: 5373.88151
+  ...
+# Subtest: config ve konu JSON dosyalari gecerli
+ok 273 - config ve konu JSON dosyalari gecerli
+  ---
+  duration_ms: 150.206787
+  ...
+# Subtest: ANALYTICS-01/05: daily tables carry real API metrics plus derived ones; impressions/CTR are marked unavailable
+ok 274 - ANALYTICS-01/05: daily tables carry real API metrics plus derived ones; impressions/CTR are marked unavailable
+  ---
+  duration_ms: 21.659474
+  ...
+# Subtest: ANALYTICS-02: first run backfills; later runs only re-read the trailing days and upsert
+ok 275 - ANALYTICS-02: first run backfills; later runs only re-read the trailing days and upsert
+  ---
+  duration_ms: 10.886903
+  ...
+# Subtest: an unsupported optional dimension is recorded, not guessed, and does not stop the other tables
+ok 276 - an unsupported optional dimension is recorded, not guessed, and does not stop the other tables
+  ---
+  duration_ms: 2.318628
+  ...
+# Subtest: TEST-03: each channel's warehouse is a separate partition
+ok 277 - TEST-03: each channel's warehouse is a separate partition
+  ---
+  duration_ms: 2.369332
+  ...
+# Subtest: derived metrics are NULL-safe
+ok 278 - derived metrics are NULL-safe
+  ---
+  duration_ms: 1.138535
+  ...
+# Subtest: the sync verifies the channel before writing and runs in the daily analytics loop
+ok 279 - the sync verifies the channel before writing and runs in the daily analytics loop
+  ---
+  duration_ms: 0.342182
+  ...
+# Subtest: per-video publish-relative performance carries the spec's derived metrics
+ok 280 - per-video publish-relative performance carries the spec's derived metrics
+  ---
+  duration_ms: 3.858054
+  ...
+# Subtest: publish slots: the 21:00 baseline and preserved 01:00 experiment cohort
+ok 281 - publish slots: the 21:00 baseline and preserved 01:00 experiment cohort
+  ---
+  duration_ms: 26.210298
+  ...
+# Subtest: popularity bands follow the Wikipedia score
+ok 282 - popularity bands follow the Wikipedia score
+  ---
+  duration_ms: 0.285415
+  ...
+# Subtest: summary compares groups only with enough measured videos and reports recent videos
+ok 283 - summary compares groups only with enough measured videos and reports recent videos
+  ---
+  duration_ms: 5.128306
+  ...
+# Subtest: adopted learning and hypotheses are listed when present
+ok 284 - adopted learning and hypotheses are listed when present
+  ---
+  duration_ms: 0.505047
+  ...
+1..284
+# tests 284
+# suites 0
+# pass 282
+# fail 1
+# cancelled 0
+# skipped 1
+# todo 0
+# duration_ms 8632.031532
