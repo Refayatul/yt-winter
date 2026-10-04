@@ -1,7 +1,7 @@
 {
   "channel": "behind-the-ordinary",
   "channelName": "The Hidden Logic of Things",
-  "tarih": "2026-10-03T19:33:19.976Z",
+  "tarih": "2026-10-04T12:23:51.502Z",
   "aggregateManaged": true,
   "yuklemeUygun": true,
   "bulgular": [
@@ -23,7 +23,7 @@
     {
       "ad": "oauth-reauth-deadline",
       "durum": "uyari",
-      "mesaj": "Testing-mode re-authorization is recommended within 7.0 days",
+      "mesaj": "Testing-mode re-authorization is recommended within 6.3 days",
       "cozum": "Run `node youtube-yetki.js --channel behind-the-ordinary --oauth-mode=production --github` after confirming Google Auth Platform → Audience is In production."
     },
     {
@@ -33,8 +33,9 @@
     },
     {
       "ad": "kutuphane",
-      "durum": "ok",
-      "mesaj": "7 günlük üretilmemiş konu var"
+      "durum": "uyari",
+      "mesaj": "6 günlük üretilmemiş konu var",
+      "cozum": "Kütüphaneye yeni konu eklenmeli (icerik/konular/)."
     }
   ]
 }

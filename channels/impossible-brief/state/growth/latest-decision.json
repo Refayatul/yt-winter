@@ -2,128 +2,16 @@
   "schema": "growth-topic-decision/1",
   "channel": "impossible-brief",
   "contentType": "short",
-  "date": "2026-10-03",
-  "createdAt": "2026-10-03T11:31:03.041Z",
+  "date": "2026-10-04",
+  "createdAt": "2026-10-04T12:12:09.802Z",
   "mode": "EXPLOIT",
-  "modeRoll": 0.382,
+  "modeRoll": 0.846,
   "pool": {
     "minimum": 20,
     "target": 50,
     "count": 50,
     "meetsMinimum": true,
     "candidates": [
-      {
-        "topicId": "IB-SPA-098",
-        "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
-        "topic": "What If the Dinosaur-Killing Asteroid Hit Today?",
-        "cluster": "SPACE",
-        "bucket": "A",
-        "viralScore": 80,
-        "videoPotentialScore": 89,
-        "selectionScore": 84,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 96,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 94,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 81,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 60,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 97,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 97,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 89,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 87,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 100,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 50,
-            "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
-          },
-          "source_confidence_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "98/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "visual_first_reveal",
-          "spoken": "One 10-kilometre asteroid ended the age of dinosaurs.",
-          "score": 81
-        },
-        "rejectionReasons": [
-          "VideoPotential 89 ≥ 80",
-          "hook 81",
-          "sources 98"
-        ]
-      },
       {
         "topicId": "IB-SPA-056",
         "slug": "what-if-you-put-saturn-in-a-bathtub",
@@ -202,7 +90,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": 0,
@@ -210,9 +98,9 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -314,7 +202,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": 0,
@@ -322,9 +210,9 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -452,118 +340,6 @@
         "selectedHook": {
           "family": "visual_first_reveal",
           "spoken": "Why water once climbed 524 metres up a mountain.",
-          "score": 80
-        },
-        "rejectionReasons": [
-          "VideoPotential 87 ≥ 80",
-          "hook 80",
-          "sources 98"
-        ]
-      },
-      {
-        "topicId": "IB-SPA-006",
-        "slug": "what-if-the-1859-solar-superstorm-hit-today",
-        "topic": "What If the 1859 Solar Superstorm Hit Today?",
-        "cluster": "SPACE",
-        "bucket": "A",
-        "viralScore": 78,
-        "videoPotentialScore": 87,
-        "selectionScore": 82,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 99,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 94,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 75,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 75,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 60,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 93,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 89,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 91,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 87,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 88,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 50,
-            "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
-          },
-          "source_confidence_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "98/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "visual_first_reveal",
-          "spoken": "Why a repeat of 1859 could cost $2.6 trillion.",
           "score": 80
         },
         "rejectionReasons": [
@@ -1357,6 +1133,118 @@
         ]
       },
       {
+        "topicId": "IB-SPA-006",
+        "slug": "what-if-the-1859-solar-superstorm-hit-today",
+        "topic": "What If the 1859 Solar Superstorm Hit Today?",
+        "cluster": "SPACE",
+        "bucket": "A",
+        "viralScore": 77,
+        "videoPotentialScore": 87,
+        "selectionScore": 81,
+        "viralComponents": {
+          "curiosity_gap": {
+            "value": 99,
+            "basis": "derived"
+          },
+          "immediate_stakes": {
+            "value": 94,
+            "basis": "derived"
+          },
+          "human_consequence": {
+            "value": 75,
+            "basis": "derived"
+          },
+          "recognizability": {
+            "value": 75,
+            "basis": "measured"
+          },
+          "surprise": {
+            "value": 60,
+            "basis": "derived"
+          },
+          "visual_potential": {
+            "value": 93,
+            "basis": "inventory-signal"
+          },
+          "archival_footage_potential": {
+            "value": 35,
+            "basis": "inventory-signal"
+          },
+          "first_frame_potential": {
+            "value": 68,
+            "basis": "derived"
+          },
+          "title_potential": {
+            "value": 84,
+            "basis": "derived",
+            "note": "3 source-backed title seeds"
+          },
+          "emotional_tension": {
+            "value": 89,
+            "basis": "derived"
+          },
+          "contradiction": {
+            "value": 85,
+            "basis": "derived"
+          },
+          "unexpected_cause": {
+            "value": 82,
+            "basis": "derived"
+          },
+          "numerical_anomaly": {
+            "value": 95,
+            "basis": "derived"
+          },
+          "didnt_know_factor": {
+            "value": 91,
+            "basis": "derived"
+          },
+          "shareability": {
+            "value": 87,
+            "basis": "derived"
+          },
+          "channel_fit": {
+            "value": 88,
+            "basis": "derived"
+          },
+          "historical_similarity": {
+            "value": 50,
+            "basis": "learned",
+            "note": "2 same-cluster upload(s), breakout rate 0"
+          },
+          "duplicate_risk": {
+            "value": 0,
+            "basis": "penalty",
+            "note": "no published-title collision"
+          },
+          "saturation_risk": {
+            "value": -5,
+            "basis": "penalty",
+            "note": "2 published / 125 inventory in cluster"
+          },
+          "source_confidence_risk": {
+            "value": -2,
+            "basis": "penalty",
+            "note": "98/100 source quality"
+          },
+          "weak_footage_risk": {
+            "value": -33,
+            "basis": "penalty",
+            "note": "no archival footage confirmed"
+          }
+        },
+        "selectedHook": {
+          "family": "visual_first_reveal",
+          "spoken": "Why a repeat of 1859 could cost $2.6 trillion.",
+          "score": 80
+        },
+        "rejectionReasons": [
+          "VideoPotential 87 ≥ 80",
+          "hook 80",
+          "sources 98"
+        ]
+      },
+      {
         "topicId": "IB-SPA-021",
         "slug": "what-if-you-lived-on-mars",
         "topic": "What If You Lived on Mars?",
@@ -1434,7 +1322,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": 0,
@@ -1442,9 +1330,9 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -1546,7 +1434,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": 0,
@@ -1554,9 +1442,9 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -1882,7 +1770,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": 0,
@@ -1890,9 +1778,9 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -2666,7 +2554,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": 0,
@@ -2674,9 +2562,9 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -4122,7 +4010,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": 0,
@@ -4130,9 +4018,9 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -4153,118 +4041,6 @@
         "rejectionReasons": [
           "VideoPotential 86 ≥ 80",
           "hook 81",
-          "sources 98"
-        ]
-      },
-      {
-        "topicId": "IB-SPA-086",
-        "slug": "what-if-earth-were-tilted-like-uranus",
-        "topic": "What If Earth Were Tilted Like Uranus?",
-        "cluster": "SPACE",
-        "bucket": "A",
-        "viralScore": 74,
-        "videoPotentialScore": 86,
-        "selectionScore": 79,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 70,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 35,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 76,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 80,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 95,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 57,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 89,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 91,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 100,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 50,
-            "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
-          },
-          "source_confidence_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "98/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "visual_first_reveal",
-          "spoken": "Why Uranus's poles get 42 years of sunlight.",
-          "score": 79
-        },
-        "rejectionReasons": [
-          "VideoPotential 86 ≥ 80",
-          "hook 79",
           "sources 98"
         ]
       },
@@ -4346,7 +4122,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": 0,
@@ -4354,9 +4130,9 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -4570,7 +4346,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": 0,
@@ -4578,9 +4354,9 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -5578,7 +5354,7 @@
           "historical_similarity": {
             "value": 50,
             "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
+            "note": "2 same-cluster upload(s), breakout rate 0"
           },
           "duplicate_risk": {
             "value": -17,
@@ -5586,9 +5362,9 @@
             "note": "published-title similarity 0.17"
           },
           "saturation_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "1 published / 125 inventory in cluster"
+            "note": "2 published / 125 inventory in cluster"
           },
           "source_confidence_risk": {
             "value": -2,
@@ -5611,21 +5387,245 @@
           "hook 85",
           "sources 98"
         ]
+      },
+      {
+        "topicId": "IB-SPA-086",
+        "slug": "what-if-earth-were-tilted-like-uranus",
+        "topic": "What If Earth Were Tilted Like Uranus?",
+        "cluster": "SPACE",
+        "bucket": "A",
+        "viralScore": 73,
+        "videoPotentialScore": 86,
+        "selectionScore": 78,
+        "viralComponents": {
+          "curiosity_gap": {
+            "value": 95,
+            "basis": "derived"
+          },
+          "immediate_stakes": {
+            "value": 70,
+            "basis": "derived"
+          },
+          "human_consequence": {
+            "value": 35,
+            "basis": "derived"
+          },
+          "recognizability": {
+            "value": 76,
+            "basis": "measured"
+          },
+          "surprise": {
+            "value": 80,
+            "basis": "derived"
+          },
+          "visual_potential": {
+            "value": 95,
+            "basis": "inventory-signal"
+          },
+          "archival_footage_potential": {
+            "value": 35,
+            "basis": "inventory-signal"
+          },
+          "first_frame_potential": {
+            "value": 68,
+            "basis": "derived"
+          },
+          "title_potential": {
+            "value": 84,
+            "basis": "derived",
+            "note": "3 source-backed title seeds"
+          },
+          "emotional_tension": {
+            "value": 57,
+            "basis": "derived"
+          },
+          "contradiction": {
+            "value": 85,
+            "basis": "derived"
+          },
+          "unexpected_cause": {
+            "value": 82,
+            "basis": "derived"
+          },
+          "numerical_anomaly": {
+            "value": 95,
+            "basis": "derived"
+          },
+          "didnt_know_factor": {
+            "value": 89,
+            "basis": "derived"
+          },
+          "shareability": {
+            "value": 91,
+            "basis": "derived"
+          },
+          "channel_fit": {
+            "value": 100,
+            "basis": "derived"
+          },
+          "historical_similarity": {
+            "value": 50,
+            "basis": "learned",
+            "note": "2 same-cluster upload(s), breakout rate 0"
+          },
+          "duplicate_risk": {
+            "value": 0,
+            "basis": "penalty",
+            "note": "no published-title collision"
+          },
+          "saturation_risk": {
+            "value": -5,
+            "basis": "penalty",
+            "note": "2 published / 125 inventory in cluster"
+          },
+          "source_confidence_risk": {
+            "value": -2,
+            "basis": "penalty",
+            "note": "98/100 source quality"
+          },
+          "weak_footage_risk": {
+            "value": -33,
+            "basis": "penalty",
+            "note": "no archival footage confirmed"
+          }
+        },
+        "selectedHook": {
+          "family": "visual_first_reveal",
+          "spoken": "Why Uranus's poles get 42 years of sunlight.",
+          "score": 79
+        },
+        "rejectionReasons": [
+          "VideoPotential 86 ≥ 80",
+          "hook 79",
+          "sources 98"
+        ]
+      },
+      {
+        "topicId": "IB-SPA-106",
+        "slug": "what-if-pluto-were-still-a-planet",
+        "topic": "What If Pluto Were Still a Planet?",
+        "cluster": "SPACE",
+        "bucket": "A",
+        "viralScore": 73,
+        "videoPotentialScore": 86,
+        "selectionScore": 78,
+        "viralComponents": {
+          "curiosity_gap": {
+            "value": 95,
+            "basis": "derived"
+          },
+          "immediate_stakes": {
+            "value": 70,
+            "basis": "derived"
+          },
+          "human_consequence": {
+            "value": 35,
+            "basis": "derived"
+          },
+          "recognizability": {
+            "value": 79,
+            "basis": "measured"
+          },
+          "surprise": {
+            "value": 80,
+            "basis": "derived"
+          },
+          "visual_potential": {
+            "value": 82,
+            "basis": "inventory-signal"
+          },
+          "archival_footage_potential": {
+            "value": 35,
+            "basis": "inventory-signal"
+          },
+          "first_frame_potential": {
+            "value": 68,
+            "basis": "derived"
+          },
+          "title_potential": {
+            "value": 84,
+            "basis": "derived",
+            "note": "3 source-backed title seeds"
+          },
+          "emotional_tension": {
+            "value": 57,
+            "basis": "derived"
+          },
+          "contradiction": {
+            "value": 85,
+            "basis": "derived"
+          },
+          "unexpected_cause": {
+            "value": 82,
+            "basis": "derived"
+          },
+          "numerical_anomaly": {
+            "value": 95,
+            "basis": "derived"
+          },
+          "didnt_know_factor": {
+            "value": 89,
+            "basis": "derived"
+          },
+          "shareability": {
+            "value": 91,
+            "basis": "derived"
+          },
+          "channel_fit": {
+            "value": 100,
+            "basis": "derived"
+          },
+          "historical_similarity": {
+            "value": 50,
+            "basis": "learned",
+            "note": "2 same-cluster upload(s), breakout rate 0"
+          },
+          "duplicate_risk": {
+            "value": 0,
+            "basis": "penalty",
+            "note": "no published-title collision"
+          },
+          "saturation_risk": {
+            "value": -5,
+            "basis": "penalty",
+            "note": "2 published / 125 inventory in cluster"
+          },
+          "source_confidence_risk": {
+            "value": -2,
+            "basis": "penalty",
+            "note": "98/100 source quality"
+          },
+          "weak_footage_risk": {
+            "value": -33,
+            "basis": "penalty",
+            "note": "no archival footage confirmed"
+          }
+        },
+        "selectedHook": {
+          "family": "visual_first_reveal",
+          "spoken": "Why Pluto lost its planet status in 2006.",
+          "score": 86
+        },
+        "rejectionReasons": [
+          "VideoPotential 86 ≥ 80",
+          "hook 86",
+          "sources 98"
+        ]
       }
     ]
   },
   "selected": {
-    "topicId": "IB-SPA-098",
-    "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
-    "topic": "What If the Dinosaur-Killing Asteroid Hit Today?",
+    "topicId": "IB-SPA-056",
+    "slug": "what-if-you-put-saturn-in-a-bathtub",
+    "topic": "What If You Put Saturn in a Bathtub?",
     "cluster": "SPACE",
     "bucket": "A",
-    "viralScore": 80,
-    "videoPotentialScore": 89,
-    "selectionScore": 84,
+    "viralScore": 79,
+    "videoPotentialScore": 88,
+    "selectionScore": 83,
     "viralComponents": {
       "curiosity_gap": {
-        "value": 96,
+        "value": 89,
         "basis": "derived"
       },
       "immediate_stakes": {
@@ -5633,19 +5633,19 @@
         "basis": "derived"
       },
       "human_consequence": {
-        "value": 85,
+        "value": 75,
         "basis": "derived"
       },
       "recognizability": {
-        "value": 81,
+        "value": 80,
         "basis": "measured"
       },
       "surprise": {
-        "value": 60,
+        "value": 80,
         "basis": "derived"
       },
       "visual_potential": {
-        "value": 97,
+        "value": 96,
         "basis": "inventory-signal"
       },
       "archival_footage_potential": {
@@ -5662,7 +5662,7 @@
         "note": "3 source-backed title seeds"
       },
       "emotional_tension": {
-        "value": 97,
+        "value": 77,
         "basis": "derived"
       },
       "contradiction": {
@@ -5678,11 +5678,11 @@
         "basis": "derived"
       },
       "didnt_know_factor": {
-        "value": 89,
+        "value": 86,
         "basis": "derived"
       },
       "shareability": {
-        "value": 87,
+        "value": 97,
         "basis": "derived"
       },
       "channel_fit": {
@@ -5692,7 +5692,7 @@
       "historical_similarity": {
         "value": 50,
         "basis": "learned",
-        "note": "1 same-cluster upload(s), breakout rate 0"
+        "note": "2 same-cluster upload(s), breakout rate 0"
       },
       "duplicate_risk": {
         "value": 0,
@@ -5700,9 +5700,9 @@
         "note": "no published-title collision"
       },
       "saturation_risk": {
-        "value": -2,
+        "value": -5,
         "basis": "penalty",
-        "note": "1 published / 125 inventory in cluster"
+        "note": "2 published / 125 inventory in cluster"
       },
       "source_confidence_risk": {
         "value": -2,
@@ -5717,12 +5717,12 @@
     },
     "selectedHook": {
       "family": "visual_first_reveal",
-      "spoken": "One 10-kilometre asteroid ended the age of dinosaurs.",
-      "score": 81
+      "spoken": "Why a planet 95 times Earth's mass could float.",
+      "score": 84
     },
     "rejectionReasons": [
-      "VideoPotential 89 ≥ 80",
-      "hook 81",
+      "VideoPotential 88 ≥ 80",
+      "hook 84",
       "sources 98"
     ]
   },

@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-03T19:50:02.365Z
+Generated: 2026-10-04T12:29:09.242Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,85 +8,85 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | rana-plaza-2013 |
+| Today topic | chernobyl-1986 |
 | Short | scheduled |
 | Long | due-not-produced |
-| Quality | PUBLISH / 89 |
+| Quality | PUBLISH / 92 |
 | YouTube | scheduled |
-| Publish time | 2026-10-03T22:00:00.000Z |
-| Video ID | 4Mo58FxCr4A |
+| Publish time | 2026-10-04T22:00:00.000Z |
+| Video ID | Nk7vmybWY98 |
 | Analytics | measured |
 | Scheduler | healthy |
-| Ready topic backlog | 363 |
+| Ready topic backlog | 362 |
 | Errors/review/blocks | 3 |
 | TikTok today | NOT_SENT |
-| TikTok backlog | 3 |
-| Analytics warehouse | through 2026-10-01 (lag 2 d) |
+| TikTok backlog | 4 |
+| Analytics warehouse | through 2026-10-02 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-03 (0 d) |
-| API quota today | 0 / 9800 units (project channel:failure-reconstructed) |
+| Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
+| API quota today | 1613 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 21/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
 
 | Signal | Status |
 |---|---|
-| Today topic | what-if-the-dinosaur-killing-asteroid-hit-today |
+| Today topic | what-if-you-put-saturn-in-a-bathtub |
 | Short | scheduled |
 | Long | due-not-produced |
 | Quality | PUBLISH / unavailable |
 | YouTube | scheduled |
-| Publish time | 2026-10-03T22:00:00.000Z |
-| Video ID | u0iftg8gF5w |
+| Publish time | 2026-10-04T22:00:00.000Z |
+| Video ID | Vuvx5nEqcaY |
 | Analytics | measured |
 | Scheduler | healthy |
-| Ready topic backlog | 494 |
+| Ready topic backlog | 493 |
 | Errors/review/blocks | 1 |
-| Analytics warehouse | through 2026-10-01 (lag 2 d) |
+| Analytics warehouse | through 2026-10-02 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-03 (0 d) |
-| API quota today | 0 / 9800 units (project channel:impossible-brief) |
+| Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
+| API quota today | 1613 / 9800 units (project 684098966511) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
 
 | Signal | Status |
 |---|---|
-| Today topic | what-quietly-depends-on-uninterruptible-power-supply |
+| Today topic | why-nuclear-reactor-coolant-pump-is-so-hard-to-replace |
 | Short | scheduled |
 | Long | due-not-produced |
 | Quality | PUBLISH / unavailable |
 | YouTube | scheduled |
-| Publish time | 2026-10-03T22:00:00.000Z |
-| Video ID | hsuWhB8lCvU |
+| Publish time | 2026-10-04T22:00:00.000Z |
+| Video ID | rAZ4cE4A0DE |
 | Analytics | measured |
 | Scheduler | healthy |
-| Ready topic backlog | 518 |
+| Ready topic backlog | 517 |
 | Errors/review/blocks | 0 |
-| Analytics warehouse | through 2026-10-01 (lag 2 d) |
+| Analytics warehouse | through 2026-10-02 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-03 (0 d) |
-| API quota today | 0 / 9800 units (project channel:critical-thread) |
+| Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
+| API quota today | 1613 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
 
 | Signal | Status |
 |---|---|
-| Today topic | why-road-cats-eyes-clean-themselves |
+| Today topic | why-jeans-have-a-tiny-pocket |
 | Short | scheduled |
 | Long | due-not-produced |
 | Quality | PUBLISH / unavailable |
 | YouTube | scheduled |
-| Publish time | 2026-10-03T22:00:00.000Z |
-| Video ID | I9Lcpi9kPYs |
+| Publish time | 2026-10-04T22:00:00.000Z |
+| Video ID | ZTtPwqBSxpA |
 | Analytics | no-channel-measurements |
 | Scheduler | healthy |
-| Ready topic backlog | 6 |
-| Errors/review/blocks | 0 |
-| Analytics warehouse | through 2026-10-01 (lag 2 d) · 3 table error(s) |
-| Ops (24 h) | analytics.partial 1, publish.success 1, growth.decision 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-03 (0 d) |
-| API quota today | 1639 / 9800 units (project 739767423116) |
+| Ready topic backlog | 4 |
+| Errors/review/blocks | 1 |
+| Analytics warehouse | through 2026-10-01 (lag 3 d) · 3 table error(s) |
+| Ops (24 h) | analytics.partial 1, publish.success 2, growth.decision 2 |
+| Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
+| API quota today | 1611 / 9800 units (project 739767423116) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
