@@ -37,22 +37,24 @@ test("REPORT-01: the daily report shows warehouse freshness, ops, quota and read
   assert.match(md, /long-form watch h \(365 d\) unavailable\/4,000/, "missing stays unavailable, not zero");
 });
 
-test("TEST-07: production behaviour is not silently altered by the platform work", () => {
+test("TEST-07: production behaviour reflects the approved 21:00 all-channel schedule", () => {
   const Safety = require("../../lib/publish-safety");
   assert.equal(Safety.publishMode({}), "live", "uploads stay live unless PUBLISH_MODE says otherwise");
   const portfolio = read(".github/workflows/portfolio-production.yml");
-  for (const slug of ["failure-reconstructed", "impossible-brief", "critical-thread"]) {
+  for (const slug of ["failure-reconstructed", "impossible-brief", "critical-thread", "behind-the-ordinary"]) {
     assert.match(portfolio, new RegExp(`node shorts-sira\\.js --channel ${slug}`), `${slug} still produced by the portfolio run`);
   }
-  assert.match(portfolio, /PUBLISH: \$\{\{ vars\.IB_PUBLISH \}\}/);
-  assert.match(portfolio, /PUBLISH: \$\{\{ vars\.CT_PUBLISH \}\}/);
-  assert.doesNotMatch(portfolio, /PUBLISH_MODE|PROVENANCE_REQUIRED/, "new gates are opt-in, not switched on in production");
+  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name == 'schedule' && '1' \|\| vars\.IB_PUBLISH \}\}/);
+  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name == 'schedule' && '1' \|\| vars\.CT_PUBLISH \}\}/);
+  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name == 'schedule' && '1' \|\| vars\.BTO_PUBLISH \}\}/);
+  assert.doesNotMatch(portfolio, /PUBLISH_MODE|PROVENANCE_REQUIRED/, "new platform gates are not silently switched on in production");
   const uploader = read("youtube-yukle.js");
   assert.match(uploader, /let gizlilik = \(env\("YT_PRIVACY"\) \|\| "private"\)\.toLowerCase\(\);/, "default privacy unchanged");
   assert.match(uploader, /require\("\.\/core\/scheduling\/calendar"\)\.publishSlot\(CHANNEL/, "publish slot logic unchanged");
   const calendar = require("../../core/scheduling/calendar");
   const Channel = require("../../core/channel-context");
   assert.equal(calendar.shortSchedule(Channel.getChannel("failure-reconstructed")).timeZone, "Europe/Istanbul");
+  assert.equal(calendar.shortSchedule(Channel.getChannel("failure-reconstructed")).publishTime, "21:00");
 });
 
 test("TIKTOK-01 (blocked): TikTok stays retired by the owner's decision, its code dormant and intact", () => {

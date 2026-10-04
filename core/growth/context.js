@@ -10,7 +10,7 @@ const M = require("../../lib/metin");
 const Config = require("./config");
 const Model = require("./topic-model");
 const Sources = require("./sources");
-const Hooks = require("./hooks");
+const Hooks = require("./hooks-v2");
 const Scoring = require("./topic-scoring");
 
 function readJson(file, fallback) {
@@ -93,6 +93,10 @@ function evaluate(topic, ctx, options = {}) {
     performance: options.performance || {},
   };
   const score = Scoring.scoreShort(topic, scoringContext);
+  // Curated topics already passed a separate research/evidence gate. We carry
+  // that fact into readiness so they may clear a narrowly defined B-grade
+  // exception without weakening the generic auto-discovery A-only policy.
+  score.curatedResearch = !!((topic.raw && topic.raw.researched) || topic.productionReady === true);
   return { topic, boilerplate, hooks, sourceQuality, score };
 }
 

@@ -1,0 +1,185 @@
+{
+  "_comment": "Portfolio-wide Viral Quality Engine v2 overlay. Applied after channel overrides so minimum viral standards cannot be weakened by legacy cadence fallbacks. Channel identity/content rules remain channel-scoped.",
+  "candidatePool": {
+    "videoPotentialWeight": 0.3,
+    "viralPotentialWeight": 0.7
+  },
+  "viralScoring": {
+    "minimumToProduce": 75,
+    "penaltyScale": 0.3,
+    "weights": {
+      "curiosity_gap": 1.3,
+      "immediate_stakes": 1.4,
+      "human_consequence": 1.35,
+      "recognizability": 1.15,
+      "surprise": 1.15,
+      "visual_potential": 1.1,
+      "first_frame_potential": 1.25,
+      "emotional_tension": 1.2,
+      "unexpected_cause": 1.05,
+      "didnt_know_factor": 1.05,
+      "shareability": 1.35,
+      "subscriber_conversion_potential": 1.3,
+      "audience_breadth": 1.2,
+      "hook_potential": 1.35,
+      "visual_availability": 1.0,
+      "research_confidence": 1.1,
+      "duplicate_risk": 1.3,
+      "recent_fatigue_risk": 1.1,
+      "source_confidence_risk": 1.25,
+      "weak_footage_risk": 1.0
+    }
+  },
+  "selection": {
+    "exploitRatio": 0.75,
+    "exploreRatio": 0.25,
+    "exploitBuckets": ["A"],
+    "exploreBuckets": ["A"],
+    "exploreTopPerCluster": 2
+  },
+  "topic": {
+    "buckets": {
+      "A": 80,
+      "B": 72,
+      "C": 58
+    },
+    "bucketRequirements": {
+      "A": {
+        "hookMinimum": 78,
+        "sourceMinimum": 70,
+        "maxBoilerplateRatio": 0.22
+      },
+      "B": {
+        "hookMinimum": 72,
+        "sourceMinimum": 62,
+        "maxBoilerplateRatio": 0.35
+      }
+    },
+    "minimumSourcesForAB": 1,
+    "weights": {
+      "TopicDemandScore": 1.05,
+      "CuriosityScore": 1.2,
+      "HookPotentialScore": 1.4,
+      "VisualImpactScore": 1.05,
+      "EmotionalImpactScore": 1.25,
+      "StoryCompressionScore": 1.15,
+      "RewatchPotentialScore": 0.9,
+      "SharePotentialScore": 1.25,
+      "CommentPotentialScore": 0.75,
+      "SubscriberConversionPotential": 1.2,
+      "NoveltyScore": 0.8,
+      "AudienceFitScore": 1.15,
+      "SourceQualityScore": 1.1,
+      "ChannelFitScore": 1.0
+    }
+  },
+  "scheduler": {
+    "shorts": {
+      "primaryBuckets": ["A"],
+      "experimentalBucket": "A",
+      "experimentRatio": 0,
+      "neverProduce": ["B", "C", "D"],
+      "skipDayWhenNoQualifiedTopic": true,
+      "fallbackToC": false
+    }
+  },
+  "hooks": {
+    "minimumCandidates": 12,
+    "targetCandidates": 30,
+    "minimumScore": 76,
+    "maxSpokenWords": 10,
+    "spokenWordsPerSecond": 3.2,
+    "cosmeticSimilarity": 0.66,
+    "weights": {
+      "SwipeStoppingPower": 1.65,
+      "CuriosityGap": 1.4,
+      "Clarity": 1.05,
+      "Specificity": 1.15,
+      "EmotionalIntensity": 1.1,
+      "Credibility": 1.35,
+      "VisualCompatibility": 1.0,
+      "ChannelFit": 0.9,
+      "ImmediateComprehension": 1.25,
+      "RetentionExpectation": 1.3,
+      "VoiceoverNaturalness": 0.9,
+      "FirstFrameCompatibility": 1.1,
+      "FactualDefensibility": 1.3,
+      "ShortFormSuitability": 1.15
+    }
+  },
+  "firstSeconds": {
+    "minimumScore": 80,
+    "maxOnScreenWords": 4,
+    "firstCutWithinSeconds": 1.2,
+    "soundCue": true
+  },
+  "script": {
+    "shorts": {
+      "maxSentenceWords": 14,
+      "targetWords": [52, 78],
+      "minimumScore": 75
+    }
+  },
+  "pacing": {
+    "shorts": {
+      "openingSegmentSeconds": [0.7, 1.15],
+      "earlySegmentSeconds": [1.2, 1.9],
+      "laterSegmentSeconds": [2.2, 3.2],
+      "earlyWindowSeconds": 8,
+      "openingWindowSeconds": 3
+    }
+  },
+  "readiness": {
+    "shorts": {
+      "publish": 88,
+      "review": 76,
+      "weights": {
+        "topicPotential": 1.3,
+        "hook": 1.5,
+        "title": 0.8,
+        "script": 1.15,
+        "firstSeconds": 1.45,
+        "factual": 1.35,
+        "visualRelevance": 1.1,
+        "visualQuality": 0.9,
+        "audio": 0.75,
+        "captions": 0.75,
+        "duration": 0.55,
+        "pacing": 1.05,
+        "sources": 1.05,
+        "metadata": 0.4,
+        "render": 0.7
+      }
+    }
+  },
+  "performance": {
+    "growthScoreWeights": {
+      "viewVelocity": 0.18,
+      "retention": 0.24,
+      "engagement": 0.18,
+      "subscriberConversion": 0.28,
+      "views": 0.12
+    },
+    "classification": {
+      "breakoutMedianMultiple": 2.5,
+      "breakoutMinimumViews": 2500,
+      "strongGrowthScore": 72,
+      "normalGrowthScore": 42
+    }
+  },
+  "diagnosis": {
+    "shorts": {
+      "minViews": 250,
+      "hookFailureRetentionAt3s": 0.72,
+      "retentionFailureAvp": 65,
+      "goodAvp": 85,
+      "lowEngagementRatePer1000": 25,
+      "lowSubsPer1000": 2,
+      "lowDistributionViewsVsMedian": 0.55,
+      "shortsFeedShareMinimum": 0.55,
+      "strongConversionVsMedian": 1.5,
+      "strongDiscoveryVsMedian": 2,
+      "goodCtr": 6
+    }
+  }
+}

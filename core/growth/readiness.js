@@ -29,15 +29,28 @@ function shorts(inputs, config) {
   const d = {};
   const topic = inputs.topicScore;
   d.topicPotential = topic.VideoPotentialScore;
-  if (topic.bucket === "D") hardFails.push("topic bucket D: " + topic.reasons.join("; "));
-  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+
+  // Generic discovery stays A-only. A curated researched/production-ready topic
+  // already passed a separate evidence gate, so a B record may proceed only if
+  // it clears every remaining Viral Quality v2 gate and at least a 68 viral
+  // score. C/D are never eligible through this exception.
+  const curatedB = topic.curatedResearch === true && topic.bucket === "B";
+  if (topic.bucket !== "A" && !curatedB) hardFails.push(`topic bucket ${topic.bucket}: Viral Quality v2 publishes A-grade Shorts only (except separately researched B records)`);
+  const configuredViralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+  const viralMinimum = curatedB ? Math.min(configuredViralMinimum, 68) : configuredViralMinimum;
   d.viralPotential = topic.ViralPotentialScore;
   if (!Number.isFinite(topic.ViralPotentialScore) || topic.ViralPotentialScore < viralMinimum) {
     hardFails.push(`viral potential ${Number.isFinite(topic.ViralPotentialScore) ? topic.ViralPotentialScore : "unmeasured"} < ${viralMinimum}`);
   }
+  if (curatedB) notes.push("curated researched B-grade exception: all hard gates remain mandatory; composite publish floor uses the review threshold");
+
+  const shareability = topic.viralComponents && topic.viralComponents.shareability && topic.viralComponents.shareability.value;
+  d.shareability = Number.isFinite(shareability) ? shareability : null;
+  if (Number.isFinite(shareability) && shareability < 58) hardFails.push(`shareability ${shareability} < 58`);
   d.hook = inputs.hooks.selectedScore;
   if (!inputs.hooks.selected) hardFails.push("no usable hook");
   if (!inputs.hooks.meetsMinimum) notes.push(`only ${inputs.hooks.candidateCount} hook candidates`);
+  if (inputs.hooks.targetCandidates && inputs.hooks.candidateCount < inputs.hooks.targetCandidates) notes.push(`${inputs.hooks.candidateCount}/${inputs.hooks.targetCandidates} distinct evidence-backed hook candidates available`);
   if (inputs.hooks.selected && !inputs.hooks.passes) hardFails.push(`hook score ${inputs.hooks.selectedScore} < ${config.hooks.minimumScore}`);
   d.title = inputs.titles ? inputs.titles.selectedScore : null;
   if (!inputs.titles || !inputs.titles.selected) hardFails.push("no truthful title candidate");
@@ -48,6 +61,7 @@ function shorts(inputs, config) {
   if (!inputs.script.passes && !(inputs.script.blockers || []).length) hardFails.push(`retention quality ${inputs.script.score} < ${config.script.shorts.minimumScore}`);
   d.firstSeconds = inputs.firstSeconds.score;
   for (const blocker of inputs.firstSeconds.blockers || []) hardFails.push("first 3 s: " + blocker);
+  if (inputs.firstSeconds.score < config.firstSeconds.minimumScore) hardFails.push(`first 3 s score ${inputs.firstSeconds.score} < ${config.firstSeconds.minimumScore}`);
   d.factual = inputs.factual.score;
   hardFails.push(...inputs.factual.hardFails.map((item) => "factual: " + item));
   d.visualRelevance = inputs.integrity.score;
@@ -76,9 +90,7 @@ function shorts(inputs, config) {
   if (external && external.visual != null) d.visualQuality = external.visual;
   else if (measuredVisual && Number.isFinite(measuredVisual.score)) d.visualQuality = measuredVisual.score;
   else d.visualQuality = null;
-  if (render && render.completed && !visualEvidence) {
-    hardFails.push("missing measured rendered visual-quality evidence");
-  }
+  if (render && render.completed && !visualEvidence) hardFails.push("missing measured rendered visual-quality evidence");
   if (render && render.completed && measuredVisual && measuredVisual.decision !== "PUBLISH") {
     hardFails.push("rendered visual quality: " + ((measuredVisual.reasons || []).join("; ") || measuredVisual.decision || "missing decision"));
   }
@@ -92,11 +104,27 @@ function shorts(inputs, config) {
   const range = inputs.durationRange;
   d.duration = render && render.durationSeconds && range ? (render.durationSeconds >= range[0] - 0.5 && render.durationSeconds <= range[1] + 0.5 ? 100 : 40) : null;
   d.pacing = inputs.pacing ? (inputs.pacing.mechanical ? 50 : inputs.pacing.cutsInFirst3Seconds >= 2 ? 92 : 70) : null;
+  if (inputs.pacing && inputs.pacing.cutsInFirst3Seconds < 2) hardFails.push("opening pacing: fewer than 2 visual beats in first 3 seconds");
   d.render = render ? (render.completed && (!render.width || (render.width === 1080 && render.height === 1920)) ? 100 : 0) : null;
   if (render && render.completed && render.width && (render.width !== 1080 || render.height !== 1920)) hardFails.push(`broken render: ${render.width}x${render.height}`);
+
   const rules = config.readiness.shorts;
-  const result = decide(d, rules.weights, rules, hardFails);
-  return { ProductionReadinessScore: result.score, decision: result.decision, stage: render && render.completed ? "final" : "pre", dimensions: d, renderedVisualQuality: visualEvidence, unmeasured: result.unmeasured, hardFails, notes, thresholds: { publish: rules.publish, review: rules.review } };
+  // The curated B exception is intentionally narrow: it can only lower the
+  // composite publish threshold from PUBLISH to REVIEW after every hard gate,
+  // source check, viral floor and shareability requirement has already passed.
+  const decisionRules = curatedB ? { ...rules, publish: Math.min(rules.publish, rules.review) } : rules;
+  const result = decide(d, rules.weights, decisionRules, hardFails);
+  return {
+    ProductionReadinessScore: result.score,
+    decision: result.decision,
+    stage: render && render.completed ? "final" : "pre",
+    dimensions: d,
+    renderedVisualQuality: visualEvidence,
+    unmeasured: result.unmeasured,
+    hardFails,
+    notes,
+    thresholds: { publish: decisionRules.publish, review: rules.review },
+  };
 }
 
 function longform(inputs, config) {

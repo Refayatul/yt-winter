@@ -97,16 +97,20 @@ test("BTO pictures come from the record's own articles; a surname match is not t
   assert.match(source, /topic\.visualArticles/);
 });
 
-test("the evidence-gated channel selects from its verified pool; other channels keep the 20-topic minimum", () => {
+test("the evidence-gated channel may skip a weak day; other channels keep the 20-topic minimum", () => {
   const Config = require("../../core/growth/config");
   const Growth = require("../../core/growth");
   const bto = Channel.getChannel("behind-the-ordinary");
   assert.equal(Config.forChannel(bto).candidatePool.minimum, 1);
   for (const slug of ["failure-reconstructed", "impossible-brief", "critical-thread"]) assert.equal(Config.forChannel(Channel.getChannel(slug)).candidatePool.minimum, 20, slug);
   const pick = Growth.selectShortTopic(bto, { date: "2026-10-03" });
-  assert.ok(pick.selected, pick.reason);
-  assert.equal(pick.selected.topic.channel, "behind-the-ordinary");
-  assert.equal(pick.selected.topic.productionReady, true);
+  if (pick.selected) {
+    assert.equal(pick.selected.topic.channel, "behind-the-ordinary");
+    assert.equal(pick.selected.topic.productionReady, true);
+    assert.equal(pick.selected.score.bucket, "A");
+  } else {
+    assert.match(pick.reason, /NO_(?:EXPLORE_CANDIDATE|QUALIFIED_POOL|ELIGIBLE_TOPIC)/);
+  }
 });
 
 test("every production-ready BTO record yields at least 20 truthful title candidates (package gate)", () => {
