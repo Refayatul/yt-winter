@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   apply:
-    if: "!contains(github.event.head_commit.message, 'feat: harden quality and growth gates')"
+    if: "!contains(github.event.head_commit.message, 'feat: harden quality and growth gates') && !contains(github.event.head_commit.message, 'debug: capture JS test failure')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,8 +27,26 @@ jobs:
             git apply --check "$p"
             git apply "$p"
           done
-      - name: Run full JavaScript regression suite
-        run: npm run test:js
+      - name: Run full JavaScript regression suite and capture output
+        run: |
+          set +e
+          npm run test:js > .codex-patches/test-output.log 2>&1
+          code=$?
+          echo "$code" > .codex-patches/test-status
+          cat .codex-patches/test-output.log
+          exit 0
+      - name: Commit diagnostic log if tests failed
+        run: |
+          set -euo pipefail
+          code=$(cat .codex-patches/test-status)
+          if [ "$code" != "0" ]; then
+            git config user.name "quality-growth-bot"
+            git config user.email "actions@users.noreply.github.com"
+            git add .codex-patches/test-output.log .codex-patches/test-status
+            git commit -m "debug: capture JS test failure"
+            git push origin HEAD:quality-growth-replacements-2026-10-04
+            exit 1
+          fi
       - name: Commit final source changes
         run: |
           set -euo pipefail
