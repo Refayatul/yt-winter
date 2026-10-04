@@ -10,7 +10,7 @@ const M = require("../../lib/metin");
 const Config = require("./config");
 const Model = require("./topic-model");
 const Sources = require("./sources");
-const Hooks = require("./hooks");
+const Hooks = require("./hooks-v2");
 const Scoring = require("./topic-scoring");
 
 function readJson(file, fallback) {
