@@ -38,6 +38,16 @@ test("stock footage: the page slug must name the topic, and people clips are rej
   assert.equal(Stock.accept(video(11, "ocean-waves-and-currents"), terms, europaSubject, europa), false);
   assert.equal(Stock.offWorldConflict(["ocean", "planet", "from", "space"], europa), false, "space footage still fits");
   assert.equal(Stock.offWorldConflict(["ocean", "waves"], "how rogue waves sink ships"), false, "Earth topics keep Earth footage");
+
+  // Regression: a road-stud/cat's-eye topic must not admit generic road footage.
+  const studs = { topic: "Why Cat's Eyes Clean Themselves", canonicalTopic: "road cat's eyes", subject: "road stud", designDetail: "self-cleaning reflector mechanism" };
+  const studTerms = Nasa.topicTerms(studs);
+  const studSubject = Stock.subjectTerms(studs);
+  assert.equal(Stock.accept(video(20, "aerial-view-of-a-road"), studTerms, studSubject, "road studs cat's eye reflectors"), false, "generic road alone is insufficient");
+  assert.equal(Stock.accept(video(21, "close-up-road-stud-reflector"), studTerms, studSubject, "road studs cat's eye reflectors"), true, "distinctive stud/reflector evidence passes");
+  const evidence = Stock.relevanceEvidence(video(20, "aerial-view-of-a-road"), studSubject);
+  assert.deepEqual(evidence.matchedStrongTerms, []);
+  assert.ok(evidence.genericTermsIgnored.includes("road"));
 });
 
 test("stock footage: only portrait HD MP4 files are used, closest to 1920 tall", () => {

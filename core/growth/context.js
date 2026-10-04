@@ -44,8 +44,9 @@ function build(channel, options = {}) {
   const clusterPerformance = {};
   for (const row of performanceRows) {
     const cluster = row.topicCluster || "uncategorized";
-    const group = clusterPerformance[cluster] = clusterPerformance[cluster] || { n: 0, scores: [], breakouts: 0, subscribers: [] };
+    const group = clusterPerformance[cluster] = clusterPerformance[cluster] || { n: 0, recentN: 0, scores: [], breakouts: 0, subscribers: [] };
     group.n += 1;
+    if (row.publishAt && Date.now() - Date.parse(row.publishAt) <= 30 * 86400000) group.recentN += 1;
     if (row.performance && Number.isFinite(row.performance.growthScore)) group.scores.push(row.performance.growthScore);
     if (row.performance && row.performance.classification === "BREAKOUT") group.breakouts += 1;
     if (row.normalized && Number.isFinite(row.normalized.subscriberConversion)) group.subscribers.push(row.normalized.subscriberConversion);

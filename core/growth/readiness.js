@@ -30,6 +30,11 @@ function shorts(inputs, config) {
   const topic = inputs.topicScore;
   d.topicPotential = topic.VideoPotentialScore;
   if (topic.bucket === "D") hardFails.push("topic bucket D: " + topic.reasons.join("; "));
+  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+  d.viralPotential = topic.ViralPotentialScore;
+  if (!Number.isFinite(topic.ViralPotentialScore) || topic.ViralPotentialScore < viralMinimum) {
+    hardFails.push(`viral potential ${Number.isFinite(topic.ViralPotentialScore) ? topic.ViralPotentialScore : "unmeasured"} < ${viralMinimum}`);
+  }
   d.hook = inputs.hooks.selectedScore;
   if (!inputs.hooks.selected) hardFails.push("no usable hook");
   if (!inputs.hooks.meetsMinimum) notes.push(`only ${inputs.hooks.candidateCount} hook candidates`);
@@ -57,7 +62,26 @@ function shorts(inputs, config) {
   // Measured after render (null before).
   const render = inputs.render || null;
   const external = inputs.externalGate || null;
-  d.visualQuality = external && external.visual != null ? external.visual : render ? (render.completed ? 82 : 0) : null;
+  const measuredVisual = render && render.visualQuality;
+  const visualEvidence = measuredVisual ? {
+    source: "render.video.visualQuality",
+    score: Number.isFinite(measuredVisual.score) ? measuredVisual.score : null,
+    decision: measuredVisual.decision || null,
+    reasons: measuredVisual.reasons || [],
+    metrics: measuredVisual.metrics || measuredVisual.semanticEvidence || null,
+  } : external && external.visual != null ? {
+    source: "externalGate.visual", score: external.visual, decision: external.visualCritical ? "BLOCK" : null,
+    reasons: external.visualCritical ? [external.visualCritical] : [], metrics: null,
+  } : null;
+  if (external && external.visual != null) d.visualQuality = external.visual;
+  else if (measuredVisual && Number.isFinite(measuredVisual.score)) d.visualQuality = measuredVisual.score;
+  else d.visualQuality = null;
+  if (render && render.completed && !visualEvidence) {
+    hardFails.push("missing measured rendered visual-quality evidence");
+  }
+  if (render && render.completed && measuredVisual && measuredVisual.decision !== "PUBLISH") {
+    hardFails.push("rendered visual quality: " + ((measuredVisual.reasons || []).join("; ") || measuredVisual.decision || "missing decision"));
+  }
   d.audio = external && external.audio != null ? external.audio : render ? (render.completed && render.syntheticVoice ? 85 : 0) : null;
   if (render && render.completed && render.syntheticVoice === false) hardFails.push("broken audio: non-speech fallback narration");
   if (render && render.completed && render.hasAudio === false) hardFails.push("broken audio: no audio stream");
@@ -72,7 +96,7 @@ function shorts(inputs, config) {
   if (render && render.completed && render.width && (render.width !== 1080 || render.height !== 1920)) hardFails.push(`broken render: ${render.width}x${render.height}`);
   const rules = config.readiness.shorts;
   const result = decide(d, rules.weights, rules, hardFails);
-  return { ProductionReadinessScore: result.score, decision: result.decision, stage: render ? "final" : "pre", dimensions: d, unmeasured: result.unmeasured, hardFails, notes, thresholds: { publish: rules.publish, review: rules.review } };
+  return { ProductionReadinessScore: result.score, decision: result.decision, stage: render && render.completed ? "final" : "pre", dimensions: d, renderedVisualQuality: visualEvidence, unmeasured: result.unmeasured, hardFails, notes, thresholds: { publish: rules.publish, review: rules.review } };
 }
 
 function longform(inputs, config) {

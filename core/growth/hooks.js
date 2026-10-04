@@ -15,6 +15,21 @@ const TENSION = /\b(explod\w*|collaps\w*|fail\w*|kill\w*|dead|died|dies|sank|sin
 const CURIOSITY = /\?|\b(why|how|what|but|not|never|only|until|hidden|nobody|no one|instead|actually|wasn'?t|isn'?t|didn'?t|doesn'?t|real|first|nothing|quietly|depends)\b/gi;
 const WEAK_START = new Set(["the", "a", "an", "in", "on", "this", "there", "it", "so", "and", "we", "today"]);
 const CLICKBAIT = /\b(shocking|insane|unbelievable|you won'?t believe|mind[- ]blowing|terrifying truth|exposed)\b/i;
+// Fail closed on common generated-English defects. These are not style
+// preferences: they produce sentence fragments or questions with a missing
+// auxiliary verb (for example, "Why servers get only 5 to 15 minutes?").
+const MALFORMED_ENGLISH = /^(?:why|how)\s+(?!do\b|does\b|did\b|can\b|could\b|would\b|will\b|is\b|are\b|was\b|were\b|has\b|have\b|had\b|should\b|might\b|must\b)[a-z0-9'’-]+\s+(?:get|gets|got|make|makes|made|need|needs|needed|depend|depends|relies?|survive|survives|work|works|fail|fails|stop|stops)\b.*[.?!]$/i;
+
+function languageProblems(text) {
+  const value = String(text || "").trim();
+  const problems = [];
+  if (MALFORMED_ENGLISH.test(value)) problems.push("malformed English question (missing auxiliary verb)");
+  if (/\b(?:the|a|an|to|of|for|with|because|if|when)\s*[.!?]$/i.test(value)) problems.push("incomplete English phrase");
+  if ((value.match(/[!?]/g) || []).length > 1) problems.push("malformed punctuation");
+  if (/^replacing .+ is not a simple purchase[.!?]?$/i.test(value)) problems.push("generic synthetic opening");
+  if (/^that[’\'`]?s\b/i.test(value)) problems.push("context-dependent opening");
+  return problems;
+}
 
 const FAMILIES = [
   "shocking_consequence", "tiny_cause_massive_consequence", "hidden_cause", "contradiction", "countdown", "warning_ignored",
@@ -224,6 +239,7 @@ function score(hook, topic, config, templated = [], options = {}) {
   const subjectWords = M.icerikKelimeleri(topic.subject);
   const hasSubject = subjectWords.some((word) => M.icerikKelimeleri(text).includes(word));
   const forbidden = FORBIDDEN.test(text);
+  const language = languageProblems(text);
   const dateStart = DATE_OPENING.test(text);
   const firstWord = (words(text)[0] || "").toLowerCase().replace(/[^a-z]/g, "");
   const scores = {
@@ -250,6 +266,7 @@ function score(hook, topic, config, templated = [], options = {}) {
   const total = Math.round(Object.entries(weights).reduce((sum, [key, weight]) => sum + scores[key] * weight, 0) / totalWeight);
   const blockers = [];
   if (forbidden) blockers.push("forbidden opening");
+  blockers.push(...language);
   // PHASE 5: "In 1944…" is a bad hook — a date/setup opening is a blocker, not a penalty.
   if (dateStart) blockers.push("date/setup opening");
   if (numeric.unsupported.length) blockers.push("unsupported number: " + numeric.unsupported.join(", "));
@@ -295,12 +312,11 @@ function generate(topic, config, options = {}) {
   if (options.openingMaxSeconds) {
     for (const hook of scored) hook.fitsOpening = hook.words / 2.8 <= options.openingMaxSeconds * 1.15;
   }
-  // Researched ImpossibleBrief / CriticalThread records speak their own
-  // editorial opening: that line IS the hook, so it is what gets scored and
-  // planned (other candidates stay on record as alternatives).
-  const spoken = topic.narrationBeats && topic.narrationBeats.length && topic.channel !== "failure-reconstructed" ? finish(topic.narrationBeats[0].text) : null;
-  const locked = spoken ? scored.find((hook) => hook.spoken === spoken && !hook.blocked) : null;
-  const selected = locked || scored.find((hook) => !hook.blocked && hook.fitsOpening !== false) || null;
+  // Editorial openings compete on the same language, factual, duration and
+  // score gates as every other candidate. They remain in the audit trail but
+  // can no longer override a stronger valid hook merely because they were
+  // written first in the source record.
+  const selected = scored.find((hook) => !hook.blocked && hook.fitsOpening !== false && hook.adjustedTotal >= config.hooks.minimumScore) || null;
   const families = new Set(scored.map((hook) => hook.family));
   return {
     channel: topic.channel,
@@ -315,4 +331,4 @@ function generate(topic, config, options = {}) {
   };
 }
 
-module.exports = { FAMILIES, FORBIDDEN, DATE_OPENING, TENSION, build, score, generate, dedupe, compress, sentenceCase, wordCount };
+module.exports = { FAMILIES, FORBIDDEN, DATE_OPENING, TENSION, MALFORMED_ENGLISH, languageProblems, build, score, generate, dedupe, compress, sentenceCase, wordCount };

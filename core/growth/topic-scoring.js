@@ -133,6 +133,7 @@ function viralFactors(topic, context, parts) {
   const titleCount = (topic.editorialTitles || []).length + (topic.title ? 1 : 0);
   const duplicateRisk = Math.round(parts.similarity * 100);
   const saturationRisk = performance.n ? Math.min(100, performance.n / Math.max(1, context.clusterSizes && context.clusterSizes[topic.cluster] || 1) * 300) : 0;
+  const recentFatigueRisk = performance.recentN ? Math.min(100, performance.recentN * 22) : 0;
   const sourceRisk = 100 - context.sourceQuality.score;
   const weakFootageRisk = topic.archivalFilm ? 0 : topic.archival ? 15 : topic.stock ? 45 : Math.max(20, 75 - (topic.visualScenes || []).length * 7);
   const components = {
@@ -154,8 +155,17 @@ function viralFactors(topic, context, parts) {
     shareability: component(parts.factors.SharePotentialScore.value, "derived"),
     channel_fit: component(parts.factors.ChannelFitScore.value, "derived"),
     historical_similarity: component(performance.score + learnedCluster, performance.n ? "learned" : "neutral", performance.n ? `${performance.n} same-cluster upload(s), breakout rate ${performance.breakoutRate}` : "no same-cluster channel evidence yet"),
+    subscriber_conversion_potential: component(performance.subscriberConversion == null
+      ? parts.factors.SubscriberConversionPotential.value
+      : Math.min(100, 50 + performance.subscriberConversion * 10), performance.subscriberConversion == null ? "derived" : "learned",
+    performance.subscriberConversion == null ? "series-depth proxy; no measured conversion yet" : `${performance.subscriberConversion.toFixed(2)} subscribers / 1,000 views in this topic family`),
+    audience_breadth: component(parts.factors.AudienceFitScore.value, parts.factors.AudienceFitScore.basis),
+    hook_potential: component(parts.factors.HookPotentialScore.value, "derived"),
+    visual_availability: component(Math.max(0, 100 - weakFootageRisk), "inventory-signal"),
+    research_confidence: component(context.sourceQuality.score, "derived"),
     duplicate_risk: component(-duplicateRisk, "penalty", duplicateRisk ? `published-title similarity ${parts.similarity.toFixed(2)}` : "no published-title collision"),
     saturation_risk: component(-saturationRisk, "penalty", `${performance.n || 0} published / ${context.clusterSizes && context.clusterSizes[topic.cluster] || 1} inventory in cluster`),
+    recent_fatigue_risk: component(-recentFatigueRisk, "penalty", `${performance.recentN || 0} same-family upload(s) in the last 30 days`),
     source_confidence_risk: component(-sourceRisk, "penalty", context.sourceQuality.notes.join("; ") || `${context.sourceQuality.score}/100 source quality`),
     weak_footage_risk: component(-weakFootageRisk, "penalty", topic.archivalFilm ? "archival film available" : topic.archival ? "archival stills available" : "no archival footage confirmed"),
   };
@@ -164,7 +174,7 @@ function viralFactors(topic, context, parts) {
   let positiveWeight = 0;
   let penaltySum = 0;
   let penaltyWeight = 0;
-  const penaltyKeys = new Set(["duplicate_risk", "saturation_risk", "source_confidence_risk", "weak_footage_risk"]);
+  const penaltyKeys = new Set(["duplicate_risk", "saturation_risk", "recent_fatigue_risk", "source_confidence_risk", "weak_footage_risk"]);
   for (const [key, weight] of Object.entries(weights)) {
     const value = components[key] && components[key].value;
     if (!Number.isFinite(value)) continue;

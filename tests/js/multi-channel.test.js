@@ -178,9 +178,10 @@ test("The Hidden Logic of Things has 500+ unique research questions and an evide
   });
   for (const topic of universe.topics) assert.notEqual(BehindQuality.evaluateTopic(topic, universe.topics).decision, "BLOCK", topic.id);
   const discovered = Discovery.discover(channel, { limit: 50 });
-  assert.equal(discovered.length, universe.topics.filter((item) => item.productionReady === true).length, "unresearched questions cannot enter production discovery");
+  const used = Discovery.usedIds(channel);
+  assert.equal(discovered.length, universe.topics.filter((item) => item.productionReady === true && !used.has(item.id)).length, "unresearched or already-used questions cannot enter production discovery");
   assert.ok(discovered.every((item) => item.researchStatus === "VERIFIED"));
-  const topic = universe.topics.find((item) => item.slug === "why-jeans-have-a-tiny-pocket");
+  const topic = universe.topics.find((item) => item.id === "BTO-256");
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), "bto-e2e-"));
   try {
     const plan = require("../../core/growth").planShort(channel, topic.id, { skipDuplicate: true });

@@ -9,11 +9,11 @@
 // date), never "last publishAt + 24 h", which kept yesterday's 21:00 Short
 // blocking this morning's production.
 //
-// The production calendar and the publish clock may use different zones: a
-// channel produces on Istanbul days but publishes at an audience-local time
-// (e.g. 18:00 America/New_York). A Short belongs to the production day D and
-// goes public at publishTime on the same date D in publishTimeZone, so its
-// slot day is read in publishTimeZone (01:00 Istanbul on D+1 is still day D).
+// Historical 01:00 Istanbul experiment records keep their original production
+// day (the previous Istanbul date). Current production publishes at 21:00
+// Europe/Istanbul. The explicit cohort conversion prevents a historical UTC
+// instant from being reinterpreted as a second production day after a config
+// change.
 //
 // All conversions go through Intl with an explicit time zone, so the runner's
 // local TZ never matters and DST transitions are handled by the tz database.
@@ -101,8 +101,20 @@ function shortRows(records) {
 // A Short occupies the day of its publish slot (read in the publish zone) and
 // the local day it was uploaded: a Short uploaded today but scheduled later
 // still counts for today, so no run can follow it with a second upload.
+function publicationDay(row, timeZone, publishTimeZone = timeZone) {
+  if (!row || !row.publishAt) return null;
+  const instant = toDate(row.publishAt);
+  if (!instant) return null;
+  const local = parts(instant, timeZone);
+  const localDay = dayKey(row.publishAt, timeZone);
+  // The preserved experiment cohort was scheduled as 18:00 New York and
+  // appeared at 01:00 TR on D+1. Its production slot remains D.
+  if ((row.publishTimeCohort === "01:00_TR" || (!row.publishTimeCohort && local.hour === 1)) && timeZone === DEFAULT_TIME_ZONE) return addDays(localDay, -1);
+  return dayKey(row.publishAt, publishTimeZone);
+}
+
 function occupiedDays(row, timeZone, publishTimeZone = timeZone) {
-  return [...new Set([dayKey(row.publishAt, publishTimeZone), dayKey(row.tarih || row.generatedAt, timeZone)].filter(Boolean))];
+  return [...new Set([publicationDay(row, timeZone, publishTimeZone), dayKey(row.tarih || row.generatedAt, timeZone)].filter(Boolean))];
 }
 
 function shortForDay(records, key, timeZone = DEFAULT_TIME_ZONE, publishTimeZone = timeZone) {
@@ -116,7 +128,8 @@ function lastShortDay(records, timeZone = DEFAULT_TIME_ZONE, publishTimeZone = t
 
 // The production day a publish instant belongs to, for this channel.
 function publishDay(value, channel) {
-  return dayKey(value, shortSchedule(channel).publishTimeZone);
+  const schedule = shortSchedule(channel);
+  return publicationDay({ publishAt: value }, schedule.timeZone, schedule.publishTimeZone);
 }
 
 // Daily eligibility. `everyDays` > 1 (a stretched cadence) requires that many
@@ -154,7 +167,7 @@ function shortDecision(channel, records, now = new Date(), options = {}) {
 function publishSlot(channel, records, now = new Date(), minLeadMinutes = MIN_UPLOAD_LEAD_MINUTES) {
   const schedule = shortSchedule(channel);
   const timeZone = schedule.timeZone;
-  const taken = new Set(shortRows(records).map((row) => dayKey(row.publishAt, schedule.publishTimeZone)).filter(Boolean));
+  const taken = new Set(shortRows(records).map((row) => publicationDay(row, schedule.timeZone, schedule.publishTimeZone)).filter(Boolean));
   // Start one day back: after local midnight the previous production day's
   // release (e.g. 18:00 New York = 01:00 Istanbul) can still be ahead and free.
   let key = addDays(dayKey(now, timeZone), -1);
@@ -167,5 +180,5 @@ function publishSlot(channel, records, now = new Date(), minLeadMinutes = MIN_UP
 
 module.exports = {
   DEFAULT_TIME_ZONE, MIN_UPLOAD_LEAD_MINUTES,
-  dayKey, zonedTime, addDays, daysBetween, shortSchedule, shortForDay, lastShortDay, publishDay, shortDecision, publishSlot,
+  dayKey, zonedTime, addDays, daysBetween, shortSchedule, publicationDay, occupiedDays, shortForDay, lastShortDay, publishDay, shortDecision, publishSlot,
 };

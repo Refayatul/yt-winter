@@ -8,6 +8,7 @@
 
 const fs = require("fs");
 const Popularity = require("./popularity");
+const Overrides = require("../topic-overrides");
 const path = require("path");
 const M = require("../../lib/metin");
 
@@ -398,7 +399,7 @@ function inventory(channel) {
     }).filter(Boolean);
   }
   const universe = readJson(channel.paths.topicUniverse, { topics: [] });
-  return (universe.topics || [])
+  return Overrides.apply(channel, universe.topics || [])
     .filter((topic) => topic.status === "qualified" && (channel.slug !== "behind-the-ordinary" || topic.productionReady === true))
     .map((raw) => normalize(channel, raw));
 }

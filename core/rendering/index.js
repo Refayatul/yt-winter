@@ -622,7 +622,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
     for (const frame of generated) try { fs.unlinkSync(frame); } catch (error) {}
     try { fs.unlinkSync(filterFile); } catch (error) {}
   }
-  const metrics = TopicVisuals.visualMetrics(plan);
+  const metrics = TopicVisuals.visualMetrics(plan, topic);
   return { ...metrics, opening, visualQuality: TopicVisuals.evaluateVisualQuality(metrics), segmentSeconds: plan.map((shot) => shot.duration), sources: plan.map(({ shot, claimIndex, type, sourceId, numbers }) => ({ shot, claimIndex, type, sourceId, numbers })) };
 }
 
@@ -666,7 +666,13 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   const growth = options.growthPlan || null;
   const growthConfig = growth ? require("../growth/config").forChannel(channel) : null;
   const Pacing = growth ? require("../growth/pacing") : null;
-  const script = growth ? JSON.parse(JSON.stringify({ format: "short", targetSeconds: growth.script.targetSeconds, spoken: growth.script.spoken, claims: growth.script.claims.map(({ role, ...claim }) => ({ ...claim, role })), forbiddenOpening: growth.script.forbiddenOpening, sourceIds: growth.script.sourceIds })) : Scripting.shortScript(topic);
+  const growthLines = growth && (growth.script.claims || (growth.script.lines || []).map((text, index, lines) => {
+    const target = Number(growth.script.estimatedSeconds || 30);
+    return { text, start: index * target / lines.length, end: (index + 1) * target / lines.length, role: growth.script.structure && growth.script.structure[index] || `BEAT_${index + 1}` };
+  }));
+  const script = growth ? JSON.parse(JSON.stringify({ format: "short", targetSeconds: growth.script.targetSeconds || growth.script.estimatedSeconds,
+    spoken: growth.script.spoken || (growth.script.lines || []).join(" "), claims: growthLines.map(({ role, ...claim }) => ({ ...claim, role })),
+    forbiddenOpening: growth.script.forbiddenOpening || false, sourceIds: growth.script.sourceIds || (topic.sources || []).map((source) => source.name) })) : Scripting.shortScript(topic);
   const titles = growth ? growth.titles.candidates.filter((item) => !item.misleading).map((item) => item.title) : Scripting.titleCandidates(topic);
   const captionSrt = (value) => growth ? Pacing.srt(value.claims, growthConfig.captions) : captions(value);
   const captionAss = (value) => growth ? Pacing.ass(value.claims, growthConfig.captions) : assCaptions(value);

@@ -13,7 +13,7 @@
 const Titles = require("./titles");
 
 const MIN_GROUP = 3;
-const NEW_SLOT_ZONE = "America/New_York";
+const ISTANBUL_ZONE = "Europe/Istanbul";
 
 function metric(checkpoint, key) {
   const value = checkpoint && checkpoint.metrics && checkpoint.metrics[key];
@@ -48,12 +48,12 @@ function hourIn(publishAt, timeZone) {
   return Number(new Intl.DateTimeFormat("en-US", { timeZone, hour: "2-digit", hourCycle: "h23" }).format(date));
 }
 
-// Publish slot label: the old fixed 18:00 UTC (21:00 TR) or the US-evening
-// 18:00 New York slot introduced on 2026-10-02.
+// Stable cohort labels survive schedule changes. The 01:00 experiment remains
+// visible in learning reports after the production default returns to 21:00.
 function publishSlot(publishAt) {
   if (!publishAt) return "unknown";
-  if (hourIn(publishAt, NEW_SLOT_ZONE) === 18) return "18:00 New York";
-  if (new Date(publishAt).getUTCHours() === 18) return "21:00 TR";
+  if (hourIn(publishAt, ISTANBUL_ZONE) === 1) return "01:00 TR";
+  if (hourIn(publishAt, ISTANBUL_ZONE) === 21) return "21:00 TR";
   return `${new Date(publishAt).getUTCHours()}:00 UTC`;
 }
 

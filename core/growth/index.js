@@ -164,11 +164,14 @@ function orderedQueue(channel, options = {}) {
 }
 
 const DEFAULT_LAYER = { "impossible-brief": "KNOWN SCIENCE", "critical-thread": "VERIFIED FACT" };
-function editorialClaims(topic, config, templatedFields) {
-  const lint = Script.lint(topic.narration, topic, config, { templatedFields });
+function editorialClaims(topic, config, templatedFields, selectedHook = null) {
+  const beats = topic.narrationBeats.map((beat) => ({ ...beat }));
+  const opening = optimizeEditorialOpening(beats.map((beat) => beat.text), selectedHook, config);
+  if (opening.changed) beats[0] = { ...beats[0], text: opening.selected, role: "HOOK", layer: beats[0].layer || DEFAULT_LAYER[topic.channel] || "VERIFIED FACT" };
+  const lint = Script.lint(beats.map((beat) => beat.text), topic, config, { templatedFields });
   const wordsPerSecond = 2.8;
   let t = 0;
-  const claims = topic.narrationBeats.map((beat, index) => {
+  const claims = beats.map((beat, index) => {
     const text = /[.!?]$/.test(beat.text) ? beat.text : beat.text + ".";
     const seconds = Math.max(1.2, text.split(/\s+/).length / wordsPerSecond);
     const claim = { start: Math.round(t * 10) / 10, end: Math.round((t + seconds) * 10) / 10, role: beat.role || `BEAT_${index + 1}`, layer: beat.layer || DEFAULT_LAYER[topic.channel] || "VERIFIED FACT", confidence: beat.layer || DEFAULT_LAYER[topic.channel] || "VERIFIED FACT", text };
@@ -179,7 +182,7 @@ function editorialClaims(topic, config, templatedFields) {
     format: "short", generator: "editorial (researched record)", targetSeconds: claims[claims.length - 1].end,
     spoken: claims.map((claim) => claim.text).join(" "), claims, lines: claims.map((claim) => claim.text),
     structure: claims.map((claim) => claim.role), forbiddenOpening: Hooks.FORBIDDEN.test(claims[0].text),
-    sourceIds: (topic.sources || []).map((source) => source.name), retention: lint,
+    sourceIds: (topic.sources || []).map((source) => source.name), retention: lint, openingRewrite: opening,
   };
 }
 
@@ -236,7 +239,7 @@ function planShort(channel, idOrTopic, options = {}) {
     // Researched ImpossibleBrief / CriticalThread records: editorial narration,
     // one timed claim per line with its evidence layer (the renderer's
     // contract); nominal timing is replaced by measured takes at render.
-    script = editorialClaims(topic, config, evaluation.boilerplate.templatedFields);
+    script = editorialClaims(topic, config, evaluation.boilerplate.templatedFields, hooks.selected);
   } else if (hooks.selected) {
     script = Script.buildShort(topic, hooks, config, { templatedFields: evaluation.boilerplate.templatedFields, cta: cta.type !== "NONE" && cta.delivery !== "on-screen" ? cta.text : null });
   } else {
@@ -280,6 +283,12 @@ function planShort(channel, idOrTopic, options = {}) {
     createdAt: (options.now || new Date()).toISOString(),
     topic: { id: topic.id, slug: topic.slug, title: topic.title, cluster: topic.cluster, subject: topic.subject },
     topicScore: evaluation.score,
+    viralPotentialGate: {
+      score: evaluation.score.ViralPotentialScore,
+      minimum: Number(config.viralScoring.minimumToProduce || 68),
+      decision: evaluation.score.ViralPotentialScore >= Number(config.viralScoring.minimumToProduce || 68) ? "PRODUCE" : "BLOCK",
+      components: evaluation.score.viralComponents,
+    },
     topicDecision: options.selection || null,
     hooks: { selected: hooks.selected, selectedScore: hooks.selectedScore, passes: hooks.passes, candidateCount: hooks.candidateCount, familyCount: hooks.familyCount, meetsMinimum: hooks.meetsMinimum, candidates: hooks.candidates },
     first3Seconds: first,

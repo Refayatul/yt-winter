@@ -7,10 +7,10 @@ const Weekly = require("../../core/growth/weekly-learning");
 const cp = (views, viewed) => ({ metrics: { views: { value: views }, average_percentage_viewed: { value: viewed } } });
 const record = (id, publishAt, title, views, viewed, extra = {}) => ({ videoId: id, slug: id, contentType: "short", publishAt, title, checkpoints: views == null ? { "1h": cp(5, null) } : { "1d": cp(views, viewed) }, ...extra });
 
-test("publish slots: the old 18:00 UTC slot and 18:00 New York in both DST seasons", () => {
+test("publish slots: the 21:00 baseline and preserved 01:00 experiment cohort", () => {
   assert.equal(Weekly.publishSlot("2026-10-02T18:00:00Z"), "21:00 TR");
-  assert.equal(Weekly.publishSlot("2026-10-03T22:00:00Z"), "18:00 New York");
-  assert.equal(Weekly.publishSlot("2026-11-03T23:00:00Z"), "18:00 New York");
+  assert.equal(Weekly.publishSlot("2026-10-03T22:00:00Z"), "01:00 TR");
+  assert.equal(Weekly.publishSlot("2026-11-03T22:00:00Z"), "01:00 TR");
   assert.equal(Weekly.publishSlot(null), "unknown");
 });
 
@@ -35,7 +35,7 @@ test("summary compares groups only with enough measured videos and reports recen
   assert.equal(summary.sample, 6);
   assert.equal(summary.measured, 5);
   assert.equal(summary.recent.length, 6);
-  assert.deepEqual(summary.bySlot.map((group) => [group.value, group.measured]).sort(), [["18:00 New York", 2], ["21:00 TR", 3]]);
+  assert.deepEqual(summary.bySlot.map((group) => [group.value, group.measured]).sort(), [["01:00 TR", 2], ["21:00 TR", 3]]);
   const md = Weekly.markdown(summary);
   assert.match(md, /Yayın saati: karşılaştırma için yeterli veri yok/, "the new slot has only 2 measured videos");
   assert.match(md, /Başlık kalıbı: karşılaştırma için yeterli veri yok/);

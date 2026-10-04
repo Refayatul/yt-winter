@@ -7,6 +7,7 @@ const path = require("path");
 const TopicVisuals = require("../../core/rendering/topic-visuals");
 const Rendering = require("../../core/rendering");
 const PackageQuality = require("../../core/quality/impossible-brief");
+const BtoQuality = require("../../core/quality/behind-the-ordinary");
 
 function shot(sourceId, type, start, end, claimIndex = 0, claimText = "80,800 km", numbers = ["80,800 km"]) {
   return { sourceId, type, start, end, duration: end - start, claimIndex, claimText, numbers };
@@ -48,6 +49,27 @@ test("rendered-visual gate passes varied licensed stills and sourced cards", () 
   const gate = TopicVisuals.evaluateVisualQuality(metrics);
   assert.equal(gate.decision, "PUBLISH");
   assert.equal(PackageQuality.evaluatePackage(packageWith(gate)).decision, "PUBLISH");
+});
+
+test("opening semantic gate rejects generic roads/Oak Alley and accepts a real road-stud mechanism", () => {
+  const topic = { canonicalTopic: "road cat's eyes", subject: "road stud", designDetail: "self-cleaning reflector mechanism" };
+  const oak = TopicVisuals.semanticVisualEvidence(topic, { type: "licensed-still", still: { file: "Oak Alley road photograph.jpg", description: "A road under oak trees" } });
+  assert.equal(oak.relevant, false);
+  assert.match(oak.reason, /Oak Alley/);
+  const genuine = TopicVisuals.semanticVisualEvidence(topic, { type: "licensed-still", still: { file: "Road stud reflector close-up.jpg", description: "Catseye road reflector mechanism" } });
+  assert.equal(genuine.relevant, true);
+  assert.ok(genuine.matchedTerms.some((term) => ["stud", "reflector"].includes(term)));
+  const generic = TopicVisuals.semanticVisualEvidence({ canonicalTopic: "ocean current sensor system" }, { type: "licensed-still", still: { file: "Ocean.jpg", description: "generic ocean view" } });
+  assert.equal(generic.relevant, false, "generic ocean/system words alone are not evidence");
+});
+
+test("Behind the Ordinary package gate has rendered-visual BLOCK parity", () => {
+  const pkg = packageWith({ decision: "BLOCK", score: 40, reasons: ["opening asset is unrelated"] });
+  pkg.channel = "behind-the-ordinary";
+  pkg.topic = { productionReady: true, researchStatus: "VERIFIED" };
+  pkg.thumbnail = { maxWords: 3 };
+  pkg.metadata.uploadChannel = "behind-the-ordinary";
+  assert.equal(BtoQuality.evaluatePackage(pkg).decision, "BLOCK");
 });
 
 test("number cards use only number-and-unit tokens present in their narration line", () => {
