@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-04T15:50:37.254Z
+Generated: 2026-10-04T16:36:14.353Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -16,7 +16,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | 2026-10-04T22:00:00.000Z |
 | Video ID | Nk7vmybWY98 |
 | Analytics | measured |
-| Scheduler | pending-before-deadline |
+| Scheduler | sla-missed-or-channel-disabled |
 | Ready topic backlog | 362 |
 | Errors/review/blocks | 3 |
 | TikTok today | NOT_SENT |
@@ -24,7 +24,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-02 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
-| API quota today | 1669 / 9800 units (project 1012165386949) |
+| API quota today | 0 / 9800 units (project channel:failure-reconstructed) |
 | YPP readiness (estimate) | subs 21/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
@@ -39,13 +39,13 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | 2026-10-04T22:00:00.000Z |
 | Video ID | Vuvx5nEqcaY |
 | Analytics | measured |
-| Scheduler | pending-before-deadline |
+| Scheduler | sla-missed-or-channel-disabled |
 | Ready topic backlog | 493 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-02 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
-| API quota today | 1677 / 9800 units (project 684098966511) |
+| API quota today | 1682 / 9800 units (project 684098966511) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
@@ -60,13 +60,13 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | 2026-10-04T22:00:00.000Z |
 | Video ID | rAZ4cE4A0DE |
 | Analytics | measured |
-| Scheduler | pending-before-deadline |
+| Scheduler | sla-missed-or-channel-disabled |
 | Ready topic backlog | 517 |
 | Errors/review/blocks | 0 |
 | Analytics warehouse | through 2026-10-02 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
-| API quota today | 1677 / 9800 units (project 208987599838) |
+| API quota today | 0 / 9800 units (project channel:critical-thread) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
@@ -81,12 +81,12 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | 2026-10-04T22:00:00.000Z |
 | Video ID | ZTtPwqBSxpA |
 | Analytics | no-channel-measurements |
-| Scheduler | pending-before-deadline |
+| Scheduler | sla-missed-or-channel-disabled |
 | Ready topic backlog | 4 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-02 (lag 2 d) · 3 table error(s) |
 | Ops (24 h) | analytics.partial 2, publish.success 2, growth.decision 2 |
 | Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
-| API quota today | 1668 / 9800 units (project 739767423116) |
+| API quota today | 0 / 9800 units (project channel:behind-the-ordinary) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
