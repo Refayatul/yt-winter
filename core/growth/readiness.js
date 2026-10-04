@@ -42,7 +42,7 @@ function shorts(inputs, config) {
   if (!Number.isFinite(topic.ViralPotentialScore) || topic.ViralPotentialScore < viralMinimum) {
     hardFails.push(`viral potential ${Number.isFinite(topic.ViralPotentialScore) ? topic.ViralPotentialScore : "unmeasured"} < ${viralMinimum}`);
   }
-  if (curatedB) notes.push("curated researched B-grade exception: all other Viral Quality v2 gates remain mandatory");
+  if (curatedB) notes.push("curated researched B-grade exception: all hard gates remain mandatory; composite publish floor uses the review threshold");
 
   const shareability = topic.viralComponents && topic.viralComponents.shareability && topic.viralComponents.shareability.value;
   d.shareability = Number.isFinite(shareability) ? shareability : null;
@@ -90,9 +90,7 @@ function shorts(inputs, config) {
   if (external && external.visual != null) d.visualQuality = external.visual;
   else if (measuredVisual && Number.isFinite(measuredVisual.score)) d.visualQuality = measuredVisual.score;
   else d.visualQuality = null;
-  if (render && render.completed && !visualEvidence) {
-    hardFails.push("missing measured rendered visual-quality evidence");
-  }
+  if (render && render.completed && !visualEvidence) hardFails.push("missing measured rendered visual-quality evidence");
   if (render && render.completed && measuredVisual && measuredVisual.decision !== "PUBLISH") {
     hardFails.push("rendered visual quality: " + ((measuredVisual.reasons || []).join("; ") || measuredVisual.decision || "missing decision"));
   }
@@ -109,9 +107,24 @@ function shorts(inputs, config) {
   if (inputs.pacing && inputs.pacing.cutsInFirst3Seconds < 2) hardFails.push("opening pacing: fewer than 2 visual beats in first 3 seconds");
   d.render = render ? (render.completed && (!render.width || (render.width === 1080 && render.height === 1920)) ? 100 : 0) : null;
   if (render && render.completed && render.width && (render.width !== 1080 || render.height !== 1920)) hardFails.push(`broken render: ${render.width}x${render.height}`);
+
   const rules = config.readiness.shorts;
-  const result = decide(d, rules.weights, rules, hardFails);
-  return { ProductionReadinessScore: result.score, decision: result.decision, stage: render && render.completed ? "final" : "pre", dimensions: d, renderedVisualQuality: visualEvidence, unmeasured: result.unmeasured, hardFails, notes, thresholds: { publish: rules.publish, review: rules.review } };
+  // The curated B exception is intentionally narrow: it can only lower the
+  // composite publish threshold from PUBLISH to REVIEW after every hard gate,
+  // source check, viral floor and shareability requirement has already passed.
+  const decisionRules = curatedB ? { ...rules, publish: Math.min(rules.publish, rules.review) } : rules;
+  const result = decide(d, rules.weights, decisionRules, hardFails);
+  return {
+    ProductionReadinessScore: result.score,
+    decision: result.decision,
+    stage: render && render.completed ? "final" : "pre",
+    dimensions: d,
+    renderedVisualQuality: visualEvidence,
+    unmeasured: result.unmeasured,
+    hardFails,
+    notes,
+    thresholds: { publish: decisionRules.publish, review: rules.review },
+  };
 }
 
 function longform(inputs, config) {
