@@ -44,12 +44,31 @@ function flatSnapshot(snapshot) {
   };
 }
 
+// A checkpoint label describes the target age, not necessarily when GitHub
+// Actions actually collected it. Older runs could miss 6h/12h and later
+// backfill both at ~18h. Treating those labels as literal ages fabricates view
+// velocity and can create a false EARLY_DISTRIBUTION_PLATEAU. When collection
+// drift is material (>2.5h), performance math uses the real collection age;
+// the declared label remains available for audit/reporting.
 function checkpointSeries(row) {
   const series = Object.entries(row.checkpoints || {}).map(([label, snapshot]) => {
+    const scheduledHours = labelHours(label);
     const collectedAge = row.publishAt && snapshot.collectedAt
       ? Math.max(0, (Date.parse(snapshot.collectedAt) - Date.parse(row.publishAt)) / 3600000)
       : null;
-    return { label, hours: labelHours(label) ?? collectedAge, snapshot, metrics: flatSnapshot(snapshot) };
+    const driftHours = Number.isFinite(scheduledHours) && Number.isFinite(collectedAge) ? collectedAge - scheduledHours : null;
+    const materiallyLate = Number.isFinite(driftHours) && Math.abs(driftHours) > 2.5;
+    const effectiveHours = materiallyLate ? collectedAge : (scheduledHours ?? collectedAge);
+    return {
+      label,
+      hours: effectiveHours,
+      scheduledHours,
+      collectedAgeHours: round(collectedAge),
+      checkpointDriftHours: round(driftHours),
+      timingStatus: materiallyLate ? "LATE_COLLECTION_REAL_AGE_USED" : "ON_TIME",
+      snapshot,
+      metrics: flatSnapshot(snapshot),
+    };
   }).filter((item) => Number.isFinite(item.hours)).sort((a, b) => a.hours - b.hours);
   return series;
 }
