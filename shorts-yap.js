@@ -7,9 +7,9 @@
 //   {
 //     "kanal": "Failure Reconstructed",
 //     "baslik": "...",
-//     "ses": "en-US-AndrewNeural",      // Edge nöral ses (dogal)
-//     "sesHizi": "+6%",
-//     "altyaziFont": "Arial Black",     // istege bagli
+//     "ses": "en-US-AndrewMultilingualNeural", // opsiyonel; yoksa kanal profili
+//     "sesHizi": "+1%",                       // opsiyonel; yoksa kanal profili
+//     "altyaziFont": "Arial Black",           // istege bagli
 //     "sahneler": [
 //       { "metin": "cumle...", "kaynak": "Footage/x.mp4", "baslangic": 12 }
 //     ]
@@ -41,6 +41,7 @@ const telaffuz = require("./pronunciation-check");
 const muzik = require("./lib/muzik");
 const K = require("./lib/kutuphane");
 const { ayar } = require("./lib/ayar");
+const Channel = require("./core/channel-context");
 
 const KOK = __dirname;
 const IS = process.argv.find((a, i) => i >= 2 && !a.startsWith("--"));
@@ -49,17 +50,22 @@ const BASE = path.join(KOK, "uretim", IS);
 if (!fs.existsSync(path.join(BASE, "konu.json"))) { console.error("Is yok: " + BASE); process.exit(1); }
 const konu = JSON.parse(fs.readFileSync(path.join(BASE, "konu.json"), "utf8"));
 
+const CURRENT_CHANNEL = Channel.getChannel();
+const VOICE_PROFILE = CURRENT_CHANNEL.config.voice || {};
 const W = 1080, H = 1920, FPS = 30;
-const SES = konu.ses || "en-US-AndrewNeural";
-const HIZ = konu.sesHizi || "+6%";
+// The renderer used to fall back to one fast generic voice. Use the selected
+// channel's identity instead, while still allowing a researched topic to opt
+// into an explicit voice when needed.
+const SES = konu.ses || VOICE_PROFILE.voice || "en-US-AndrewMultilingualNeural";
+const HIZ = konu.sesHizi || VOICE_PROFILE.rate || "+1%";
 const FONT = konu.altyaziFont || process.env.SHORTS_FONT || "Arial Black";
-const KANAL = (konu.kanal || "Failure Reconstructed");
-const HANDLE = konu.handle || ("@" + KANAL.replace(/[^A-Za-z0-9]/g, ""));
+const KANAL = (konu.kanal || CURRENT_CHANNEL.name);
+const HANDLE = konu.handle || CURRENT_CHANNEL.config.handle || ("@" + KANAL.replace(/[^A-Za-z0-9]/g, ""));
 const DFONT = font(true);   // drawtext icin acik font yolu
 // Buyume: ekranda kanca (ilk ~2.5s) + sona etkilesim sorusu (yorum icin)
 const cleanTxt = (s) => String(s || "").replace(/[{}]/g, "").replace(/\\/g, "").replace(/[<>]/g, "");
 const HOOK = cleanTxt(konu.hook).toUpperCase();
-const SERI = require("./core/series").label(require("./core/channel-context").getChannel("failure-reconstructed"), IS);
+const SERI = require("./core/series").label(CURRENT_CHANNEL, IS);
 const SORU = cleanTxt(konu.soru);
 const sahneler = konu.sahneler || [];
 if (!sahneler.length) { console.error("konu.json'da sahneler[] yok."); process.exit(1); }
@@ -120,7 +126,7 @@ const assTime = (t) => { const h = Math.floor(t / 3600), m = Math.floor(t % 3600
 const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
 
 (async () => {
-  console.log(`Shorts: ${IS}  (${W}x${H}, ${sahneler.length} sahne, ses ${SES})`);
+  console.log(`Shorts: ${IS}  (${W}x${H}, ${sahneler.length} sahne, ses ${SES}, hiz ${HIZ}, kanal ${CURRENT_CHANNEL.slug})`);
   const vo = path.join(TMP, "vo.mp3");
   const anlati = sahneler.map(s => s.metin.trim()).join(" ");
   // Ses sozluk karsiliklariyla okunur (O-ring -> "O ring"); altyazi orijinal yazimi korur.
@@ -186,7 +192,11 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
     // Kare hassasiyetli sinirlar: yuvarlama hatasi sahneler boyunca birikmesin (ses senkronu)
     const f0 = Math.round(s.start * FPS), f1 = Math.round((s.start + s.dur) * FPS);
     const kareler = Math.max(1, f1 - f0);
-    const k = Math.max(1, Math.min(p.cekimSayisi || 1, Math.floor(kareler / (1.2 * FPS))));
+    // Hook sahnesi Viral Quality v2'de 0.75–1.1 sn visual beat hedefler.
+    // Eski global 1.2 sn tabani scene-pacing'in daha hizli opening planini
+    // sessizce geri aliyordu; yalnizca hook icin daha dusuk sinira izin ver.
+    const minShotSeconds = p.rol === "hook" ? 0.75 : 1.2;
+    const k = Math.max(1, Math.min(p.cekimSayisi || 1, Math.floor(kareler / (minShotSeconds * FPS))));
     const bol = Array.from({ length: k }, (_, j) => Math.round(kareler * (j + 1) / k) - Math.round(kareler * j / k));
     const kalan = Math.max(0, kaynakSure[s.kaynak] - (s.baslangic || 0) - kareler / FPS - 0.1);
     const atla = k > 1 ? Math.min(ATLA, kalan / (k - 1)) : 0;
@@ -308,8 +318,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
       // Kanca ILK KAREDE ekranda (fade-in yok): Shorts akisinda kaydirma karari ilk karede verilir.
       ekstra.push(`Dialogue: 0,${assTime(0)},${assTime(hookSon)},Pop,,0,0,0,,` +
         `{\\an5\\pos(${cx},${y})\\fs${fs}\\bord${bord}\\shad3\\fad(0,220)}${satirlar.map(assKacis).join("\\N")}`);
-      // Seri etiketi ("FAILURE FILE #13") kancanin hemen ustunde, kanal turuncusuyla:
-      // numarali, tekrar eden bir format abone olmak icin bir sebeptir (core/series.js).
+      // Seri etiketi kancanin hemen ustunde; numarali tekrar eden format kanal kimligini korur.
       if (SERI) {
         const sfs = Math.round(W * 0.040 * k);
         const sy = Math.round(y - (satirlar.length * fs) / 2 - sfs * 0.9);
@@ -424,21 +433,22 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     tasmaOrnek: tasma && tasma.length ? tasma.slice(0, 5) : [], ton: TON ? "stok-belgesel" : "yok",
     captionBurned: true, captionEvents: events.length,
     captionMaxWords: events.reduce((max, event) => Math.max(max, event.txt.split(/\s+/).length), 0),
-    captionMaxLines: 1, captionSafeZoneMeasured: tasma !== null };
+    captionMaxLines: 1, captionSafeZoneMeasured: tasma !== null,
+    voice: { provider: VOICE_PROFILE.provider || "edge-tts", voice: SES, rate: HIZ, channel: CURRENT_CHANNEL.slug } };
   try { Object.assign(denetim, DEN.videoDenetim(cikti)); } catch (e) { denetim.videoDenetimHata = String(e.message).slice(0, 160); }
   try { DEN.onizleme(cikti, path.join(VID, "onizleme.jpg"), sure(cikti)); denetim.onizleme = "Videos/onizleme.jpg"; }
   catch (e) { denetim.onizlemeHata = String(e.message).slice(0, 160); }
   fs.writeFileSync(path.join(VID, "denetim.json"), JSON.stringify(denetim, null, 2));
   console.log(`  denetim: yazi tasmasi ${denetim.yaziTasmasi} · siyah ${denetim.siyahToplam ?? "?"} sn · en uzun donuk ${denetim.donukEnUzun ?? "?"} sn`);
 
-  try { K.defterYaz(IS, { muzik: mp, render: { sure: sure(cikti), tarih: new Date().toISOString(), ustKatman: !!ustKatman } }); }
+  try { K.defterYaz(IS, { muzik: mp, render: { sure: sure(cikti), tarih: new Date().toISOString(), ustKatman: !!ustKatman, voice: denetim.voice } }); }
   catch (e) { console.log("  (kaynak defteri yazilamadi: " + e.message + ")"); }
   // Provenance manifest from the source ledger's credit lines (licence + URL
   // per asset) plus the generated voice, music and graphics.
   try {
     const P = require("./lib/provenance");
     const krediler = ((K.defter() || {})[IS] || {}).krediler || [];
-    P.write(path.dirname(K.paketYolu(IS, "provenance.json")), P.build({ channel: "failure-reconstructed", slug: IS,
+    P.write(path.dirname(K.paketYolu(IS, "provenance.json")), P.build({ channel: CURRENT_CHANNEL.slug, slug: IS,
       extra: krediler.map(P.fromCreditLine), voiceProvider: "Microsoft Edge neural TTS (" + SES + ")", music: true }));
   } catch (e) { console.log("  (provenance yazilamadi: " + e.message.slice(0, 120) + ")"); }
   console.log(`✓ Bitti: ${path.relative(KOK, cikti)}  (${sure(cikti).toFixed(1)}s, ${W}x${H}${ustKatman ? ", failure-chain katmani" : ""})`);
