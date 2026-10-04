@@ -302,5 +302,28 @@
       }
     ],
     "at": "2026-10-03T18:44:27.550Z"
+  },
+  {
+    "videoId": "aScjSrwqeRk",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "7d",
+    "diagnoses": [
+      {
+        "code": "TOPIC_FAILURE",
+        "confidence": "low",
+        "evidence": "Shorts feed share 20% and weak retention",
+        "recommendation": "Lower this cluster's topic weight until more evidence.",
+        "specCode": "TOPIC_REACH_LIMITED"
+      },
+      {
+        "code": "SEARCH_DEPENDENT",
+        "confidence": "medium",
+        "evidence": "76% of views from YouTube search",
+        "recommendation": "Evergreen search demand: keep the searchable subject in the title; consider a long-form companion.",
+        "specCode": "SEARCH_DEPENDENT"
+      }
+    ],
+    "at": "2026-10-04T18:12:24.913Z"
   }
 ]
