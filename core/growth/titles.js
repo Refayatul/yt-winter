@@ -298,6 +298,13 @@ function scoreOne(candidate, topic, config, kind, context = {}) {
   const totalWeight = Object.values(weights).reduce((sum, value) => sum + value, 0);
   const total = Math.round(Object.entries(weights).reduce((sum, [key, weight]) => sum + (s[key] || 0) * weight, 0) / totalWeight);
   const learnedBonus = (context.learnedPatternBonus || {})[candidate.pattern] || 0;
+  // Generic CT templates become visibly machine-written when a long technical
+  // noun phrase is inserted verbatim (for example, "What Depends on
+  // Uninterruptible Power Supply?"). Keep them available for audit, but apply
+  // a bounded naturalness penalty so a strong researched title can win.
+  const longTechnicalSubject = topic.channel === "critical-thread" && subjectWords.length >= 3;
+  const templateNaturalnessPenalty = longTechnicalSubject && candidate.source !== "editorial" && candidate.source !== "current"
+    && String(topic.subject || "").length && title.toLowerCase().includes(String(topic.subject).toLowerCase()) ? 10 : 0;
   // Pattern freshness: word similarity alone let four titles in a row share
   // one shape ("Eastern 212: What Failed First", "Inside Van Norman Dam: The
   // Failure Chain"...). A pattern used in the last three published titles
@@ -306,7 +313,9 @@ function scoreOne(candidate, topic, config, kind, context = {}) {
   const repeats = recentPatterns.filter((item) => item === candidate.pattern).length;
   const patternPenalty = Math.min(12, repeats * 4 + (recentPatterns[recentPatterns.length - 1] === candidate.pattern ? 3 : 0));
   s.patternFreshness = clamp(100 - repeats * 30);
-  return { ...candidate, scores: s, total, patternPenalty, adjustedTotal: Math.max(0, Math.min(100, total + learnedBonus - patternPenalty)), unsupportedWords: unsupported, misleading: s.truthfulness < 60 };
+  return { ...candidate, scores: s, total, patternPenalty, templateNaturalnessPenalty,
+    adjustedTotal: Math.max(0, Math.min(100, total + learnedBonus - patternPenalty - templateNaturalnessPenalty)),
+    unsupportedWords: unsupported, misleading: s.truthfulness < 60 };
 }
 
 function generate(topic, config, kind = "short", context = {}) {
@@ -317,9 +326,11 @@ function generate(topic, config, kind = "short", context = {}) {
   // ("What Depends on Road Tunnel Ventilation System?") yet read as
   // machine-made, so the best editorial title leads when one is truthful.
   const editorialFirst = kind === "short" && (topic.narrationBeats || []).length > 0;
-  const rank = (candidate) => (editorialFirst && candidate.source === "editorial" ? 1 : 0);
+  // Researched/editorial titles receive only a small provenance tie-break.
+  // They no longer override a materially stronger truthful title candidate.
+  const rankScore = (candidate) => candidate.adjustedTotal + (editorialFirst && candidate.source === "editorial" ? 3 : 0);
   const scored = pool.map((candidate) => scoreOne(candidate, topic, config, kind, context))
-    .sort((a, b) => Number(a.misleading) - Number(b.misleading) || rank(b) - rank(a) || b.adjustedTotal - a.adjustedTotal);
+    .sort((a, b) => Number(a.misleading) - Number(b.misleading) || rankScore(b) - rankScore(a) || b.adjustedTotal - a.adjustedTotal);
   const selected = scored.find((item) => !item.misleading) || null;
   const minimum = kind === "long" ? config.titles.longform.minimumCandidates : config.titles.shorts.minimumCandidates;
   return {

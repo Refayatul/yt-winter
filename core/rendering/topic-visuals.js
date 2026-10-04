@@ -110,6 +110,77 @@ const MAX_CARDS_WITHOUT_STILLS = 6;
 // is used once.
 const CLIP_SPACING = 4;
 
+const GENERIC_VISUAL_TERMS = new Set([
+  "road", "roads", "ocean", "sea", "water", "system", "systems", "eye", "eyes", "thing", "things", "object", "objects",
+  "technology", "machine", "machines", "infrastructure", "building", "buildings", "sky", "earth", "world", "photo", "image",
+  "view", "aerial", "landscape", "street", "highway", "server", "servers", "network", "power",
+]);
+const TERM_STOP = new Set(["the", "and", "for", "that", "this", "with", "from", "into", "inside", "what", "why", "how", "only", "actual", "detail", "design"]);
+
+function semanticFieldTerms(value) {
+  const text = String(value || "").toLowerCase().replace(/cat['’]?s[- ]eye/g, " road stud reflector ");
+  const words = text.split(/[^a-z0-9]+/)
+    .filter((word) => word.length >= 3 && !TERM_STOP.has(word) && !GENERIC_VISUAL_TERMS.has(word));
+  if (/\b(?:road stud|cat['’]?s[- ]eye)\b/i.test(text)) words.push("stud", "reflector", "reflective", "catseye");
+  if (/\b(?:uninterruptible power supply|\bups\b)\b/i.test(text)) words.push("ups", "uninterruptible", "battery", "backup");
+  return [...new Set(words)];
+}
+
+function semanticTerms(topic) {
+  return [...new Set([topic && topic.canonicalTopic, topic && topic.subject, topic && topic.designDetail, topic && topic.mechanism,
+    topic && topic.topic, topic && topic.coreQuestion].flatMap(semanticFieldTerms))];
+}
+
+function visualAssetText(shot) {
+  const asset = shot && (shot.still || shot.clip || shot.backdrop) || {};
+  return [asset.file, asset.description, asset.alt, asset.title, asset.origin, shot && shot.scene].filter(Boolean).join(" ");
+}
+
+function semanticVisualEvidence(topic, shot) {
+  const assetText = visualAssetText(shot);
+  const normalized = assetText.toLowerCase().replace(/[^a-z0-9]+/g, " ");
+  const matcher = (terms) => terms.filter((term) => new RegExp(`\\b${term.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&")}\\b`, "i").test(normalized));
+  const fields = {
+    canonicalTopic: semanticFieldTerms(topic && topic.canonicalTopic),
+    subject: semanticFieldTerms(topic && topic.subject),
+    designDetail: semanticFieldTerms(topic && topic.designDetail),
+    mechanism: semanticFieldTerms(topic && topic.mechanism),
+    openingClaim: semanticFieldTerms(shot && (shot.claimText || shot.scene)),
+  };
+  const matches = Object.fromEntries(Object.entries(fields).map(([key, terms]) => [key, matcher(terms)]));
+  const terms = [...new Set(Object.values(fields).flat())];
+  const matchedTerms = [...new Set(Object.values(matches).flat())];
+  const genericTermsIgnored = [...GENERIC_VISUAL_TERMS].filter((term) => new RegExp(`\\b${term}\\b`, "i").test(normalized));
+  const unrelatedLandmark = /\boak alley\b/i.test(assetText) && /\b(?:road stud|cat['’]?s[- ]eye)\b/i.test([topic && topic.canonicalTopic, topic && topic.subject, topic && topic.topic].join(" "));
+  const subjectMatch = matches.subject.length > 0 || matches.canonicalTopic.length > 0;
+  const mechanismMatch = matches.mechanism.length > 0;
+  const designDetailMatch = matches.designDetail.length > 0;
+  const claimMatch = matches.openingClaim.length > 0;
+  const strongTerms = [...new Set([...matches.subject, ...matches.canonicalTopic, ...matches.mechanism, ...matches.designDetail])];
+  const relevant = !unrelatedLandmark && (strongTerms.length > 0 || (claimMatch && matchedTerms.length >= 2));
+  const rejectionReasons = [];
+  if (unrelatedLandmark) rejectionReasons.push("Oak Alley is a generic road setting, not a road stud or reflector mechanism");
+  if (!unrelatedLandmark && !relevant) rejectionReasons.push("opening asset does not depict a distinctive subject, design detail, or mechanism");
+  if (!strongTerms.length && genericTermsIgnored.length) rejectionReasons.push(`generic context terms ignored: ${genericTermsIgnored.join(", ")}`);
+  return {
+    measured: true,
+    relevant,
+    decision: relevant ? "PUBLISH" : "BLOCK",
+    assetType: shot && shot.type || null,
+    asset: assetText || null,
+    topicTerms: terms,
+    matchedTerms,
+    strongTerms,
+    genericTermsIgnored,
+    subjectMatch,
+    mechanismMatch,
+    designDetailMatch,
+    claimMatch,
+    rejectionReasons,
+    reason: relevant ? `opening asset matches distinctive evidence: ${strongTerms.length ? strongTerms.join(", ") : matchedTerms.join(", ")}` : rejectionReasons.join("; "),
+  };
+}
+
 // Opening experiment, 50/50 by topic: "number" opens on the hook's sourced
 // number card (the original look); "motion" opens on moving footage (or the
 // lead photograph) with the hook words on screen. Recorded in render.json so
@@ -126,7 +197,9 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
   const scenes = scenesFor(topic);
   // Photographs first (they carry the story), diagrams after, each in the
   // relevance order prepareAssets produced.
-  const ordered = [...stills.filter((still) => stillKind(still) === "photo"), ...stills.filter((still) => stillKind(still) === "diagram")];
+  const semanticFirst = (items) => items.sort((a, b) => Number(semanticVisualEvidence(topic, { type: "licensed-still", still: b }).relevant)
+    - Number(semanticVisualEvidence(topic, { type: "licensed-still", still: a }).relevant));
+  const ordered = [...semanticFirst(stills.filter((still) => stillKind(still) === "photo")), ...semanticFirst(stills.filter((still) => stillKind(still) === "diagram"))];
   const maxCards = ordered.length >= 2 ? MAX_CARDS_WITH_STILLS : MAX_CARDS_WITHOUT_STILLS;
   const stillUses = new Map();
   const cardedClaims = new Set();
@@ -236,7 +309,7 @@ function loopBack(plan) {
   return plan;
 }
 
-function visualMetrics(plan) {
+function visualMetrics(plan, topic = null) {
   // A still re-used with another camera move is the same picture: it counts
   // once for variety, and back-to-back uses count as one static hold.
   const key = (shot) => shot.visualKey || shot.sourceId;
@@ -255,6 +328,7 @@ function visualMetrics(plan) {
   const openingHookCovered = !!first && first.claimIndex === 0 && (first.type !== "number-card" || first.numbers.every((token) => first.claimText.includes(token)));
   const cardNumbersValid = plan.filter((shot) => shot.type === "number-card")
     .every((shot) => shot.numbers.length > 0 && shot.numbers.every((token) => shot.claimText.includes(token)));
+  const openingSemantic = topic && first ? semanticVisualEvidence(topic, first) : { measured: false, relevant: null, reason: "topic not supplied to semantic visual audit" };
   return {
     distinctVisuals: distinct.size,
     realImageCount: real.size,
@@ -263,6 +337,7 @@ function visualMetrics(plan) {
     visualChanges: plan.length,
     openingHookCovered,
     cardNumbersValid,
+    openingSemantic,
   };
 }
 
@@ -273,7 +348,11 @@ function evaluateVisualQuality(metrics) {
   if (!metrics || metrics.maxStaticSeconds > MAX_HOLD_SECONDS) reasons.push(`maximum static hold ${metrics && metrics.maxStaticSeconds || 0}s > ${MAX_HOLD_SECONDS}s`);
   if (!metrics || !metrics.openingHookCovered) reasons.push("first visual does not cover the opening hook");
   if (!metrics || !metrics.cardNumbersValid) reasons.push("number card contains a value absent from its narration line");
-  return { decision: reasons.length ? "BLOCK" : "PUBLISH", reasons };
+  if (!metrics || !metrics.openingSemantic || (metrics.openingSemantic.measured && !metrics.openingSemantic.relevant)) {
+    reasons.push(metrics && metrics.openingSemantic && metrics.openingSemantic.reason || "opening semantic relevance was not measured");
+  }
+  const score = Math.max(0, 100 - reasons.length * 20);
+  return { decision: reasons.length ? "BLOCK" : "PUBLISH", score, reasons, semanticEvidence: metrics && metrics.openingSemantic || null };
 }
 
 const PERSON_FILE = /\b(Miss|Mrs?|Ms|Mme|Mlle|Dr|Sir|Lady|Lord|portrait|gagnante|winner|actress|actor|singer)\b|\b[A-Z][a-z]+[A-Z][a-z]+\.(jpe?g|png)\b/;
@@ -495,6 +574,6 @@ function attributionLines(stills, clips = []) {
 
 module.exports = { PERSON_FILE,
   loopBack, orderStills,
-  CACHE_SCHEMA, MAX_HOLD_SECONDS, numberTokens, stillKind, cardTokens, openingVariant, buildVisualPlan, visualMetrics, evaluateVisualQuality,
+  CACHE_SCHEMA, MAX_HOLD_SECONDS, GENERIC_VISUAL_TERMS, numberTokens, stillKind, cardTokens, semanticTerms, semanticVisualEvidence, openingVariant, buildVisualPlan, visualMetrics, evaluateVisualQuality,
   wikiTitles, prepareAssets, prepareAssetsSync, loadManifest, attributionLines,
 };

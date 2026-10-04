@@ -181,7 +181,8 @@ function runChannel(slug, argv = []) {
         legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true, stage: "final",
         assignExperiment: true, write: true, selection: choice.plan.topicDecision,
         render: { completed: true, syntheticVoice: result.render.audio.syntheticVoice, hasAudio: result.render.video.hasAudio, captionsBurned: result.render.video.captionsBurned,
-          width: result.render.video.width, height: result.render.video.height, durationSeconds: result.render.video.durationSeconds },
+          width: result.render.video.width, height: result.render.video.height, durationSeconds: result.render.video.durationSeconds,
+          visualQuality: result.render.video.visualQuality },
       })
       : choice.plan;
     fs.writeFileSync(path.join(output, "readiness.json"), JSON.stringify(finalPlan.readiness, null, 2) + "\n");

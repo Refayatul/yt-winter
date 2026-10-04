@@ -24,6 +24,16 @@ test("idempotency key is stable for the same upload and changes with any identit
   assert.throws(() => Safety.idempotencyKey({ ...base, channelId: "" }));
 });
 
+test("intentional replacements require traceable metadata and a new media identity", () => {
+  const media = "a".repeat(64);
+  const job = { replacementForVideoId: "OLDVID12345", originalVideoId: "OLDVID12345", replacementReason: "Corrected visual and hook quality defects", replacementVersion: 1 };
+  assert.equal(Safety.replacementCheck(job, media).ok, true);
+  assert.equal(Safety.replacementCheck({ replacementForVideoId: "OLDVID12345" }, media).code, "REPLACEMENT_METADATA_INCOMPLETE");
+  assert.equal(Safety.replacementCheck({ ...job, originalMediaSha256: media }, media).code, "REPLACEMENT_IDENTICAL_MEDIA");
+  const base = { channelId: "UC1", mediaSha256: media, title: "Replacement", publishAt: "2026-10-05T18:00:00Z" };
+  assert.notEqual(Safety.idempotencyKey(base), Safety.idempotencyKey({ ...base, replacementForVideoId: job.originalVideoId, replacementVersion: 1 }));
+});
+
 test("failures are classified; only transient ones are retried", () => {
   const c = (args) => Safety.classifyFailure(args);
   assert.deepEqual([c({ error: new Error("ECONNRESET") }).kind, c({ error: new Error("x") }).retryable], ["NETWORK", true]);

@@ -45,6 +45,9 @@ function evaluatePackage(pkg) {
   if (!pkg.script || pkg.script.forbiddenOpening) blockers.push("forbidden or missing opening");
   if (!pkg.titles || pkg.titles.length < 20) blockers.push("fewer than 20 title candidates");
   if (!pkg.visuals || pkg.visuals.some((scene) => scene.changeRequiredWithinSeconds > 3.5)) blockers.push("visual pacing too slow");
+  if (pkg.renderVisuals && pkg.renderVisuals.visualQuality && pkg.renderVisuals.visualQuality.decision === "BLOCK") {
+    blockers.push(...pkg.renderVisuals.visualQuality.reasons.map((reason) => "rendered visuals: " + reason));
+  }
   if (!pkg.sources || pkg.sources.length < 2) blockers.push("insufficient sources");
   if (!pkg.thumbnail || pkg.thumbnail.maxWords > 4) blockers.push("thumbnail identity missing or too verbose");
   if (!pkg.metadata || pkg.metadata.uploadChannel !== "behind-the-ordinary") blockers.push("wrong channel metadata");

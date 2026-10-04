@@ -3,10 +3,13 @@
 const fs = require("fs");
 const path = require("path");
 const { getChannel } = require("../channel-context");
+const Overrides = require("../topic-overrides");
 
 function universe(channel = getChannel()) {
   if (!fs.existsSync(channel.paths.topicUniverse)) return { topics: [] };
-  return JSON.parse(fs.readFileSync(channel.paths.topicUniverse, "utf8"));
+  const data = JSON.parse(fs.readFileSync(channel.paths.topicUniverse, "utf8"));
+  data.topics = Overrides.apply(channel, data.topics || []);
+  return data;
 }
 
 function usedIds(channel = getChannel()) {

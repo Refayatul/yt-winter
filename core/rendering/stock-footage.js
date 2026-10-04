@@ -39,6 +39,15 @@ function httpGet(url, options = {}, redirects = 5) {
 const API = "https://api.pexels.com/videos/search";
 const LICENCE = "Pexels License";
 const MAX_CLIPS = 3;
+// Low-information context words must never establish subject relevance on their
+// own. They are useful search terms, but not evidence that a clip depicts the
+// mechanism the Short is actually about.
+const GENERIC_SUBJECT_TERMS = new Set([
+  "road", "roads", "ocean", "oceans", "system", "systems", "eye", "eyes", "water", "power", "city", "cities",
+  "building", "buildings", "machine", "machines", "vehicle", "vehicles", "technology", "infrastructure", "device", "devices",
+  "server", "servers", "network", "networks", "view", "aerial", "street", "highway", "world", "earth",
+]);
+
 // A Short about a port should not cut to a smiling stranger.
 // Uniformed crews read as a specific country's service (a Russian fire crew in
 // a Short about a French–Italian tunnel).
@@ -86,16 +95,32 @@ function offWorldConflict(words, topicText) {
 // The subject of the topic (its canonical subject, or its title words), not a
 // place name: "Mont Blanc" alone admitted a helicopter on a landing pad.
 function subjectTerms(topic) {
-  const words = Nasa.contentWords(topic.canonicalTopic || topic.subject || topic.topic);
-  return new Set(words.filter((word) => !["system", "systems"].includes(word)));
+  const text = [topic.canonicalTopic, topic.subject, topic.designDetail, topic.mechanism, topic.topic].filter(Boolean).join(" ")
+    .replace(/cat['’]?s[- ]eye/gi, "road stud reflector");
+  const words = Nasa.contentWords(text);
+  if (/\b(?:road stud|cat['’]?s[- ]eye)\b/i.test(text)) words.push("stud", "reflector", "reflective", "catseye");
+  if (/\b(?:uninterruptible power supply|\bups\b)\b/i.test(text)) words.push("ups", "uninterruptible", "battery", "backup");
+  return new Set(words.filter((word) => !GENERIC_SUBJECT_TERMS.has(word)));
+}
+
+function relevanceEvidence(video, subject) {
+  const words = slugWords(video && video.url);
+  const strongSubject = new Set([...(subject || [])].filter((word) => !GENERIC_SUBJECT_TERMS.has(word)));
+  const matchedStrongTerms = words.filter((word) => strongSubject.has(word));
+  const genericTermsIgnored = words.filter((word) => GENERIC_SUBJECT_TERMS.has(word));
+  return { words, matchedStrongTerms: [...new Set(matchedStrongTerms)], genericTermsIgnored: [...new Set(genericTermsIgnored)] };
 }
 
 function accept(video, terms, subject = terms.anchors, topicText = [...terms.anchors].join(" ")) {
   if (!video || !(video.duration >= 5)) return false;
-  const words = slugWords(video.url);
+  const evidence = relevanceEvidence(video, subject);
+  const words = evidence.words;
   if (!words.length || PEOPLE.test(words.join(" ")) || modeConflict(words, topicText)) return false;
   if (offWorldConflict(words, topicText)) return false;
-  return words.some((word) => subject.has(word));
+  // A generic setting ("road", "ocean", "system", etc.) is context, not
+  // subject/mechanism evidence. At least one distinctive topic term must be in
+  // the provider's descriptive slug.
+  return evidence.matchedStrongTerms.length > 0;
 }
 
 function pickFile(video) {
@@ -169,4 +194,4 @@ async function search(topic, directory, key, options = {}) {
   return clips;
 }
 
-module.exports = { API, LICENCE, MAX_CLIPS, httpGet, lumaStats, slugWords, subjectTerms, modeConflict, offWorldConflict, queries, accept, pickFile, brightness, search };
+module.exports = { API, LICENCE, MAX_CLIPS, GENERIC_SUBJECT_TERMS, httpGet, lumaStats, slugWords, subjectTerms, relevanceEvidence, modeConflict, offWorldConflict, queries, accept, pickFile, brightness, search };

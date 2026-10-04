@@ -10,6 +10,7 @@
   },
   "viralScoring": {
     "_comment": "All positive dimensions are 0-100. Risk dimensions are stored as negative penalties and reduce the score through penaltyScale.",
+    "minimumToProduce": 68,
     "penaltyScale": 0.25,
     "weights": {
       "curiosity_gap": 1.1,
@@ -29,8 +30,14 @@
       "shareability": 0.9,
       "channel_fit": 1,
       "historical_similarity": 1,
+      "subscriber_conversion_potential": 1.1,
+      "audience_breadth": 0.9,
+      "hook_potential": 1,
+      "visual_availability": 0.9,
+      "research_confidence": 1,
       "duplicate_risk": 1.2,
       "saturation_risk": 0.6,
+      "recent_fatigue_risk": 0.9,
       "source_confidence_risk": 1.2,
       "weak_footage_risk": 0.8
     }

@@ -35,6 +35,7 @@ const SLUGS = ["failure-reconstructed", "impossible-brief", "critical-thread"];
 const ch = (slug) => Channel.getChannel(slug);
 const FR = () => ch("failure-reconstructed");
 const IB = () => ch("impossible-brief");
+const CT = () => ch("critical-thread");
 const contexts = {};
 const ctxFor = (slug) => (contexts[slug] = contexts[slug] || Context.build(ch(slug)));
 const frTopic = (slug = "chernobyl-1986") => ctxFor("failure-reconstructed").inventory.find((topic) => topic.slug === slug);
@@ -140,6 +141,37 @@ test("quality block: hard fails force BLOCK regardless of the weighted score", (
   assert.ok(plan.readiness.hardFails.some((item) => /broken audio/.test(item)));
   const wrong = Readiness.shorts({ ...{ channel: "failure-reconstructed", topicScore: plan.topicScore, hooks: plan.hooks, script: plan.script.retention, firstSeconds: plan.first3Seconds, factual: plan.factual, integrity: plan.integrity, sourceQuality: { score: 90 }, pacing: plan.pacing, durationRange: [20, 40] }, metadata: { uploadChannel: "critical-thread" } }, Config.forChannel(FR()));
   assert.equal(wrong.decision, "BLOCK");
+});
+
+test("final readiness requires real rendered visual evidence and honors visual BLOCK", () => {
+  const base = Growth.planShort(FR(), frTopic(), { context: ctxFor("failure-reconstructed") });
+  const input = { channel: "failure-reconstructed", topicScore: base.topicScore, hooks: base.hooks, titles: base.titles,
+    script: base.script.retention, firstSeconds: base.first3Seconds, factual: base.factual, integrity: base.integrity,
+    sourceQuality: { score: 90 }, metadata: { uploadChannel: "failure-reconstructed" }, pacing: base.pacing, durationRange: [20, 40] };
+  const missing = Readiness.shorts({ ...input, render: { completed: true, syntheticVoice: true, hasAudio: true, captionsBurned: true, width: 1080, height: 1920, durationSeconds: 30 } }, Config.forChannel(FR()));
+  assert.equal(missing.decision, "BLOCK");
+  assert.ok(missing.hardFails.some((item) => /missing measured rendered visual/.test(item)));
+  const blocked = Readiness.shorts({ ...input, render: { completed: true, syntheticVoice: true, hasAudio: true, captionsBurned: true, width: 1080, height: 1920, durationSeconds: 30,
+    visualQuality: { decision: "BLOCK", score: 40, reasons: ["semantic opening mismatch"] } } }, Config.forChannel(FR()));
+  assert.equal(blocked.decision, "BLOCK");
+  assert.ok(blocked.hardFails.some((item) => /semantic opening mismatch/.test(item)));
+});
+
+test("malformed English editorial hooks cannot override a better valid candidate", () => {
+  const Hooks = require("../../core/growth/hooks");
+  assert.deepEqual(Hooks.languageProblems("Why servers get only 5 to 15 minutes?"), ["malformed English question (missing auxiliary verb)"]);
+  const channel = CT();
+  const source = ctxFor("critical-thread").inventory.find((item) => item.slug === "what-quietly-depends-on-uninterruptible-power-supply");
+  const topic = JSON.parse(JSON.stringify(source));
+  topic.openingLine = "Why servers get only 5 to 15 minutes.";
+  topic.narration[0] = topic.openingLine;
+  topic.narrationBeats[0].text = topic.openingLine;
+  assert.ok(topic);
+  const plan = Growth.planShort(channel, topic, { context: ctxFor("critical-thread"), skipDuplicate: true });
+  const malformed = plan.hooks.candidates.find((item) => /Why servers get only/.test(item.spoken));
+  assert.ok(malformed && malformed.blocked);
+  assert.doesNotMatch(plan.hooks.selected.spoken, /Why servers get only/);
+  assert.equal(plan.script.claims[0].text, plan.hooks.selected.spoken);
 });
 
 test("Shorts regression safety: Failure Reconstructed source stays immutable while the selected factual hook is promoted", () => {

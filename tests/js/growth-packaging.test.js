@@ -13,15 +13,18 @@ const Rendering = require("../../core/rendering");
 const TopicVisuals = require("../../core/rendering/topic-visuals");
 const Seed = require("../../seed-comment");
 
-test("researched IB/CT records lead with their editorial title, not a keyword template", () => {
+test("researched IB/CT titles compete on quality instead of receiving an unconditional editorial lock", () => {
   for (const slug of ["impossible-brief", "critical-thread"]) {
     const channel = Channel.getChannel(slug);
     const topic = Discovery.universe(channel).topics.find((item) => item.researched && (item.editorialTitles || []).length);
     const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true });
     const first = plan.titles.candidates[0];
-    assert.equal(first.source, "editorial", `${slug}: ${first.title}`);
     assert.equal(first.misleading, false);
-    assert.doesNotMatch(first.title, /^What Depends on /);
+    assert.ok(first.adjustedTotal >= 70);
+    const bestEditorial = plan.titles.candidates.find((item) => item.source === "editorial" && !item.misleading);
+    if (first.source !== "editorial" && bestEditorial) {
+      assert.ok(first.adjustedTotal >= bestEditorial.adjustedTotal, `${slug}: weaker non-editorial title beat editorial`);
+    }
   }
 });
 

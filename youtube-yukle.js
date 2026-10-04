@@ -315,14 +315,23 @@ async function main() {
 
   // --- Idempotency: key, journal, remote reconciliation (fail closed) ---
   const medyaSha = Safety.sha256File(dosya);
-  const anahtar = Safety.idempotencyKey({ channelId: kimlik.actual, mediaSha256: medyaSha, title: snippet.title, publishAt });
+  const replacement = Safety.replacementCheck(konuVerisi, medyaSha);
+  if (!replacement.ok) {
+    hataYaz(BASE, IS, `${replacement.code}: ${replacement.detail}`);
+    Ops.event(CHANNEL, "publish.blocked", { slug: IS, code: replacement.code });
+    console.error(`⛔ ${replacement.code}: ${replacement.detail} — yukleme YAPILMADI.`);
+    process.exit(13);
+  }
+  const anahtar = Safety.idempotencyKey({ channelId: kimlik.actual, mediaSha256: medyaSha, title: snippet.title, publishAt,
+    replacementForVideoId: konuVerisi.replacementForVideoId, replacementVersion: konuVerisi.replacementVersion });
   const kayitTamamla = (videoId, kaynak) => {
     Safety.upsertIntent(CHANNEL, anahtar, { state: "COMPLETED", videoId, completedBy: kaynak });
     const library = require("./lib/kutuphane");
     const previous = library.yayinBul(IS) || {};
     library.yayinKaydet({ ...previous, channel: CHANNEL.slug, slug: IS, videoId, baslik: snippet.title,
       tarih: previous.tarih || new Date().toISOString(), format: videoFormat,
-      gizlilik, publishAt: previous.publishAt || publishAt, kalite: previous.kalite || kapiKarari, kaynak, idempotencyKey: anahtar, mediaSha256: medyaSha });
+      gizlilik, publishAt: previous.publishAt || publishAt, kalite: previous.kalite || kapiKarari, kaynak, idempotencyKey: anahtar, mediaSha256: medyaSha,
+      ...(replacement.replacement || {}) });
   };
   const onceki = Safety.findIntent(CHANNEL, anahtar);
   if (onceki && onceki.state === "COMPLETED" && onceki.videoId) {
@@ -371,6 +380,7 @@ async function main() {
   const onKontrol = {
     mode: mod, channel: CHANNEL.slug, authenticatedChannelId: kimlik.actual, mediaSha256: medyaSha, bytes: boyut,
     title: snippet.title, publishAt, privacy: gizlilik, qualityGate: kapiKarari, idempotencyKey: anahtar,
+    replacement: replacement.replacement,
     remoteDuplicate: false, quota: { used: butce.used, needed: butce.needed, budget: butce.budget, ok: butce.ok },
     provenance: { required: process.env.PROVENANCE_REQUIRED === "1", problems: kaynakSorunlari },
     checkedAt: new Date().toISOString(),
@@ -422,10 +432,11 @@ async function main() {
     try {
       require("./lib/kutuphane").yayinKaydet({ channel: CHANNEL.slug, slug: IS, videoId: j.id, baslik: snippet.title, tarih: new Date().toISOString(),
         format: videoFormat,
-        gizlilik, publishAt, kalite: kapiKarari, kaynak: "upload", idempotencyKey: anahtar, mediaSha256: medyaSha });
+        gizlilik, publishAt, kalite: kapiKarari, kaynak: "upload", idempotencyKey: anahtar, mediaSha256: medyaSha,
+        ...(replacement.replacement || {}) });
       // Bildirim (GitHub issue) icin ozet — bildirim.js okur
       fs.writeFileSync(path.join(BASE, "BILDIRIM.json"), JSON.stringify({ channel: CHANNEL.slug, channelName: CHANNEL.name, slug: IS, videoId: j.id, baslik: snippet.title,
-        kalite: kapiKarari, publishAt, tarih: new Date().toISOString() }, null, 2));
+        kalite: kapiKarari, publishAt, tarih: new Date().toISOString(), ...(replacement.replacement || {}) }, null, 2));
     } catch (e) { console.log("  (yayin kaydi yazilamadi: " + e.message + ")"); }
     try { const kol = require("./experiments").otomatikAta(j.id, snippet.title); if (kol) console.log("  deney: title-style / " + kol); } catch (e) {}
     // Seriye (playlist) ekle — binge/oturum suresi icin. Hata yuklemeyi bozmaz.
