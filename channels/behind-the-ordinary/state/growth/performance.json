@@ -283,6 +283,106 @@
         "traffic": [],
         "retention": null,
         "analyticsStatus": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+      },
+      "6h": {
+        "collectedAt": "2026-10-04T12:38:27.963Z",
+        "metrics": {
+          "views": {
+            "value": 4,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 250,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": null,
+        "analyticsStatus": "YouTube Analytics API has not been used in project 739767423116 before or it is disabled. Enable it by visiting https://console.developers.google.com/apis/api/youtubeanalytics.googleapis.com/overview?project=739767423116 then retry. If you enabled this API recently, wait a few minutes for the action to propagate to our systems and retry."
       }
     },
     "hookType": "visual_first_reveal",
@@ -427,7 +527,7 @@
     "normalized": {
       "ageHours": 12,
       "viewsPerHour": 0.33,
-      "recentViewVelocity": null,
+      "recentViewVelocity": 0,
       "likeRate": 0,
       "commentRate": 0.25,
       "shareRate": null,
@@ -484,6 +584,6 @@
       "shortsFeedShare": null,
       "searchShare": null
     },
-    "latestCheckpoint": "12h"
+    "latestCheckpoint": "6h"
   }
 ]
