@@ -10,16 +10,16 @@ on:
     inputs:
       fr_slug:
         description: Failure Reconstructed topic slug
-        default: lower-van-norman-dam-1971
+        default: rana-plaza-2013
       ib_slug:
         description: ImpossibleBrief topic slug
-        default: what-if-we-swam-in-europas-ocean
+        default: what-if-the-dinosaur-killing-asteroid-hit-today
       ct_slug:
         description: CriticalThread topic slug
-        default: inside-the-system-built-around-road-tunnel-ventilation-system
+        default: what-quietly-depends-on-uninterruptible-power-supply
       bto_slug:
         description: The Hidden Logic of Things topic slug
-        default: why-jeans-have-a-tiny-pocket
+        default: why-the-bluetooth-logo-looks-like-that
 
 permissions:
   contents: read
@@ -34,10 +34,10 @@ jobs:
         channel: [failure-reconstructed, impossible-brief, critical-thread, behind-the-ordinary]
     env:
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
-      FR_SLUG: ${{ inputs.fr_slug || 'lower-van-norman-dam-1971' }}
-      IB_SLUG: ${{ inputs.ib_slug || 'what-if-we-swam-in-europas-ocean' }}
-      CT_SLUG: ${{ inputs.ct_slug || 'inside-the-system-built-around-road-tunnel-ventilation-system' }}
-      BTO_SLUG: ${{ inputs.bto_slug || 'why-jeans-have-a-tiny-pocket' }}
+      FR_SLUG: ${{ inputs.fr_slug || 'rana-plaza-2013' }}
+      IB_SLUG: ${{ inputs.ib_slug || 'what-if-the-dinosaur-killing-asteroid-hit-today' }}
+      CT_SLUG: ${{ inputs.ct_slug || 'what-quietly-depends-on-uninterruptible-power-supply' }}
+      BTO_SLUG: ${{ inputs.bto_slug || 'why-the-bluetooth-logo-looks-like-that' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
