@@ -1,14 +1,17 @@
 "use strict";
 
 // Growth-engine configuration: shared defaults (config/growth-engine.json)
-// deep-merged with one channel's overrides (channels/<slug>/growth-engine.json).
-// A channel never reads another channel's overrides.
+// deep-merged with one channel's overrides (channels/<slug>/growth-engine.json),
+// then the portfolio-wide Viral Quality v2 minimum standard. A channel never
+// reads another channel's overrides, and legacy cadence fallbacks cannot weaken
+// the shared viral publication floor.
 
 const fs = require("fs");
 const path = require("path");
 const Channel = require("../channel-context");
 
 const DEFAULTS_PATH = path.join(Channel.ROOT, "config", "growth-engine.json");
+const VIRAL_V2_PATH = path.join(Channel.ROOT, "config", "viral-quality-v2.json");
 
 function readJson(file, fallback) {
   try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch (error) { return fallback; }
@@ -49,6 +52,8 @@ function validate(config) {
   if (!config.performance || config.performance.growthScoreWeights.subscriberConversion < config.performance.growthScoreWeights.views) fail("subscriber conversion must have meaningful growth-score weight");
   const buckets = config.script.shorts.durationBuckets || [];
   if (buckets.length !== 4 || buckets.some((bucket, index) => !(bucket.min <= bucket.max) || (index && bucket.min <= buckets[index - 1].max))) fail("Short duration buckets must be four ordered, non-overlapping ranges");
+  if (!config.scheduler || !config.scheduler.shorts || !Array.isArray(config.scheduler.shorts.primaryBuckets) || !config.scheduler.shorts.primaryBuckets.length) fail("scheduler.shorts.primaryBuckets must not be empty");
+  if (config.firstSeconds.minimumScore < 70 || config.hooks.minimumScore < 70) fail("viral opening floors must remain at least 70");
   return config;
 }
 
@@ -58,7 +63,10 @@ function forChannel(channel = Channel.getChannel()) {
   const defaults = readJson(DEFAULTS_PATH, null);
   if (!defaults) throw new Error("Missing growth-engine defaults: config/growth-engine.json");
   const override = readJson(channelOverridePath(channel), {});
-  const merged = deepMerge(defaults, override);
+  const viralV2 = readJson(VIRAL_V2_PATH, {});
+  // Channel identity and niche rules are preserved first; the final v2 overlay
+  // contains only portfolio-wide minimum viral/retention standards.
+  const merged = deepMerge(deepMerge(defaults, override), viralV2);
   merged.channel = channel.slug;
   // Channel config remains the single source for cadence and quality floors.
   const cadence = channel.config.publishingCadence || {};
@@ -72,4 +80,4 @@ function forChannel(channel = Channel.getChannel()) {
 
 function clearCache() { cache.clear(); }
 
-module.exports = { DEFAULTS_PATH, deepMerge, validate, forChannel, channelOverridePath, clearCache, readJson };
+module.exports = { DEFAULTS_PATH, VIRAL_V2_PATH, deepMerge, validate, forChannel, channelOverridePath, clearCache, readJson };
