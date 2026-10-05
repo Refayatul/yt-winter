@@ -1,0 +1,1 @@
+After merge, run `The Hidden Logic of Things research` manually with limit 4. Success criterion is not workflow green alone: at least one formerly `NO_SOURCE` candidate must advance to evidence evaluation, with no quality-gate bypass. If none become production-ready, inspect primary-link discovery next rather than lowering thresholds.
