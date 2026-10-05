@@ -1,0 +1,1 @@
+Fallback discovery is intentionally separated from evidence acceptance. The production research script should invoke broadWikipediaTitles only after strict article discovery returns zero documents, then fetch candidate article extracts and continue through the existing primary-link, verbatim-quote, narration-support and Builder.run quality gates.
