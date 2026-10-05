@@ -26,7 +26,7 @@ patch(
   'causal wiki');
 patch(
   'async function researchOne(topic, deps) {\n  const docs = await articles(topic, deps.get);',
-  'async function researchOne(topic, deps) {\n  // Primary authority pages are evidence first; Wikipedia is orientation/fallback.\n  // Search-result snippets are never evidence: each authority page is fetched and\n  // its quotes are independently verified by Builder before productionReady.\n  const authorityDocs = await AuthorityDiscovery.discover(topic, deps.get).catch(() => []);\n  const wikiDocs = await articles(topic, deps.get);\n  const docs = [...authorityDocs, ...wikiDocs].slice(0, 5);',
+  'async function researchOne(topic, deps) {\n  const authorityDocs = await AuthorityDiscovery.discover(topic, deps.get).catch(() => []);\n  const wikiDocs = await articles(topic, deps.get);\n  const docs = [...authorityDocs, ...wikiDocs].slice(0, 5);',
   'authority first');
 patch(
   '  for (const doc of docs) {\n    const links = (await primaryLinks(doc.title, deps.get)).map((url, index) => ({ url, index })).sort((a, b) => relevance(b.url) - relevance(a.url) || a.index - b.index).map((item) => item.url);\n    doc.links = await reachableLinks(links, deps.get);\n  }',
@@ -56,5 +56,7 @@ patch(
   '    researchMethod: "automated: provider draft from Wikipedia text; verbatim quotes, numbers and sources verified by scripts/ib-ct-library/build.js",',
   '    researchMethod: "automated authority-first research; direct primary pages preferred, Wikipedia fallback; verbatim quotes, numbers, hosts and reachability verified by scripts/ib-ct-library/build.js",',
   'method');
+if(!src.includes('AuthorityDiscovery.discover')) throw new Error('BTO authority discovery v5 was not wired into researchOne');
+if(!src.includes('const AuthorityDiscovery')) throw new Error('BTO authority discovery v5 module was not imported');
 fs.writeFileSync(file,src);
-console.log("BTO discovery v4 wired: direct authority evidence first, Wikipedia fallback, quality gates unchanged");
+console.log("BTO discovery v5 wired and asserted: direct authority evidence first, Wikipedia fallback, quality gates unchanged");
