@@ -4,10 +4,12 @@ on:
     paths:
       - 'scripts/bto-source-discovery.js'
       - 'scripts/bto-research-fallback.js'
+      - 'scripts/bto-research-fallback-hook.js'
       - 'test/bto-source-discovery.test.js'
       - 'test/bto-discovery-regression.test.js'
       - 'test/bto-research-fallback.test.js'
       - 'test/bto-fallback-safety.test.js'
+      - 'test/bto-research-fallback-hook.test.js'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -20,3 +22,4 @@ jobs:
       - run: node test/bto-discovery-regression.test.js
       - run: node test/bto-research-fallback.test.js
       - run: node test/bto-fallback-safety.test.js
+      - run: node test/bto-research-fallback-hook.test.js
