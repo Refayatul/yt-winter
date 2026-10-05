@@ -3,7 +3,7 @@
   "channel": "behind-the-ordinary",
   "channelName": "The Hidden Logic of Things",
   "contentType": "long",
-  "createdAt": "2026-10-05T15:32:20.375Z",
+  "createdAt": "2026-10-05T16:11:53.723Z",
   "topic": {
     "id": "BTO-256",
     "slug": "why-the-bluetooth-logo-looks-like-that",
@@ -119,7 +119,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 3
+    "reuseCount": 4
   },
   "outline": {
     "structure": [
@@ -356,18 +356,223 @@
     }
   },
   "script": {
-    "generator": "deterministic-evidence",
+    "generator": "llm:groq:openai/gpt-oss-120b",
     "provider": "groq",
-    "model": null,
-    "status": "DEFERRED",
-    "pipeline": null,
-    "blueprint": null,
-    "quality": null,
+    "model": "openai/gpt-oss-120b",
+    "status": "COMPLETE",
+    "pipeline": [
+      "TOPIC",
+      "RESEARCH_EVIDENCE",
+      "FACT_PACK",
+      "NARRATIVE_ANGLE",
+      "OUTLINE",
+      "SECTION_PLAN",
+      "SECTION_GENERATION",
+      "CONTINUITY_PASS",
+      "RETENTION_PASS",
+      "FACTUAL_CONSISTENCY_CHECK",
+      "FINAL_VOICEOVER_SCRIPT"
+    ],
+    "blueprint": {
+      "central_question": "Why is the Bluetooth logo that angular symbol, and where did the name come from?",
+      "audience_promise": "Answer one precise question about the Bluetooth symbol using only documented evidence.",
+      "narrative_angle": "Evidence‑led hidden‑logic explainer that traces the Bluetooth logo’s Viking‑runic origin, the practical naming shortcut that became permanent, and why the design endures today.",
+      "hook_candidates": [
+        "Two ancient runes, merged into one sleek symbol you see on every phone.",
+        "A king’s dead tooth gave a tech standard its name.",
+        "What a placeholder code name and a Viking king have in common."
+      ],
+      "retention_beats": [
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object]."
+      ],
+      "uncertain_claims": [
+        "C23",
+        "C24",
+        "C25",
+        "C26",
+        "C27",
+        "C28",
+        "C29",
+        "C30",
+        "C31",
+        "C32",
+        "C33",
+        "C34",
+        "C35",
+        "C36",
+        "C37",
+        "C38",
+        "C39",
+        "C40",
+        "C41",
+        "C42"
+      ],
+      "section_plan": [
+        {
+          "section": "COLD_OPEN",
+          "question": "What is the unresolved consequence the viewer sees first?",
+          "claimIds": [
+            "C1",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C10",
+            "C11",
+            "C23"
+          ]
+        },
+        {
+          "section": "THE_QUESTION",
+          "question": "What familiar detail are we actually explaining?",
+          "claimIds": [
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C10",
+            "C11"
+          ]
+        },
+        {
+          "section": "ORIGIN_CONTEXT",
+          "question": "Where did this design come from?",
+          "claimIds": [
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C22"
+          ]
+        },
+        {
+          "section": "THE_PROBLEM",
+          "question": "What practical problem shaped it?",
+          "claimIds": [
+            "C19",
+            "C20"
+          ]
+        },
+        {
+          "section": "THE_EXPLANATION",
+          "question": "What does the documented evidence show?",
+          "claimIds": [
+            "C2",
+            "C16",
+            "C30",
+            "C31",
+            "C32",
+            "C33",
+            "C34",
+            "C35",
+            "C36",
+            "C37",
+            "C38",
+            "C39",
+            "C40",
+            "C41",
+            "C42",
+            "C43",
+            "C44",
+            "C45",
+            "C46",
+            "C47",
+            "C48",
+            "C49",
+            "C50",
+            "C51",
+            "C68",
+            "C69",
+            "C70",
+            "C71",
+            "C72",
+            "C73",
+            "C74",
+            "C75",
+            "C76",
+            "C77",
+            "C78",
+            "C79",
+            "C80",
+            "C81",
+            "C82",
+            "C83",
+            "C84",
+            "C85",
+            "C86",
+            "C87",
+            "C88",
+            "C89",
+            "C90",
+            "C91",
+            "C92",
+            "C93",
+            "C94",
+            "C95",
+            "C96",
+            "C97",
+            "C98"
+          ]
+        },
+        {
+          "section": "SURPRISING_DETAIL",
+          "question": "Which detail changes the obvious explanation?",
+          "claimIds": [
+            "C3",
+            "C17",
+            "C18"
+          ]
+        },
+        {
+          "section": "REAL_WORLD_CONSEQUENCE",
+          "question": "How did the design persist or change?",
+          "claimIds": [
+            "C1",
+            "C23"
+          ]
+        },
+        {
+          "section": "FINAL_PAYOFF",
+          "question": "What is the precise answer to the opening question?",
+          "claimIds": [
+            "C21"
+          ]
+        },
+        {
+          "section": "NEXT_CURIOSITY_BRIDGE",
+          "question": "Which related ordinary detail follows naturally?",
+          "claimIds": []
+        }
+      ]
+    },
+    "quality": {
+      "duplicateSections": [],
+      "repeatedPhrases": [],
+      "weakHook": false,
+      "payoff": true,
+      "filler": [],
+      "introShare": 0.21,
+      "missingPlanSections": [],
+      "hardFails": [],
+      "notes": []
+    },
     "checkpoint": "generation/why-the-bluetooth-logo-looks-like-that.json",
-    "llmError": "groq rate limit reached; long-form generation deferred",
-    "llmErrorCode": "RATE_LIMIT",
-    "llmErrorStage": "section:ORIGIN_CONTEXT",
-    "depthNote": null,
+    "llmError": null,
+    "llmErrorCode": null,
+    "llmErrorStage": null,
+    "depthNote": "All paragraphs rely solely on the provided claim IDs; no additional facts were introduced. Uses only the five provided claims, each paragraph cites its supporting IDs and avoids unsupported additions. Only claims C19 and C20 were used as evidence. Evidence ties the Bluetooth logo’s rune origin to broader theories of symbols and semiotics, showing how cultural and functional meanings intertwine. All content derived solely from claims C3, C17, C18. Only two claims were available; each paragraph is limited to the evidence they provide. Only claim C21 supports this answer.",
     "sections": [
       {
         "section": "COLD_OPEN",
@@ -383,16 +588,22 @@
         "section": "THE_QUESTION",
         "paragraphs": [
           {
-            "text": "Start with the detail itself. The Bluetooth logo is a Viking king's initials. Two runes, merged into one symbol. The name honours King Harald Bluetooth, who united Denmark and Norway. At an industry meeting, Intel's Jim Kardach suggested it as a temporary code name. Harald united Scandinavia. This radio link would unite PCs and phones. It was only a placeholder. RadioWire or PAN was meant to replace it. PAN was already everywhere online, and RadioWire's trademark check ran out of time. So the logo merges Harald's initials in runes: H and B.",
+            "text": "The Bluetooth logo is a Viking king's initials. Two runes, merged into one symbol. So the logo merges Harald's initials in runes: H and B.",
             "claims": [
               "C4",
               "C5",
+              "C11"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "The name honours King Harald Bluetooth, who united Denmark and Norway. At an industry meeting, Intel's Jim Kardach suggested it as a temporary code name. Harald united Scandinavia. This radio link would unite PCs and phones. It was only a placeholder. RadioWire or PAN was meant to replace it. PAN was already everywhere online, and RadioWire's trademark check ran out of time.",
+            "claims": [
               "C6",
               "C7",
               "C8",
               "C9",
-              "C10",
-              "C11"
+              "C10"
             ],
             "role": "evidence"
           }
@@ -402,10 +613,16 @@
         "section": "ORIGIN_CONTEXT",
         "paragraphs": [
           {
-            "text": "Its history begins with a practical problem. King Harald Bluetooth Gormsson was known for uniting Denmark and Norway in 958. Harald's nickname came from a dead tooth of a dark blue-grey colour. In 1996 Intel, Ericsson and Nokia met to plan the standardization of a short-range radio technology. At that meeting Jim Kardach of Intel suggested Bluetooth as a temporary code name. Kardach proposed the code name after seeing a picture of Harald Bluetooth's runestone in a history of the Vikings.",
+            "text": "King Harald Bluetooth Gormsson, who united Denmark and Norway, earned his nickname from a dead tooth of a dark blue‑grey colour.",
             "claims": [
               "C12",
-              "C13",
+              "C13"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "In 1996 Intel, Ericsson and Nokia convened to standardize a short‑range radio technology; Jim Kardach suggested \"Bluetooth\" as a temporary code name after seeing a picture of Harald Bluetooth’s runestone.",
+            "claims": [
               "C14",
               "C15",
               "C22"
@@ -418,7 +635,7 @@
         "section": "THE_PROBLEM",
         "paragraphs": [
           {
-            "text": "That problem shaped the design. PAN already had tens of thousands of hits on the internet. A full trademark search on RadioWire could not be completed in time for launch.",
+            "text": "The practical issue arose because the existing PAN name already had tens of thousands of hits on the internet, and a full trademark search on RadioWire could not be completed in time for launch.",
             "claims": [
               "C19",
               "C20"
@@ -431,10 +648,40 @@
         "section": "THE_EXPLANATION",
         "paragraphs": [
           {
-            "text": "The documentation makes the purpose clearer. The governing physics: The logo is a bind rune that merges the Younger Futhark runes for Harald Bluetooth's initials. Kardach compared Harald uniting Scandinavia with uniting the PC and cellular industries through a short-range wireless link.",
+            "text": "The Bluetooth emblem is a bind rune that fuses the Younger Futhark characters representing Harald Bluetooth’s initials. Kardach likened Harald’s historic unification of Scandinavia to the modern linking of personal computers and mobile devices through a short‑range wireless protocol.",
             "claims": [
               "C2",
               "C16"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "A symbol acts as an outward sign that represents another concept, a usage documented in English literature since the late 1500s. Symbols enable layered communication, often bearing multiple levels of meaning and forming the basis of human understanding. They aid interpretation of the world and facilitate social coordination through shared rhetoric. Cultural background shapes a symbol’s reading, making its meaning a learned construct rather than an inherent property.",
+            "claims": [
+              "C30",
+              "C31",
+              "C32",
+              "C33",
+              "C34",
+              "C35",
+              "C36",
+              "C37",
+              "C38"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "Semiotics examines the link between a sign’s form and its referent, analyzing how visual cues generate meaning. Symbols can convey ideological, comparative, or isomorphic value, indicating beliefs, judgments of superiority, or conformity within a cultural setting. Their significance may shift as history, popular usage, and context evolve.",
+            "claims": [
+              "C45",
+              "C46",
+              "C68",
+              "C69",
+              "C70",
+              "C71",
+              "C82",
+              "C83",
+              "C85"
             ],
             "role": "evidence"
           }
@@ -444,7 +691,7 @@
         "section": "SURPRISING_DETAIL",
         "paragraphs": [
           {
-            "text": "But one detail complicates the familiar story. Bluetooth sounds like a technical acronym, but it is a king's nickname that was meant to be a placeholder. Bluetooth was intended only as a placeholder name. The planned replacement names were RadioWire or PAN (Personal Area Networking).",
+            "text": "Bluetooth sounds like a technical acronym, but it is a king's nickname that was meant to be a placeholder. It was intended only as a placeholder name. The planned replacement names were RadioWire or PAN (Personal Area Networking).",
             "claims": [
               "C3",
               "C17",
@@ -458,9 +705,16 @@
         "section": "REAL_WORLD_CONSEQUENCE",
         "paragraphs": [
           {
-            "text": "The design did not stop changing there. A temporary code name became the permanent name and logo of a global wireless standard.",
+            "text": "The Bluetooth identifier began as a provisional code name, yet it was adopted as the enduring name and visual emblem for the worldwide wireless protocol.",
             "claims": [
               "C1"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "In this context, the emblem functions as a symbol—a visual mark that conveys a specific concept or relationship.",
+            "claims": [
+              "C23"
             ],
             "role": "evidence"
           }
@@ -470,7 +724,7 @@
         "section": "FINAL_PAYOFF",
         "paragraphs": [
           {
-            "text": "Now the opening question has a precise answer. The Bluetooth logo is a bind rune merging the Younger Futhark runes Hagall and Bjarkan, Harald's initials.",
+            "text": "The Bluetooth logo is a bind rune that combines the Younger Futhark runes Hagall and Bjarkan, representing the initials of King Harald Bluetooth.",
             "claims": [
               "C21"
             ],
@@ -483,10 +737,10 @@
         "paragraphs": []
       }
     ],
-    "words": 343,
-    "estimatedMinutes": 2.3,
-    "paragraphs": 8,
-    "secondsPerNewBeat": 17
+    "words": 436,
+    "estimatedMinutes": 2.9,
+    "paragraphs": 13,
+    "secondsPerNewBeat": 13
   },
   "claimSourceMap": {
     "rows": [
@@ -497,7 +751,7 @@
       },
       {
         "section": "THE_QUESTION",
-        "excerpt": "Start with the detail itself. The Bluetooth logo is a Viking king's initials. Two runes, m",
+        "excerpt": "The Bluetooth logo is a Viking king's initials. Two runes, merged into one symbol. So the ",
         "claims": [
           {
             "id": "C4",
@@ -509,6 +763,17 @@
             "class": "CONFIRMED_FACT",
             "source": "editorial narration (case file)"
           },
+          {
+            "id": "C11",
+            "class": "CONFIRMED_FACT",
+            "source": "editorial narration (case file)"
+          }
+        ]
+      },
+      {
+        "section": "THE_QUESTION",
+        "excerpt": "The name honours King Harald Bluetooth, who united Denmark and Norway. At an industry meet",
+        "claims": [
           {
             "id": "C6",
             "class": "CONFIRMED_FACT",
@@ -533,17 +798,12 @@
             "id": "C10",
             "class": "CONFIRMED_FACT",
             "source": "editorial narration (case file)"
-          },
-          {
-            "id": "C11",
-            "class": "CONFIRMED_FACT",
-            "source": "editorial narration (case file)"
           }
         ]
       },
       {
         "section": "ORIGIN_CONTEXT",
-        "excerpt": "Its history begins with a practical problem. King Harald Bluetooth Gormsson was known for ",
+        "excerpt": "King Harald Bluetooth Gormsson, who united Denmark and Norway, earned his nickname from a ",
         "claims": [
           {
             "id": "C12",
@@ -554,7 +814,13 @@
             "id": "C13",
             "class": "CONFIRMED_FACT",
             "source": "Bluetooth SIG — Origin of the Name"
-          },
+          }
+        ]
+      },
+      {
+        "section": "ORIGIN_CONTEXT",
+        "excerpt": "In 1996 Intel, Ericsson and Nokia convened to standardize a short‑range radio technology; ",
+        "claims": [
           {
             "id": "C14",
             "class": "CONFIRMED_FACT",
@@ -574,7 +840,7 @@
       },
       {
         "section": "THE_PROBLEM",
-        "excerpt": "That problem shaped the design. PAN already had tens of thousands of hits on the internet.",
+        "excerpt": "The practical issue arose because the existing PAN name already had tens of thousands of h",
         "claims": [
           {
             "id": "C19",
@@ -590,7 +856,7 @@
       },
       {
         "section": "THE_EXPLANATION",
-        "excerpt": "The documentation makes the purpose clearer. The governing physics: The logo is a bind run",
+        "excerpt": "The Bluetooth emblem is a bind rune that fuses the Younger Futhark characters representing",
         "claims": [
           {
             "id": "C2",
@@ -605,8 +871,110 @@
         ]
       },
       {
+        "section": "THE_EXPLANATION",
+        "excerpt": "A symbol acts as an outward sign that represents another concept, a usage documented in En",
+        "claims": [
+          {
+            "id": "C30",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C31",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C32",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C33",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C34",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C35",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C36",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C37",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C38",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          }
+        ]
+      },
+      {
+        "section": "THE_EXPLANATION",
+        "excerpt": "Semiotics examines the link between a sign’s form and its referent, analyzing how visual c",
+        "claims": [
+          {
+            "id": "C45",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C46",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C68",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C69",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C70",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C71",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C82",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C83",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          },
+          {
+            "id": "C85",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          }
+        ]
+      },
+      {
         "section": "SURPRISING_DETAIL",
-        "excerpt": "But one detail complicates the familiar story. Bluetooth sounds like a technical acronym, ",
+        "excerpt": "Bluetooth sounds like a technical acronym, but it is a king's nickname that was meant to b",
         "claims": [
           {
             "id": "C3",
@@ -627,7 +995,7 @@
       },
       {
         "section": "REAL_WORLD_CONSEQUENCE",
-        "excerpt": "The design did not stop changing there. A temporary code name became the permanent name an",
+        "excerpt": "The Bluetooth identifier began as a provisional code name, yet it was adopted as the endur",
         "claims": [
           {
             "id": "C1",
@@ -637,8 +1005,19 @@
         ]
       },
       {
+        "section": "REAL_WORLD_CONSEQUENCE",
+        "excerpt": "In this context, the emblem functions as a symbol—a visual mark that conveys a specific co",
+        "claims": [
+          {
+            "id": "C23",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Symbol"
+          }
+        ]
+      },
+      {
         "section": "FINAL_PAYOFF",
-        "excerpt": "Now the opening question has a precise answer. The Bluetooth logo is a bind rune merging t",
+        "excerpt": "The Bluetooth logo is a bind rune that combines the Younger Futhark runes Hagall and Bjark",
         "claims": [
           {
             "id": "C21",
@@ -649,7 +1028,9 @@
       }
     ],
     "unsupportedParagraphs": 0,
-    "unsupportedNumbers": [],
+    "unsupportedNumbers": [
+      "1500"
+    ],
     "copyRisks": []
   },
   "scenePlan": [
@@ -675,7 +1056,7 @@
       "scene": 2,
       "narrationSpan": [
         2,
-        21
+        12
       ],
       "section": "THE_QUESTION",
       "visualPurpose": "visualise scenario",
@@ -683,7 +1064,7 @@
       "subject": "the two runes drawn separately",
       "asset": "the two runes drawn separately",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 18.4,
+      "durationEstimateSeconds": 10,
       "motion": "slow push-in to detail",
       "claimSupported": "C4",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -692,8 +1073,8 @@
     {
       "scene": 3,
       "narrationSpan": [
-        21,
-        39
+        12,
+        25
       ],
       "section": "THE_QUESTION",
       "visualPurpose": "visualise scenario",
@@ -701,35 +1082,35 @@
       "subject": "the runes sliding together into the logo",
       "asset": "the runes sliding together into the logo",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 18.4,
-      "motion": "lateral reframe / crop to evidence",
-      "claimSupported": "C5",
+      "durationEstimateSeconds": 12.4,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C6",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": null
     },
     {
       "scene": 4,
       "narrationSpan": [
-        39,
-        55
+        25,
+        37
       ],
-      "section": "ORIGIN_CONTEXT",
+      "section": "THE_QUESTION",
       "visualPurpose": "visualise scenario",
-      "visualType": "MUSEUM_ARCHIVE",
+      "visualType": "REAL_OBJECT",
       "subject": "a runestone carving",
       "asset": "a runestone carving",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 16.2,
-      "motion": "slow push-in to detail",
-      "claimSupported": "C12",
+      "durationEstimateSeconds": 12.4,
+      "motion": "lateral reframe / crop to evidence",
+      "claimSupported": "C7",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": null
     },
     {
       "scene": 5,
       "narrationSpan": [
-        55,
-        72
+        37,
+        46
       ],
       "section": "ORIGIN_CONTEXT",
       "visualPurpose": "visualise scenario",
@@ -737,17 +1118,35 @@
       "subject": "a laptop and phone pairing",
       "asset": "a laptop and phone pairing",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 16.2,
-      "motion": "lateral reframe / crop to evidence",
-      "claimSupported": "C13",
+      "durationEstimateSeconds": 8.4,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C12",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": null
     },
     {
       "scene": 6,
       "narrationSpan": [
-        72,
-        84
+        46,
+        58
+      ],
+      "section": "ORIGIN_CONTEXT",
+      "visualPurpose": "visualise scenario",
+      "visualType": "MUSEUM_ARCHIVE",
+      "subject": "Encoding communication",
+      "asset": "Commons: Encoding communication.jpg",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 12,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C14",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": null
+    },
+    {
+      "scene": 7,
+      "narrationSpan": [
+        58,
+        71
       ],
       "section": "THE_PROBLEM",
       "visualPurpose": "visualise scenario",
@@ -755,17 +1154,17 @@
       "subject": "PAN already had tens of thousands of hits on the internet.",
       "asset": "diagram:THE_PROBLEM:C19",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 12,
+      "durationEstimateSeconds": 13.6,
       "motion": "slow push-in to detail",
       "claimSupported": "C19",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
-      "scene": 7,
+      "scene": 8,
       "narrationSpan": [
-        84,
-        100
+        71,
+        87
       ],
       "section": "THE_EXPLANATION",
       "visualPurpose": "visualise scenario",
@@ -773,61 +1172,133 @@
       "subject": "The governing physics: The logo is a bind rune that merges the Younger Futhark",
       "asset": "diagram:THE_EXPLANATION:C2",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 16.8,
+      "durationEstimateSeconds": 15.6,
       "motion": "slow push-in to detail",
       "claimSupported": "C2",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
-      "scene": 8,
+      "scene": 9,
+      "narrationSpan": [
+        87,
+        100
+      ],
+      "section": "THE_EXPLANATION",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "A literary or artistic symbol as an \"outward sign\" of something else is a",
+      "asset": "diagram:THE_EXPLANATION:C30",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 13.6,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C30",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 10,
       "narrationSpan": [
         100,
-        118
+        114
+      ],
+      "section": "THE_EXPLANATION",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "In English, the meaning \"something which stands for something else\" was first recorded in",
+      "asset": "diagram:THE_EXPLANATION:C31",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 13.6,
+      "motion": "lateral reframe / crop to evidence",
+      "claimSupported": "C31",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 11,
+      "narrationSpan": [
+        114,
+        133
+      ],
+      "section": "THE_EXPLANATION",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "Semiotics is the study of signs, symbols, and signification as communicative behavior.",
+      "asset": "diagram:THE_EXPLANATION:C45",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 18.8,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C45",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 12,
+      "narrationSpan": [
+        133,
+        148
       ],
       "section": "SURPRISING_DETAIL",
       "visualPurpose": "visualise scenario",
       "visualType": "REAL_OBJECT",
-      "subject": "Encoding communication",
-      "asset": "Commons: Encoding communication.jpg",
+      "subject": "the Bluetooth logo on a phone settings screen",
+      "asset": "the Bluetooth logo on a phone settings screen",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 18,
+      "durationEstimateSeconds": 15.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C3",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": null
     },
     {
-      "scene": 9,
+      "scene": 13,
       "narrationSpan": [
-        118,
-        127
+        148,
+        158
       ],
       "section": "REAL_WORLD_CONSEQUENCE",
-      "visualPurpose": "visualise scenario",
-      "visualType": "MACRO_DETAIL",
-      "subject": "the Bluetooth logo on a phone settings screen",
-      "asset": "the Bluetooth logo on a phone settings screen",
-      "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 8.8,
-      "motion": "slow push-in to detail",
-      "claimSupported": "C1",
-      "fallbackAssetStrategy": "labelled procedural diagram",
-      "disclosure": null
-    },
-    {
-      "scene": 10,
-      "narrationSpan": [
-        127,
-        137
-      ],
-      "section": "FINAL_PAYOFF",
       "visualPurpose": "visualise scenario",
       "visualType": "MACRO_DETAIL",
       "subject": "the two runes drawn separately",
       "asset": "the two runes drawn separately",
       "sourceRequirement": "procedural render, labelled on screen",
       "durationEstimateSeconds": 10,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C1",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": null
+    },
+    {
+      "scene": 14,
+      "narrationSpan": [
+        158,
+        165
+      ],
+      "section": "REAL_WORLD_CONSEQUENCE",
+      "visualPurpose": "visualise scenario",
+      "visualType": "MACRO_DETAIL",
+      "subject": "the runes sliding together into the logo",
+      "asset": "the runes sliding together into the logo",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 7.2,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C23",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": null
+    },
+    {
+      "scene": 15,
+      "narrationSpan": [
+        165,
+        174
+      ],
+      "section": "FINAL_PAYOFF",
+      "visualPurpose": "visualise scenario",
+      "visualType": "MACRO_DETAIL",
+      "subject": "a runestone carving",
+      "asset": "a runestone carving",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 9.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C21",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -836,12 +1307,12 @@
   ],
   "assetPlan": {
     "byType": {
-      "REAL_OBJECT": 4,
+      "REAL_OBJECT": 5,
       "MUSEUM_ARCHIVE": 2,
-      "TECHNICAL_ILLUSTRATION": 2,
-      "MACRO_DETAIL": 2
+      "TECHNICAL_ILLUSTRATION": 5,
+      "MACRO_DETAIL": 3
     },
-    "distinctSubjects": 8,
+    "distinctSubjects": 11,
     "archivalLeads": 6,
     "articleImageCandidates": 1,
     "overused": [],
@@ -2233,7 +2704,7 @@
     "playlist": "STRANGE ORIGINS",
     "subscribe_element": true,
     "timing": {
-      "startSeconds": 118,
+      "startSeconds": 154,
       "durationSeconds": 20,
       "note": "final 20 s; narration must not end abruptly"
     },
@@ -2241,19 +2712,19 @@
     "apiSupport": "UNSUPPORTED — YouTube Data API v3 has no end-screen write endpoint; configure in Studio (task emitted)."
   },
   "cost": {
-    "estimated_production_cost": 0.07,
+    "estimated_production_cost": 0.37,
     "currency": "USD",
     "breakdown": {
-      "llmTokens": 0,
-      "ttsMinutes": 2.3,
-      "renderMinutesCpu": 6.9,
-      "assets": 10,
+      "llmTokens": 19573,
+      "ttsMinutes": 2.9,
+      "renderMinutesCpu": 8.7,
+      "assets": 15,
       "youtubeQuotaUnits": 1650
     },
     "note": "approximate; update config/growth-engine.json cost units from invoices"
   },
   "readiness": {
-    "LongFormProductionReadinessScore": 87,
+    "LongFormProductionReadinessScore": 85,
     "decision": "BLOCK",
     "dimensions": {
       "TopicDepth": 90,
@@ -2261,8 +2732,8 @@
       "Hook": 76,
       "ResearchQuality": 93,
       "SourceCoverage": 90,
-      "FactualAccuracy": 100,
-      "ScriptRetention": 54,
+      "FactualAccuracy": 70,
+      "ScriptRetention": 59,
       "VisualCoverage": 90,
       "AudioQuality": null,
       "Editing": null,
@@ -2278,13 +2749,10 @@
       "Editing"
     ],
     "hardFails": [
-      "INSUFFICIENT_DEPTH: evidence supports ~2.3 min; target 8–15 min — not padded",
-      "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+      "unsupported central claim/number: 1500",
+      "INSUFFICIENT_DEPTH: evidence supports ~2.9 min; target 8–15 min — not padded"
     ],
-    "notes": [
-      "76 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim",
-      "LLM generation safely deferred at section:ORIGIN_CONTEXT; resume from generation/why-the-bluetooth-logo-looks-like-that.json"
-    ],
+    "notes": [],
     "thresholds": {
       "publish": 85,
       "review": 70
@@ -2302,11 +2770,11 @@
     "Topic Bucket": "B",
     "Cold Open": "Two runes, merged into one symbol.",
     "Target Duration": "8–15 min",
-    "Actual Duration": "~2.3 min (script estimate, deterministic-evidence)",
-    "Scenes": 10,
+    "Actual Duration": "~2.9 min (script estimate, llm:groq:openai/gpt-oss-120b)",
+    "Scenes": 15,
     "Thumbnail Score": 92,
     "Title Score": 83,
-    "LongFormProductionReadinessScore": "87 → BLOCK",
+    "LongFormProductionReadinessScore": "85 → BLOCK",
     "Related Shorts": "why-the-bluetooth-logo-looks-like-that",
     "Primary Next Video": "Why Some Barcode Bars Are Longer"
   }

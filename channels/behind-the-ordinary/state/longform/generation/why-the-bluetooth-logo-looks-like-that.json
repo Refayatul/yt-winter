@@ -3,9 +3,9 @@
   "channel": "behind-the-ordinary",
   "slug": "why-the-bluetooth-logo-looks-like-that",
   "topicHash": "711babbc4433:98",
-  "status": "DEFERRED",
+  "status": "COMPLETE",
   "createdAt": "2026-10-05T14:31:31.934Z",
-  "updatedAt": "2026-10-05T15:32:20.375Z",
+  "updatedAt": "2026-10-05T16:11:53.723Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -863,11 +863,138 @@
           "role": "evidence"
         }
       ]
+    },
+    {
+      "section": "ORIGIN_CONTEXT",
+      "paragraphs": [
+        {
+          "text": "King Harald Bluetooth Gormsson, who united Denmark and Norway, earned his nickname from a dead tooth of a dark blue‑grey colour.",
+          "claims": [
+            "C12",
+            "C13"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "In 1996 Intel, Ericsson and Nokia convened to standardize a short‑range radio technology; Jim Kardach suggested \"Bluetooth\" as a temporary code name after seeing a picture of Harald Bluetooth’s runestone.",
+          "claims": [
+            "C14",
+            "C15",
+            "C22"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "THE_PROBLEM",
+      "paragraphs": [
+        {
+          "text": "The practical issue arose because the existing PAN name already had tens of thousands of hits on the internet, and a full trademark search on RadioWire could not be completed in time for launch.",
+          "claims": [
+            "C19",
+            "C20"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "THE_EXPLANATION",
+      "paragraphs": [
+        {
+          "text": "The Bluetooth emblem is a bind rune that fuses the Younger Futhark characters representing Harald Bluetooth’s initials. Kardach likened Harald’s historic unification of Scandinavia to the modern linking of personal computers and mobile devices through a short‑range wireless protocol.",
+          "claims": [
+            "C2",
+            "C16"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "A symbol acts as an outward sign that represents another concept, a usage documented in English literature since the late 1500s. Symbols enable layered communication, often bearing multiple levels of meaning and forming the basis of human understanding. They aid interpretation of the world and facilitate social coordination through shared rhetoric. Cultural background shapes a symbol’s reading, making its meaning a learned construct rather than an inherent property.",
+          "claims": [
+            "C30",
+            "C31",
+            "C32",
+            "C33",
+            "C34",
+            "C35",
+            "C36",
+            "C37",
+            "C38"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Semiotics examines the link between a sign’s form and its referent, analyzing how visual cues generate meaning. Symbols can convey ideological, comparative, or isomorphic value, indicating beliefs, judgments of superiority, or conformity within a cultural setting. Their significance may shift as history, popular usage, and context evolve.",
+          "claims": [
+            "C45",
+            "C46",
+            "C68",
+            "C69",
+            "C70",
+            "C71",
+            "C82",
+            "C83",
+            "C85"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "SURPRISING_DETAIL",
+      "paragraphs": [
+        {
+          "text": "Bluetooth sounds like a technical acronym, but it is a king's nickname that was meant to be a placeholder. It was intended only as a placeholder name. The planned replacement names were RadioWire or PAN (Personal Area Networking).",
+          "claims": [
+            "C3",
+            "C17",
+            "C18"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "REAL_WORLD_CONSEQUENCE",
+      "paragraphs": [
+        {
+          "text": "The Bluetooth identifier began as a provisional code name, yet it was adopted as the enduring name and visual emblem for the worldwide wireless protocol.",
+          "claims": [
+            "C1"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "In this context, the emblem functions as a symbol—a visual mark that conveys a specific concept or relationship.",
+          "claims": [
+            "C23"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FINAL_PAYOFF",
+      "paragraphs": [
+        {
+          "text": "The Bluetooth logo is a bind rune that combines the Younger Futhark runes Hagall and Bjarkan, representing the initials of King Harald Bluetooth.",
+          "claims": [
+            "C21"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "NEXT_CURIOSITY_BRIDGE",
+      "paragraphs": []
     }
   ],
   "usage": {
-    "input_tokens": 5802,
-    "output_tokens": 2874
+    "input_tokens": 12110,
+    "output_tokens": 7463
   },
   "error": {
     "code": "RATE_LIMIT",
@@ -878,5 +1005,16 @@
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "All paragraphs rely solely on the provided claim IDs; no additional facts were introduced."
+  "depthNote": "All paragraphs rely solely on the provided claim IDs; no additional facts were introduced. Uses only the five provided claims, each paragraph cites its supporting IDs and avoids unsupported additions. Only claims C19 and C20 were used as evidence. Evidence ties the Bluetooth logo’s rune origin to broader theories of symbols and semiotics, showing how cultural and functional meanings intertwine. All content derived solely from claims C3, C17, C18. Only two claims were available; each paragraph is limited to the evidence they provide. Only claim C21 supports this answer.",
+  "quality": {
+    "duplicateSections": [],
+    "repeatedPhrases": [],
+    "weakHook": false,
+    "payoff": true,
+    "filler": [],
+    "introShare": 0.21,
+    "missingPlanSections": [],
+    "hardFails": [],
+    "notes": []
+  }
 }

@@ -3,7 +3,7 @@
   "channel": "behind-the-ordinary",
   "channelName": "The Hidden Logic of Things",
   "contentType": "long",
-  "createdAt": "2026-10-03T19:22:31.354Z",
+  "createdAt": "2026-10-05T16:11:53.723Z",
   "topic": {
     "id": "BTO-226",
     "slug": "why-some-barcode-bars-are-longer",
@@ -17,10 +17,10 @@
     "slug": "why-some-barcode-bars-are-longer",
     "title": "Why Some Barcode Bars Are Longer",
     "cluster": "STRANGE ORIGINS",
-    "LongFormPotentialScore": 67,
+    "LongFormPotentialScore": 68,
     "bucket": "B",
     "reasons": [
-      "LongFormPotential 67 ≥ 66"
+      "LongFormPotential 68 ≥ 66"
     ],
     "factors": {
       "DepthPotential": {
@@ -63,11 +63,11 @@
         "note": "no published Short in this cluster yet — neutral"
       },
       "SeriesPotential": {
-        "value": 49,
+        "value": 54,
         "basis": "derived"
       },
       "ViewerJourneyPotential": {
-        "value": 45,
+        "value": 55,
         "basis": "derived"
       }
     },
@@ -119,7 +119,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 0
+    "reuseCount": 1
   },
   "outline": {
     "structure": [
@@ -394,12 +394,6 @@
         "text": "Every stripe looks like data, but the longest bars carry no digit.",
         "score": 68,
         "estimatedSeconds": 3.8
-      },
-      {
-        "type": "question_gap",
-        "text": "What is guard bars for?",
-        "score": 68,
-        "estimatedSeconds": 1.6
       },
       {
         "type": "shocking_consequence",
@@ -1056,6 +1050,7 @@
       },
       "total": 82,
       "patternPenalty": 0,
+      "templateNaturalnessPenalty": 0,
       "adjustedTotal": 82,
       "unsupportedWords": [],
       "misleading": false
@@ -1087,6 +1082,7 @@
         },
         "total": 82,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 82,
         "unsupportedWords": [],
         "misleading": false
@@ -1115,38 +1111,9 @@
         },
         "total": 82,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 82,
         "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Why Barcodes Have Guard Bars",
-        "source": "why",
-        "pattern": "why",
-        "scores": {
-          "clarity": 82,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 95,
-          "channelIdentity": 62,
-          "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 100,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 77,
-        "patternPenalty": 0,
-        "adjustedTotal": 77,
-        "unsupportedWords": [
-          "have"
-        ],
         "misleading": false
       },
       {
@@ -1173,6 +1140,7 @@
         },
         "total": 77,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [
           "history"
@@ -1203,71 +1171,10 @@
         },
         "total": 77,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [
           "reveal"
-        ],
-        "misleading": false
-      },
-      {
-        "title": "Why This Old Detail Survived on Modern Barcodes",
-        "source": "survived",
-        "pattern": "why",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 70,
-          "searchIntent": 87,
-          "channelIdentity": 74,
-          "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 100,
-          "factualIntegrity": 70,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 77,
-        "patternPenalty": 0,
-        "adjustedTotal": 77,
-        "unsupportedWords": [
-          "old",
-          "survived"
-        ],
-        "misleading": false
-      },
-      {
-        "title": "How Barcodes Got Their Most Overlooked Detail",
-        "source": "how-got-detail",
-        "pattern": "how",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 70,
-          "searchIntent": 95,
-          "channelIdentity": 62,
-          "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 100,
-          "factualIntegrity": 70,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 77,
-        "patternPenalty": 0,
-        "adjustedTotal": 77,
-        "unsupportedWords": [
-          "got",
-          "overlooked"
         ],
         "misleading": false
       },
@@ -1295,6 +1202,7 @@
         },
         "total": 77,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [],
         "misleading": false
@@ -1323,6 +1231,7 @@
         },
         "total": 76,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [
           "stayed"
@@ -1353,9 +1262,42 @@
         },
         "total": 76,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [
           "noticing"
+        ],
+        "misleading": false
+      },
+      {
+        "title": "How Barcodes Got Their Most Overlooked Detail",
+        "source": "how-got-detail",
+        "pattern": "how",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 70,
+          "searchIntent": 95,
+          "channelIdentity": 62,
+          "ctrPotential": 67,
+          "novelty": 100,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 100,
+          "factualIntegrity": 70,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 77,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 73,
+        "unsupportedWords": [
+          "got",
+          "overlooked"
         ],
         "misleading": false
       },
@@ -1383,39 +1325,12 @@
         },
         "total": 71,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 71,
         "unsupportedWords": [
           "small",
           "shaped"
         ],
-        "misleading": false
-      },
-      {
-        "title": "Why Some Barcode Bars Are Longer",
-        "source": "editorial",
-        "pattern": "why",
-        "scores": {
-          "clarity": 88,
-          "curiosity": 58,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 42,
-          "channelIdentity": 72,
-          "ctrPotential": 57,
-          "novelty": 100,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 100,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 68,
-        "patternPenalty": 0,
-        "adjustedTotal": 68,
-        "unsupportedWords": [],
         "misleading": false
       },
       {
@@ -1442,37 +1357,71 @@
         },
         "total": 67,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 67,
         "unsupportedWords": [],
         "misleading": false
       },
       {
-        "title": "Why Guard Bars Are Still There",
-        "source": "still-there",
+        "title": "Why Barcodes Have Guard Bars",
+        "source": "why",
         "pattern": "why",
         "scores": {
-          "clarity": 85,
+          "clarity": 82,
           "curiosity": 58,
-          "specificity": 47,
+          "specificity": 77,
           "truthfulness": 85,
-          "searchIntent": 42,
+          "searchIntent": 95,
           "channelIdentity": 62,
-          "ctrPotential": 57,
-          "novelty": 100,
-          "evergreenPotential": 75,
+          "ctrPotential": 67,
+          "novelty": 89,
+          "evergreenPotential": 85,
           "consequence": 42,
           "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 100,
+          "recognizability": 80,
+          "nonRedundancy": 89,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
+          "patternFreshness": 40
         },
-        "total": 65,
-        "patternPenalty": 0,
-        "adjustedTotal": 65,
+        "total": 77,
+        "patternPenalty": 11,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 66,
         "unsupportedWords": [
-          "still"
+          "have"
+        ],
+        "misleading": false
+      },
+      {
+        "title": "Why This Old Detail Survived on Modern Barcodes",
+        "source": "survived",
+        "pattern": "why",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 70,
+          "searchIntent": 87,
+          "channelIdentity": 74,
+          "ctrPotential": 67,
+          "novelty": 100,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 100,
+          "factualIntegrity": 70,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 40
+        },
+        "total": 77,
+        "patternPenalty": 11,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 66,
+        "unsupportedWords": [
+          "old",
+          "survived"
         ],
         "misleading": false
       },
@@ -1500,6 +1449,7 @@
         },
         "total": 63,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 63,
         "unsupportedWords": [],
         "misleading": false
@@ -1528,6 +1478,7 @@
         },
         "total": 63,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 63,
         "unsupportedWords": [],
         "misleading": false
@@ -1556,6 +1507,7 @@
         },
         "total": 62,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 62,
         "unsupportedWords": [
           "evidence"
@@ -1586,6 +1538,7 @@
         },
         "total": 61,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 61,
         "unsupportedWords": [],
         "misleading": false
@@ -1614,6 +1567,7 @@
         },
         "total": 61,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 61,
         "unsupportedWords": [
           "unexpected"
@@ -1644,6 +1598,7 @@
         },
         "total": 60,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 60,
         "unsupportedWords": [
           "everyday",
@@ -1675,10 +1630,71 @@
         },
         "total": 58,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 58,
         "unsupportedWords": [
           "problem",
           "solve"
+        ],
+        "misleading": false
+      },
+      {
+        "title": "Why Some Barcode Bars Are Longer",
+        "source": "editorial",
+        "pattern": "why",
+        "scores": {
+          "clarity": 88,
+          "curiosity": 58,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 42,
+          "channelIdentity": 72,
+          "ctrPotential": 57,
+          "novelty": 100,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 100,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 40
+        },
+        "total": 68,
+        "patternPenalty": 11,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 57,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Why Guard Bars Are Still There",
+        "source": "still-there",
+        "pattern": "why",
+        "scores": {
+          "clarity": 85,
+          "curiosity": 58,
+          "specificity": 47,
+          "truthfulness": 85,
+          "searchIntent": 42,
+          "channelIdentity": 62,
+          "ctrPotential": 57,
+          "novelty": 100,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 100,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 40
+        },
+        "total": 65,
+        "patternPenalty": 11,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 54,
+        "unsupportedWords": [
+          "still"
         ],
         "misleading": false
       },
@@ -1702,11 +1718,12 @@
           "nonRedundancy": 100,
           "factualIntegrity": 55,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
+          "patternFreshness": 70
         },
         "total": 62,
-        "patternPenalty": 0,
-        "adjustedTotal": 62,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 58,
         "unsupportedWords": [
           "became",
           "everyday",
@@ -1738,6 +1755,7 @@
         },
         "total": 54,
         "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 54,
         "unsupportedWords": [
           "function",
@@ -1750,6 +1768,54 @@
   },
   "derivedShorts": {
     "shorts": [
+      {
+        "angle": "the-question",
+        "hook": "Barcodes failed because the longer start.",
+        "hookFamily": "mechanism_reveal",
+        "hookScore": 79,
+        "first3SecondPlan": {
+          "narration": "Barcodes failed because the longer start.",
+          "firstFrame": {
+            "description": "barcodes fills the frame; one marker isolates guard bars",
+            "source": "procedural render",
+            "startAtSeconds": 0,
+            "sourceClass": "REAL_OBJECT",
+            "communicates": "mystery",
+            "rule": "labelled illustration; no logo, no establishing shot"
+          },
+          "visual": "barcodes fills the frame; one marker isolates guard bars",
+          "onScreenText": "NOT DATA",
+          "motion": "macro push toward the highlighted detail in 0.7 s, then cut to source evidence",
+          "cutTiming": [
+            0,
+            1,
+            1.9
+          ],
+          "soundCue": "single low hit on the first cut",
+          "communicates": "mystery"
+        },
+        "miniNarrative": [
+          "Some barcode bars are longer, and that's deliberate.",
+          "They hold no number at all.",
+          "On a UPC barcode, the start, middle and end guard bars extend lower.",
+          "They encode no digit; they split the code into two halves."
+        ],
+        "payoff": "So the longest bars are signposts, not data.",
+        "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
+        "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
+        "standalone": true,
+        "longformBridge": "That detail is only one part of the design. The full explanation is in the linked episode.",
+        "claimIds": [
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11"
+        ]
+      },
       {
         "angle": "origin-context",
         "hook": "Barcodes failed because the longer start.",
@@ -1773,7 +1839,7 @@
             1,
             1.9
           ],
-          "soundCue": "one small tactile click synchronized to the highlighted detail",
+          "soundCue": "single low hit on the first cut",
           "communicates": "mystery"
         },
         "miniNarrative": [
@@ -1815,7 +1881,7 @@
             1,
             1.9
           ],
-          "soundCue": "one small tactile click synchronized to the highlighted detail",
+          "soundCue": "single low hit on the first cut",
           "communicates": "mystery"
         },
         "miniNarrative": [
@@ -1979,7 +2045,7 @@
             1,
             1.9
           ],
-          "soundCue": "one small tactile click synchronized to the highlighted detail",
+          "soundCue": "single low hit on the first cut",
           "communicates": "mystery"
         },
         "miniNarrative": [
@@ -2019,7 +2085,7 @@
             1,
             1.9
           ],
-          "soundCue": "one small tactile click synchronized to the highlighted detail",
+          "soundCue": "single low hit on the first cut",
           "communicates": "mystery"
         },
         "miniNarrative": [
@@ -2037,60 +2103,20 @@
           "C20",
           "C21"
         ]
-      },
-      {
-        "angle": "the-question",
-        "hook": "Some barcode bars are longer, and that's deliberate.",
-        "hookFamily": "visual_first_reveal",
-        "hookScore": 74,
-        "first3SecondPlan": {
-          "narration": "Some barcode bars are longer, and that's deliberate.",
-          "firstFrame": {
-            "description": "barcodes fills the frame; one marker isolates guard bars",
-            "source": "procedural render",
-            "startAtSeconds": 0,
-            "sourceClass": "REAL_OBJECT",
-            "communicates": "mystery",
-            "rule": "labelled illustration; no logo, no establishing shot"
-          },
-          "visual": "barcodes fills the frame; one marker isolates guard bars",
-          "onScreenText": "NOT DATA",
-          "motion": "macro push toward the highlighted detail in 0.7 s, then cut to source evidence",
-          "cutTiming": [
-            0,
-            1.3,
-            2.5
-          ],
-          "soundCue": "one small tactile click synchronized to the highlighted detail",
-          "communicates": "mystery"
-        },
-        "miniNarrative": [
-          "Some barcode bars are longer, and that's deliberate.",
-          "They hold no number at all.",
-          "On a UPC barcode, the start, middle and end guard bars extend lower.",
-          "They encode no digit; they split the code into two halves."
-        ],
-        "payoff": "So the longest bars are signposts, not data.",
-        "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
-        "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
-        "standalone": true,
-        "longformBridge": "That detail is only one part of the design. The full explanation is in the linked episode.",
-        "claimIds": [
-          "C4",
-          "C5",
-          "C6",
-          "C7",
-          "C8",
-          "C9",
-          "C10",
-          "C11"
-        ]
       }
     ],
     "count": 5,
     "meetsMinimum": true
   },
-  "relatedShorts": [],
+  "relatedShorts": [
+    {
+      "short_video_id": "Q98e12I0NFA",
+      "short_slug": "why-the-bluetooth-logo-looks-like-that",
+      "relationship_type": "SAME_SERIES",
+      "relationship_reason": "same series; subject overlap 0.00, same cluster STRANGE ORIGINS",
+      "score": 0.4
+    }
+  ],
   "nextVideos": {
     "primary_next_video": {
       "slug": "why-the-bluetooth-logo-looks-like-that",
@@ -2189,7 +2215,7 @@
     "Channel": "The Hidden Logic of Things",
     "Content Type": "LONG_FORM",
     "Topic": "Why Some Barcode Bars Are Longer",
-    "LongFormPotentialScore": 67,
+    "LongFormPotentialScore": 68,
     "Topic Bucket": "B",
     "Cold Open": "Barcodes failed because the longer start.",
     "Target Duration": "8–15 min",
@@ -2198,7 +2224,7 @@
     "Thumbnail Score": 92,
     "Title Score": 82,
     "LongFormProductionReadinessScore": "86 → BLOCK",
-    "Related Shorts": "none published yet",
+    "Related Shorts": "why-the-bluetooth-logo-looks-like-that",
     "Primary Next Video": "Why the Bluetooth Logo Looks Like That"
   }
 }

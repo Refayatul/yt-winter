@@ -625,5 +625,247 @@
     "status": 429,
     "retryable": true,
     "retryAfterMs": 5000
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:ORIGIN_CONTEXT",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:ORIGIN_CONTEXT",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 738,
+      "output_tokens": 719
+    }
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:THE_PROBLEM",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:THE_PROBLEM",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 531,
+      "output_tokens": 539
+    }
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:THE_EXPLANATION",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:THE_EXPLANATION",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 3301,
+      "output_tokens": 1506
+    }
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SURPRISING_DETAIL",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SURPRISING_DETAIL",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 759,
+      "output_tokens": 697
+    }
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:REAL_WORLD_CONSEQUENCE",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:REAL_WORLD_CONSEQUENCE",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 7000
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:REAL_WORLD_CONSEQUENCE",
+    "attempt": 2,
+    "delayMs": 7000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:REAL_WORLD_CONSEQUENCE",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:REAL_WORLD_CONSEQUENCE",
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 509,
+      "output_tokens": 644
+    }
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FINAL_PAYOFF",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FINAL_PAYOFF",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 3000
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FINAL_PAYOFF",
+    "attempt": 2,
+    "delayMs": 3000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FINAL_PAYOFF",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FINAL_PAYOFF",
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 470,
+      "output_tokens": 484
+    }
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "failed",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "REQUEST",
+    "status": 413,
+    "retryable": false,
+    "retryAfterMs": null
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T16:11:53.723Z",
+    "channel": "behind-the-ordinary",
+    "event": "failed",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "REQUEST",
+    "status": 413,
+    "retryable": false,
+    "retryAfterMs": null
   }
 ]
