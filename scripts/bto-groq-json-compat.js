@@ -1,26 +1,22 @@
 #!/usr/bin/env node
 "use strict";
 
-// Make GPT-OSS JSON mode valid, retain safe HTTP diagnostics, and recover from
-// Groq json_validate_failed responses without weakening research quality gates.
+// Keep GPT-OSS reasoning hidden, but do not use Groq server-side JSON Object
+// Mode. Some valid research prompts make Groq reject the generation with
+// json_validate_failed before the application can inspect it. We instead ask
+// for strict JSON in the prompt and use the provider's existing client-side
+// JSON parser. Research/evidence/answerability quality gates are unchanged.
 const fs = require("fs");
 const path = require("path");
 
 const providerFile = path.join(__dirname, "..", "core", "llm", "longform-provider.js");
 let provider = fs.readFileSync(providerFile, "utf8");
 
-const reasoningNeedle = '        response_format: { type: "json_object" },\n        temperature: 0.25,';
-const reasoningReplacement = '        reasoning_format: "hidden",\n        response_format: { type: "json_object" },\n        temperature: input.jsonRecovery ? 0 : 0.25,';
-if (!provider.includes(reasoningReplacement)) {
-  if (!provider.includes(reasoningNeedle)) throw new Error("Groq JSON compatibility patch target not found");
-  provider = provider.replace(reasoningNeedle, reasoningReplacement);
-}
-
-const messagesNeedle = '        messages: [{ role: "system", content: input.system }, { role: "user", content: input.user }],';
-const messagesReplacement = '        messages: [{ role: "system", content: input.jsonRecovery ? `${input.system}\\n\\nSTRICT JSON RECOVERY: Return exactly one valid JSON object and nothing else. Use double-quoted property names and strings. Do not use markdown fences, comments, trailing commas, NaN, Infinity, or text before/after the JSON object.` : input.system }, { role: "user", content: input.user }],';
-if (!provider.includes(messagesReplacement)) {
-  if (!provider.includes(messagesNeedle)) throw new Error("Groq JSON recovery prompt patch target not found");
-  provider = provider.replace(messagesNeedle, messagesReplacement);
+const requestNeedle = '        messages: [{ role: "system", content: input.system }, { role: "user", content: input.user }],\n        response_format: { type: "json_object" },\n        temperature: 0.25,';
+const requestReplacement = '        messages: [{ role: "system", content: `${input.system}\\n\\nOUTPUT CONTRACT: Return exactly one valid JSON object and nothing else. Use double-quoted property names and strings. Do not use markdown fences, comments, trailing commas, NaN, Infinity, or text before/after the JSON object.` }, { role: "user", content: input.user }],\n        reasoning_format: "hidden",\n        temperature: input.jsonRecovery ? 0 : 0.25,';
+if (!provider.includes(requestReplacement)) {
+  if (!provider.includes(requestNeedle)) throw new Error("Groq client-side JSON patch target not found");
+  provider = provider.replace(requestNeedle, requestReplacement);
 }
 
 const httpNeedle = '  if (!response.ok) throw classifyHttp("groq", response.status, response.headers, input.stage);';
@@ -28,16 +24,9 @@ const httpReplacement = `  if (!response.ok) {
     let detail = "";
     try {
       const raw = await response.text();
-      // Groq error payloads are JSON/text. Keep only a bounded, single-line,
-      // control-character-free diagnostic; never include request data.
       detail = String(raw || "").replace(/[\\r\\n\\t]+/g, " ").replace(/[\\x00-\\x1f\\x7f]/g, " ").trim().slice(0, 500);
     } catch (error) { /* diagnostics are best effort */ }
     const classified = classifyHttp("groq", response.status, response.headers, input.stage);
-    if (response.status === 400 && detail.includes("json_validate_failed")) {
-      classified.code = "JSON_VALIDATE_FAILED";
-      classified.retryable = true;
-      classified.defer = false;
-    }
     if (detail) classified.message = classified.message + ": " + detail;
     throw classified;
   }`;
@@ -46,6 +35,8 @@ if (!provider.includes(httpReplacement)) {
   provider = provider.replace(httpNeedle, httpReplacement);
 }
 
+// INVALID_JSON is produced only after Groq returned a successful HTTP response;
+// retry it with temperature 0 and the same strict JSON output contract.
 const retryNeedle = '      const result = await once(spec, input, dependencies);';
 const retryReplacement = '      const result = await once(spec, attempt > 0 && input.__jsonRecovery ? { ...input, jsonRecovery: true } : input, dependencies);';
 if (!provider.includes(retryReplacement)) {
@@ -54,16 +45,16 @@ if (!provider.includes(retryReplacement)) {
 }
 
 const catchNeedle = '      if (!safe.retryable || attempt + 1 >= attempts) throw safe;\n      const delay = delayFor(safe, attempt);';
-const catchReplacement = '      if (!safe.retryable || attempt + 1 >= attempts) throw safe;\n      if (safe.code === "JSON_VALIDATE_FAILED") input = { ...input, __jsonRecovery: true };\n      const delay = safe.code === "JSON_VALIDATE_FAILED" ? 250 : delayFor(safe, attempt);';
+const catchReplacement = '      if (spec.name === "groq" && safe.code === "INVALID_JSON") { safe.retryable = true; safe.defer = false; }\n      if (!safe.retryable || attempt + 1 >= attempts) throw safe;\n      if (safe.code === "INVALID_JSON") input = { ...input, __jsonRecovery: true };\n      const delay = safe.code === "INVALID_JSON" ? 250 : delayFor(safe, attempt);';
 if (!provider.includes(catchReplacement)) {
-  if (!provider.includes(catchNeedle)) throw new Error("Groq JSON retry state patch target not found");
+  if (!provider.includes(catchNeedle)) throw new Error("Groq client JSON retry state patch target not found");
   provider = provider.replace(catchNeedle, catchReplacement);
 }
 
 fs.writeFileSync(providerFile, provider);
 if (!provider.includes('reasoning_format: "hidden"')) throw new Error("Groq reasoning_format assertion failed");
-if (!provider.includes('JSON_VALIDATE_FAILED')) throw new Error("Groq JSON recovery assertion failed");
-if (!provider.includes('STRICT JSON RECOVERY')) throw new Error("Groq strict JSON retry assertion failed");
+if (provider.includes('response_format: { type: "json_object" }')) throw new Error("Groq server-side JSON mode must be disabled");
+if (!provider.includes('OUTPUT CONTRACT: Return exactly one valid JSON object')) throw new Error("Groq strict JSON output contract assertion failed");
 
 // Preserve code + status + bounded provider message in per-topic outcomes.
 const researchFile = path.join(__dirname, "bto-research.js");
@@ -77,4 +68,4 @@ if (!research.includes(reasonReplacement)) {
 }
 if (!research.includes('error.status ? ` HTTP ${error.status}`')) throw new Error("BTO provider error telemetry assertion failed");
 
-console.log("Groq JSON mode + strict validation recovery + safe diagnostics verified; model and quality gates unchanged");
+console.log("Groq client-side JSON parsing + strict output contract + safe diagnostics verified; model and quality gates unchanged");
