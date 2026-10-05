@@ -43,10 +43,12 @@ jobs:
         with:
           node-version: '20'
       - run: npm install --no-audit --no-fund
-      - name: Activate source discovery v2
+      - name: Activate authority discovery v5
         run: |
           node scripts/bto-wire-discovery-v2.js
-          grep -q 'ResearchFallback.relatedArticles' scripts/bto-research.js
+          grep -q 'AuthorityDiscovery.discover' scripts/bto-research.js
+          grep -q 'const AuthorityDiscovery' scripts/bto-research.js
+          node -e "const a=require('./scripts/bto-authority-discovery'); if(typeof a.discover!=='function') process.exit(1); console.log('BTO authority discovery v5 verified')"
       - name: Research and verify
         run: node scripts/bto-research.js --limit "${{ inputs.limit || '4' }}" --write
       - name: Commit researched records
