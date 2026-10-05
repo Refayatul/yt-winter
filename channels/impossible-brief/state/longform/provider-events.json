@@ -581,5 +581,104 @@
     "status": 429,
     "retryable": true,
     "retryAfterMs": 8000
+  },
+  {
+    "at": "2026-10-05T14:33:25.336Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:33:25.336Z",
+    "channel": "impossible-brief",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 1,
+    "code": "TRANSIENT",
+    "status": 503,
+    "retryable": true,
+    "retryAfterMs": 15000
+  },
+  {
+    "at": "2026-10-05T14:33:25.336Z",
+    "channel": "impossible-brief",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 2,
+    "delayMs": 15000,
+    "code": "TRANSIENT"
+  },
+  {
+    "at": "2026-10-05T14:33:25.336Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T14:33:25.336Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 1014,
+      "output_tokens": 1266
+    }
+  },
+  {
+    "at": "2026-10-05T14:33:25.336Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SCIENCE_EXPLANATION",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:33:25.336Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SCIENCE_EXPLANATION",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 404,
+      "output_tokens": 371
+    }
+  },
+  {
+    "at": "2026-10-05T14:33:25.336Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:LIMITS_UNCERTAINTIES",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:33:25.336Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:LIMITS_UNCERTAINTIES",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 441,
+      "output_tokens": 477
+    }
   }
 ]

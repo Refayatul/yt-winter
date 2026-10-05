@@ -48,13 +48,13 @@
     {
       "cycleId": "2026-W41",
       "channel": "impossible-brief",
-      "startedAt": "2026-10-05T14:29:45.073Z",
-      "status": "DEFERRED_PROVIDER",
+      "startedAt": "2026-10-05T14:33:25.336Z",
+      "status": "QUALITY_BLOCKED",
       "evaluated": [
         {
           "slug": "what-if-we-swam-in-europas-ocean",
           "mode": "A_LONG_FIRST",
-          "LongFormPotentialScore": 81,
+          "LongFormPotentialScore": 82,
           "bucket": "A",
           "decision": "BLOCK",
           "score": 84,
@@ -66,7 +66,7 @@
         {
           "slug": "what-if-you-visited-io-the-volcano-moon",
           "mode": "A_LONG_FIRST",
-          "LongFormPotentialScore": 81,
+          "LongFormPotentialScore": 82,
           "bucket": "A",
           "decision": "BLOCK",
           "score": 84,
@@ -78,21 +78,19 @@
         {
           "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
           "mode": "A_LONG_FIRST",
-          "LongFormPotentialScore": 81,
+          "LongFormPotentialScore": 82,
           "bucket": "A",
           "decision": "BLOCK",
-          "score": 84,
+          "score": 83,
           "hardFails": [
-            "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded",
-            "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+            "INSUFFICIENT_DEPTH: evidence supports ~0.9 min; target 8–12 min — not padded"
           ],
-          "generationStatus": "DEFERRED"
+          "generationStatus": "QUALITY_REVIEW"
         }
       ],
       "selected": null,
-      "reason": "provider deferred what-if-the-dinosaur-killing-asteroid-hit-today; retry this cycle and resume its checkpoint",
-      "checkpoint": "generation/what-if-the-dinosaur-killing-asteroid-hit-today.json",
-      "finishedAt": "2026-10-05T14:31:28.971Z"
+      "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
+      "finishedAt": "2026-10-05T14:33:52.519Z"
     }
   ]
 }

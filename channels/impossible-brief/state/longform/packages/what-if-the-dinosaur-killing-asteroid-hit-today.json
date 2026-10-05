@@ -3,7 +3,7 @@
   "channel": "impossible-brief",
   "channelName": "ImpossibleBrief",
   "contentType": "long",
-  "createdAt": "2026-10-05T14:29:45.073Z",
+  "createdAt": "2026-10-05T14:33:25.336Z",
   "topic": {
     "id": "IB-SPA-098",
     "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
@@ -17,10 +17,10 @@
     "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
     "title": "What If the Dinosaur-Killing Asteroid Hit Today?",
     "cluster": "SPACE",
-    "LongFormPotentialScore": 81,
+    "LongFormPotentialScore": 82,
     "bucket": "A",
     "reasons": [
-      "LongFormPotential 81 ≥ 78"
+      "LongFormPotential 82 ≥ 78"
     ],
     "factors": {
       "DepthPotential": {
@@ -58,9 +58,9 @@
         "basis": "inventory-signal"
       },
       "ShortsEvidence": {
-        "value": 54,
+        "value": 66,
         "basis": "measured",
-        "note": "best cluster Short 589 views vs channel median 589; best subscriber conversion unavailable; best growth score 62.5"
+        "note": "best cluster Short 965 views vs channel median 589; best subscriber conversion unavailable; best growth score 81.3"
       },
       "SeriesPotential": {
         "value": 100,
@@ -123,7 +123,7 @@
     "gaps": [
       "no deep research — long-form depth limited to the Shorts case file"
     ],
-    "reuseCount": 0
+    "reuseCount": 1
   },
   "outline": {
     "structure": [
@@ -311,18 +311,142 @@
     }
   },
   "script": {
-    "generator": "deterministic-evidence",
+    "generator": "llm:groq:openai/gpt-oss-120b",
     "provider": "groq",
-    "model": null,
-    "status": "DEFERRED",
-    "pipeline": null,
-    "blueprint": null,
-    "quality": null,
+    "model": "openai/gpt-oss-120b",
+    "status": "QUALITY_REVIEW",
+    "pipeline": [
+      "TOPIC",
+      "RESEARCH_EVIDENCE",
+      "FACT_PACK",
+      "NARRATIVE_ANGLE",
+      "OUTLINE",
+      "SECTION_PLAN",
+      "SECTION_GENERATION",
+      "CONTINUITY_PASS",
+      "RETENTION_PASS",
+      "FACTUAL_CONSISTENCY_CHECK",
+      "FINAL_VOICEOVER_SCRIPT"
+    ],
+    "blueprint": {
+      "central_question": "What If the Dinosaur-Killing Asteroid Hit Today?",
+      "audience_promise": "Answer one precise question about a Chicxulub-size asteroid strikes Earth today using only documented evidence.",
+      "narrative_angle": "We follow the chain of physics‑driven events—from the instant a 10‑km asteroid hits, through global heating, ejecta fallout, and years of sunlight blockage—that would unfold if a Chicxulub‑size impact occurred today.",
+      "hook_candidates": [
+        "Imagine a 10‑kilometre asteroid, the size that ended the dinosaurs, looming over a modern skyline.",
+        "The moment a mountain‑tall impactor strikes Earth, fireballs rain down worldwide.",
+        "From the instant the Chicxulub‑size rock hits, the sky darkens as soot blankets the planet."
+      ],
+      "retention_beats": [
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object]."
+      ],
+      "uncertain_claims": [
+        "Specific secondary atmospheric dynamics after soot injection are not documented in supplied claims",
+        "Exact global temperature drop magnitude and duration are not provided",
+        "Final quantitative answer to the central question cannot be given without missing evidence for sections 5,6,9"
+      ],
+      "section_plan": [
+        {
+          "section": "COLD_OPEN",
+          "question": "What is the unresolved consequence the viewer sees first?",
+          "claimIds": [
+            "C1",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C10",
+            "C11",
+            "C12"
+          ]
+        },
+        {
+          "section": "IMPOSSIBLE_QUESTION",
+          "question": "What exactly is being asked?",
+          "claimIds": [
+            "C1"
+          ]
+        },
+        {
+          "section": "INITIAL_CONDITIONS",
+          "question": "What do we assume?",
+          "claimIds": [
+            "C2"
+          ]
+        },
+        {
+          "section": "FIRST_EFFECT",
+          "question": "What changes first?",
+          "claimIds": [
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C10",
+            "C11",
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C16",
+            "C17",
+            "C18"
+          ]
+        },
+        {
+          "section": "SECOND_ORDER_EFFECT",
+          "question": "What does that trigger?",
+          "claimIds": []
+        },
+        {
+          "section": "SYSTEM_WIDE_CONSEQUENCE",
+          "question": "How far does it spread?",
+          "claimIds": []
+        },
+        {
+          "section": "SCIENCE_EXPLANATION",
+          "question": "What physics governs it?",
+          "claimIds": [
+            "C3"
+          ]
+        },
+        {
+          "section": "LIMITS_UNCERTAINTIES",
+          "question": "What can science not predict here?",
+          "claimIds": [
+            "C19"
+          ]
+        },
+        {
+          "section": "FINAL_SCIENTIFIC_PAYOFF",
+          "question": "What is the answer?",
+          "claimIds": []
+        }
+      ]
+    },
+    "quality": {
+      "duplicateSections": [],
+      "repeatedPhrases": [],
+      "weakHook": false,
+      "payoff": false,
+      "filler": [],
+      "introShare": 0.23,
+      "missingPlanSections": [],
+      "hardFails": [
+        "missing final payoff"
+      ],
+      "notes": []
+    },
     "checkpoint": "generation/what-if-the-dinosaur-killing-asteroid-hit-today.json",
-    "llmError": "groq rate limit reached; long-form generation deferred",
-    "llmErrorCode": "RATE_LIMIT",
-    "llmErrorStage": "section:FIRST_EFFECT",
-    "depthNote": null,
+    "llmError": null,
+    "llmErrorCode": null,
+    "llmErrorStage": null,
+    "depthNote": "Only claim C1 used Evidence limited to a single speculative claim. First effects focus on immediate heat, debris, and atmospheric opacity. Single claim limits detail; paragraph kept concise. Limited predictive certainty",
     "sections": [
       {
         "section": "COLD_OPEN",
@@ -338,7 +462,7 @@
         "section": "IMPOSSIBLE_QUESTION",
         "paragraphs": [
           {
-            "text": "Start with the assumption. Global heating from falling debris, then years of dimmed sunlight that collapse food chains.",
+            "text": "The impact would cause intense heating from the incoming debris, then a prolonged dimming of sunlight that would disrupt ecosystems and collapse food chains.",
             "claims": [
               "C1"
             ],
@@ -350,7 +474,7 @@
         "section": "INITIAL_CONDITIONS",
         "paragraphs": [
           {
-            "text": "That is the first effect — but not the biggest. Assume a Chicxulub-size asteroid strikes Earth today.",
+            "text": "We start by assuming a 10‑km Chicxulub‑scale asteroid impacts Earth in the present day.",
             "claims": [
               "C2"
             ],
@@ -362,20 +486,43 @@
         "section": "FIRST_EFFECT",
         "paragraphs": [
           {
-            "text": "The second-order effect is stranger. One 10-kilometre asteroid ended the age of dinosaurs. Stood on end, it would tower over Everest. It struck slightly over 66 million years ago. The crater it left is up to 300 kilometres wide. Today, the first danger would be heat and debris raining worldwide. Then soot and dust would dim sunlight for years. The real killer wasn't the crater. It was the sky. The Chicxulub crater was formed slightly over 66 million years ago when an asteroid, about ten kilometers (six miles) in diameter, struck Earth. The impactor was around 10 kilometers (6 mi) in diameter, large enough that, if set at sea level, it would have reached taller than Mount Everest. More recent evidence suggests the crater is 300 km (190 mi) wide, and the 180 km (110 mi) ring observed is an inner wall of the larger crater. Field research from the Hell Creek Formation shows the simultaneous mass extinction of myriad species, consistent with the impact event. An impact turns the asteroid's kinetic energy into heat, shock and ejecta; fine debris and soot then block sunlight. A Chicxulub-size asteroid strikes Earth today.",
+            "text": "A ten‑kilometre asteroid ended the age of dinosaurs and would tower over Everest.",
             "claims": [
               "C6",
               "C7",
-              "C8",
+              "C14"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "The impact left a crater up to three hundred kilometres wide.",
+            "claims": [
               "C9",
-              "C10",
-              "C11",
-              "C12",
-              "C13",
-              "C14",
               "C15",
-              "C16",
+              "C13"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "The first danger would be heat and debris raining worldwide.",
+            "claims": [
+              "C10",
               "C17",
+              "C12"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "Soot and dust would then dim sunlight for years.",
+            "claims": [
+              "C11",
+              "C17"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "A Chicxulub‑size asteroid striking Earth today is a speculation.",
+            "claims": [
               "C18"
             ],
             "role": "evidence"
@@ -394,7 +541,7 @@
         "section": "SCIENCE_EXPLANATION",
         "paragraphs": [
           {
-            "text": "And here is where science stops being certain. The governing physics: an impact turns the asteroid's kinetic energy into heat, shock and ejecta; fine debris and soot then block sunlight.",
+            "text": "The impact converts the asteroid’s kinetic energy into heat, shock waves and ejecta; fine debris and soot then block sunlight.",
             "claims": [
               "C3"
             ],
@@ -406,7 +553,7 @@
         "section": "LIMITS_UNCERTAINTIES",
         "paragraphs": [
           {
-            "text": "So what is the answer? The exact timeline depends on how the impossible change happens; the order of effects is what established physics constrains.",
+            "text": "The exact timeline depends on how the impossible change happens; the order of effects is what established physics constrains.",
             "claims": [
               "C19"
             ],
@@ -419,10 +566,10 @@
         "paragraphs": []
       }
     ],
-    "words": 287,
-    "estimatedMinutes": 1.9,
-    "paragraphs": 6,
-    "secondsPerNewBeat": 19
+    "words": 136,
+    "estimatedMinutes": 0.9,
+    "paragraphs": 10,
+    "secondsPerNewBeat": 5
   },
   "claimSourceMap": {
     "rows": [
@@ -433,7 +580,7 @@
       },
       {
         "section": "IMPOSSIBLE_QUESTION",
-        "excerpt": "Start with the assumption. Global heating from falling debris, then years of dimmed sunlig",
+        "excerpt": "The impact would cause intense heating from the incoming debris, then a prolonged dimming ",
         "claims": [
           {
             "id": "C1",
@@ -444,7 +591,7 @@
       },
       {
         "section": "INITIAL_CONDITIONS",
-        "excerpt": "That is the first effect — but not the biggest. Assume a Chicxulub-size asteroid strikes E",
+        "excerpt": "We start by assuming a 10‑km Chicxulub‑scale asteroid impacts Earth in the present day.",
         "claims": [
           {
             "id": "C2",
@@ -455,7 +602,7 @@
       },
       {
         "section": "FIRST_EFFECT",
-        "excerpt": "The second-order effect is stranger. One 10-kilometre asteroid ended the age of dinosaurs.",
+        "excerpt": "A ten‑kilometre asteroid ended the age of dinosaurs and would tower over Everest.",
         "claims": [
           {
             "id": "C6",
@@ -468,39 +615,20 @@
             "source": "editorial narration (case file)"
           },
           {
-            "id": "C8",
+            "id": "C14",
             "class": "CONFIRMED_FACT",
-            "source": "editorial narration (case file)"
-          },
+            "source": "Wikipedia — Chicxulub crater"
+          }
+        ]
+      },
+      {
+        "section": "FIRST_EFFECT",
+        "excerpt": "The impact left a crater up to three hundred kilometres wide.",
+        "claims": [
           {
             "id": "C9",
             "class": "CONFIRMED_FACT",
             "source": "editorial narration (case file)"
-          },
-          {
-            "id": "C10",
-            "class": "CONFIRMED_FACT",
-            "source": "editorial narration (case file)"
-          },
-          {
-            "id": "C11",
-            "class": "CONFIRMED_FACT",
-            "source": "editorial narration (case file)"
-          },
-          {
-            "id": "C12",
-            "class": "CONFIRMED_FACT",
-            "source": "editorial narration (case file)"
-          },
-          {
-            "id": "C13",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Chicxulub crater"
-          },
-          {
-            "id": "C14",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Chicxulub crater"
           },
           {
             "id": "C15",
@@ -508,15 +636,53 @@
             "source": "Wikipedia — Chicxulub crater"
           },
           {
-            "id": "C16",
+            "id": "C13",
             "class": "CONFIRMED_FACT",
             "source": "Wikipedia — Chicxulub crater"
+          }
+        ]
+      },
+      {
+        "section": "FIRST_EFFECT",
+        "excerpt": "The first danger would be heat and debris raining worldwide.",
+        "claims": [
+          {
+            "id": "C10",
+            "class": "CONFIRMED_FACT",
+            "source": "editorial narration (case file)"
           },
           {
             "id": "C17",
             "class": "CONFIRMED_FACT",
             "source": "NASA Science"
           },
+          {
+            "id": "C12",
+            "class": "CONFIRMED_FACT",
+            "source": "editorial narration (case file)"
+          }
+        ]
+      },
+      {
+        "section": "FIRST_EFFECT",
+        "excerpt": "Soot and dust would then dim sunlight for years.",
+        "claims": [
+          {
+            "id": "C11",
+            "class": "CONFIRMED_FACT",
+            "source": "editorial narration (case file)"
+          },
+          {
+            "id": "C17",
+            "class": "CONFIRMED_FACT",
+            "source": "NASA Science"
+          }
+        ]
+      },
+      {
+        "section": "FIRST_EFFECT",
+        "excerpt": "A Chicxulub‑size asteroid striking Earth today is a speculation.",
+        "claims": [
           {
             "id": "C18",
             "class": "SPECULATION",
@@ -526,7 +692,7 @@
       },
       {
         "section": "SCIENCE_EXPLANATION",
-        "excerpt": "And here is where science stops being certain. The governing physics: an impact turns the ",
+        "excerpt": "The impact converts the asteroid’s kinetic energy into heat, shock waves and ejecta; fine ",
         "claims": [
           {
             "id": "C3",
@@ -537,7 +703,7 @@
       },
       {
         "section": "LIMITS_UNCERTAINTIES",
-        "excerpt": "So what is the answer? The exact timeline depends on how the impossible change happens; th",
+        "excerpt": "The exact timeline depends on how the impossible change happens; the order of effects is w",
         "claims": [
           {
             "id": "C19",
@@ -574,7 +740,7 @@
       "scene": 2,
       "narrationSpan": [
         3,
-        10
+        12
       ],
       "section": "IMPOSSIBLE_QUESTION",
       "visualPurpose": "visualise scenario",
@@ -582,7 +748,7 @@
       "subject": "Chicxulub crater map on the Yucatán coast",
       "asset": "Chicxulub crater map on the Yucatán coast",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 7.2,
+      "durationEstimateSeconds": 9.6,
       "motion": "slow push-in to detail",
       "claimSupported": "C1",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -591,8 +757,8 @@
     {
       "scene": 3,
       "narrationSpan": [
-        10,
-        17
+        12,
+        18
       ],
       "section": "INITIAL_CONDITIONS",
       "visualPurpose": "visualise scenario",
@@ -600,7 +766,7 @@
       "subject": "impact ejecta arcing around the globe",
       "asset": "impact ejecta arcing around the globe",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 6.8,
+      "durationEstimateSeconds": 5.6,
       "motion": "slow push-in to detail",
       "claimSupported": "C2",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -609,8 +775,8 @@
     {
       "scene": 4,
       "narrationSpan": [
-        17,
-        36
+        18,
+        23
       ],
       "section": "FIRST_EFFECT",
       "visualPurpose": "visualise scenario",
@@ -618,7 +784,7 @@
       "subject": "soot layer dimming sunlight",
       "asset": "soot layer dimming sunlight",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 19.1,
+      "durationEstimateSeconds": 5.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C6",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -627,8 +793,8 @@
     {
       "scene": 5,
       "narrationSpan": [
-        36,
-        55
+        23,
+        28
       ],
       "section": "FIRST_EFFECT",
       "visualPurpose": "visualise scenario",
@@ -636,17 +802,17 @@
       "subject": "timeline of the end-Cretaceous extinction",
       "asset": "timeline of the end-Cretaceous extinction",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 19.1,
-      "motion": "lateral reframe / crop to evidence",
-      "claimSupported": "C7",
+      "durationEstimateSeconds": 4.4,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C9",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 6,
       "narrationSpan": [
-        55,
-        74
+        28,
+        32
       ],
       "section": "FIRST_EFFECT",
       "visualPurpose": "visualise scenario",
@@ -654,17 +820,17 @@
       "subject": "modern city skyline under darkened sky",
       "asset": "modern city skyline under darkened sky",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 19.1,
-      "motion": "hold, animated highlight on the claimed element",
-      "claimSupported": "C8",
+      "durationEstimateSeconds": 4,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C10",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 7,
       "narrationSpan": [
-        74,
-        93
+        32,
+        35
       ],
       "section": "FIRST_EFFECT",
       "visualPurpose": "visualise scenario",
@@ -672,17 +838,35 @@
       "subject": "asteroid beside Mount Everest for scale",
       "asset": "asteroid beside Mount Everest for scale",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 19.1,
+      "durationEstimateSeconds": 3.6,
       "motion": "slow push-in to detail",
-      "claimSupported": "C9",
+      "claimSupported": "C11",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 8,
       "narrationSpan": [
-        93,
-        105
+        35,
+        39
+      ],
+      "section": "FIRST_EFFECT",
+      "visualPurpose": "visualise scenario",
+      "visualType": "ILLUSTRATION",
+      "subject": "Chicxulub crater map on the Yucatán coast",
+      "asset": "Chicxulub crater map on the Yucatán coast",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 3.6,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C18",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 9,
+      "narrationSpan": [
+        39,
+        47
       ],
       "section": "SCIENCE_EXPLANATION",
       "visualPurpose": "explain mechanism",
@@ -690,25 +874,25 @@
       "subject": "The governing physics: an impact turns the asteroid's kinetic energy into heat, shock and",
       "asset": "diagram:SCIENCE_EXPLANATION:C3",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 12,
+      "durationEstimateSeconds": 8,
       "motion": "slow push-in to detail",
       "claimSupported": "C3",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": null
     },
     {
-      "scene": 9,
+      "scene": 10,
       "narrationSpan": [
-        105,
-        115
+        47,
+        54
       ],
       "section": "LIMITS_UNCERTAINTIES",
       "visualPurpose": "visualise scenario",
       "visualType": "ILLUSTRATION",
-      "subject": "Chicxulub crater map on the Yucatán coast",
-      "asset": "Chicxulub crater map on the Yucatán coast",
+      "subject": "impact ejecta arcing around the globe",
+      "asset": "impact ejecta arcing around the globe",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 9.6,
+      "durationEstimateSeconds": 7.6,
       "motion": "slow push-in to detail",
       "claimSupported": "C19",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -718,7 +902,7 @@
   "assetPlan": {
     "byType": {
       "SIMULATION": 1,
-      "ILLUSTRATION": 7,
+      "ILLUSTRATION": 8,
       "DIAGRAM": 1
     },
     "distinctSubjects": 7,
@@ -1712,7 +1896,7 @@
     "playlist": "SPACE",
     "subscribe_element": true,
     "timing": {
-      "startSeconds": 94,
+      "startSeconds": 34,
       "durationSeconds": 20,
       "note": "final 20 s; narration must not end abruptly"
     },
@@ -1720,19 +1904,19 @@
     "apiSupport": "UNSUPPORTED — YouTube Data API v3 has no end-screen write endpoint; configure in Studio (task emitted)."
   },
   "cost": {
-    "estimated_production_cost": 0.06,
+    "estimated_production_cost": 0.16,
     "currency": "USD",
     "breakdown": {
-      "llmTokens": 0,
-      "ttsMinutes": 1.9,
-      "renderMinutesCpu": 5.7,
-      "assets": 9,
+      "llmTokens": 8554,
+      "ttsMinutes": 0.9,
+      "renderMinutesCpu": 2.7,
+      "assets": 10,
       "youtubeQuotaUnits": 1650
     },
     "note": "approximate; update config/growth-engine.json cost units from invoices"
   },
   "readiness": {
-    "LongFormProductionReadinessScore": 84,
+    "LongFormProductionReadinessScore": 83,
     "decision": "BLOCK",
     "dimensions": {
       "TopicDepth": 82,
@@ -1741,7 +1925,7 @@
       "ResearchQuality": 88,
       "SourceCoverage": 100,
       "FactualAccuracy": 100,
-      "ScriptRetention": 51,
+      "ScriptRetention": 43,
       "VisualCoverage": 90,
       "AudioQuality": null,
       "Editing": null,
@@ -1757,12 +1941,9 @@
       "Editing"
     ],
     "hardFails": [
-      "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded",
-      "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+      "INSUFFICIENT_DEPTH: evidence supports ~0.9 min; target 8–12 min — not padded"
     ],
-    "notes": [
-      "LLM generation safely deferred at section:FIRST_EFFECT; resume from generation/what-if-the-dinosaur-killing-asteroid-hit-today.json"
-    ],
+    "notes": [],
     "thresholds": {
       "publish": 85,
       "review": 70
@@ -1776,15 +1957,15 @@
     "Channel": "ImpossibleBrief",
     "Content Type": "LONG_FORM",
     "Topic": "What If the Dinosaur-Killing Asteroid Hit Today?",
-    "LongFormPotentialScore": 81,
+    "LongFormPotentialScore": 82,
     "Topic Bucket": "A",
     "Cold Open": "What If the Dinosaur-Killing Asteroid Hit Today?",
     "Target Duration": "8–12 min",
-    "Actual Duration": "~1.9 min (script estimate, deterministic-evidence)",
-    "Scenes": 9,
+    "Actual Duration": "~0.9 min (script estimate, llm:groq:openai/gpt-oss-120b)",
+    "Scenes": 10,
     "Thumbnail Score": 91,
     "Title Score": 72,
-    "LongFormProductionReadinessScore": "84 → BLOCK",
+    "LongFormProductionReadinessScore": "83 → BLOCK",
     "Related Shorts": "what-if-we-swam-in-europas-ocean, what-if-the-dinosaur-killing-asteroid-hit-today, what-if-the-dinosaur-killing-asteroid-hit-today, what-if-you-put-saturn-in-a-bathtub",
     "Primary Next Video": "What If Asteroid Apophis Hit Earth?"
   }

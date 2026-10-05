@@ -36,7 +36,7 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 116.54,
+      "ageHours": 116.58,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -59,7 +59,7 @@
       },
       "baselines": {
         "views": 38,
-        "viewsPerHour": 2.08,
+        "viewsPerHour": 2.07,
         "averagePercentageViewed": null,
         "engagementRate": 0.02632,
         "subscriberConversion": null
@@ -736,7 +736,7 @@
       },
       "baselines": {
         "views": 38,
-        "viewsPerHour": 2.08,
+        "viewsPerHour": 2.07,
         "averagePercentageViewed": null,
         "engagementRate": 0.02632,
         "subscriberConversion": null
@@ -971,7 +971,7 @@
       },
       "baselines": {
         "views": 38,
-        "viewsPerHour": 2.08,
+        "viewsPerHour": 2.07,
         "averagePercentageViewed": null,
         "engagementRate": 0.02632,
         "subscriberConversion": null
@@ -988,310 +988,6 @@
       "probableCauses": [],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
     }
-  },
-  {
-    "checkpoints": {
-      "12h": {
-        "collectedAt": "2026-10-05T14:32:23.123Z",
-        "metrics": {
-          "views": {
-            "value": 38,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "likes": {
-            "value": 0,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "comments": {
-            "value": 1,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "shares": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_gained": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_lost": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "net_subscribers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_view_duration": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_percentage_viewed": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "watch_time_minutes": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "impressions": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "ctr": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "returning_viewers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed per video by the public API"
-          },
-          "first_30s_retention": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "engaged_views": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "net_subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "engagement_per_1000_views": {
-            "value": 26.32,
-            "status": "DERIVED",
-            "from": "likes+comments+shares / views"
-          },
-          "watch_hours_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          }
-        },
-        "traffic": [],
-        "retention": [],
-        "analyticsStatus": "ok"
-      }
-    },
-    "hookType": "visual_first_reveal",
-    "hookScore": 85,
-    "selectedHook": "Why 6% leftover heat nearly melted a reactor.",
-    "firstLine": "Why 6% leftover heat nearly melted a reactor.",
-    "firstSecondsScore": 93,
-    "topicCluster": "ENERGY",
-    "bucket": "A",
-    "viralScore": 74,
-    "viralComponents": {
-      "curiosity_gap": {
-        "value": 89,
-        "basis": "derived"
-      },
-      "immediate_stakes": {
-        "value": 94,
-        "basis": "derived"
-      },
-      "human_consequence": {
-        "value": 95,
-        "basis": "derived"
-      },
-      "recognizability": {
-        "value": 77,
-        "basis": "measured"
-      },
-      "surprise": {
-        "value": 50,
-        "basis": "derived"
-      },
-      "visual_potential": {
-        "value": 89,
-        "basis": "inventory-signal"
-      },
-      "archival_footage_potential": {
-        "value": 35,
-        "basis": "inventory-signal"
-      },
-      "first_frame_potential": {
-        "value": 68,
-        "basis": "derived"
-      },
-      "title_potential": {
-        "value": 85,
-        "basis": "derived",
-        "note": "4 source-backed title seeds"
-      },
-      "emotional_tension": {
-        "value": 97,
-        "basis": "derived"
-      },
-      "contradiction": {
-        "value": 50,
-        "basis": "derived"
-      },
-      "unexpected_cause": {
-        "value": 65,
-        "basis": "derived"
-      },
-      "numerical_anomaly": {
-        "value": 95,
-        "basis": "derived"
-      },
-      "didnt_know_factor": {
-        "value": 92,
-        "basis": "derived"
-      },
-      "shareability": {
-        "value": 72,
-        "basis": "derived"
-      },
-      "channel_fit": {
-        "value": 82,
-        "basis": "derived"
-      },
-      "historical_similarity": {
-        "value": 50,
-        "basis": "neutral",
-        "note": "no same-cluster channel evidence yet"
-      },
-      "duplicate_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "no published-title collision"
-      },
-      "saturation_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "0 published / 18 inventory in cluster"
-      },
-      "source_confidence_risk": {
-        "value": -7,
-        "basis": "penalty",
-        "note": "93/100 source quality"
-      },
-      "weak_footage_risk": {
-        "value": -33,
-        "basis": "penalty",
-        "note": "no archival footage confirmed"
-      }
-    },
-    "storyStructure": "HIDDEN_SYSTEM>WHY_IT_MATTERS>WHAT_DEPENDS_ON_IT>BOTTLENECK>FAILURE_CONSEQUENCE>RESILIENCE",
-    "titlePattern": "statement",
-    "selectedTitle": "The Stuck Valve Behind Three Mile Island",
-    "titleScore": 72,
-    "titleCandidates": 36,
-    "hookCandidates": 14,
-    "topicScore": 83,
-    "popularityScore": 77,
-    "ctaStyle": "COMMENT_PROMPT",
-    "durationBucket": "18-25s",
-    "openingVisual": "TECHNICAL_ILLUSTRATION",
-    "experimentVariant": null,
-    "factors": {
-      "TopicDemandScore": 77,
-      "CuriosityScore": 89,
-      "HookPotentialScore": 85,
-      "VisualImpactScore": 89,
-      "EmotionalImpactScore": 97,
-      "StoryCompressionScore": 84,
-      "RewatchPotentialScore": 69,
-      "SharePotentialScore": 72,
-      "CommentPotentialScore": 53,
-      "SubscriberConversionPotential": 70,
-      "NoveltyScore": 94,
-      "AudienceFitScore": 90,
-      "SourceQualityScore": 93,
-      "ChannelFitScore": 82
-    },
-    "selectionMode": "EXPLOIT",
-    "videoId": "rAZ4cE4A0DE",
-    "slug": "why-nuclear-reactor-coolant-pump-is-so-hard-to-replace",
-    "channel": "critical-thread",
-    "contentType": "short",
-    "title": "The Stuck Valve Behind Three Mile Island",
-    "publishAt": "2026-10-04T20:15:11Z",
-    "publishHourUTC": 22,
-    "publishSlot": "18:00 New York",
-    "popularityBand": "unknown",
-    "readiness": 89,
-    "normalized": {
-      "ageHours": 18.29,
-      "viewsPerHour": 2.08,
-      "recentViewVelocity": null,
-      "likeRate": 0,
-      "commentRate": 0.02632,
-      "shareRate": null,
-      "engagementRate": 0.02632,
-      "engagedViewRate": null,
-      "subscriberConversion": null,
-      "subscribersPer1000Views": null
-    },
-    "performance": {
-      "growthScore": 50,
-      "classification": "NORMAL",
-      "percentiles": {
-        "viewVelocity": 50,
-        "retention": null,
-        "engagement": 50,
-        "subscriberConversion": null,
-        "views": 50
-      },
-      "baselines": {
-        "views": 38,
-        "viewsPerHour": 2.08,
-        "averagePercentageViewed": null,
-        "engagementRate": 0.02632,
-        "subscriberConversion": null
-      },
-      "missing": [
-        "retention",
-        "subscriberConversion"
-      ],
-      "plateau": null,
-      "breakout": null,
-      "probableCauses": [],
-      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
-    },
-    "durationSeconds": 34,
-    "registeredBy": "analytics-pass",
-    "metrics": {
-      "views": 38,
-      "averagePercentageViewed": null,
-      "averageViewDuration": null,
-      "likes": 0,
-      "comments": 1,
-      "shares": null,
-      "subscribersGained": null,
-      "engagedViews": null,
-      "subscribersLost": null,
-      "netSubscribers": null,
-      "subscribersPer1000Views": null,
-      "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 26.32,
-      "watchHoursPer1000Views": null,
-      "ctr": null,
-      "first30sRetention": null,
-      "shortsFeedShare": null,
-      "searchShare": null
-    },
-    "latestCheckpoint": "12h"
   },
   {
     "checkpoints": {
@@ -1848,10 +1544,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 37.5,
-      "classification": "WEAK",
+      "growthScore": 56.3,
+      "classification": "NORMAL",
       "percentiles": {
-        "viewVelocity": 0,
+        "viewVelocity": 50,
         "retention": null,
         "engagement": 100,
         "subscriberConversion": null,
@@ -1859,7 +1555,7 @@
       },
       "baselines": {
         "views": 38,
-        "viewsPerHour": 2.08,
+        "viewsPerHour": 2.07,
         "averagePercentageViewed": null,
         "engagementRate": 0.02632,
         "subscriberConversion": null
@@ -1896,5 +1592,409 @@
       "searchShare": null
     },
     "latestCheckpoint": "24h"
+  },
+  {
+    "checkpoints": {
+      "12h": {
+        "collectedAt": "2026-10-05T14:32:23.123Z",
+        "metrics": {
+          "views": {
+            "value": 38,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 26.32,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      },
+      "6h": {
+        "collectedAt": "2026-10-05T14:34:37.314Z",
+        "metrics": {
+          "views": {
+            "value": 38,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 26.32,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      }
+    },
+    "hookType": "visual_first_reveal",
+    "hookScore": 85,
+    "selectedHook": "Why 6% leftover heat nearly melted a reactor.",
+    "firstLine": "Why 6% leftover heat nearly melted a reactor.",
+    "firstSecondsScore": 93,
+    "topicCluster": "ENERGY",
+    "bucket": "A",
+    "viralScore": 74,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 89,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 77,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 50,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 89,
+        "basis": "inventory-signal"
+      },
+      "archival_footage_potential": {
+        "value": 35,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 68,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 85,
+        "basis": "derived",
+        "note": "4 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 50,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 65,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 92,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 72,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 50,
+        "basis": "neutral",
+        "note": "no same-cluster channel evidence yet"
+      },
+      "duplicate_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "no published-title collision"
+      },
+      "saturation_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 published / 18 inventory in cluster"
+      },
+      "source_confidence_risk": {
+        "value": -7,
+        "basis": "penalty",
+        "note": "93/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -33,
+        "basis": "penalty",
+        "note": "no archival footage confirmed"
+      }
+    },
+    "storyStructure": "HIDDEN_SYSTEM>WHY_IT_MATTERS>WHAT_DEPENDS_ON_IT>BOTTLENECK>FAILURE_CONSEQUENCE>RESILIENCE",
+    "titlePattern": "statement",
+    "selectedTitle": "The Stuck Valve Behind Three Mile Island",
+    "titleScore": 72,
+    "titleCandidates": 36,
+    "hookCandidates": 14,
+    "topicScore": 83,
+    "popularityScore": 77,
+    "ctaStyle": "COMMENT_PROMPT",
+    "durationBucket": "18-25s",
+    "openingVisual": "TECHNICAL_ILLUSTRATION",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 77,
+      "CuriosityScore": 89,
+      "HookPotentialScore": 85,
+      "VisualImpactScore": 89,
+      "EmotionalImpactScore": 97,
+      "StoryCompressionScore": 84,
+      "RewatchPotentialScore": 69,
+      "SharePotentialScore": 72,
+      "CommentPotentialScore": 53,
+      "SubscriberConversionPotential": 70,
+      "NoveltyScore": 94,
+      "AudienceFitScore": 90,
+      "SourceQualityScore": 93,
+      "ChannelFitScore": 82
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "rAZ4cE4A0DE",
+    "slug": "why-nuclear-reactor-coolant-pump-is-so-hard-to-replace",
+    "channel": "critical-thread",
+    "contentType": "short",
+    "title": "The Stuck Valve Behind Three Mile Island",
+    "publishAt": "2026-10-04T20:15:11Z",
+    "publishHourUTC": 22,
+    "publishSlot": "18:00 New York",
+    "popularityBand": "unknown",
+    "readiness": 89,
+    "normalized": {
+      "ageHours": 18.32,
+      "viewsPerHour": 2.07,
+      "recentViewVelocity": 0,
+      "likeRate": 0,
+      "commentRate": 0.02632,
+      "shareRate": null,
+      "engagementRate": 0.02632,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": 31.3,
+      "classification": "WEAK",
+      "percentiles": {
+        "viewVelocity": 0,
+        "retention": null,
+        "engagement": 50,
+        "subscriberConversion": null,
+        "views": 50
+      },
+      "baselines": {
+        "views": 38,
+        "viewsPerHour": 2.07,
+        "averagePercentageViewed": null,
+        "engagementRate": 0.02632,
+        "subscriberConversion": null
+      },
+      "missing": [
+        "retention",
+        "subscriberConversion"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    },
+    "durationSeconds": 34,
+    "registeredBy": "analytics-pass",
+    "metrics": {
+      "views": 38,
+      "averagePercentageViewed": null,
+      "averageViewDuration": null,
+      "likes": 0,
+      "comments": 1,
+      "shares": null,
+      "subscribersGained": null,
+      "engagedViews": null,
+      "subscribersLost": null,
+      "netSubscribers": null,
+      "subscribersPer1000Views": null,
+      "netSubscribersPer1000Views": null,
+      "engagementPer1000Views": 26.32,
+      "watchHoursPer1000Views": null,
+      "ctr": null,
+      "first30sRetention": null,
+      "shortsFeedShare": null,
+      "searchShare": null
+    },
+    "latestCheckpoint": "6h"
   }
 ]

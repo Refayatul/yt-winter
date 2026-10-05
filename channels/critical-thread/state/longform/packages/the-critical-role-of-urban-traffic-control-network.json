@@ -3,7 +3,7 @@
   "channel": "critical-thread",
   "channelName": "CriticalThread",
   "contentType": "long",
-  "createdAt": "2026-10-05T14:31:29.020Z",
+  "createdAt": "2026-10-05T14:33:52.569Z",
   "topic": {
     "id": "CT-215",
     "slug": "the-critical-role-of-urban-traffic-control-network",
@@ -17,10 +17,10 @@
     "slug": "the-critical-role-of-urban-traffic-control-network",
     "title": "The System Running 63,000 Traffic Lights",
     "cluster": "ROADS AND BRIDGES",
-    "LongFormPotentialScore": 77,
-    "bucket": "B",
+    "LongFormPotentialScore": 79,
+    "bucket": "A",
     "reasons": [
-      "LongFormPotential 77 ≥ 66"
+      "LongFormPotential 79 ≥ 78"
     ],
     "factors": {
       "DepthPotential": {
@@ -58,9 +58,9 @@
         "basis": "inventory-signal"
       },
       "ShortsEvidence": {
-        "value": 54,
+        "value": 76,
         "basis": "measured",
-        "note": "best cluster Short 1003 views vs channel median 1003; best subscriber conversion unavailable; best growth score 62.5"
+        "note": "best cluster Short 1003 views vs channel median 38; best subscriber conversion unavailable; best growth score 70.5 — MODE B: Short proved demand"
       },
       "SeriesPotential": {
         "value": 85,
@@ -119,7 +119,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 0
+    "reuseCount": 1
   },
   "outline": {
     "structure": [
@@ -312,7 +312,7 @@
     "checkpoint": "generation/the-critical-role-of-urban-traffic-control-network.json",
     "llmError": "groq rate limit reached; long-form generation deferred",
     "llmErrorCode": "RATE_LIMIT",
-    "llmErrorStage": "narrative-angle",
+    "llmErrorStage": "section:HOW_IT_WORKS",
     "depthNote": null,
     "sections": [
       {
@@ -1942,7 +1942,7 @@
     ],
     "notes": [
       "2 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim",
-      "LLM generation safely deferred at narrative-angle; resume from generation/the-critical-role-of-urban-traffic-control-network.json"
+      "LLM generation safely deferred at section:HOW_IT_WORKS; resume from generation/the-critical-role-of-urban-traffic-control-network.json"
     ],
     "thresholds": {
       "publish": 85,
@@ -1957,8 +1957,8 @@
     "Channel": "CriticalThread",
     "Content Type": "LONG_FORM",
     "Topic": "The System Running 63,000 Traffic Lights",
-    "LongFormPotentialScore": 77,
-    "Topic Bucket": "B",
+    "LongFormPotentialScore": 79,
+    "Topic Bucket": "A",
     "Cold Open": "Why 63,000 intersections share one control system.",
     "Target Duration": "8–12 min",
     "Actual Duration": "~1 min (script estimate, deterministic-evidence)",

@@ -5,7 +5,7 @@
   "topicHash": "db1725aeda00:19",
   "status": "DEFERRED",
   "createdAt": "2026-10-05T14:31:29.020Z",
-  "updatedAt": "2026-10-05T14:31:29.020Z",
+  "updatedAt": "2026-10-05T14:33:52.569Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -177,17 +177,174 @@
       }
     ]
   },
-  "blueprint": null,
-  "sections": [],
+  "blueprint": {
+    "central_question": "Who decides how long your traffic light stays green?",
+    "audience_promise": "Answer one precise question about urban traffic control network using only documented evidence.",
+    "narrative_angle": "Expose the invisible, software‑driven brain—SCATS—that synchronises over 63,000 intersections across 216 cities, showing how detectors, real‑time offsets and central coordination keep traffic flowing, why that coordination is a single point of fragility, and what the fallout looks like when it fails.",
+    "hook_candidates": [
+      "A city’s traffic grid collapses into chaos the moment the central computer blinks out—watch the domino effect unfold.",
+      "63,000 traffic lights, one hidden algorithm: the secret that decides every green you see.",
+      "When detectors sense a car, software rewrites the light’s schedule in milliseconds—see the invisible hand at work.",
+      "A single software glitch can turn a bustling intersection into a gridlock nightmare—discover why.",
+      "Pedestrian safety jumps 34% when the system tweaks a few seconds—learn how code saves lives."
+    ],
+    "retention_beats": [
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object]."
+    ],
+    "uncertain_claims": [],
+    "section_plan": [
+      {
+        "section": "COLD_OPEN",
+        "question": "What is the unresolved consequence the viewer sees first?",
+        "claimIds": [
+          "C1",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C18"
+        ]
+      },
+      {
+        "section": "INVISIBLE_SYSTEM",
+        "question": "What is it?",
+        "claimIds": [
+          "C11",
+          "C12",
+          "C13",
+          "C14",
+          "C15"
+        ]
+      },
+      {
+        "section": "WHERE_IT_EXISTS",
+        "question": "Where is it?",
+        "claimIds": [
+          "C19"
+        ]
+      },
+      {
+        "section": "HOW_IT_WORKS",
+        "question": "How does it work?",
+        "claimIds": [
+          "C2"
+        ]
+      },
+      {
+        "section": "WHAT_DEPENDS_ON_IT",
+        "question": "What depends on it?",
+        "claimIds": []
+      },
+      {
+        "section": "BOTTLENECK",
+        "question": "Where is the chokepoint?",
+        "claimIds": [
+          "C16"
+        ]
+      },
+      {
+        "section": "WHY_THE_BOTTLENECK_EXISTS",
+        "question": "Why can't it be replaced quickly?",
+        "claimIds": []
+      },
+      {
+        "section": "FAILURE_SCENARIO",
+        "question": "What if it fails?",
+        "claimIds": []
+      },
+      {
+        "section": "CASCADING_CONSEQUENCES",
+        "question": "What fails next?",
+        "claimIds": [
+          "C1",
+          "C18"
+        ]
+      },
+      {
+        "section": "REDUNDANCY_ALTERNATIVES",
+        "question": "What protects the system?",
+        "claimIds": [
+          "C17"
+        ]
+      },
+      {
+        "section": "FINAL_SYSTEM_INSIGHT",
+        "question": "What does this reveal about the modern world?",
+        "claimIds": []
+      }
+    ]
+  },
+  "sections": [
+    {
+      "section": "COLD_OPEN",
+      "paragraphs": [
+        {
+          "text": "Why 63,000 intersections share one control system.",
+          "claims": [],
+          "role": "cold-open"
+        }
+      ]
+    },
+    {
+      "section": "INVISIBLE_SYSTEM",
+      "paragraphs": [
+        {
+          "text": "SCATS is deployed at more than 63,000 intersections across 216 cities in 33 countries, and in its home country Australia it operates the majority of signalised intersections, about 11,000.",
+          "claims": [
+            "C11",
+            "C12"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "The system coordinates signals adaptively, and an online offset calculation method improves performance by 8% over precalculated plans; longer or more frequent pedestrian greens can reduce unsafe crossings by 34%.",
+          "claims": [
+            "C13",
+            "C14",
+            "C15"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHERE_IT_EXISTS",
+      "paragraphs": [
+        {
+          "text": "The scope covers planning, controlling, and purchasing transport services required to physically move vehicles—road vehicles, aircraft, rail stock, watercraft—and freight.",
+          "claims": [
+            "C19"
+          ],
+          "role": "evidence"
+        }
+      ]
+    }
+  ],
   "usage": {
-    "input_tokens": 0,
-    "output_tokens": 0
+    "input_tokens": 2648,
+    "output_tokens": 2442
   },
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
-    "stage": "narrative-angle",
+    "stage": "section:HOW_IT_WORKS",
     "retryable": true,
     "retryAfterMs": 1000
-  }
+  },
+  "providerUsed": "groq",
+  "model": "openai/gpt-oss-120b",
+  "depthNote": "Describes SCATS scale and adaptive coordination using only the supplied claims. Only claim C19 used"
 }

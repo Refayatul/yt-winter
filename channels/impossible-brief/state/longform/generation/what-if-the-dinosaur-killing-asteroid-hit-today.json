@@ -3,9 +3,9 @@
   "channel": "impossible-brief",
   "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
   "topicHash": "fadaa87a42cd:19",
-  "status": "DEFERRED",
+  "status": "QUALITY_REVIEW",
   "createdAt": "2026-10-05T14:29:45.073Z",
-  "updatedAt": "2026-10-05T14:29:45.073Z",
+  "updatedAt": "2026-10-05T14:33:25.336Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -307,20 +307,116 @@
           "role": "evidence"
         }
       ]
+    },
+    {
+      "section": "FIRST_EFFECT",
+      "paragraphs": [
+        {
+          "text": "A ten‑kilometre asteroid ended the age of dinosaurs and would tower over Everest.",
+          "claims": [
+            "C6",
+            "C7",
+            "C14"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "The impact left a crater up to three hundred kilometres wide.",
+          "claims": [
+            "C9",
+            "C15",
+            "C13"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "The first danger would be heat and debris raining worldwide.",
+          "claims": [
+            "C10",
+            "C17",
+            "C12"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Soot and dust would then dim sunlight for years.",
+          "claims": [
+            "C11",
+            "C17"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "A Chicxulub‑size asteroid striking Earth today is a speculation.",
+          "claims": [
+            "C18"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "SECOND_ORDER_EFFECT",
+      "paragraphs": []
+    },
+    {
+      "section": "SYSTEM_WIDE_CONSEQUENCE",
+      "paragraphs": []
+    },
+    {
+      "section": "SCIENCE_EXPLANATION",
+      "paragraphs": [
+        {
+          "text": "The impact converts the asteroid’s kinetic energy into heat, shock waves and ejecta; fine debris and soot then block sunlight.",
+          "claims": [
+            "C3"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "LIMITS_UNCERTAINTIES",
+      "paragraphs": [
+        {
+          "text": "The exact timeline depends on how the impossible change happens; the order of effects is what established physics constrains.",
+          "claims": [
+            "C19"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FINAL_SCIENTIFIC_PAYOFF",
+      "paragraphs": []
     }
   ],
   "usage": {
-    "input_tokens": 2309,
-    "output_tokens": 2272
+    "input_tokens": 4168,
+    "output_tokens": 4386
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "Only claim C1 used Evidence limited to a single speculative claim.",
+  "depthNote": "Only claim C1 used Evidence limited to a single speculative claim. First effects focus on immediate heat, debris, and atmospheric opacity. Single claim limits detail; paragraph kept concise. Limited predictive certainty",
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
     "stage": "section:FIRST_EFFECT",
     "retryable": true,
     "retryAfterMs": 8000
+  },
+  "quality": {
+    "duplicateSections": [],
+    "repeatedPhrases": [],
+    "weakHook": false,
+    "payoff": false,
+    "filler": [],
+    "introShare": 0.23,
+    "missingPlanSections": [],
+    "hardFails": [
+      "missing final payoff"
+    ],
+    "notes": []
   }
 }
