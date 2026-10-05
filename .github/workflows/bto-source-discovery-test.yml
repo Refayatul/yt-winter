@@ -5,11 +5,8 @@ on:
       - 'scripts/bto-source-discovery.js'
       - 'scripts/bto-research-fallback.js'
       - 'scripts/bto-research-fallback-hook.js'
-      - 'test/bto-source-discovery.test.js'
-      - 'test/bto-discovery-regression.test.js'
-      - 'test/bto-research-fallback.test.js'
-      - 'test/bto-fallback-safety.test.js'
-      - 'test/bto-research-fallback-hook.test.js'
+      - 'scripts/bto-research-production-adapter.js'
+      - 'test/**'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -18,8 +15,4 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: node test/bto-source-discovery.test.js
-      - run: node test/bto-discovery-regression.test.js
-      - run: node test/bto-research-fallback.test.js
-      - run: node test/bto-fallback-safety.test.js
-      - run: node test/bto-research-fallback-hook.test.js
+      - run: node test/run-bto-discovery-tests.js
