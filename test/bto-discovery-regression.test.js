@@ -1,0 +1,3 @@
+"use strict";
+const assert=require("assert"),D=require("../scripts/bto-source-discovery");
+(async()=>{let calls=0;const titles=await D.broadWikipediaTitles({object:"coffee shops",designDetail:"menu board height",question:"Why are menu boards mounted high?"},async()=>{calls++;return{query:{search:[{title:"Menu"},{title:"Coffeehouse"},{title:"List of coffee companies"}]}}});assert.ok(calls>=1);assert.ok(titles.includes("Menu"));assert.ok(titles.includes("Coffeehouse"));assert.ok(!titles.includes("List of coffee companies"));console.log("bto discovery regression passed")})().catch(e=>{console.error(e);process.exit(1)});

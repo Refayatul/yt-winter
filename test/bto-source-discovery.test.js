@@ -1,0 +1,10 @@
+"use strict";
+const assert=require("assert");
+const D=require("../scripts/bto-source-discovery");
+assert.equal(D.authorityHost("www.nist.gov"),true);
+assert.equal(D.authorityHost("example.com"),false);
+const topic={object:"street numbers",designDetail:"skipped numbers",question:"Why are some street numbers skipped?"};
+const ranked=D.rankCandidates([{url:"https://www.nist.gov/example/street-numbers",title:"Street numbers",snippet:"skipped numbers"},{url:"https://example.com/street",title:"Street numbers",snippet:"skipped"}],topic);
+assert.equal(ranked.length,1);
+assert.ok(ranked[0].url.includes("nist.gov"));
+(async()=>{const titles=await D.broadWikipediaTitles(topic,async()=>({query:{search:[{title:"House numbering"},{title:"List of roads"}]}}));assert.deepEqual(titles,["House numbering"]);console.log("bto source discovery tests passed")})().catch(e=>{console.error(e);process.exit(1)});
