@@ -3,9 +3,10 @@ on:
   pull_request:
     paths:
       - 'scripts/bto-source-discovery.js'
-      - 'scripts/bto-research-v2.js'
+      - 'scripts/bto-research-fallback.js'
       - 'test/bto-source-discovery.test.js'
       - 'test/bto-discovery-regression.test.js'
+      - 'test/bto-research-fallback.test.js'
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -16,3 +17,4 @@ jobs:
           node-version: '20'
       - run: node test/bto-source-discovery.test.js
       - run: node test/bto-discovery-regression.test.js
+      - run: node test/bto-research-fallback.test.js
