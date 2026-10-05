@@ -1,9 +1,9 @@
 {
   "channel": "impossible-brief",
-  "updatedAt": "2026-10-05T18:36:24.690Z",
+  "updatedAt": "2026-10-05T19:19:43.017Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
-    "sampleSize": 3,
+    "sampleSize": 4,
     "status": "observing",
     "baselines": {
       "views": 589,
@@ -17,7 +17,7 @@
         "stage": "OBSERVATION",
         "dimension": "hookType",
         "value": "visual_first_reveal",
-        "sample": 3,
+        "sample": 4,
         "lift": 0,
         "z": 0
       },
@@ -26,22 +26,38 @@
         "dimension": "topicCluster",
         "value": "SPACE",
         "sample": 3,
-        "lift": 0,
-        "z": 0
+        "lift": -0.167,
+        "z": -0.69
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "durationBucket",
+        "value": "26-35s",
+        "sample": 3,
+        "lift": -0.083,
+        "z": -0.26
       },
       {
         "stage": "OBSERVATION",
         "dimension": "storyStructure",
         "value": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
-        "sample": 3,
+        "sample": 4,
         "lift": 0,
         "z": 0
       },
       {
         "stage": "OBSERVATION",
+        "dimension": "popularityBand",
+        "value": "unknown",
+        "sample": 3,
+        "lift": 0.195,
+        "z": 1
+      },
+      {
+        "stage": "OBSERVATION",
         "dimension": "openingVisual",
         "value": "ILLUSTRATION",
-        "sample": 3,
+        "sample": 4,
         "lift": 0,
         "z": 0
       },
@@ -49,7 +65,7 @@
         "stage": "OBSERVATION",
         "dimension": "bucket",
         "value": "A",
-        "sample": 3,
+        "sample": 4,
         "lift": 0,
         "z": 0
       }
