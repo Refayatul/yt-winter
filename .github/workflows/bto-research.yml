@@ -9,7 +9,7 @@ on:
     inputs:
       limit:
         description: Questions to research in this run
-        default: '8'
+        default: '4'
 
 concurrency:
   group: bto-research
@@ -25,15 +25,17 @@ jobs:
     env:
       LONGFORM_LLM_PROVIDER: ${{ vars.LONGFORM_LLM_PROVIDER }}
       LONGFORM_LLM_FALLBACK_PROVIDER: ${{ vars.LONGFORM_LLM_FALLBACK_PROVIDER }}
-      LONGFORM_LLM_MAX_ATTEMPTS: ${{ vars.LONGFORM_LLM_MAX_ATTEMPTS }}
-      LONGFORM_LLM_MAX_RETRY_MS: ${{ vars.LONGFORM_LLM_MAX_RETRY_MS }}
+      LONGFORM_LLM_MAX_ATTEMPTS: '4'
+      LONGFORM_LLM_MAX_RETRY_MS: '120000'
       GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
       GROQ_MODEL: ${{ vars.GROQ_MODEL }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
-      BTO_RESEARCH_PAUSE_MS: ${{ vars.BTO_RESEARCH_PAUSE_MS }}
-      BTO_RESEARCH_MAX_TOKENS: ${{ vars.BTO_RESEARCH_MAX_TOKENS }}
-      BTO_RESEARCH_EXCERPT_CHARS: ${{ vars.BTO_RESEARCH_EXCERPT_CHARS }}
+      # Groq free-tier is minute-budgeted. Space LLM calls so one successful
+      # topic cannot immediately rate-limit the next candidate.
+      BTO_RESEARCH_PAUSE_MS: '75000'
+      BTO_RESEARCH_MAX_TOKENS: '2200'
+      BTO_RESEARCH_EXCERPT_CHARS: '7000'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -44,7 +46,7 @@ jobs:
           node-version: '20'
       - run: npm install --no-audit --no-fund
       - name: Research and verify
-        run: node scripts/bto-research.js --limit "${{ inputs.limit || '8' }}" --write
+        run: node scripts/bto-research.js --limit "${{ inputs.limit || '4' }}" --write
       - name: Commit researched records
         run: |
           git config user.name "research-bot"
