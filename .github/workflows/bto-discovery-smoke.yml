@@ -1,0 +1,15 @@
+name: BTO discovery smoke
+on:
+  pull_request:
+    paths:
+      - 'scripts/bto-source-discovery*'
+      - 'scripts/bto-research-v2.js'
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: node scripts/bto-source-discovery-cli.js 'street numbers' 'skipped numbers' 'Why are some street numbers skipped?'
