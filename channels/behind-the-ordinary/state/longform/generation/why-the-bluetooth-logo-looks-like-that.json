@@ -5,7 +5,7 @@
   "topicHash": "711babbc4433:98",
   "status": "DEFERRED",
   "createdAt": "2026-10-05T14:31:31.934Z",
-  "updatedAt": "2026-10-05T15:04:38.529Z",
+  "updatedAt": "2026-10-05T15:32:20.375Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -644,17 +644,239 @@
       }
     ]
   },
-  "blueprint": null,
-  "sections": [],
+  "blueprint": {
+    "central_question": "Why is the Bluetooth logo that angular symbol, and where did the name come from?",
+    "audience_promise": "Answer one precise question about the Bluetooth symbol using only documented evidence.",
+    "narrative_angle": "Evidence‑led hidden‑logic explainer that traces the Bluetooth logo’s Viking‑runic origin, the practical naming shortcut that became permanent, and why the design endures today.",
+    "hook_candidates": [
+      "Two ancient runes, merged into one sleek symbol you see on every phone.",
+      "A king’s dead tooth gave a tech standard its name.",
+      "What a placeholder code name and a Viking king have in common."
+    ],
+    "retention_beats": [
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object]."
+    ],
+    "uncertain_claims": [
+      "C23",
+      "C24",
+      "C25",
+      "C26",
+      "C27",
+      "C28",
+      "C29",
+      "C30",
+      "C31",
+      "C32",
+      "C33",
+      "C34",
+      "C35",
+      "C36",
+      "C37",
+      "C38",
+      "C39",
+      "C40",
+      "C41",
+      "C42"
+    ],
+    "section_plan": [
+      {
+        "section": "COLD_OPEN",
+        "question": "What is the unresolved consequence the viewer sees first?",
+        "claimIds": [
+          "C1",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11",
+          "C23"
+        ]
+      },
+      {
+        "section": "THE_QUESTION",
+        "question": "What familiar detail are we actually explaining?",
+        "claimIds": [
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11"
+        ]
+      },
+      {
+        "section": "ORIGIN_CONTEXT",
+        "question": "Where did this design come from?",
+        "claimIds": [
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C22"
+        ]
+      },
+      {
+        "section": "THE_PROBLEM",
+        "question": "What practical problem shaped it?",
+        "claimIds": [
+          "C19",
+          "C20"
+        ]
+      },
+      {
+        "section": "THE_EXPLANATION",
+        "question": "What does the documented evidence show?",
+        "claimIds": [
+          "C2",
+          "C16",
+          "C30",
+          "C31",
+          "C32",
+          "C33",
+          "C34",
+          "C35",
+          "C36",
+          "C37",
+          "C38",
+          "C39",
+          "C40",
+          "C41",
+          "C42",
+          "C43",
+          "C44",
+          "C45",
+          "C46",
+          "C47",
+          "C48",
+          "C49",
+          "C50",
+          "C51",
+          "C68",
+          "C69",
+          "C70",
+          "C71",
+          "C72",
+          "C73",
+          "C74",
+          "C75",
+          "C76",
+          "C77",
+          "C78",
+          "C79",
+          "C80",
+          "C81",
+          "C82",
+          "C83",
+          "C84",
+          "C85",
+          "C86",
+          "C87",
+          "C88",
+          "C89",
+          "C90",
+          "C91",
+          "C92",
+          "C93",
+          "C94",
+          "C95",
+          "C96",
+          "C97",
+          "C98"
+        ]
+      },
+      {
+        "section": "SURPRISING_DETAIL",
+        "question": "Which detail changes the obvious explanation?",
+        "claimIds": [
+          "C3",
+          "C17",
+          "C18"
+        ]
+      },
+      {
+        "section": "REAL_WORLD_CONSEQUENCE",
+        "question": "How did the design persist or change?",
+        "claimIds": [
+          "C1",
+          "C23"
+        ]
+      },
+      {
+        "section": "FINAL_PAYOFF",
+        "question": "What is the precise answer to the opening question?",
+        "claimIds": [
+          "C21"
+        ]
+      },
+      {
+        "section": "NEXT_CURIOSITY_BRIDGE",
+        "question": "Which related ordinary detail follows naturally?",
+        "claimIds": []
+      }
+    ]
+  },
+  "sections": [
+    {
+      "section": "COLD_OPEN",
+      "paragraphs": [
+        {
+          "text": "Two runes, merged into one symbol.",
+          "claims": [],
+          "role": "cold-open"
+        }
+      ]
+    },
+    {
+      "section": "THE_QUESTION",
+      "paragraphs": [
+        {
+          "text": "The Bluetooth logo is a Viking king's initials. Two runes, merged into one symbol. So the logo merges Harald's initials in runes: H and B.",
+          "claims": [
+            "C4",
+            "C5",
+            "C11"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "The name honours King Harald Bluetooth, who united Denmark and Norway. At an industry meeting, Intel's Jim Kardach suggested it as a temporary code name. Harald united Scandinavia. This radio link would unite PCs and phones. It was only a placeholder. RadioWire or PAN was meant to replace it. PAN was already everywhere online, and RadioWire's trademark check ran out of time.",
+          "claims": [
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C10"
+          ],
+          "role": "evidence"
+        }
+      ]
+    }
+  ],
   "usage": {
-    "input_tokens": 0,
-    "output_tokens": 0
+    "input_tokens": 5802,
+    "output_tokens": 2874
   },
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
-    "stage": "narrative-angle",
+    "stage": "section:ORIGIN_CONTEXT",
     "retryable": true,
     "retryAfterMs": 5000
-  }
+  },
+  "providerUsed": "groq",
+  "model": "openai/gpt-oss-120b",
+  "depthNote": "All paragraphs rely solely on the provided claim IDs; no additional facts were introduced."
 }

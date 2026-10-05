@@ -3,9 +3,9 @@
   "channel": "critical-thread",
   "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
   "topicHash": "1e025681c0ef:20",
-  "status": "DEFERRED",
+  "status": "QUALITY_REVIEW",
   "createdAt": "2026-10-05T15:04:22.736Z",
-  "updatedAt": "2026-10-05T15:04:22.736Z",
+  "updatedAt": "2026-10-05T15:32:13.086Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -365,20 +365,63 @@
     {
       "section": "FAILURE_SCENARIO",
       "paragraphs": []
+    },
+    {
+      "section": "CASCADING_CONSEQUENCES",
+      "paragraphs": [
+        {
+          "text": "Smoke and heat trapped drivers, and the tunnel stayed shut for years.",
+          "claims": [
+            "C1"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "REDUNDANCY_ALTERNATIVES",
+      "paragraphs": [
+        {
+          "text": "The tunnel’s safety framework relies on unified management, dedicated shelters, and enforced truck spacing rules, which together constitute the primary protective measures.",
+          "claims": [
+            "C20"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FINAL_SYSTEM_INSIGHT",
+      "paragraphs": []
     }
   ],
   "usage": {
-    "input_tokens": 3025,
-    "output_tokens": 2626
+    "input_tokens": 3833,
+    "output_tokens": 3505
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "Section composed using only the supplied claim IDs, adhering to length and formatting constraints. Paragraph relies solely on claim C2 Focused on the design chokepoint using the sole provided claim.",
+  "depthNote": "Section composed using only the supplied claim IDs, adhering to length and formatting constraints. Paragraph relies solely on claim C2 Focused on the design chokepoint using the sole provided claim. Only one confirmed claim supports this section, limiting detail. All content derived from claim C20 only",
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
     "stage": "section:CASCADING_CONSEQUENCES",
     "retryable": true,
     "retryAfterMs": 5000
+  },
+  "quality": {
+    "duplicateSections": [],
+    "repeatedPhrases": [],
+    "weakHook": false,
+    "payoff": false,
+    "filler": [],
+    "introShare": 0.54,
+    "missingPlanSections": [],
+    "hardFails": [
+      "missing final payoff"
+    ],
+    "notes": [
+      "introduction exceeds 25% of the script"
+    ]
   }
 }

@@ -427,5 +427,71 @@
     "status": 429,
     "retryable": true,
     "retryAfterMs": 5000
+  },
+  {
+    "at": "2026-10-05T15:32:13.086Z",
+    "channel": "critical-thread",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:CASCADING_CONSEQUENCES",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T15:32:13.086Z",
+    "channel": "critical-thread",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:CASCADING_CONSEQUENCES",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 389,
+      "output_tokens": 419
+    }
+  },
+  {
+    "at": "2026-10-05T15:32:13.086Z",
+    "channel": "critical-thread",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:REDUNDANCY_ALTERNATIVES",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T15:32:13.086Z",
+    "channel": "critical-thread",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:REDUNDANCY_ALTERNATIVES",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 419,
+      "output_tokens": 460
+    }
+  },
+  {
+    "at": "2026-10-05T15:32:13.086Z",
+    "channel": "critical-thread",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T15:32:13.086Z",
+    "channel": "critical-thread",
+    "event": "failed",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "REQUEST",
+    "status": 413,
+    "retryable": false,
+    "retryAfterMs": null
   }
 ]

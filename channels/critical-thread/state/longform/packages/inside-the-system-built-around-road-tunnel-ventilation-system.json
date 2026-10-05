@@ -3,7 +3,7 @@
   "channel": "critical-thread",
   "channelName": "CriticalThread",
   "contentType": "long",
-  "createdAt": "2026-10-05T15:04:22.736Z",
+  "createdAt": "2026-10-05T15:32:13.086Z",
   "topic": {
     "id": "CT-201",
     "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
@@ -60,7 +60,7 @@
       "ShortsEvidence": {
         "value": 76,
         "basis": "measured",
-        "note": "best cluster Short 1003 views vs channel median 38; best subscriber conversion unavailable; best growth score 70.5 — MODE B: Short proved demand"
+        "note": "best cluster Short 1003 views vs channel median 32; best subscriber conversion unavailable; best growth score 70.5 — MODE B: Short proved demand"
       },
       "SeriesPotential": {
         "value": 85,
@@ -118,7 +118,7 @@
       "2 source(s); long-form needs ≥ 3",
       "no deep research — long-form depth limited to the Shorts case file"
     ],
-    "reuseCount": 0
+    "reuseCount": 1
   },
   "outline": {
     "structure": [
@@ -307,18 +307,150 @@
     }
   },
   "script": {
-    "generator": "deterministic-evidence",
+    "generator": "llm:groq:openai/gpt-oss-120b",
     "provider": "groq",
-    "model": null,
-    "status": "DEFERRED",
-    "pipeline": null,
-    "blueprint": null,
-    "quality": null,
+    "model": "openai/gpt-oss-120b",
+    "status": "QUALITY_REVIEW",
+    "pipeline": [
+      "TOPIC",
+      "RESEARCH_EVIDENCE",
+      "FACT_PACK",
+      "NARRATIVE_ANGLE",
+      "OUTLINE",
+      "SECTION_PLAN",
+      "SECTION_GENERATION",
+      "CONTINUITY_PASS",
+      "RETENTION_PASS",
+      "FACTUAL_CONSISTENCY_CHECK",
+      "FINAL_VOICEOVER_SCRIPT"
+    ],
+    "blueprint": {
+      "central_question": "How did one truck fire close a key Alpine tunnel for three years?",
+      "audience_promise": "Answer one precise question about road tunnel ventilation system using only documented evidence.",
+      "narrative_angle": "A forensic, evidence‑led investigation of the Mont Blanc Tunnel’s single‑tube design and ventilation limits that turned a single truck fire into a three‑year Alpine shutdown, exposing the hidden dependencies of trans‑Alpine freight.",
+      "hook_candidates": [
+        "A single truck fire traps smoke, heat and 39 lives, sealing the 11.6 km Mont Blanc Tunnel for three years.",
+        "The Alpine lifeline that cuts 100 km off the France‑Milan route sits idle for 1,095 days – why?",
+        "Inside the tunnel, a 150 m vehicle‑spacing rule and a single ventilation shaft become the difference between safety and catastrophe."
+      ],
+      "retention_beats": [
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object]."
+      ],
+      "uncertain_claims": [],
+      "section_plan": [
+        {
+          "section": "COLD_OPEN",
+          "question": "What is the unresolved consequence the viewer sees first?",
+          "claimIds": [
+            "C1",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C10",
+            "C11"
+          ]
+        },
+        {
+          "section": "INVISIBLE_SYSTEM",
+          "question": "What is it?",
+          "claimIds": [
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C16",
+            "C17",
+            "C18"
+          ]
+        },
+        {
+          "section": "WHERE_IT_EXISTS",
+          "question": "Where is it?",
+          "claimIds": []
+        },
+        {
+          "section": "HOW_IT_WORKS",
+          "question": "How does it work?",
+          "claimIds": [
+            "C2"
+          ]
+        },
+        {
+          "section": "WHAT_DEPENDS_ON_IT",
+          "question": "What depends on it?",
+          "claimIds": []
+        },
+        {
+          "section": "BOTTLENECK",
+          "question": "Where is the chokepoint?",
+          "claimIds": [
+            "C19"
+          ]
+        },
+        {
+          "section": "WHY_THE_BOTTLENECK_EXISTS",
+          "question": "Why can't it be replaced quickly?",
+          "claimIds": []
+        },
+        {
+          "section": "FAILURE_SCENARIO",
+          "question": "What if it fails?",
+          "claimIds": []
+        },
+        {
+          "section": "CASCADING_CONSEQUENCES",
+          "question": "What fails next?",
+          "claimIds": [
+            "C1"
+          ]
+        },
+        {
+          "section": "REDUNDANCY_ALTERNATIVES",
+          "question": "What protects the system?",
+          "claimIds": [
+            "C20"
+          ]
+        },
+        {
+          "section": "FINAL_SYSTEM_INSIGHT",
+          "question": "What does this reveal about the modern world?",
+          "claimIds": []
+        }
+      ]
+    },
+    "quality": {
+      "duplicateSections": [],
+      "repeatedPhrases": [],
+      "weakHook": false,
+      "payoff": false,
+      "filler": [],
+      "introShare": 0.54,
+      "missingPlanSections": [],
+      "hardFails": [
+        "missing final payoff"
+      ],
+      "notes": [
+        "introduction exceeds 25% of the script"
+      ]
+    },
     "checkpoint": "generation/inside-the-system-built-around-road-tunnel-ventilation-system.json",
-    "llmError": "groq rate limit reached; long-form generation deferred",
-    "llmErrorCode": "RATE_LIMIT",
-    "llmErrorStage": "section:CASCADING_CONSEQUENCES",
-    "depthNote": null,
+    "llmError": null,
+    "llmErrorCode": null,
+    "llmErrorStage": null,
+    "depthNote": "Section composed using only the supplied claim IDs, adhering to length and formatting constraints. Paragraph relies solely on claim C2 Focused on the design chokepoint using the sole provided claim. Only one confirmed claim supports this section, limiting detail. All content derived from claim C20 only",
     "sections": [
       {
         "section": "COLD_OPEN",
@@ -334,14 +466,26 @@
         "section": "INVISIBLE_SYSTEM",
         "paragraphs": [
           {
-            "text": "Most people never see it. On the morning of 24 March 1999, the engine of a Belgian transport truck carrying volatile freight caught fire in the tunnel. The event expanded into a catastrophe which killed 39 people. The fire led to a tunnel closure until 9 March 2002. It reduces the route from France to Turin by 50 kilometres (30 miles) and to Milan by 100 km (60 mi). The tunnel is 11.611 km (7.215 mi) in length, 8.6 m (28 ft) in width, and 4.35 m (14.3 ft) in height. Within the tunnel, a minimum speed of 50 km/h and a maximum speed of 70 km/h applies, while the prescribed distance between vehicles is 150 m. Road freight between France and Italy depends on the Mont Blanc Tunnel.",
+            "text": "On 24 March 1999 a Belgian truck’s engine ignited inside the Mont Blanc Tunnel, the blaze killing 39 people and forcing the tunnel to remain closed until 9 March 2002.",
             "claims": [
               "C12",
               "C13",
-              "C14",
+              "C14"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "The tunnel spans 11.611 km, is 8.6 m wide and 4.35 m high; traffic is limited to 50–70 km/h with a 150 m vehicle spacing, and the crossing shortens the France‑Turin route by about 50 km and the France‑Milan route by roughly 100 km.",
+            "claims": [
               "C15",
               "C16",
-              "C17",
+              "C17"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "Road freight between France and Italy relies on this crossing.",
+            "claims": [
               "C18"
             ],
             "role": "evidence"
@@ -356,7 +500,7 @@
         "section": "HOW_IT_WORKS",
         "paragraphs": [
           {
-            "text": "Here is how it works. Ventilation and fire systems must clear smoke and heat fast in a long, single-bore tunnel.",
+            "text": "The tunnel’s ventilation and fire‑suppression systems must quickly clear smoke and heat along the entire length of the single‑bore passage, a requirement dictated by its design constraints.",
             "claims": [
               "C2"
             ],
@@ -372,7 +516,7 @@
         "section": "BOTTLENECK",
         "paragraphs": [
           {
-            "text": "That is the bottleneck. A single tube with split management left little margin in a fire.",
+            "text": "The tunnel’s single‑tube layout combined with split traffic management offered very little safety margin when a fire occurred.",
             "claims": [
               "C19"
             ],
@@ -392,7 +536,7 @@
         "section": "CASCADING_CONSEQUENCES",
         "paragraphs": [
           {
-            "text": "The failure would not stay contained. Smoke and heat trapped drivers; the tunnel stayed shut for years.",
+            "text": "Smoke and heat trapped drivers, and the tunnel stayed shut for years.",
             "claims": [
               "C1"
             ],
@@ -404,7 +548,7 @@
         "section": "REDUNDANCY_ALTERNATIVES",
         "paragraphs": [
           {
-            "text": "So what protects the system? Unified management, shelters and truck spacing rules followed.",
+            "text": "The tunnel’s safety framework relies on unified management, dedicated shelters, and enforced truck spacing rules, which together constitute the primary protective measures.",
             "claims": [
               "C20"
             ],
@@ -417,10 +561,10 @@
         "paragraphs": []
       }
     ],
-    "words": 203,
-    "estimatedMinutes": 1.4,
-    "paragraphs": 6,
-    "secondsPerNewBeat": 14
+    "words": 171,
+    "estimatedMinutes": 1.1,
+    "paragraphs": 8,
+    "secondsPerNewBeat": 9
   },
   "claimSourceMap": {
     "rows": [
@@ -431,7 +575,7 @@
       },
       {
         "section": "INVISIBLE_SYSTEM",
-        "excerpt": "Most people never see it. On the morning of 24 March 1999, the engine of a Belgian transpo",
+        "excerpt": "On 24 March 1999 a Belgian truck’s engine ignited inside the Mont Blanc Tunnel, the blaze ",
         "claims": [
           {
             "id": "C12",
@@ -447,7 +591,13 @@
             "id": "C14",
             "class": "CONFIRMED_FACT",
             "source": "Wikipedia — Mont Blanc Tunnel"
-          },
+          }
+        ]
+      },
+      {
+        "section": "INVISIBLE_SYSTEM",
+        "excerpt": "The tunnel spans 11.611 km, is 8.6 m wide and 4.35 m high; traffic is limited to 50–70 km/",
+        "claims": [
           {
             "id": "C15",
             "class": "CONFIRMED_FACT",
@@ -462,7 +612,13 @@
             "id": "C17",
             "class": "CONFIRMED_FACT",
             "source": "Wikipedia — Mont Blanc Tunnel"
-          },
+          }
+        ]
+      },
+      {
+        "section": "INVISIBLE_SYSTEM",
+        "excerpt": "Road freight between France and Italy relies on this crossing.",
+        "claims": [
           {
             "id": "C18",
             "class": "CONFIRMED_FACT",
@@ -472,7 +628,7 @@
       },
       {
         "section": "HOW_IT_WORKS",
-        "excerpt": "Here is how it works. Ventilation and fire systems must clear smoke and heat fast in a lon",
+        "excerpt": "The tunnel’s ventilation and fire‑suppression systems must quickly clear smoke and heat al",
         "claims": [
           {
             "id": "C2",
@@ -483,7 +639,7 @@
       },
       {
         "section": "BOTTLENECK",
-        "excerpt": "That is the bottleneck. A single tube with split management left little margin in a fire.",
+        "excerpt": "The tunnel’s single‑tube layout combined with split traffic management offered very little",
         "claims": [
           {
             "id": "C19",
@@ -494,7 +650,7 @@
       },
       {
         "section": "CASCADING_CONSEQUENCES",
-        "excerpt": "The failure would not stay contained. Smoke and heat trapped drivers; the tunnel stayed sh",
+        "excerpt": "Smoke and heat trapped drivers, and the tunnel stayed shut for years.",
         "claims": [
           {
             "id": "C1",
@@ -505,7 +661,7 @@
       },
       {
         "section": "REDUNDANCY_ALTERNATIVES",
-        "excerpt": "So what protects the system? Unified management, shelters and truck spacing rules followed",
+        "excerpt": "The tunnel’s safety framework relies on unified management, dedicated shelters, and enforc",
         "claims": [
           {
             "id": "C20",
@@ -542,7 +698,7 @@
       "scene": 2,
       "narrationSpan": [
         3,
-        20
+        15
       ],
       "section": "INVISIBLE_SYSTEM",
       "visualPurpose": "visualise scenario",
@@ -550,7 +706,7 @@
       "subject": "On the morning of 24 March 1999, the engine of a Belgian transport truck",
       "asset": "diagram:INVISIBLE_SYSTEM:C12",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 17.2,
+      "durationEstimateSeconds": 12,
       "motion": "slow push-in to detail",
       "claimSupported": "C12",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -559,44 +715,44 @@
     {
       "scene": 3,
       "narrationSpan": [
-        20,
-        38
+        15,
+        33
       ],
       "section": "INVISIBLE_SYSTEM",
       "visualPurpose": "visualise scenario",
       "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "The event expanded into a catastrophe which killed 39 people.",
-      "asset": "diagram:INVISIBLE_SYSTEM:C13",
+      "subject": "It reduces the route from France to Turin by 50 kilometres (30 miles) and",
+      "asset": "diagram:INVISIBLE_SYSTEM:C15",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 17.2,
-      "motion": "lateral reframe / crop to evidence",
-      "claimSupported": "C13",
+      "durationEstimateSeconds": 17.6,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C15",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 4,
       "narrationSpan": [
-        38,
-        55
+        33,
+        37
       ],
       "section": "INVISIBLE_SYSTEM",
       "visualPurpose": "visualise scenario",
       "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "The fire led to a tunnel closure until 9 March 2002.",
-      "asset": "diagram:INVISIBLE_SYSTEM:C14",
+      "subject": "Road freight between France and Italy depends on the Mont Blanc Tunnel.",
+      "asset": "diagram:INVISIBLE_SYSTEM:C18",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 17.2,
-      "motion": "hold, animated highlight on the claimed element",
-      "claimSupported": "C14",
+      "durationEstimateSeconds": 4,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C18",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 5,
       "narrationSpan": [
-        55,
-        63
+        37,
+        48
       ],
       "section": "HOW_IT_WORKS",
       "visualPurpose": "explain mechanism",
@@ -604,7 +760,7 @@
       "subject": "Ventilation and fire systems must clear smoke and heat fast in a long, single-bore",
       "asset": "diagram:HOW_IT_WORKS:C2",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 8,
+      "durationEstimateSeconds": 10.8,
       "motion": "slow push-in to detail",
       "claimSupported": "C2",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -613,8 +769,8 @@
     {
       "scene": 6,
       "narrationSpan": [
-        63,
-        69
+        48,
+        55
       ],
       "section": "BOTTLENECK",
       "visualPurpose": "visualise scenario",
@@ -622,7 +778,7 @@
       "subject": "A single tube with split management left little margin in a fire.",
       "asset": "diagram:BOTTLENECK:C19",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 6.4,
+      "durationEstimateSeconds": 7.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C19",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -631,8 +787,8 @@
     {
       "scene": 7,
       "narrationSpan": [
-        69,
-        76
+        55,
+        60
       ],
       "section": "CASCADING_CONSEQUENCES",
       "visualPurpose": "explain mechanism",
@@ -640,7 +796,7 @@
       "subject": "Smoke and heat trapped drivers; the tunnel stayed shut for years.",
       "asset": "diagram:CASCADING_CONSEQUENCES:C1",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 6.8,
+      "durationEstimateSeconds": 4.8,
       "motion": "slow push-in to detail",
       "claimSupported": "C1",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -649,8 +805,8 @@
     {
       "scene": 8,
       "narrationSpan": [
-        76,
-        81
+        60,
+        68
       ],
       "section": "REDUNDANCY_ALTERNATIVES",
       "visualPurpose": "visualise scenario",
@@ -658,7 +814,7 @@
       "subject": "Unified management, shelters and truck spacing rules followed.",
       "asset": "diagram:REDUNDANCY_ALTERNATIVES:C20",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 5.2,
+      "durationEstimateSeconds": 8.8,
       "motion": "slow push-in to detail",
       "claimSupported": "C20",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -1891,7 +2047,7 @@
     "playlist": "ROADS AND BRIDGES",
     "subscribe_element": true,
     "timing": {
-      "startSeconds": 64,
+      "startSeconds": 46,
       "durationSeconds": 20,
       "note": "final 20 s; narration must not end abruptly"
     },
@@ -1899,12 +2055,12 @@
     "apiSupport": "UNSUPPORTED — YouTube Data API v3 has no end-screen write endpoint; configure in Studio (task emitted)."
   },
   "cost": {
-    "estimated_production_cost": 0.04,
+    "estimated_production_cost": 0.15,
     "currency": "USD",
     "breakdown": {
-      "llmTokens": 0,
-      "ttsMinutes": 1.4,
-      "renderMinutesCpu": 4.2,
+      "llmTokens": 7338,
+      "ttsMinutes": 1.1,
+      "renderMinutesCpu": 3.3,
       "assets": 8,
       "youtubeQuotaUnits": 1650
     },
@@ -1920,7 +2076,7 @@
       "ResearchQuality": 87,
       "SourceCoverage": 90,
       "FactualAccuracy": 100,
-      "ScriptRetention": 47,
+      "ScriptRetention": 45,
       "VisualCoverage": 90,
       "AudioQuality": null,
       "Editing": null,
@@ -1936,12 +2092,9 @@
       "Editing"
     ],
     "hardFails": [
-      "INSUFFICIENT_DEPTH: evidence supports ~1.4 min; target 8–12 min — not padded",
-      "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+      "INSUFFICIENT_DEPTH: evidence supports ~1.1 min; target 8–12 min — not padded"
     ],
-    "notes": [
-      "LLM generation safely deferred at section:CASCADING_CONSEQUENCES; resume from generation/inside-the-system-built-around-road-tunnel-ventilation-system.json"
-    ],
+    "notes": [],
     "thresholds": {
       "publish": 85,
       "review": 70
@@ -1959,7 +2112,7 @@
     "Topic Bucket": "A",
     "Cold Open": "A truck fire shut Mont Blanc until 2002.",
     "Target Duration": "8–12 min",
-    "Actual Duration": "~1.4 min (script estimate, deterministic-evidence)",
+    "Actual Duration": "~1.1 min (script estimate, llm:groq:openai/gpt-oss-120b)",
     "Scenes": 8,
     "Thumbnail Score": 87,
     "Title Score": 75,

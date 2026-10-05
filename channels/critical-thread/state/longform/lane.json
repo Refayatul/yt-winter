@@ -48,8 +48,8 @@
     {
       "cycleId": "2026-W41",
       "channel": "critical-thread",
-      "startedAt": "2026-10-05T15:04:22.736Z",
-      "status": "DEFERRED_PROVIDER",
+      "startedAt": "2026-10-05T15:32:13.086Z",
+      "status": "QUALITY_BLOCKED",
       "evaluated": [
         {
           "slug": "the-critical-role-of-urban-traffic-control-network",
@@ -71,16 +71,27 @@
           "decision": "BLOCK",
           "score": 82,
           "hardFails": [
-            "INSUFFICIENT_DEPTH: evidence supports ~1.4 min; target 8–12 min — not padded",
-            "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+            "INSUFFICIENT_DEPTH: evidence supports ~1.1 min; target 8–12 min — not padded"
           ],
-          "generationStatus": "DEFERRED"
+          "generationStatus": "QUALITY_REVIEW"
+        },
+        {
+          "slug": "what-quietly-depends-on-geothermal-production-well",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 77,
+          "bucket": "B",
+          "decision": "BLOCK",
+          "score": 82,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.1 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
         }
       ],
       "selected": null,
-      "reason": "provider deferred inside-the-system-built-around-road-tunnel-ventilation-system; retry this cycle and resume its checkpoint",
-      "checkpoint": "generation/inside-the-system-built-around-road-tunnel-ventilation-system.json",
-      "finishedAt": "2026-10-05T15:04:38.478Z"
+      "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
+      "finishedAt": "2026-10-05T15:32:20.334Z"
     }
   ]
 }
