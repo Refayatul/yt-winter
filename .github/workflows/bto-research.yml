@@ -31,8 +31,6 @@ jobs:
       GROQ_MODEL: ${{ vars.GROQ_MODEL }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
-      # Groq free-tier is minute-budgeted. Space LLM calls so one successful
-      # topic cannot immediately rate-limit the next candidate.
       BTO_RESEARCH_PAUSE_MS: '75000'
       BTO_RESEARCH_MAX_TOKENS: '2200'
       BTO_RESEARCH_EXCERPT_CHARS: '7000'
@@ -45,6 +43,10 @@ jobs:
         with:
           node-version: '20'
       - run: npm install --no-audit --no-fund
+      - name: Activate source discovery v2
+        run: |
+          node scripts/bto-wire-discovery-v2.js
+          grep -q 'ResearchFallback.relatedArticles' scripts/bto-research.js
       - name: Research and verify
         run: node scripts/bto-research.js --limit "${{ inputs.limit || '4' }}" --write
       - name: Commit researched records
