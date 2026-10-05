@@ -48,7 +48,7 @@
     {
       "cycleId": "2026-W41",
       "channel": "critical-thread",
-      "startedAt": "2026-10-05T14:33:52.569Z",
+      "startedAt": "2026-10-05T15:04:22.736Z",
       "status": "DEFERRED_PROVIDER",
       "evaluated": [
         {
@@ -59,16 +59,28 @@
           "decision": "BLOCK",
           "score": 82,
           "hardFails": [
-            "INSUFFICIENT_DEPTH: evidence supports ~1 min; target 8–12 min — not padded",
+            "INSUFFICIENT_DEPTH: evidence supports ~1.2 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        },
+        {
+          "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
+          "mode": "B_SHORT_PROVES_DEMAND",
+          "LongFormPotentialScore": 78,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 82,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.4 min; target 8–12 min — not padded",
             "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
           ],
           "generationStatus": "DEFERRED"
         }
       ],
       "selected": null,
-      "reason": "provider deferred the-critical-role-of-urban-traffic-control-network; retry this cycle and resume its checkpoint",
-      "checkpoint": "generation/the-critical-role-of-urban-traffic-control-network.json",
-      "finishedAt": "2026-10-05T14:34:01.008Z"
+      "reason": "provider deferred inside-the-system-built-around-road-tunnel-ventilation-system; retry this cycle and resume its checkpoint",
+      "checkpoint": "generation/inside-the-system-built-around-road-tunnel-ventilation-system.json",
+      "finishedAt": "2026-10-05T15:04:38.478Z"
     }
   ]
 }

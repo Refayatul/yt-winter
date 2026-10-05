@@ -5,26 +5,26 @@
   "contentType": "long",
   "createdAt": "2026-10-05T15:04:22.736Z",
   "topic": {
-    "id": "CT-215",
-    "slug": "the-critical-role-of-urban-traffic-control-network",
-    "title": "The System Running 63,000 Traffic Lights",
-    "subject": "urban traffic control network",
+    "id": "CT-201",
+    "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
+    "title": "The Tunnel Fire That Closed the Alps for 3 Years",
+    "subject": "road tunnel ventilation system",
     "cluster": "ROADS AND BRIDGES"
   },
   "LongFormPotential": {
     "channel": "critical-thread",
-    "topicId": "CT-215",
-    "slug": "the-critical-role-of-urban-traffic-control-network",
-    "title": "The System Running 63,000 Traffic Lights",
+    "topicId": "CT-201",
+    "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
+    "title": "The Tunnel Fire That Closed the Alps for 3 Years",
     "cluster": "ROADS AND BRIDGES",
-    "LongFormPotentialScore": 79,
+    "LongFormPotentialScore": 78,
     "bucket": "A",
     "reasons": [
-      "LongFormPotential 79 ≥ 78"
+      "LongFormPotential 78 ≥ 78"
     ],
     "factors": {
       "DepthPotential": {
-        "value": 81,
+        "value": 87,
         "basis": "derived+inventory-signal"
       },
       "NarrativeDepth": {
@@ -37,7 +37,7 @@
         "note": "2 sources, 2 primary"
       },
       "VisualDepth": {
-        "value": 94,
+        "value": 96,
         "basis": "inventory-signal"
       },
       "EngineeringOrScientificDepth": {
@@ -45,12 +45,12 @@
         "basis": "derived"
       },
       "SearchDemand": {
-        "value": 88,
+        "value": 74,
         "basis": "inventory-signal",
         "note": "seed estimate unless measured"
       },
       "EvergreenPotential": {
-        "value": 94,
+        "value": 91,
         "basis": "inventory-signal"
       },
       "AudienceFit": {
@@ -84,10 +84,10 @@
       "SeriesPotential": 1,
       "ViewerJourneyPotential": 1
     },
-    "specificEvidence": 7
+    "specificEvidence": 9
   },
   "researchPackage": {
-    "id": "critical-thread:the-critical-role-of-urban-traffic-control-network",
+    "id": "critical-thread:inside-the-system-built-around-road-tunnel-ventilation-system",
     "sources": [
       {
         "name": "U.S. Department of Transportation",
@@ -102,24 +102,23 @@
         "score": 95
       },
       {
-        "name": "Wikipedia — Traffic management",
-        "url": "https://en.wikipedia.org/wiki/Traffic_management",
+        "name": "Wikipedia — road tunnel ventilation system",
+        "url": "https://en.wikipedia.org/wiki/road_tunnel_ventilation_system",
         "tier": "ENCYCLOPEDIA",
         "score": 55
       }
     ],
-    "claims": 19,
+    "claims": 20,
     "deepResearch": {
-      "article": "Traffic management",
-      "via": "subject title (exact/redirect match, no fuzzy search)",
-      "claims": 2,
-      "status": "OK",
-      "licence": "CC BY-SA 4.0 — facts only; never narrate verbatim"
+      "article": "road tunnel ventilation system",
+      "claims": 0,
+      "status": "ARTICLE_NOT_FOUND"
     },
     "gaps": [
-      "2 source(s); long-form needs ≥ 3"
+      "2 source(s); long-form needs ≥ 3",
+      "no deep research — long-form depth limited to the Shorts case file"
     ],
-    "reuseCount": 2
+    "reuseCount": 0
   },
   "outline": {
     "structure": [
@@ -149,7 +148,7 @@
           "C8",
           "C9",
           "C10",
-          "C18"
+          "C11"
         ],
         "evidence": "available"
       },
@@ -158,11 +157,13 @@
         "section": "INVISIBLE_SYSTEM",
         "question": "What is it?",
         "claimIds": [
-          "C11",
           "C12",
           "C13",
           "C14",
-          "C15"
+          "C15",
+          "C16",
+          "C17",
+          "C18"
         ],
         "evidence": "available"
       },
@@ -170,10 +171,8 @@
         "order": 3,
         "section": "WHERE_IT_EXISTS",
         "question": "Where is it?",
-        "claimIds": [
-          "C19"
-        ],
-        "evidence": "available"
+        "claimIds": [],
+        "evidence": "MISSING"
       },
       {
         "order": 4,
@@ -196,7 +195,7 @@
         "section": "BOTTLENECK",
         "question": "Where is the chokepoint?",
         "claimIds": [
-          "C16"
+          "C19"
         ],
         "evidence": "available"
       },
@@ -219,8 +218,7 @@
         "section": "CASCADING_CONSEQUENCES",
         "question": "What fails next?",
         "claimIds": [
-          "C1",
-          "C18"
+          "C1"
         ],
         "evidence": "available"
       },
@@ -229,7 +227,7 @@
         "section": "REDUNDANCY_ALTERNATIVES",
         "question": "What protects the system?",
         "claimIds": [
-          "C17"
+          "C20"
         ],
         "evidence": "available"
       },
@@ -242,219 +240,91 @@
       }
     ],
     "missingSections": [
+      "WHERE_IT_EXISTS",
       "WHAT_DEPENDS_ON_IT",
       "WHY_THE_BOTTLENECK_EXISTS",
       "FAILURE_SCENARIO",
       "FINAL_SYSTEM_INSIGHT"
     ],
-    "coverage": 64
+    "coverage": 55
   },
   "coldOpens": {
     "candidates": [
       {
         "type": "visual_first_reveal",
-        "text": "Why 63,000 intersections share one control system.",
-        "score": 84,
+        "text": "A truck fire shut Mont Blanc until 2002.",
+        "score": 81,
+        "estimatedSeconds": 2.5
+      },
+      {
+        "type": "human_consequence",
+        "text": "39 people died.",
+        "score": 77,
+        "estimatedSeconds": 0.9
+      },
+      {
+        "type": "unexpected_chain_reaction",
+        "text": "The 1999 blaze started in a single truck.",
+        "score": 76,
+        "estimatedSeconds": 2.5
+      },
+      {
+        "type": "impossible_sounding_fact",
+        "text": "The tunnel stayed closed until March 2002.",
+        "score": 76,
         "estimatedSeconds": 2.2
       },
       {
         "type": "shocking_consequence",
-        "text": "When control fails, signals fall back to fixed timings and queues grow.",
-        "score": 76,
-        "estimatedSeconds": 3.8
-      },
-      {
-        "type": "unexpected_chain_reaction",
-        "text": "SCATS runs signals in over 216 cities.",
+        "text": "Smoke and heat trapped drivers; the tunnel stayed shut for years.",
         "score": 74,
-        "estimatedSeconds": 2.2
-      },
-      {
-        "type": "impossible_sounding_fact",
-        "text": "Australia alone has around 11,000 of them.",
-        "score": 73,
-        "estimatedSeconds": 2.2
+        "estimatedSeconds": 3.4
       },
       {
         "type": "hidden_cause",
-        "text": "Sensors in the road feed real-time timing changes.",
-        "score": 73,
-        "estimatedSeconds": 2.5
+        "text": "Road freight between France and Italy depends on the Mont Blanc Tunnel quietly relies on road tunnel ventilation system.",
+        "score": 69,
+        "estimatedSeconds": 5.9
       },
       {
         "type": "question_gap",
-        "text": "What stops if urban traffic control network stops?",
+        "text": "What stops if road tunnel ventilation system stops?",
         "score": 68,
         "estimatedSeconds": 2.5
       },
       {
         "type": "mechanism_reveal",
-        "text": "Urban traffic control network failed because detectors measure traffic and software adjusts green times and offsets in real time.",
-        "score": 67,
-        "estimatedSeconds": 5.9
+        "text": "Road tunnel ventilation system failed because ventilation and fire systems must clear smoke and heat fast in a long, single-bore tunnel.",
+        "score": 64,
+        "estimatedSeconds": 6.6
       }
     ],
     "selected": {
       "type": "visual_first_reveal",
-      "text": "Why 63,000 intersections share one control system.",
-      "score": 84,
-      "estimatedSeconds": 2.2
+      "text": "A truck fire shut Mont Blanc until 2002.",
+      "score": 81,
+      "estimatedSeconds": 2.5
     }
   },
   "script": {
-    "generator": "llm:groq:openai/gpt-oss-120b",
+    "generator": "deterministic-evidence",
     "provider": "groq",
-    "model": "openai/gpt-oss-120b",
-    "status": "QUALITY_REVIEW",
-    "pipeline": [
-      "TOPIC",
-      "RESEARCH_EVIDENCE",
-      "FACT_PACK",
-      "NARRATIVE_ANGLE",
-      "OUTLINE",
-      "SECTION_PLAN",
-      "SECTION_GENERATION",
-      "CONTINUITY_PASS",
-      "RETENTION_PASS",
-      "FACTUAL_CONSISTENCY_CHECK",
-      "FINAL_VOICEOVER_SCRIPT"
-    ],
-    "blueprint": {
-      "central_question": "Who decides how long your traffic light stays green?",
-      "audience_promise": "Answer one precise question about urban traffic control network using only documented evidence.",
-      "narrative_angle": "Expose the invisible, software‑driven brain—SCATS—that synchronises over 63,000 intersections across 216 cities, showing how detectors, real‑time offsets and central coordination keep traffic flowing, why that coordination is a single point of fragility, and what the fallout looks like when it fails.",
-      "hook_candidates": [
-        "A city’s traffic grid collapses into chaos the moment the central computer blinks out—watch the domino effect unfold.",
-        "63,000 traffic lights, one hidden algorithm: the secret that decides every green you see.",
-        "When detectors sense a car, software rewrites the light’s schedule in milliseconds—see the invisible hand at work.",
-        "A single software glitch can turn a bustling intersection into a gridlock nightmare—discover why.",
-        "Pedestrian safety jumps 34% when the system tweaks a few seconds—learn how code saves lives."
-      ],
-      "retention_beats": [
-        "[object Object].",
-        "[object Object].",
-        "[object Object].",
-        "[object Object].",
-        "[object Object].",
-        "[object Object].",
-        "[object Object].",
-        "[object Object].",
-        "[object Object].",
-        "[object Object].",
-        "[object Object]."
-      ],
-      "uncertain_claims": [],
-      "section_plan": [
-        {
-          "section": "COLD_OPEN",
-          "question": "What is the unresolved consequence the viewer sees first?",
-          "claimIds": [
-            "C1",
-            "C4",
-            "C5",
-            "C6",
-            "C7",
-            "C8",
-            "C9",
-            "C10",
-            "C18"
-          ]
-        },
-        {
-          "section": "INVISIBLE_SYSTEM",
-          "question": "What is it?",
-          "claimIds": [
-            "C11",
-            "C12",
-            "C13",
-            "C14",
-            "C15"
-          ]
-        },
-        {
-          "section": "WHERE_IT_EXISTS",
-          "question": "Where is it?",
-          "claimIds": [
-            "C19"
-          ]
-        },
-        {
-          "section": "HOW_IT_WORKS",
-          "question": "How does it work?",
-          "claimIds": [
-            "C2"
-          ]
-        },
-        {
-          "section": "WHAT_DEPENDS_ON_IT",
-          "question": "What depends on it?",
-          "claimIds": []
-        },
-        {
-          "section": "BOTTLENECK",
-          "question": "Where is the chokepoint?",
-          "claimIds": [
-            "C16"
-          ]
-        },
-        {
-          "section": "WHY_THE_BOTTLENECK_EXISTS",
-          "question": "Why can't it be replaced quickly?",
-          "claimIds": []
-        },
-        {
-          "section": "FAILURE_SCENARIO",
-          "question": "What if it fails?",
-          "claimIds": []
-        },
-        {
-          "section": "CASCADING_CONSEQUENCES",
-          "question": "What fails next?",
-          "claimIds": [
-            "C1",
-            "C18"
-          ]
-        },
-        {
-          "section": "REDUNDANCY_ALTERNATIVES",
-          "question": "What protects the system?",
-          "claimIds": [
-            "C17"
-          ]
-        },
-        {
-          "section": "FINAL_SYSTEM_INSIGHT",
-          "question": "What does this reveal about the modern world?",
-          "claimIds": []
-        }
-      ]
-    },
-    "quality": {
-      "duplicateSections": [],
-      "repeatedPhrases": [],
-      "weakHook": false,
-      "payoff": false,
-      "filler": [],
-      "introShare": 0.36,
-      "missingPlanSections": [],
-      "hardFails": [
-        "missing final payoff"
-      ],
-      "notes": [
-        "introduction exceeds 25% of the script"
-      ]
-    },
-    "checkpoint": "generation/the-critical-role-of-urban-traffic-control-network.json",
-    "llmError": null,
-    "llmErrorCode": null,
-    "llmErrorStage": null,
-    "depthNote": "Describes SCATS scale and adaptive coordination using only the supplied claims. Only claim C19 used Paragraph constructed using only claim C2 Focused on the single-point coordination identified by claim C16. Paragraph links signal fallback to broader logistics role using only provided claims. Only claim C17 supports this redundancy description.",
+    "model": null,
+    "status": "DEFERRED",
+    "pipeline": null,
+    "blueprint": null,
+    "quality": null,
+    "checkpoint": "generation/inside-the-system-built-around-road-tunnel-ventilation-system.json",
+    "llmError": "groq rate limit reached; long-form generation deferred",
+    "llmErrorCode": "RATE_LIMIT",
+    "llmErrorStage": "section:CASCADING_CONSEQUENCES",
+    "depthNote": null,
     "sections": [
       {
         "section": "COLD_OPEN",
         "paragraphs": [
           {
-            "text": "Why 63,000 intersections share one control system.",
+            "text": "A truck fire shut Mont Blanc until 2002.",
             "claims": [],
             "role": "cold-open"
           }
@@ -464,19 +334,15 @@
         "section": "INVISIBLE_SYSTEM",
         "paragraphs": [
           {
-            "text": "SCATS is deployed at more than 63,000 intersections across 216 cities in 33 countries, and in its home country Australia it operates the majority of signalised intersections, about 11,000.",
+            "text": "Most people never see it. On the morning of 24 March 1999, the engine of a Belgian transport truck carrying volatile freight caught fire in the tunnel. The event expanded into a catastrophe which killed 39 people. The fire led to a tunnel closure until 9 March 2002. It reduces the route from France to Turin by 50 kilometres (30 miles) and to Milan by 100 km (60 mi). The tunnel is 11.611 km (7.215 mi) in length, 8.6 m (28 ft) in width, and 4.35 m (14.3 ft) in height. Within the tunnel, a minimum speed of 50 km/h and a maximum speed of 70 km/h applies, while the prescribed distance between vehicles is 150 m. Road freight between France and Italy depends on the Mont Blanc Tunnel.",
             "claims": [
-              "C11",
-              "C12"
-            ],
-            "role": "evidence"
-          },
-          {
-            "text": "The system coordinates signals adaptively, and an online offset calculation method improves performance by 8% over precalculated plans; longer or more frequent pedestrian greens can reduce unsafe crossings by 34%.",
-            "claims": [
+              "C12",
               "C13",
               "C14",
-              "C15"
+              "C15",
+              "C16",
+              "C17",
+              "C18"
             ],
             "role": "evidence"
           }
@@ -484,21 +350,13 @@
       },
       {
         "section": "WHERE_IT_EXISTS",
-        "paragraphs": [
-          {
-            "text": "The scope covers planning, controlling, and purchasing transport services required to physically move vehicles—road vehicles, aircraft, rail stock, watercraft—and freight.",
-            "claims": [
-              "C19"
-            ],
-            "role": "evidence"
-          }
-        ]
+        "paragraphs": []
       },
       {
         "section": "HOW_IT_WORKS",
         "paragraphs": [
           {
-            "text": "Detectors measure traffic and the SCATS software adjusts green‑light durations and intersection offsets in real time.",
+            "text": "Here is how it works. Ventilation and fire systems must clear smoke and heat fast in a long, single-bore tunnel.",
             "claims": [
               "C2"
             ],
@@ -514,9 +372,9 @@
         "section": "BOTTLENECK",
         "paragraphs": [
           {
-            "text": "The chokepoint is the central coordination engine that manages tens of thousands of intersections worldwide, meaning a single system must process detector data, compute offsets and dispatch timing updates for the entire network.",
+            "text": "That is the bottleneck. A single tube with split management left little margin in a fire.",
             "claims": [
-              "C16"
+              "C19"
             ],
             "role": "evidence"
           }
@@ -534,10 +392,9 @@
         "section": "CASCADING_CONSEQUENCES",
         "paragraphs": [
           {
-            "text": "When central control collapses, signals revert to preset cycles, and vehicle queues lengthen. This outcome underscores that traffic management forms an essential component of logistics.",
+            "text": "The failure would not stay contained. Smoke and heat trapped drivers; the tunnel stayed shut for years.",
             "claims": [
-              "C1",
-              "C18"
+              "C1"
             ],
             "role": "evidence"
           }
@@ -547,9 +404,9 @@
         "section": "REDUNDANCY_ALTERNATIVES",
         "paragraphs": [
           {
-            "text": "When the central SCATS hub loses contact, each intersection’s local controller automatically switches to a predefined basic timing plan, preserving signal operation without centralized coordination.",
+            "text": "So what protects the system? Unified management, shelters and truck spacing rules followed.",
             "claims": [
-              "C17"
+              "C20"
             ],
             "role": "evidence"
           }
@@ -560,69 +417,62 @@
         "paragraphs": []
       }
     ],
-    "words": 185,
-    "estimatedMinutes": 1.2,
-    "paragraphs": 8,
-    "secondsPerNewBeat": 9
+    "words": 203,
+    "estimatedMinutes": 1.4,
+    "paragraphs": 6,
+    "secondsPerNewBeat": 14
   },
   "claimSourceMap": {
     "rows": [
       {
         "section": "COLD_OPEN",
-        "excerpt": "Why 63,000 intersections share one control system.",
+        "excerpt": "A truck fire shut Mont Blanc until 2002.",
         "claims": []
       },
       {
         "section": "INVISIBLE_SYSTEM",
-        "excerpt": "SCATS is deployed at more than 63,000 intersections across 216 cities in 33 countries, and",
+        "excerpt": "Most people never see it. On the morning of 24 March 1999, the engine of a Belgian transpo",
         "claims": [
-          {
-            "id": "C11",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System"
-          },
           {
             "id": "C12",
             "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System"
-          }
-        ]
-      },
-      {
-        "section": "INVISIBLE_SYSTEM",
-        "excerpt": "The system coordinates signals adaptively, and an online offset calculation method improve",
-        "claims": [
+            "source": "Wikipedia — Mont Blanc Tunnel"
+          },
           {
             "id": "C13",
             "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System"
+            "source": "Wikipedia — Mont Blanc Tunnel"
           },
           {
             "id": "C14",
             "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System"
+            "source": "Wikipedia — Mont Blanc Tunnel"
           },
           {
             "id": "C15",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Mont Blanc Tunnel"
+          },
+          {
+            "id": "C16",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Mont Blanc Tunnel"
+          },
+          {
+            "id": "C17",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Mont Blanc Tunnel"
+          },
+          {
+            "id": "C18",
             "class": "CONFIRMED_FACT",
             "source": "U.S. Department of Transportation"
           }
         ]
       },
       {
-        "section": "WHERE_IT_EXISTS",
-        "excerpt": "The scope covers planning, controlling, and purchasing transport services required to phys",
-        "claims": [
-          {
-            "id": "C19",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Traffic management"
-          }
-        ]
-      },
-      {
         "section": "HOW_IT_WORKS",
-        "excerpt": "Detectors measure traffic and the SCATS software adjusts green‑light durations and interse",
+        "excerpt": "Here is how it works. Ventilation and fire systems must clear smoke and heat fast in a lon",
         "claims": [
           {
             "id": "C2",
@@ -633,10 +483,10 @@
       },
       {
         "section": "BOTTLENECK",
-        "excerpt": "The chokepoint is the central coordination engine that manages tens of thousands of inters",
+        "excerpt": "That is the bottleneck. A single tube with split management left little margin in a fire.",
         "claims": [
           {
-            "id": "C16",
+            "id": "C19",
             "class": "MODEL",
             "source": "U.S. Department of Transportation"
           }
@@ -644,26 +494,21 @@
       },
       {
         "section": "CASCADING_CONSEQUENCES",
-        "excerpt": "When central control collapses, signals revert to preset cycles, and vehicle queues length",
+        "excerpt": "The failure would not stay contained. Smoke and heat trapped drivers; the tunnel stayed sh",
         "claims": [
           {
             "id": "C1",
             "class": "CONFIRMED_FACT",
             "source": "U.S. Department of Transportation"
-          },
-          {
-            "id": "C18",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Traffic management"
           }
         ]
       },
       {
         "section": "REDUNDANCY_ALTERNATIVES",
-        "excerpt": "When the central SCATS hub loses contact, each intersection’s local controller automatical",
+        "excerpt": "So what protects the system? Unified management, shelters and truck spacing rules followed",
         "claims": [
           {
-            "id": "C17",
+            "id": "C20",
             "class": "CONFIRMED_FACT",
             "source": "U.S. Department of Transportation"
           }
@@ -684,10 +529,10 @@
       "section": "COLD_OPEN",
       "visualPurpose": "show evidence",
       "visualType": "REAL_INFRASTRUCTURE",
-      "subject": "busy intersection from above",
-      "asset": "busy intersection from above",
+      "subject": "tunnel portal under Mont Blanc",
+      "asset": "tunnel portal under Mont Blanc",
       "sourceRequirement": "government/manufacturer media or licensed industrial footage",
-      "durationEstimateSeconds": 2.8,
+      "durationEstimateSeconds": 3.2,
       "motion": "slow push-in to detail",
       "claimSupported": null,
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -697,34 +542,34 @@
       "scene": 2,
       "narrationSpan": [
         3,
-        14
+        20
       ],
       "section": "INVISIBLE_SYSTEM",
       "visualPurpose": "visualise scenario",
       "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "SCATS is installed at more than 63,000 intersections in over 216 cities in 33",
-      "asset": "diagram:INVISIBLE_SYSTEM:C11",
+      "subject": "On the morning of 24 March 1999, the engine of a Belgian transport truck",
+      "asset": "diagram:INVISIBLE_SYSTEM:C12",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 11.6,
+      "durationEstimateSeconds": 17.2,
       "motion": "slow push-in to detail",
-      "claimSupported": "C11",
+      "claimSupported": "C12",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 3,
       "narrationSpan": [
-        14,
-        26
+        20,
+        38
       ],
       "section": "INVISIBLE_SYSTEM",
       "visualPurpose": "visualise scenario",
       "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "Longer or more frequent green signals for pedestrians can reduce unsafe crossing by 34%.",
+      "subject": "The event expanded into a catastrophe which killed 39 people.",
       "asset": "diagram:INVISIBLE_SYSTEM:C13",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 12,
-      "motion": "slow push-in to detail",
+      "durationEstimateSeconds": 17.2,
+      "motion": "lateral reframe / crop to evidence",
       "claimSupported": "C13",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
@@ -732,34 +577,34 @@
     {
       "scene": 4,
       "narrationSpan": [
-        26,
-        34
+        38,
+        55
       ],
-      "section": "WHERE_IT_EXISTS",
-      "visualPurpose": "explain mechanism",
-      "visualType": "MAP",
-      "subject": "It concerns the planning, control and purchasing of transport services needed to physically move",
-      "asset": "diagram:WHERE_IT_EXISTS:C19",
+      "section": "INVISIBLE_SYSTEM",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "The fire led to a tunnel closure until 9 March 2002.",
+      "asset": "diagram:INVISIBLE_SYSTEM:C14",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 8,
-      "motion": "slow push-in to detail",
-      "claimSupported": "C19",
+      "durationEstimateSeconds": 17.2,
+      "motion": "hold, animated highlight on the claimed element",
+      "claimSupported": "C14",
       "fallbackAssetStrategy": "labelled procedural diagram",
-      "disclosure": null
+      "disclosure": "on-screen label required"
     },
     {
       "scene": 5,
       "narrationSpan": [
-        34,
-        41
+        55,
+        63
       ],
       "section": "HOW_IT_WORKS",
       "visualPurpose": "explain mechanism",
       "visualType": "PROCESS_DIAGRAM",
-      "subject": "Detectors measure traffic and software adjusts green times and offsets in real time.",
+      "subject": "Ventilation and fire systems must clear smoke and heat fast in a long, single-bore",
       "asset": "diagram:HOW_IT_WORKS:C2",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 6.4,
+      "durationEstimateSeconds": 8,
       "motion": "slow push-in to detail",
       "claimSupported": "C2",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -768,34 +613,34 @@
     {
       "scene": 6,
       "narrationSpan": [
-        41,
-        54
+        63,
+        69
       ],
       "section": "BOTTLENECK",
       "visualPurpose": "visualise scenario",
       "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "One system coordinates tens of thousands of intersections worldwide.",
-      "asset": "diagram:BOTTLENECK:C16",
+      "subject": "A single tube with split management left little margin in a fire.",
+      "asset": "diagram:BOTTLENECK:C19",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 13.2,
+      "durationEstimateSeconds": 6.4,
       "motion": "slow push-in to detail",
-      "claimSupported": "C16",
+      "claimSupported": "C19",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 7,
       "narrationSpan": [
-        54,
-        64
+        69,
+        76
       ],
       "section": "CASCADING_CONSEQUENCES",
       "visualPurpose": "explain mechanism",
       "visualType": "MAP",
-      "subject": "When control fails, signals fall back to fixed timings and queues grow.",
+      "subject": "Smoke and heat trapped drivers; the tunnel stayed shut for years.",
       "asset": "diagram:CASCADING_CONSEQUENCES:C1",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 10,
+      "durationEstimateSeconds": 6.8,
       "motion": "slow push-in to detail",
       "claimSupported": "C1",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -804,18 +649,18 @@
     {
       "scene": 8,
       "narrationSpan": [
-        64,
-        74
+        76,
+        81
       ],
       "section": "REDUNDANCY_ALTERNATIVES",
       "visualPurpose": "visualise scenario",
       "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "Local controllers keep running basic plans if central control drops.",
-      "asset": "diagram:REDUNDANCY_ALTERNATIVES:C17",
+      "subject": "Unified management, shelters and truck spacing rules followed.",
+      "asset": "diagram:REDUNDANCY_ALTERNATIVES:C20",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 10,
+      "durationEstimateSeconds": 5.2,
       "motion": "slow push-in to detail",
-      "claimSupported": "C17",
+      "claimSupported": "C20",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     }
@@ -823,13 +668,13 @@
   "assetPlan": {
     "byType": {
       "REAL_INFRASTRUCTURE": 1,
-      "TECHNICAL_ILLUSTRATION": 4,
-      "MAP": 2,
-      "PROCESS_DIAGRAM": 1
+      "TECHNICAL_ILLUSTRATION": 5,
+      "PROCESS_DIAGRAM": 1,
+      "MAP": 1
     },
     "distinctSubjects": 8,
-    "archivalLeads": 7,
-    "articleImageCandidates": 1,
+    "archivalLeads": 6,
+    "articleImageCandidates": 0,
     "overused": [],
     "licensing": "record source, licence and URL per asset in GORSEL-KAYNAKLARI.txt (existing ledger)"
   },
@@ -837,148 +682,148 @@
     "concepts": [
       {
         "id": "critical-object",
-        "primarySubject": "urban traffic control network",
+        "primarySubject": "road tunnel ventilation system",
         "background": "faint global network",
-        "visualHierarchy": "urban traffic control network isolated against a dark technical field",
+        "visualHierarchy": "road tunnel ventilation system isolated against a dark technical field",
         "emotion": "quiet tension / dependency",
-        "text": "63,000 TRAFFIC LIGHTS",
-        "textLength": 21,
-        "textWords": 3,
+        "text": "TUNNEL FIRE",
+        "textLength": 11,
+        "textWords": 2,
         "contrast": "light subject on dark field; single accent colour",
         "truthfulness": "evidence-consistent",
-        "mobileReadability": 79,
+        "mobileReadability": 100,
         "scores": {
           "Clarity": 95,
           "Curiosity": 65,
           "VisualImpact": 75,
           "TopicRecognition": 90,
-          "MobileReadability": 79,
+          "MobileReadability": 100,
           "Truthfulness": 100,
           "ChannelFit": 86
         },
-        "total": 84
+        "total": 87
       },
       {
         "id": "system-map",
-        "primarySubject": "urban traffic control network",
+        "primarySubject": "road tunnel ventilation system",
         "background": "downstream nodes dimmed",
-        "visualHierarchy": "urban traffic control network centered inside a minimal dependency map",
+        "visualHierarchy": "road tunnel ventilation system centered inside a minimal dependency map",
         "emotion": "quiet tension / dependency",
-        "text": "63,000 TRAFFIC LIGHTS",
-        "textLength": 21,
-        "textWords": 3,
+        "text": "TUNNEL FIRE",
+        "textLength": 11,
+        "textWords": 2,
         "contrast": "light subject on dark field; single accent colour",
         "truthfulness": "evidence-consistent",
-        "mobileReadability": 79,
+        "mobileReadability": 100,
         "scores": {
           "Clarity": 95,
           "Curiosity": 65,
           "VisualImpact": 75,
           "TopicRecognition": 90,
-          "MobileReadability": 79,
+          "MobileReadability": 100,
           "Truthfulness": 100,
           "ChannelFit": 86
         },
-        "total": 84
+        "total": 87
       },
       {
         "id": "scale",
-        "primarySubject": "urban traffic control network",
+        "primarySubject": "road tunnel ventilation system",
         "background": "small Earth silhouette",
-        "visualHierarchy": "extreme close view of urban traffic control network",
+        "visualHierarchy": "extreme close view of road tunnel ventilation system",
         "emotion": "quiet tension / dependency",
-        "text": "63,000 TRAFFIC LIGHTS",
-        "textLength": 21,
-        "textWords": 3,
+        "text": "TUNNEL FIRE",
+        "textLength": 11,
+        "textWords": 2,
         "contrast": "light subject on dark field; single accent colour",
         "truthfulness": "evidence-consistent",
-        "mobileReadability": 79,
+        "mobileReadability": 100,
         "scores": {
           "Clarity": 95,
           "Curiosity": 65,
           "VisualImpact": 75,
           "TopicRecognition": 90,
-          "MobileReadability": 79,
+          "MobileReadability": 100,
           "Truthfulness": 100,
           "ChannelFit": 86
         },
-        "total": 84
+        "total": 87
       },
       {
         "id": "failure",
-        "primarySubject": "urban traffic control network",
+        "primarySubject": "road tunnel ventilation system",
         "background": "restrained dark infrastructure",
-        "visualHierarchy": "urban traffic control network with one precise break or warning marker",
+        "visualHierarchy": "road tunnel ventilation system with one precise break or warning marker",
         "emotion": "quiet tension / dependency",
-        "text": "63,000 TRAFFIC LIGHTS",
-        "textLength": 21,
-        "textWords": 3,
+        "text": "TUNNEL FIRE",
+        "textLength": 11,
+        "textWords": 2,
         "contrast": "light subject on dark field; single accent colour",
         "truthfulness": "evidence-consistent",
-        "mobileReadability": 79,
+        "mobileReadability": 100,
         "scores": {
           "Clarity": 95,
           "Curiosity": 65,
           "VisualImpact": 75,
           "TopicRecognition": 90,
-          "MobileReadability": 79,
+          "MobileReadability": 100,
           "Truthfulness": 100,
           "ChannelFit": 86
         },
-        "total": 84
+        "total": 87
       },
       {
         "id": "replacement",
-        "primarySubject": "urban traffic control network",
+        "primarySubject": "road tunnel ventilation system",
         "background": "lead-time clock",
-        "visualHierarchy": "urban traffic control network beside an empty replacement outline",
+        "visualHierarchy": "road tunnel ventilation system beside an empty replacement outline",
         "emotion": "quiet tension / dependency",
-        "text": "63,000 TRAFFIC LIGHTS",
-        "textLength": 21,
-        "textWords": 3,
+        "text": "TUNNEL FIRE",
+        "textLength": 11,
+        "textWords": 2,
         "contrast": "light subject on dark field; single accent colour",
         "truthfulness": "evidence-consistent",
-        "mobileReadability": 79,
+        "mobileReadability": 100,
         "scores": {
           "Clarity": 95,
           "Curiosity": 65,
           "VisualImpact": 75,
           "TopicRecognition": 90,
-          "MobileReadability": 79,
+          "MobileReadability": 100,
           "Truthfulness": 100,
           "ChannelFit": 86
         },
-        "total": 84
+        "total": 87
       }
     ],
     "selected": {
       "id": "critical-object",
-      "primarySubject": "urban traffic control network",
+      "primarySubject": "road tunnel ventilation system",
       "background": "faint global network",
-      "visualHierarchy": "urban traffic control network isolated against a dark technical field",
+      "visualHierarchy": "road tunnel ventilation system isolated against a dark technical field",
       "emotion": "quiet tension / dependency",
-      "text": "63,000 TRAFFIC LIGHTS",
-      "textLength": 21,
-      "textWords": 3,
+      "text": "TUNNEL FIRE",
+      "textLength": 11,
+      "textWords": 2,
       "contrast": "light subject on dark field; single accent colour",
       "truthfulness": "evidence-consistent",
-      "mobileReadability": 79,
+      "mobileReadability": 100,
       "scores": {
         "Clarity": 95,
         "Curiosity": 65,
         "VisualImpact": 75,
         "TopicRecognition": 90,
-        "MobileReadability": 79,
+        "MobileReadability": 100,
         "Truthfulness": 100,
         "ChannelFit": 86
       },
-      "total": 84
+      "total": 87
     },
     "meetsMinimum": true
   },
   "titles": {
     "selected": {
-      "title": "What Depends on Urban Traffic Control Network?",
+      "title": "What Depends on Road Tunnel Ventilation System?",
       "source": "what-depends",
       "pattern": "question",
       "scores": {
@@ -989,12 +834,12 @@
         "searchIntent": 95,
         "channelIdentity": 74,
         "ctrPotential": 87,
-        "novelty": 100,
+        "novelty": 91,
         "evergreenPotential": 85,
         "consequence": 80,
         "compactness": 100,
         "recognizability": 80,
-        "nonRedundancy": 100,
+        "nonRedundancy": 91,
         "factualIntegrity": 100,
         "historicalPerformanceSimilarity": 50,
         "patternFreshness": 70
@@ -1010,7 +855,7 @@
     "count": 31,
     "candidates": [
       {
-        "title": "What Depends on Urban Traffic Control Network?",
+        "title": "What Depends on Road Tunnel Ventilation System?",
         "source": "what-depends",
         "pattern": "question",
         "scores": {
@@ -1021,12 +866,12 @@
           "searchIntent": 95,
           "channelIdentity": 74,
           "ctrPotential": 87,
-          "novelty": 100,
+          "novelty": 91,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 91,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1039,7 +884,7 @@
         "misleading": false
       },
       {
-        "title": "What Happens If Urban Traffic Control Network Fails?",
+        "title": "What Happens If Road Tunnel Ventilation System Fails?",
         "source": "what-if-fails",
         "pattern": "question",
         "scores": {
@@ -1052,7 +897,7 @@
           "ctrPotential": 87,
           "novelty": 82,
           "evergreenPotential": 85,
-          "consequence": 95,
+          "consequence": 80,
           "compactness": 100,
           "recognizability": 80,
           "nonRedundancy": 82,
@@ -1068,7 +913,7 @@
         "misleading": false
       },
       {
-        "title": "Why Urban Traffic Control Network Is so Hard to Replace",
+        "title": "Why Road Tunnel Ventilation System Is so Hard to Replace",
         "source": "hard-to-replace",
         "pattern": "why",
         "scores": {
@@ -1079,12 +924,12 @@
           "searchIntent": 95,
           "channelIdentity": 74,
           "ctrPotential": 67,
-          "novelty": 100,
+          "novelty": 92,
           "evergreenPotential": 85,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 92,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1097,65 +942,7 @@
         "misleading": false
       },
       {
-        "title": "Inside Urban Traffic Control Network: The Complete System Map",
-        "source": "system-map",
-        "pattern": "inside",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 67,
-          "novelty": 94,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 98,
-          "recognizability": 80,
-          "nonRedundancy": 94,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 82,
-        "patternPenalty": 0,
-        "templateNaturalnessPenalty": 10,
-        "adjustedTotal": 72,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Urban Traffic Control Network: Where It Is, How It Works, What Depends on It",
-        "source": "where-how-what",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 76,
-          "curiosity": 76,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 77,
-          "novelty": 100,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 40,
-          "recognizability": 80,
-          "nonRedundancy": 100,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 82,
-        "patternPenalty": 0,
-        "templateNaturalnessPenalty": 10,
-        "adjustedTotal": 72,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Why Urban Traffic Control Network Matters More Than You Think",
+        "title": "Why Road Tunnel Ventilation System Matters More Than You Think",
         "source": "matters-more",
         "pattern": "why",
         "scores": {
@@ -1166,12 +953,12 @@
           "searchIntent": 95,
           "channelIdentity": 62,
           "ctrPotential": 67,
-          "novelty": 100,
+          "novelty": 92,
           "evergreenPotential": 85,
           "consequence": 42,
-          "compactness": 98,
+          "compactness": 96,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 92,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1184,7 +971,36 @@
         "misleading": false
       },
       {
-        "title": "Urban Traffic Control Network: The System Behind the System",
+        "title": "Inside Road Tunnel Ventilation System: The Complete System Map",
+        "source": "system-map",
+        "pattern": "inside",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 67,
+          "novelty": 93,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 96,
+          "recognizability": 80,
+          "nonRedundancy": 93,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 81,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "adjustedTotal": 71,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Road Tunnel Ventilation System: The System Behind the System",
         "source": "system-behind-system",
         "pattern": "label-colon",
         "scores": {
@@ -1193,56 +1009,58 @@
           "specificity": 77,
           "truthfulness": 100,
           "searchIntent": 83,
-          "channelIdentity": 74,
+          "channelIdentity": 62,
           "ctrPotential": 67,
-          "novelty": 93,
+          "novelty": 91,
           "evergreenPotential": 85,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 93,
+          "nonRedundancy": 91,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
         },
-        "total": 82,
+        "total": 81,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
-        "adjustedTotal": 72,
+        "adjustedTotal": 71,
         "unsupportedWords": [],
         "misleading": false
       },
       {
-        "title": "The Hidden System Behind Urban Traffic Control Network",
-        "source": "hidden-system",
-        "pattern": "statement",
+        "title": "Road Tunnel Ventilation System: Where It Is, How It Works, What Depends on It",
+        "source": "where-how-what",
+        "pattern": "label-colon",
         "scores": {
-          "clarity": 100,
+          "clarity": 75,
           "curiosity": 76,
           "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 75,
+          "truthfulness": 85,
+          "searchIntent": 83,
           "channelIdentity": 74,
-          "ctrPotential": 79,
+          "ctrPotential": 77,
           "novelty": 93,
           "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
+          "consequence": 80,
+          "compactness": 38,
           "recognizability": 80,
           "nonRedundancy": 93,
-          "factualIntegrity": 100,
+          "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
-        "total": 84,
-        "patternPenalty": 4,
+        "total": 80,
+        "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
         "adjustedTotal": 70,
-        "unsupportedWords": [],
+        "unsupportedWords": [
+          "where"
+        ],
         "misleading": false
       },
       {
-        "title": "Who Makes Urban Traffic Control Network — And Why so Few Can",
+        "title": "Who Makes Road Tunnel Ventilation System — And Why so Few Can",
         "source": "who-makes",
         "pattern": "two-beat",
         "scores": {
@@ -1253,12 +1071,12 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 67,
-          "novelty": 100,
+          "novelty": 92,
           "evergreenPotential": 85,
           "consequence": 42,
-          "compactness": 86,
+          "compactness": 84,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 92,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1271,7 +1089,65 @@
         "misleading": false
       },
       {
-        "title": "Urban Traffic Control Network — A Critical Systems Documentary",
+        "title": "Why Tunnel Ventilation Is Life or Death",
+        "source": "editorial",
+        "pattern": "why",
+        "scores": {
+          "clarity": 99,
+          "curiosity": 58,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 42,
+          "channelIdentity": 60,
+          "ctrPotential": 57,
+          "novelty": 90,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 69,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "The Hidden System Behind Road Tunnel Ventilation System",
+        "source": "hidden-system",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 76,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 79,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 83,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 10,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Road Tunnel Ventilation System — A Critical Systems Documentary",
         "source": "documentary",
         "pattern": "two-beat",
         "scores": {
@@ -1280,27 +1156,27 @@
           "specificity": 77,
           "truthfulness": 100,
           "searchIntent": 83,
-          "channelIdentity": 86,
+          "channelIdentity": 74,
           "ctrPotential": 55,
-          "novelty": 100,
+          "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 42,
-          "compactness": 96,
+          "compactness": 94,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 93,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
         },
-        "total": 79,
+        "total": 78,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
-        "adjustedTotal": 69,
+        "adjustedTotal": 68,
         "unsupportedWords": [],
         "misleading": false
       },
       {
-        "title": "Why Urban Traffic Control Network Became Irreplaceable",
+        "title": "Why Road Tunnel Ventilation System Became Irreplaceable",
         "source": "became-irreplaceable",
         "pattern": "why",
         "scores": {
@@ -1311,12 +1187,12 @@
           "searchIntent": 95,
           "channelIdentity": 74,
           "ctrPotential": 67,
-          "novelty": 100,
+          "novelty": 92,
           "evergreenPotential": 85,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 92,
           "factualIntegrity": 70,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1332,7 +1208,36 @@
         "misleading": false
       },
       {
-        "title": "How the World Depends on Urban Traffic Control Network",
+        "title": "The Tunnel Fire That Closed the Alps for 3 Years",
+        "source": "editorial",
+        "pattern": "the-x-that",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 62,
+          "truthfulness": 100,
+          "searchIntent": 30,
+          "channelIdentity": 60,
+          "ctrPotential": 55,
+          "novelty": 20,
+          "evergreenPotential": 75,
+          "consequence": 57,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 20,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 67,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 67,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "How the World Depends on Road Tunnel Ventilation System",
         "source": "world-depends",
         "pattern": "how",
         "scores": {
@@ -1343,12 +1248,12 @@
           "searchIntent": 87,
           "channelIdentity": 74,
           "ctrPotential": 75,
-          "novelty": 100,
+          "novelty": 92,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 92,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1361,7 +1266,7 @@
         "misleading": false
       },
       {
-        "title": "Urban Traffic Control Network: The Bottleneck Holding up Modern Life",
+        "title": "Road Tunnel Ventilation System: The Bottleneck Holding up Modern Life",
         "source": "bottleneck",
         "pattern": "label-colon",
         "scores": {
@@ -1372,12 +1277,12 @@
           "searchIntent": 83,
           "channelIdentity": 74,
           "ctrPotential": 55,
-          "novelty": 100,
+          "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 42,
-          "compactness": 84,
+          "compactness": 82,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 93,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1392,7 +1297,7 @@
         "misleading": false
       },
       {
-        "title": "How Urban Traffic Control Network Became Critical Infrastructure",
+        "title": "How Road Tunnel Ventilation System Became Critical Infrastructure",
         "source": "became-critical",
         "pattern": "how",
         "scores": {
@@ -1403,12 +1308,12 @@
           "searchIntent": 95,
           "channelIdentity": 86,
           "ctrPotential": 67,
-          "novelty": 100,
+          "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 42,
-          "compactness": 92,
+          "compactness": 90,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 93,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1423,23 +1328,23 @@
         "misleading": false
       },
       {
-        "title": "Urban Traffic Control Network Explained: Dependency, Bottleneck, Resilience",
+        "title": "Road Tunnel Ventilation System Explained: Dependency, Bottleneck, Resilience",
         "source": "explained-dbr",
         "pattern": "label-colon",
         "scores": {
-          "clarity": 93,
+          "clarity": 91,
           "curiosity": 40,
           "specificity": 77,
           "truthfulness": 85,
           "searchIntent": 83,
           "channelIdentity": 86,
           "ctrPotential": 53,
-          "novelty": 94,
+          "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 80,
-          "compactness": 70,
+          "compactness": 68,
           "recognizability": 80,
-          "nonRedundancy": 94,
+          "nonRedundancy": 93,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1454,7 +1359,7 @@
         "misleading": false
       },
       {
-        "title": "Mapping the Urban Traffic Control Network Dependency Chain",
+        "title": "Mapping the Road Tunnel Ventilation System Dependency Chain",
         "source": "mapping",
         "pattern": "statement",
         "scores": {
@@ -1483,7 +1388,7 @@
         "misleading": false
       },
       {
-        "title": "Urban Traffic Control Network: One Bottleneck, Global Consequences",
+        "title": "Road Tunnel Ventilation System: One Bottleneck, Global Consequences",
         "source": "global-consequences",
         "pattern": "label-colon",
         "scores": {
@@ -1494,12 +1399,12 @@
           "searchIntent": 83,
           "channelIdentity": 74,
           "ctrPotential": 55,
-          "novelty": 100,
+          "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 80,
-          "compactness": 88,
+          "compactness": 86,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 93,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1514,65 +1419,38 @@
         "misleading": false
       },
       {
-        "title": "The System Running 63,000 Traffic Lights",
-        "source": "editorial",
-        "pattern": "statement",
+        "title": "The Single Point of Failure: Road Tunnel Ventilation System",
+        "source": "single-point",
+        "pattern": "label-colon",
         "scores": {
           "clarity": 100,
           "curiosity": 40,
-          "specificity": 62,
-          "truthfulness": 100,
-          "searchIntent": 30,
-          "channelIdentity": 72,
-          "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 75,
-          "consequence": 42,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 63,
+          "novelty": 93,
+          "evergreenPotential": 85,
+          "consequence": 80,
           "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 100,
-          "factualIntegrity": 100,
+          "recognizability": 80,
+          "nonRedundancy": 93,
+          "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
-        "total": 68,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
+        "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
         "adjustedTotal": 64,
-        "unsupportedWords": [],
+        "unsupportedWords": [
+          "point"
+        ],
         "misleading": false
       },
       {
-        "title": "The Hidden System Running Your Traffic Lights",
-        "source": "editorial",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 30,
-          "channelIdentity": 72,
-          "ctrPotential": 57,
-          "novelty": 92,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 92,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 68,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 64,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Cascading Failure Hidden in Urban Traffic Control Network",
+        "title": "The Cascading Failure Hidden in Road Tunnel Ventilation System",
         "source": "cascade",
         "pattern": "statement",
         "scores": {
@@ -1586,7 +1464,7 @@
           "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 80,
-          "compactness": 98,
+          "compactness": 96,
           "recognizability": 80,
           "nonRedundancy": 93,
           "factualIntegrity": 85,
@@ -1603,68 +1481,36 @@
         "misleading": false
       },
       {
-        "title": "How Adaptive Signals Keep Cities Moving",
+        "title": "The Fire That Closed the Mont Blanc Tunnel",
         "source": "editorial",
-        "pattern": "how",
+        "pattern": "the-x-that",
         "scores": {
-          "clarity": 99,
-          "curiosity": 58,
+          "clarity": 100,
+          "curiosity": 40,
           "specificity": 47,
           "truthfulness": 100,
-          "searchIntent": 42,
+          "searchIntent": 30,
           "channelIdentity": 60,
-          "ctrPotential": 57,
-          "novelty": 100,
+          "ctrPotential": 45,
+          "novelty": 66,
           "evergreenPotential": 75,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 38,
-          "nonRedundancy": 100,
+          "nonRedundancy": 66,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
-        "total": 69,
-        "patternPenalty": 7,
+        "total": 63,
+        "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 62,
+        "adjustedTotal": 63,
         "unsupportedWords": [],
         "misleading": false
       },
       {
-        "title": "The Single Point of Failure: Urban Traffic Control Network",
-        "source": "single-point",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 70,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 63,
-          "novelty": 100,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 100,
-          "factualIntegrity": 70,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 72,
-        "patternPenalty": 0,
-        "templateNaturalnessPenalty": 10,
-        "adjustedTotal": 62,
-        "unsupportedWords": [
-          "single",
-          "point"
-        ],
-        "misleading": false
-      },
-      {
-        "title": "The Backup Plan for Urban Traffic Control Network",
+        "title": "The Backup Plan for Road Tunnel Ventilation System",
         "source": "backup-plan",
         "pattern": "statement",
         "scores": {
@@ -1675,12 +1521,12 @@
           "searchIntent": 75,
           "channelIdentity": 62,
           "ctrPotential": 55,
-          "novelty": 100,
+          "novelty": 92,
           "evergreenPotential": 85,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 92,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1693,38 +1539,7 @@
         "misleading": false
       },
       {
-        "title": "Where the Urban Traffic Control Network Dependency Starts",
-        "source": "dependency-start",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 63,
-          "novelty": 93,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 93,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 76,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "adjustedTotal": 62,
-        "unsupportedWords": [
-          "starts"
-        ],
-        "misleading": false
-      },
-      {
-        "title": "If Urban Traffic Control Network Stopped Tomorrow",
+        "title": "If Road Tunnel Ventilation System Stopped Tomorrow",
         "source": "stopped-tomorrow",
         "pattern": "statement",
         "scores": {
@@ -1735,12 +1550,12 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 63,
-          "novelty": 100,
+          "novelty": 92,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 92,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1755,7 +1570,7 @@
         "misleading": false
       },
       {
-        "title": "The Invisible Infrastructure of Urban Traffic Control Network",
+        "title": "The Invisible Infrastructure of Road Tunnel Ventilation System",
         "source": "invisible",
         "pattern": "statement",
         "scores": {
@@ -1766,12 +1581,12 @@
           "searchIntent": 75,
           "channelIdentity": 74,
           "ctrPotential": 55,
-          "novelty": 100,
+          "novelty": 92,
           "evergreenPotential": 85,
           "consequence": 42,
-          "compactness": 98,
+          "compactness": 96,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 92,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1786,7 +1601,7 @@
         "misleading": false
       },
       {
-        "title": "The Chain Reaction If Urban Traffic Control Network Fails",
+        "title": "The Chain Reaction If Road Tunnel Ventilation System Fails",
         "source": "failure-chain",
         "pattern": "statement",
         "scores": {
@@ -1817,7 +1632,7 @@
         "misleading": false
       },
       {
-        "title": "How Urban Traffic Control Network Holds the Chain Together",
+        "title": "How Road Tunnel Ventilation System Holds the Chain Together",
         "source": "holds-chain",
         "pattern": "how",
         "scores": {
@@ -1828,12 +1643,12 @@
           "searchIntent": 95,
           "channelIdentity": 62,
           "ctrPotential": 67,
-          "novelty": 100,
+          "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 93,
           "factualIntegrity": 70,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1849,7 +1664,39 @@
         "misleading": false
       },
       {
-        "title": "The Global Chain Built on Urban Traffic Control Network",
+        "title": "Where the Road Tunnel Ventilation System Dependency Starts",
+        "source": "dependency-start",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 70,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 63,
+          "novelty": 93,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 93,
+          "factualIntegrity": 70,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 74,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 10,
+        "adjustedTotal": 60,
+        "unsupportedWords": [
+          "where",
+          "starts"
+        ],
+        "misleading": false
+      },
+      {
+        "title": "The Global Chain Built on Road Tunnel Ventilation System",
         "source": "global-chain",
         "pattern": "statement",
         "scores": {
@@ -1860,12 +1707,12 @@
           "searchIntent": 75,
           "channelIdentity": 62,
           "ctrPotential": 55,
-          "novelty": 100,
+          "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 93,
           "factualIntegrity": 70,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1881,7 +1728,7 @@
         "misleading": false
       },
       {
-        "title": "Urban Traffic Control Network: The Risk Hidden in Plain Sight",
+        "title": "Road Tunnel Ventilation System: The Risk Hidden in Plain Sight",
         "source": "hidden-risk",
         "pattern": "label-colon",
         "scores": {
@@ -1892,12 +1739,12 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 67,
-          "novelty": 94,
+          "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 42,
-          "compactness": 98,
+          "compactness": 96,
           "recognizability": 80,
-          "nonRedundancy": 94,
+          "nonRedundancy": 93,
           "factualIntegrity": 55,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1914,7 +1761,7 @@
         "misleading": true
       },
       {
-        "title": "Urban Traffic Control Network: Redundancy, Risk and Recovery",
+        "title": "Road Tunnel Ventilation System: Redundancy, Risk and Recovery",
         "source": "redundancy",
         "pattern": "label-colon",
         "scores": {
@@ -1925,12 +1772,12 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 55,
-          "novelty": 100,
+          "novelty": 93,
           "evergreenPotential": 85,
           "consequence": 42,
-          "compactness": 100,
+          "compactness": 98,
           "recognizability": 80,
-          "nonRedundancy": 100,
+          "nonRedundancy": 93,
           "factualIntegrity": 55,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1952,21 +1799,21 @@
     "shorts": [
       {
         "angle": "invisible-system",
-        "hook": "City traffic flow depends on adaptive control systems coordinating signals.",
-        "hookFamily": "hidden_cause",
-        "hookScore": 76,
+        "hook": "The tunnel is 11.611 km (7.215 mi) in length.",
+        "hookFamily": "impossible_sounding_fact",
+        "hookScore": 77,
         "first3SecondPlan": {
-          "narration": "City traffic flow depends on adaptive control systems coordinating signals.",
+          "narration": "The tunnel is 11.611 km (7.215 mi) in length.",
           "firstFrame": {
-            "description": "urban traffic control network isolated, dependency lines to what fails without it",
+            "description": "road tunnel ventilation system isolated, dependency lines to what fails without it",
             "source": "procedural render",
             "startAtSeconds": 0,
             "sourceClass": "TECHNICAL_ILLUSTRATION",
             "communicates": "dependency",
             "rule": "labelled illustration; no logo, no establishing shot"
           },
-          "visual": "urban traffic control network isolated, dependency lines to what fails without it",
-          "onScreenText": "63,000 TRAFFIC LIGHTS",
+          "visual": "road tunnel ventilation system isolated, dependency lines to what fails without it",
+          "onScreenText": "11.611 KM",
           "motion": "dependency lines draw outward in 0.6 s, then hard cut",
           "cutTiming": [
             0,
@@ -1977,75 +1824,37 @@
           "communicates": "dependency"
         },
         "miniNarrative": [
-          "SCATS is installed at more than 63,000 intersections in over 216 cities in 33 countries.",
-          "In Australia, where the system was first developed, the majority of signalised intersections are SCATS operated (around 11,000).",
-          "Longer or more frequent green signals for pedestrians can reduce unsafe crossing by 34%.",
-          "The new method of on-line offset calculation showed an 8% improvement over the existing precalculated offset plans."
+          "On the morning of 24 March 1999, the engine of a Belgian transport truck carrying volatile freight caught fire in the tunnel.",
+          "The event expanded into a catastrophe which killed 39 people.",
+          "The fire led to a tunnel closure until 9 March 2002.",
+          "It reduces the route from France to Turin by 50 kilometres (30 miles) and to Milan by 100 km (60 mi)."
         ],
-        "payoff": "City traffic flow depends on adaptive control systems coordinating signals.",
+        "payoff": "Road freight between France and Italy depends on the Mont Blanc Tunnel.",
         "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
         "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
         "standalone": true,
         "longformBridge": "This is only one dependency. The full system is mapped in the linked episode.",
         "claimIds": [
-          "C11",
           "C12",
           "C13",
           "C14",
-          "C15"
-        ]
-      },
-      {
-        "angle": "cascading-consequences",
-        "hook": "Traffic management is a key branch within logistics.",
-        "hookFamily": "countdown",
-        "hookScore": 76,
-        "first3SecondPlan": {
-          "narration": "Traffic management is a key branch within logistics.",
-          "firstFrame": {
-            "description": "urban traffic control network isolated, dependency lines to what fails without it",
-            "source": "procedural render",
-            "startAtSeconds": 0,
-            "sourceClass": "TECHNICAL_ILLUSTRATION",
-            "communicates": "dependency",
-            "rule": "labelled illustration; no logo, no establishing shot"
-          },
-          "visual": "urban traffic control network isolated, dependency lines to what fails without it",
-          "onScreenText": "63,000 TRAFFIC LIGHTS",
-          "motion": "dependency lines draw outward in 0.6 s, then hard cut",
-          "cutTiming": [
-            0,
-            1,
-            2
-          ],
-          "soundCue": "single low hit on the first cut",
-          "communicates": "dependency"
-        },
-        "miniNarrative": [
-          "When control fails, signals fall back to fixed timings and queues grow.",
-          "Traffic management is a key branch within logistics."
-        ],
-        "payoff": "Traffic management is a key branch within logistics.",
-        "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
-        "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
-        "standalone": true,
-        "longformBridge": "This is only one dependency. The full system is mapped in the linked episode.",
-        "claimIds": [
-          "C1",
+          "C15",
+          "C16",
+          "C17",
           "C18"
         ]
       }
     ],
-    "count": 2,
+    "count": 1,
     "meetsMinimum": false
   },
   "relatedShorts": [
     {
       "short_video_id": "fGE8kZOaQZ4",
       "short_slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
-      "relationship_type": "SAME_SERIES",
-      "relationship_reason": "same series; subject overlap 0.00, same cluster ROADS AND BRIDGES",
-      "score": 0.4
+      "relationship_type": "SAME_SYSTEM",
+      "relationship_reason": "same system; subject overlap 1.00, same cluster ROADS AND BRIDGES",
+      "score": 0.85
     }
   ],
   "nextVideos": {
@@ -2082,7 +1891,7 @@
     "playlist": "ROADS AND BRIDGES",
     "subscribe_element": true,
     "timing": {
-      "startSeconds": 52,
+      "startSeconds": 64,
       "durationSeconds": 20,
       "note": "final 20 s; narration must not end abruptly"
     },
@@ -2090,12 +1899,12 @@
     "apiSupport": "UNSUPPORTED — YouTube Data API v3 has no end-screen write endpoint; configure in Studio (task emitted)."
   },
   "cost": {
-    "estimated_production_cost": 0.17,
+    "estimated_production_cost": 0.04,
     "currency": "USD",
     "breakdown": {
-      "llmTokens": 8665,
-      "ttsMinutes": 1.2,
-      "renderMinutesCpu": 3.6,
+      "llmTokens": 0,
+      "ttsMinutes": 1.4,
+      "renderMinutesCpu": 4.2,
       "assets": 8,
       "youtubeQuotaUnits": 1650
     },
@@ -2105,31 +1914,34 @@
     "LongFormProductionReadinessScore": 82,
     "decision": "BLOCK",
     "dimensions": {
-      "TopicDepth": 81,
-      "NarrativeQuality": 71,
-      "Hook": 84,
-      "ResearchQuality": 86,
+      "TopicDepth": 87,
+      "NarrativeQuality": 64,
+      "Hook": 81,
+      "ResearchQuality": 87,
       "SourceCoverage": 90,
       "FactualAccuracy": 100,
-      "ScriptRetention": 46,
+      "ScriptRetention": 47,
       "VisualCoverage": 90,
       "AudioQuality": null,
       "Editing": null,
-      "Thumbnail": 84,
+      "Thumbnail": 87,
       "Title": 75,
       "CopyrightSafety": 90,
       "Disclosure": 95,
       "EndScreenPlan": 90,
-      "ShortFunnelPotential": 60
+      "ShortFunnelPotential": 50
     },
     "unmeasured": [
       "AudioQuality",
       "Editing"
     ],
     "hardFails": [
-      "INSUFFICIENT_DEPTH: evidence supports ~1.2 min; target 8–12 min — not padded"
+      "INSUFFICIENT_DEPTH: evidence supports ~1.4 min; target 8–12 min — not padded",
+      "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
     ],
-    "notes": [],
+    "notes": [
+      "LLM generation safely deferred at section:CASCADING_CONSEQUENCES; resume from generation/inside-the-system-built-around-road-tunnel-ventilation-system.json"
+    ],
     "thresholds": {
       "publish": 85,
       "review": 70
@@ -2142,14 +1954,14 @@
   "summary": {
     "Channel": "CriticalThread",
     "Content Type": "LONG_FORM",
-    "Topic": "The System Running 63,000 Traffic Lights",
-    "LongFormPotentialScore": 79,
+    "Topic": "The Tunnel Fire That Closed the Alps for 3 Years",
+    "LongFormPotentialScore": 78,
     "Topic Bucket": "A",
-    "Cold Open": "Why 63,000 intersections share one control system.",
+    "Cold Open": "A truck fire shut Mont Blanc until 2002.",
     "Target Duration": "8–12 min",
-    "Actual Duration": "~1.2 min (script estimate, llm:groq:openai/gpt-oss-120b)",
+    "Actual Duration": "~1.4 min (script estimate, deterministic-evidence)",
     "Scenes": 8,
-    "Thumbnail Score": 84,
+    "Thumbnail Score": 87,
     "Title Score": 75,
     "LongFormProductionReadinessScore": "82 → BLOCK",
     "Related Shorts": "inside-the-system-built-around-road-tunnel-ventilation-system",

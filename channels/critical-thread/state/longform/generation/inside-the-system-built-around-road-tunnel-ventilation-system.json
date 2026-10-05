@@ -1,0 +1,384 @@
+{
+  "schema": "longform-generation/2",
+  "channel": "critical-thread",
+  "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
+  "topicHash": "1e025681c0ef:20",
+  "status": "DEFERRED",
+  "createdAt": "2026-10-05T15:04:22.736Z",
+  "updatedAt": "2026-10-05T15:04:22.736Z",
+  "provider": {
+    "primary": "groq",
+    "fallback": null
+  },
+  "factPack": {
+    "topic": "The Tunnel Fire That Closed the Alps for 3 Years",
+    "central_question": "How did one truck fire close a key Alpine tunnel for three years?",
+    "audience_promise": "Answer one precise question about road tunnel ventilation system using only documented evidence.",
+    "verified_facts": [
+      {
+        "id": "C1",
+        "text": "Smoke and heat trapped drivers; the tunnel stayed shut for years.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      },
+      {
+        "id": "C2",
+        "text": "Ventilation and fire systems must clear smoke and heat fast in a long, single-bore tunnel.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      },
+      {
+        "id": "C3",
+        "text": "The key figure: 39 deaths.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      },
+      {
+        "id": "C4",
+        "text": "A truck fire shut Mont Blanc until 2002.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C5",
+        "text": "The 1999 blaze started in a single truck.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C6",
+        "text": "39 people died.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C7",
+        "text": "The tunnel stayed closed until March 2002.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C8",
+        "text": "It's 11.611 kilometres long, in a single tube.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C9",
+        "text": "It cuts the drive from France to Milan by 100 kilometres.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C10",
+        "text": "Vehicles must now keep 150 metres apart.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C11",
+        "text": "That's why a tunnel's ventilation matters as much as its length.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C12",
+        "text": "On the morning of 24 March 1999, the engine of a Belgian transport truck carrying volatile freight caught fire in the tunnel.",
+        "source": "Wikipedia — Mont Blanc Tunnel",
+        "rewrite": false
+      },
+      {
+        "id": "C13",
+        "text": "The event expanded into a catastrophe which killed 39 people.",
+        "source": "Wikipedia — Mont Blanc Tunnel",
+        "rewrite": false
+      },
+      {
+        "id": "C14",
+        "text": "The fire led to a tunnel closure until 9 March 2002.",
+        "source": "Wikipedia — Mont Blanc Tunnel",
+        "rewrite": false
+      },
+      {
+        "id": "C15",
+        "text": "It reduces the route from France to Turin by 50 kilometres (30 miles) and to Milan by 100 km (60 mi).",
+        "source": "Wikipedia — Mont Blanc Tunnel",
+        "rewrite": false
+      },
+      {
+        "id": "C16",
+        "text": "The tunnel is 11.611 km (7.215 mi) in length, 8.6 m (28 ft) in width, and 4.35 m (14.3 ft) in height.",
+        "source": "Wikipedia — Mont Blanc Tunnel",
+        "rewrite": false
+      },
+      {
+        "id": "C17",
+        "text": "Within the tunnel, a minimum speed of 50 km/h and a maximum speed of 70 km/h applies, while the prescribed distance between vehicles is 150 m.",
+        "source": "Wikipedia — Mont Blanc Tunnel",
+        "rewrite": false
+      },
+      {
+        "id": "C18",
+        "text": "Road freight between France and Italy depends on the Mont Blanc Tunnel.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      },
+      {
+        "id": "C20",
+        "text": "Unified management, shelters and truck spacing rules followed.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      }
+    ],
+    "bounded_interpretations": [
+      {
+        "id": "C19",
+        "text": "A single tube with split management left little margin in a fire.",
+        "class": "MODEL",
+        "source": "U.S. Department of Transportation"
+      }
+    ],
+    "uncertain_claims": [],
+    "visual_leads": [
+      {
+        "text": "tunnel portal under Mont Blanc",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "truck fire inside a tunnel",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "smoke flow diagram",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "closed tunnel sign",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "new safety shelters",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "Alpine detour route map",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      }
+    ]
+  },
+  "blueprint": {
+    "central_question": "How did one truck fire close a key Alpine tunnel for three years?",
+    "audience_promise": "Answer one precise question about road tunnel ventilation system using only documented evidence.",
+    "narrative_angle": "A forensic, evidence‑led investigation of the Mont Blanc Tunnel’s single‑tube design and ventilation limits that turned a single truck fire into a three‑year Alpine shutdown, exposing the hidden dependencies of trans‑Alpine freight.",
+    "hook_candidates": [
+      "A single truck fire traps smoke, heat and 39 lives, sealing the 11.6 km Mont Blanc Tunnel for three years.",
+      "The Alpine lifeline that cuts 100 km off the France‑Milan route sits idle for 1,095 days – why?",
+      "Inside the tunnel, a 150 m vehicle‑spacing rule and a single ventilation shaft become the difference between safety and catastrophe."
+    ],
+    "retention_beats": [
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object]."
+    ],
+    "uncertain_claims": [],
+    "section_plan": [
+      {
+        "section": "COLD_OPEN",
+        "question": "What is the unresolved consequence the viewer sees first?",
+        "claimIds": [
+          "C1",
+          "C4",
+          "C5",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11"
+        ]
+      },
+      {
+        "section": "INVISIBLE_SYSTEM",
+        "question": "What is it?",
+        "claimIds": [
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C16",
+          "C17",
+          "C18"
+        ]
+      },
+      {
+        "section": "WHERE_IT_EXISTS",
+        "question": "Where is it?",
+        "claimIds": []
+      },
+      {
+        "section": "HOW_IT_WORKS",
+        "question": "How does it work?",
+        "claimIds": [
+          "C2"
+        ]
+      },
+      {
+        "section": "WHAT_DEPENDS_ON_IT",
+        "question": "What depends on it?",
+        "claimIds": []
+      },
+      {
+        "section": "BOTTLENECK",
+        "question": "Where is the chokepoint?",
+        "claimIds": [
+          "C19"
+        ]
+      },
+      {
+        "section": "WHY_THE_BOTTLENECK_EXISTS",
+        "question": "Why can't it be replaced quickly?",
+        "claimIds": []
+      },
+      {
+        "section": "FAILURE_SCENARIO",
+        "question": "What if it fails?",
+        "claimIds": []
+      },
+      {
+        "section": "CASCADING_CONSEQUENCES",
+        "question": "What fails next?",
+        "claimIds": [
+          "C1"
+        ]
+      },
+      {
+        "section": "REDUNDANCY_ALTERNATIVES",
+        "question": "What protects the system?",
+        "claimIds": [
+          "C20"
+        ]
+      },
+      {
+        "section": "FINAL_SYSTEM_INSIGHT",
+        "question": "What does this reveal about the modern world?",
+        "claimIds": []
+      }
+    ]
+  },
+  "sections": [
+    {
+      "section": "COLD_OPEN",
+      "paragraphs": [
+        {
+          "text": "A truck fire shut Mont Blanc until 2002.",
+          "claims": [],
+          "role": "cold-open"
+        }
+      ]
+    },
+    {
+      "section": "INVISIBLE_SYSTEM",
+      "paragraphs": [
+        {
+          "text": "On 24 March 1999 a Belgian truck’s engine ignited inside the Mont Blanc Tunnel, the blaze killing 39 people and forcing the tunnel to remain closed until 9 March 2002.",
+          "claims": [
+            "C12",
+            "C13",
+            "C14"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "The tunnel spans 11.611 km, is 8.6 m wide and 4.35 m high; traffic is limited to 50–70 km/h with a 150 m vehicle spacing, and the crossing shortens the France‑Turin route by about 50 km and the France‑Milan route by roughly 100 km.",
+          "claims": [
+            "C15",
+            "C16",
+            "C17"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Road freight between France and Italy relies on this crossing.",
+          "claims": [
+            "C18"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHERE_IT_EXISTS",
+      "paragraphs": []
+    },
+    {
+      "section": "HOW_IT_WORKS",
+      "paragraphs": [
+        {
+          "text": "The tunnel’s ventilation and fire‑suppression systems must quickly clear smoke and heat along the entire length of the single‑bore passage, a requirement dictated by its design constraints.",
+          "claims": [
+            "C2"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHAT_DEPENDS_ON_IT",
+      "paragraphs": []
+    },
+    {
+      "section": "BOTTLENECK",
+      "paragraphs": [
+        {
+          "text": "The tunnel’s single‑tube layout combined with split traffic management offered very little safety margin when a fire occurred.",
+          "claims": [
+            "C19"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHY_THE_BOTTLENECK_EXISTS",
+      "paragraphs": []
+    },
+    {
+      "section": "FAILURE_SCENARIO",
+      "paragraphs": []
+    }
+  ],
+  "usage": {
+    "input_tokens": 3025,
+    "output_tokens": 2626
+  },
+  "providerUsed": "groq",
+  "model": "openai/gpt-oss-120b",
+  "depthNote": "Section composed using only the supplied claim IDs, adhering to length and formatting constraints. Paragraph relies solely on claim C2 Focused on the design chokepoint using the sole provided claim.",
+  "error": {
+    "code": "RATE_LIMIT",
+    "provider": "groq",
+    "stage": "section:CASCADING_CONSEQUENCES",
+    "retryable": true,
+    "retryAfterMs": 5000
+  }
+}

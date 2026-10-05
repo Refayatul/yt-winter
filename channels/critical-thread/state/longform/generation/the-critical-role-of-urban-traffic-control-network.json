@@ -3,9 +3,9 @@
   "channel": "critical-thread",
   "slug": "the-critical-role-of-urban-traffic-control-network",
   "topicHash": "db1725aeda00:19",
-  "status": "DEFERRED",
+  "status": "QUALITY_REVIEW",
   "createdAt": "2026-10-05T14:31:29.020Z",
-  "updatedAt": "2026-10-05T14:33:52.569Z",
+  "updatedAt": "2026-10-05T15:04:22.736Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -331,11 +331,76 @@
           "role": "evidence"
         }
       ]
+    },
+    {
+      "section": "HOW_IT_WORKS",
+      "paragraphs": [
+        {
+          "text": "Detectors measure traffic and the SCATS software adjusts green‑light durations and intersection offsets in real time.",
+          "claims": [
+            "C2"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHAT_DEPENDS_ON_IT",
+      "paragraphs": []
+    },
+    {
+      "section": "BOTTLENECK",
+      "paragraphs": [
+        {
+          "text": "The chokepoint is the central coordination engine that manages tens of thousands of intersections worldwide, meaning a single system must process detector data, compute offsets and dispatch timing updates for the entire network.",
+          "claims": [
+            "C16"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHY_THE_BOTTLENECK_EXISTS",
+      "paragraphs": []
+    },
+    {
+      "section": "FAILURE_SCENARIO",
+      "paragraphs": []
+    },
+    {
+      "section": "CASCADING_CONSEQUENCES",
+      "paragraphs": [
+        {
+          "text": "When central control collapses, signals revert to preset cycles, and vehicle queues lengthen. This outcome underscores that traffic management forms an essential component of logistics.",
+          "claims": [
+            "C1",
+            "C18"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "REDUNDANCY_ALTERNATIVES",
+      "paragraphs": [
+        {
+          "text": "When the central SCATS hub loses contact, each intersection’s local controller automatically switches to a predefined basic timing plan, preserving signal operation without centralized coordination.",
+          "claims": [
+            "C17"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FINAL_SYSTEM_INSIGHT",
+      "paragraphs": []
     }
   ],
   "usage": {
-    "input_tokens": 2648,
-    "output_tokens": 2442
+    "input_tokens": 4390,
+    "output_tokens": 4275
   },
   "error": {
     "code": "RATE_LIMIT",
@@ -346,5 +411,20 @@
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "Describes SCATS scale and adaptive coordination using only the supplied claims. Only claim C19 used"
+  "depthNote": "Describes SCATS scale and adaptive coordination using only the supplied claims. Only claim C19 used Paragraph constructed using only claim C2 Focused on the single-point coordination identified by claim C16. Paragraph links signal fallback to broader logistics role using only provided claims. Only claim C17 supports this redundancy description.",
+  "quality": {
+    "duplicateSections": [],
+    "repeatedPhrases": [],
+    "weakHook": false,
+    "payoff": false,
+    "filler": [],
+    "introShare": 0.36,
+    "missingPlanSections": [],
+    "hardFails": [
+      "missing final payoff"
+    ],
+    "notes": [
+      "introduction exceeds 25% of the script"
+    ]
+  }
 }
