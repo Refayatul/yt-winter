@@ -27,7 +27,7 @@ const httpReplacement = `  if (!response.ok) {
       detail = String(raw || "").replace(/[\\r\\n\\t]+/g, " ").replace(/[\\x00-\\x1f\\x7f]/g, " ").trim().slice(0, 500);
     } catch (error) { /* diagnostics are best effort */ }
     const classified = classifyHttp("groq", response.status, response.headers, input.stage);
-    if (detail) classified.message = \\`\\${classified.message}: \\${detail}\\`;
+    if (detail) classified.message = classified.message + ": " + detail;
     throw classified;
   }`;
 if (!provider.includes(httpReplacement)) {
