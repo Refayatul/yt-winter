@@ -7,13 +7,23 @@ https://youtu.be/WlZ2z90pqx8
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-03 | 1023 | 10 | 1 | — | — |  |
+| 3d | 2026-10-05 | 1053 | 9 | 1 | 65.06 | 0 | Shorts feed 97%, Search 2% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 1023 views after 1 days — too early/small for rate-based conclusions.
+- **HIGH_VIEWS_LOW_SUB_CONVERSION** (medium) — 0.0 subscribers per 1,000 views.
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 46.3/100 in the title engine; best editorial option scores 53.3.
 
 ## Suggested interventions
 
-- INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
+- HIGH VIEWS + LOW SUBS → improve subscriber conversion (contextual CTA after the payoff, series links, pinned comment).
 - WEAK PACKAGING (heuristic) → candidate for a logged title experiment once data exists.
+
+## First major observed retention drop
+
+- Timestamp: 5s; magnitude: 11 percentage points.
+- Active sentence: Within seconds, part of its crest slid into the reservoir.
+- Visual type: REAL ARCHIVAL IMAGE
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 30.

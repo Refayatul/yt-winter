@@ -8,8 +8,9 @@ https://youtu.be/I86SnrokHMk
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-09-29 | 1141 | 46 | 0 | — | — |  |
 | 3d | 2026-10-01 | 1272 | 47 | 0 | 73.68 | 5 | Shorts feed 89%, Search 10% |
+| 7d | 2026-10-05 | 1318 | 48 | 1 | 71.74 | 7 | Shorts feed 80%, Search 18% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 31.3/100 in the title engine; best editorial option scores 54.
 
@@ -19,9 +20,9 @@ https://youtu.be/I86SnrokHMk
 
 ## First major observed retention drop
 
-- Timestamp: 6s; magnitude: 10 percentage points.
+- Timestamp: 5s; magnitude: 10 percentage points.
 - Active sentence: Lava swallowed whole villages while Allied troops looked on.
 - Visual type: REAL ARCHIVAL/LICENCED FOOTAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 131.
+Views gained between 3d and 7d: 46.

@@ -7,11 +7,23 @@ https://youtu.be/fGE8kZOaQZ4
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-03 | 938 | 15 | 3 | — | — |  |
+| 3d | 2026-10-05 | 1040 | 16 | 3 | 111.00000000000001 | 0 | Shorts feed 98%, Browse/other YouTube 1% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 938 views after 1 days — too early/small for rate-based conclusions.
+- **HIGH_VIEWS_LOW_SUB_CONVERSION** (medium) — 0.0 subscribers per 1,000 views.
+- **OUTPERFORMER** (low) — 1040 views vs channel median 37 (n=4 videos).
 
 ## Suggested interventions
 
-- INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
+- HIGH VIEWS + LOW SUBS → improve subscriber conversion (contextual CTA after the payoff, series links, pinned comment).
+- OUTPERFORMER → keep as is; reuse its subject/hook shape in the next episode.
+
+## First major observed retention drop
+
+- Timestamp: 6s; magnitude: 11 percentage points.
+- Active sentence: unavailable
+- Visual type: unavailable
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 102.
