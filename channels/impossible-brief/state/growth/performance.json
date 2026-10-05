@@ -36,7 +36,7 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 121.33,
+      "ageHours": 122.62,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -59,9 +59,9 @@
       },
       "baselines": {
         "views": 436.5,
-        "viewsPerHour": 31.740000000000002,
+        "viewsPerHour": 26.845,
         "averagePercentageViewed": null,
-        "engagementRate": 0.023545,
+        "engagementRate": 0.0232,
         "subscriberConversion": null
       },
       "missing": [
@@ -725,10 +725,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 20.8,
+      "growthScore": 8.3,
       "classification": "WEAK",
       "percentiles": {
-        "viewVelocity": 33.3,
+        "viewVelocity": 0,
         "retention": null,
         "engagement": 0,
         "subscriberConversion": null,
@@ -736,9 +736,9 @@
       },
       "baselines": {
         "views": 436.5,
-        "viewsPerHour": 31.740000000000002,
+        "viewsPerHour": 26.845,
         "averagePercentageViewed": null,
-        "engagementRate": 0.023545,
+        "engagementRate": 0.0232,
         "subscriberConversion": null
       },
       "missing": [
@@ -1329,10 +1329,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 62.5,
+      "growthScore": 50,
       "classification": "NORMAL",
       "percentiles": {
-        "viewVelocity": 66.7,
+        "viewVelocity": 33.3,
         "retention": null,
         "engagement": 100,
         "subscriberConversion": null,
@@ -1340,9 +1340,9 @@
       },
       "baselines": {
         "views": 436.5,
-        "viewsPerHour": 31.740000000000002,
+        "viewsPerHour": 26.845,
         "averagePercentageViewed": null,
-        "engagementRate": 0.023545,
+        "engagementRate": 0.0232,
         "subscriberConversion": null
       },
       "missing": [
@@ -1377,6 +1377,336 @@
       "searchShare": null
     },
     "latestCheckpoint": "24h"
+  },
+  {
+    "checkpoints": {
+      "1h": {
+        "collectedAt": "2026-10-05T19:19:43.505Z",
+        "metrics": {
+          "views": {
+            "value": 86,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 23.26,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      }
+    },
+    "hookType": "visual_first_reveal",
+    "hookScore": 80,
+    "selectedHook": "Why water once climbed 524 metres up a mountain.",
+    "firstLine": "Why water once climbed 524 metres up a mountain.",
+    "firstSecondsScore": 81,
+    "topicCluster": "EARTH",
+    "bucket": "A",
+    "viralScore": 82,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 98,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 69,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 80,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 93,
+        "basis": "inventory-signal"
+      },
+      "archival_footage_potential": {
+        "value": 35,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 68,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 84,
+        "basis": "derived",
+        "note": "3 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 90,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 88,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 50,
+        "basis": "neutral",
+        "note": "no same-cluster channel evidence yet"
+      },
+      "subscriber_conversion_potential": {
+        "value": 88,
+        "basis": "derived",
+        "note": "series-depth proxy; no measured conversion yet"
+      },
+      "audience_breadth": {
+        "value": 100,
+        "basis": "inventory-signal"
+      },
+      "hook_potential": {
+        "value": 80,
+        "basis": "derived"
+      },
+      "visual_availability": {
+        "value": 67,
+        "basis": "inventory-signal"
+      },
+      "research_confidence": {
+        "value": 98,
+        "basis": "derived"
+      },
+      "duplicate_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "no published-title collision"
+      },
+      "saturation_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 published / 100 inventory in cluster"
+      },
+      "recent_fatigue_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 same-family upload(s) in the last 30 days"
+      },
+      "source_confidence_risk": {
+        "value": -2,
+        "basis": "penalty",
+        "note": "98/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -33,
+        "basis": "penalty",
+        "note": "no archival footage confirmed"
+      }
+    },
+    "storyStructure": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
+    "titlePattern": "what-if-question",
+    "selectedTitle": "What If a Mountain Fell Into a Bay?",
+    "titleScore": 84,
+    "titleCandidates": 41,
+    "hookCandidates": 14,
+    "topicScore": 87,
+    "popularityScore": 69,
+    "ctaStyle": "NONE",
+    "durationBucket": "26-35s",
+    "openingVisual": "ILLUSTRATION",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 69,
+      "CuriosityScore": 98,
+      "HookPotentialScore": 80,
+      "VisualImpactScore": 93,
+      "EmotionalImpactScore": 85,
+      "StoryCompressionScore": 88,
+      "RewatchPotentialScore": 69,
+      "SharePotentialScore": 97,
+      "CommentPotentialScore": 71,
+      "SubscriberConversionPotential": 88,
+      "NoveltyScore": 82,
+      "AudienceFitScore": 100,
+      "SourceQualityScore": 98,
+      "ChannelFitScore": 88
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "6AdruLBoGiw",
+    "slug": "what-if-a-mountain-fell-into-a-bay",
+    "channel": "impossible-brief",
+    "contentType": "short",
+    "title": "What If a Mountain Fell Into a Bay?",
+    "publishAt": "2026-10-05T18:00:35Z",
+    "publishHourUTC": 18,
+    "publishSlot": "21:00 TR",
+    "popularityBand": "unknown",
+    "readiness": 90,
+    "normalized": {
+      "ageHours": 1,
+      "viewsPerHour": 86,
+      "recentViewVelocity": null,
+      "likeRate": 0.01163,
+      "commentRate": 0.01163,
+      "shareRate": null,
+      "engagementRate": 0.02326,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": 87.5,
+      "classification": "STRONG",
+      "percentiles": {
+        "viewVelocity": 100,
+        "retention": null,
+        "engagement": 66.7,
+        "subscriberConversion": null,
+        "views": 100
+      },
+      "baselines": {
+        "views": 436.5,
+        "viewsPerHour": 26.845,
+        "averagePercentageViewed": null,
+        "engagementRate": 0.0232,
+        "subscriberConversion": null
+      },
+      "missing": [
+        "retention",
+        "subscriberConversion"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    },
+    "durationSeconds": 35,
+    "registeredBy": "analytics-pass",
+    "metrics": {
+      "views": 86,
+      "averagePercentageViewed": null,
+      "averageViewDuration": null,
+      "likes": 1,
+      "comments": 1,
+      "shares": null,
+      "subscribersGained": null,
+      "engagedViews": null,
+      "subscribersLost": null,
+      "netSubscribers": null,
+      "subscribersPer1000Views": null,
+      "netSubscribersPer1000Views": null,
+      "engagementPer1000Views": 23.26,
+      "watchHoursPer1000Views": null,
+      "ctr": null,
+      "first30sRetention": null,
+      "shortsFeedShare": null,
+      "searchShare": null
+    },
+    "latestCheckpoint": "1h"
   },
   {
     "checkpoints": {
@@ -1679,6 +2009,106 @@
         "traffic": [],
         "retention": [],
         "analyticsStatus": "ok"
+      },
+      "24h": {
+        "collectedAt": "2026-10-05T20:37:01.853Z",
+        "metrics": {
+          "views": {
+            "value": 994,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 20,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 3,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 23.14,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
       }
     },
     "hookType": "visual_first_reveal",
@@ -1821,32 +2251,32 @@
     "popularityBand": "unknown",
     "readiness": 91,
     "normalized": {
-      "ageHours": 18.84,
-      "viewsPerHour": 51.21,
-      "recentViewVelocity": 0,
-      "likeRate": 0.02073,
-      "commentRate": 0.00311,
+      "ageHours": 24,
+      "viewsPerHour": 41.42,
+      "recentViewVelocity": 5.62,
+      "likeRate": 0.02012,
+      "commentRate": 0.00302,
       "shareRate": null,
-      "engagementRate": 0.02383,
+      "engagementRate": 0.02314,
       "engagedViewRate": null,
       "subscriberConversion": null,
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 41.7,
-      "classification": "WEAK",
+      "growthScore": 54.2,
+      "classification": "NORMAL",
       "percentiles": {
-        "viewVelocity": 0,
+        "viewVelocity": 66.7,
         "retention": null,
-        "engagement": 66.7,
+        "engagement": 33.3,
         "subscriberConversion": null,
         "views": 66.7
       },
       "baselines": {
         "views": 436.5,
-        "viewsPerHour": 31.740000000000002,
+        "viewsPerHour": 26.845,
         "averagePercentageViewed": null,
-        "engagementRate": 0.023545,
+        "engagementRate": 0.0232,
         "subscriberConversion": null
       },
       "missing": [
@@ -1861,7 +2291,7 @@
     "durationSeconds": 32,
     "registeredBy": "analytics-pass",
     "metrics": {
-      "views": 965,
+      "views": 994,
       "averagePercentageViewed": null,
       "averageViewDuration": null,
       "likes": 20,
@@ -1873,343 +2303,13 @@
       "netSubscribers": null,
       "subscribersPer1000Views": null,
       "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 23.83,
+      "engagementPer1000Views": 23.14,
       "watchHoursPer1000Views": null,
       "ctr": null,
       "first30sRetention": null,
       "shortsFeedShare": null,
       "searchShare": null
     },
-    "latestCheckpoint": "1h"
-  },
-  {
-    "checkpoints": {
-      "1h": {
-        "collectedAt": "2026-10-05T19:19:43.505Z",
-        "metrics": {
-          "views": {
-            "value": 86,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "likes": {
-            "value": 1,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "comments": {
-            "value": 1,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "shares": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_gained": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_lost": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "net_subscribers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_view_duration": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_percentage_viewed": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "watch_time_minutes": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "impressions": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "ctr": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "returning_viewers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed per video by the public API"
-          },
-          "first_30s_retention": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "engaged_views": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "net_subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "engagement_per_1000_views": {
-            "value": 23.26,
-            "status": "DERIVED",
-            "from": "likes+comments+shares / views"
-          },
-          "watch_hours_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          }
-        },
-        "traffic": [],
-        "retention": [],
-        "analyticsStatus": "ok"
-      }
-    },
-    "hookType": "visual_first_reveal",
-    "hookScore": 80,
-    "selectedHook": "Why water once climbed 524 metres up a mountain.",
-    "firstLine": "Why water once climbed 524 metres up a mountain.",
-    "firstSecondsScore": 81,
-    "topicCluster": "EARTH",
-    "bucket": "A",
-    "viralScore": 82,
-    "viralComponents": {
-      "curiosity_gap": {
-        "value": 98,
-        "basis": "derived"
-      },
-      "immediate_stakes": {
-        "value": 94,
-        "basis": "derived"
-      },
-      "human_consequence": {
-        "value": 95,
-        "basis": "derived"
-      },
-      "recognizability": {
-        "value": 69,
-        "basis": "measured"
-      },
-      "surprise": {
-        "value": 80,
-        "basis": "derived"
-      },
-      "visual_potential": {
-        "value": 93,
-        "basis": "inventory-signal"
-      },
-      "archival_footage_potential": {
-        "value": 35,
-        "basis": "inventory-signal"
-      },
-      "first_frame_potential": {
-        "value": 68,
-        "basis": "derived"
-      },
-      "title_potential": {
-        "value": 84,
-        "basis": "derived",
-        "note": "3 source-backed title seeds"
-      },
-      "emotional_tension": {
-        "value": 85,
-        "basis": "derived"
-      },
-      "contradiction": {
-        "value": 85,
-        "basis": "derived"
-      },
-      "unexpected_cause": {
-        "value": 82,
-        "basis": "derived"
-      },
-      "numerical_anomaly": {
-        "value": 95,
-        "basis": "derived"
-      },
-      "didnt_know_factor": {
-        "value": 90,
-        "basis": "derived"
-      },
-      "shareability": {
-        "value": 97,
-        "basis": "derived"
-      },
-      "channel_fit": {
-        "value": 88,
-        "basis": "derived"
-      },
-      "historical_similarity": {
-        "value": 50,
-        "basis": "neutral",
-        "note": "no same-cluster channel evidence yet"
-      },
-      "subscriber_conversion_potential": {
-        "value": 88,
-        "basis": "derived",
-        "note": "series-depth proxy; no measured conversion yet"
-      },
-      "audience_breadth": {
-        "value": 100,
-        "basis": "inventory-signal"
-      },
-      "hook_potential": {
-        "value": 80,
-        "basis": "derived"
-      },
-      "visual_availability": {
-        "value": 67,
-        "basis": "inventory-signal"
-      },
-      "research_confidence": {
-        "value": 98,
-        "basis": "derived"
-      },
-      "duplicate_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "no published-title collision"
-      },
-      "saturation_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "0 published / 100 inventory in cluster"
-      },
-      "recent_fatigue_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "0 same-family upload(s) in the last 30 days"
-      },
-      "source_confidence_risk": {
-        "value": -2,
-        "basis": "penalty",
-        "note": "98/100 source quality"
-      },
-      "weak_footage_risk": {
-        "value": -33,
-        "basis": "penalty",
-        "note": "no archival footage confirmed"
-      }
-    },
-    "storyStructure": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
-    "titlePattern": "what-if-question",
-    "selectedTitle": "What If a Mountain Fell Into a Bay?",
-    "titleScore": 84,
-    "titleCandidates": 41,
-    "hookCandidates": 14,
-    "topicScore": 87,
-    "popularityScore": 69,
-    "ctaStyle": "NONE",
-    "durationBucket": "26-35s",
-    "openingVisual": "ILLUSTRATION",
-    "experimentVariant": null,
-    "factors": {
-      "TopicDemandScore": 69,
-      "CuriosityScore": 98,
-      "HookPotentialScore": 80,
-      "VisualImpactScore": 93,
-      "EmotionalImpactScore": 85,
-      "StoryCompressionScore": 88,
-      "RewatchPotentialScore": 69,
-      "SharePotentialScore": 97,
-      "CommentPotentialScore": 71,
-      "SubscriberConversionPotential": 88,
-      "NoveltyScore": 82,
-      "AudienceFitScore": 100,
-      "SourceQualityScore": 98,
-      "ChannelFitScore": 88
-    },
-    "selectionMode": "EXPLOIT",
-    "videoId": "6AdruLBoGiw",
-    "slug": "what-if-a-mountain-fell-into-a-bay",
-    "channel": "impossible-brief",
-    "contentType": "short",
-    "title": "What If a Mountain Fell Into a Bay?",
-    "publishAt": "2026-10-05T18:00:35Z",
-    "publishHourUTC": 18,
-    "publishSlot": "21:00 TR",
-    "popularityBand": "unknown",
-    "readiness": 90,
-    "normalized": {
-      "ageHours": 1,
-      "viewsPerHour": 86,
-      "recentViewVelocity": null,
-      "likeRate": 0.01163,
-      "commentRate": 0.01163,
-      "shareRate": null,
-      "engagementRate": 0.02326,
-      "engagedViewRate": null,
-      "subscriberConversion": null,
-      "subscribersPer1000Views": null
-    },
-    "performance": {
-      "growthScore": 75,
-      "classification": "STRONG",
-      "percentiles": {
-        "viewVelocity": 100,
-        "retention": null,
-        "engagement": 33.3,
-        "subscriberConversion": null,
-        "views": 100
-      },
-      "baselines": {
-        "views": 436.5,
-        "viewsPerHour": 31.740000000000002,
-        "averagePercentageViewed": null,
-        "engagementRate": 0.023545,
-        "subscriberConversion": null
-      },
-      "missing": [
-        "retention",
-        "subscriberConversion"
-      ],
-      "plateau": null,
-      "breakout": null,
-      "probableCauses": [],
-      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
-    },
-    "durationSeconds": 35,
-    "registeredBy": "analytics-pass",
-    "metrics": {
-      "views": 86,
-      "averagePercentageViewed": null,
-      "averageViewDuration": null,
-      "likes": 1,
-      "comments": 1,
-      "shares": null,
-      "subscribersGained": null,
-      "engagedViews": null,
-      "subscribersLost": null,
-      "netSubscribers": null,
-      "subscribersPer1000Views": null,
-      "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 23.26,
-      "watchHoursPer1000Views": null,
-      "ctr": null,
-      "first30sRetention": null,
-      "shortsFeedShare": null,
-      "searchShare": null
-    },
-    "latestCheckpoint": "1h"
+    "latestCheckpoint": "24h"
   }
 ]
