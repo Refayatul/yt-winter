@@ -51,10 +51,28 @@ if (!provider.includes(catchReplacement)) {
   provider = provider.replace(catchNeedle, catchReplacement);
 }
 
+// Groq can return 429 while the token-per-minute window is still occupied.
+// Short exponential retries only burn attempts inside the same window. Honor
+// Retry-After with a safety margin; when the header is absent, wait one full
+// minute before retrying. LONGFORM_LLM_MAX_RETRY_MS remains the hard ceiling.
+const delayNeedle = `  const exponential = Math.min(maximum, 1000 * 2 ** attempt);
+  return Math.min(maximum, Math.max(exponential, error.retryAfterMs || 0));`;
+const delayReplacement = `  const exponential = Math.min(maximum, 1000 * 2 ** attempt);
+  if (error.code === "RATE_LIMIT") {
+    const rateWindow = error.retryAfterMs ? error.retryAfterMs + 5000 : 65000;
+    return Math.min(maximum, Math.max(exponential, rateWindow));
+  }
+  return Math.min(maximum, Math.max(exponential, error.retryAfterMs || 0));`;
+if (!provider.includes(delayReplacement)) {
+  if (!provider.includes(delayNeedle)) throw new Error("Groq rate-limit delay patch target not found");
+  provider = provider.replace(delayNeedle, delayReplacement);
+}
+
 fs.writeFileSync(providerFile, provider);
 if (!provider.includes('reasoning_format: "hidden"')) throw new Error("Groq reasoning_format assertion failed");
 if (provider.includes('response_format: { type: "json_object" }')) throw new Error("Groq server-side JSON mode must be disabled");
 if (!provider.includes('OUTPUT CONTRACT: Return exactly one valid JSON object')) throw new Error("Groq strict JSON output contract assertion failed");
+if (!provider.includes('error.code === "RATE_LIMIT"')) throw new Error("Groq rate-limit wait assertion failed");
 
 // Preserve code + status + bounded provider message in per-topic outcomes.
 const researchFile = path.join(__dirname, "bto-research.js");
@@ -68,4 +86,4 @@ if (!research.includes(reasonReplacement)) {
 }
 if (!research.includes('error.status ? ` HTTP ${error.status}`')) throw new Error("BTO provider error telemetry assertion failed");
 
-console.log("Groq client-side JSON parsing + strict output contract + safe diagnostics verified; model and quality gates unchanged");
+console.log("Groq client-side JSON parsing + strict output contract + rate-limit-aware retry + safe diagnostics verified; model and quality gates unchanged");
