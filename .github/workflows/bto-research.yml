@@ -1,10 +1,7 @@
 name: The Hidden Logic of Things research
 
-# Daily, evidence-first research of The Hidden Logic of Things's question backlog
-# (scripts/bto-research.js). A question becomes a production-ready record only
-# when its verbatim quotes, numbers, primary sources and quality checks pass;
-# everything else stays in the backlog. Nothing is rendered or uploaded here.
-# Dormant until BTO_RESEARCH=1 and a long-form provider key is configured.
+# Daily, evidence-first research replenishes the production-ready inventory.
+# Failed/unverified questions remain in the backlog; nothing is rendered/uploaded here.
 on:
   schedule:
     - cron: '41 4 * * *'
@@ -12,10 +9,10 @@ on:
     inputs:
       limit:
         description: Questions to research in this run
-        default: '3'
+        default: '8'
 
 concurrency:
-  group: portfolio-production
+  group: bto-research
   cancel-in-progress: false
 
 permissions:
@@ -23,9 +20,8 @@ permissions:
 
 jobs:
   research:
-    if: ${{ vars.BTO_RESEARCH == '1' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 120
     env:
       LONGFORM_LLM_PROVIDER: ${{ vars.LONGFORM_LLM_PROVIDER }}
       LONGFORM_LLM_FALLBACK_PROVIDER: ${{ vars.LONGFORM_LLM_FALLBACK_PROVIDER }}
@@ -35,16 +31,20 @@ jobs:
       GROQ_MODEL: ${{ vars.GROQ_MODEL }}
       ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
       ANTHROPIC_MODEL: ${{ vars.ANTHROPIC_MODEL }}
+      BTO_RESEARCH_PAUSE_MS: ${{ vars.BTO_RESEARCH_PAUSE_MS }}
+      BTO_RESEARCH_MAX_TOKENS: ${{ vars.BTO_RESEARCH_MAX_TOKENS }}
+      BTO_RESEARCH_EXCERPT_CHARS: ${{ vars.BTO_RESEARCH_EXCERPT_CHARS }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
       - run: npm install --no-audit --no-fund
       - name: Research and verify
-        run: node scripts/bto-research.js --limit "${{ inputs.limit || '3' }}" --write
+        run: node scripts/bto-research.js --limit "${{ inputs.limit || '8' }}" --write
       - name: Commit researched records
         run: |
           git config user.name "research-bot"
