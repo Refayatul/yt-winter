@@ -1,0 +1,3 @@
+"use strict";
+const assert=require("assert"),F=require("../scripts/bto-research-fallback");
+(async()=>{const wiki=async p=>p.list==="search"?{query:{search:[{title:"House numbering"}]}}:{query:{pages:{1:{title:"House numbering",extract:"House numbering assigns numbers to buildings on a street. ".repeat(20)}}}};const docs=await F.relatedArticles({object:"street numbers",designDetail:"skipped numbers",question:"Why are some street numbers skipped?"},wiki);assert.equal(docs.length,1);assert.equal(docs[0].title,"House numbering");console.log("bto fallback test passed")})().catch(e=>{console.error(e);process.exit(1)});
