@@ -1,0 +1,1 @@
+"use strict";const assert=require("assert"),D=require("../scripts/bto-source-discovery");for(const key of Object.keys(D))assert.notEqual(key,"productionReady");console.log("bto discovery cannot set readiness");
