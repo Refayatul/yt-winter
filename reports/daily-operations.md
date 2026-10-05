@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-05T20:37:08.483Z
+Generated: 2026-10-05T21:14:20.521Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,85 +8,85 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | san-bruno-pipeline-2010 |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / 89 |
-| YouTube | scheduled |
-| Publish time | 2026-10-05T18:00:00.000Z |
-| Video ID | PAi4kSZesNE |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 361 |
 | Errors/review/blocks | 5 |
-| TikTok today | NOT_SENT |
+| TikTok today | NO_TODAY_VIDEO |
 | TikTok backlog | 5 |
 | Analytics warehouse | through 2026-10-03 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.public 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-05 (0 d) |
-| API quota today | 1677 / 9800 units (project 1012165386949) |
+| Scheduler queue | 1 queued, oldest 2026-10-06 (-1 d) |
+| API quota today | 1683 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 22/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
 
 | Signal | Status |
 |---|---|
-| Today topic | what-if-a-mountain-fell-into-a-bay |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / unavailable |
-| YouTube | scheduled |
-| Publish time | 2026-10-05T18:00:00.000Z |
-| Video ID | 6AdruLBoGiw |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 492 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-03 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.public 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-05 (0 d) |
-| API quota today | 1686 / 9800 units (project 684098966511) |
+| Scheduler queue | 1 queued, oldest 2026-10-06 (-1 d) |
+| API quota today | 1693 / 9800 units (project 684098966511) |
 | YPP readiness (estimate) | subs 3/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
 
 | Signal | Status |
 |---|---|
-| Today topic | when-grid-control-room-becomes-the-bottleneck |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / unavailable |
-| YouTube | scheduled |
-| Publish time | 2026-10-05T18:00:00.000Z |
-| Video ID | 7g6pgV-E0PE |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 516 |
 | Errors/review/blocks | 0 |
 | Analytics warehouse | through 2026-10-03 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.public 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-05 (0 d) |
-| API quota today | 1686 / 9800 units (project 208987599838) |
+| Scheduler queue | 1 queued, oldest 2026-10-06 (-1 d) |
+| API quota today | 1693 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
 
 | Signal | Status |
 |---|---|
-| Today topic | why-the-bluetooth-logo-looks-like-that |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / unavailable |
-| YouTube | scheduled |
-| Publish time | 2026-10-05T18:00:00.000Z |
-| Video ID | Q98e12I0NFA |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 4 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-02 (lag 3 d) · 4 table error(s) |
 | Ops (24 h) | analytics.partial 1 |
-| Scheduler queue | 1 queued, oldest 2026-10-05 (0 d) |
-| API quota today | 73 / 9800 units (project 739767423116) |
+| Scheduler queue | 1 queued, oldest 2026-10-06 (-1 d) |
+| API quota today | 80 / 9800 units (project 739767423116) |
 | YPP readiness (estimate) | subs 1/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
