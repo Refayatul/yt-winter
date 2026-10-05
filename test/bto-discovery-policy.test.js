@@ -1,0 +1,1 @@
+"use strict";const assert=require("assert"),p=require("../scripts/bto-discovery-policy.json");assert.equal(p.searchResultsAreEvidence,false);assert.equal(p.requireExistingPrimarySourceGate,true);assert.equal(p.requireExistingQuoteGate,true);assert.equal(p.requireExistingBuilderGate,true);console.log("bto discovery policy passed");
