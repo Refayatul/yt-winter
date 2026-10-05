@@ -1,18 +1,59 @@
 {
   "channel": "impossible-brief",
-  "updatedAt": "2026-10-04T19:43:48.025Z",
+  "updatedAt": "2026-10-05T14:32:13.719Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
-    "sampleSize": 2,
-    "status": "heuristics-only",
+    "sampleSize": 3,
+    "status": "observing",
     "baselines": {
       "views": 589,
       "averagePercentageViewed": null,
       "subscribersPer1000Views": null,
       "watchHoursPer1000Views": null,
-      "engagementPer1000Views": 23.95
+      "engagementPer1000Views": 23.83
     },
-    "observations": [],
+    "observations": [
+      {
+        "stage": "OBSERVATION",
+        "dimension": "hookType",
+        "value": "visual_first_reveal",
+        "sample": 3,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "SPACE",
+        "sample": 3,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "storyStructure",
+        "value": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
+        "sample": 3,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "openingVisual",
+        "value": "ILLUSTRATION",
+        "sample": 3,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "bucket",
+        "value": "A",
+        "sample": 3,
+        "lift": 0,
+        "z": 0
+      }
+    ],
     "hypotheses": [],
     "adopted": [],
     "suppressed": [],

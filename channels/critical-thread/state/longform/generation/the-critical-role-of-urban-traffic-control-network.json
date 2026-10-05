@@ -1,0 +1,193 @@
+{
+  "schema": "longform-generation/2",
+  "channel": "critical-thread",
+  "slug": "the-critical-role-of-urban-traffic-control-network",
+  "topicHash": "db1725aeda00:19",
+  "status": "DEFERRED",
+  "createdAt": "2026-10-05T14:31:29.020Z",
+  "updatedAt": "2026-10-05T14:31:29.020Z",
+  "provider": {
+    "primary": "groq",
+    "fallback": null
+  },
+  "factPack": {
+    "topic": "The System Running 63,000 Traffic Lights",
+    "central_question": "Who decides how long your traffic light stays green?",
+    "audience_promise": "Answer one precise question about urban traffic control network using only documented evidence.",
+    "verified_facts": [
+      {
+        "id": "C1",
+        "text": "When control fails, signals fall back to fixed timings and queues grow.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      },
+      {
+        "id": "C2",
+        "text": "Detectors measure traffic and software adjusts green times and offsets in real time.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      },
+      {
+        "id": "C3",
+        "text": "The key figure: 63,000 intersections.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      },
+      {
+        "id": "C4",
+        "text": "Why 63,000 intersections share one control system.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C5",
+        "text": "SCATS runs signals in over 216 cities.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C6",
+        "text": "Australia alone has around 11,000 of them.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C7",
+        "text": "Sensors in the road feed real-time timing changes.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C8",
+        "text": "Smarter offsets improved flow by 8% in one test.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C9",
+        "text": "Better pedestrian timing cut unsafe crossing by 34%.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C10",
+        "text": "That's why your green light is decided by software.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C11",
+        "text": "SCATS is installed at more than 63,000 intersections in over 216 cities in 33 countries.",
+        "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+        "rewrite": false
+      },
+      {
+        "id": "C12",
+        "text": "In Australia, where the system was first developed, the majority of signalised intersections are SCATS operated (around 11,000).",
+        "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+        "rewrite": false
+      },
+      {
+        "id": "C13",
+        "text": "Longer or more frequent green signals for pedestrians can reduce unsafe crossing by 34%.",
+        "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+        "rewrite": false
+      },
+      {
+        "id": "C14",
+        "text": "The new method of on-line offset calculation showed an 8% improvement over the existing precalculated offset plans.",
+        "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+        "rewrite": false
+      },
+      {
+        "id": "C15",
+        "text": "City traffic flow depends on adaptive control systems coordinating signals.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      },
+      {
+        "id": "C17",
+        "text": "Local controllers keep running basic plans if central control drops.",
+        "source": "U.S. Department of Transportation",
+        "rewrite": false
+      },
+      {
+        "id": "C18",
+        "text": "Traffic management is a key branch within logistics.",
+        "source": "Wikipedia — Traffic management",
+        "rewrite": true
+      },
+      {
+        "id": "C19",
+        "text": "It concerns the planning, control and purchasing of transport services needed to physically move vehicles (for example aircraft, road vehicles, rolling stock and watercraft) and freight.",
+        "source": "Wikipedia — Traffic management",
+        "rewrite": true
+      }
+    ],
+    "bounded_interpretations": [
+      {
+        "id": "C16",
+        "text": "One system coordinates tens of thousands of intersections worldwide.",
+        "class": "MODEL",
+        "source": "U.S. Department of Transportation"
+      }
+    ],
+    "uncertain_claims": [],
+    "visual_leads": [
+      {
+        "text": "busy intersection from above",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "loop detectors in the road",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "traffic control centre screens",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "map of cities using the system",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "green wave animation",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "pedestrian crossing",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "Specialist Traffic Management Vehicle",
+        "source": "Commons: Specialist Traffic Management Vehicle.jpg",
+        "origin": "article-image (licence check pending)"
+      }
+    ]
+  },
+  "blueprint": null,
+  "sections": [],
+  "usage": {
+    "input_tokens": 0,
+    "output_tokens": 0
+  },
+  "error": {
+    "code": "RATE_LIMIT",
+    "provider": "groq",
+    "stage": "narrative-angle",
+    "retryable": true,
+    "retryAfterMs": 1000
+  }
+}

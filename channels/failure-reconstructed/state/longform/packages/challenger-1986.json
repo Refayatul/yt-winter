@@ -3,7 +3,7 @@
   "channel": "failure-reconstructed",
   "channelName": "Failure Reconstructed",
   "contentType": "long",
-  "createdAt": "2026-09-30T15:48:32.929Z",
+  "createdAt": "2026-10-05T14:29:42.895Z",
   "topic": {
     "id": "challenger-1986",
     "slug": "challenger-1986",
@@ -17,10 +17,10 @@
     "slug": "challenger-1986",
     "title": "Why Challenger Broke Apart 73 Seconds After Launch",
     "cluster": "spaceflight-disasters",
-    "LongFormPotentialScore": 83,
+    "LongFormPotentialScore": 84,
     "bucket": "A",
     "reasons": [
-      "LongFormPotential 83 ≥ 78"
+      "LongFormPotential 84 ≥ 78"
     ],
     "factors": {
       "DepthPotential": {
@@ -58,9 +58,9 @@
         "basis": "derived"
       },
       "ShortsEvidence": {
-        "value": 50,
-        "basis": "derived",
-        "note": "no published Short in this cluster yet — neutral"
+        "value": 67,
+        "basis": "measured",
+        "note": "best cluster Short 1731 views vs channel median 1033; best subscriber conversion 0.00231; best growth score 80.7"
       },
       "SeriesPotential": {
         "value": 90,
@@ -113,7 +113,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 0
+    "reuseCount": 1
   },
   "outline": {
     "structure": [
@@ -421,83 +421,98 @@
   "coldOpens": {
     "candidates": [
       {
-        "type": "hidden_cause",
-        "text": "Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.",
-        "score": 81,
-        "estimatedSeconds": 4.7
-      },
-      {
         "type": "shocking_consequence",
         "text": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
-        "score": 76,
+        "score": 82,
         "estimatedSeconds": 3.1
       },
       {
-        "type": "countdown",
-        "text": "73 seconds.",
-        "score": 70,
-        "estimatedSeconds": 0.6
+        "type": "hidden_cause",
+        "text": "Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.",
+        "score": 80,
+        "estimatedSeconds": 4.7
       },
       {
         "type": "visual_first_reveal",
         "text": "Seventy-three seconds after launch, Challenger broke apart.",
-        "score": 69,
+        "score": 78,
         "estimatedSeconds": 2.2
       },
       {
         "type": "contradiction",
         "text": "The engineers had the data but not the authority.",
-        "score": 68,
+        "score": 76,
         "estimatedSeconds": 2.8
+      },
+      {
+        "type": "countdown",
+        "text": "73 seconds.",
+        "score": 76,
+        "estimatedSeconds": 0.6
+      },
+      {
+        "type": "mechanism_reveal",
+        "text": "Challenger failed because o-ring seal failure in a solid rocket booster field joint.",
+        "score": 76,
+        "estimatedSeconds": 4.1
+      },
+      {
+        "type": "tiny_cause_massive_consequence",
+        "text": "It took only an O-ring seal stiffened by cold.",
+        "score": 73,
+        "estimatedSeconds": 2.8
+      },
+      {
+        "type": "before_after_consequence",
+        "text": "Today, that warning is taught to every engineer.",
+        "score": 73,
+        "estimatedSeconds": 2.5
+      },
+      {
+        "type": "warning_ignored",
+        "text": "Engineers had warned against launching in the cold the night before.",
+        "score": 70,
+        "estimatedSeconds": 3.4
+      },
+      {
+        "type": "unexpected_chain_reaction",
+        "text": "It started with cold night below freezing. It ended with VEHICLE BREAKS APART AT 73 s.",
+        "score": 69,
+        "estimatedSeconds": 5
       },
       {
         "type": "question_gap",
         "text": "Challenger: what failed first?",
         "score": 68,
         "estimatedSeconds": 1.3
-      },
-      {
-        "type": "before_after_consequence",
-        "text": "After Challenger, NASA redesigned the booster joints and changed how engineering objections are heard before launch.",
-        "score": 67,
-        "estimatedSeconds": 5
-      },
-      {
-        "type": "unexpected_chain_reaction",
-        "text": "It started with cold night below freezing. It ended with VEHICLE BREAKS APART AT 73 s.",
-        "score": 66,
-        "estimatedSeconds": 5
-      },
-      {
-        "type": "tiny_cause_massive_consequence",
-        "text": "It took only an O-ring seal stiffened by cold.",
-        "score": 64,
-        "estimatedSeconds": 2.8
-      },
-      {
-        "type": "warning_ignored",
-        "text": "Engineers had warned against launching in the cold the night before.",
-        "score": 63,
-        "estimatedSeconds": 3.4
       }
     ],
     "selected": {
-      "type": "hidden_cause",
-      "text": "Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.",
-      "score": 81,
-      "estimatedSeconds": 4.7
+      "type": "shocking_consequence",
+      "text": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
+      "score": 82,
+      "estimatedSeconds": 3.1
     }
   },
   "script": {
     "generator": "deterministic-evidence",
-    "llmError": null,
+    "provider": "groq",
+    "model": null,
+    "status": "FAILED",
+    "pipeline": null,
+    "blueprint": null,
+    "quality": null,
+    "checkpoint": "generation/challenger-1986.json",
+    "llmError": "groq request failed (HTTP 413)",
+    "llmErrorCode": "REQUEST",
+    "llmErrorStage": "narrative-angle",
     "depthNote": null,
     "sections": [
       {
         "section": "COLD_OPEN",
         "paragraphs": [
           {
-            "text": "Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.",
+            "text": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
             "claims": [],
             "role": "cold-open"
           }
@@ -618,8 +633,8 @@
         ]
       }
     ],
-    "words": 338,
-    "estimatedMinutes": 2.3,
+    "words": 333,
+    "estimatedMinutes": 2.2,
     "paragraphs": 8,
     "secondsPerNewBeat": 17
   },
@@ -627,7 +642,7 @@
     "rows": [
       {
         "section": "COLD_OPEN",
-        "excerpt": "Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore t",
+        "excerpt": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
         "claims": []
       },
       {
@@ -807,7 +822,7 @@
       "scene": 1,
       "narrationSpan": [
         0,
-        6
+        4
       ],
       "section": "COLD_OPEN",
       "visualPurpose": "show evidence",
@@ -815,7 +830,7 @@
       "subject": "Seventy-three seconds after launch, Challenger broke apart.",
       "asset": "Footage/challenger.ogv",
       "sourceRequirement": "public-domain / licensed archival with attribution",
-      "durationEstimateSeconds": 6,
+      "durationEstimateSeconds": 4,
       "motion": "slow push-in to detail",
       "claimSupported": null,
       "fallbackAssetStrategy": "labelled reconstruction diagram (never presented as archive)",
@@ -824,8 +839,8 @@
     {
       "scene": 2,
       "narrationSpan": [
-        6,
-        15
+        4,
+        13
       ],
       "section": "CONSEQUENCE",
       "visualPurpose": "show evidence",
@@ -842,8 +857,8 @@
     {
       "scene": 3,
       "narrationSpan": [
-        15,
-        33
+        13,
+        31
       ],
       "section": "WHAT_HAPPENED",
       "visualPurpose": "show evidence",
@@ -860,8 +875,8 @@
     {
       "scene": 4,
       "narrationSpan": [
-        33,
-        50
+        31,
+        48
       ],
       "section": "WHAT_HAPPENED",
       "visualPurpose": "show evidence",
@@ -878,8 +893,8 @@
     {
       "scene": 5,
       "narrationSpan": [
-        50,
-        68
+        48,
+        66
       ],
       "section": "WHAT_HAPPENED",
       "visualPurpose": "show evidence",
@@ -896,8 +911,8 @@
     {
       "scene": 6,
       "narrationSpan": [
-        68,
-        76
+        66,
+        74
       ],
       "section": "SYSTEM",
       "visualPurpose": "visualise scenario",
@@ -914,8 +929,8 @@
     {
       "scene": 7,
       "narrationSpan": [
-        76,
-        89
+        74,
+        87
       ],
       "section": "HIDDEN_WEAKNESS",
       "visualPurpose": "visualise scenario",
@@ -932,8 +947,8 @@
     {
       "scene": 8,
       "narrationSpan": [
-        89,
-        102
+        87,
+        100
       ],
       "section": "FAILURE_CHAIN",
       "visualPurpose": "explain mechanism",
@@ -950,8 +965,8 @@
     {
       "scene": 9,
       "narrationSpan": [
-        102,
-        114
+        100,
+        112
       ],
       "section": "FAILURE_CHAIN",
       "visualPurpose": "explain mechanism",
@@ -968,8 +983,8 @@
     {
       "scene": 10,
       "narrationSpan": [
-        114,
-        122
+        112,
+        120
       ],
       "section": "WHAT_CHANGED",
       "visualPurpose": "visualise scenario",
@@ -986,8 +1001,8 @@
     {
       "scene": 11,
       "narrationSpan": [
-        122,
-        135
+        120,
+        133
       ],
       "section": "FINAL_TAKEAWAY",
       "visualPurpose": "visualise scenario",
@@ -1164,28 +1179,66 @@
   },
   "titles": {
     "selected": {
-      "title": "Why Challenger Broke Apart 73 Seconds After Launch",
-      "source": "editorial",
-      "pattern": "why",
+      "title": "What Really Destroyed Challenger — The Complete Investigation",
+      "source": "complete-investigation",
+      "pattern": "two-beat",
       "scores": {
         "clarity": 100,
         "curiosity": 58,
-        "specificity": 92,
+        "specificity": 77,
         "truthfulness": 100,
-        "searchIntent": 95,
-        "channelIdentity": 60,
-        "ctrPotential": 77,
-        "novelty": 20,
-        "evergreenPotential": 85
+        "searchIntent": 87,
+        "channelIdentity": 62,
+        "ctrPotential": 75,
+        "novelty": 89,
+        "evergreenPotential": 85,
+        "consequence": 80,
+        "compactness": 98,
+        "recognizability": 98,
+        "nonRedundancy": 89,
+        "factualIntegrity": 100,
+        "historicalPerformanceSimilarity": 50,
+        "patternFreshness": 100
       },
-      "total": 85,
-      "adjustedTotal": 85,
+      "total": 82,
+      "patternPenalty": 0,
+      "templateNaturalnessPenalty": 0,
+      "adjustedTotal": 82,
       "unsupportedWords": [],
       "misleading": false
     },
-    "selectedScore": 85,
+    "selectedScore": 82,
     "count": 25,
     "candidates": [
+      {
+        "title": "What Really Destroyed Challenger — The Complete Investigation",
+        "source": "complete-investigation",
+        "pattern": "two-beat",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 87,
+          "channelIdentity": 62,
+          "ctrPotential": 75,
+          "novelty": 89,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 98,
+          "recognizability": 98,
+          "nonRedundancy": 89,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 82,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 82,
+        "unsupportedWords": [],
+        "misleading": false
+      },
       {
         "title": "Why Challenger Broke Apart 73 Seconds After Launch",
         "source": "editorial",
@@ -1199,109 +1252,18 @@
           "channelIdentity": 60,
           "ctrPotential": 77,
           "novelty": 20,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 57,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 20,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
         "total": 85,
-        "adjustedTotal": 85,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Challenger: What Failed, Why, and What Changed",
-        "source": "what-why-changed",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 76,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 87,
-          "novelty": 90,
-          "evergreenPotential": 85
-        },
-        "total": 85,
-        "adjustedTotal": 85,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Challenger: From First Warning to Final Failure",
-        "source": "warning-to-failure",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 75,
-          "novelty": 92,
-          "evergreenPotential": 85
-        },
-        "total": 83,
-        "adjustedTotal": 83,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "How Engineers Solved the Challenger Failure",
-        "source": "engineers-solved",
-        "pattern": "how",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 87,
-          "channelIdentity": 74,
-          "ctrPotential": 75,
-          "novelty": 91,
-          "evergreenPotential": 85
-        },
-        "total": 83,
-        "adjustedTotal": 83,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "What Really Destroyed Challenger — The Complete Investigation",
-        "source": "complete-investigation",
-        "pattern": "two-beat",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 87,
-          "channelIdentity": 62,
-          "ctrPotential": 75,
-          "novelty": 92,
-          "evergreenPotential": 85
-        },
-        "total": 82,
-        "adjustedTotal": 82,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "How Cold Weather Brought Down Challenger",
-        "source": "editorial",
-        "pattern": "how",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 87,
-          "channelIdentity": 60,
-          "ctrPotential": 67,
-          "novelty": 91,
-          "evergreenPotential": 85
-        },
-        "total": 81,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 81,
         "unsupportedWords": [],
         "misleading": false
@@ -1318,10 +1280,19 @@
           "searchIntent": 75,
           "channelIdentity": 74,
           "ctrPotential": 75,
-          "novelty": 91,
-          "evergreenPotential": 85
+          "novelty": 80,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 80,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 81,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 81,
         "unsupportedWords": [],
         "misleading": false
@@ -1339,11 +1310,225 @@
           "channelIdentity": 50,
           "ctrPotential": 79,
           "novelty": 91,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 81,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 81,
         "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "How Engineers Solved the Challenger Failure",
+        "source": "engineers-solved",
+        "pattern": "how",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 87,
+          "channelIdentity": 74,
+          "ctrPotential": 75,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 83,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 79,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "The Failure Chain That Destroyed Challenger",
+        "source": "failure-chain",
+        "pattern": "the-x-that",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 74,
+          "ctrPotential": 63,
+          "novelty": 80,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 80,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 78,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 78,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Challenger: What Failed, Why, and What Changed",
+        "source": "what-why-changed",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 76,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 87,
+          "novelty": 84,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 84,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 85,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 78,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "The Rubber Ring That Destroyed Challenger",
+        "source": "editorial",
+        "pattern": "the-x-that",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 60,
+          "ctrPotential": 63,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 77,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 77,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Engineers Said Don't Launch. Challenger Launched",
+        "source": "editorial",
+        "pattern": "two-beat",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 72,
+          "ctrPotential": 55,
+          "novelty": 84,
+          "evergreenPotential": 85,
+          "consequence": 57,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 84,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 77,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 77,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "How Cold Weather Brought Down Challenger",
+        "source": "editorial",
+        "pattern": "how",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 87,
+          "channelIdentity": 60,
+          "ctrPotential": 67,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 81,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 77,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "The Engineering Mistakes Behind Challenger",
+        "source": "engineering-mistakes",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 67,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 77,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 77,
+        "unsupportedWords": [
+          "mistakes"
+        ],
         "misleading": false
       },
       {
@@ -1359,10 +1544,48 @@
           "channelIdentity": 50,
           "ctrPotential": 67,
           "novelty": 90,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
         "total": 80,
-        "adjustedTotal": 80,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 76,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Challenger: From First Warning to Final Failure",
+        "source": "warning-to-failure",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 75,
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 83,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 76,
         "unsupportedWords": [],
         "misleading": false
       },
@@ -1379,10 +1602,19 @@
           "channelIdentity": 62,
           "ctrPotential": 67,
           "novelty": 90,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 90,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
         "total": 80,
-        "adjustedTotal": 80,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 76,
         "unsupportedWords": [
           "forever"
         ],
@@ -1401,198 +1633,23 @@
           "channelIdentity": 50,
           "ctrPotential": 87,
           "novelty": 91,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 70,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
         "total": 80,
-        "adjustedTotal": 80,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 76,
         "unsupportedWords": [
           "never",
           "have"
         ],
-        "misleading": false
-      },
-      {
-        "title": "Why Challenger Failed",
-        "source": "why-failed",
-        "pattern": "why",
-        "scores": {
-          "clarity": 72,
-          "curiosity": 58,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 62,
-          "ctrPotential": 75,
-          "novelty": 89,
-          "evergreenPotential": 85
-        },
-        "total": 79,
-        "adjustedTotal": 79,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Failure Chain That Destroyed Challenger",
-        "source": "failure-chain",
-        "pattern": "the-x-that",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 74,
-          "ctrPotential": 63,
-          "novelty": 91,
-          "evergreenPotential": 85
-        },
-        "total": 78,
-        "adjustedTotal": 78,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Rubber Ring That Destroyed Challenger",
-        "source": "editorial",
-        "pattern": "the-x-that",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 60,
-          "ctrPotential": 63,
-          "novelty": 91,
-          "evergreenPotential": 85
-        },
-        "total": 77,
-        "adjustedTotal": 77,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Engineers Said Don't Launch. Challenger Launched",
-        "source": "editorial",
-        "pattern": "two-beat",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 72,
-          "ctrPotential": 55,
-          "novelty": 84,
-          "evergreenPotential": 85
-        },
-        "total": 77,
-        "adjustedTotal": 77,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Challenger: The Full Failure Reconstructed",
-        "source": "full-reconstruction",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 63,
-          "novelty": 91,
-          "evergreenPotential": 85
-        },
-        "total": 77,
-        "adjustedTotal": 77,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Engineering Mistakes Behind Challenger",
-        "source": "engineering-mistakes",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 67,
-          "novelty": 91,
-          "evergreenPotential": 85
-        },
-        "total": 77,
-        "adjustedTotal": 77,
-        "unsupportedWords": [
-          "mistakes"
-        ],
-        "misleading": false
-      },
-      {
-        "title": "Challenger: Every Link in the Failure Chain",
-        "source": "every-link",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 63,
-          "novelty": 92,
-          "evergreenPotential": 85
-        },
-        "total": 76,
-        "adjustedTotal": 76,
-        "unsupportedWords": [
-          "link"
-        ],
-        "misleading": false
-      },
-      {
-        "title": "Reconstructing Challenger: Cause, Chain, Consequence",
-        "source": "reconstructing",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 55,
-          "novelty": 92,
-          "evergreenPotential": 85
-        },
-        "total": 76,
-        "adjustedTotal": 76,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Challenger: The Investigation, Explained",
-        "source": "investigation-explained",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 55,
-          "novelty": 90,
-          "evergreenPotential": 85
-        },
-        "total": 76,
-        "adjustedTotal": 76,
-        "unsupportedWords": [],
         "misleading": false
       },
       {
@@ -1608,9 +1665,18 @@
           "channelIdentity": 50,
           "ctrPotential": 67,
           "novelty": 89,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 89,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 76,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [
           "disaster"
@@ -1618,21 +1684,30 @@
         "misleading": false
       },
       {
-        "title": "O-ring Seal Failure in a Solid Rocket Booster Field Joint: How It Destroyed Challenger",
-        "source": "mechanism-long",
-        "pattern": "label-colon",
+        "title": "Why Challenger Failed",
+        "source": "why-failed",
+        "pattern": "why",
         "scores": {
-          "clarity": 61,
+          "clarity": 72,
           "curiosity": 58,
-          "specificity": 77,
+          "specificity": 71,
           "truthfulness": 100,
-          "searchIntent": 75,
+          "searchIntent": 95,
           "channelIdentity": 62,
-          "ctrPotential": 65,
-          "novelty": 95,
-          "evergreenPotential": 85
+          "ctrPotential": 75,
+          "novelty": 80,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 80,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
-        "total": 75,
+        "total": 79,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 75,
         "unsupportedWords": [],
         "misleading": false
@@ -1650,9 +1725,18 @@
           "channelIdentity": 50,
           "ctrPotential": 67,
           "novelty": 90,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 90,
+          "factualIntegrity": 70,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 75,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 75,
         "unsupportedWords": [
           "have",
@@ -1673,13 +1757,169 @@
           "channelIdentity": 62,
           "ctrPotential": 55,
           "novelty": 91,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 74,
         "unsupportedWords": [
           "forensic"
         ],
+        "misleading": false
+      },
+      {
+        "title": "Challenger: The Full Failure Reconstructed",
+        "source": "full-reconstruction",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 63,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 77,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 70,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Challenger: Every Link in the Failure Chain",
+        "source": "every-link",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 63,
+          "novelty": 82,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 82,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 76,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [
+          "link"
+        ],
+        "misleading": false
+      },
+      {
+        "title": "Reconstructing Challenger: Cause, Chain, Consequence",
+        "source": "reconstructing",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 55,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 76,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Challenger: The Investigation, Explained",
+        "source": "investigation-explained",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 55,
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 76,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "O-ring Seal Failure in a Solid Rocket Booster Field Joint: How It Destroyed Challenger",
+        "source": "mechanism-long",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 61,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 65,
+          "novelty": 95,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 20,
+          "recognizability": 98,
+          "nonRedundancy": 95,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 75,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 68,
+        "unsupportedWords": [],
         "misleading": false
       },
       {
@@ -1695,10 +1935,19 @@
           "channelIdentity": 62,
           "ctrPotential": 65,
           "novelty": 91,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 55,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
         "total": 71,
-        "adjustedTotal": 71,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 64,
         "unsupportedWords": [
           "disaster",
           "still",
@@ -1711,12 +1960,12 @@
   "derivedShorts": {
     "shorts": [
       {
-        "angle": "what-happened",
-        "hook": "+73 s: External tank fails; Challenger breaks apart — 7 crew lost.",
+        "angle": "consequence",
+        "hook": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
         "hookFamily": "shocking_consequence",
-        "hookScore": 84,
+        "hookScore": 82,
         "first3SecondPlan": {
-          "narration": "+73 s: External tank fails; Challenger breaks apart — 7 crew lost.",
+          "narration": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
           "firstFrame": {
             "description": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
             "source": "Footage/challenger.ogv",
@@ -1730,10 +1979,52 @@
           "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
           "cutTiming": [
             0,
-            1.5,
-            3
+            1,
+            2
           ],
-          "soundCue": "low impact hit under the first cut",
+          "soundCue": "single low hit on the first cut",
+          "communicates": "tension"
+        },
+        "miniNarrative": [
+          "The Space Shuttle Challenger broke apart 73 seconds after launch.",
+          "The key figure: 73 SECONDS.",
+          "On January 28, 1986, Space Shuttle Challenger broke apart 73 seconds into its flight, killing all seven crew members."
+        ],
+        "payoff": "On January 28, 1986, Space Shuttle Challenger broke apart 73 seconds into its flight, killing all seven crew members.",
+        "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
+        "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
+        "standalone": true,
+        "longformBridge": "That was only the final failure. The full chain is in the linked episode.",
+        "claimIds": [
+          "C1",
+          "C4",
+          "C26"
+        ]
+      },
+      {
+        "angle": "what-happened",
+        "hook": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
+        "hookFamily": "shocking_consequence",
+        "hookScore": 82,
+        "first3SecondPlan": {
+          "narration": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
+          "firstFrame": {
+            "description": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
+            "source": "Footage/challenger.ogv",
+            "startAtSeconds": 85,
+            "sourceClass": "REAL_ARCHIVAL",
+            "communicates": "tension",
+            "rule": "opens on the most striking evidence moment, never the reel's leader"
+          },
+          "visual": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
+          "onScreenText": "73 SECONDS",
+          "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
+          "cutTiming": [
+            0,
+            1,
+            2
+          ],
+          "soundCue": "single low hit on the first cut",
           "communicates": "tension"
         },
         "miniNarrative": [
@@ -1817,12 +2108,12 @@
         ]
       },
       {
-        "angle": "failure-chain",
-        "hook": "Step 2 of the failure chain: o-rINGS lose resilience.",
-        "hookFamily": "impossible_sounding_fact",
-        "hookScore": 78,
+        "angle": "hidden-weakness",
+        "hook": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
+        "hookFamily": "shocking_consequence",
+        "hookScore": 82,
         "first3SecondPlan": {
-          "narration": "Step 2 of the failure chain: o-rINGS lose resilience.",
+          "narration": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
           "firstFrame": {
             "description": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
             "source": "Footage/challenger.ogv",
@@ -1836,10 +2127,52 @@
           "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
           "cutTiming": [
             0,
-            1.4,
-            2.8
+            1,
+            2
           ],
-          "soundCue": "low impact hit under the first cut",
+          "soundCue": "single low hit on the first cut",
+          "communicates": "tension"
+        },
+        "miniNarrative": [
+          "The trigger: an O-ring seal stiffened by cold.",
+          "Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.",
+          "The crew cabin broke away largely intact."
+        ],
+        "payoff": "The crew cabin broke away largely intact.",
+        "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
+        "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
+        "standalone": true,
+        "longformBridge": "That was only the final failure. The full chain is in the linked episode.",
+        "claimIds": [
+          "C2",
+          "C5",
+          "C6"
+        ]
+      },
+      {
+        "angle": "failure-chain",
+        "hook": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
+        "hookFamily": "shocking_consequence",
+        "hookScore": 82,
+        "first3SecondPlan": {
+          "narration": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
+          "firstFrame": {
+            "description": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
+            "source": "Footage/challenger.ogv",
+            "startAtSeconds": 85,
+            "sourceClass": "REAL_ARCHIVAL",
+            "communicates": "tension",
+            "rule": "opens on the most striking evidence moment, never the reel's leader"
+          },
+          "visual": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
+          "onScreenText": "73 SECONDS",
+          "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
+          "cutTiming": [
+            0,
+            1,
+            2
+          ],
+          "soundCue": "single low hit on the first cut",
           "communicates": "tension"
         },
         "miniNarrative": [
@@ -1862,94 +2195,10 @@
         ]
       },
       {
-        "angle": "hidden-weakness",
-        "hook": "Challenger didn't simply 'explode'.",
-        "hookFamily": "hidden_cause",
-        "hookScore": 77,
-        "first3SecondPlan": {
-          "narration": "Challenger didn't simply 'explode'.",
-          "firstFrame": {
-            "description": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
-            "source": "Footage/challenger.ogv",
-            "startAtSeconds": 85,
-            "sourceClass": "REAL_ARCHIVAL",
-            "communicates": "consequence",
-            "rule": "opens on the most striking evidence moment, never the reel's leader"
-          },
-          "visual": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
-          "onScreenText": "73 SECONDS",
-          "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
-          "cutTiming": [
-            0,
-            0.8,
-            1.6
-          ],
-          "soundCue": "low impact hit under the first cut",
-          "communicates": "consequence"
-        },
-        "miniNarrative": [
-          "The trigger: an O-ring seal stiffened by cold.",
-          "Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.",
-          "The crew cabin broke away largely intact."
-        ],
-        "payoff": "The crew cabin broke away largely intact.",
-        "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
-        "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
-        "standalone": true,
-        "longformBridge": "That was only the final failure. The full chain is in the linked episode.",
-        "claimIds": [
-          "C2",
-          "C5",
-          "C6"
-        ]
-      },
-      {
-        "angle": "consequence",
-        "hook": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
-        "hookFamily": "shocking_consequence",
-        "hookScore": 76,
-        "first3SecondPlan": {
-          "narration": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
-          "firstFrame": {
-            "description": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
-            "source": "Footage/challenger.ogv",
-            "startAtSeconds": 85,
-            "sourceClass": "REAL_ARCHIVAL",
-            "communicates": "tension",
-            "rule": "opens on the most striking evidence moment, never the reel's leader"
-          },
-          "visual": "Evidence frame for: \"Seventy-three seconds after launch, Challenger broke apart.\"",
-          "onScreenText": "73 SECONDS",
-          "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
-          "cutTiming": [
-            0,
-            1.5,
-            3
-          ],
-          "soundCue": "low impact hit under the first cut",
-          "communicates": "tension"
-        },
-        "miniNarrative": [
-          "The Space Shuttle Challenger broke apart 73 seconds after launch.",
-          "The key figure: 73 SECONDS.",
-          "On January 28, 1986, Space Shuttle Challenger broke apart 73 seconds into its flight, killing all seven crew members."
-        ],
-        "payoff": "On January 28, 1986, Space Shuttle Challenger broke apart 73 seconds into its flight, killing all seven crew members.",
-        "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
-        "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
-        "standalone": true,
-        "longformBridge": "That was only the final failure. The full chain is in the linked episode.",
-        "claimIds": [
-          "C1",
-          "C4",
-          "C26"
-        ]
-      },
-      {
         "angle": "engineering-explanation",
         "hook": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
         "hookFamily": "shocking_consequence",
-        "hookScore": 76,
+        "hookScore": 82,
         "first3SecondPlan": {
           "narration": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
           "firstFrame": {
@@ -1965,10 +2214,10 @@
           "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
           "cutTiming": [
             0,
-            1.5,
-            3
+            1,
+            2
           ],
-          "soundCue": "low impact hit under the first cut",
+          "soundCue": "single low hit on the first cut",
           "communicates": "tension"
         },
         "miniNarrative": [
@@ -2144,7 +2393,7 @@
     "playlist": "spaceflight-disasters",
     "subscribe_element": true,
     "timing": {
-      "startSeconds": 118,
+      "startSeconds": 112,
       "durationSeconds": 20,
       "note": "final 20 s; narration must not end abruptly"
     },
@@ -2152,12 +2401,12 @@
     "apiSupport": "UNSUPPORTED — YouTube Data API v3 has no end-screen write endpoint; configure in Studio (task emitted)."
   },
   "cost": {
-    "estimated_production_cost": 0.07,
+    "estimated_production_cost": 0.06,
     "currency": "USD",
     "breakdown": {
       "llmTokens": 0,
-      "ttsMinutes": 2.3,
-      "renderMinutesCpu": 6.9,
+      "ttsMinutes": 2.2,
+      "renderMinutesCpu": 6.6,
       "assets": 11,
       "youtubeQuotaUnits": 1650
     },
@@ -2169,7 +2418,7 @@
     "dimensions": {
       "TopicDepth": 97,
       "NarrativeQuality": 86,
-      "Hook": 81,
+      "Hook": 82,
       "ResearchQuality": 83,
       "SourceCoverage": 57,
       "FactualAccuracy": 100,
@@ -2178,7 +2427,7 @@
       "AudioQuality": null,
       "Editing": null,
       "Thumbnail": 89,
-      "Title": 85,
+      "Title": 82,
       "CopyrightSafety": 90,
       "Disclosure": 95,
       "EndScreenPlan": 90,
@@ -2189,11 +2438,12 @@
       "Editing"
     ],
     "hardFails": [
-      "INSUFFICIENT_DEPTH: evidence supports ~2.3 min; target 8–12 min — not padded"
+      "INSUFFICIENT_DEPTH: evidence supports ~2.2 min; target 8–12 min — not padded",
+      "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
     ],
     "notes": [
       "2 sources (preferred 3): add an independent source before the next revision",
-      "160 deep-research claims need the LLM writer (LONGFORM_LLM=1 + ANTHROPIC_API_KEY); the deterministic writer never narrates encyclopedia text verbatim"
+      "160 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim"
     ],
     "thresholds": {
       "publish": 85,
@@ -2208,14 +2458,14 @@
     "Channel": "Failure Reconstructed",
     "Content Type": "LONG_FORM",
     "Topic": "Why Challenger Broke Apart 73 Seconds After Launch",
-    "LongFormPotentialScore": 83,
+    "LongFormPotentialScore": 84,
     "Topic Bucket": "A",
-    "Cold Open": "Challenger didn't simply 'explode': the external tank failed and aerodynamic forces tore the orbiter apart.",
+    "Cold Open": "The Space Shuttle Challenger broke apart 73 seconds after launch.",
     "Target Duration": "8–12 min",
-    "Actual Duration": "~2.3 min (script estimate, deterministic-evidence)",
+    "Actual Duration": "~2.2 min (script estimate, deterministic-evidence)",
     "Scenes": 11,
     "Thumbnail Score": 89,
-    "Title Score": 85,
+    "Title Score": 82,
     "LongFormProductionReadinessScore": "83 → BLOCK",
     "Related Shorts": "challenger-1986, apollo-13-1970",
     "Primary Next Video": "The Rocket Nose Cone That Wouldn't Open — Twice"

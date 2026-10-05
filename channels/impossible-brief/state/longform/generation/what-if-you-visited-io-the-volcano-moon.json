@@ -1,0 +1,416 @@
+{
+  "schema": "longform-generation/2",
+  "channel": "impossible-brief",
+  "slug": "what-if-you-visited-io-the-volcano-moon",
+  "topicHash": "5e759fead2bc:20",
+  "status": "QUALITY_REVIEW",
+  "createdAt": "2026-10-05T14:29:45.073Z",
+  "updatedAt": "2026-10-05T14:29:45.073Z",
+  "provider": {
+    "primary": "groq",
+    "fallback": null
+  },
+  "factPack": {
+    "topic": "What If You Visited Io, the Volcano Moon?",
+    "central_question": "What If You Visited Io, the Volcano Moon?",
+    "audience_promise": "Answer one precise question about a visitor landed on Io using only documented evidence.",
+    "verified_facts": [
+      {
+        "id": "C1",
+        "text": "A surface constantly repaved by lava and sulfur plumes.",
+        "source": "NASA Science",
+        "rewrite": false
+      },
+      {
+        "id": "C3",
+        "text": "The governing physics: Jupiter's tides flex Io's interior, generating heat that drives constant volcanism.",
+        "source": "NASA Science",
+        "rewrite": false
+      },
+      {
+        "id": "C4",
+        "text": "The key figure: 400+ volcanoes.",
+        "source": "NASA Science",
+        "rewrite": false
+      },
+      {
+        "id": "C5",
+        "text": "A small moon far from the Sun can still be hot inside; tides, not sunlight, heat Io.",
+        "source": "NASA Science",
+        "rewrite": false
+      },
+      {
+        "id": "C6",
+        "text": "Why one moon has over 400 active volcanoes.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C7",
+        "text": "Io, orbiting Jupiter, is the most volcanic place known.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C8",
+        "text": "Some plumes rise 500 kilometres above its surface.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C9",
+        "text": "Some lava flows run more than 500 kilometres.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C10",
+        "text": "Jupiter's tides flex Io, heating its interior.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C11",
+        "text": "Voyager revealed the activity in 1979.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C12",
+        "text": "Its surface is constantly repaved, leaving no obvious craters.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C13",
+        "text": "So a moon can be hotter inside than its distance suggests.",
+        "source": "editorial narration (case file)",
+        "rewrite": false
+      },
+      {
+        "id": "C14",
+        "text": "With over 400 active volcanoes, Io is the most geologically active object in the Solar System.",
+        "source": "Wikipedia — Io (moon)",
+        "rewrite": false
+      },
+      {
+        "id": "C15",
+        "text": "Several volcanoes produce plumes of sulfur and sulfur dioxide as high as 500 km (300 mi) above the surface.",
+        "source": "Wikipedia — Io (moon)",
+        "rewrite": false
+      },
+      {
+        "id": "C16",
+        "text": "Numerous extensive lava flows, several more than 500 km (300 mi) in length, also mark the surface.",
+        "source": "Wikipedia — Io (moon)",
+        "rewrite": false
+      },
+      {
+        "id": "C17",
+        "text": "In 1979, the two Voyager spacecraft revealed Io to be a geologically active world, with numerous volcanic features, large mountains, and a young surface with no obvious impact craters.",
+        "source": "Wikipedia — Io (moon)",
+        "rewrite": false
+      },
+      {
+        "id": "C18",
+        "text": "Jupiter's tides flex Io's interior, generating heat that drives constant volcanism.",
+        "source": "NASA Science",
+        "rewrite": false
+      }
+    ],
+    "bounded_interpretations": [
+      {
+        "id": "C2",
+        "text": "Assume a visitor landed on Io.",
+        "class": "SPECULATION",
+        "source": "NASA Science"
+      },
+      {
+        "id": "C19",
+        "text": "A visitor landed on Io.",
+        "class": "SPECULATION",
+        "source": "NASA Science"
+      },
+      {
+        "id": "C20",
+        "text": "The exact timeline depends on how the impossible change happens; the order of effects is what established physics constrains.",
+        "class": "SPECULATION",
+        "source": "ImpossibleBrief claim framework"
+      }
+    ],
+    "uncertain_claims": [],
+    "visual_leads": [
+      {
+        "text": "Io's mottled yellow surface",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "sulfur plume rising 500 km",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "tidal flexing diagram",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "lava flow map",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "Voyager 1979 image",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      },
+      {
+        "text": "Jupiter looming over Io",
+        "source": null,
+        "start": null,
+        "origin": "case-file"
+      }
+    ]
+  },
+  "blueprint": {
+    "central_question": "What If You Visited Io, the Volcano Moon?",
+    "audience_promise": "Answer one precise question about a visitor landed on Io using only documented evidence.",
+    "narrative_angle": "A lone explorer steps onto Io’s ever‑changing surface, where lava rivers stretch hundreds of kilometres and sulfur plumes tower as high as the sky, exposing the tidal forces that make this moon the Solar System’s most volcanic world.",
+    "hook_candidates": [
+      "A landscape where lava flows run over 500 km and plumes rise another 500 km – a world constantly repaved by fire (C8,C9).",
+      "No impact craters survive on Io; every surface is freshly forged by volcanic activity (C12).",
+      "Jupiter’s gravity flexes Io like a drum, heating its interior and driving nonstop eruptions (C3)."
+    ],
+    "retention_beats": [
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object].",
+      "[object Object]."
+    ],
+    "uncertain_claims": [
+      "C2",
+      "C19",
+      "C20"
+    ],
+    "section_plan": [
+      {
+        "section": "COLD_OPEN",
+        "question": "What is the unresolved consequence the viewer sees first?",
+        "claimIds": [
+          "C1",
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C13"
+        ]
+      },
+      {
+        "section": "IMPOSSIBLE_QUESTION",
+        "question": "What exactly is being asked?",
+        "claimIds": [
+          "C1"
+        ]
+      },
+      {
+        "section": "INITIAL_CONDITIONS",
+        "question": "What do we assume?",
+        "claimIds": [
+          "C2"
+        ]
+      },
+      {
+        "section": "FIRST_EFFECT",
+        "question": "What changes first?",
+        "claimIds": [
+          "C6",
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11",
+          "C12",
+          "C13",
+          "C14",
+          "C15",
+          "C16",
+          "C17",
+          "C18",
+          "C19"
+        ]
+      },
+      {
+        "section": "SECOND_ORDER_EFFECT",
+        "question": "What does that trigger?",
+        "claimIds": []
+      },
+      {
+        "section": "SYSTEM_WIDE_CONSEQUENCE",
+        "question": "How far does it spread?",
+        "claimIds": []
+      },
+      {
+        "section": "SCIENCE_EXPLANATION",
+        "question": "What physics governs it?",
+        "claimIds": [
+          "C3"
+        ]
+      },
+      {
+        "section": "LIMITS_UNCERTAINTIES",
+        "question": "What can science not predict here?",
+        "claimIds": [
+          "C20"
+        ]
+      },
+      {
+        "section": "FINAL_SCIENTIFIC_PAYOFF",
+        "question": "What is the answer?",
+        "claimIds": []
+      }
+    ]
+  },
+  "sections": [
+    {
+      "section": "COLD_OPEN",
+      "paragraphs": [
+        {
+          "text": "What If You Visited Io, the Volcano Moon?",
+          "claims": [],
+          "role": "cold-open"
+        }
+      ]
+    },
+    {
+      "section": "IMPOSSIBLE_QUESTION",
+      "paragraphs": [
+        {
+          "text": "A surface constantly repaved by lava and sulfur plumes.",
+          "claims": [
+            "C1"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "INITIAL_CONDITIONS",
+      "paragraphs": [
+        {
+          "text": "We assume a visitor has landed on Io.",
+          "claims": [
+            "C2"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FIRST_EFFECT",
+      "paragraphs": [
+        {
+          "text": "A visitor landed on Io and immediately experiences Jupiter's tides flexing the moon, heating its interior and driving constant volcanism, making Io the most volcanic place known with over 400 active volcanoes.",
+          "claims": [
+            "C19",
+            "C10",
+            "C18",
+            "C7",
+            "C6",
+            "C14"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "The eruptions launch sulfur and sulfur‑dioxide plumes as high as 500 km and send lava flows that run more than 500 km, rapidly repaving the surface.",
+          "claims": [
+            "C8",
+            "C15",
+            "C9",
+            "C16",
+            "C12"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Voyager’s 1979 observations showed a young surface with no obvious craters, confirming the continual resurfacing that a visitor would encounter.",
+          "claims": [
+            "C11",
+            "C17",
+            "C12"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "SECOND_ORDER_EFFECT",
+      "paragraphs": []
+    },
+    {
+      "section": "SYSTEM_WIDE_CONSEQUENCE",
+      "paragraphs": []
+    },
+    {
+      "section": "SCIENCE_EXPLANATION",
+      "paragraphs": [
+        {
+          "text": "Jupiter’s tidal forces flex Io’s interior, generating heat that drives continuous volcanism.",
+          "claims": [
+            "C3"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "LIMITS_UNCERTAINTIES",
+      "paragraphs": [
+        {
+          "text": "The exact timeline depends on how the impossible change happens; the order of effects is what established physics constrains.",
+          "claims": [
+            "C20"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FINAL_SCIENTIFIC_PAYOFF",
+      "paragraphs": []
+    }
+  ],
+  "usage": {
+    "input_tokens": 4078,
+    "output_tokens": 3866
+  },
+  "providerUsed": "groq",
+  "model": "openai/gpt-oss-120b",
+  "depthNote": "Only claim C1 supports this section; no additional evidence. Section uses only claim C2 Describes the immediate volcanic and resurfacing changes observed right after a landing on Io. Based on NASA Science confirmation. Only claim C20 informs this section",
+  "quality": {
+    "duplicateSections": [],
+    "repeatedPhrases": [],
+    "weakHook": false,
+    "payoff": false,
+    "filler": [],
+    "introShare": 0.13,
+    "missingPlanSections": [],
+    "hardFails": [
+      "missing final payoff"
+    ],
+    "notes": []
+  }
+}

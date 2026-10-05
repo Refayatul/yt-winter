@@ -1,0 +1,262 @@
+{
+  "schema": "research-package/1",
+  "id": "critical-thread:the-critical-role-of-urban-traffic-control-network",
+  "channel": "critical-thread",
+  "topicId": "CT-215",
+  "slug": "the-critical-role-of-urban-traffic-control-network",
+  "subject": "urban traffic control network",
+  "cluster": "ROADS AND BRIDGES",
+  "topicHash": "db1725aeda00+deep2",
+  "createdAt": "2026-10-05T14:31:29.020Z",
+  "reuseCount": 0,
+  "reusableFor": [
+    "long-form",
+    "derived-shorts",
+    "metadata",
+    "fact-check",
+    "visual-sourcing",
+    "follow-up-episodes"
+  ],
+  "sources": [
+    {
+      "name": "U.S. Department of Transportation",
+      "url": "https://www.transportation.gov/",
+      "tier": "GOVERNMENT_AGENCY",
+      "score": 95
+    },
+    {
+      "name": "International Transport Forum",
+      "url": "https://www.itf-oecd.org/",
+      "tier": "GOVERNMENT_AGENCY",
+      "score": 95
+    },
+    {
+      "name": "Wikipedia — Traffic management",
+      "url": "https://en.wikipedia.org/wiki/Traffic_management",
+      "tier": "ENCYCLOPEDIA",
+      "score": 55
+    }
+  ],
+  "deepResearch": {
+    "article": "Traffic management",
+    "via": "subject title (exact/redirect match, no fuzzy search)",
+    "claims": 2,
+    "status": "OK",
+    "licence": "CC BY-SA 4.0 — facts only; never narrate verbatim"
+  },
+  "sourceQuality": 95,
+  "primarySources": 2,
+  "claims": [
+    {
+      "id": "C1",
+      "text": "When control fails, signals fall back to fixed timings and queues grow.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "U.S. Department of Transportation",
+      "role": "consequence"
+    },
+    {
+      "id": "C2",
+      "text": "Detectors measure traffic and software adjusts green times and offsets in real time.",
+      "class": "CONFIRMED_FACT",
+      "layer": "VERIFIED FACT",
+      "source": "U.S. Department of Transportation",
+      "role": "mechanism"
+    },
+    {
+      "id": "C3",
+      "text": "The key figure: 63,000 intersections.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "U.S. Department of Transportation",
+      "role": "number"
+    },
+    {
+      "id": "C4",
+      "text": "Why 63,000 intersections share one control system.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "editorial narration (case file)",
+      "role": "narration"
+    },
+    {
+      "id": "C5",
+      "text": "SCATS runs signals in over 216 cities.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "editorial narration (case file)",
+      "role": "narration"
+    },
+    {
+      "id": "C6",
+      "text": "Australia alone has around 11,000 of them.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "editorial narration (case file)",
+      "role": "narration"
+    },
+    {
+      "id": "C7",
+      "text": "Sensors in the road feed real-time timing changes.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "editorial narration (case file)",
+      "role": "narration"
+    },
+    {
+      "id": "C8",
+      "text": "Smarter offsets improved flow by 8% in one test.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "editorial narration (case file)",
+      "role": "narration"
+    },
+    {
+      "id": "C9",
+      "text": "Better pedestrian timing cut unsafe crossing by 34%.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "editorial narration (case file)",
+      "role": "narration"
+    },
+    {
+      "id": "C10",
+      "text": "That's why your green light is decided by software.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "editorial narration (case file)",
+      "role": "narration"
+    },
+    {
+      "id": "C11",
+      "text": "SCATS is installed at more than 63,000 intersections in over 216 cities in 33 countries.",
+      "class": "CONFIRMED_FACT",
+      "layer": "VERIFIED FACT",
+      "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+      "role": "evidence",
+      "url": "https://en.wikipedia.org/wiki/Sydney_Coordinated_Adaptive_Traffic_System"
+    },
+    {
+      "id": "C12",
+      "text": "In Australia, where the system was first developed, the majority of signalised intersections are SCATS operated (around 11,000).",
+      "class": "CONFIRMED_FACT",
+      "layer": "VERIFIED FACT",
+      "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+      "role": "evidence",
+      "url": "https://en.wikipedia.org/wiki/Sydney_Coordinated_Adaptive_Traffic_System"
+    },
+    {
+      "id": "C13",
+      "text": "Longer or more frequent green signals for pedestrians can reduce unsafe crossing by 34%.",
+      "class": "CONFIRMED_FACT",
+      "layer": "VERIFIED FACT",
+      "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+      "role": "evidence",
+      "url": "https://en.wikipedia.org/wiki/Sydney_Coordinated_Adaptive_Traffic_System"
+    },
+    {
+      "id": "C14",
+      "text": "The new method of on-line offset calculation showed an 8% improvement over the existing precalculated offset plans.",
+      "class": "CONFIRMED_FACT",
+      "layer": "VERIFIED FACT",
+      "source": "Wikipedia — Sydney Coordinated Adaptive Traffic System",
+      "role": "evidence",
+      "url": "https://en.wikipedia.org/wiki/Sydney_Coordinated_Adaptive_Traffic_System"
+    },
+    {
+      "id": "C15",
+      "text": "City traffic flow depends on adaptive control systems coordinating signals.",
+      "class": "CONFIRMED_FACT",
+      "layer": "VERIFIED FACT",
+      "source": "U.S. Department of Transportation",
+      "role": "dependency"
+    },
+    {
+      "id": "C16",
+      "text": "One system coordinates tens of thousands of intersections worldwide.",
+      "class": "MODEL",
+      "layer": "MODEL",
+      "source": "U.S. Department of Transportation",
+      "role": "bottleneck"
+    },
+    {
+      "id": "C17",
+      "text": "Local controllers keep running basic plans if central control drops.",
+      "class": "CONFIRMED_FACT",
+      "layer": "VERIFIED FACT",
+      "source": "U.S. Department of Transportation",
+      "role": "resilience"
+    },
+    {
+      "id": "C18",
+      "text": "Traffic management is a key branch within logistics.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "Wikipedia — Traffic management",
+      "role": "consequence",
+      "verbatim": false,
+      "url": "https://en.wikipedia.org/wiki/Traffic_management",
+      "section": "Lead",
+      "licence": "CC BY-SA 4.0"
+    },
+    {
+      "id": "C19",
+      "text": "It concerns the planning, control and purchasing of transport services needed to physically move vehicles (for example aircraft, road vehicles, rolling stock and watercraft) and freight.",
+      "class": "CONFIRMED_FACT",
+      "layer": "CONFIRMED FACT",
+      "source": "Wikipedia — Traffic management",
+      "role": "event",
+      "verbatim": false,
+      "url": "https://en.wikipedia.org/wiki/Traffic_management",
+      "section": "Lead",
+      "licence": "CC BY-SA 4.0"
+    }
+  ],
+  "visualLeads": [
+    {
+      "text": "busy intersection from above",
+      "source": null,
+      "start": null,
+      "origin": "case-file"
+    },
+    {
+      "text": "loop detectors in the road",
+      "source": null,
+      "start": null,
+      "origin": "case-file"
+    },
+    {
+      "text": "traffic control centre screens",
+      "source": null,
+      "start": null,
+      "origin": "case-file"
+    },
+    {
+      "text": "map of cities using the system",
+      "source": null,
+      "start": null,
+      "origin": "case-file"
+    },
+    {
+      "text": "green wave animation",
+      "source": null,
+      "start": null,
+      "origin": "case-file"
+    },
+    {
+      "text": "pedestrian crossing",
+      "source": null,
+      "start": null,
+      "origin": "case-file"
+    },
+    {
+      "text": "Specialist Traffic Management Vehicle",
+      "source": "Commons: Specialist Traffic Management Vehicle.jpg",
+      "origin": "article-image (licence check pending)"
+    }
+  ],
+  "footage": [],
+  "gaps": [
+    "2 source(s); long-form needs ≥ 3"
+  ]
+}

@@ -3,7 +3,7 @@
   "channel": "failure-reconstructed",
   "channelName": "Failure Reconstructed",
   "contentType": "long",
-  "createdAt": "2026-09-30T15:48:32.929Z",
+  "createdAt": "2026-10-05T14:29:42.895Z",
   "topic": {
     "id": "columbia-2003",
     "slug": "columbia-2003",
@@ -17,10 +17,10 @@
     "slug": "columbia-2003",
     "title": "A Piece of Foam Destroyed Space Shuttle Columbia",
     "cluster": "spaceflight-disasters",
-    "LongFormPotentialScore": 82,
+    "LongFormPotentialScore": 83,
     "bucket": "A",
     "reasons": [
-      "LongFormPotential 82 ≥ 78"
+      "LongFormPotential 83 ≥ 78"
     ],
     "factors": {
       "DepthPotential": {
@@ -58,9 +58,9 @@
         "basis": "derived"
       },
       "ShortsEvidence": {
-        "value": 50,
-        "basis": "derived",
-        "note": "no published Short in this cluster yet — neutral"
+        "value": 67,
+        "basis": "measured",
+        "note": "best cluster Short 1731 views vs channel median 1033; best subscriber conversion 0.00231; best growth score 80.7"
       },
       "SeriesPotential": {
         "value": 90,
@@ -113,7 +113,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 0
+    "reuseCount": 1
   },
   "outline": {
     "structure": [
@@ -419,28 +419,52 @@
   "coldOpens": {
     "candidates": [
       {
-        "type": "shocking_consequence",
-        "text": "Space Shuttle Columbia broke apart during re-entry.",
-        "score": 76,
-        "estimatedSeconds": 2.2
-      },
-      {
         "type": "visual_first_reveal",
         "text": "Space Shuttle Columbia broke apart as it came home.",
-        "score": 75,
+        "score": 83,
         "estimatedSeconds": 2.8
       },
       {
-        "type": "before_after_consequence",
-        "text": "After Columbia, shuttles were inspected in orbit for heat-shield damage on every later flight.",
-        "score": 70,
-        "estimatedSeconds": 4.4
+        "type": "shocking_consequence",
+        "text": "Space Shuttle Columbia broke apart during re-entry.",
+        "score": 82,
+        "estimatedSeconds": 2.2
       },
       {
         "type": "hidden_cause",
         "text": "The structure melted from the inside.",
-        "score": 70,
+        "score": 76,
         "estimatedSeconds": 1.9
+      },
+      {
+        "type": "before_after_consequence",
+        "text": "After that, every shuttle's heat shield was inspected in orbit.",
+        "score": 75,
+        "estimatedSeconds": 3.1
+      },
+      {
+        "type": "number_anomaly",
+        "text": "7 CREW.",
+        "score": 75,
+        "estimatedSeconds": 0.6
+      },
+      {
+        "type": "countdown",
+        "text": "All seven astronauts were killed minutes before landing.",
+        "score": 74,
+        "estimatedSeconds": 2.5
+      },
+      {
+        "type": "mechanism_reveal",
+        "text": "Columbia failed because foam strike breaching a reinforced carbon-carbon panel on the wing's leading edge.",
+        "score": 72,
+        "estimatedSeconds": 4.7
+      },
+      {
+        "type": "unexpected_chain_reaction",
+        "text": "It started with foam breaks off external tank. It ended with orbiter breaks apart.",
+        "score": 69,
+        "estimatedSeconds": 4.4
       },
       {
         "type": "question_gap",
@@ -449,47 +473,44 @@
         "estimatedSeconds": 1.3
       },
       {
-        "type": "unexpected_chain_reaction",
-        "text": "It started with foam breaks off external tank. It ended with orbiter breaks apart.",
+        "type": "tiny_cause_massive_consequence",
+        "text": "It took only a suitcase-sized piece of foam hitting the left wing at launch.",
         "score": 65,
         "estimatedSeconds": 4.4
-      },
-      {
-        "type": "countdown",
-        "text": "All seven astronauts were killed minutes before landing.",
-        "score": 65,
-        "estimatedSeconds": 2.5
       },
       {
         "type": "warning_ignored",
         "text": "Engineers asked for satellite images of the wing and were turned down. What should happen when a warning is inconvenient?",
-        "score": 63,
+        "score": 65,
         "estimatedSeconds": 6.3
-      },
-      {
-        "type": "tiny_cause_massive_consequence",
-        "text": "It took only a suitcase-sized piece of foam hitting the left wing at launch.",
-        "score": 59,
-        "estimatedSeconds": 4.4
       }
     ],
     "selected": {
-      "type": "shocking_consequence",
-      "text": "Space Shuttle Columbia broke apart during re-entry.",
-      "score": 76,
-      "estimatedSeconds": 2.2
+      "type": "visual_first_reveal",
+      "text": "Space Shuttle Columbia broke apart as it came home.",
+      "score": 83,
+      "estimatedSeconds": 2.8
     }
   },
   "script": {
     "generator": "deterministic-evidence",
-    "llmError": null,
+    "provider": "groq",
+    "model": null,
+    "status": "FAILED",
+    "pipeline": null,
+    "blueprint": null,
+    "quality": null,
+    "checkpoint": "generation/columbia-2003.json",
+    "llmError": "groq request failed (HTTP 413)",
+    "llmErrorCode": "REQUEST",
+    "llmErrorStage": "narrative-angle",
     "depthNote": null,
     "sections": [
       {
         "section": "COLD_OPEN",
         "paragraphs": [
           {
-            "text": "Space Shuttle Columbia broke apart during re-entry.",
+            "text": "Space Shuttle Columbia broke apart as it came home.",
             "claims": [],
             "role": "cold-open"
           }
@@ -608,8 +629,8 @@
         ]
       }
     ],
-    "words": 292,
-    "estimatedMinutes": 1.9,
+    "words": 294,
+    "estimatedMinutes": 2,
     "paragraphs": 8,
     "secondsPerNewBeat": 15
   },
@@ -617,7 +638,7 @@
     "rows": [
       {
         "section": "COLD_OPEN",
-        "excerpt": "Space Shuttle Columbia broke apart during re-entry.",
+        "excerpt": "Space Shuttle Columbia broke apart as it came home.",
         "claims": []
       },
       {
@@ -787,7 +808,7 @@
       "scene": 1,
       "narrationSpan": [
         0,
-        3
+        4
       ],
       "section": "COLD_OPEN",
       "visualPurpose": "show evidence",
@@ -795,7 +816,7 @@
       "subject": "Space Shuttle Columbia broke apart as it came home.",
       "asset": "Footage/columbia-1.jpg",
       "sourceRequirement": "public-domain / licensed archival with attribution",
-      "durationEstimateSeconds": 2.8,
+      "durationEstimateSeconds": 3.6,
       "motion": "slow push-in to detail",
       "claimSupported": null,
       "fallbackAssetStrategy": "labelled reconstruction diagram (never presented as archive)",
@@ -804,8 +825,8 @@
     {
       "scene": 2,
       "narrationSpan": [
-        3,
-        10
+        4,
+        11
       ],
       "section": "CONSEQUENCE",
       "visualPurpose": "show evidence",
@@ -822,8 +843,8 @@
     {
       "scene": 3,
       "narrationSpan": [
-        10,
-        29
+        11,
+        30
       ],
       "section": "WHAT_HAPPENED",
       "visualPurpose": "show evidence",
@@ -840,7 +861,7 @@
     {
       "scene": 4,
       "narrationSpan": [
-        29,
+        30,
         48
       ],
       "section": "WHAT_HAPPENED",
@@ -859,7 +880,7 @@
       "scene": 5,
       "narrationSpan": [
         48,
-        56
+        57
       ],
       "section": "SYSTEM",
       "visualPurpose": "visualise scenario",
@@ -876,8 +897,8 @@
     {
       "scene": 6,
       "narrationSpan": [
-        56,
-        73
+        57,
+        74
       ],
       "section": "HIDDEN_WEAKNESS",
       "visualPurpose": "visualise scenario",
@@ -894,8 +915,8 @@
     {
       "scene": 7,
       "narrationSpan": [
-        73,
-        86
+        74,
+        87
       ],
       "section": "FAILURE_CHAIN",
       "visualPurpose": "explain mechanism",
@@ -912,8 +933,8 @@
     {
       "scene": 8,
       "narrationSpan": [
-        86,
-        99
+        87,
+        100
       ],
       "section": "FAILURE_CHAIN",
       "visualPurpose": "explain mechanism",
@@ -930,8 +951,8 @@
     {
       "scene": 9,
       "narrationSpan": [
-        99,
-        106
+        100,
+        107
       ],
       "section": "WHAT_CHANGED",
       "visualPurpose": "visualise scenario",
@@ -948,8 +969,8 @@
     {
       "scene": 10,
       "narrationSpan": [
-        106,
-        117
+        107,
+        118
       ],
       "section": "FINAL_TAKEAWAY",
       "visualPurpose": "visualise scenario",
@@ -1121,45 +1142,121 @@
   },
   "titles": {
     "selected": {
-      "title": "Columbia: What Failed, Why, and What Changed",
-      "source": "what-why-changed",
-      "pattern": "label-colon",
+      "title": "What Really Destroyed Columbia — The Complete Investigation",
+      "source": "complete-investigation",
+      "pattern": "two-beat",
       "scores": {
         "clarity": 100,
-        "curiosity": 76,
-        "specificity": 71,
+        "curiosity": 58,
+        "specificity": 77,
         "truthfulness": 100,
-        "searchIntent": 83,
+        "searchIntent": 87,
         "channelIdentity": 62,
-        "ctrPotential": 87,
-        "novelty": 100,
-        "evergreenPotential": 85
+        "ctrPotential": 75,
+        "novelty": 89,
+        "evergreenPotential": 85,
+        "consequence": 80,
+        "compactness": 100,
+        "recognizability": 100,
+        "nonRedundancy": 89,
+        "factualIntegrity": 100,
+        "historicalPerformanceSimilarity": 50,
+        "patternFreshness": 100
       },
-      "total": 85,
-      "adjustedTotal": 85,
+      "total": 82,
+      "patternPenalty": 0,
+      "templateNaturalnessPenalty": 0,
+      "adjustedTotal": 82,
       "unsupportedWords": [],
       "misleading": false
     },
-    "selectedScore": 85,
+    "selectedScore": 82,
     "count": 23,
     "candidates": [
       {
-        "title": "Columbia: What Failed, Why, and What Changed",
-        "source": "what-why-changed",
-        "pattern": "label-colon",
+        "title": "What Really Destroyed Columbia — The Complete Investigation",
+        "source": "complete-investigation",
+        "pattern": "two-beat",
         "scores": {
           "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 87,
+          "channelIdentity": 62,
+          "ctrPotential": 75,
+          "novelty": 89,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 89,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 82,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 82,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Inside the Engineering Failure of Columbia",
+        "source": "inside-engineering",
+        "pattern": "inside",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 74,
+          "ctrPotential": 75,
+          "novelty": 80,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 80,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 81,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 81,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "The Hidden Weakness Inside Columbia",
+        "source": "hidden-weakness",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 93,
           "curiosity": 76,
           "specificity": 71,
           "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 87,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "searchIntent": 75,
+          "channelIdentity": 50,
+          "ctrPotential": 79,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
-        "total": 85,
-        "adjustedTotal": 85,
+        "total": 81,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 81,
         "unsupportedWords": [],
         "misleading": false
       },
@@ -1176,10 +1273,19 @@
           "channelIdentity": 50,
           "ctrPotential": 87,
           "novelty": 100,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 100,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
         "total": 83,
-        "adjustedTotal": 83,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 79,
         "unsupportedWords": [
           "have"
         ],
@@ -1197,154 +1303,19 @@
           "searchIntent": 87,
           "channelIdentity": 74,
           "ctrPotential": 75,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
         "total": 83,
-        "adjustedTotal": 83,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "What Really Destroyed Columbia — The Complete Investigation",
-        "source": "complete-investigation",
-        "pattern": "two-beat",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 87,
-          "channelIdentity": 62,
-          "ctrPotential": 75,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 82,
-        "adjustedTotal": 82,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Why Columbia Broke Apart on Re-entry",
-        "source": "editorial",
-        "pattern": "why",
-        "scores": {
-          "clarity": 94,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 60,
-          "ctrPotential": 67,
-          "novelty": 80,
-          "evergreenPotential": 85
-        },
-        "total": 81,
-        "adjustedTotal": 81,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Inside the Engineering Failure of Columbia",
-        "source": "inside-engineering",
-        "pattern": "inside",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 74,
-          "ctrPotential": 75,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 81,
-        "adjustedTotal": 81,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Hidden Weakness Inside Columbia",
-        "source": "hidden-weakness",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 93,
-          "curiosity": 76,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 50,
-          "ctrPotential": 79,
-          "novelty": 93,
-          "evergreenPotential": 85
-        },
-        "total": 81,
-        "adjustedTotal": 81,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Columbia: From First Warning to Final Failure",
-        "source": "warning-to-failure",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 75,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 80,
-        "adjustedTotal": 80,
-        "unsupportedWords": [
-          "warning"
-        ],
-        "misleading": false
-      },
-      {
-        "title": "How Columbia Changed Engineering Forever",
-        "source": "changed-engineering",
-        "pattern": "how",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 95,
-          "channelIdentity": 62,
-          "ctrPotential": 67,
-          "novelty": 90,
-          "evergreenPotential": 85
-        },
-        "total": 80,
-        "adjustedTotal": 80,
-        "unsupportedWords": [
-          "forever"
-        ],
-        "misleading": false
-      },
-      {
-        "title": "Why Columbia Failed",
-        "source": "why-failed",
-        "pattern": "why",
-        "scores": {
-          "clarity": 69,
-          "curiosity": 58,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 62,
-          "ctrPotential": 75,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 79,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 79,
         "unsupportedWords": [],
         "misleading": false
@@ -1361,10 +1332,48 @@
           "searchIntent": 75,
           "channelIdentity": 74,
           "ctrPotential": 63,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 80,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 80,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 78,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 78,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Columbia: What Failed, Why, and What Changed",
+        "source": "what-why-changed",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 76,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 87,
+          "novelty": 84,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 84,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 85,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 78,
         "unsupportedWords": [],
         "misleading": false
@@ -1382,51 +1391,47 @@
           "channelIdentity": 60,
           "ctrPotential": 63,
           "novelty": 100,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 95,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 100,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 77,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [],
         "misleading": false
       },
       {
-        "title": "How One Weakness Brought Down Columbia",
-        "source": "one-weakness",
-        "pattern": "how",
+        "title": "Why Columbia Broke Apart on Re-entry",
+        "source": "editorial",
+        "pattern": "why",
         "scores": {
-          "clarity": 97,
+          "clarity": 94,
           "curiosity": 58,
           "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 87,
-          "channelIdentity": 50,
-          "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 77,
-        "adjustedTotal": 77,
-        "unsupportedWords": [
-          "brought"
-        ],
-        "misleading": false
-      },
-      {
-        "title": "Columbia: The Full Failure Reconstructed",
-        "source": "full-reconstruction",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 71,
           "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 63,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "searchIntent": 95,
+          "channelIdentity": 60,
+          "ctrPotential": 67,
+          "novelty": 80,
+          "evergreenPotential": 85,
+          "consequence": 57,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 80,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
-        "total": 77,
+        "total": 81,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [],
         "misleading": false
@@ -1444,9 +1449,18 @@
           "channelIdentity": 62,
           "ctrPotential": 67,
           "novelty": 100,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 100,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 77,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [
           "mistakes"
@@ -1454,65 +1468,34 @@
         "misleading": false
       },
       {
-        "title": "Columbia: Every Link in the Failure Chain",
-        "source": "every-link",
-        "pattern": "label-colon",
+        "title": "How Columbia Changed Engineering Forever",
+        "source": "changed-engineering",
+        "pattern": "how",
         "scores": {
           "clarity": 100,
-          "curiosity": 40,
+          "curiosity": 58,
           "specificity": 77,
           "truthfulness": 85,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 63,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "searchIntent": 95,
+          "channelIdentity": 62,
+          "ctrPotential": 67,
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 90,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
-        "total": 76,
+        "total": 80,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [
-          "link"
+          "forever"
         ],
-        "misleading": false
-      },
-      {
-        "title": "Reconstructing Columbia: Cause, Chain, Consequence",
-        "source": "reconstructing",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 76,
-        "adjustedTotal": 76,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Columbia: The Investigation, Explained",
-        "source": "investigation-explained",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 97,
-          "curiosity": 40,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 76,
-        "adjustedTotal": 76,
-        "unsupportedWords": [],
         "misleading": false
       },
       {
@@ -1528,13 +1511,51 @@
           "channelIdentity": 50,
           "ctrPotential": 67,
           "novelty": 89,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 89,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 76,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [
           "disaster"
         ],
+        "misleading": false
+      },
+      {
+        "title": "Why Columbia Failed",
+        "source": "why-failed",
+        "pattern": "why",
+        "scores": {
+          "clarity": 69,
+          "curiosity": 58,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 62,
+          "ctrPotential": 75,
+          "novelty": 80,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 80,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 79,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 75,
+        "unsupportedWords": [],
         "misleading": false
       },
       {
@@ -1550,9 +1571,18 @@
           "channelIdentity": 62,
           "ctrPotential": 55,
           "novelty": 100,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 100,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 74,
         "unsupportedWords": [
           "forensic"
@@ -1572,14 +1602,203 @@
           "channelIdentity": 50,
           "ctrPotential": 67,
           "novelty": 100,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 100,
+          "factualIntegrity": 70,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 74,
         "unsupportedWords": [
           "have",
           "prevented"
         ],
+        "misleading": false
+      },
+      {
+        "title": "How One Weakness Brought Down Columbia",
+        "source": "one-weakness",
+        "pattern": "how",
+        "scores": {
+          "clarity": 97,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 87,
+          "channelIdentity": 50,
+          "ctrPotential": 67,
+          "novelty": 100,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 100,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 77,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 73,
+        "unsupportedWords": [
+          "brought"
+        ],
+        "misleading": false
+      },
+      {
+        "title": "Columbia: From First Warning to Final Failure",
+        "source": "warning-to-failure",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 75,
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 90,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 80,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 73,
+        "unsupportedWords": [
+          "warning"
+        ],
+        "misleading": false
+      },
+      {
+        "title": "Columbia: The Full Failure Reconstructed",
+        "source": "full-reconstruction",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 63,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 77,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 70,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Columbia: Every Link in the Failure Chain",
+        "source": "every-link",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 63,
+          "novelty": 82,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 82,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 76,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [
+          "link"
+        ],
+        "misleading": false
+      },
+      {
+        "title": "Reconstructing Columbia: Cause, Chain, Consequence",
+        "source": "reconstructing",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 55,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 76,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false
+      },
+      {
+        "title": "Columbia: The Investigation, Explained",
+        "source": "investigation-explained",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 97,
+          "curiosity": 40,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 55,
+          "novelty": 100,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 100,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 76,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
         "misleading": false
       },
       {
@@ -1595,9 +1814,18 @@
           "channelIdentity": 60,
           "ctrPotential": 57,
           "novelty": 91,
-          "evergreenPotential": 75
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 58,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 65,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "adjustedTotal": 65,
         "unsupportedWords": [],
         "misleading": false
@@ -1615,10 +1843,19 @@
           "channelIdentity": 62,
           "ctrPotential": 65,
           "novelty": 91,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 100,
+          "nonRedundancy": 91,
+          "factualIntegrity": 55,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
         "total": 71,
-        "adjustedTotal": 71,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "adjustedTotal": 64,
         "unsupportedWords": [
           "disaster",
           "still",
@@ -1631,55 +1868,10 @@
   "derivedShorts": {
     "shorts": [
       {
-        "angle": "failure-chain",
-        "hook": "Step 5 of the failure chain: orbiter breaks apart.",
-        "hookFamily": "impossible_sounding_fact",
-        "hookScore": 77,
-        "first3SecondPlan": {
-          "narration": "Step 5 of the failure chain: orbiter breaks apart.",
-          "firstFrame": {
-            "description": "Evidence frame for: \"Space Shuttle Columbia broke apart as it came home.\"",
-            "source": "Footage/columbia-1.jpg",
-            "startAtSeconds": null,
-            "sourceClass": "REAL_ARCHIVAL",
-            "communicates": "tension",
-            "rule": "opens on the most striking evidence moment, never the reel's leader"
-          },
-          "visual": "Evidence frame for: \"Space Shuttle Columbia broke apart as it came home.\"",
-          "onScreenText": "JUST FOAM",
-          "motion": "slow push-in 100→112% on the still, hard cut at the first beat",
-          "cutTiming": [
-            0,
-            1.4,
-            2.8
-          ],
-          "soundCue": "low impact hit under the first cut",
-          "communicates": "tension"
-        },
-        "miniNarrative": [
-          "Step 1 of the failure chain: foam breaks off external tank.",
-          "Step 2 of the failure chain: strikes left wing leading edge.",
-          "Step 3 of the failure chain: hole in heat shield panel.",
-          "Step 4 of the failure chain: hot gas enters wing on re-entry."
-        ],
-        "payoff": "Step 5 of the failure chain: orbiter breaks apart.",
-        "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
-        "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
-        "standalone": true,
-        "longformBridge": "That was only the final failure. The full chain is in the linked episode.",
-        "claimIds": [
-          "C7",
-          "C8",
-          "C9",
-          "C10",
-          "C11"
-        ]
-      },
-      {
         "angle": "consequence",
         "hook": "Space Shuttle Columbia broke apart during re-entry.",
         "hookFamily": "shocking_consequence",
-        "hookScore": 76,
+        "hookScore": 82,
         "first3SecondPlan": {
           "narration": "Space Shuttle Columbia broke apart during re-entry.",
           "firstFrame": {
@@ -1695,10 +1887,10 @@
           "motion": "slow push-in 100→112% on the still, hard cut at the first beat",
           "cutTiming": [
             0,
-            1.1,
-            2.2
+            1,
+            2
           ],
-          "soundCue": "low impact hit under the first cut",
+          "soundCue": "single low hit on the first cut",
           "communicates": "tension"
         },
         "miniNarrative": [
@@ -1721,7 +1913,7 @@
         "angle": "what-happened",
         "hook": "Space Shuttle Columbia broke apart during re-entry.",
         "hookFamily": "shocking_consequence",
-        "hookScore": 76,
+        "hookScore": 82,
         "first3SecondPlan": {
           "narration": "Space Shuttle Columbia broke apart during re-entry.",
           "firstFrame": {
@@ -1737,10 +1929,10 @@
           "motion": "slow push-in 100→112% on the still, hard cut at the first beat",
           "cutTiming": [
             0,
-            1.1,
-            2.2
+            1,
+            2
           ],
-          "soundCue": "low impact hit under the first cut",
+          "soundCue": "single low hit on the first cut",
           "communicates": "tension"
         },
         "miniNarrative": [
@@ -1818,7 +2010,7 @@
         "angle": "hidden-weakness",
         "hook": "Space Shuttle Columbia broke apart during re-entry.",
         "hookFamily": "shocking_consequence",
-        "hookScore": 76,
+        "hookScore": 82,
         "first3SecondPlan": {
           "narration": "Space Shuttle Columbia broke apart during re-entry.",
           "firstFrame": {
@@ -1834,10 +2026,10 @@
           "motion": "slow push-in 100→112% on the still, hard cut at the first beat",
           "cutTiming": [
             0,
-            1.1,
-            2.2
+            1,
+            2
           ],
-          "soundCue": "low impact hit under the first cut",
+          "soundCue": "single low hit on the first cut",
           "communicates": "tension"
         },
         "miniNarrative": [
@@ -1857,10 +2049,10 @@
         ]
       },
       {
-        "angle": "engineering-explanation",
+        "angle": "failure-chain",
         "hook": "Space Shuttle Columbia broke apart during re-entry.",
         "hookFamily": "shocking_consequence",
-        "hookScore": 76,
+        "hookScore": 82,
         "first3SecondPlan": {
           "narration": "Space Shuttle Columbia broke apart during re-entry.",
           "firstFrame": {
@@ -1876,10 +2068,55 @@
           "motion": "slow push-in 100→112% on the still, hard cut at the first beat",
           "cutTiming": [
             0,
-            1.1,
-            2.2
+            1,
+            2
           ],
-          "soundCue": "low impact hit under the first cut",
+          "soundCue": "single low hit on the first cut",
+          "communicates": "tension"
+        },
+        "miniNarrative": [
+          "Step 1 of the failure chain: foam breaks off external tank.",
+          "Step 2 of the failure chain: strikes left wing leading edge.",
+          "Step 3 of the failure chain: hole in heat shield panel.",
+          "Step 4 of the failure chain: hot gas enters wing on re-entry."
+        ],
+        "payoff": "Step 5 of the failure chain: orbiter breaks apart.",
+        "captionPlan": "semantic 2–3 word chunks, ≤ 2 lines, raised above Shorts UI (config.captions)",
+        "visualRhythm": "cut ≤ 1.4 s in the first 3 s, 1.6–2.4 s to 10 s, then 2.6–3.5 s",
+        "standalone": true,
+        "longformBridge": "That was only the final failure. The full chain is in the linked episode.",
+        "claimIds": [
+          "C7",
+          "C8",
+          "C9",
+          "C10",
+          "C11"
+        ]
+      },
+      {
+        "angle": "engineering-explanation",
+        "hook": "Space Shuttle Columbia broke apart during re-entry.",
+        "hookFamily": "shocking_consequence",
+        "hookScore": 82,
+        "first3SecondPlan": {
+          "narration": "Space Shuttle Columbia broke apart during re-entry.",
+          "firstFrame": {
+            "description": "Evidence frame for: \"Space Shuttle Columbia broke apart as it came home.\"",
+            "source": "Footage/columbia-1.jpg",
+            "startAtSeconds": null,
+            "sourceClass": "REAL_ARCHIVAL",
+            "communicates": "tension",
+            "rule": "opens on the most striking evidence moment, never the reel's leader"
+          },
+          "visual": "Evidence frame for: \"Space Shuttle Columbia broke apart as it came home.\"",
+          "onScreenText": "JUST FOAM",
+          "motion": "slow push-in 100→112% on the still, hard cut at the first beat",
+          "cutTiming": [
+            0,
+            1,
+            2
+          ],
+          "soundCue": "single low hit on the first cut",
           "communicates": "tension"
         },
         "miniNarrative": [
@@ -2007,7 +2244,7 @@
         "angle": "aftermath",
         "hook": "Space Shuttle Columbia broke apart during re-entry.",
         "hookFamily": "shocking_consequence",
-        "hookScore": 76,
+        "hookScore": 82,
         "first3SecondPlan": {
           "narration": "Space Shuttle Columbia broke apart during re-entry.",
           "firstFrame": {
@@ -2023,10 +2260,10 @@
           "motion": "slow push-in 100→112% on the still, hard cut at the first beat",
           "cutTiming": [
             0,
-            1.1,
-            2.2
+            1,
+            2
           ],
-          "soundCue": "low impact hit under the first cut",
+          "soundCue": "single low hit on the first cut",
           "communicates": "tension"
         },
         "miniNarrative": [
@@ -2102,7 +2339,7 @@
     "playlist": "spaceflight-disasters",
     "subscribe_element": true,
     "timing": {
-      "startSeconds": 94,
+      "startSeconds": 100,
       "durationSeconds": 20,
       "note": "final 20 s; narration must not end abruptly"
     },
@@ -2114,8 +2351,8 @@
     "currency": "USD",
     "breakdown": {
       "llmTokens": 0,
-      "ttsMinutes": 1.9,
-      "renderMinutesCpu": 5.7,
+      "ttsMinutes": 2,
+      "renderMinutesCpu": 6,
       "assets": 10,
       "youtubeQuotaUnits": 1650
     },
@@ -2127,16 +2364,16 @@
     "dimensions": {
       "TopicDepth": 97,
       "NarrativeQuality": 93,
-      "Hook": 76,
+      "Hook": 83,
       "ResearchQuality": 85,
       "SourceCoverage": 57,
       "FactualAccuracy": 100,
-      "ScriptRetention": 51,
+      "ScriptRetention": 52,
       "VisualCoverage": 90,
       "AudioQuality": null,
       "Editing": null,
       "Thumbnail": 89,
-      "Title": 85,
+      "Title": 82,
       "CopyrightSafety": 90,
       "Disclosure": 95,
       "EndScreenPlan": 90,
@@ -2147,11 +2384,12 @@
       "Editing"
     ],
     "hardFails": [
-      "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded"
+      "INSUFFICIENT_DEPTH: evidence supports ~2 min; target 8–12 min — not padded",
+      "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
     ],
     "notes": [
       "2 sources (preferred 3): add an independent source before the next revision",
-      "160 deep-research claims need the LLM writer (LONGFORM_LLM=1 + ANTHROPIC_API_KEY); the deterministic writer never narrates encyclopedia text verbatim"
+      "160 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim"
     ],
     "thresholds": {
       "publish": 85,
@@ -2166,14 +2404,14 @@
     "Channel": "Failure Reconstructed",
     "Content Type": "LONG_FORM",
     "Topic": "A Piece of Foam Destroyed Space Shuttle Columbia",
-    "LongFormPotentialScore": 82,
+    "LongFormPotentialScore": 83,
     "Topic Bucket": "A",
-    "Cold Open": "Space Shuttle Columbia broke apart during re-entry.",
+    "Cold Open": "Space Shuttle Columbia broke apart as it came home.",
     "Target Duration": "8–12 min",
-    "Actual Duration": "~1.9 min (script estimate, deterministic-evidence)",
+    "Actual Duration": "~2 min (script estimate, deterministic-evidence)",
     "Scenes": 10,
     "Thumbnail Score": 89,
-    "Title Score": 85,
+    "Title Score": 82,
     "LongFormProductionReadinessScore": "85 → BLOCK",
     "Related Shorts": "challenger-1986, apollo-13-1970",
     "Primary Next Video": "A Decades-Old Engine Exploded Seconds After Launch"

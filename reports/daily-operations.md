@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-04T20:08:03.026Z
+Generated: 2026-10-05T14:32:34.240Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,65 +8,65 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | chernobyl-1986 |
-| Short | uploaded-not-scheduled |
+| Today topic | san-bruno-pipeline-2010 |
+| Short | scheduled |
 | Long | due-not-produced |
-| Quality | PUBLISH / 92 |
-| YouTube | uploaded |
-| Publish time | 2026-10-04T22:00:00.000Z |
-| Video ID | Nk7vmybWY98 |
+| Quality | PUBLISH / 89 |
+| YouTube | scheduled |
+| Publish time | 2026-10-05T18:00:00.000Z |
+| Video ID | PAi4kSZesNE |
 | Analytics | measured |
-| Scheduler | sla-missed-or-channel-disabled |
-| Ready topic backlog | 362 |
-| Errors/review/blocks | 3 |
+| Scheduler | healthy |
+| Ready topic backlog | 361 |
+| Errors/review/blocks | 5 |
 | TikTok today | NOT_SENT |
-| TikTok backlog | 4 |
-| Analytics warehouse | through 2026-10-02 (lag 2 d) |
+| TikTok backlog | 5 |
+| Analytics warehouse | through 2026-10-03 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
-| API quota today | 0 / 9800 units (project channel:failure-reconstructed) |
+| Scheduler queue | 2 queued, oldest 2026-10-05 (0 d) |
+| API quota today | 1615 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 21/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
 
 | Signal | Status |
 |---|---|
-| Today topic | what-if-you-put-saturn-in-a-bathtub |
-| Short | uploaded-not-scheduled |
+| Today topic | what-if-a-mountain-fell-into-a-bay |
+| Short | scheduled |
 | Long | due-not-produced |
 | Quality | PUBLISH / unavailable |
-| YouTube | uploaded |
-| Publish time | 2026-10-04T22:00:00.000Z |
-| Video ID | Vuvx5nEqcaY |
+| YouTube | scheduled |
+| Publish time | 2026-10-05T18:00:00.000Z |
+| Video ID | 6AdruLBoGiw |
 | Analytics | measured |
-| Scheduler | sla-missed-or-channel-disabled |
-| Ready topic backlog | 493 |
+| Scheduler | healthy |
+| Ready topic backlog | 492 |
 | Errors/review/blocks | 1 |
-| Analytics warehouse | through 2026-10-02 (lag 2 d) |
-| Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.duplicate_prevented 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
-| API quota today | 0 / 9800 units (project channel:impossible-brief) |
-| YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
+| Analytics warehouse | through 2026-10-03 (lag 2 d) |
+| Ops (24 h) | publish.duplicate_prevented 1, publish.success 1, growth.decision 1, analytics.load 1 |
+| Scheduler queue | 2 queued, oldest 2026-10-05 (0 d) |
+| API quota today | 1615 / 9800 units (project 684098966511) |
+| YPP readiness (estimate) | subs 3/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
 
 | Signal | Status |
 |---|---|
-| Today topic | why-nuclear-reactor-coolant-pump-is-so-hard-to-replace |
-| Short | uploaded-not-scheduled |
+| Today topic | when-grid-control-room-becomes-the-bottleneck |
+| Short | scheduled |
 | Long | due-not-produced |
 | Quality | PUBLISH / unavailable |
-| YouTube | uploaded |
-| Publish time | 2026-10-04T22:00:00.000Z |
-| Video ID | rAZ4cE4A0DE |
+| YouTube | scheduled |
+| Publish time | 2026-10-05T18:00:00.000Z |
+| Video ID | 7g6pgV-E0PE |
 | Analytics | measured |
-| Scheduler | sla-missed-or-channel-disabled |
-| Ready topic backlog | 517 |
+| Scheduler | healthy |
+| Ready topic backlog | 516 |
 | Errors/review/blocks | 0 |
-| Analytics warehouse | through 2026-10-02 (lag 2 d) |
-| Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.duplicate_prevented 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
-| API quota today | 0 / 9800 units (project channel:critical-thread) |
+| Analytics warehouse | through 2026-10-03 (lag 2 d) |
+| Ops (24 h) | publish.duplicate_prevented 1, publish.success 1, growth.decision 1, analytics.load 1 |
+| Scheduler queue | 2 queued, oldest 2026-10-05 (0 d) |
+| API quota today | 1615 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
@@ -74,19 +74,19 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Signal | Status |
 |---|---|
 | Today topic | why-the-bluetooth-logo-looks-like-that |
-| Short | uploaded-not-scheduled |
+| Short | scheduled |
 | Long | due-not-produced |
 | Quality | PUBLISH / unavailable |
-| YouTube | uploaded |
+| YouTube | scheduled |
 | Publish time | 2026-10-05T18:00:00.000Z |
 | Video ID | Q98e12I0NFA |
-| Analytics | no-channel-measurements |
-| Scheduler | sla-missed-or-channel-disabled |
+| Analytics | measured |
+| Scheduler | healthy |
 | Ready topic backlog | 4 |
 | Errors/review/blocks | 1 |
-| Analytics warehouse | through 2026-10-02 (lag 2 d) · 3 table error(s) |
-| Ops (24 h) | publish.success 1, growth.decision 1, analytics.partial 1, publish.duplicate_prevented 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-04 (0 d) |
-| API quota today | 1711 / 9800 units (project 739767423116) |
-| YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
+| Analytics warehouse | through 2026-10-02 (lag 3 d) · 4 table error(s) |
+| Ops (24 h) | analytics.partial 2, publish.duplicate_prevented 1 |
+| Scheduler queue | 1 queued, oldest 2026-10-05 (0 d) |
+| API quota today | 8 / 9800 units (project 739767423116) |
+| YPP readiness (estimate) | subs 1/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 

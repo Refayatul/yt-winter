@@ -1,0 +1,49 @@
+{
+  "slug": "titanic-1912",
+  "format": "short",
+  "olusturuldu": "2026-10-05T14:15:03.726Z",
+  "ekranHook": "4 COMPARTMENTS",
+  "mevcut": {
+    "puan": 70,
+    "pencereler": {
+      "0-5": "The Titanic sank on her maiden voyage. It went down in two hours and",
+      "5-12": "forty minutes, and more than fifteen hundred people died. It was built to stay afloat with four compartments flooded.",
+      "12-20": "The iceberg opened more than that along the side. As the bow sank lower, water spilled over the watertight walls. They weren't",
+      "20-30": "high enough to stop it. There weren't enough lifeboats for everyone. Now international rules require lifeboats for everyone aboard."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 2 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "The Titanic sank on her maiden voyage."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only an iceberg scraping along the starboard side."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could an iceberg scraping along the starboard side do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is hull breaches across more watertight compartments than the design could survive — and it is why SOLAS rules made lifeboats for everyone aboard mandatory."
+      }
+    ],
+    "metin": "The Titanic sank on her maiden voyage. It took only an iceberg scraping along the starboard side. So how could an iceberg scraping along the starboard side do this? The answer is hull breaches across more watertight compartments than the design could survive — and it is why SOLAS rules made lifeboats for everyone aboard mandatory.",
+    "puan": 95
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

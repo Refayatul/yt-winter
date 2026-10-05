@@ -1,0 +1,585 @@
+[
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1447,
+      "output_tokens": 1417
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 416,
+      "output_tokens": 415
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:INITIAL_CONDITIONS",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:INITIAL_CONDITIONS",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 425,
+      "output_tokens": 455
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 1024,
+      "output_tokens": 804
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SCIENCE_EXPLANATION",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SCIENCE_EXPLANATION",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 400,
+      "output_tokens": 419
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:LIMITS_UNCERTAINTIES",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:LIMITS_UNCERTAINTIES",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 444,
+      "output_tokens": 391
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 8000
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 2,
+    "delayMs": 8000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 1438,
+      "output_tokens": 1375
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 6000
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 2,
+    "delayMs": 6000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 407,
+      "output_tokens": 371
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:INITIAL_CONDITIONS",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:INITIAL_CONDITIONS",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 404,
+      "output_tokens": 384
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 2000
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 2,
+    "delayMs": 2000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 1005,
+      "output_tokens": 1077
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SCIENCE_EXPLANATION",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SCIENCE_EXPLANATION",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 4000
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SCIENCE_EXPLANATION",
+    "attempt": 2,
+    "delayMs": 4000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SCIENCE_EXPLANATION",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:SCIENCE_EXPLANATION",
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 393,
+      "output_tokens": 291
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:LIMITS_UNCERTAINTIES",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:LIMITS_UNCERTAINTIES",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 431,
+      "output_tokens": 368
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 1000
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 2,
+    "delayMs": 1000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 1467,
+      "output_tokens": 1422
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 11000
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 2,
+    "delayMs": 11000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:IMPOSSIBLE_QUESTION",
+    "attempt": 2,
+    "usage": {
+      "input_tokens": 415,
+      "output_tokens": 479
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:INITIAL_CONDITIONS",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:INITIAL_CONDITIONS",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 427,
+      "output_tokens": 371
+    }
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 1,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 9000
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "retry_scheduled",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 2,
+    "delayMs": 9000,
+    "code": "RATE_LIMIT"
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 2
+  },
+  {
+    "at": "2026-10-05T14:29:45.073Z",
+    "channel": "impossible-brief",
+    "event": "deferred",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FIRST_EFFECT",
+    "attempt": 2,
+    "code": "RATE_LIMIT",
+    "status": 429,
+    "retryable": true,
+    "retryAfterMs": 8000
+  }
+]

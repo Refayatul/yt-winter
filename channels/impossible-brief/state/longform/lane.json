@@ -44,6 +44,55 @@
       "selected": null,
       "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
       "finishedAt": "2026-09-30T15:48:35.659Z"
+    },
+    {
+      "cycleId": "2026-W41",
+      "channel": "impossible-brief",
+      "startedAt": "2026-10-05T14:29:45.073Z",
+      "status": "DEFERRED_PROVIDER",
+      "evaluated": [
+        {
+          "slug": "what-if-we-swam-in-europas-ocean",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 81,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~0.8 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        },
+        {
+          "slug": "what-if-you-visited-io-the-volcano-moon",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 81,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~0.9 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        },
+        {
+          "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 81,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded",
+            "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+          ],
+          "generationStatus": "DEFERRED"
+        }
+      ],
+      "selected": null,
+      "reason": "provider deferred what-if-the-dinosaur-killing-asteroid-hit-today; retry this cycle and resume its checkpoint",
+      "checkpoint": "generation/what-if-the-dinosaur-killing-asteroid-hit-today.json",
+      "finishedAt": "2026-10-05T14:31:28.971Z"
     }
   ]
 }

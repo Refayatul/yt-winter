@@ -44,6 +44,44 @@
       "selected": null,
       "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
       "finishedAt": "2026-09-30T15:48:37.139Z"
+    },
+    {
+      "cycleId": "2026-W41",
+      "channel": "critical-thread",
+      "startedAt": "2026-10-05T14:31:29.020Z",
+      "status": "DEFERRED_PROVIDER",
+      "evaluated": [
+        {
+          "slug": "what-quietly-depends-on-geothermal-production-well",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 77,
+          "bucket": "B",
+          "decision": "BLOCK",
+          "score": 82,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.1 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
+        },
+        {
+          "slug": "the-critical-role-of-urban-traffic-control-network",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 77,
+          "bucket": "B",
+          "decision": "BLOCK",
+          "score": 82,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1 min; target 8–12 min — not padded",
+            "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+          ],
+          "generationStatus": "DEFERRED"
+        }
+      ],
+      "selected": null,
+      "reason": "provider deferred the-critical-role-of-urban-traffic-control-network; retry this cycle and resume its checkpoint",
+      "checkpoint": "generation/the-critical-role-of-urban-traffic-control-network.json",
+      "finishedAt": "2026-10-05T14:31:31.878Z"
     }
   ]
 }
