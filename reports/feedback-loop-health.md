@@ -1,14 +1,14 @@
 # Growth Feedback Loop Health
 
-Generated: 2026-10-04T22:20:18.336Z
+Generated: 2026-10-05T01:59:49.055Z
 Portfolio verdict: **CLOSED_LOOP_WORKING**
 
 | Channel | Verdict | Mode | Samples | Performance rows | Diagnoses | Late checkpoints |
 |---|---|---|---:|---:|---:|---:|
 | failure-reconstructed | CLOSED_LOOP_WORKING | adaptive | 14 | 15 | 19 | 51 |
-| impossible-brief | CLOSED_LOOP_WORKING | observing | 3 | 4 | 2 | 4 |
-| critical-thread | CLOSED_LOOP_WORKING | observing | 3 | 4 | 2 | 4 |
-| behind-the-ordinary | CLOSED_LOOP_WORKING | heuristics-only | 2 | 2 | 1 | 2 |
+| impossible-brief | CLOSED_LOOP_WORKING | observing | 3 | 4 | 2 | 6 |
+| critical-thread | CLOSED_LOOP_WORKING | observing | 3 | 4 | 2 | 6 |
+| behind-the-ordinary | CLOSED_LOOP_WORKING | heuristics-only | 2 | 2 | 1 | 4 |
 
 ## Interpretation
 
