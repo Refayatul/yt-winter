@@ -1,0 +1,5 @@
+- Added broad semantic Wikipedia discovery for strict-title misses.
+- Added authority-host candidate ranking helpers.
+- Added fallback fetch adapter that never sets production readiness.
+- Added regression and safety tests plus PR smoke CI.
+- Existing primary-source, quote, narration-support and Builder gates remain mandatory.
