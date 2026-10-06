@@ -84,7 +84,12 @@ function selectShortTopic(channel, options = {}) {
   const day = options.date || new Date().toISOString().slice(0, 10);
   const exclude = new Set(options.exclude || []);
   const eligible = ranked.rows.filter((row) => !exclude.has(row.topic.id) && !exclude.has(row.topic.slug));
-  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);\n  const qualified = eligible.filter((row) => row.score.bucket !== "D" && Number.isFinite(row.score.ViralPotentialScore) && row.score.ViralPotentialScore >= viralMinimum);
+  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+  const qualified = eligible.filter((row) =>
+    row.score.bucket !== "D"
+    && Number.isFinite(row.score.ViralPotentialScore)
+    && row.score.ViralPotentialScore >= viralMinimum
+  );
   const candidatePool = qualified.slice(0, poolPolicy.target);
   const poolReady = candidatePool.length >= poolPolicy.minimum;
   const primary = candidatePool.filter((row) => selectionPolicy.exploitBuckets.includes(row.score.bucket));
