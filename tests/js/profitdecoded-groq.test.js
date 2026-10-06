@@ -184,7 +184,7 @@ test("groq research: unparseable memo falls back to URLs + our own passage selec
   assert.ok(r.dropped.some((d) => /does not appear/.test(d.reason)), "the invented quote is rejected");
   const extractCalls = client.calls.filter((b) => /You extract evidence/.test(sysOf(b)));
   assert.equal(extractCalls.length, 3, "one small call per page");
-  assert.ok(extractCalls.every((b) => b.max_completion_tokens === 3000 && b.response_format.type === "json_schema"));
+  assert.ok(extractCalls.every((b) => b.max_completion_tokens === 4500 && b.response_format.type === "json_schema"));
   assert.ok(extractCalls.every((b) => (userOf(b).match(/https?:\/\//g) || []).length >= 1 && /PAGE:/.test(userOf(b))));
   assert.ok(fs.readdirSync(debugDir).some((f) => /groq-memo\.txt$/.test(f)) && fs.readdirSync(debugDir).some((f) => /groq-quotes\.json$/.test(f)));
   // the structuring step requires a recorded contradiction check
@@ -284,4 +284,27 @@ test("EDGAR: errors name the failing URL, and full-text search is the fallback w
   assert.match(c.note, /HTTP 404 for https:\/\/www\.sec\.gov\/files\/company_tickers\.json/); assert.match(c.note, /full-text search/);
   const all404 = await E.candidates("Planet Fitness", { fetchImpl: async () => resp("nope", false, 404), contact: "r@example.org" });
   assert.deepEqual(all404.urls, []); assert.match(all404.note, /company_tickers\.json.*efts\.sec\.gov/);
+});
+
+test("groq chat: error bodies are surfaced, and a JSON-validation 400 is retried once in plain JSON mode", async () => {
+  const G = A("groq"); const calls = [];
+  const fail400 = () => ({ ok: false, status: 400, headers: { get: () => null }, json: async () => ({ error: { message: "Failed to generate JSON. Please adjust your prompt.", code: "json_validate_failed" } }) });
+  const f = async (url, init) => { const body = JSON.parse(init.body); calls.push(body); return body.response_format.type === "json_schema" ? fail400() : resp(chatBody('{"ok":true}')); };
+  const r = await G.chat({ messages: [{ role: "user", content: "x" }], schema: { type: "object", required: ["ok"] }, maxTokens: 4000, key: "KEY123", fetchImpl: f });
+  assert.equal(r.text, '{"ok":true}'); assert.equal(calls.length, 2);
+  assert.equal(calls[1].response_format.type, "json_object"); assert.equal(calls[1].max_completion_tokens, 6000);
+  assert.match(calls[1].messages.at(-1).content, /JSON Schema/); assert.match(calls[1].messages.at(-1).content, /"required":\["ok"\]/);
+  // if plain JSON mode also fails, the reason is in the error (and no secret)
+  const always = async () => ({ ok: false, status: 400, headers: { get: () => null }, json: async () => ({ error: { message: "bad request: schema invalid", code: "invalid_request_error" } }) });
+  await assert.rejects(G.chat({ messages: [], schema: { type: "object" }, key: "KEY123", fetchImpl: always }), (e) => e.code === "HTTP" && e.status === 400 && /invalid_request_error: bad request: schema invalid/.test(e.message) && !e.message.includes("KEY123"));
+  // 400 without a JSON body still reports the status
+  await assert.rejects(G.chat({ messages: [], key: "K", fetchImpl: async () => ({ ok: false, status: 400, headers: { get: () => null } }) }), /HTTP 400/);
+});
+
+test("groq research: a 400 on one page's extraction skips that page and keeps the others", async () => {
+  const R = A("research-agent"); const L = A("llm");
+  const client = { provider: "groq", key: "K", sleep: async () => {}, fetch: async (url, init) => { const b = JSON.parse(init.body); if (b.tools) return resp(chatBody(`see ${SEC} and ${AER} and ${FORT}`)); if (/You extract evidence/.test(sysOf(b))) { if (userOf(b).includes(AER)) return { ok: false, status: 400, headers: { get: () => null }, json: async () => ({ error: { message: "model refused the schema", code: "invalid_request_error" } }) }; const u = userOf(b).includes(SEC) ? SEC : FORT; return resp(chatBody(JSON.stringify({ quotes: u === SEC ? [{ url: SEC, fact: "m", quote: "we had approximately 20.8 million members and 2,896 clubs" }] : [{ url: FORT, fact: "p", quote: "raise the Classic membership from $10 to $15 a month, the first increase since 1998" }] }))); } return resp(chatBody(JSON.stringify(dossierDraft()))); } };
+  const r = await R.research(topic(), "short", { client, ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir: require("os").tmpdir() });
+  assert.ok(r.dropped.some((d) => /extraction skipped for this page: .*invalid_request_error/.test(d.reason)), JSON.stringify(r.dropped));
+  assert.ok(r.evidenceCount >= 2);
 });

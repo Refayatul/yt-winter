@@ -45,6 +45,7 @@ async function chat({ system, messages, tools, schema, maxTokens = 8000, effort 
   if (tools && tools.length) { body.tools = tools; body.tool_choice = "required"; }
   if (schema && !(tools && tools.length)) body.response_format = { type: "json_schema", json_schema: { name: "result", schema } };
   const doFetch = fetchImpl || fetch;
+  let schemaFallbackUsed = false;
   for (let attempt = 0; ; attempt += 1) {
     const res = await doFetch(URL_CHAT, { method: "POST", headers: { authorization: "Bearer " + k, "content-type": "application/json" }, body: JSON.stringify(body) });
     if (res.ok) {
@@ -52,8 +53,21 @@ async function chat({ system, messages, tools, schema, maxTokens = 8000, effort 
       if (c.finish_reason === "length") throw new AutoError("MAX_TOKENS", "Groq response hit the token limit: output would be truncated");
       return { text: (c.message && c.message.content) || "", usage: j.usage || {}, finish: c.finish_reason, raw: j };
     }
+    // The error body says WHY (never contains the key). Read it, keep it short.
+    let detail = null;
+    try { const eb = await (res.json ? res.json() : Promise.resolve(null)); detail = eb && eb.error ? { message: String(eb.error.message || "").slice(0, 300), code: eb.error.code || eb.error.type || null } : null; } catch (e) { /* no body */ }
+    // Structured-output validation failed (often because reasoning used the token budget): retry ONCE in plain
+    // JSON mode with the schema in the prompt and more room; our own checks validate the result.
+    if (res.status === 400 && detail && /json_validate_failed|failed to generate json|json/i.test(`${detail.code} ${detail.message}`) && body.response_format && !schemaFallbackUsed) {
+      schemaFallbackUsed = true;
+      const schemaText = JSON.stringify(body.response_format.json_schema && body.response_format.json_schema.schema);
+      body.response_format = { type: "json_object" };
+      body.max_completion_tokens = Math.min(30000, Math.round(body.max_completion_tokens * 1.5));
+      body.messages = [...body.messages, { role: "user", content: `Return ONLY one JSON object that conforms to this JSON Schema (no prose, no code fences):\n${schemaText}` }];
+      continue;
+    }
     const retryable = res.status === 429 || res.status >= 500;
-    if (!retryable || attempt >= maxRetries) throw new AutoError(res.status === 429 ? "RATE_LIMIT" : "HTTP", `Groq request failed: HTTP ${res.status}${res.status === 429 ? " (free-tier rate limit; try again later or lower the load)" : ""}`, { status: res.status });
+    if (!retryable || attempt >= maxRetries) throw new AutoError(res.status === 429 ? "RATE_LIMIT" : "HTTP", `Groq request failed: HTTP ${res.status}${detail ? ` (${detail.code ? detail.code + ": " : ""}${detail.message})` : ""}${res.status === 429 ? " (free-tier rate limit; try again later or lower the load)" : ""}`, { status: res.status, apiCode: detail && detail.code });
     const ra = Number((res.headers && res.headers.get && res.headers.get("retry-after")) || 0);
     await sleepMs(Math.min(60000, (ra > 0 ? ra * 1000 : 2000 * 2 ** attempt)));
   }
