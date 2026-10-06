@@ -182,9 +182,16 @@ function selectFromArgv(argv = process.argv.slice(2), options = {}) {
   return { channel: selectChannel(parsed.slug), argv: parsed.argv };
 }
 
+// Slugs of channels that take part in live portfolio operations. A channel
+// registered with enabled:false (e.g. a shadow-mode channel under onboarding)
+// stays addressable via --channel but is skipped by portfolio-wide loops.
+function activeSlugs() {
+  return Object.keys(registry().channels).filter((slug) => registry().channels[slug].enabled !== false);
+}
+
 // Every enabled channel (shared-quota accounting and portfolio reports).
 function allChannels() {
-  return Object.keys(registry().channels).filter((slug) => registry().channels[slug].enabled !== false).map((slug) => getChannel(slug));
+  return activeSlugs().map((slug) => getChannel(slug));
 }
 
 function ensureChannelDirectories(channel = getChannel()) {
@@ -195,6 +202,6 @@ function ensureChannelDirectories(channel = getChannel()) {
 }
 
 module.exports = {
-  allChannels, ROOT, REGISTRY_PATH, SLUG_PATTERN, registry, parseChannelArgv, selectChannel, selectFromArgv,
+  allChannels, activeSlugs, ROOT, REGISTRY_PATH, SLUG_PATTERN, registry, parseChannelArgv, selectChannel, selectFromArgv,
   currentSlug, getChannel, ensureChannelDirectories, credentialNames,
 };

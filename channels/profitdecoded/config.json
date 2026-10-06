@@ -1,0 +1,41 @@
+{
+  "slug": "profitdecoded",
+  "name": "ProfitDecoded",
+  "handle": "@ProfitDecoded",
+  "tagline": "The business behind everyday life.",
+  "positioning": "ProfitDecoded reveals how everyday businesses really make money — from pricing psychology and hidden business models to subscriptions, consumer traps and strange economics.",
+  "enabled": false,
+  "status": "shadow",
+  "onboarding": true,
+  "youtubeChannelId": "",
+  "credentialsPrefix": "PD",
+  "credentialEnv": {
+    "clientId": ["PD_YT_CLIENT_ID"],
+    "clientSecret": ["PD_YT_CLIENT_SECRET"],
+    "refreshToken": ["PD_YT_REFRESH_TOKEN"],
+    "channelId": ["PD_YT_CHANNEL_ID"]
+  },
+  "allowLegacyYouTubeEnv": false,
+  "pathMode": "isolated",
+  "language": "en",
+  "market": "global-english, US-weighted",
+  "timezone": "America/New_York",
+  "publishing": {
+    "publishFlag": "PD_PUBLISH",
+    "longFormPublishFlag": "PD_LONGFORM_PUBLISH",
+    "requireHumanApprovalForFirstN": 5,
+    "shorts": { "maxPerDay": 1, "targetDurationSeconds": [30, 50], "publishWindowsLocal": [{ "tz": "America/New_York", "time": "12:00" }, { "tz": "America/New_York", "time": "18:30" }], "productionTimeUtc": "08:30" },
+    "longForm": { "perWeek": 1, "targetDurationMinutes": [10, 18], "publishDay": "Saturday", "publishTimeLocal": "09:30", "publishTz": "America/New_York", "productionDays": ["Monday", "Tuesday", "Wednesday", "Thursday"], "productionTimeUtc": "09:30" },
+    "qualityOverCadence": true,
+    "skipInsteadOfLowering": true,
+    "scheduleRationale": "Initial US-Eastern windows (long-form Saturday morning, Shorts lunch/evening). This is an unvalidated starting assumption; the learning engine replaces it with channel analytics (publish-time cohorts) after enough data."
+  },
+  "voice": { "provider": "edge-tts", "voice": "en-US-AndrewMultilingualNeural", "rate": "-2%", "premiumProviderRequired": true, "note": "edge-tts is a fallback only. Narration naturalness cannot be certified from it without human listening; the narration gate caps it at REVIEW until a premium provider or an approved human listen is recorded." },
+  "contentPillars": { "hidden-business-models": 0.30, "pricing-psychology": 0.25, "money-traps": 0.20, "strange-economics": 0.15, "company-stories": 0.10 },
+  "portfolioAllocation": { "reach": 0.30, "revenue": 0.25, "evergreen": 0.20, "authority": 0.10, "trend": 0.10, "experiment": 0.05 },
+  "exploration": { "provenShare": 0.75, "exploreShare": 0.25 },
+  "qualityThresholds": { "autoPublish": 88, "review": 76, "humanness": { "target": 90, "hardReject": 85 }, "firstThirtySeconds": 80, "narration": 88, "researchGate": 80, "visualScriptMatch": 85, "topicDecisionMinimum": 60 },
+  "brandStyle": "premium editorial business documentary: warm paper-white and ink, one signal color, receipts, price tags, floor plans and unit-economics diagrams. No dollar signs, cash piles, rockets, crypto or green candlesticks unless a story genuinely requires them.",
+  "avoid": ["financial advice", "get-rich-quick framing", "slideshow stock footage", "Reddit-story format", "Wikipedia summaries", "generic 10-facts listicles", "scam-news channel drift"],
+  "platforms": { "youtube": { "enabled": false }, "instagram": { "enabled": false }, "tiktok": { "enabled": false } }
+}

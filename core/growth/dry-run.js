@@ -130,7 +130,7 @@ async function run(options = {}) {
   const dir = options.outDir || path.join(Channel.ROOT, "reports", "dry-runs");
   fs.mkdirSync(dir, { recursive: true });
   const results = [];
-  for (const slug of options.channels || Object.keys(Channel.registry().channels)) {
+  for (const slug of options.channels || Channel.activeSlugs()) {
     const channel = Channel.getChannel(slug);
     const short = shortReport(channel, options);
     const long = await longReport(channel, options);

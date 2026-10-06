@@ -8,7 +8,7 @@ const Experiment = require("../core/growth/publish-time-experiment");
 function read(file, fallback) { try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch (error) { return fallback; } }
 
 const records = [];
-for (const slug of Object.keys(Channel.registry().channels)) {
+for (const slug of Channel.activeSlugs()) {
   const channel = Channel.getChannel(slug);
   const performance = read(path.join(channel.paths.state, "growth", "performance.json"), []);
   const published = read(path.join(channel.paths.state, channel.config.pathMode === "legacy-adapter" ? "yayinlananlar.json" : "published.json"), []);

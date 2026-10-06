@@ -79,14 +79,14 @@ function infrastructure() {
   const workflows = fs.readdirSync(path.join(Channel.ROOT, ".github", "workflows")).filter((file) => file.endsWith(".yml"));
   return {
     workflows,
-    channels: Object.keys(Channel.registry().channels),
+    channels: Channel.activeSlugs(),
     growthEngineConfig: fs.existsSync(Config.DEFAULTS_PATH),
     analyticsSupport: Analytics.SUPPORT,
   };
 }
 
 function build(now = new Date()) {
-  const channels = Object.keys(Channel.registry().channels).map((slug) => channelHealth(Channel.getChannel(slug), now));
+  const channels = Channel.activeSlugs().map((slug) => channelHealth(Channel.getChannel(slug), now));
   return { generatedAt: now.toISOString(), note: "Per-channel baselines are computed separately and never blended.", channels, infrastructure: infrastructure() };
 }
 

@@ -302,7 +302,7 @@ function aggregateReport(results, shared, options = {}) {
 }
 
 async function checkAll(options = {}) {
-  const channels = options.channels || Object.keys(Channel.registry().channels)
+  const channels = options.channels || Channel.activeSlugs()
     .map((slug) => Channel.getChannel(slug))
     .filter((channel) => channel.config.enabled !== false && channel.config.platforms.youtube.enabled !== false);
   const results = [];
@@ -319,7 +319,7 @@ async function checkAll(options = {}) {
 }
 
 async function combineReports(directory, options = {}) {
-  const expected = Object.keys(Channel.registry().channels).filter((slug) => Channel.registry().channels[slug].enabled !== false);
+  const expected = Channel.activeSlugs();
   const files = fs.readdirSync(directory).filter((file) => file.endsWith(".json")).sort();
   const loaded = new Map();
   for (const file of files) {

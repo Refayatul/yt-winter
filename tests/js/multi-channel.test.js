@@ -28,7 +28,7 @@ const ROOT = path.resolve(__dirname, "..", "..");
 test("channel registry defaults safely and parses --channel in both forms", () => {
   const registry = Channel.registry();
   assert.equal(registry.defaultChannel, "failure-reconstructed");
-  assert.deepEqual(Object.keys(registry.channels).sort(), ["behind-the-ordinary", "critical-thread", "failure-reconstructed", "impossible-brief"]);
+  assert.deepEqual(Object.keys(registry.channels).sort(), ["behind-the-ordinary", "critical-thread", "failure-reconstructed", "impossible-brief", "profitdecoded"]);
   assert.deepEqual(Channel.parseChannelArgv(["--channel", "impossible-brief", "--due"]), { slug: "impossible-brief", argv: ["--due"] });
   assert.deepEqual(Channel.parseChannelArgv(["--channel=failure-reconstructed", "x"]), { slug: "failure-reconstructed", argv: ["x"] });
   assert.throws(() => Channel.parseChannelArgv(["--channel", "unknown"]), /Unknown channel/);
