@@ -300,6 +300,27 @@ async function commonsStills(queries, need = 7, wiki = null, options = {}) {
       const titles = ((search.body && search.body.query && search.body.query.search) || []).map((row) => row.title).filter((t) => /\.(jpe?g|png)$/i.test(t));
       for (const item of await imageInfo(titles)) consider(item, "commons-search");
     }
+    // Classic Commons full-text search can miss strongly relevant media whose
+    // subject is carried by the file title or structured caption. If the
+    // licence-safe pool is still short, query those two indexes explicitly.
+    // The normal consider() subject, safety, licence and size gates still
+    // decide whether a result is usable.
+    if (scored.length < need) {
+      const anchors = (options.anchorSubjects || options.subjects || list)
+        .filter((q) => !/^Category:/i.test(q))
+        .map((q) => String(q).trim())
+        .filter((q) => q && q.split(/\s+/).length <= 6)
+        .slice(0, 8);
+      for (const query of anchors) {
+        if (scored.length >= need) break;
+        for (const searchTerm of [`intitle:"${query}" filetype:bitmap`, `incaption:"${query}" filetype:bitmap`]) {
+          const search = await get("https://commons.wikimedia.org/w/api.php?action=query&list=search&srnamespace=6&srlimit=50&format=json&srsearch=" + encodeURIComponent(searchTerm), { json: true });
+          const titles = ((search.body && search.body.query && search.body.query.search) || []).map((row) => row.title).filter((t) => /\.(jpe?g|png)$/i.test(t));
+          for (const item of await imageInfo(titles)) consider(item, "commons-search");
+          if (scored.length >= need) break;
+        }
+      }
+    }
   }
   // At most two stills from the same series (e.g. "Anniversary Observance (1..4)").
   const prefix = (file) => file.toLowerCase().replace(/[\d()_.,-]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 28);
