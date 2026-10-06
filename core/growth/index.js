@@ -91,7 +91,10 @@ function selectShortTopic(channel, options = {}) {
     && row.score.ViralPotentialScore >= viralMinimum
   );
   const candidatePool = qualified.slice(0, poolPolicy.target);
-  const poolReady = candidatePool.length >= poolPolicy.minimum;
+  // The inventory-size minimum is a research-health signal, not a reason to
+  // suppress a genuinely production-qualified topic. Evidence-gated channels
+  // may intentionally have a small daily pool after viral/source filtering.
+  const poolReady = candidatePool.length > 0;
   const primary = candidatePool.filter((row) => selectionPolicy.exploitBuckets.includes(row.score.bucket));
   const experimental = candidatePool.filter((row) => row.score.bucket === policy.experimentalBucket);
   const modeRoll = Engagement.hash01(`${channel.slug}:${day}:explore-exploit`);
