@@ -14,6 +14,7 @@ const Rendering = require("./core/rendering");
 const Scripting = require("./core/scripting");
 const Growth = require("./core/growth");
 const { visualRejection, visualShortfall } = require("./core/pipeline/impossible-brief");
+const GrowthContext = require("./core/growth/context");
 
 const MAX_ATTEMPTS = 3;
 const channel = Channel.getChannel("critical-thread");
@@ -29,15 +30,23 @@ if (!launch) throw new Error(`Missing CriticalThread dry-run topic: ${requested 
 function nextTopic(tried) {
   if (!tried.length) return launch;
   if (requested) return null;
-  // Use the production queue, not repeated daily selectShortTopic() calls.
-  // selectShortTopic() intentionally returns one deterministic exploit/explore
-  // winner; calling it again with exclusions can exhaust a tiny decision pool
-  // after only a few visual rejects. orderedQueue() exposes every remaining
-  // production-qualified A/B (then C when configured), so visual qualification
-  // can actually scan the inventory as the scheduled pipeline is intended to.
-  const queue = Growth.orderedQueue(channel, { exclude: tried.map((item) => item.topicId) }).order;
-  const nextSlug = queue[0];
-  return nextSlug ? topics.find((item) => item.slug === nextSlug) : null;
+
+  // Re-rank the complete unused inventory and walk every topic that satisfies
+  // the same hard production floor as selectShortTopic(). The normal selector
+  // deliberately caps its daily decision pool; that cap must not become a
+  // recovery cap when visual preflight rejects every member of the pool.
+  const ranked = GrowthContext.rank(channel);
+  const config = require("./core/growth/config").forChannel(channel);
+  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+  const excluded = new Set(tried.flatMap((item) => [item.topicId, item.slug]));
+  const row = ranked.rows.find((candidate) =>
+    !excluded.has(candidate.topic.id)
+    && !excluded.has(candidate.topic.slug)
+    && candidate.score.bucket !== "D"
+    && Number.isFinite(candidate.score.ViralPotentialScore)
+    && candidate.score.ViralPotentialScore >= viralMinimum
+  );
+  return row ? topics.find((item) => item.id === row.topic.id) : null;
 }
 
 function portable(result) {
