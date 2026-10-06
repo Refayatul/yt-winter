@@ -75,7 +75,7 @@ jobs:
           PD_AUTO_PROVIDER: ${{ inputs.provider }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          PD_FETCH_CONTACT: https://github.com/${{ github.repository }}
+          PD_FETCH_CONTACT: ${{ vars.PD_FETCH_CONTACT || secrets.PD_FETCH_CONTACT || format('https://github.com/{0}', github.repository) }}
           PD_TTS_PROVIDER: kokoro
           PD_KOKORO_MODEL: ${{ github.workspace }}/kokoro-model/kokoro-v1.0.onnx
           PD_KOKORO_VOICES: ${{ github.workspace }}/kokoro-model/voices-v1.0.bin

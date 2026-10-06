@@ -18,6 +18,8 @@ const { AutoError } = require("./llm");
 
 const URL_CHAT = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = () => process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+// Groq's free-tier limits are per model: browsing (token-hungry) uses a smaller model with its own quota.
+const BROWSE_MODEL = () => process.env.GROQ_BROWSE_MODEL || "openai/gpt-oss-20b";
 
 function apiKey() {
   if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.trim()) return process.env.GROQ_API_KEY.trim();
@@ -36,10 +38,10 @@ function extractJson(text) {
 }
 
 // One chat completion with bounded retries on 429/5xx (honours retry-after). Returns {text, usage, finish}.
-async function chat({ system, messages, tools, schema, maxTokens = 8000, effort = "low", fetchImpl, key, sleepMs = sleep, maxRetries = 3 }) {
+async function chat({ system, messages, tools, schema, maxTokens = 8000, effort = "low", fetchImpl, key, sleepMs = sleep, maxRetries = 3, model }) {
   const k = key || apiKey();
   if (!k) throw new AutoError("NO_KEY", "GROQ_API_KEY is not set (env or .env)");
-  const body = { model: MODEL(), messages: [...(system ? [{ role: "system", content: system }] : []), ...messages], max_completion_tokens: maxTokens, reasoning_effort: effort, temperature: 0.3 };
+  const body = { model: model || ((tools && tools.length) ? BROWSE_MODEL() : MODEL()), messages: [...(system ? [{ role: "system", content: system }] : []), ...messages], max_completion_tokens: maxTokens, reasoning_effort: effort, temperature: 0.3 };
   if (tools && tools.length) { body.tools = tools; body.tool_choice = "required"; }
   if (schema && !(tools && tools.length)) body.response_format = { type: "json_schema", json_schema: { name: "result", schema } };
   const doFetch = fetchImpl || fetch;
@@ -65,19 +67,24 @@ function htmlToText(html) {
     .replace(/[ \t\r\f\v]+/g, " ").replace(/\n\s*/g, "\n").trim();
 }
 const BLOCKED_HOSTS = /(^|\.)wikipedia\.org$|(^|\.)wikimedia\.org$/;
-async function fetchPage(url, { fetchImpl, maxChars = 1500000, timeoutMs = 25000 } = {}) {
+async function fetchPage(url, { fetchImpl, maxChars, timeoutMs = 25000 } = {}) {
   let u; try { u = new URL(url); } catch (e) { return { ok: false, reason: "invalid URL" }; }
   if (!/^https?:$/.test(u.protocol)) return { ok: false, reason: "not http(s)" };
   if (BLOCKED_HOSTS.test(u.hostname)) return { ok: false, reason: "Wikipedia is not an allowed source" };
   const contact = process.env.PD_FETCH_CONTACT || "https://github.com/eyazan/youtube-otomasyon";
+  // sec.gov rejects undeclared tools: it needs a User-Agent with a contact e-mail ("Name admin@domain.com").
+  if (/(^|\.)sec\.gov$/.test(u.hostname) && !/@/.test(contact)) return { ok: false, reason: "sec.gov requires a contact e-mail in the User-Agent: set PD_FETCH_CONTACT to an e-mail address" };
+  const agent = /@/.test(contact) ? `ProfitDecodedResearch ${contact}` : `ProfitDecodedResearch/1.0 (${contact})`;
   const ctl = new AbortController(); const timer = setTimeout(() => ctl.abort(), timeoutMs);
   try {
-    const res = await (fetchImpl || fetch)(url, { headers: { "user-agent": `ProfitDecodedResearch/1.0 (${contact})`, accept: "text/html,application/xhtml+xml,text/plain" }, signal: ctl.signal, redirect: "follow" });
+    const res = await (fetchImpl || fetch)(url, { headers: { "user-agent": agent, accept: "text/html,application/xhtml+xml,text/plain" }, signal: ctl.signal, redirect: "follow" });
     if (!res.ok) return { ok: false, reason: `HTTP ${res.status}` };
     const type = String((res.headers && res.headers.get && res.headers.get("content-type")) || "");
     if (/pdf|octet-stream|image|video/i.test(type)) return { ok: false, reason: `unsupported content type ${type}` };
     const raw = await res.text();
-    const text = (/html|xml/i.test(type) || /^\s*</.test(raw) ? htmlToText(raw) : raw).slice(0, maxChars);
+    if (/Undeclared Automated Tool|Request Rate Threshold Exceeded|Access Denied/i.test(raw.slice(0, 4000)) && raw.length < 20000) return { ok: false, reason: "the site blocked the automated request (declare a contact e-mail in PD_FETCH_CONTACT)" };
+    const cap = maxChars || (/(^|\.)sec\.gov$/.test(u.hostname) ? 8000000 : 1500000); // annual reports are long
+    const text = (/html|xml/i.test(type) || /^\s*</.test(raw) ? htmlToText(raw) : raw).slice(0, cap);
     const title = (raw.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1];
     return { ok: true, url, title: title ? htmlToText(title).slice(0, 200) : "", text };
   } catch (e) { return { ok: false, reason: e.name === "AbortError" ? "timeout" : e.message }; }
@@ -155,4 +162,4 @@ async function verifyMemo(lines, deps = {}, pages = new Map(), docs = new Map())
   return { docs, rejected, pages, pagesFetched: [...pages.values()].filter((p) => p.ok).length };
 }
 
-module.exports = { MODEL, apiKey, chat, fetchPage, htmlToText, quoteInPage, parseMemoLines, urlsFromAnything, selectPassages, verifyMemo, extractJson };
+module.exports = { MODEL, BROWSE_MODEL, apiKey, chat, fetchPage, htmlToText, quoteInPage, parseMemoLines, urlsFromAnything, selectPassages, verifyMemo, extractJson };
