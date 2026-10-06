@@ -16,11 +16,11 @@ const Growth = require("./core/growth");
 const { visualRejection, visualShortfall, MAX_VISUAL_PRECHECKS } = require("./core/pipeline/impossible-brief");
 
 const MAX_ATTEMPTS = 3;
-const MAX_TOPIC_SCANS = Math.max(MAX_ATTEMPTS, topics.length);
 const channel = Channel.getChannel("critical-thread");
 const render = process.argv.includes("--render");
 const requested = process.argv.slice(2).find((arg) => !arg.startsWith("--"));
 const topics = Discovery.universe(channel).topics || [];
+const MAX_TOPIC_SCANS = Math.max(MAX_ATTEMPTS, topics.length);
 const launch = requested
   ? topics.find((item) => item.slug === requested || item.id === requested)
   : topics.find((item) => item.topic === "The Machine the Entire Chip Industry Depends On");
