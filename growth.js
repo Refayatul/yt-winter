@@ -37,7 +37,7 @@ function args(argv) {
 async function main() {
   const a = args(process.argv.slice(2));
   const command = a._[0] || "status";
-  const channels = a.channel ? [a.channel] : Object.keys(Channel.registry().channels);
+  const channels = a.channel ? [a.channel] : Channel.activeSlugs();
   if (command === "status") {
     const Lane = require("./core/growth/lane");
     const Growth = require("./core/growth");

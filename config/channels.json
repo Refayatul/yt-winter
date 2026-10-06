@@ -12,7 +12,9 @@
       "failure-reconstructed:long",
       "impossible-brief:long",
       "critical-thread:long",
-      "behind-the-ordinary:long"
+      "behind-the-ordinary:long",
+      "profitdecoded:short",
+      "profitdecoded:long"
     ]
   },
   "channels": {
@@ -39,6 +41,13 @@
       "enabled": true,
       "config": "channels/behind-the-ordinary/config.json",
       "brand": "channels/behind-the-ordinary/brand.json"
+    },
+    "profitdecoded": {
+      "name": "ProfitDecoded",
+      "enabled": false,
+      "status": "shadow",
+      "config": "channels/profitdecoded/config.json",
+      "brand": "channels/profitdecoded/brand.json"
     }
   }
 }

@@ -153,7 +153,7 @@ function channelReport(channel, date, now) {
 
 function build(now = new Date()) {
   const date = Calendar.dayKey(now);
-  const channels = Object.keys(Channel.registry().channels).map((slug) => channelReport(Channel.getChannel(slug), date, now));
+  const channels = Channel.activeSlugs().map((slug) => channelReport(Channel.getChannel(slug), date, now));
   return { generatedAt: now.toISOString(), date, channels };
 }
 

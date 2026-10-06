@@ -13,5 +13,8 @@ else {
     console.log(`Long due: ${item.long.due ? "YES" : "NO"}\n`);
   }
   console.log(`Queue: ${plan.queue.map((item) => item.key).join(" → ") || "empty"}`);
+  // Shadow channels (registered but disabled) are planned for visibility only and are never enqueued.
+  const shadow = require("./core/profitdecoded/schedule").plan(new Date());
+  console.log(`Shadow (not enqueued): ${shadow.channel} — Short ${shadow.short.publishAtLocal} (prod ${shadow.short.productionStartUtc.slice(11, 16)}Z), long ${shadow.long.publishLocal}`);
   console.log(`Limits: ${plan.resourceLimits.maxConcurrentRenders} render / ${plan.resourceLimits.maxConcurrentUploads} upload`);
 }

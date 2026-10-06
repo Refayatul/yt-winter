@@ -87,7 +87,7 @@ async function run(options = {}) {
   const scenario = options.scenario || "B";
   const start = new Date(options.start || "2026-10-01T00:00:00Z");
   const days = options.days || 30;
-  const slugs = options.channels || Object.keys(Channel.registry().channels);
+  const slugs = options.channels || Channel.activeSlugs();
   const log = [];
   const say = (line) => log.push(line);
   const state = {};

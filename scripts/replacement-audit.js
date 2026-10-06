@@ -41,7 +41,7 @@ function chooseReplacement(channel, originalTopic, originalPlan) {
 
 const output = path.join(Channel.ROOT, "reports", "corrected-replacements");
 const audits = [];
-for (const slug of Object.keys(Channel.registry().channels)) {
+for (const slug of Channel.activeSlugs()) {
   const channel = Channel.getChannel(slug);
   const publication = latestShort(channel);
   if (!publication) continue;

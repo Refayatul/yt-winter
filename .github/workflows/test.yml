@@ -40,6 +40,13 @@ jobs:
         run: node e2e-critical-thread.js --render
       - name: The Hidden Logic of Things dry-run package (no upload)
         run: node e2e-behind-the-ordinary.js
+      - name: ProfitDecoded shadow channel (inventory, ranking, dry-run assessments; no upload)
+        run: |
+          node profitdecoded.js inventory
+          node profitdecoded.js rank --top 20
+          node profitdecoded.js publish-check
+          node profitdecoded.js dry-run channels/profitdecoded/dryruns/short-costco-membership/bundle.json
+          node profitdecoded.js dry-run channels/profitdecoded/dryruns/long-planet-fitness-capacity/bundle.json
       - name: Four-channel 30-day simulation
         run: node simulate-portfolio.js
       - name: Python testleri

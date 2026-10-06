@@ -103,7 +103,7 @@ function compare(rows) {
 }
 
 function build() {
-  const rows = Object.keys(Channel.registry().channels).map((slug) => channelMetrics(Channel.getChannel(slug)));
+  const rows = Channel.activeSlugs().map((slug) => channelMetrics(Channel.getChannel(slug)));
   return { generatedAt: new Date().toISOString(), channels: rows, comparison: compare(rows) };
 }
 

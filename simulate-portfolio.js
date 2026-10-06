@@ -7,7 +7,7 @@ const { ROOT } = require("./core/channel-context");
 const Channel = require("./core/channel-context");
 const Library = require("./core/analytics/library-health");
 const Simulation = require("./core/simulation/two-channel");
-const inventories = Object.fromEntries(Object.keys(Channel.registry().channels).map((slug) => {
+const inventories = Object.fromEntries(Channel.activeSlugs().map((slug) => {
   const health = Library.calculate(Channel.getChannel(slug));
   return [slug, health];
 }));
