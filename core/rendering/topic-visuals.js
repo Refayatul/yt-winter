@@ -375,16 +375,30 @@ const PERSON_FILE = /\b(Miss|Mrs?|Ms|Mme|Mlle|Dr|Sir|Lady|Lord|portrait|gagnante
 
 function wikiTitles(topic) {
   const titles = [];
-  // A researched record may name the articles its pictures should come from
-  // (The Hidden Logic of Things: facts cite a manufacturer archive, not Wikipedia).
+  // A researched record may name the articles its pictures should come from.
   for (const title of Array.isArray(topic.visualArticles) ? topic.visualArticles : []) if (title && !titles.includes(title)) titles.push(String(title));
-  for (const fact of topic.facts || []) {
+  // CriticalThread research stores citations in sources/researchEvidence rather
+  // than facts. Reuse any explicit Wikipedia citations there too, otherwise CT
+  // incorrectly skips the strongest curated visual source entirely.
+  const rows = [
+    ...(Array.isArray(topic.facts) ? topic.facts : []),
+    ...(Array.isArray(topic.sources) ? topic.sources : []),
+    ...(Array.isArray(topic.researchEvidence) ? topic.researchEvidence : []),
+  ];
+  for (const row of rows) {
     try {
-      const url = new URL(fact.url || "");
+      const url = new URL(row && (row.url || row.sourceUrl) || "");
       if (url.hostname !== "en.wikipedia.org" || !url.pathname.startsWith("/wiki/")) continue;
       const title = decodeURIComponent(url.pathname.slice(6)).replace(/_/g, " ");
       if (title && !titles.includes(title)) titles.push(title);
     } catch (error) {}
+  }
+  // CT records are often sourced from NIST/manufacturer pages and therefore
+  // have no Wikipedia URL. Their canonical subject is still a safe candidate
+  // article title: Commons article lookup simply returns no images when the
+  // title does not exist, while valid titles unlock editor-curated media.
+  if (topic.channel === "critical-thread" && topic.canonicalTopic && !titles.length) {
+    titles.push(String(topic.canonicalTopic));
   }
   return titles;
 }
@@ -473,7 +487,9 @@ async function prepareAssets(topic, outputDirectory) {
   // subject-title/description rules still apply. It runs only when the article
   // itself has too few pictures: a broad search returns loosely related photos
   // (an aircraft "over the Atlantic" for an ocean-current topic).
-  if (picked.length < 2) {
+  // Keep the secondary Commons search aligned with the production pre-check:
+  // a topic with 2–3 licensed visuals is still short of the four-image floor.
+  if (picked.length < 4) {
     const subjects = subjectPhrases(topic, articles[0] || "");
     const anchorSubjects = anchorPhrases(topic, articles[0] || "");
     const found = await Commons.commonsStills(subjects, MAX_STILLS - picked.length, null, {

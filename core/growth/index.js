@@ -84,9 +84,17 @@ function selectShortTopic(channel, options = {}) {
   const day = options.date || new Date().toISOString().slice(0, 10);
   const exclude = new Set(options.exclude || []);
   const eligible = ranked.rows.filter((row) => !exclude.has(row.topic.id) && !exclude.has(row.topic.slug));
-  const qualified = eligible.filter((row) => row.score.bucket !== "D");
+  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+  const qualified = eligible.filter((row) =>
+    row.score.bucket !== "D"
+    && Number.isFinite(row.score.ViralPotentialScore)
+    && row.score.ViralPotentialScore >= viralMinimum
+  );
   const candidatePool = qualified.slice(0, poolPolicy.target);
-  const poolReady = candidatePool.length >= poolPolicy.minimum;
+  // The inventory-size minimum is a research-health signal, not a reason to
+  // suppress a genuinely production-qualified topic. Evidence-gated channels
+  // may intentionally have a small daily pool after viral/source filtering.
+  const poolReady = candidatePool.length > 0;
   const primary = candidatePool.filter((row) => selectionPolicy.exploitBuckets.includes(row.score.bucket));
   const experimental = candidatePool.filter((row) => row.score.bucket === policy.experimentalBucket);
   const modeRoll = Engagement.hash01(`${channel.slug}:${day}:explore-exploit`);
@@ -154,7 +162,14 @@ function orderedQueue(channel, options = {}) {
   const config = Config.forChannel(channel);
   const policy = config.scheduler.shorts;
   const exclude = new Set(options.exclude || []);
-  const rows = selection.ranked.rows.filter((row) => !exclude.has(row.topic.id) && !exclude.has(row.topic.slug));
+  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+  const rows = selection.ranked.rows.filter((row) =>
+    !exclude.has(row.topic.id)
+    && !exclude.has(row.topic.slug)
+    && row.score.bucket !== "D"
+    && Number.isFinite(row.score.ViralPotentialScore)
+    && row.score.ViralPotentialScore >= viralMinimum
+  );
   const order = [];
   const push = (row) => { if (row && !order.includes(row.topic.slug)) order.push(row.topic.slug); };
   push(selection.selected);

@@ -1,40 +1,44 @@
 {
-  "_comment": "Portfolio-wide Viral Quality Engine v2 overlay. Applied after channel overrides so minimum viral standards cannot be weakened by legacy cadence fallbacks. Channel identity/content rules remain channel-scoped.",
+  "_comment": "Portfolio-wide Rapid Growth Engine v3 overlay: optimize for scroll-stop, broad curiosity, retention, sharing and subscriber conversion while preserving factual/source gates.",
   "candidatePool": {
-    "videoPotentialWeight": 0.3,
-    "viralPotentialWeight": 0.7
+    "videoPotentialWeight": 0.2,
+    "viralPotentialWeight": 0.8
   },
   "viralScoring": {
     "minimumToProduce": 75,
     "penaltyScale": 0.3,
     "weights": {
-      "curiosity_gap": 1.4,
-      "immediate_stakes": 1.5,
-      "human_consequence": 1.4,
-      "recognizability": 1.4,
-      "surprise": 1.2,
+      "curiosity_gap": 1.6,
+      "immediate_stakes": 1.7,
+      "human_consequence": 1.45,
+      "recognizability": 1.45,
+      "surprise": 1.45,
       "visual_potential": 1.15,
-      "first_frame_potential": 1.4,
-      "emotional_tension": 1.25,
+      "first_frame_potential": 1.65,
+      "emotional_tension": 1.4,
       "unexpected_cause": 1.05,
-      "didnt_know_factor": 1.1,
-      "shareability": 1.4,
-      "subscriber_conversion_potential": 1.3,
-      "audience_breadth": 1.5,
-      "hook_potential": 1.4,
-      "visual_availability": 1.0,
+      "didnt_know_factor": 1.35,
+      "shareability": 1.6,
+      "subscriber_conversion_potential": 1.55,
+      "audience_breadth": 1.7,
+      "hook_potential": 1.65,
+      "visual_availability": 1,
       "research_confidence": 1.1,
       "duplicate_risk": 1.3,
       "recent_fatigue_risk": 1.1,
       "source_confidence_risk": 1.25,
-      "weak_footage_risk": 1.0
+      "weak_footage_risk": 1
     }
   },
   "selection": {
     "exploitRatio": 0.75,
     "exploreRatio": 0.25,
-    "exploitBuckets": ["A"],
-    "exploreBuckets": ["A"],
+    "exploitBuckets": [
+      "A"
+    ],
+    "exploreBuckets": [
+      "A"
+    ],
     "exploreTopPerCluster": 2
   },
   "topic": {
@@ -57,81 +61,99 @@
     },
     "minimumSourcesForAB": 1,
     "weights": {
-      "TopicDemandScore": 1.15,
-      "CuriosityScore": 1.3,
-      "HookPotentialScore": 1.45,
+      "TopicDemandScore": 1.3,
+      "CuriosityScore": 1.5,
+      "HookPotentialScore": 1.65,
       "VisualImpactScore": 1.1,
-      "EmotionalImpactScore": 1.3,
-      "StoryCompressionScore": 1.15,
-      "RewatchPotentialScore": 0.9,
-      "SharePotentialScore": 1.3,
+      "EmotionalImpactScore": 1.4,
+      "StoryCompressionScore": 1.3,
+      "RewatchPotentialScore": 1.05,
+      "SharePotentialScore": 1.5,
       "CommentPotentialScore": 0.75,
-      "SubscriberConversionPotential": 1.2,
+      "SubscriberConversionPotential": 1.45,
       "NoveltyScore": 0.8,
-      "AudienceFitScore": 1.25,
+      "AudienceFitScore": 1.4,
       "SourceQualityScore": 1.1,
-      "ChannelFitScore": 1.0
+      "ChannelFitScore": 0.8
     }
   },
   "scheduler": {
     "shorts": {
-      "primaryBuckets": ["A"],
+      "primaryBuckets": [
+        "A"
+      ],
       "experimentalBucket": "A",
       "experimentRatio": 0,
-      "neverProduce": ["B", "C", "D"],
+      "neverProduce": [
+        "B",
+        "C",
+        "D"
+      ],
       "skipDayWhenNoQualifiedTopic": true,
       "fallbackToC": false
     }
   },
   "hooks": {
-    "minimumCandidates": 12,
-    "targetCandidates": 30,
+    "minimumCandidates": 20,
+    "targetCandidates": 40,
     "minimumScore": 76,
     "maxSpokenWords": 10,
     "spokenWordsPerSecond": 3.2,
     "cosmeticSimilarity": 0.66,
     "weights": {
-      "SwipeStoppingPower": 1.75,
-      "CuriosityGap": 1.5,
+      "SwipeStoppingPower": 2,
+      "CuriosityGap": 1.75,
       "Clarity": 1.1,
       "Specificity": 1.15,
-      "EmotionalIntensity": 1.15,
+      "EmotionalIntensity": 1.35,
       "Credibility": 1.35,
       "VisualCompatibility": 1.15,
       "ChannelFit": 0.9,
-      "ImmediateComprehension": 1.35,
-      "RetentionExpectation": 1.35,
+      "ImmediateComprehension": 1.55,
+      "RetentionExpectation": 1.55,
       "VoiceoverNaturalness": 1.05,
-      "FirstFrameCompatibility": 1.3,
+      "FirstFrameCompatibility": 1.55,
       "FactualDefensibility": 1.3,
-      "ShortFormSuitability": 1.2
+      "ShortFormSuitability": 1.4
     }
   },
   "firstSeconds": {
-    "minimumScore": 80,
-    "maxOnScreenWords": 4,
-    "firstCutWithinSeconds": 1.0,
+    "minimumScore": 81,
+    "maxOnScreenWords": 3,
+    "firstCutWithinSeconds": 0.8,
     "soundCue": true
   },
   "script": {
     "shorts": {
       "maxSentenceWords": 14,
-      "targetWords": [52, 78],
+      "targetWords": [
+        52,
+        78
+      ],
       "minimumScore": 75
     }
   },
   "pacing": {
     "shorts": {
-      "openingSegmentSeconds": [0.75, 1.1],
-      "earlySegmentSeconds": [1.2, 1.9],
-      "laterSegmentSeconds": [2.2, 3.2],
+      "openingSegmentSeconds": [
+        0.55,
+        0.9
+      ],
+      "earlySegmentSeconds": [
+        1,
+        1.6
+      ],
+      "laterSegmentSeconds": [
+        2.2,
+        3.2
+      ],
       "earlyWindowSeconds": 8,
-      "openingWindowSeconds": 3
+      "openingWindowSeconds": 2
     }
   },
   "readiness": {
     "shorts": {
-      "publish": 88,
+      "publish": 86,
       "review": 76,
       "weights": {
         "topicPotential": 1.3,
@@ -155,10 +177,10 @@
   "performance": {
     "growthScoreWeights": {
       "viewVelocity": 0.18,
-      "retention": 0.24,
+      "retention": 0.27,
       "engagement": 0.18,
-      "subscriberConversion": 0.28,
-      "views": 0.12
+      "subscriberConversion": 0.3,
+      "views": 0.07
     },
     "classification": {
       "breakoutMedianMultiple": 2.5,
@@ -169,7 +191,7 @@
   },
   "diagnosis": {
     "shorts": {
-      "minViews": 250,
+      "minViews": 100,
       "hookFailureRetentionAt3s": 0.72,
       "retentionFailureAvp": 65,
       "goodAvp": 85,
@@ -180,6 +202,23 @@
       "strongConversionVsMedian": 1.5,
       "strongDiscoveryVsMedian": 2,
       "goodCtr": 6
-    }
+    },
+    "checkpoints": [
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "48h",
+      "7d",
+      "14d",
+      "30d"
+    ]
+  },
+  "learning": {
+    "minimumSampleObservation": 1,
+    "minimumSampleHypothesis": 3,
+    "minimumSampleAdopt": 8,
+    "minimumLift": 0.1,
+    "maxWeightShift": 0.2
   }
 }

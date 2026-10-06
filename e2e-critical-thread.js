@@ -13,13 +13,15 @@ const Discovery = require("./core/discovery");
 const Rendering = require("./core/rendering");
 const Scripting = require("./core/scripting");
 const Growth = require("./core/growth");
-const { visualRejection, visualShortfall, MAX_VISUAL_PRECHECKS } = require("./core/pipeline/impossible-brief");
+const { visualRejection, visualShortfall } = require("./core/pipeline/impossible-brief");
+const GrowthContext = require("./core/growth/context");
 
 const MAX_ATTEMPTS = 3;
 const channel = Channel.getChannel("critical-thread");
 const render = process.argv.includes("--render");
 const requested = process.argv.slice(2).find((arg) => !arg.startsWith("--"));
 const topics = Discovery.universe(channel).topics || [];
+const MAX_TOPIC_SCANS = Math.max(MAX_ATTEMPTS, topics.length);
 const launch = requested
   ? topics.find((item) => item.slug === requested || item.id === requested)
   : topics.find((item) => item.topic === "The Machine the Entire Chip Industry Depends On");
@@ -28,8 +30,23 @@ if (!launch) throw new Error(`Missing CriticalThread dry-run topic: ${requested 
 function nextTopic(tried) {
   if (!tried.length) return launch;
   if (requested) return null;
-  const selection = Growth.selectShortTopic(channel, { exclude: tried.map((item) => item.topicId) });
-  return selection.selected ? topics.find((item) => item.id === selection.selected.topic.id) : null;
+
+  // Re-rank the complete unused inventory and walk every topic that satisfies
+  // the same hard production floor as selectShortTopic(). The normal selector
+  // deliberately caps its daily decision pool; that cap must not become a
+  // recovery cap when visual preflight rejects every member of the pool.
+  const ranked = GrowthContext.rank(channel);
+  const config = require("./core/growth/config").forChannel(channel);
+  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+  const excluded = new Set(tried.flatMap((item) => [item.topicId, item.slug]));
+  const row = ranked.rows.find((candidate) =>
+    !excluded.has(candidate.topic.id)
+    && !excluded.has(candidate.topic.slug)
+    && candidate.score.bucket !== "D"
+    && Number.isFinite(candidate.score.ViralPotentialScore)
+    && candidate.score.ViralPotentialScore >= viralMinimum
+  );
+  return row ? topics.find((item) => item.id === row.topic.id) : null;
 }
 
 function portable(result) {
@@ -44,27 +61,34 @@ function portable(result) {
 const attempts = [];
 let result = null;
 let pass = false;
-let prechecks = 0;
-for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+let lastPlan = null;
+let renderAttempts = 0;
+for (let scan = 1; scan <= MAX_TOPIC_SCANS && renderAttempts < MAX_ATTEMPTS; scan += 1) {
   const topic = nextTopic(attempts);
   if (!topic) break;
-  // Same visual pre-check as production: a picture-poor topic is skipped
-  // before rendering and does not use up a render attempt.
-  const shortfall = render && !requested ? visualShortfall(topic, path.join(channel.paths.reports, "dry-runs", topic.slug)) : null;
-  if (shortfall && prechecks < MAX_VISUAL_PRECHECKS) {
-    prechecks += 1;
-    attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass: false, visualPrecheck: shortfall });
-    console.log(`CriticalThread E2E pre-check: skipped ${topic.topic} — ${shortfall}`);
-    attempt -= 1;
+  // Match production ordering: editorial/growth readiness is a cheap gate
+  // and must run before the network-heavy visual preflight. This prevents a
+  // visually rich but sub-threshold topic from consuming a render attempt.
+  const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true });
+  if (plan.readiness.decision === "BLOCK") {
+    attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass: false, growthPrecheck: plan.readiness.hardFails || [] });
+    console.log(`CriticalThread E2E growth pre-check: skipped ${topic.topic} — ${(plan.readiness.hardFails || []).join("; ") || plan.readiness.ProductionReadinessScore}`);
     continue;
   }
-  const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true });
+  const shortfall = render && !requested ? visualShortfall(topic, path.join(channel.paths.reports, "dry-runs", topic.slug)) : null;
+  if (shortfall) {
+    attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass: false, visualPrecheck: shortfall });
+    console.log(`CriticalThread E2E pre-check: skipped ${topic.topic} — ${shortfall}`);
+    continue;
+  }
+  renderAttempts += 1;
+  lastPlan = plan;
   const outputDirectory = path.join(channel.paths.reports, "dry-runs", topic.slug);
   result = Rendering.buildPackage(topic, channel, outputDirectory, { render, growthPlan: plan });
   pass = Object.values(result.validations).every(Boolean);
   const visualReason = !pass && render && !requested ? visualRejection(result, outputDirectory) : null;
   attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass, visualRejection: visualReason });
-  console.log(`CriticalThread E2E attempt ${attempt}: ${pass ? "PASS" : "FAIL"} — ${topic.topic}${render ? " (rendered)" : " (package)"}`);
+  console.log(`CriticalThread E2E attempt ${renderAttempts}: ${pass ? "PASS" : "FAIL"} — ${topic.topic}${render ? " (rendered)" : " (package)"}`);
   if (pass || !visualReason) break;
   console.log(`  visual gate BLOCK (controlled, topic skipped): ${visualReason}`);
 }
@@ -80,6 +104,13 @@ if (!pass) {
     for (const name of failed) {
       const reasons = result.validationReasons && result.validationReasons[name];
       if (Array.isArray(reasons) && reasons.length) console.error(`  ${name}: ${reasons.join("; ")}`);
+      if (name === "growthReadiness" && lastPlan && lastPlan.readiness) {
+        const r = lastPlan.readiness;
+        console.error(`  growthReadiness: stage=${r.stage} decision=${r.decision} score=${r.ProductionReadinessScore} thresholds=${JSON.stringify(r.thresholds)}`);
+        console.error(`  growthReadiness dimensions: ${JSON.stringify(r.dimensions)}`);
+        if (r.hardFails && r.hardFails.length) console.error(`  growthReadiness hardFails: ${r.hardFails.join("; ")}`);
+        if (r.unmeasured && r.unmeasured.length) console.error(`  growthReadiness unmeasured: ${r.unmeasured.join(", ")}`);
+      }
     }
     if (render && result.render.video) {
       console.error(`Render evidence: duration=${result.render.video.durationSeconds}s resolution=${result.render.video.width}x${result.render.video.height} audio=${result.render.video.hasAudio} visualChanges=${result.render.video.visualChanges}`);
