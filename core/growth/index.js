@@ -162,7 +162,14 @@ function orderedQueue(channel, options = {}) {
   const config = Config.forChannel(channel);
   const policy = config.scheduler.shorts;
   const exclude = new Set(options.exclude || []);
-  const rows = selection.ranked.rows.filter((row) => !exclude.has(row.topic.id) && !exclude.has(row.topic.slug));
+  const viralMinimum = Number(config.viralScoring.minimumToProduce || 68);
+  const rows = selection.ranked.rows.filter((row) =>
+    !exclude.has(row.topic.id)
+    && !exclude.has(row.topic.slug)
+    && row.score.bucket !== "D"
+    && Number.isFinite(row.score.ViralPotentialScore)
+    && row.score.ViralPotentialScore >= viralMinimum
+  );
   const order = [];
   const push = (row) => { if (row && !order.includes(row.topic.slug)) order.push(row.topic.slug); };
   push(selection.selected);
