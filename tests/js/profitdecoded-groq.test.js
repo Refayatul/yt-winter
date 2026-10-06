@@ -132,7 +132,7 @@ test("groq research: fabricated quotes, dead links and Wikipedia are rejected, n
   assert.equal(r.status, "research-failed"); assert.match(r.reasons[0], /no quote could be verified/);
   assert.deepEqual(r.dropped.map((d) => d.reason.split(" (")[0]).sort(), ["could not download the page", "could not download the page", "quote does not appear in the downloaded page"]);
   const none = await R.research(topic(), "short", { client: groqClient(["I found nothing useful."]), ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() } });
-  assert.equal(none.status, "research-failed"); assert.match(none.reasons[0], /no FACT \| URL \| QUOTE lines/);
+  assert.equal(none.status, "research-failed"); assert.match(none.reasons[0], /no usable FACT/);
 });
 
 test("groq script stage reuses the same gates and rewrite loop", async () => {
@@ -146,4 +146,55 @@ test("groq script stage reuses the same gates and rewrite loop", async () => {
   assert.equal(r.status, "ok"); assert.equal(r.rounds.length, 2);
   assert.match(client.calls[1].messages.at(-1).content, /number "73/);
   assert.equal(client.calls[0].response_format.type, "json_schema");
+});
+
+test("groq: tolerant memo parsing, URL discovery from anywhere in a response, passage selection", () => {
+  const G = A("groq");
+  const lines = G.parseMemoLines(`1. **FACT:** Members | **URL:** ${SEC} | **QUOTE:** \u201cwe had approximately 20.8 million members and 2,896 clubs\u201d.\n- Workouts \u2014 ${SEC}: "Members completed more than 650 million workouts in our clubs during the year"\nplain line with no link or quote\nFACT: short | URL: ${AER} | QUOTE: "too short"`);
+  assert.equal(lines.length, 2); assert.equal(lines[0].url, SEC); assert.match(lines[1].quote, /650 million workouts/);
+  assert.deepEqual(G.urlsFromAnything({ message: `see ${AER}, and (https://en.wikipedia.org/wiki/X) https://api.groq.com/x`, annotations: [{ url: FORT }, { url: FORT }] }), [AER, FORT]);
+  const t = "alpha ".repeat(300) + " Planet Fitness reported 20.8 million members in 2,896 clubs. " + "beta ".repeat(300);
+  const sel = G.selectPassages(t, "planet fitness members clubs", 800);
+  assert.match(sel, /20\.8 million members/); assert.ok(sel.length <= 800);
+  assert.match(G.selectPassages(t, "planet fitness members clubs", 300), /Planet Fitness/, "a single over-budget chunk is truncated, not dropped");
+  assert.equal(G.selectPassages("nothing relevant here at all", "planet fitness", 500), "");
+});
+
+test("groq research: unparseable memo falls back to URLs + our own passage selection + verified quote extraction", async () => {
+  const R = A("research-agent"); const L = A("llm"); const fs = require("fs"); const os = require("os"); const path = require("path");
+  const debugDir = fs.mkdtempSync(path.join(os.tmpdir(), "pd-dbg-"));
+  const prose = `I looked at the filings. The key page is ${SEC} and the study is at ${AER} (see also ${FORT}). Members are numerous and attendance is modest.`;
+  const quotes = { quotes: [
+    { url: SEC, fact: "members and clubs", quote: "we had approximately 20.8 million members and 2,896 clubs" },
+    { url: SEC, fact: "workouts", quote: "Members completed more than 650 million workouts in our clubs during the year" },
+    { url: AER, fact: "attendance", quote: "attend on average 4.3 times per month" },
+    { url: FORT, fact: "price", quote: "raise the Classic membership from $10 to $15 a month, the first increase since 1998" },
+    { url: SEC, fact: "invented", quote: "the company secretly measures attendance at every club every single day" },
+  ] };
+  const client = groqClient([prose, quotes, dossierDraft()]);
+  const r = await R.research(topic(), "short", { client, ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir, now: new Date("2026-10-06") });
+  assert.equal(r.status, "ok", JSON.stringify(r.reasons)); assert.equal(r.usedFallback, true);
+  assert.ok(r.dropped.some((d) => /does not appear/.test(d.reason)), "the invented quote is rejected");
+  assert.equal(client.calls.length, 3);
+  assert.equal(client.calls[1].response_format.type, "json_schema");
+  const userMsg = client.calls[1].messages.find((m) => m.role === "user").content;
+  assert.match(userMsg, /PAGES/); assert.match(userMsg, /20\.8 million members/);
+  assert.ok(fs.readdirSync(debugDir).some((f) => /groq-memo\.txt$/.test(f)) && fs.readdirSync(debugDir).some((f) => /groq-quotes\.json$/.test(f)));
+  assert.match(fs.readFileSync(path.join(debugDir, fs.readdirSync(debugDir).find((f) => /memo/.test(f))), "utf8"), /key page is/);
+  // memo with usable lines takes the cheap path (2 verified sources) and skips the fallback call
+  const c2 = groqClient([MEMO, dossierDraft()]);
+  const ok = await R.research(topic(), "short", { client: c2, ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir, now: new Date("2026-10-06") });
+  assert.equal(ok.status, "ok"); assert.equal(ok.usedFallback, false); assert.equal(c2.calls.length, 2);
+  // nothing usable anywhere: still a clean failure, never an invention
+  const none = await R.research(topic(), "short", { client: groqClient(["no links, no quotes"]), ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir });
+  assert.equal(none.status, "research-failed"); assert.match(none.reasons[0], /no usable FACT/);
+});
+
+test("groq research: the discovery prompt asks for a small search budget (free-tier tokens)", async () => {
+  const R = A("research-agent"); const L = A("llm"); const client = groqClient(["nothing"]);
+  await R.research(topic(), "short", { client, ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir: require("os").tmpdir() });
+  const sys = client.calls[0].messages.find((m) => m.role === "system").content;
+  assert.match(sys, /at most 3 searches and open at most 4 pages/);
+  assert.match(client.calls[0].messages.find((m) => m.role === "user").content, /Topic: /);
+  assert.equal(client.calls[0].max_completion_tokens, 8000);
 });

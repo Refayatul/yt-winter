@@ -58,25 +58,53 @@ function verifyDossier(draft, docs, now = new Date()) {
   return { dossier, dropped };
 }
 
-const GROQ_MEMO_FORMAT = `\n\nOUTPUT FORMAT (strict): after any short reasoning, write one line per fact, exactly:\nFACT: <the fact> | URL: <page url> | QUOTE: "<one verbatim sentence or fragment copied from that page, at least 8 words>"\nOnly pages you actually opened. No Wikipedia. Quotes are machine-checked against the downloaded page: a quote that is not on the page is discarded. Add lines starting with CAVEAT: for contradictions, missing evidence and what the sources do NOT say.`;
+const GROQ_MEMO_FORMAT = `\n\nBUDGET: use at most 3 searches and open at most 4 pages (tokens are limited). Prefer primary sources.\nOUTPUT FORMAT (strict): one line per fact, exactly:\nFACT: <the fact> | URL: <page url> | QUOTE: "<one verbatim sentence or fragment copied from that page, at least 8 words>"\nOnly pages you actually opened. No Wikipedia. Quotes are machine-checked against the downloaded page: a quote that is not on the page is discarded. Add lines starting with CAVEAT: for contradictions, missing evidence and what the sources do NOT say.`;
 
-// Groq path: the model finds sources and quotes (browser_search); WE download the pages and verify every quote.
+const QUOTES_SCHEMA = { type: "object", additionalProperties: false, required: ["quotes"], properties: { quotes: { type: "array", items: { type: "object", additionalProperties: false, required: ["url", "fact", "quote"], properties: { url: { type: "string" }, fact: { type: "string" }, quote: { type: "string" } } } } } };
+
+function writeDebug(deps, name, text) {
+  try {
+    const dir = deps.debugDir || path.join(CHANNEL_DIR, "state", "auto-debug");
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(path.join(dir, name), String(text || "").slice(0, 200000));
+  } catch (e) { /* diagnostics are best effort */ }
+}
+
+// Groq path: the model finds sources (browser_search); WE download the pages and verify every quote.
+// If its answer is not parseable (or yields too little), URLs are taken from anywhere in the response, the
+// relevant passages of each downloaded page are selected by us, and the model extracts verbatim quotes from them.
 async function researchGroq(topic, format, deps, client, ledger) {
-  const memo = await LLM.run({ client, ledger, system: prompt("research.md") + GROQ_MEMO_FORMAT, messages: [{ role: "user", content: userBrief(topic, format) }], tools: [{ type: "browser_search" }], maxTokens: 12000, effort: "low" });
-  const G = require("./groq"); const lines = G.parseMemoLines(memo.text);
-  if (!lines.length) return { status: "research-failed", reasons: ["the research model returned no FACT | URL | QUOTE lines"], ledger };
-  const { docs, rejected, pagesFetched } = await G.verifyMemo(lines, deps.groq || {});
+  const G = require("./groq"); const gdeps = deps.groq || {};
+  const slug = String(topic.id || topic.topic).slice(0, 60);
+  const memo = await LLM.run({ client, ledger, system: prompt("research.md") + GROQ_MEMO_FORMAT, messages: [{ role: "user", content: userBrief(topic, format) }], tools: [{ type: "browser_search" }], maxTokens: 8000, effort: "low" });
+  writeDebug(deps, `${slug}-groq-memo.txt`, memo.text);
+  const lines = G.parseMemoLines(memo.text);
+  const pages = new Map(); const docs = new Map(); let rejected = [];
+  let v = await G.verifyMemo(lines, gdeps, pages, docs); rejected = rejected.concat(v.rejected);
+  let usedFallback = false;
+  if (docs.size < 2) {
+    usedFallback = true;
+    const urls = [...new Set([...lines.map((l) => l.url), ...G.urlsFromAnything(memo.text), ...G.urlsFromAnything(memo.raw)])].slice(0, 8);
+    const Evk = require("./evidence"); const fetched = [];
+    for (const u of urls) { const k = Evk.urlKey(u); const fresh = !pages.has(k); if (fresh) pages.set(k, await G.fetchPage(u, gdeps)); const pg = pages.get(k); if (pg.ok) fetched.push({ url: u, title: pg.title, passages: G.selectPassages(pg.text, `${topic.topic} ${topic.entity} ${topic.coreQuestion}`) }); else if (fresh) rejected.push({ url: u, reason: `could not download the page (${pg.reason})` }); }
+    const usable = fetched.filter((f) => f.passages);
+    if (usable.length) {
+      const q = await LLM.run({ client, ledger, system: "You extract evidence. From the PASSAGES of each downloaded page, copy verbatim sentences or fragments (>= 8 words each) that state concrete facts, figures, prices, dates or mechanisms relevant to the topic. Copy exactly, character for character; never paraphrase or combine. Machine-checked: a quote that is not verbatim on the page is discarded. Return JSON.", messages: [{ role: "user", content: `TOPIC: ${topic.topic}\nCORE QUESTION: ${topic.coreQuestion}\n\nPAGES:\n${JSON.stringify(usable)}` }], schema: QUOTES_SCHEMA, maxTokens: 6000, effort: "low" });
+      writeDebug(deps, `${slug}-groq-quotes.json`, JSON.stringify(q.json, null, 1));
+      v = await G.verifyMemo((q.json.quotes || []).map((x) => ({ fact: x.fact, url: x.url, quote: x.quote })), gdeps, pages, docs); rejected = rejected.concat(v.rejected);
+    }
+  }
   const evidence = Ev.summary(docs);
-  if (!evidence.length) return { status: "research-failed", reasons: ["no quote could be verified against a downloaded page"], dropped: rejected.map((r) => ({ type: "quote", ...r })), ledger };
+  if (!evidence.length) return { status: "research-failed", reasons: [lines.length ? "no quote could be verified against a downloaded page" : "the research model returned no usable FACT | URL | QUOTE lines and no page could supply verified quotes"], dropped: rejected.map((r) => ({ type: "quote", ...r })), usedFallback, ledger };
   const structured = await LLM.run({
     client, ledger, system: "You convert verified quotes into a dossier. Use ONLY the sources under EVIDENCE: each excerpt is a quote already verified against the real page. Every number in a claim must appear in the excerpt of a source it cites. Mark claims central only if the video's thesis depends on them. Inferences are only our own arithmetic on claims (list basisClaimIds). Anything not in the evidence is left out. Return JSON only.",
-    messages: [{ role: "user", content: `TOPIC: ${topic.topic}\n\nNOTES (caveats and context):\n${memo.text.split(/\r?\n/).filter((x) => /^CAVEAT:/i.test(x)).join("\n")}\n\nEVIDENCE (verified quotes):\n${JSON.stringify(evidence)}\n\nReturn JSON with keys thesis, angle, contradictions, sources, claims, inferences.` }],
+    messages: [{ role: "user", content: `TOPIC: ${topic.topic}\n\nNOTES (caveats and context):\n${memo.text.split(/\r?\n/).filter((x) => /^\W*CAVEAT:/i.test(x)).join("\n")}\n\nEVIDENCE (verified quotes):\n${JSON.stringify(evidence)}\n\nReturn JSON with keys thesis, angle, contradictions, sources, claims, inferences.` }],
     schema: DOSSIER_SCHEMA, maxTokens: 12000, effort: "medium",
   });
   const draft = { ...structured.json, format };
   const { dossier, dropped } = verifyDossier(draft, docs, deps.now);
   const gate = Research.gate(dossier, { format });
-  return { status: gate.pass ? "ok" : "research-failed", dossier, gate, dropped: [...rejected.map((r) => ({ type: "quote", ...r })), ...dropped], evidenceCount: evidence.length, pagesFetched, reasons: gate.rejections, ledger };
+  return { status: gate.pass ? "ok" : "research-failed", dossier, gate, dropped: [...rejected.map((r) => ({ type: "quote", ...r })), ...dropped], evidenceCount: evidence.length, pagesFetched: v.pagesFetched, usedFallback, reasons: gate.rejections, ledger };
 }
 
 async function research(topic, format, deps = {}) {

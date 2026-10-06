@@ -1,0 +1,96 @@
+{
+ "thesis": "Planet Fitness can charge a very low price partly because its clubs are sized for the share of members who actually show up and the filings point to that share being small.",
+ "angle": "capacity arithmetic from the company's own numbers",
+ "contradictions": [
+  {
+   "id": "k1",
+   "status": "resolved",
+   "note": "the filing never states the mechanism; presented as our arithmetic"
+  }
+ ],
+ "sources": [
+  {
+   "id": "s1",
+   "type": "10-k",
+   "publisher": "Planet Fitness, Inc. / SEC",
+   "title": "10-K FY2025",
+   "url": "https://www.sec.gov/Archives/edgar/data/1637207/plnt10k.htm",
+   "date": "2026-02"
+  },
+  {
+   "id": "s2",
+   "type": "academic",
+   "publisher": "American Economic Review",
+   "title": "Paying Not to Go to the Gym",
+   "url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.96.3.694",
+   "date": "2006-06"
+  },
+  {
+   "id": "s3",
+   "type": "journalism",
+   "publisher": "Fortune",
+   "title": "Price hike",
+   "url": "https://fortune.com/2024/05/10/planet-fitness-price-hike-classic-membership",
+   "date": "2024-05-10"
+  }
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "central": true,
+   "text": "Planet Fitness had approximately 20.8 million members and 2,896 clubs.",
+   "numbers": [
+    "20.8",
+    "2,896"
+   ],
+   "sourceIds": [
+    "s1"
+   ]
+  },
+  {
+   "id": "c2",
+   "central": true,
+   "text": "Members completed more than 650 million workouts.",
+   "numbers": [
+    "650"
+   ],
+   "sourceIds": [
+    "s1"
+   ]
+  },
+  {
+   "id": "c3",
+   "central": false,
+   "text": "Members attended 4.3 times a month.",
+   "numbers": [
+    "4.3"
+   ],
+   "sourceIds": [
+    "s2"
+   ]
+  },
+  {
+   "id": "c4",
+   "central": false,
+   "text": "Members pay 999 dollars a year.",
+   "numbers": [
+    "999"
+   ],
+   "sourceIds": [
+    "s1"
+   ]
+  }
+ ],
+ "inferences": [
+  {
+   "id": "i1",
+   "text": "20.8 million over 2,896 clubs is about 7,200 members per club.",
+   "numbers": [
+    "7,200"
+   ],
+   "basisClaimIds": [
+    "c1"
+   ]
+  }
+ ]
+}
