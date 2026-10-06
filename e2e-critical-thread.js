@@ -16,6 +16,7 @@ const Growth = require("./core/growth");
 const { visualRejection, visualShortfall, MAX_VISUAL_PRECHECKS } = require("./core/pipeline/impossible-brief");
 
 const MAX_ATTEMPTS = 3;
+const MAX_TOPIC_SCANS = Math.max(MAX_ATTEMPTS, MAX_VISUAL_PRECHECKS + MAX_ATTEMPTS);
 const channel = Channel.getChannel("critical-thread");
 const render = process.argv.includes("--render");
 const requested = process.argv.slice(2).find((arg) => !arg.startsWith("--"));
@@ -46,7 +47,8 @@ let result = null;
 let pass = false;
 let prechecks = 0;
 let lastPlan = null;
-for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
+let renderAttempts = 0;
+for (let scan = 1; scan <= MAX_TOPIC_SCANS && renderAttempts < MAX_ATTEMPTS; scan += 1) {
   const topic = nextTopic(attempts);
   if (!topic) break;
   const shortfall = render && !requested ? visualShortfall(topic, path.join(channel.paths.reports, "dry-runs", topic.slug)) : null;
@@ -54,9 +56,9 @@ for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
     prechecks += 1;
     attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass: false, visualPrecheck: shortfall });
     console.log(`CriticalThread E2E pre-check: skipped ${topic.topic} — ${shortfall}`);
-    attempt -= 1;
     continue;
   }
+  renderAttempts += 1;
   const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true });
   lastPlan = plan;
   const outputDirectory = path.join(channel.paths.reports, "dry-runs", topic.slug);
@@ -64,7 +66,7 @@ for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
   pass = Object.values(result.validations).every(Boolean);
   const visualReason = !pass && render && !requested ? visualRejection(result, outputDirectory) : null;
   attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass, visualRejection: visualReason });
-  console.log(`CriticalThread E2E attempt ${attempt}: ${pass ? "PASS" : "FAIL"} — ${topic.topic}${render ? " (rendered)" : " (package)"}`);
+  console.log(`CriticalThread E2E attempt ${renderAttempts}: ${pass ? "PASS" : "FAIL"} — ${topic.topic}${render ? " (rendered)" : " (package)"}`);
   if (pass || !visualReason) break;
   console.log(`  visual gate BLOCK (controlled, topic skipped): ${visualReason}`);
 }
