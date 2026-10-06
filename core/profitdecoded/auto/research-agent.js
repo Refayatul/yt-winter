@@ -92,17 +92,23 @@ async function researchGroq(topic, format, deps, client, ledger) {
     const urls = [...new Set([...(sec.urls || []), ...lines.map((l) => l.url), ...G.urlsFromAnything(memo.text), ...G.urlsFromAnything(memo.raw)])].slice(0, 8);
     const Evk = require("./evidence"); const fetched = [];
     for (const u of urls) { const k = Evk.urlKey(u); const fresh = !pages.has(k); if (fresh) pages.set(k, await G.fetchPage(u, gdeps)); const pg = pages.get(k); if (pg.ok) fetched.push({ url: u, title: pg.title, passages: G.selectPassages(pg.text, `${topic.topic} ${topic.entity} ${topic.coreQuestion}`) }); else if (fresh) rejected.push({ url: u, reason: `could not download the page (${pg.reason})` }); }
-    const usable = fetched.filter((f) => f.passages);
-    if (usable.length) {
-      const q = await LLM.run({ client, ledger, system: "You extract evidence. From the PASSAGES of each downloaded page, copy verbatim sentences or fragments (>= 8 words each) that state concrete facts, figures, prices, dates or mechanisms relevant to the topic. Copy exactly, character for character; never paraphrase or combine. Machine-checked: a quote that is not verbatim on the page is discarded. Return JSON.", messages: [{ role: "user", content: `TOPIC: ${topic.topic}\nCORE QUESTION: ${topic.coreQuestion}\n\nPAGES:\n${JSON.stringify(usable)}` }], schema: QUOTES_SCHEMA, maxTokens: 6000, effort: "low" });
-      writeDebug(deps, `${slug}-groq-quotes.json`, JSON.stringify(q.json, null, 1));
-      v = await G.verifyMemo((q.json.quotes || []).map((x) => ({ fact: x.fact, url: x.url, quote: x.quote })), gdeps, pages, docs); rejected = rejected.concat(v.rejected);
+    const usable = fetched.filter((f) => f.passages).slice(0, 6);
+    // One small call per page: every page gets its own chance to contribute quotes (more independent sources),
+    // and each call stays cheap (a few thousand tokens) for the free-tier budget.
+    const allQuotes = [];
+    for (const page of usable) {
+      let q;
+      try { q = await LLM.run({ client, ledger, system: "You extract evidence. From the PASSAGES of ONE downloaded page, copy verbatim sentences or fragments (>= 8 words each) that state concrete facts, figures, prices, dates or mechanisms relevant to the topic (at most 6). Copy exactly, character for character; never paraphrase or combine. Machine-checked: a quote that is not verbatim on the page is discarded. Return JSON.", messages: [{ role: "user", content: `TOPIC: ${topic.topic}\nCORE QUESTION: ${topic.coreQuestion}\n\nPAGE:\n${JSON.stringify(page)}` }], schema: QUOTES_SCHEMA, maxTokens: 3000, effort: "low" }); }
+      catch (e) { if (e.code === "BUDGET" || e.code === "RATE_LIMIT") { rejected.push({ url: page.url, reason: `extraction stopped: ${e.message}` }); break; } throw e; }
+      for (const x of (q.json.quotes || [])) allQuotes.push({ fact: x.fact, url: page.url, quote: x.quote });
     }
+    writeDebug(deps, `${slug}-groq-quotes.json`, JSON.stringify(allQuotes, null, 1));
+    v = await G.verifyMemo(allQuotes, gdeps, pages, docs); rejected = rejected.concat(v.rejected);
   }
   const evidence = Ev.summary(docs);
   if (!evidence.length) return { status: "research-failed", reasons: [lines.length ? "no quote could be verified against a downloaded page" : "the research model returned no usable FACT | URL | QUOTE lines and no page could supply verified quotes"], dropped: rejected.map((r) => ({ type: "quote", ...r })), usedFallback, ledger };
   const structured = await LLM.run({
-    client, ledger, system: "You convert verified quotes into a dossier. Use ONLY the sources under EVIDENCE: each excerpt is a quote already verified against the real page. Every number in a claim must appear in the excerpt of a source it cites. Mark claims central only if the video's thesis depends on them. Inferences are only our own arithmetic on claims (list basisClaimIds). Anything not in the evidence is left out. Return JSON only.",
+    client, ledger, system: "You convert verified quotes into a dossier. Use ONLY the sources under EVIDENCE: each excerpt is a quote already verified against the real page. Every number in a claim must appear in the excerpt of a source it cites. Mark claims central only if the video's thesis depends on them. Inferences are only our own arithmetic on claims (list basisClaimIds). Anything not in the evidence is left out. contradictions MUST contain at least one entry that records which claims or sources you compared and the outcome (status resolved or open); if nothing conflicts, say exactly what you compared and that the figures agree. Never return it empty. Return JSON only.",
     messages: [{ role: "user", content: `TOPIC: ${topic.topic}\n\nNOTES (caveats and context):\n${memo.text.split(/\r?\n/).filter((x) => /^\W*CAVEAT:/i.test(x)).join("\n")}\n\nEVIDENCE (verified quotes):\n${JSON.stringify(evidence)}\n\nReturn JSON with keys thesis, angle, contradictions, sources, claims, inferences.` }],
     schema: DOSSIER_SCHEMA, maxTokens: 12000, effort: "medium",
   });
