@@ -1,6 +1,6 @@
 {
   "channel": "impossible-brief",
-  "updatedAt": "2026-10-06T17:17:02.101Z",
+  "updatedAt": "2026-10-06T18:29:43.041Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 4,
@@ -26,15 +26,15 @@
         "dimension": "topicCluster",
         "value": "SPACE",
         "sample": 3,
-        "lift": -0.01,
-        "z": -0.05
+        "lift": 0.259,
+        "z": 1.05
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "EARTH",
         "sample": 1,
-        "lift": 0.03,
+        "lift": -0.778,
         "z": 0
       },
       {
@@ -42,15 +42,15 @@
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 3,
-        "lift": 0.03,
-        "z": 0.14
+        "lift": -0.022,
+        "z": -0.05
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 1,
-        "lift": -0.091,
+        "lift": 0.067,
         "z": 0
       },
       {
@@ -58,7 +58,7 @@
         "dimension": "titlePattern",
         "value": "statement",
         "sample": 1,
-        "lift": -0.349,
+        "lift": -0.039,
         "z": 0
       },
       {
@@ -66,7 +66,7 @@
         "dimension": "titlePattern",
         "value": "question",
         "sample": 1,
-        "lift": 0.41,
+        "lift": 0.75,
         "z": 0
       },
       {
@@ -74,7 +74,7 @@
         "dimension": "titlePattern",
         "value": "why",
         "sample": 1,
-        "lift": -0.091,
+        "lift": 0.067,
         "z": 0
       },
       {
@@ -82,7 +82,7 @@
         "dimension": "titlePattern",
         "value": "what-if-question",
         "sample": 1,
-        "lift": 0.03,
+        "lift": -0.778,
         "z": 0
       },
       {
@@ -98,47 +98,47 @@
         "dimension": "ctaStyle",
         "value": "NONE",
         "sample": 2,
-        "lift": -0.159,
-        "z": -0.84
+        "lift": -0.409,
+        "z": -1.1
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 2,
-        "lift": 0.159,
-        "z": 0.64
+        "lift": 0.409,
+        "z": 1.2
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "18",
         "sample": 2,
-        "lift": -0.159,
-        "z": -0.84
+        "lift": -0.409,
+        "z": -1.1
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "22",
         "sample": 2,
-        "lift": 0.159,
-        "z": 0.64
+        "lift": 0.409,
+        "z": 1.2
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "18:00 New York",
         "sample": 2,
-        "lift": 0.159,
-        "z": 0.64
+        "lift": 0.409,
+        "z": 1.2
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "21:00 TR",
         "sample": 1,
-        "lift": 0.03,
+        "lift": -0.778,
         "z": 0
       },
       {
@@ -146,8 +146,8 @@
         "dimension": "popularityBand",
         "value": "unknown",
         "sample": 3,
-        "lift": 0.116,
-        "z": 0.77
+        "lift": 0.013,
+        "z": 0.03
       },
       {
         "stage": "OBSERVATION",
@@ -169,11 +169,11 @@
     "hypotheses": [
       {
         "stage": "HYPOTHESIS",
-        "dimension": "popularityBand",
-        "value": "unknown",
+        "dimension": "topicCluster",
+        "value": "SPACE",
         "sample": 3,
-        "lift": 0.116,
-        "z": 0.77
+        "lift": 0.259,
+        "z": 1.05
       }
     ],
     "adopted": [],

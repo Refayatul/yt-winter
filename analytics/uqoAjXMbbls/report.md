@@ -8,8 +8,9 @@ https://youtu.be/uqoAjXMbbls
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-09-30 | 1221 | 40 | 1 | — | — |  |
 | 3d | 2026-10-02 | 1262 | 40 | 2 | 54.35 | 2 | Shorts feed 93%, Search 6% |
+| 7d | 2026-10-06 | 1279 | 40 | 2 | 53.81 | 2 | Shorts feed 89%, Search 9% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 48/100 in the title engine; best editorial option scores 54.5.
 
@@ -24,4 +25,4 @@ https://youtu.be/uqoAjXMbbls
 - Visual type: REAL ARCHIVAL/LICENCED FOOTAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 41.
+Views gained between 3d and 7d: 17.

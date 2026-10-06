@@ -1,24 +1,15 @@
 {
   "channel": "critical-thread",
   "channelName": "CriticalThread",
-  "tarih": "2026-10-06T17:16:58.292Z",
+  "tarih": "2026-10-06T18:29:32.689Z",
   "aggregateManaged": true,
-  "yuklemeUygun": true,
+  "yuklemeUygun": false,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "ok",
-      "mesaj": "refresh token çalışıyor"
-    },
-    {
-      "ad": "youtube-kapsam",
-      "durum": "ok",
-      "mesaj": "gerekli kapsamlar tamam"
-    },
-    {
-      "ad": "youtube-kanal",
-      "durum": "ok",
-      "mesaj": "doğru kanal doğrulandı (UCBTEWcPZvo4B71hFw9Do_NA)"
+      "durum": "kritik",
+      "mesaj": "YOUTUBE_AUTH_FAILURE channel=critical-thread reason=TOKEN_REVOKED",
+      "cozum": "Yerelde `node youtube-yetki.js --channel critical-thread --github` çalıştır. Kalıcı çözüm: Google Auth Platform → Audience → In production."
     },
     {
       "ad": "oauth-reauth-deadline",

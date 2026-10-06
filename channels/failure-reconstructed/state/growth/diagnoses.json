@@ -389,5 +389,60 @@
       }
     ],
     "at": "2026-10-06T13:29:20.156Z"
+  },
+  {
+    "videoId": "PAi4kSZesNE",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "24h",
+    "diagnoses": [
+      {
+        "code": "LOW_ENGAGEMENT",
+        "confidence": "low",
+        "evidence": "16.39 engagements / 1,000 views",
+        "recommendation": "Contextual comment prompt after the payoff.",
+        "specCode": "LOW_ENGAGEMENT"
+      }
+    ],
+    "at": "2026-10-06T18:29:35.818Z"
+  },
+  {
+    "videoId": "nVBdZNDfqkQ",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "48h",
+    "diagnoses": [
+      {
+        "code": "INSUFFICIENT_DATA",
+        "confidence": "high",
+        "evidence": "95 views < 100",
+        "recommendation": "No intervention; wait for the next checkpoint.",
+        "specCode": "INSUFFICIENT_DATA"
+      }
+    ],
+    "at": "2026-10-06T18:29:35.818Z"
+  },
+  {
+    "videoId": "uqoAjXMbbls",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "7d",
+    "diagnoses": [
+      {
+        "code": "RETENTION_FAILURE",
+        "confidence": "medium",
+        "evidence": "average viewed 53.81% < 65%",
+        "recommendation": "Cut setup sentences; move the mechanism earlier.",
+        "specCode": "RETENTION_WEAK"
+      },
+      {
+        "code": "LOW_SUBSCRIBER_CONVERSION",
+        "confidence": "medium",
+        "evidence": "1.56 subs / 1,000 views",
+        "recommendation": "Series-shaped payoff; link a related long-form episode.",
+        "specCode": "SUBSCRIBER_CONVERSION_WEAK"
+      }
+    ],
+    "at": "2026-10-06T18:29:35.818Z"
   }
 ]
