@@ -51,7 +51,7 @@ function run(bundle, options = {}) {
   const format = bundle.format || "long";
   const beats = bundle.beats.map((b, i) => ({ id: b.id || "b" + (i + 1), ...b }));
   const script = beats.map((b) => b.text).join(" ");
-  const ev = {};
+  const ev = { format };
   // 1. Research gate (must precede everything else).
   ev.research = Research.gate(bundle.dossier, { format });
   ev.scriptClaims = Research.unsupportedClaimsInScript(script, bundle.dossier);
@@ -102,6 +102,9 @@ function run(bundle, options = {}) {
     graphicSpecificity: Math.round(Math.min(100, ev.visuals.graphicShare * 160)),
     topicTreatment: story.score,
   };
+  const durationSec = segments.length ? segments[segments.length - 1].end : null;
+  ev.duration = { seconds: durationSec, target: format === "short" ? [30, 50] : [600, 1080] };
+  if (durationSec != null) ev.duration.inRange = durationSec >= ev.duration.target[0] && durationSec <= ev.duration.target[1] + (format === "short" ? 2 : 0);
   // 11. Quality score from computed components.
   const components = {
     topic: bundle.topicScore != null ? bundle.topicScore : null,

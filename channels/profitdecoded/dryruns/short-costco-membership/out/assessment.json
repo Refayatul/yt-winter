@@ -1,0 +1,969 @@
+{
+ "bundleId": "dryrun-short-costco-membership",
+ "format": "short",
+ "topic": {
+  "id": "cs-001-why-costco-wants-membership-more-than-sales",
+  "topic": "Why Costco Wants Membership More Than Sales",
+  "entity": "Costco",
+  "pillar": "company-stories",
+  "viralMechanism": "Company Decision + Hidden Economics"
+ },
+ "components": {
+  "topic": 81,
+  "hook": 70,
+  "storytelling": 79,
+  "visual": 94,
+  "visualScriptMatch": 100,
+  "narration": 80,
+  "research": 96,
+  "editing": 78,
+  "title": 83.3,
+  "thumbnail": 100
+ },
+ "evidence": {
+  "format": "short",
+  "research": {
+   "pass": true,
+   "score": 96,
+   "rejections": [],
+   "warnings": [],
+   "claims": [
+    {
+     "id": "c1",
+     "central": true,
+     "text": "Costco's fiscal 2025 total revenue was $275,235 million against net sales of $269,912 million; the difference, membership fees, was $5,323 million (about $5.3 billion).",
+     "status": "supported-single-primary",
+     "tier1": 1,
+     "tier2": 0,
+     "missingSourceIds": []
+    },
+    {
+     "id": "c2",
+     "central": true,
+     "text": "Costco's fiscal 2025 operating income was $10,383 million (about $10.4 billion), so membership fees equal roughly 51% of operating income.",
+     "status": "supported-single-primary",
+     "tier1": 1,
+     "tier2": 0,
+     "missingSourceIds": []
+    },
+    {
+     "id": "c3",
+     "central": true,
+     "text": "The 10-K says Costco does not focus in the short term on maximizing prices charged, and instead seeks a perception among members of 'pricing authority'.",
+     "status": "supported-single-primary",
+     "tier1": 1,
+     "tier2": 0,
+     "missingSourceIds": []
+    },
+    {
+     "id": "c4",
+     "central": false,
+     "text": "Costco's renewal rate was 92.3% in the U.S. and Canada and 89.8% worldwide at the end of fiscal 2025, with about 81.0 million paid members.",
+     "status": "supported-single-primary",
+     "tier1": 1,
+     "tier2": 0,
+     "missingSourceIds": []
+    }
+   ],
+   "sources": [
+    {
+     "id": "s1",
+     "publisher": "Costco Wholesale Corp / SEC",
+     "tier": 1,
+     "tierReason": "declared primary source type: earnings-release"
+    },
+    {
+     "id": "s2",
+     "publisher": "Costco Wholesale Corp / SEC",
+     "tier": 1,
+     "tierReason": "declared primary source type: 10-k"
+    },
+    {
+     "id": "s3",
+     "publisher": "Fox Business",
+     "tier": 3,
+     "tierReason": "unvetted publisher"
+    }
+   ],
+   "stats": {
+    "sources": 3,
+    "tier1": 2,
+    "wikipediaShare": 0
+   }
+  },
+  "scriptClaims": {
+   "unsupported": [],
+   "numbersWithoutDossierSupport": []
+  },
+  "aiPatterns": {
+   "aiPatternScore": 13,
+   "naturalness": 87,
+   "findings": [
+    {
+     "type": "rhythm",
+     "name": "uniform sentence length",
+     "detail": "CV 0.38 < 0.42",
+     "penalty": 2.6
+    },
+    {
+     "type": "rhythm",
+     "name": "too many but/and/so/this openers",
+     "penalty": 5.5
+    }
+   ],
+   "stats": {
+    "sentences": 12,
+    "words": 119,
+    "sentenceLengthCv": 0.38,
+    "questionRate": 0,
+    "emDashesPer100Words": 0
+   },
+   "verdict": "OK"
+  },
+  "hook": {
+   "winner": {
+    "text": "Costco did not make most of its profit in the aisles. Of $10.4 billion in operating income, about half came from one line most shoppers never see.",
+    "mechanism": "number",
+    "score": 70,
+    "notes": [
+     "concrete names/numbers"
+    ]
+   },
+   "ranked": [
+    {
+     "text": "Costco did not make most of its profit in the aisles. Of $10.4 billion in operating income, about half came from one line most shoppers never see.",
+     "mechanism": "number",
+     "score": 70,
+     "notes": [
+      "concrete names/numbers"
+     ]
+    },
+    {
+     "text": "$5.3 billion. That is what Costco collected last year just for letting people in.",
+     "mechanism": "number",
+     "score": 70,
+     "notes": [
+      "concrete names/numbers"
+     ]
+    },
+    {
+     "text": "Look at Costco's income statement. Total revenue is $275.2 billion. Sales of goods are $269.9 billion. Something fills that gap.",
+     "mechanism": "number",
+     "score": 70,
+     "notes": [
+      "concrete names/numbers"
+     ]
+    },
+    {
+     "text": "Costco wants you to pay to walk in the door, and that is the point.",
+     "mechanism": "hidden incentive",
+     "score": 62,
+     "notes": [
+      "no concrete name or number",
+      "opens an unresolved tension (hidden incentive)"
+     ]
+    },
+    {
+     "text": "What if the cheapest store in town isn't making its money from the things it sells?",
+     "mechanism": "question",
+     "score": 36,
+     "notes": [
+      "no concrete name or number",
+      "does not name the topic's subject"
+     ]
+    },
+    {
+     "text": "The store famous for cheap prices has a profit engine that is not priced at all.",
+     "mechanism": "reveal",
+     "score": 34,
+     "notes": [
+      "no concrete name or number",
+      "does not name the topic's subject"
+     ]
+    }
+   ],
+   "distinctMechanisms": 4,
+   "problems": [],
+   "valid": true
+  },
+  "first30": {
+   "score": 72,
+   "parts": {
+    "hook": 70,
+    "validate": 84,
+    "momentum": 61
+   },
+   "notes": [
+    "0-5s: concrete names/numbers",
+    "15-30s: no explicit mechanism/value statement yet"
+   ],
+   "windows": {
+    "0-5": "Costco did not make most of its profit in the aisles. Of $10.4 billion in operating income, about half came from one line most shoppers never see.",
+    "5-15": "Costco did not make most of its profit in the aisles. Of $10.4 billion in operating income, about half came from one line most shoppers never see. That line is membership fees: $5.3 billion. It sits in the income statement as the gap between total revenue and sales of goods.",
+    "15-30": "That line is membership fees: $5.3 billion. It sits in the income statement as the gap between total revenue and sales of goods. Costco's annual report says it does not try to maximize prices in the short term. It wants what it calls pricing authority."
+   },
+   "aiPatternScore": 13
+  },
+  "title": {
+   "selected": {
+    "title": "Why Costco Wants You to Renew",
+    "score": 83.3,
+    "dims": {
+     "curiosity": 85,
+     "clarity": 90,
+     "familiarity": 100,
+     "surprise": 60,
+     "emotionalTension": 88,
+     "mobileReadability": 100,
+     "promiseStrength": 82,
+     "truthfulness": 70,
+     "differentiation": 85
+    },
+    "pattern": "why-x-wants-you-to",
+    "notes": [
+     "promise not matched by any sourced claim"
+    ],
+    "misleading": false
+   },
+   "ranked": [
+    {
+     "title": "Why Costco Wants You to Renew",
+     "score": 83.3,
+     "dims": {
+      "curiosity": 85,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 88,
+      "mobileReadability": 100,
+      "promiseStrength": 82,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "why-x-wants-you-to",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Why Costco Wants Membership More Than Sales",
+     "score": 77.4,
+     "dims": {
+      "curiosity": 69,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 82,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "why-x-question",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Why Costco Prices Can Stay Low",
+     "score": 77.4,
+     "dims": {
+      "curiosity": 69,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 82,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "why-x-question",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Why Costco Is Not Really Selling You Groceries",
+     "score": 77.4,
+     "dims": {
+      "curiosity": 69,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 82,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "why-x-question",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Why Costco's Real Product Is the Card",
+     "score": 77.4,
+     "dims": {
+      "curiosity": 69,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 82,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "why-x-question",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "How Costco's Card Pays for Cheap Prices",
+     "score": 74.9,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 82,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "how-x",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "How Costco Gets You to Pay to Shop",
+     "score": 74.9,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 82,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "how-x",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "How a Membership Card Became Half of Costco's Profit",
+     "score": 74.9,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 82,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "how-x",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "The Costco Line Item Most Shoppers Never See",
+     "score": 73.4,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "The Membership Model Behind Costco's Low Prices",
+     "score": 73.4,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "The Quiet Number Behind Costco's Profit",
+     "score": 73.4,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "The Costco Math Most Shoppers Miss",
+     "score": 73.4,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 90,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Costco's Real Profit Isn't in the Aisles",
+     "score": 70.8,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Half of Costco's Operating Profit Comes From a Card",
+     "score": 70.8,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Costco Doesn't Sell Groceries. It Sells This.",
+     "score": 70.8,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Costco's Profit Isn't Mostly on the Shelves",
+     "score": 70.8,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Costco Sells the Discount. Here's the Math.",
+     "score": 70.8,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Follow the Money Inside Costco's Income Statement",
+     "score": 70.8,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Where Costco's Profit Really Comes From",
+     "score": 70.8,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "What Costco's Membership Fee Does for Its Prices",
+     "score": 70.8,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 100,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Costco Makes About Half Its Operating Profit From Fees",
+     "score": 69.3,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 85,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    },
+    {
+     "title": "Costco Isn't Really a Store. It's a Membership Business.",
+     "score": 69.3,
+     "dims": {
+      "curiosity": 55,
+      "clarity": 68,
+      "familiarity": 100,
+      "surprise": 60,
+      "emotionalTension": 58,
+      "mobileReadability": 85,
+      "promiseStrength": 64,
+      "truthfulness": 70,
+      "differentiation": 85
+     },
+     "pattern": "statement",
+     "notes": [
+      "promise not matched by any sourced claim"
+     ],
+     "misleading": false
+    }
+   ],
+   "problems": [],
+   "valid": true
+  },
+  "thumbnail": {
+   "selected": {
+    "id": "t1-card-vs-cart",
+    "score": 100,
+    "composition": "balance-scale",
+    "misleading": false
+   },
+   "ranked": [
+    {
+     "id": "t1-card-vs-cart",
+     "score": 100,
+     "composition": "balance-scale",
+     "misleading": false,
+     "notes": [],
+     "candidate": {
+      "id": "t1-card-vs-cart",
+      "dominantObject": "single warehouse-club membership card (generic, no logo)",
+      "brandLogo": false,
+      "text": "HALF",
+      "elementCount": 2,
+      "face": false,
+      "contradiction": "a thin card outweighs a full shopping cart on a balance",
+      "composition": "balance-scale",
+      "contrast": "high",
+      "numberShown": "51"
+     }
+    },
+    {
+     "id": "t2-receipt-line",
+     "score": 100,
+     "composition": "receipt-highlight",
+     "misleading": false,
+     "notes": [],
+     "candidate": {
+      "id": "t2-receipt-line",
+      "dominantObject": "receipt with one line highlighted",
+      "brandLogo": false,
+      "text": "THIS LINE",
+      "elementCount": 2,
+      "face": false,
+      "contradiction": "tiny highlighted line versus a long receipt of goods",
+      "composition": "receipt-highlight",
+      "contrast": "high",
+      "numberShown": null
+     }
+    },
+    {
+     "id": "t3-aisle-empty-profit",
+     "score": 94,
+     "composition": "floor-plan-door",
+     "misleading": false,
+     "notes": [
+      "no text: relies on image + title"
+     ],
+     "candidate": {
+      "id": "t3-aisle-empty-profit",
+      "dominantObject": "warehouse aisle floor plan with the profit marker at the entrance gate",
+      "brandLogo": false,
+      "text": "",
+      "elementCount": 3,
+      "face": false,
+      "contradiction": "profit marker sits at the door, not in the aisles",
+      "composition": "floor-plan-door",
+      "contrast": "medium",
+      "numberShown": null
+     }
+    }
+   ],
+   "problems": [],
+   "score": 100,
+   "misleading": false
+  },
+  "narration": {
+   "naturalness": 80,
+   "measuredNaturalness": 99,
+   "parts": {
+    "normalisation": 100,
+    "cadenceVariation": 100,
+    "pauseVariation": 95,
+    "audioTechnical": 100
+   },
+   "certified": false,
+   "provider": "edge-tts en-US-AndrewMultilingualNeural (fallback voice)",
+   "audio": {
+    "status": "OBSERVED",
+    "method": "js-bs1770-k-weighted (dependency-free)",
+    "durationSec": 50.481625,
+    "integratedLufs": -17.5,
+    "truePeakDbfs": -2.3,
+    "clippedSamples": 0,
+    "pauses": [
+     0.38,
+     0.78,
+     0.6,
+     0.48,
+     1.64
+    ],
+    "silenceCount": 5
+   },
+   "measured": true,
+   "rejections": [],
+   "warnings": [
+    "voice provider \"edge-tts en-US-AndrewMultilingualNeural (fallback voice)\" is not certified as premium; reported naturalness capped at 80 (measured 99) until a human listen is approved or a premium voice is used"
+   ],
+   "pass": true,
+   "spokenPreview": "Costco did not make most of its profit in the aisles. Of ten point four billion dollars in operating income, about half came from one line most shoppers never see. That line is membership fees: five p"
+  },
+  "visuals": {
+   "alignment": 100,
+   "specificity": 100,
+   "repetition": 97,
+   "pacing": 78,
+   "visualQuality": 94,
+   "graphicShare": 1,
+   "genericStockShare": 0,
+   "aiShare": 0,
+   "shotLengthCv": 0.47,
+   "rejections": [],
+   "warnings": [],
+   "pass": true
+  },
+  "similarity": {
+   "pass": true,
+   "rejections": [],
+   "warnings": [
+    "competitor-script similarity NOT checked (no transcripts supplied): originality is unverified"
+   ],
+   "detail": {
+    "maxScriptSimilarity": 0,
+    "mostSimilarTo": null,
+    "maxHookSimilarity": 0,
+    "competitorChecked": 0
+   },
+   "competitorVerified": false
+  },
+  "copyright": {
+   "ok": true,
+   "detail": "13 assets, all with licence status",
+   "assets": 13
+  },
+  "render": null,
+  "humannessParts": {
+   "scriptNaturalness": 87,
+   "sentenceVariation": 69,
+   "narrationProsody": 95,
+   "visualSpecificity": 100,
+   "visualRepetition": 97,
+   "editingVariation": 78,
+   "sourceDepth": 96,
+   "insightOriginality": null,
+   "transitions": 78,
+   "emotionalRhythm": null,
+   "graphicSpecificity": 100,
+   "topicTreatment": 79
+  },
+  "duration": {
+   "seconds": 48.897,
+   "target": [
+    30,
+    50
+   ],
+   "inRange": true
+  }
+ },
+ "story": {
+  "score": 79,
+  "notes": []
+ },
+ "assessment": {
+  "decision": "REVIEW",
+  "quality": {
+   "total": 84.5,
+   "breakdown": {
+    "topic": {
+     "weight": 15,
+     "score": 81,
+     "points": 12.2
+    },
+    "hook": {
+     "weight": 15,
+     "score": 70,
+     "points": 10.5
+    },
+    "storytelling": {
+     "weight": 15,
+     "score": 79,
+     "points": 11.9
+    },
+    "visual": {
+     "weight": 15,
+     "score": 94,
+     "points": 14.1
+    },
+    "visualScriptMatch": {
+     "weight": 10,
+     "score": 100,
+     "points": 10
+    },
+    "narration": {
+     "weight": 10,
+     "score": 80,
+     "points": 8
+    },
+    "research": {
+     "weight": 8,
+     "score": 96,
+     "points": 7.7
+    },
+    "editing": {
+     "weight": 5,
+     "score": 78,
+     "points": 3.9
+    },
+    "title": {
+     "weight": 4,
+     "score": 83,
+     "points": 3.3
+    },
+    "thumbnail": {
+     "weight": 3,
+     "score": 100,
+     "points": 3
+    }
+   },
+   "unknown": []
+  },
+  "humanness": {
+   "score": 82,
+   "knownScore": 89,
+   "target": 90,
+   "hardReject": 85,
+   "verdict": "UNVERIFIED",
+   "unknown": [
+    "insightOriginality",
+    "emotionalRhythm"
+   ],
+   "breakdown": {
+    "scriptNaturalness": 87,
+    "sentenceVariation": 69,
+    "narrationProsody": 95,
+    "visualSpecificity": 100,
+    "visualRepetition": 97,
+    "editingVariation": 78,
+    "sourceDepth": 96,
+    "insightOriginality": null,
+    "transitions": 78,
+    "emotionalRhythm": null,
+    "graphicSpecificity": 100,
+    "topicTreatment": 79
+   }
+  },
+  "premiumMediaTest": {
+   "wouldFeelOutOfPlace": true,
+   "reasons": [
+    "narration is not certified as human-grade",
+    "humanness 82 < 90",
+    "first 30 seconds (72) weaker than leading channels"
+   ],
+   "verdict": "FAIL",
+   "note": "Heuristic comparison on quality dimensions only; a human reviewer makes the final judgement."
+  },
+  "hardGateFailures": [],
+  "unverified": [
+   "narration voice \"edge-tts en-US-AndrewMultilingualNeural (fallback voice)\" is not certified premium (no human listen recorded)",
+   "no rendered file inspected (render QA UNKNOWN)",
+   "competitor similarity unverified",
+   "humanness components unmeasured: insightOriginality, emotionalRhythm"
+  ],
+  "reasons": [
+   "REVIEW: quality 84.5 < auto-publish 88",
+   "REVIEW: narration voice \"edge-tts en-US-AndrewMultilingualNeural (fallback voice)\" is not certified premium (no human listen recorded)",
+   "REVIEW: no rendered file inspected (render QA UNKNOWN)",
+   "REVIEW: competitor similarity unverified",
+   "REVIEW: humanness components unmeasured: insightOriginality, emotionalRhythm",
+   "REVIEW: humanness 82 (UNVERIFIED) vs target 90",
+   "REVIEW: premium media test FAIL — narration is not certified as human-grade; humanness 82 < 90; first 30 seconds (72) weaker than leading channels"
+  ],
+  "thresholds": {
+   "autoPublish": 88,
+   "review": 76
+  }
+ },
+ "publishGuard": {
+  "allowed": false,
+  "blocks": [
+   "dry-run mode (default): no upload is ever attempted",
+   "channel config enabled=false (shadow mode)",
+   "platforms.youtube.enabled=false",
+   "PD_PUBLISH is not set to 1",
+   "PD_YT_* credentials not present/verified for this channel",
+   "expected YouTube channel id not configured (identity check impossible)",
+   "assessment is REVIEW, not PUBLISH",
+   "first 5 videos need recorded human approval (has 0)"
+  ]
+ },
+ "generatedAt": "2026-10-06T17:00:36.579Z"
+}

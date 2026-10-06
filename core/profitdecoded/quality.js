@@ -21,8 +21,12 @@ function humanness(parts) {
     total += wt * used; wsum += wt;
   }
   const score = Math.round(total / wsum);
-  const verdict = unknown.length ? "UNVERIFIED" : score >= th.target ? "PASS" : score >= th.hardReject ? "REVIEW" : "REJECT";
-  return { score, target: th.target, hardReject: th.hardReject, verdict, unknown, breakdown };
+  // Unknown components are scored pessimistically for ranking, but they alone must not hard-reject:
+  // the floor applies to the score over components that were actually measured.
+  let kt = 0, kw = 0; for (const [k, wt] of Object.entries(w)) if (!unknown.includes(k)) { kt += wt * breakdown[k]; kw += wt; }
+  const knownScore = kw ? Math.round(kt / kw) : 0;
+  const verdict = knownScore < th.hardReject ? "REJECT" : unknown.length ? "UNVERIFIED" : score >= th.target ? "PASS" : "REVIEW";
+  return { score, knownScore, target: th.target, hardReject: th.hardReject, verdict, unknown, breakdown };
 }
 
 // ---- Quality score ----
@@ -63,7 +67,11 @@ function hardGates(ev) {
     if (ev.scriptClaims.numbersWithoutDossierSupport.length) fails.push(`REJECTED: ${ev.scriptClaims.numbersWithoutDossierSupport.length} number(s) in the script are not in the research dossier (e.g. ${ev.scriptClaims.numbersWithoutDossierSupport[0].number})`);
   }
   // first seconds
-  if (ev.first30) need(ev.first30.score >= th.firstThirtySeconds, `REJECTED: first-30-second score ${ev.first30.score} < required ${th.firstThirtySeconds} (${(ev.first30.notes || []).join("; ") || "weak opening"})`);
+  if (ev.first30) {
+    // The full 0-5 / 5-15 / 15-30 evaluation is a long-form requirement. A 30-50 s Short is judged on its opening seconds.
+    if (ev.format === "short") need(ev.first30.parts.hook >= 65, `REJECTED: Short opening (first 5 seconds) scores ${ev.first30.parts.hook} < required 65 (${(ev.first30.notes || []).join("; ") || "weak opening"})`);
+    else need(ev.first30.score >= th.firstThirtySeconds, `REJECTED: first-30-second score ${ev.first30.score} < required ${th.firstThirtySeconds} (${(ev.first30.notes || []).join("; ") || "weak opening"})`);
+  }
   if (ev.hook) { need(ev.hook.valid, "REJECTED: hook competition invalid — " + (ev.hook.problems || []).join("; ")); need(!ev.hook.winner || ev.hook.winner.score >= 60, `REJECTED: weakest-possible first seconds, winning hook scored ${ev.hook.winner && ev.hook.winner.score} < 60`); }
   // visuals
   if (ev.visuals) {
@@ -88,7 +96,7 @@ function hardGates(ev) {
   if (ev.copyright) need(ev.copyright.ok, "REJECTED: copyright uncertainty — " + (ev.copyright.detail || "unlicensed asset"));
   // humanness
   if (ev.humanness) {
-    if (ev.humanness.score < ev.humanness.hardReject) fails.push(`REJECTED: humanness ${ev.humanness.score} < hard floor ${ev.humanness.hardReject}`);
+    if (ev.humanness.verdict === "REJECT") fails.push(`REJECTED: humanness ${ev.humanness.knownScore} (measured components) < hard floor ${ev.humanness.hardReject}`);
     if (ev.humanness.unknown.length) unverified.push("humanness components unmeasured: " + ev.humanness.unknown.join(", "));
   }
   return { fails, unverified };
@@ -102,7 +110,8 @@ function premiumMediaTest(ev, q, h) {
   if (ev.visuals && (ev.visuals.visualQuality < 80 || ev.visuals.graphicShare < 0.4)) reasons.push(`visuals look cheaper/more generic than top peers (quality ${ev.visuals.visualQuality}, graphics ${Math.round((ev.visuals.graphicShare || 0) * 100)}%)`);
   if (ev.aiPatterns && ev.aiPatterns.aiPatternScore >= 25) reasons.push("script still carries generic-AI phrasing");
   if (h && h.score < 90) reasons.push(`humanness ${h.score} < 90`);
-  if (ev.first30 && ev.first30.score < 85) reasons.push(`first 30 seconds (${ev.first30.score}) weaker than leading channels`);
+  if (ev.first30 && ev.format !== "short" && ev.first30.score < 85) reasons.push(`first 30 seconds (${ev.first30.score}) weaker than leading channels`);
+  if (ev.first30 && ev.format === "short" && ev.first30.parts.hook < 70) reasons.push(`Short opening (${ev.first30.parts.hook}) weaker than leading channels`);
   return { wouldFeelOutOfPlace: reasons.length > 0, reasons, verdict: reasons.length ? "FAIL" : "PASS", note: "Heuristic comparison on quality dimensions only; a human reviewer makes the final judgement." };
 }
 

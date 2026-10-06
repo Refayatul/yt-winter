@@ -38,6 +38,12 @@ if (cmd === "inventory") {
   const u = universe(); console.log(JSON.stringify(u.stats, null, 2));
 } else if (cmd === "rank") {
   const u = universe(); const evidence = flag("--evidence") ? readJson(path.resolve(flag("--evidence")), {}) : {};
+  // Researched dossiers on disk feed the decision engine through the real research gate.
+  const Research = require(path.join(P, "research")); const rdir = path.join(CHANNEL_DIR, "research");
+  if (fs.existsSync(rdir)) for (const f of fs.readdirSync(rdir).filter((x) => x.endsWith(".json"))) {
+    const d = readJson(path.join(rdir, f), null); if (!d) continue;
+    evidence[d.topicId] = { ...(evidence[d.topicId] || {}), research: Research.gate(d, { format: d.format }) };
+  }
   const rows = Decision.rank(u.topics, evidence); const byId = Object.fromEntries(u.topics.map((t) => [t.id, t]));
   const top = Decision.selectDiverse(rows, +flag("--top", 20), { topicById: byId });
   const out = table(top, [
@@ -68,6 +74,9 @@ if (cmd === "inventory") {
   const file = path.resolve(argv[1] || "");
   if (!fs.existsSync(file)) { console.error("usage: dry-run <bundle.json>"); process.exit(2); }
   const bundle = readJson(file, null); const baseDir = path.dirname(file);
+  if (bundle.dossierFile) bundle.dossier = readJson(path.resolve(baseDir, bundle.dossierFile), null);
+  if (bundle.graphicSpecs && !(bundle.visualPlan || []).length) bundle.visualPlan = require(path.join(__dirname, "scripts", "profitdecoded", "plan-visuals")).build(bundle);
+  if (bundle.topicScore == null) { const t = universe().topics.find((x) => x.id === bundle.topic.id); if (t) bundle.topicScore = t.score.score; }
   const result = Pipeline.run(bundle, { baseDir });
   const topic = universe().topics.find((t) => t.id === bundle.topic.id);
   const extra = topic ? { portfolioType: Port.classifyPortfolioType(topic), ebv: Rev.expectedBusinessValue(topic), longPotential: topic.formats.longformExpansionPotential, learningValue: bundle.learningValue } : { learningValue: bundle.learningValue };

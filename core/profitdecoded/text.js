@@ -5,11 +5,21 @@ const STOP = new Set("a an and are as at be but by for from has have he her his 
 
 function words(text) { return String(text || "").toLowerCase().normalize("NFKD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9$%'.\s-]/g, " ").split(/\s+/).map((w) => w.replace(/^[.'-]+|[.'-]+$/g, "")).filter(Boolean); }
 function contentWords(text) { return words(text).filter((w) => !STOP.has(w) && w.length > 2); }
+const ABBREV = /\b(Mr|Mrs|Ms|Dr|Inc|Co|Corp|Ltd|vs|No|St|U\.S|U\.K|e\.g|i\.e)\.$/;
 function sentences(text) {
   const clean = String(text || "").replace(/\s+/g, " ").trim();
   if (!clean) return [];
-  const parts = clean.match(/[^.!?]+(?:[.!?]+["')\]]*|$)/g) || [clean];
-  return parts.map((s) => s.trim()).filter((s) => s.length > 1);
+  // Split only where terminal punctuation is followed by whitespace and a new sentence start,
+  // so decimals ("$10.4 billion") and abbreviations are never cut.
+  const out = []; let start = 0;
+  const re = /[.!?]+["')\]]*\s+(?=["'(\[]?[A-Z0-9$“‘])/g; let m;
+  while ((m = re.exec(clean))) {
+    const piece = clean.slice(start, m.index + m[0].trimEnd().length);
+    if (ABBREV.test(piece.trim())) continue;
+    out.push(piece.trim()); start = m.index + m[0].length;
+  }
+  const tail = clean.slice(start).trim(); if (tail) out.push(tail);
+  return out.filter((x) => x.length > 1);
 }
 function shingles(text, n = 3) {
   const w = words(text); const set = new Set();

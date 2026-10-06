@@ -1,0 +1,372 @@
+{
+  "id": "dryrun-short-costco-membership",
+  "format": "short",
+  "dossierFile": "../../research/cs-001-why-costco-wants-membership-more-than-sales.json",
+  "topic": {
+    "id": "cs-001-why-costco-wants-membership-more-than-sales",
+    "topic": "Why Costco Wants Membership More Than Sales",
+    "entity": "Costco",
+    "pillar": "company-stories",
+    "viralMechanism": "Company Decision + Hidden Economics"
+  },
+  "learningValue": "Tests the 'familiar retailer + hidden profit line' mechanism with a primary-source numbers-only Short. A strong result (viewed-vs-swiped, shares, subs/1k) would raise priority of the Costco / membership cluster long-form; a weak hook with strong retention would test a different hook mechanism on the same facts.",
+  "selectedTitle": "Why Costco Wants Membership More Than Sales",
+  "hookCandidates": [
+    "Costco did not make most of its profit in the aisles. Of $10.4 billion in operating income, about half came from one line most shoppers never see.",
+    "What if the cheapest store in town isn't making its money from the things it sells?",
+    "$5.3 billion. That is what Costco collected last year just for letting people in.",
+    "Look at Costco's income statement. Total revenue is $275.2 billion. Sales of goods are $269.9 billion. Something fills that gap.",
+    "Costco wants you to pay to walk in the door, and that is the point.",
+    "The store famous for cheap prices has a profit engine that is not priced at all."
+  ],
+  "beats": [
+    {
+      "id": "b1",
+      "type": "hook",
+      "text": "Costco did not make most of its profit in the aisles. Of $10.4 billion in operating income, about half came from one line most shoppers never see.",
+      "claimId": "c2",
+      "start": 0.35,
+      "end": 11.648
+    },
+    {
+      "id": "b2",
+      "type": "proof",
+      "text": "That line is membership fees: $5.3 billion. It sits in the income statement as the gap between total revenue and sales of goods.",
+      "claimId": "c1",
+      "start": 12.326,
+      "end": 22.073
+    },
+    {
+      "id": "b3",
+      "type": "mechanism",
+      "text": "Costco's annual report says it does not try to maximize prices in the short term. It wants what it calls pricing authority.",
+      "claimId": "c3",
+      "start": 22.459,
+      "end": 29.489
+    },
+    {
+      "id": "b4",
+      "type": "mini-payoff",
+      "text": "That is easier when the card carries the profit. Fees were about 51% of operating income.",
+      "claimId": "c2",
+      "start": 30.095,
+      "end": 36.325
+    },
+    {
+      "id": "b5",
+      "type": "proof",
+      "text": "And you do renew. In the US and Canada, 92.3% of members did.",
+      "claimId": "c4",
+      "start": 36.843,
+      "end": 42.304
+    },
+    {
+      "id": "b6",
+      "type": "payoff",
+      "text": "So Costco isn't really selling you groceries at a discount. It sells the discount itself, once a year.",
+      "claimId": "c3",
+      "start": 42.695,
+      "end": 48.897
+    }
+  ],
+  "graphicSpecs": {
+    "b1": [
+      {
+        "type": "chart",
+        "entities": [
+          "Costco",
+          "operating income",
+          "membership fees"
+        ],
+        "overlayText": "51% of operating income",
+        "numbers": [
+          "10.4",
+          "51"
+        ],
+        "evidenceClaimId": "c2",
+        "asset": "graphic:split-bar-operating-income"
+      },
+      {
+        "type": "typography",
+        "entities": [
+          "Costco",
+          "aisles",
+          "profit"
+        ],
+        "overlayText": "Not in the aisles",
+        "numbers": [],
+        "evidenceClaimId": "c2",
+        "asset": "graphic:headline-aisles"
+      }
+    ],
+    "b2": [
+      {
+        "type": "filing-excerpt",
+        "entities": [
+          "total revenue",
+          "net sales",
+          "membership fees",
+          "Costco"
+        ],
+        "overlayText": "$275.2B revenue − $269.9B sales",
+        "numbers": [
+          "275.2",
+          "269.9",
+          "5.3"
+        ],
+        "evidenceClaimId": "c1",
+        "asset": "graphic:income-statement-excerpt"
+      },
+      {
+        "type": "animated-number",
+        "entities": [
+          "membership fees",
+          "Costco"
+        ],
+        "overlayText": "$5.3B in fees",
+        "numbers": [
+          "5.3"
+        ],
+        "evidenceClaimId": "c1",
+        "asset": "graphic:count-up-fees"
+      }
+    ],
+    "b3": [
+      {
+        "type": "filing-excerpt",
+        "entities": [
+          "annual report",
+          "prices",
+          "pricing authority",
+          "Costco"
+        ],
+        "overlayText": "“pricing authority”",
+        "numbers": [],
+        "evidenceClaimId": "c3",
+        "asset": "graphic:10k-pricing-authority"
+      }
+    ],
+    "b4": [
+      {
+        "type": "money-flow",
+        "entities": [
+          "card",
+          "profit",
+          "shelves",
+          "operating income",
+          "fees"
+        ],
+        "overlayText": "Fees carry the profit",
+        "numbers": [
+          "51"
+        ],
+        "evidenceClaimId": "c2",
+        "asset": "graphic:money-flow-card-to-shelves"
+      },
+      {
+        "type": "comparison-panel",
+        "entities": [
+          "fees",
+          "operating income",
+          "renewing"
+        ],
+        "overlayText": "51% from fees",
+        "numbers": [
+          "51"
+        ],
+        "evidenceClaimId": "c2",
+        "asset": "graphic:fees-vs-merchandise-share"
+      }
+    ],
+    "b5": [
+      {
+        "type": "chart",
+        "entities": [
+          "renew",
+          "members",
+          "US",
+          "Canada"
+        ],
+        "overlayText": "92.3% renewed",
+        "numbers": [
+          "92.3"
+        ],
+        "evidenceClaimId": "c4",
+        "asset": "graphic:renewal-ring"
+      }
+    ],
+    "b6": [
+      {
+        "type": "typography",
+        "entities": [
+          "Costco",
+          "groceries",
+          "discount",
+          "once a year"
+        ],
+        "overlayText": "It sells the discount",
+        "numbers": [],
+        "evidenceClaimId": "c3",
+        "asset": "graphic:headline-sells-discount"
+      },
+      {
+        "type": "price-animation",
+        "entities": [
+          "discount",
+          "once a year",
+          "groceries"
+        ],
+        "overlayText": "Paid once a year",
+        "numbers": [],
+        "evidenceClaimId": "c3",
+        "asset": "graphic:card-annual-tag"
+      }
+    ]
+  },
+  "titleCandidates": [
+    "Why Costco Wants Membership More Than Sales",
+    "Costco's Real Profit Isn't in the Aisles",
+    "Half of Costco's Operating Profit Comes From a Card",
+    "Costco Doesn't Sell Groceries. It Sells This.",
+    "The Costco Line Item Most Shoppers Never See",
+    "Why Costco Prices Can Stay Low",
+    "Costco Makes About Half Its Operating Profit From Fees",
+    "Why Costco Wants You to Renew",
+    "The Membership Model Behind Costco's Low Prices",
+    "How Costco's Card Pays for Cheap Prices",
+    "Why Costco Is Not Really Selling You Groceries",
+    "Costco's Profit Isn't Mostly on the Shelves",
+    "The Quiet Number Behind Costco's Profit",
+    "Why Costco's Real Product Is the Card",
+    "How Costco Gets You to Pay to Shop",
+    "Costco Sells the Discount. Here's the Math.",
+    "Follow the Money Inside Costco's Income Statement",
+    "Where Costco's Profit Really Comes From",
+    "The Costco Math Most Shoppers Miss",
+    "How a Membership Card Became Half of Costco's Profit",
+    "Costco Isn't Really a Store. It's a Membership Business.",
+    "What Costco's Membership Fee Does for Its Prices"
+  ],
+  "thumbnailCandidates": [
+    {
+      "id": "t1-card-vs-cart",
+      "dominantObject": "single warehouse-club membership card (generic, no logo)",
+      "brandLogo": false,
+      "text": "HALF",
+      "elementCount": 2,
+      "face": false,
+      "contradiction": "a thin card outweighs a full shopping cart on a balance",
+      "composition": "balance-scale",
+      "contrast": "high",
+      "numberShown": "51"
+    },
+    {
+      "id": "t2-receipt-line",
+      "dominantObject": "receipt with one line highlighted",
+      "brandLogo": false,
+      "text": "THIS LINE",
+      "elementCount": 2,
+      "face": false,
+      "contradiction": "tiny highlighted line versus a long receipt of goods",
+      "composition": "receipt-highlight",
+      "contrast": "high",
+      "numberShown": null
+    },
+    {
+      "id": "t3-aisle-empty-profit",
+      "dominantObject": "warehouse aisle floor plan with the profit marker at the entrance gate",
+      "brandLogo": false,
+      "text": "",
+      "elementCount": 3,
+      "face": false,
+      "contradiction": "profit marker sits at the door, not in the aisles",
+      "composition": "floor-plan-door",
+      "contrast": "medium",
+      "numberShown": null
+    }
+  ],
+  "history": [],
+  "competitorTranscripts": [],
+  "gap": {
+    "status": "UNKNOWN",
+    "reasonToExist": false
+  },
+  "audioFile": "out/mix.wav",
+  "narration": {
+    "provider": "edge-tts en-US-AndrewMultilingualNeural (fallback voice)",
+    "segments": [
+      {
+        "text": "Costco did not make most of its profit in the aisles.",
+        "start": 0.35,
+        "end": 4.154
+      },
+      {
+        "text": "Of $10.4 billion in operating income, about half came from one line most shoppers never see.",
+        "start": 4.415,
+        "end": 11.648
+      },
+      {
+        "text": "That line is membership fees: $5.3 billion.",
+        "start": 12.326,
+        "end": 16.415
+      },
+      {
+        "text": "It sits in the income statement as the gap between total revenue and sales of goods.",
+        "start": 16.829,
+        "end": 22.073
+      },
+      {
+        "text": "Costco's annual report says it does not try to maximize prices in the short term.",
+        "start": 22.459,
+        "end": 27.167
+      },
+      {
+        "text": "It wants what it calls pricing authority.",
+        "start": 27.379,
+        "end": 29.489
+      },
+      {
+        "text": "That is easier when the card carries the profit.",
+        "start": 30.095,
+        "end": 32.676
+      },
+      {
+        "text": "Fees were about 51% of operating income.",
+        "start": 32.984,
+        "end": 36.325
+      },
+      {
+        "text": "And you do renew.",
+        "start": 36.843,
+        "end": 37.761
+      },
+      {
+        "text": "In the US and Canada, 92.3% of members did.",
+        "start": 38.163,
+        "end": 42.304
+      },
+      {
+        "text": "So Costco isn't really selling you groceries at a discount.",
+        "start": 42.695,
+        "end": 45.92
+      },
+      {
+        "text": "It sells the discount itself, once a year.",
+        "start": 46.233,
+        "end": 48.897
+      }
+    ],
+    "humanListenApproved": false
+  },
+  "audio": {
+    "music": "pd-original-pad-minor-pulse-dryrun-short",
+    "assets": [
+      {
+        "id": "pd-original-pad-minor-pulse-dryrun-short",
+        "kind": "music",
+        "license": "owned",
+        "note": "procedurally generated by scripts/profitdecoded/produce-audio.js; original, no third-party material"
+      }
+    ]
+  }
+}

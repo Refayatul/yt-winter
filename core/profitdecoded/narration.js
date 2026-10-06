@@ -78,6 +78,7 @@ function textChecks(script, options = {}) {
 // ---- Audio measurement (real ffmpeg; returns UNKNOWN when ffmpeg or file are missing) ----
 function measureAudio(file) {
   if (!file || !fs.existsSync(file)) return { status: "UNKNOWN", reason: "no audio file" };
+  if (/\.wav$/i.test(file)) { try { return require("./wav").analyze(fs.readFileSync(file)); } catch (e) { /* fall through to ffmpeg */ } }
   try {
     const out = execFileSync("ffmpeg", ["-hide_banner", "-nostats", "-i", file, "-af", "ebur128=peak=true,silencedetect=n=-45dB:d=0.35", "-f", "null", "-"], { encoding: "utf8", stdio: ["ignore", "pipe", "pipe"], maxBuffer: 1 << 26 });
     return parseAudio(out);
@@ -112,7 +113,7 @@ function qa(segments, options = {}) {
     const cadenceCv = T.cv(wps);
     parts.cadenceVariation = S.clamp(Math.round(cadenceCv / 0.14 * 100));
     if (cadenceCv < 0.06) rejections.push(`robotic cadence: sentence pace varies only ${(cadenceCv * 100).toFixed(1)}% (needs >=6%)`);
-    if (wpm < 125 || wpm > 185) warnings.push(`average pace ${Math.round(wpm)} wpm is outside 125-185`);
+    if (wpm < 130 || wpm > 200) warnings.push(`average pace ${Math.round(wpm)} wpm is outside 130-200 (spoken words per speaking minute)`);
     const gaps = []; for (let i = 1; i < timed.length; i += 1) gaps.push(Math.max(0, timed[i].start - timed[i - 1].end));
     const gapCv = T.cv(gaps);
     parts.pauseVariation = S.clamp(Math.round(gapCv / 0.35 * 100));
@@ -126,6 +127,7 @@ function qa(segments, options = {}) {
   const audio = options.audio || (options.audioFile ? measureAudio(options.audioFile) : { status: "UNKNOWN" });
   if (audio.status === "OBSERVED") {
     let a = 100;
+    if (audio.clippedSamples > 0) { rejections.push(`clipping: ${audio.clippedSamples} samples at full scale`); a -= 50; }
     if (audio.truePeakDbfs != null && audio.truePeakDbfs > -0.5) { rejections.push(`clipping risk: peak ${audio.truePeakDbfs} dBFS > -0.5`); a -= 50; }
     if (audio.integratedLufs != null && (audio.integratedLufs < -19 || audio.integratedLufs > -12)) { warnings.push(`loudness ${audio.integratedLufs} LUFS outside -19..-12 (target about -16 to -14)`); a -= 15; }
     parts.audioTechnical = Math.max(0, a);
@@ -136,9 +138,12 @@ function qa(segments, options = {}) {
   // Premium certification: acoustic metrics cannot prove human-like prosody. Cap until a human listen is recorded.
   const premium = /elevenlabs|azure.*(hd|dragon)|openai.*(tts|gpt-4o)|studio|recorded|human/i.test(provider);
   const certified = !!options.humanListenApproved || premium;
-  if (!certified) { naturalness = Math.min(naturalness, 80); warnings.push(`voice provider "${provider}" is not certified as premium; naturalness capped at 80 until a human listen is approved or a premium voice is used`); }
-  if (naturalness < required) rejections.push(`narration naturalness ${naturalness} < required ${required}`);
-  return { naturalness, parts, certified, provider, audio, measured, rejections, warnings, pass: rejections.length === 0, spokenPreview: textInfo.spoken.slice(0, 200) };
+  const measuredNaturalness = naturalness;
+  // Acoustic metrics alone cannot prove human-like prosody, so an uncertified voice is capped and can
+  // never reach PUBLISH (it becomes REVIEW). A measured score below the bar is still a hard rejection.
+  if (!certified) { naturalness = Math.min(naturalness, 80); warnings.push(`voice provider "${provider}" is not certified as premium; reported naturalness capped at 80 (measured ${measuredNaturalness}) until a human listen is approved or a premium voice is used`); }
+  if (measuredNaturalness < required) rejections.push(`narration naturalness ${measuredNaturalness} < required ${required}`);
+  return { naturalness, measuredNaturalness, parts, certified, provider, audio, measured, rejections, warnings, pass: rejections.length === 0, spokenPreview: textInfo.spoken.slice(0, 200) };
 }
 function textChecksSpoken(text) { return spokenText(text); }
 

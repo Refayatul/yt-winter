@@ -33,6 +33,7 @@ function render(result, bundle, extra = {}) {
   for (const c of ev.research.claims) L.push(row([esc(c.text), c.central ? "yes" : "", c.status]));
   if (ev.research.warnings.length) { L.push(""); for (const w of ev.research.warnings) L.push("- ⚠ " + w); }
   L.push("");
+  if (ev.duration && ev.duration.seconds != null) L.push(`Narrated duration: **${ev.duration.seconds.toFixed(1)} s** (target ${ev.duration.target[0]}-${ev.duration.target[1]} s) ${ev.duration.inRange ? "✔" : "⚠ outside typical range"}`), L.push("");
   L.push("## Hook and first 30 seconds");
   L.push(`Winning hook (**${ev.hook.winner ? ev.hook.winner.mechanism : "—"}**, score ${ev.hook.winner ? ev.hook.winner.score : "—"}): “${ev.hook.winner ? ev.hook.winner.text : ""}”`);
   L.push(""); L.push(row(["Hook candidate", "Mechanism", "Score"])); L.push(row(["---", "---", "---"]));

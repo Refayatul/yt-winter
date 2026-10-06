@@ -62,6 +62,13 @@ function gate(dossier, options = {}) {
     if (c.quote && !c.quoteSourceId) rejections.push(`quote in claim ${c.id} has no quoteSourceId`);
     if (missingIds.length) rejections.push(`claim ${c.id} cites unknown source ids ${missingIds.join(", ")}`);
   }
+  // Inferences (our own arithmetic/analysis) must be disclosed and rest only on supported claims.
+  const supportedIds = new Set(claimReports.filter((c) => ["supported", "supported-single-primary", "supported-secondary"].includes(c.status)).map((c) => c.id));
+  for (const inf of dossier.inferences || []) {
+    if (!inf.disclosed) rejections.push(`inference ${inf.id} is not marked as our own analysis (disclosed:true)`);
+    const bad = (inf.basisClaimIds || []).filter((id) => !supportedIds.has(id));
+    if (!(inf.basisClaimIds || []).length || bad.length) rejections.push(`inference ${inf.id} rests on unsupported/missing claim(s): ${(bad.length ? bad : ["none cited"]).join(", ")}`);
+  }
   if (central.length && dossier.contradictions && dossier.contradictions.some((x) => x.status === "open")) rejections.push("an open contradiction is unresolved");
   const dated = sources.filter((s) => s.date).length;
   if (sources.length && dated / sources.length < 0.6) warnings.push("fewer than 60% of sources carry a publication date");
@@ -85,7 +92,7 @@ function unsupportedClaimsInScript(script, dossier) {
   const hits = [];
   for (const c of bad) { for (const s of T.sentences(script)) if (T.wordSetSimilarity(s, c.text) > 0.45) hits.push({ claim: c.text, sentence: s }); }
   // Any number in the script that is absent from supported claims/facts is suspicious.
-  const known = new Set(((dossier.claims || []).concat(dossier.facts || [])).flatMap((c) => (String(c.text || c.claim || "").match(/\d[\d,.]*/g) || []).map((n) => n.replace(/[,.]+$/, ""))));
+  const known = new Set(((dossier.claims || []).concat(dossier.facts || [], dossier.inferences || [])).flatMap((c) => (String((c.text || c.claim || "") + " " + (c.numbers || []).join(" ")).match(/\d[\d,.]*/g) || []).map((n) => n.replace(/[,.]+$/, ""))));
   const orphan = [];
   for (const s of T.sentences(script)) for (const n of (s.match(/\$?\d[\d,.]*\d|\$?\d/g) || [])) { const bare = n.replace(/^\$/, "").replace(/[,.]+$/, ""); if (!known.has(bare) && !/^(19|20)\d\d$/.test(bare) && bare.length > 1) orphan.push({ number: n, sentence: s }); }
   return { unsupported: hits, numbersWithoutDossierSupport: orphan };

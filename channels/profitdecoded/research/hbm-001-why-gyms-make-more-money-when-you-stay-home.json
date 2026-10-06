@@ -1,0 +1,37 @@
+{
+  "topicId": "hbm-001-why-gyms-make-more-money-when-you-stay-home",
+  "format": "long",
+  "researchedAt": "2026-10-06",
+  "researcher": "Claude (web research session); every source below was opened and read for the cited facts on the date shown",
+  "thesis": "Planet Fitness can charge a very low price partly because its clubs are sized for the share of members who actually show up, and the company's own filings point to that share being small.",
+  "contradictionsChecked": true,
+  "contradictions": [
+    { "id": "k1", "status": "resolved", "note": "Planet Fitness does not state anywhere in the 10-K that its model depends on non-attendance, and the 10-K gives no members-per-club or capacity figure. Resolution: the video presents the capacity logic as OUR arithmetic on disclosed numbers (inferences i1-i3), not as a company statement, and says so on screen and in narration." },
+    { "id": "k2", "status": "resolved", "note": "'Workouts' in the 10-K is undefined (check-ins vs distinct sessions). Resolution: use only as an approximate floor ('more than 650 million') and say the definition is the company's." },
+    { "id": "k3", "status": "resolved", "note": "The academic study covers three non-Planet-Fitness health clubs (1997-2000), so it shows a behavioral pattern, not Planet Fitness behavior. Resolution: attributed only as a general finding." }
+  ],
+  "sources": [
+    { "id": "p1", "type": "10-k", "publisher": "Planet Fitness, Inc. / SEC", "title": "Form 10-K for fiscal year ended December 31, 2025", "url": "https://www.sec.gov/Archives/edgar/data/1637207/000163720726000021/plnt10-k12312025_ars.htm", "date": "2026-02", "accessed": "2026-10-06" },
+    { "id": "p2", "type": "10-k", "publisher": "Planet Fitness, Inc. / SEC", "title": "Form 10-K for fiscal year ended December 31, 2024", "url": "https://www.sec.gov/Archives/edgar/data/1637207/000163720725000016/plnt-20241231.htm", "date": "2025-02", "accessed": "2026-10-06" },
+    { "id": "p3", "type": "academic", "publisher": "American Economic Review", "title": "Paying Not to Go to the Gym (DellaVigna & Malmendier, AER 96(3), 694-719)", "url": "https://www.aeaweb.org/articles?id=10.1257%2Faer.96.3.694", "date": "2006-06", "accessed": "2026-10-06" },
+    { "id": "p4", "type": "journalism", "publisher": "Fortune", "title": "Planet Fitness price hike, classic membership (Chris Morris)", "url": "https://fortune.com/2024/05/10/planet-fitness-price-hike-classic-membership", "date": "2024-05-10", "accessed": "2026-10-06" },
+    { "id": "p5", "type": "journalism", "publisher": "Sherwood News", "title": "Planet Fitness' business only works out if its members don't", "url": "https://sherwood.news/business/planet-fitnesss-membership-gym-cancellation/", "date": "2024-05-02", "accessed": "2026-10-06", "use": "context only; peak-attendance figures come from informal club-staff remarks and are NOT used in the script" },
+    { "id": "p6", "type": "journalism", "publisher": "Sherwood News", "title": "How many people can you cram into one gym? For Planet Fitness, the jury's still out", "url": "https://sherwood.news/business/how-many-people-can-you-cram-into-one-gym-for-planet-fitness-the-jurys-still/", "date": "2026-02-25", "accessed": "2026-10-06", "use": "context only; data source unstated, NOT used in the script" }
+  ],
+  "claims": [
+    { "id": "c1", "central": true, "text": "At December 31, 2025 Planet Fitness had approximately 20.8 million members and 2,896 clubs (2,604 franchised, 292 corporate-owned); a year earlier, 19.7 million members and 2,722 clubs.", "numbers": ["20.8", "2,896", "2,604", "292", "19.7", "2,722"], "sourceIds": ["p1", "p2"], "primaryOnlyOk": true },
+    { "id": "c2", "central": true, "text": "The FY2025 10-K says members completed more than 650 million workouts in the company's clubs.", "numbers": ["650"], "sourceIds": ["p1"] },
+    { "id": "c3", "central": true, "text": "The 10-K describes its clubs as typically 20,000 square feet.", "numbers": ["20,000"], "sourceIds": ["p1"] },
+    { "id": "c4", "central": true, "text": "Classic Card dues start at $15 a month for new members and the PF Black Card at $24.99; the standard annual fee is $49; Black Card penetration was 66.5% at year-end 2025.", "numbers": ["15", "24.99", "49", "66.5"], "sourceIds": ["p1"] },
+    { "id": "c5", "central": true, "text": "Over 90% of both corporate-owned club and franchise revenues were recurring: royalties, monthly dues and annual fees.", "numbers": ["90"], "sourceIds": ["p1", "p2"], "primaryOnlyOk": true },
+    { "id": "c6", "central": true, "text": "In a study of 7,752 members at three health clubs, members on a flat monthly fee of over $70 attended on average 4.3 times a month, paying over $17 per expected visit versus $10 on a 10-visit pass.", "numbers": ["7,752", "70", "4.3", "17", "10"], "sourceIds": ["p3"] },
+    { "id": "c7", "central": false, "text": "The Classic Card cost $10 a month from 1998 until the May 2024 announcement that new members would pay $15.", "numbers": ["10", "1998", "15", "2024"], "sourceIds": ["p4", "p2"] }
+  ],
+  "inferences": [
+    { "id": "i1", "disclosed": true, "text": "20.8 million members across 2,896 clubs is about 7,200 members per club.", "numbers": ["7,200", "7,182"], "basisClaimIds": ["c1"] },
+    { "id": "i2", "disclosed": true, "text": "650 million workouts over 2025 spread across roughly 2,800 average clubs is about 230,000 workouts per club per year, or roughly 630 a day (workouts are defined by the company and the average-club count is approximate).", "numbers": ["230,000", "630", "2,800"], "basisClaimIds": ["c1", "c2"] },
+    { "id": "i3", "disclosed": true, "text": "650 million workouts across about 20 million average members is about 2.7 workouts per member per month, counting members who never come.", "numbers": ["2.7", "20"], "basisClaimIds": ["c1", "c2"] },
+    { "id": "i4", "disclosed": true, "text": "If every member visited at the 4.3-a-month rate in the academic study, a club of 7,200 members would see about 1,000 visits a day, versus about 630 at the 10-K-implied rate.", "numbers": ["1,000", "7,200", "4.3", "630"], "basisClaimIds": ["c1", "c2", "c6"] }
+  ],
+  "angle": "Not 'gyms are a scam'. A capacity-and-incentives explanation built only from the company's own disclosed numbers, with the limits of the evidence shown on screen."
+}
