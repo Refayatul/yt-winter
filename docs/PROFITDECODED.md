@@ -79,9 +79,13 @@ Research dossiers: `channels/profitdecoded/research/`. Ranking: `channels/profit
 
 ## Voice, render and live data (added in the follow-up)
 
-* **Voice providers** (`core/profitdecoded/tts-provider.js`): `edge-tts` (fallback, never certified), `openai` (`OPENAI_API_KEY`, gpt-4o-mini-tts) and `elevenlabs` (`ELEVENLABS_API_KEY` + `PD_ELEVENLABS_VOICE_ID`). Select with `PD_TTS_PROVIDER`. A missing key falls back to edge-tts and says so. Premium providers lift the voice cap, but a human listen is still the last word. Pick by ear with `node scripts/profitdecoded/voice-audition.js [--provider openai]` (samples in `channels/profitdecoded/reports/voice-audition/`).
+* **Voice providers** (`core/profitdecoded/tts-provider.js`): `edge-tts` (fallback, never certified; it uses an unofficial Microsoft endpoint, so check its terms before relying on it for a monetized channel), `google` (Cloud Text-to-Speech, `GOOGLE_TTS_API_KEY`, Chirp 3 HD), `openai` (`OPENAI_API_KEY`, gpt-4o-mini-tts) and `elevenlabs` (`ELEVENLABS_API_KEY` + `PD_ELEVENLABS_VOICE_ID`). Select with `PD_TTS_PROVIDER`. A missing key falls back to edge-tts and says so. Premium providers lift the voice cap, but a human listen is still the last word. Pick by ear with `node scripts/profitdecoded/voice-audition.js [--provider openai]` (samples in `channels/profitdecoded/reports/voice-audition/`).
 * **Renderer** (`scripts/profitdecoded/render.js`): brand-system frames (ImageMagick) + zoom/pan/fade per shot (ffmpeg) + the mixed audio -> `out/video.mp4`, then real render QA (probe, decode errors, black frames, duration vs audio) written to `bundle.render`. Every frame carries its source citation. Needs a working ffmpeg: the `profitdecoded-render` workflow builds and uploads the Short on a GitHub runner (artifact `profitdecoded-short-render`).
 * **Live competitor data** (`scripts/profitdecoded/collect-competitors.js`, `core/profitdecoded/yt-collector.js`): `PD_YT_API_KEY=... node scripts/profitdecoded/collect-competitors.js` (use `--dry` to see the quota plan). Resolves handles in `channels/profitdecoded/intel/reference-channels.json` (unresolved ones are reported, never guessed), runs keyword discovery per window (finds small-channel outliers), keeps a quota reserve, and writes `snapshot-*.json`, `breakout-feed-*.json`, `collection-report-*.json`. A full run is about 5,700 of the 10,000 free daily units: run weekly.
+
+## Channel art and setup
+
+`node scripts/profitdecoded/make-channel-art.js` writes the profile picture, banner (with safe-area and circle previews) to `channels/profitdecoded/brand-assets/`. The description text and the YouTube setup checklist (handle candidates, keywords, upload defaults) are in `brand-assets/description.txt` and `brand-assets/channel-setup.md`.
 
 ## Known gaps (deliberately not hidden)
 

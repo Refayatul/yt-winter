@@ -2,7 +2,7 @@
 "use strict";
 // Voice audition: renders the SAME three documentary sentences with every
 // candidate voice so a human can pick by ear. Output: <dir>/<voice>.wav (+ .m4a on macOS).
-//   node scripts/profitdecoded/voice-audition.js [outDir] [--provider edge-tts|openai|elevenlabs]
+//   node scripts/profitdecoded/voice-audition.js [outDir] [--provider edge-tts|google|openai|elevenlabs]
 const fs = require("fs");
 const path = require("path");
 const { execFileSync } = require("child_process");
@@ -18,7 +18,7 @@ const TEXT = [
   "That is easier when the card carries the profit. Fees were about 51% of operating income.",
   "So Costco isn't really selling you groceries at a discount. It sells the discount itself, once a year.",
 ].map((t) => N.spokenText(t)).join(" ... ");
-const VOICES = { "edge-tts": ["en-US-AndrewMultilingualNeural", "en-US-BrianMultilingualNeural", "en-US-AvaMultilingualNeural", "en-US-EmmaMultilingualNeural", "en-US-GuyNeural", "en-GB-RyanNeural"], openai: ["onyx", "ash", "sage", "coral"], elevenlabs: [process.env.PD_ELEVENLABS_VOICE_ID].filter(Boolean) };
+const VOICES = { "edge-tts": ["en-US-AndrewMultilingualNeural", "en-US-BrianMultilingualNeural", "en-US-AvaMultilingualNeural", "en-US-EmmaMultilingualNeural", "en-US-GuyNeural", "en-GB-RyanNeural"], openai: ["onyx", "ash", "sage", "coral"], elevenlabs: [process.env.PD_ELEVENLABS_VOICE_ID].filter(Boolean), google: ["en-US-Chirp3-HD-Charon", "en-US-Chirp3-HD-Orus", "en-US-Chirp3-HD-Fenrir", "en-US-Chirp3-HD-Aoede", "en-US-Chirp3-HD-Kore", "en-US-Neural2-D"] };
 (async () => {
   fs.mkdirSync(outDir, { recursive: true });
   const report = [];

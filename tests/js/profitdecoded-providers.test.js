@@ -116,3 +116,19 @@ test("renderer: motion/transition filters and honest on-screen data (no fake bar
   assert.equal(R.sourceTag({ evidenceClaimId: "c1" }, bundle), "Source: SEC");
   assert.equal(R.sourceTag({ evidenceClaimId: "i1" }, bundle), "Our arithmetic from the cited figures");
 });
+
+test("Google Cloud TTS: key in a header only, rate mapped, response decoded, missing key falls back", async () => {
+  const T = PD("tts-provider");
+  assert.equal(T.resolve({ PD_TTS_PROVIDER: "google" }).fallbackFrom, "google");
+  assert.equal(T.resolve({ PD_TTS_PROVIDER: "google", GOOGLE_TTS_API_KEY: "k" }).premium, true);
+  const req = T.googleRequest("Hello", { rate: "-3%" }, { GOOGLE_TTS_API_KEY: "SECRETG" });
+  assert.equal(req.init.headers["x-goog-api-key"], "SECRETG");
+  assert.ok(!req.url.includes("SECRETG") && !req.init.body.includes("SECRETG"));
+  const body = JSON.parse(req.init.body);
+  assert.equal(body.audioConfig.sampleRateHertz, 24000); assert.ok(Math.abs(body.audioConfig.speakingRate - 0.97) < 1e-9);
+  assert.match(body.voice.name, /Chirp3-HD/);
+  const wav = W.writeWav(new Float32Array(12000).fill(0.05), 24000);
+  const s = await T.synthesize("hi", { provider: "google" }, { env: { GOOGLE_TTS_API_KEY: "K" }, fetch: async () => ({ ok: true, status: 200, json: async () => ({ audioContent: wav.toString("base64") }) }) });
+  assert.equal(s.length, 12000);
+  assert.equal(PD("narration").qa([{ text: "a", start: 0, end: 1 }], { provider: "google-cloud-tts chirp3-hd" }).certified, true);
+});

@@ -5,6 +5,7 @@
 //   edge-tts     free fallback voice (no key). Never certified as premium.
 //   elevenlabs   needs ELEVENLABS_API_KEY (+ voice id)  -- premium
 //   openai       needs OPENAI_API_KEY (gpt-4o-mini-tts)  -- premium
+//   google       needs GOOGLE_TTS_API_KEY (Cloud Text-to-Speech; Chirp 3 HD / Neural2) -- premium, 1M free chars/month
 //
 // Keys are read from the environment only and are never logged or written.
 // Selection: PD_TTS_PROVIDER env, else channels/profitdecoded/config.json voice.provider.
@@ -17,7 +18,7 @@ const W = require("./wav");
 const { channelConfig } = require("./config");
 
 const RATE = 24000;
-const PREMIUM = new Set(["elevenlabs", "openai"]);
+const PREMIUM = new Set(["elevenlabs", "openai", "google"]);
 
 function pcmFromWavBuffer(buf, rate = RATE) {
   const w = W.readWav(buf);
@@ -39,6 +40,7 @@ function resolve(env = process.env) {
   const cfg = (channelConfig() || {}).voice || {};
   const name = String(env.PD_TTS_PROVIDER || cfg.provider || "edge-tts").toLowerCase();
   if (name === "elevenlabs" && !env.ELEVENLABS_API_KEY) return { name: "edge-tts", premium: false, fallbackFrom: "elevenlabs", reason: "ELEVENLABS_API_KEY not set" };
+  if (name === "google" && !env.GOOGLE_TTS_API_KEY) return { name: "edge-tts", premium: false, fallbackFrom: "google", reason: "GOOGLE_TTS_API_KEY not set" };
   if (name === "openai" && !env.OPENAI_API_KEY) return { name: "edge-tts", premium: false, fallbackFrom: "openai", reason: "OPENAI_API_KEY not set" };
   return { name, premium: PREMIUM.has(name), fallbackFrom: null };
 }
@@ -62,15 +64,26 @@ function openAiRequest(text, opts = {}, env = process.env) {
     pcm: false,
   };
 }
+// Google Cloud Text-to-Speech (REST, API key). Returns base64 LINEAR16 WAV in JSON.
+function googleRequest(text, opts = {}, env = process.env) {
+  const speakingRate = opts.rate ? Math.max(0.7, Math.min(1.3, 1 + parseFloat(opts.rate) / 100)) : 1;
+  return {
+    url: "https://texttospeech.googleapis.com/v1/text:synthesize",
+    init: { method: "POST", headers: { "x-goog-api-key": env.GOOGLE_TTS_API_KEY, "content-type": "application/json" },
+      body: JSON.stringify({ input: { text }, voice: { languageCode: "en-US", name: opts.voice && /^en-/.test(opts.voice) ? opts.voice : (env.PD_GOOGLE_TTS_VOICE || (channelConfig().voice || {}).googleVoice || "en-US-Chirp3-HD-Charon") }, audioConfig: { audioEncoding: "LINEAR16", sampleRateHertz: RATE, speakingRate } }) },
+    json: true,
+  };
+}
 function pcm16ToFloat(buf) { const n = Math.floor(buf.length / 2); const out = new Float32Array(n); for (let i = 0; i < n; i += 1) out[i] = buf.readInt16LE(i * 2) / 32768; return out; }
 
 async function synthesize(text, opts = {}, deps = {}) {
   const env = deps.env || process.env; const p = opts.provider ? { name: opts.provider, premium: PREMIUM.has(opts.provider) } : resolve(env);
   const doFetch = deps.fetch || fetch;
-  if (p.name === "elevenlabs" || p.name === "openai") {
-    const req = p.name === "elevenlabs" ? elevenLabsRequest(text, opts, env) : openAiRequest(text, opts, env);
+  if (p.name === "elevenlabs" || p.name === "openai" || p.name === "google") {
+    const req = p.name === "elevenlabs" ? elevenLabsRequest(text, opts, env) : p.name === "google" ? googleRequest(text, opts, env) : openAiRequest(text, opts, env);
     const res = await doFetch(req.url, req.init);
     if (!res.ok) throw new Error(`${p.name} TTS failed: HTTP ${res.status}`);
+    if (req.json) return pcmFromWavBuffer(Buffer.from((await res.json()).audioContent, "base64"));
     const buf = Buffer.from(await res.arrayBuffer());
     return req.pcm ? pcm16ToFloat(buf) : pcmFromWavBuffer(buf);
   }
@@ -82,4 +95,4 @@ async function synthesize(text, opts = {}, deps = {}) {
   return mp3ToSamples(mp3);
 }
 
-module.exports = { RATE, PREMIUM, resolve, synthesize, elevenLabsRequest, openAiRequest, pcm16ToFloat, mp3ToSamples };
+module.exports = { RATE, PREMIUM, resolve, synthesize, elevenLabsRequest, openAiRequest, googleRequest, pcm16ToFloat, mp3ToSamples };
