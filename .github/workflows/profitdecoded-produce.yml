@@ -2,7 +2,7 @@ name: ProfitDecoded autonomous production (dry run)
 
 # Research (web search + fetch with citations) -> verified dossier -> script -> narration -> render ->
 # assessment, all in the cloud. It NEVER uploads: output is an artifact for human review.
-# Needs the repository secret ANTHROPIC_API_KEY. A spend guard stops the run (PD_AUTO_MAX_USD).
+# Needs ONE of the repository secrets GROQ_API_KEY (free tier) or ANTHROPIC_API_KEY. Spend/token guards stop the run.
 on:
   workflow_dispatch:
     inputs:
@@ -18,6 +18,14 @@ on:
         options:
           - short
           - long
+      provider:
+        description: 'LLM provider (groq or anthropic)'
+        required: true
+        default: 'groq'
+        type: choice
+        options:
+          - groq
+          - anthropic
       max_usd:
         description: 'Spend guard in USD'
         required: true
@@ -54,14 +62,20 @@ jobs:
           mkdir -p kokoro-model
           curl -fL --retry 3 -o kokoro-model/kokoro-v1.0.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
           curl -fL --retry 3 -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
-      - name: Check the API key secret exists
+      - name: Check the selected provider's API key secret exists
         env:
-          KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          PROVIDER: ${{ inputs.provider }}
+          ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GROQ_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
-          if [ -z "$KEY" ]; then echo "::error::Repository secret ANTHROPIC_API_KEY is not set"; exit 1; fi
+          if [ "$PROVIDER" = "groq" ] && [ -z "$GROQ_KEY" ]; then echo "::error::Repository secret GROQ_API_KEY is not set"; exit 1; fi
+          if [ "$PROVIDER" = "anthropic" ] && [ -z "$ANTHROPIC_KEY" ]; then echo "::error::Repository secret ANTHROPIC_API_KEY is not set"; exit 1; fi
       - name: Autonomous production (dry run, no upload)
         env:
+          PD_AUTO_PROVIDER: ${{ inputs.provider }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          PD_FETCH_CONTACT: https://github.com/${{ github.repository }}
           PD_TTS_PROVIDER: kokoro
           PD_KOKORO_MODEL: ${{ github.workspace }}/kokoro-model/kokoro-v1.0.onnx
           PD_KOKORO_VOICES: ${{ github.workspace }}/kokoro-model/voices-v1.0.bin

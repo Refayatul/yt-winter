@@ -92,7 +92,9 @@ Research dossiers: `channels/profitdecoded/research/`. Ranking: `channels/profit
 3. **Script** (`script-agent.js`): hooks (>=6 mechanisms), beats, graphics per beat, 22 titles, 3 thumbnail concepts from the verified claims only, under `prompts/script.md`. Local checks (AI-pattern score, numbers absent from the dossier, hook competition, length, graphics coverage, titles) feed up to 2 targeted rewrite rounds; after that the run fails.
 4. Narration, render and the normal assessment run on the bundle (`out/review-report.md`). The result is PUBLISH / REVIEW / REJECT for a human; the publish guard still blocks upload.
 
-Spend: usage is accumulated per run and estimated from list prices (web search is billed separately); `PD_AUTO_MAX_USD` (default 3) stops the run before the next call. Server-side refusal fallbacks are on by default. The first live run has not happened yet: the code is tested against a mock client only.
+**Providers:** `PD_AUTO_PROVIDER=groq|anthropic` (unset: Anthropic if its key exists, else Groq). On **Groq** (free tier, `GROQ_API_KEY`, `openai/gpt-oss-120b`) the model searches with `browser_search` and must write `FACT | URL | QUOTE` lines; the code downloads every cited page itself and keeps a quote only if it appears in the downloaded text, so evidence never rests on the model's word (Groq Compound was retired on 2026-09-21 and `browser_search` returns no page text). Free-tier rate limits (429) are retried with `retry-after`, then reported; a token guard (`PD_AUTO_MAX_TOKENS`, default 400000) stops runaway runs. The writing quality of an open model is lower than Claude's, so the same gates apply and more runs will fail them.
+
+Spend (Anthropic): usage is accumulated per run and estimated from list prices (web search is billed separately); `PD_AUTO_MAX_USD` (default 3) stops the run before the next call. Server-side refusal fallbacks are on by default. The first live run has not happened yet: the code is tested against a mock client only.
 
 ## Channel art and setup
 

@@ -19,10 +19,10 @@ const pick = flag("--topic") ? { topic: universe.find((t) => t.id === flag("--to
 if (!pick || !pick.topic) { console.error("no eligible topic (all rejected, recently failed, or unknown id)"); process.exit(3); }
 const topic = pick.topic;
 console.log(`topic: ${topic.topic} (${topic.id})  format: ${format}  through: ${through}${pick.decision ? `  decision: ${pick.decision.decision} rank ${pick.decision.rankScore}` : ""}`);
-if (argv.includes("--dry")) { console.log(`plan: research (web search/fetch) -> script -> bundle${through === "script" ? "" : " -> narration -> render -> assessment"}; model ${LLM.MODEL()}; spend guard $${flag("--max-usd", process.env.PD_AUTO_MAX_USD || 3)}`); process.exit(0); }
+if (argv.includes("--dry")) { console.log(`plan: [provider: ${LLM.provider()}] research (web search + page verification) -> script -> bundle${through === "script" ? "" : " -> narration -> render -> assessment"}; model ${LLM.provider() === "groq" ? require(path.join(root, "core/profitdecoded/auto/groq")).MODEL() : LLM.MODEL()}; guard ${LLM.provider() === "groq" ? (process.env.PD_AUTO_MAX_TOKENS || 400000) + " tokens" : "$" + flag("--max-usd", process.env.PD_AUTO_MAX_USD || 3)}`); process.exit(0); }
 (async () => {
   const r = await Produce.produce({ topic, universe, format, deps: { maxUsd: flag("--max-usd") ? Number(flag("--max-usd")) : undefined }, dirs });
-  console.log(`${r.status}  (estimated spend $${r.ledger.usd.toFixed(2)}, ${r.ledger.calls} API calls)`);
+  console.log(`${r.status}  (${r.ledger.calls} API calls, ${r.ledger.tokens ? r.ledger.tokens + " Groq tokens" : "estimated spend $" + r.ledger.usd.toFixed(2)})`);
   for (const s of r.steps) console.log("  - " + JSON.stringify(s));
   if (r.status !== "bundle-ready") { for (const x of r.reasons || []) console.log("  REASON: " + x); console.log("Nothing was produced. Gates were not relaxed."); process.exit(1); }
   console.log("bundle: " + path.relative(process.cwd(), r.bundlePath));

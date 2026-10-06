@@ -58,8 +58,30 @@ function verifyDossier(draft, docs, now = new Date()) {
   return { dossier, dropped };
 }
 
+const GROQ_MEMO_FORMAT = `\n\nOUTPUT FORMAT (strict): after any short reasoning, write one line per fact, exactly:\nFACT: <the fact> | URL: <page url> | QUOTE: "<one verbatim sentence or fragment copied from that page, at least 8 words>"\nOnly pages you actually opened. No Wikipedia. Quotes are machine-checked against the downloaded page: a quote that is not on the page is discarded. Add lines starting with CAVEAT: for contradictions, missing evidence and what the sources do NOT say.`;
+
+// Groq path: the model finds sources and quotes (browser_search); WE download the pages and verify every quote.
+async function researchGroq(topic, format, deps, client, ledger) {
+  const memo = await LLM.run({ client, ledger, system: prompt("research.md") + GROQ_MEMO_FORMAT, messages: [{ role: "user", content: userBrief(topic, format) }], tools: [{ type: "browser_search" }], maxTokens: 12000, effort: "low" });
+  const G = require("./groq"); const lines = G.parseMemoLines(memo.text);
+  if (!lines.length) return { status: "research-failed", reasons: ["the research model returned no FACT | URL | QUOTE lines"], ledger };
+  const { docs, rejected, pagesFetched } = await G.verifyMemo(lines, deps.groq || {});
+  const evidence = Ev.summary(docs);
+  if (!evidence.length) return { status: "research-failed", reasons: ["no quote could be verified against a downloaded page"], dropped: rejected.map((r) => ({ type: "quote", ...r })), ledger };
+  const structured = await LLM.run({
+    client, ledger, system: "You convert verified quotes into a dossier. Use ONLY the sources under EVIDENCE: each excerpt is a quote already verified against the real page. Every number in a claim must appear in the excerpt of a source it cites. Mark claims central only if the video's thesis depends on them. Inferences are only our own arithmetic on claims (list basisClaimIds). Anything not in the evidence is left out. Return JSON only.",
+    messages: [{ role: "user", content: `TOPIC: ${topic.topic}\n\nNOTES (caveats and context):\n${memo.text.split(/\r?\n/).filter((x) => /^CAVEAT:/i.test(x)).join("\n")}\n\nEVIDENCE (verified quotes):\n${JSON.stringify(evidence)}\n\nReturn JSON with keys thesis, angle, contradictions, sources, claims, inferences.` }],
+    schema: DOSSIER_SCHEMA, maxTokens: 12000, effort: "medium",
+  });
+  const draft = { ...structured.json, format };
+  const { dossier, dropped } = verifyDossier(draft, docs, deps.now);
+  const gate = Research.gate(dossier, { format });
+  return { status: gate.pass ? "ok" : "research-failed", dossier, gate, dropped: [...rejected.map((r) => ({ type: "quote", ...r })), ...dropped], evidenceCount: evidence.length, pagesFetched, reasons: gate.rejections, ledger };
+}
+
 async function research(topic, format, deps = {}) {
   const client = deps.client || LLM.createClient(); const ledger = deps.ledger || LLM.newLedger();
+  if (client.provider === "groq") return researchGroq(topic, format, deps, client, ledger);
   // 1. read the web
   const memo = await LLM.run({ client, ledger, system: prompt("research.md"), messages: [{ role: "user", content: userBrief(topic, format) }], tools: webTools(deps.maxUses), maxTokens: 32000, effort: "high" });
   const docs = Ev.collect(memo.blocks);
