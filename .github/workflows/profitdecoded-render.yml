@@ -1,0 +1,47 @@
+name: ProfitDecoded render check
+
+# Dry-run only: builds narration (edge-tts fallback voice), renders the Short with the
+# ProfitDecoded renderer on a runner with a working ffmpeg, runs the assessment on the REAL
+# mp4 and uploads the video as an artifact. Never touches YouTube or any secret.
+on:
+  pull_request:
+    paths:
+      - 'core/profitdecoded/**'
+      - 'scripts/profitdecoded/**'
+      - 'channels/profitdecoded/**'
+      - '.github/workflows/profitdecoded-render.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: System packages (ffmpeg, ImageMagick, fonts)
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg imagemagick fonts-dejavu-core fonts-liberation
+      - run: npm install --no-audit --no-fund
+      - name: Narration + music (Short)
+        run: node scripts/profitdecoded/produce-audio.js channels/profitdecoded/dryruns/short-costco-membership/bundle.json
+      - name: Render the Short (no upload)
+        run: node scripts/profitdecoded/render.js channels/profitdecoded/dryruns/short-costco-membership/bundle.json
+      - name: Assess the rendered file
+        run: node profitdecoded.js dry-run channels/profitdecoded/dryruns/short-costco-membership/bundle.json
+      - name: Keep review artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: profitdecoded-short-render
+          path: |
+            channels/profitdecoded/dryruns/short-costco-membership/out/video.mp4
+            channels/profitdecoded/dryruns/short-costco-membership/out/video-contact-sheet.png
+            channels/profitdecoded/dryruns/short-costco-membership/out/review-report.md
+            channels/profitdecoded/dryruns/short-costco-membership/out/assessment.json
+          if-no-files-found: warn
+          retention-days: 14
