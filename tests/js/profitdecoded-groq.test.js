@@ -402,3 +402,21 @@ test("search discover works with a Serper key end to end (domain restriction bec
     assert.ok(seen[0].endsWith("site:sec.gov")); assert.deepEqual(d.urls, [SEC, FORT]); assert.equal(d.searches, 5);
   } finally { delete process.env.SERPER_API_KEY; }
 });
+
+test("light model for simple steps, main model for the dossier and script; the planner reads the title as a business-model question", async () => {
+  const R = A("research-agent"); const L = A("llm"); const S = A("search"); process.env.SERPER_API_KEY = "serper-test";
+  try {
+    const perPage = { [SEC]: [{ url: SEC, fact: "m", quote: "we had approximately 20.8 million members and 2,896 clubs" }, { url: SEC, fact: "w", quote: "Members completed more than 650 million workouts in our clubs during the year" }], [AER]: [{ url: AER, fact: "a", quote: "attend on average 4.3 times per month" }], [FORT]: [{ url: FORT, fact: "p", quote: "raise the Classic membership from $10 to $15 a month, the first increase since 1998" }] };
+    const models = {};
+    const client = { calls: [], provider: "groq", key: "K", fetch: async (url, init) => { const b = JSON.parse(init.body); client.calls.push(b); const sys = sysOf(b); const kind = /business-research desk/.test(sys) ? "plan" : /You extract evidence/.test(sys) ? "extract" : "dossier"; (models[kind] = models[kind] || new Set()).add(b.model);
+      const out = kind === "plan" ? { queries: ["a", "b", "c", "d"] } : kind === "extract" ? { quotes: perPage[Object.keys(perPage).find((k) => userOf(b).includes(k))] || [] } : dossierDraft(); return resp(chatBody(JSON.stringify(out))); } };
+    const searchFetch = async (url, init) => resp({ organic: [{ title: "t", link: SEC, snippet: "s" }, { title: "t2", link: AER, snippet: "s" }, { title: "t3", link: FORT, snippet: "s" }] });
+    const r = await R.research(topic(), "short", { client, ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, searchFetch, debugDir: require("os").tmpdir(), now: new Date("2026-10-06") });
+    assert.equal(r.status, "ok", JSON.stringify(r.reasons));
+    assert.deepEqual([...models.plan], ["openai/gpt-oss-20b"]); assert.deepEqual([...models.extract], ["openai/gpt-oss-20b"]); assert.deepEqual([...models.dossier], ["openai/gpt-oss-120b"]);
+    const planSys = sysOf(client.calls.find((b) => /business-research desk/.test(sysOf(b))));
+    assert.match(planSys, /Today is \d{4}-\d{2}-\d{2}/); assert.match(planSys, /business-model question/); assert.match(planSys, /NOT as news, a trend, remote work, or a pandemic story/);
+  } finally { delete process.env.SERPER_API_KEY; }
+  process.env.GROQ_LIGHT_MODEL = "custom/light";
+  try { assert.equal(A("groq").LIGHT_MODEL(), "custom/light"); } finally { delete process.env.GROQ_LIGHT_MODEL; }
+});

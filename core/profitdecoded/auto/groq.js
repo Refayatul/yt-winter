@@ -20,6 +20,9 @@ const URL_CHAT = "https://api.groq.com/openai/v1/chat/completions";
 const MODEL = () => process.env.GROQ_MODEL || "openai/gpt-oss-120b";
 // Groq's free-tier limits are per model: browsing (token-hungry) uses a smaller model with its own quota.
 const BROWSE_MODEL = () => process.env.GROQ_BROWSE_MODEL || "openai/gpt-oss-20b";
+// Simple, high-volume steps (query planning, per-page verbatim extraction) use the light model so the main model's daily quota
+// is kept for the dossier and the script.
+const LIGHT_MODEL = () => process.env.GROQ_LIGHT_MODEL || "openai/gpt-oss-20b";
 
 function apiKey() {
   if (process.env.GROQ_API_KEY && process.env.GROQ_API_KEY.trim()) return process.env.GROQ_API_KEY.trim();
@@ -176,4 +179,4 @@ async function verifyMemo(lines, deps = {}, pages = new Map(), docs = new Map())
   return { docs, rejected, pages, pagesFetched: [...pages.values()].filter((p) => p.ok).length };
 }
 
-module.exports = { MODEL, BROWSE_MODEL, apiKey, chat, fetchPage, htmlToText, quoteInPage, parseMemoLines, urlsFromAnything, selectPassages, verifyMemo, extractJson };
+module.exports = { MODEL, BROWSE_MODEL, LIGHT_MODEL, apiKey, chat, fetchPage, htmlToText, quoteInPage, parseMemoLines, urlsFromAnything, selectPassages, verifyMemo, extractJson };
