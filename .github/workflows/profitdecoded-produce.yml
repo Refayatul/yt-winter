@@ -3,7 +3,11 @@ name: ProfitDecoded autonomous production (dry run)
 # Research (web search + fetch with citations) -> verified dossier -> script -> narration -> render ->
 # assessment, all in the cloud. It NEVER uploads: output is an artifact for human review.
 # Needs ONE of the repository secrets GROQ_API_KEY (free tier) or ANTHROPIC_API_KEY. Spend/token guards stop the run.
+# Daily schedule is OFF until the repository variable PD_AUTO_SCHEDULE is set to true (Settings, Variables).
+# Scheduled runs produce one Short (provider groq) at the channel's US-friendly production time; never upload.
 on:
+  schedule:
+    - cron: '50 11 * * 1-5'
   workflow_dispatch:
     inputs:
       topic:
@@ -36,6 +40,7 @@ permissions:
 
 jobs:
   produce:
+    if: github.event_name == 'workflow_dispatch' || vars.PD_AUTO_SCHEDULE == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -64,7 +69,7 @@ jobs:
           curl -fL --retry 3 -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
       - name: Check the selected provider's API key secret exists
         env:
-          PROVIDER: ${{ inputs.provider }}
+          PROVIDER: ${{ inputs.provider || 'groq' }}
           ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_KEY: ${{ secrets.GROQ_API_KEY }}
         run: |
@@ -72,7 +77,7 @@ jobs:
           if [ "$PROVIDER" = "anthropic" ] && [ -z "$ANTHROPIC_KEY" ]; then echo "::error::Repository secret ANTHROPIC_API_KEY is not set"; exit 1; fi
       - name: Autonomous production (dry run, no upload)
         env:
-          PD_AUTO_PROVIDER: ${{ inputs.provider }}
+          PD_AUTO_PROVIDER: ${{ inputs.provider || 'groq' }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
@@ -84,8 +89,8 @@ jobs:
           PD_KOKORO_VOICES: ${{ github.workspace }}/kokoro-model/voices-v1.0.bin
           PD_KOKORO_PYTHON: python
           TOPIC: ${{ inputs.topic }}
-          FORMAT: ${{ inputs.format }}
-          MAX_USD: ${{ inputs.max_usd }}
+          FORMAT: ${{ inputs.format || 'short' }}
+          MAX_USD: ${{ inputs.max_usd || '3' }}
         run: |
           if [ -n "$TOPIC" ]; then
             node scripts/profitdecoded/auto-produce.js --topic "$TOPIC" --format "$FORMAT" --max-usd "$MAX_USD" --through assess
@@ -103,6 +108,7 @@ jobs:
             channels/profitdecoded/auto/**/out/review-report.md
             channels/profitdecoded/auto/**/out/assessment.json
             channels/profitdecoded/auto/**/out/narration-only.wav
+            channels/profitdecoded/auto/**/out/captions.srt
             channels/profitdecoded/research/*.json
             channels/profitdecoded/state/auto-runs.json
             channels/profitdecoded/state/auto-debug/**

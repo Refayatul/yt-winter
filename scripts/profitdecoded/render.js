@@ -12,6 +12,7 @@ const root = path.resolve(__dirname, "..", "..");
 const brand = JSON.parse(fs.readFileSync(path.join(root, "channels/profitdecoded/brand.json"), "utf8")).colors;
 const PV = require("./plan-visuals");
 const T = require(path.join(root, "core/profitdecoded/text"));
+const Cap = require(path.join(root, "core/profitdecoded/captions"));
 
 const FONT_SERIF = ["/System/Library/Fonts/Supplemental/Georgia Bold.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf", "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf"].find((f) => fs.existsSync(f));
 const FONT_SANS = ["/System/Library/Fonts/Supplemental/Arial.ttf", "/System/Library/Fonts/Supplemental/Arial Bold.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"].find((f) => fs.existsSync(f));
@@ -137,6 +138,17 @@ function main() {
   fs.writeFileSync(path.join(work, "list.txt"), segs.map((f) => `file '${f}'`).join("\n"));
   const video = path.join(out, "video.mp4");
   run("ffmpeg", ["-v", "error", "-y", "-f", "concat", "-safe", "0", "-i", path.join(work, "list.txt"), "-i", audio, "-map", "0:v", "-map", "1:a", "-c:v", "copy", "-c:a", "aac", "-b:a", "192k", "-shortest", "-movflags", "+faststart", video]);
+  // ---------- captions: sidecar SRT always; burned in when ffmpeg has libass ----------
+  const cues = Cap.build(bundle.beats, { short });
+  const srt = path.join(out, "captions.srt"); fs.writeFileSync(srt, Cap.toSrt(cues));
+  let captionsBurned = false;
+  if (cues.length && spawnSync("ffmpeg", ["-hide_banner", "-filters"], { encoding: "utf8" }).stdout.includes("subtitles")) {
+    const capped = path.join(out, "video-captioned.mp4");
+    // libass default PlayRes is 384x288, so sizes below are in that space (short: x6.7, long: x3.75 on screen)
+    const style = `FontName=Arial,Bold=1,FontSize=${short ? 9 : 12},PrimaryColour=&H00FFFFFF,OutlineColour=&H00101010,BorderStyle=1,Outline=2,Shadow=0,Alignment=2,MarginV=${short ? 50 : 19},MarginL=${short ? 14 : 64},MarginR=${short ? 14 : 64}`;
+    const r = spawnSync("ffmpeg", ["-v", "error", "-y", "-i", video, "-vf", `subtitles='${srt.replace(/'/g, "\\'")}':force_style='${style}'`, "-c:v", "libx264", "-crf", "17", "-preset", "medium", "-c:a", "copy", "-movflags", "+faststart", capped], { encoding: "utf8" });
+    if (r.status === 0 && fs.existsSync(capped)) { fs.renameSync(capped, video); captionsBurned = true; } else console.error("caption burn-in skipped:", (r.stderr || "").split("\n").slice(-3).join(" | "));
+  }
   // ---------- render QA: observed facts only ----------
   const probe = JSON.parse(execFileSync("ffprobe", ["-v", "error", "-print_format", "json", "-show_format", "-show_streams", video], { encoding: "utf8" }));
   const v = probe.streams.find((s) => s.codec_type === "video"), au = probe.streams.find((s) => s.codec_type === "audio");
@@ -147,7 +159,8 @@ function main() {
     file: "out/video.mp4", width: v.width, height: v.height, fps: v.r_frame_rate, durationSec: +vd.toFixed(2), audioDurationSec: +audioDur.toFixed(2), hasAudio: !!au,
     durationMatchesAudio: Math.abs(vd - audioDur) < 1.6, decodeErrors: decodeErr ? decodeErr.split("\n").length : 0, blackFrameSegments: black,
     audioBroken: !au || decodeErr.includes("audio"), artifacts: !!decodeErr || black > 0, textReadable: true, observedAt: new Date().toISOString(), tool: "scripts/profitdecoded/render.js",
-    limits: "static brand-system graphics with push/pan motion; no captions burned in; not a substitute for human review",
+    captions: { file: "out/captions.srt", cues: cues.length, burnedIn: captionsBurned, timing: "estimated within each beat" },
+    limits: "static brand-system graphics with push/pan motion; not a substitute for human review",
   };
   bundle.render = render; fs.writeFileSync(bundlePath, JSON.stringify(bundle, null, 2) + "\n");
   // contact sheet from the real video

@@ -107,3 +107,9 @@ Spend (Anthropic): usage is accumulated per run and estimated from list prices (
 * The renderer produces clean typographic/data graphics with simple motion; it is a solid base, not yet the full motion-graphics look (animated charts, real footage). Local render requires a repaired ffmpeg (`sudo xcodebuild -license accept && brew reinstall ffmpeg`) or the CI workflow.
 * Voice defaults to edge-tts (fallback) until a premium key is configured. Measured cadence/loudness are real; "sounds human" needs a person's ear.
 * Competitor-transcript similarity needs transcripts; until supplied it is flagged unverified.
+
+## Captions, schedule and competitor workflow
+
+- `render.js` now writes `out/captions.srt` (phrases timed proportionally inside each narration beat, so timing within a beat is an estimate) and burns the captions into `out/video.mp4` when ffmpeg has libass. The result is recorded in `bundle.render.captions`.
+- `profitdecoded-produce.yml` has a weekday cron (11:50 UTC) that is **off** until the repository variable `PD_AUTO_SCHEDULE` is `true`. Scheduled runs produce one Short as a dry run; nothing is uploaded.
+- `profitdecoded-competitors.yml` (manual) collects live competitor/outlier data with the read-only `PD_YT_API_KEY` secret and uploads the snapshot and breakout feed as an artifact. Without the secret it fails with a clear message and competitive data stays UNKNOWN.
