@@ -2,6 +2,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const A = (m) => require("../../core/profitdecoded/auto/" + m);
+delete process.env.TAVILY_API_KEY; // tests are hermetic: no real search key
 process.env.PD_FETCH_CONTACT = "tests@example.org"; // sec.gov refuses undeclared tools; real runs set this to a real contact e-mail
 
 const html = (title, body) => `<html><head><title>${title}</title><script>var x=1;</script></head><body><p>${body}</p></body></html>`;
@@ -307,4 +308,57 @@ test("groq research: a 400 on one page's extraction skips that page and keeps th
   const r = await R.research(topic(), "short", { client, ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir: require("os").tmpdir() });
   assert.ok(r.dropped.some((d) => /extraction skipped for this page: .*invalid_request_error/.test(d.reason)), JSON.stringify(r.dropped));
   assert.ok(r.evidenceCount >= 2);
+});
+
+// ---------- Tavily discovery (no browsing tokens) ----------
+const tavilyResp = (results) => resp({ results });
+test("tavily: request shape, domain restriction, error bodies and rate-limit mapping", async () => {
+  const S = A("search"); const calls = [];
+  const f = async (url, init) => { calls.push({ url, init, body: JSON.parse(init.body) }); return tavilyResp([{ url: "https://sec.gov/a", title: "A", content: "x".repeat(900), score: 0.9 }, { title: "no url" }]); };
+  const r = await S.tavily("planet fitness 10-K", { key: "tvly-SECRET", includeDomains: ["sec.gov"], fetchImpl: f });
+  assert.equal(calls[0].url, "https://api.tavily.com/search"); assert.equal(calls[0].init.headers.authorization, "Bearer tvly-SECRET");
+  assert.deepEqual(calls[0].body.include_domains, ["sec.gov"]); assert.equal(calls[0].body.search_depth, "basic"); assert.equal(calls[0].body.include_raw_content, false);
+  assert.ok(!calls[0].init.body.includes("tvly-SECRET"), "key only in the header");
+  assert.equal(r.length, 1); assert.equal(r[0].content.length, 400);
+  await assert.rejects(S.tavily("q", { key: "k", fetchImpl: async () => ({ ok: false, status: 401, json: async () => ({ detail: { error: "Unauthorized: missing or invalid API key" } }) }) }), (e) => e.code === "HTTP" && /Unauthorized/.test(e.message));
+  await assert.rejects(S.tavily("q", { key: "k", fetchImpl: async () => ({ ok: false, status: 432, json: async () => ({}) }) }), (e) => e.code === "RATE_LIMIT");
+  await assert.rejects(S.tavily("q", { key: "", fetchImpl: f }), (e) => e.code === "NO_KEY" || process.env.TAVILY_API_KEY);
+});
+
+test("tavily discover: plans queries with the LLM, restricts the first to sec.gov, ranks primary sources first, filters junk and caps hosts", async () => {
+  const S = A("search"); const L = A("llm"); process.env.TAVILY_API_KEY = "tvly-test";
+  const client = routedClient(() => ({ queries: ["planet fitness members per club", "gym membership attendance study", "planet fitness price increase 2024", "planet fitness franchise economics", "a fifth that must be dropped"] }));
+  const searched = [];
+  const f = async (url, init) => { const b = JSON.parse(init.body); searched.push(b);
+    if (b.include_domains) return tavilyResp([{ url: SEC, title: "10-K", score: 0.5 }, { url: SEC + "?x=2", title: "dup host", score: 0.4 }, { url: "https://www.sec.gov/c", title: "third on same host", score: 0.3 }]);
+    return tavilyResp([{ url: FORT, title: "Fortune", score: 0.95 }, { url: "https://en.wikipedia.org/wiki/Planet_Fitness", score: 0.99 }, { url: "https://www.reddit.com/r/x", score: 0.9 }, { url: "https://x.example/report.pdf", score: 0.9 }, { url: AER, title: "AER", score: 0.2 }, { url: "https://randomblog.example/post", score: 0.99 }]); };
+  const d = await S.discover(topic(), { client, ledger: L.newLedger(5), searchFetch: f });
+  assert.equal(d.queries.length, 4); assert.equal(d.searches, 5);
+  assert.deepEqual(searched[0].include_domains, ["sec.gov"]); assert.ok(searched.slice(1).every((b) => !b.include_domains));
+  assert.ok(d.urls.indexOf(SEC) >= 0 && d.urls.indexOf(SEC) < d.urls.indexOf(FORT), "primary before journalism");
+  assert.ok(d.urls.indexOf(FORT) < d.urls.indexOf("https://randomblog.example/post"), "journalism before unvetted blogs");
+  assert.ok(!d.urls.some((u) => /wikipedia|reddit|\.pdf/.test(u)));
+  assert.ok(d.urls.filter((u) => /sec\.gov/.test(u)).length <= 2, "at most 2 pages per host");
+  // a Tavily rate limit mid-plan stops searching but keeps what was found
+  let n = 0; const limited = await S.discover(topic(), { client, ledger: L.newLedger(5), searchFetch: async () => (++n === 1 ? tavilyResp([{ url: SEC, score: 1 }]) : ({ ok: false, status: 432, json: async () => ({}) })) });
+  assert.deepEqual(limited.urls, [SEC]);
+  delete process.env.TAVILY_API_KEY;
+});
+
+test("groq research with a search API: no browsing call at all, discovery URLs go straight to per-page verified extraction", async () => {
+  const R = A("research-agent"); const L = A("llm"); const save = process.env.TAVILY_API_KEY; process.env.TAVILY_API_KEY = "tvly-test";
+  try {
+    const perPage = { [SEC]: [{ url: SEC, fact: "m", quote: "we had approximately 20.8 million members and 2,896 clubs" }, { url: SEC, fact: "w", quote: "Members completed more than 650 million workouts in our clubs during the year" }], [AER]: [{ url: AER, fact: "a", quote: "attend on average 4.3 times per month" }], [FORT]: [{ url: FORT, fact: "p", quote: "raise the Classic membership from $10 to $15 a month, the first increase since 1998" }] };
+    const client = routedClient((b) => {
+      if (b.tools) throw new Error("browser_search must not be used when a search API is configured");
+      if (/business-research desk/.test(sysOf(b))) return { queries: ["q1", "q2", "q3", "q4"] };
+      if (/You extract evidence/.test(sysOf(b))) { const u = Object.keys(perPage).find((k) => userOf(b).includes(k)); return { quotes: perPage[u] || [] }; }
+      return dossierDraft();
+    });
+    const searchFetch = async () => tavilyResp([{ url: SEC, title: "10-K", score: 0.9 }, { url: AER, title: "AER", score: 0.8 }, { url: FORT, title: "Fortune", score: 0.7 }]);
+    const r = await R.research(topic(), "short", { client, ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, searchFetch, debugDir: require("os").tmpdir(), now: new Date("2026-10-06") });
+    assert.equal(r.status, "ok", JSON.stringify(r.reasons));
+    assert.ok(client.calls.every((b) => !b.tools));
+    assert.ok(r.ledger.tokens > 0 && r.ledger.tokens < 2000, "no browsing: tiny token use in the mock");
+  } finally { if (save === undefined) delete process.env.TAVILY_API_KEY; else process.env.TAVILY_API_KEY = save; }
 });

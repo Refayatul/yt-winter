@@ -9,6 +9,7 @@ const LLM = require("./llm");
 const Ev = require("./evidence");
 const Research = require("../research");
 const Edgar = require("./edgar");
+const Search = require("./search");
 const { CHANNEL_DIR } = require("../config");
 
 const prompt = (name) => fs.readFileSync(path.join(CHANNEL_DIR, "prompts", name), "utf8");
@@ -77,9 +78,17 @@ function writeDebug(deps, name, text) {
 async function researchGroq(topic, format, deps, client, ledger) {
   const G = require("./groq"); const gdeps = deps.groq || {};
   const slug = String(topic.id || topic.topic).slice(0, 60);
-  const memo = await LLM.run({ client, ledger, system: prompt("research.md") + GROQ_MEMO_FORMAT, messages: [{ role: "user", content: userBrief(topic, format) }], tools: [{ type: "browser_search" }], maxTokens: 8000, effort: "low" });
-  writeDebug(deps, `${slug}-groq-memo.txt`, memo.text);
-  const lines = G.parseMemoLines(memo.text);
+  // Discovery: a search API when TAVILY_API_KEY is set (cheap, no browsing tokens); otherwise Groq's browser_search.
+  let memo = { text: "", raw: null }; let lines = []; let found = [];
+  if (Search.available()) {
+    const d = await Search.discover(topic, { client, ledger, searchFetch: deps.searchFetch });
+    found = d.urls; memo.text = `[search API] queries: ${JSON.stringify(d.queries)}\n` + d.found.map((f) => `${f.tier} ${f.url} (${f.title})`).join("\n");
+    writeDebug(deps, `${slug}-search.txt`, memo.text);
+  } else {
+    memo = await LLM.run({ client, ledger, system: prompt("research.md") + GROQ_MEMO_FORMAT, messages: [{ role: "user", content: userBrief(topic, format) }], tools: [{ type: "browser_search" }], maxTokens: 8000, effort: "low" });
+    writeDebug(deps, `${slug}-groq-memo.txt`, memo.text);
+    lines = G.parseMemoLines(memo.text);
+  }
   const pages = new Map(); const docs = new Map(); let rejected = [];
   let v = await G.verifyMemo(lines, gdeps, pages, docs); rejected = rejected.concat(v.rejected);
   let usedFallback = false;
@@ -89,7 +98,7 @@ async function researchGroq(topic, format, deps, client, ledger) {
     // Official filings first: the latest 10-K of the SEC registrant (if any), then whatever the search produced.
     const sec = await Edgar.candidates(topic.entity, { ...gdeps, contact: deps.contact });
     if (sec.note) writeDebug(deps, `${slug}-sec-note.txt`, sec.note);
-    const urls = [...new Set([...(sec.urls || []), ...lines.map((l) => l.url), ...G.urlsFromAnything(memo.text), ...G.urlsFromAnything(memo.raw)])].slice(0, 8);
+    const urls = [...new Set([...(sec.urls || []), ...found, ...lines.map((l) => l.url), ...G.urlsFromAnything(memo.text), ...G.urlsFromAnything(memo.raw)])].slice(0, 8);
     const Evk = require("./evidence"); const fetched = [];
     for (const u of urls) { const k = Evk.urlKey(u); const fresh = !pages.has(k); if (fresh) pages.set(k, await G.fetchPage(u, gdeps)); const pg = pages.get(k); if (pg.ok) fetched.push({ url: u, title: pg.title, passages: G.selectPassages(pg.text, `${topic.topic} ${topic.entity} ${topic.coreQuestion}`) }); else if (fresh) rejected.push({ url: u, reason: `could not download the page (${pg.reason})` }); }
     const usable = fetched.filter((f) => f.passages).slice(0, 6);
