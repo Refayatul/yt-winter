@@ -136,7 +136,7 @@ function qa(segments, options = {}) {
   const measured = ["cadenceVariation", "pauseVariation", "audioTechnical"].every((k) => parts[k] !== S.UNKNOWN_SCORE);
   let naturalness = S.round(0.2 * parts.normalisation + 0.3 * parts.cadenceVariation + 0.25 * parts.pauseVariation + 0.25 * parts.audioTechnical, 0);
   // Premium certification: acoustic metrics cannot prove human-like prosody. Cap until a human listen is recorded.
-  const premium = /elevenlabs|azure.*(hd|dragon)|openai.*(tts|gpt-4o)|studio|recorded|human/i.test(provider);
+  const premium = /elevenlabs|azure.*(hd|dragon)|openai.*(tts|gpt-4o)|google.*(chirp|neural2|studio|tts)|studio|recorded|human/i.test(provider);
   const certified = !!options.humanListenApproved || premium;
   const measuredNaturalness = naturalness;
   // Acoustic metrics alone cannot prove human-like prosody, so an uncertified voice is capped and can

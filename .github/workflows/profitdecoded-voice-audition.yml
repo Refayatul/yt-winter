@@ -1,0 +1,61 @@
+name: ProfitDecoded voice audition
+
+# Renders the same three documentary sentences with free voices (Kokoro open-source voices and the
+# edge-tts fallback) and uploads them as an artifact, so a human can pick the narrator by ear.
+# No secrets, no YouTube.
+on:
+  pull_request:
+    paths:
+      - 'scripts/profitdecoded/voice-audition.js'
+      - 'scripts/profitdecoded/kokoro_tts.py'
+      - 'core/profitdecoded/tts-provider.js'
+      - '.github/workflows/profitdecoded-voice-audition.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: System packages (ffmpeg for mp3 decoding)
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: npm install --no-audit --no-fund
+      - run: pip install --quiet kokoro-onnx soundfile
+      - name: Kokoro model cache
+        id: kokoro-cache
+        uses: actions/cache@v4
+        with:
+          path: kokoro-model
+          key: kokoro-onnx-model-files-v1.0
+      - name: Kokoro model files (download once, then cached)
+        if: steps.kokoro-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p kokoro-model
+          curl -fL --retry 3 -o kokoro-model/kokoro-v1.0.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
+          curl -fL --retry 3 -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+      - name: Kokoro voices
+        env:
+          PD_KOKORO_MODEL: ${{ github.workspace }}/kokoro-model/kokoro-v1.0.onnx
+          PD_KOKORO_VOICES: ${{ github.workspace }}/kokoro-model/voices-v1.0.bin
+          PD_KOKORO_PYTHON: python
+        run: node scripts/profitdecoded/voice-audition.js audition-out --provider kokoro
+      - name: edge-tts voices (for comparison)
+        continue-on-error: true
+        run: node scripts/profitdecoded/voice-audition.js audition-out --provider edge-tts
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: profitdecoded-voice-audition
+          path: audition-out/
+          if-no-files-found: warn
+          retention-days: 14
