@@ -8,6 +8,7 @@ const path = require("path");
 const LLM = require("./llm");
 const Ev = require("./evidence");
 const Research = require("../research");
+const Edgar = require("./edgar");
 const { CHANNEL_DIR } = require("../config");
 
 const prompt = (name) => fs.readFileSync(path.join(CHANNEL_DIR, "prompts", name), "utf8");
@@ -82,9 +83,13 @@ async function researchGroq(topic, format, deps, client, ledger) {
   const pages = new Map(); const docs = new Map(); let rejected = [];
   let v = await G.verifyMemo(lines, gdeps, pages, docs); rejected = rejected.concat(v.rejected);
   let usedFallback = false;
-  if (docs.size < 2) {
+  const hasPrimary = () => [...docs.values()].some((d) => Research.classifySource({ url: d.url }).tier === 1);
+  if (docs.size < 3 || !hasPrimary()) {
     usedFallback = true;
-    const urls = [...new Set([...lines.map((l) => l.url), ...G.urlsFromAnything(memo.text), ...G.urlsFromAnything(memo.raw)])].slice(0, 8);
+    // Official filings first: the latest 10-K of the SEC registrant (if any), then whatever the search produced.
+    const sec = await Edgar.candidates(topic.entity, { ...gdeps, contact: deps.contact });
+    if (sec.note) writeDebug(deps, `${slug}-sec-note.txt`, sec.note);
+    const urls = [...new Set([...(sec.urls || []), ...lines.map((l) => l.url), ...G.urlsFromAnything(memo.text), ...G.urlsFromAnything(memo.raw)])].slice(0, 8);
     const Evk = require("./evidence"); const fetched = [];
     for (const u of urls) { const k = Evk.urlKey(u); const fresh = !pages.has(k); if (fresh) pages.set(k, await G.fetchPage(u, gdeps)); const pg = pages.get(k); if (pg.ok) fetched.push({ url: u, title: pg.title, passages: G.selectPassages(pg.text, `${topic.topic} ${topic.entity} ${topic.coreQuestion}`) }); else if (fresh) rejected.push({ url: u, reason: `could not download the page (${pg.reason})` }); }
     const usable = fetched.filter((f) => f.passages);

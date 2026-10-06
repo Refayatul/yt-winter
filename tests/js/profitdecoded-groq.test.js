@@ -2,6 +2,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const A = (m) => require("../../core/profitdecoded/auto/" + m);
+process.env.PD_FETCH_CONTACT = "tests@example.org"; // sec.gov refuses undeclared tools; real runs set this to a real contact e-mail
 
 const html = (title, body) => `<html><head><title>${title}</title><script>var x=1;</script></head><body><p>${body}</p></body></html>`;
 const SEC = "https://www.sec.gov/Archives/edgar/data/1637207/plnt10k.htm";
@@ -42,7 +43,7 @@ test("groq: our own page fetch refuses Wikipedia, non-http, errors, PDFs and tim
   const slow = await G.fetchPage("https://x.gov/slow", { timeoutMs: 20, fetchImpl: (u, o) => new Promise((_, rej) => o.signal.addEventListener("abort", () => rej(Object.assign(new Error("aborted"), { name: "AbortError" })))) });
   assert.equal(slow.reason, "timeout");
   let ua = ""; await G.fetchPage(SEC, { fetchImpl: async (u, o) => { ua = o.headers["user-agent"]; return resp(PAGES[SEC]); } });
-  assert.match(ua, /ProfitDecodedResearch\/1\.0 \(.+\)/);
+  assert.match(ua, /^ProfitDecodedResearch( |\/1\.0 \()/);
 });
 
 test("groq chat: request shape, retries with retry-after, rate-limit and truncation errors, no key", async () => {
@@ -52,10 +53,10 @@ test("groq chat: request shape, retries with retry-after, rate-limit and truncat
   await G.chat({ system: "s", messages: [{ role: "user", content: "x" }], tools: [{ type: "browser_search" }], schema: { type: "object" }, key: "K", fetchImpl: f });
   const b = calls[0].body;
   assert.equal(calls[0].url, "https://api.groq.com/openai/v1/chat/completions"); assert.equal(calls[0].init.headers.authorization, "Bearer K");
-  assert.equal(b.model, "openai/gpt-oss-120b"); assert.deepEqual(b.tools, [{ type: "browser_search" }]); assert.equal(b.tool_choice, "required"); assert.equal(b.reasoning_effort, "low");
+  assert.equal(b.model, "openai/gpt-oss-20b", "browsing uses the smaller model (its own free-tier quota)"); assert.deepEqual(b.tools, [{ type: "browser_search" }]); assert.equal(b.tool_choice, "required"); assert.equal(b.reasoning_effort, "low");
   assert.ok(!("response_format" in b), "browser_search cannot be combined with structured outputs");
   await G.chat({ messages: [], schema: { type: "object" }, key: "K", fetchImpl: f });
-  assert.equal(calls[1].body.response_format.type, "json_schema"); assert.ok(!("tools" in calls[1].body));
+  assert.equal(calls[1].body.response_format.type, "json_schema"); assert.ok(!("tools" in calls[1].body)); assert.equal(calls[1].body.model, "openai/gpt-oss-120b");
   assert.ok(!calls[1].init.body.includes('"K"'), "key only in the header");
   let n = 0; const slept = [];
   const flaky = async () => (++n < 3 ? resp({}, false, 429, { "retry-after": "2" }) : resp(ok));
@@ -197,4 +198,60 @@ test("groq research: the discovery prompt asks for a small search budget (free-t
   assert.match(sys, /at most 3 searches and open at most 4 pages/);
   assert.match(client.calls[0].messages.find((m) => m.role === "user").content, /Topic: /);
   assert.equal(client.calls[0].max_completion_tokens, 8000);
+});
+
+// ---------- SEC: declared User-Agent, official JSON APIs, block-page detection ----------
+const TICKERS = { 0: { cik_str: 1637207, ticker: "PLNT", title: "Planet Fitness, Inc." }, 1: { cik_str: 909832, ticker: "COST", title: "COSTCO WHOLESALE CORP /NEW" }, 2: { cik_str: 1, ticker: "XX", title: "Planet Fitness Holdings Worldwide Franchise Group Ltd Spin" } };
+const SUBS = { name: "Planet Fitness, Inc.", filings: { recent: { form: ["8-K", "10-K", "10-Q", "10-K"], accessionNumber: ["0001637207-26-000010", "0001637207-26-000021", "0001637207-26-000030", "0001637207-25-000016"], primaryDocument: ["a.htm", "plnt10-k12312025_ars.htm", "q.htm", "plnt-20241231.htm"], filingDate: ["2026-03-01", "2026-02-20", "2026-05-01", "2025-02-20"] } } };
+const secFetch = (seen = []) => async (url, init) => { seen.push({ url: String(url), ua: init && init.headers && init.headers["user-agent"] }); const u = String(url); if (u.endsWith("company_tickers.json")) return resp(JSON.stringify(TICKERS)); if (u.includes("data.sec.gov/submissions/CIK0001637207.json")) return resp(JSON.stringify(SUBS)); return resp("nope", false, 404); };
+
+test("SEC pages need a declared contact e-mail; the block page is recognised, never mistaken for evidence", async () => {
+  const G = A("groq"); const save = process.env.PD_FETCH_CONTACT;
+  try {
+    delete process.env.PD_FETCH_CONTACT;
+    const refused = await G.fetchPage(SEC, { fetchImpl: pageFetch() });
+    assert.equal(refused.ok, false); assert.match(refused.reason, /PD_FETCH_CONTACT/);
+    process.env.PD_FETCH_CONTACT = "research@example.org";
+    const seen = []; const ok = await G.fetchPage(SEC, { fetchImpl: async (u, o) => { seen.push(o.headers["user-agent"]); return resp(PAGES[SEC]); } });
+    assert.equal(ok.ok, true); assert.equal(seen[0], "ProfitDecodedResearch research@example.org");
+    const blocked = await G.fetchPage(SEC, { fetchImpl: async () => resp("<html><title>SEC.gov | Your Request Originates from an Undeclared Automated Tool</title></html>") });
+    assert.equal(blocked.ok, false); assert.match(blocked.reason, /blocked the automated request/);
+    process.env.PD_FETCH_CONTACT = "https://github.com/x/y";
+    let ua = ""; await G.fetchPage("https://fortune.com/a", { fetchImpl: async (u, o) => { ua = o.headers["user-agent"]; return resp("<p>x</p>"); } });
+    assert.equal(ua, "ProfitDecodedResearch/1.0 (https://github.com/x/y)", "non-SEC sites accept a URL contact");
+  } finally { if (save === undefined) delete process.env.PD_FETCH_CONTACT; else process.env.PD_FETCH_CONTACT = save; }
+});
+
+test("EDGAR: registrant matching is strict, the latest 10-K URL is built from the official submissions JSON", async () => {
+  const E = A("edgar");
+  const seen = []; const deps = { fetchImpl: secFetch(seen), contact: "research@example.org" };
+  const reg = await E.findRegistrant("Planet Fitness", deps);
+  assert.equal(reg.ok, true); assert.equal(reg.cik, 1637207); assert.equal(reg.title, "Planet Fitness, Inc.");
+  assert.equal((await E.findRegistrant("Costco", deps)).title, "COSTCO WHOLESALE CORP /NEW");
+  assert.equal((await E.findRegistrant("Temu", deps)).ok, false, "a private company / brand is not force-matched");
+  const f = await E.latestFilings(1637207, { forms: ["10-K"], limit: 1 }, deps);
+  assert.equal(f.filings.length, 1); assert.equal(f.filings[0].url, "https://www.sec.gov/Archives/edgar/data/1637207/000163720726000021/plnt10-k12312025_ars.htm"); assert.equal(f.filings[0].filed, "2026-02-20");
+  assert.ok(seen.some((x) => x.url.includes("data.sec.gov/submissions/CIK0001637207.json")));
+  const c = await E.candidates("Planet Fitness", deps);
+  assert.deepEqual(c.urls, [f.filings[0].url]);
+  const none = await E.candidates("Temu", deps); assert.deepEqual(none.urls, []); assert.match(none.note, /no SEC registrant/);
+  const nocontact = await E.candidates("Planet Fitness", { fetchImpl: secFetch(), contact: "" }); assert.deepEqual(nocontact.urls, []); assert.match(nocontact.note, /PD_FETCH_CONTACT/);
+});
+
+test("groq research fallback puts the registrant's latest 10-K first and still verifies every quote", async () => {
+  const R = A("research-agent"); const L = A("llm"); const save = process.env.PD_FETCH_CONTACT; process.env.PD_FETCH_CONTACT = "research@example.org";
+  try {
+    const TENK = "https://www.sec.gov/Archives/edgar/data/1637207/000163720726000021/plnt10-k12312025_ars.htm";
+    const pages = { ...PAGES, [TENK]: PAGES[SEC] };
+    const f = async (url, init) => { const u = String(url); if (/company_tickers|data\.sec\.gov/.test(u)) return secFetch()(url, init); return pages[u] ? resp(pages[u]) : resp("nope", false, 404); };
+    const prose = `Nothing parseable here, but see ${AER} and ${FORT}.`;
+    const quotes = { quotes: [{ url: TENK, fact: "members", quote: "we had approximately 20.8 million members and 2,896 clubs" }, { url: TENK, fact: "workouts", quote: "Members completed more than 650 million workouts in our clubs during the year" }, { url: AER, fact: "attendance", quote: "attend on average 4.3 times per month" }, { url: FORT, fact: "price", quote: "raise the Classic membership from $10 to $15 a month, the first increase since 1998" }] };
+    const draft = dossierDraft(); draft.sources[0].url = TENK;
+    const client = groqClient([prose, quotes, draft]);
+    const r = await R.research(topic(), "short", { client, ledger: L.newLedger(5), groq: { fetchImpl: f }, debugDir: require("os").tmpdir(), now: new Date("2026-10-06") });
+    assert.equal(r.status, "ok", JSON.stringify(r.reasons)); assert.equal(r.usedFallback, true);
+    assert.ok(r.dossier.sources.some((s) => s.url === TENK));
+    const userMsg = client.calls[1].messages.find((m) => m.role === "user").content;
+    assert.ok(userMsg.indexOf(TENK) >= 0 && userMsg.indexOf(TENK) < userMsg.indexOf(AER), "the 10-K is listed before the other pages");
+  } finally { if (save === undefined) delete process.env.PD_FETCH_CONTACT; else process.env.PD_FETCH_CONTACT = save; }
 });
