@@ -31,5 +31,6 @@ const VOICES = { "edge-tts": ["en-US-AndrewMultilingualNeural", "en-US-BrianMult
       console.log(`${voice}: ${m.durationSec.toFixed(1)} s`);
     } catch (e) { console.log(`${voice}: FAILED (${e.message})`); }
   }
+  if (!report.length && (VOICES[providerArg] || []).length) { console.error(`NO voice could be rendered for provider ${providerArg}`); process.exitCode = 1; }
   fs.writeFileSync(path.join(outDir, `${providerArg}-index.json`), JSON.stringify({ provider: providerArg, text: TEXT, voices: report }, null, 1));
 })();
