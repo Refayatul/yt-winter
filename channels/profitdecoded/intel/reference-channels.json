@@ -1,0 +1,21 @@
+{
+  "_comment": "Reference universe for the Competitive Intelligence Engine. Handles are resolved through the API (forHandle); any handle that does not resolve is reported as unresolved, never guessed. This list is a starting set to confirm by a human, NOT validated data. Small/medium channels are found by keyword discovery, not listed here.",
+  "referenceHandles": ["@WendoverProductions", "@JohnnyHarris", "@PolyMatter", "@EconomicsExplained", "@CNBCMakeIt", "@BusinessInsider", "@Vox", "@MagnatesMedia", "@ColdFusion", "@CNBC", "@Veritasium", "@TheInfographicsShow"],
+  "windowsDays": [7, 30, 90, 365],
+  "maxResultsPerSearch": 15,
+  "baselineVideos": 25,
+  "regionCode": "US",
+  "quotaBudget": 6500,
+  "queries": [
+    "how companies really make money", "why is it so expensive business model", "hidden business model everyday", "how subscriptions trap you", "pricing psychology stores",
+    "why airlines make money", "how costco makes money", "how free apps make money", "strange economics of", "why companies lose money on purpose",
+    "how gyms make money", "business behind everyday products", "hidden fees explained", "how scams make money"
+  ],
+  "pillarQueries": {
+    "hidden-business-models": ["how companies really make money", "hidden business model everyday"],
+    "pricing-psychology": ["pricing psychology stores"],
+    "money-traps": ["how subscriptions trap you", "hidden fees explained", "how scams make money"],
+    "strange-economics": ["strange economics of", "why companies lose money on purpose"],
+    "company-stories": ["how costco makes money", "why airlines make money"]
+  }
+}

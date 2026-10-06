@@ -727,19 +727,17 @@
     "status": "OBSERVED",
     "method": "js-bs1770-k-weighted (dependency-free)",
     "durationSec": 49.59229166666667,
-    "integratedLufs": -17.5,
-    "truePeakDbfs": -2.3,
+    "integratedLufs": -16,
+    "truePeakDbfs": -1.8,
     "clippedSamples": 0,
     "pauses": [
      0.38,
      0.48,
-     0.42,
      0.4,
-     0.72,
-     0.36,
+     0.6,
      1.7
     ],
-    "silenceCount": 7
+    "silenceCount": 5
    },
    "measured": true,
    "rejections": [],
@@ -782,7 +780,24 @@
    "detail": "17 assets, all with licence status",
    "assets": 17
   },
-  "render": null,
+  "render": {
+   "file": "out/video.mp4",
+   "width": 1080,
+   "height": 1920,
+   "fps": "30/1",
+   "durationSec": 49.13,
+   "audioDurationSec": 49.59,
+   "hasAudio": true,
+   "durationMatchesAudio": true,
+   "decodeErrors": 0,
+   "blackFrameSegments": 0,
+   "audioBroken": false,
+   "artifacts": false,
+   "textReadable": true,
+   "observedAt": "2026-10-06T17:51:35.415Z",
+   "tool": "scripts/profitdecoded/render.js",
+   "limits": "static brand-system graphics with push/pan motion; no captions burned in; not a substitute for human review"
+  },
   "humannessParts": {
    "scriptNaturalness": 87,
    "sentenceVariation": 69,
@@ -904,14 +919,12 @@
   "hardGateFailures": [],
   "unverified": [
    "narration voice \"edge-tts en-US-AndrewMultilingualNeural (fallback voice)\" is not certified premium (no human listen recorded)",
-   "no rendered file inspected (render QA UNKNOWN)",
    "competitor similarity unverified",
    "humanness components unmeasured: insightOriginality"
   ],
   "reasons": [
    "REVIEW: quality 84.3 < auto-publish 88",
    "REVIEW: narration voice \"edge-tts en-US-AndrewMultilingualNeural (fallback voice)\" is not certified premium (no human listen recorded)",
-   "REVIEW: no rendered file inspected (render QA UNKNOWN)",
    "REVIEW: competitor similarity unverified",
    "REVIEW: humanness components unmeasured: insightOriginality",
    "REVIEW: humanness 85 (UNVERIFIED) vs target 90",
@@ -935,5 +948,5 @@
    "first 5 videos need recorded human approval (has 0)"
   ]
  },
- "generatedAt": "2026-10-06T17:14:36.380Z"
+ "generatedAt": "2026-10-06T17:54:06.668Z"
 }

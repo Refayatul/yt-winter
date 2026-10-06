@@ -5,7 +5,7 @@
 //   node scripts/profitdecoded/storyboard.js <bundle.json>
 const fs = require("fs");
 const path = require("path");
-const { execFileSync } = require("child_process");
+const { execFileSync, spawnSync } = require("child_process");
 const root = path.resolve(__dirname, "..", "..");
 const brand = JSON.parse(fs.readFileSync(path.join(root, "channels/profitdecoded/brand.json"), "utf8")).colors;
 const PV = require("./plan-visuals");
@@ -15,7 +15,8 @@ const FONT = ["/System/Library/Fonts/Supplemental/Georgia Bold.ttf", "/usr/share
 const FONT2 = ["/System/Library/Fonts/Supplemental/Arial.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"].find((f) => fs.existsSync(f));
 const short = bundle.format === "short"; const W = short ? 540 : 960, H = short ? 960 : 540;
 const wrap = (t, n) => { const w = String(t).split(/\s+/); const lines = []; let l = ""; for (const x of w) { if ((l + " " + x).trim().length > n) { lines.push(l); l = x; } else l = (l + " " + x).trim(); } if (l) lines.push(l); return lines.join("\n"); };
-const magick = (args) => execFileSync("magick", args, { stdio: ["ignore", "pipe", "pipe"] });
+const HAS_MAGICK = spawnSync("magick", ["-version"]).status === 0; // IM7 `magick`, else IM6 `convert`/`montage`
+const magick = (args) => (args[0] === "montage" ? (HAS_MAGICK ? execFileSync("magick", args, { stdio: "pipe" }) : execFileSync("montage", args.slice(1), { stdio: "pipe" })) : execFileSync(HAS_MAGICK ? "magick" : "convert", args, { stdio: "pipe" }));
 
 fs.mkdirSync(path.join(out, "frames"), { recursive: true });
 const plan = bundle.visualPlan && bundle.visualPlan.length ? bundle.visualPlan : PV.build(bundle);

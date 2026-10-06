@@ -2,12 +2,11 @@
 
 ## Verdict: **REVIEW**  
 
-Format: short · Generated 2026-10-06T17:14:36.380Z · **Dry run: nothing was uploaded.**
+Format: short · Generated 2026-10-06T17:54:06.668Z · **Dry run: nothing was uploaded.**
 
 ### Exact reasons
 - REVIEW: quality 84.3 < auto-publish 88
 - REVIEW: narration voice "edge-tts en-US-AndrewMultilingualNeural (fallback voice)" is not certified premium (no human listen recorded)
-- REVIEW: no rendered file inspected (render QA UNKNOWN)
 - REVIEW: competitor similarity unverified
 - REVIEW: humanness components unmeasured: insightOriginality
 - REVIEW: humanness 85 (UNVERIFIED) vs target 90
@@ -70,7 +69,7 @@ Storytelling score 79.
 
 ## Narration QA
 Provider: edge-tts en-US-AndrewMultilingualNeural (fallback voice) · certified premium: **NO** · naturalness **80** (required 88) · measured from rendered take: yes
-Audio: -17.5 LUFS integrated, true peak -2.3 dBFS, 7 pauses ≥0.35s.
+Audio: -16 LUFS integrated, true peak -1.8 dBFS, 5 pauses ≥0.35s.
 - ⚠ voice provider "edge-tts en-US-AndrewMultilingualNeural (fallback voice)" is not certified as premium; reported naturalness capped at 80 (measured 99) until a human listen is approved or a premium voice is used
 
 ## Visuals
@@ -136,7 +135,6 @@ All evaluated hard gates passed.
 
 Unverified (blocks automatic PUBLISH):
 - ❔ narration voice "edge-tts en-US-AndrewMultilingualNeural (fallback voice)" is not certified premium (no human listen recorded)
-- ❔ no rendered file inspected (render QA UNKNOWN)
 - ❔ competitor similarity unverified
 - ❔ humanness components unmeasured: insightOriginality
 
