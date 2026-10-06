@@ -1,6 +1,6 @@
 {
   "schema": "feedback-loop-health/1",
-  "generatedAt": "2026-10-06T00:48:40.816Z",
+  "generatedAt": "2026-10-06T07:33:40.177Z",
   "verdict": "CLOSED_LOOP_WORKING",
   "channels": [
     {
@@ -9,13 +9,13 @@
       "mode": "adaptive",
       "publishedVideos": 15,
       "performanceRows": 16,
-      "diagnosisRows": 21,
+      "diagnosisRows": 22,
       "learning": {
-        "updatedAt": "2026-10-06T00:48:36.530Z",
+        "updatedAt": "2026-10-06T07:33:36.095Z",
         "sampleSize": 15,
         "status": "adaptive",
-        "observations": 7,
-        "hypotheses": 0,
+        "observations": 25,
+        "hypotheses": 7,
         "adopted": 0,
         "suppressed": 0
       },
@@ -160,13 +160,13 @@
       "mode": "observing",
       "publishedVideos": 6,
       "performanceRows": 5,
-      "diagnosisRows": 3,
+      "diagnosisRows": 4,
       "learning": {
-        "updatedAt": "2026-10-06T00:48:37.925Z",
+        "updatedAt": "2026-10-06T07:33:37.432Z",
         "sampleSize": 4,
         "status": "observing",
-        "observations": 7,
-        "hypotheses": 0,
+        "observations": 19,
+        "hypotheses": 1,
         "adopted": 0,
         "suppressed": 0
       },
@@ -289,7 +289,7 @@
         ]
       },
       "consumerWiring": true,
-      "caveat": "Small-sample safety active: strategy is not allowed to adopt learned bonuses before 12 usable Shorts."
+      "caveat": "Small-sample safety active: strategy is not allowed to adopt learned bonuses before 8 usable Shorts."
     },
     {
       "channel": "critical-thread",
@@ -297,12 +297,12 @@
       "mode": "observing",
       "publishedVideos": 6,
       "performanceRows": 5,
-      "diagnosisRows": 3,
+      "diagnosisRows": 4,
       "learning": {
-        "updatedAt": "2026-10-06T00:48:39.344Z",
+        "updatedAt": "2026-10-06T07:33:38.725Z",
         "sampleSize": 4,
         "status": "observing",
-        "observations": 6,
+        "observations": 22,
         "hypotheses": 0,
         "adopted": 0,
         "suppressed": 0
@@ -426,20 +426,20 @@
         ]
       },
       "consumerWiring": true,
-      "caveat": "Small-sample safety active: strategy is not allowed to adopt learned bonuses before 12 usable Shorts."
+      "caveat": "Small-sample safety active: strategy is not allowed to adopt learned bonuses before 8 usable Shorts."
     },
     {
       "channel": "behind-the-ordinary",
       "verdict": "CLOSED_LOOP_WORKING",
-      "mode": "heuristics-only",
+      "mode": "observing",
       "publishedVideos": 3,
       "performanceRows": 2,
       "diagnosisRows": 2,
       "learning": {
-        "updatedAt": "2026-10-06T00:48:40.700Z",
+        "updatedAt": "2026-10-06T07:33:40.060Z",
         "sampleSize": 2,
-        "status": "heuristics-only",
-        "observations": 0,
+        "status": "observing",
+        "observations": 15,
         "hypotheses": 0,
         "adopted": 0,
         "suppressed": 0
@@ -549,7 +549,7 @@
         ]
       },
       "consumerWiring": true,
-      "caveat": "Small-sample safety active: strategy is not allowed to adopt learned bonuses before 12 usable Shorts."
+      "caveat": "Small-sample safety active: strategy is not allowed to adopt learned bonuses before 8 usable Shorts."
     }
   ]
 }
