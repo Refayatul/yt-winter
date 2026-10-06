@@ -32,7 +32,7 @@ function frameArgs(shot, ctx) {
   const a = ["-size", `${W}x${H}`, `xc:${bg}`];
   // A bar is only drawn for an actual percentage on screen (never for $5.3B or "7,200").
   const pctMatch = text.match(/(\d+(?:\.\d+)?)\s?%/); const pct = pctMatch && +pctMatch[1] > 0 && +pctMatch[1] <= 100 ? +pctMatch[1] : null;
-  const big = (s, size, y, color = fg, font = FONT_SERIF) => a.push("-font", font, "-fill", color, "-pointsize", px(size), "-gravity", "center", "-annotate", `+0${y >= 0 ? "+" : ""}${px(y)}`, s);
+  const big = (s, size, y, color = fg, font = FONT_SERIF) => a.push("-font", font, "-fill", color, "-pointsize", px(size), "-gravity", "center", "-annotate", `+0${y >= 0 ? "+" : ""}${Math.round(y)}`, s); // y arrives already scaled via px()
   const bar = (y, p, track, fill, h = 30) => { const x0 = W * 0.1, w = W * 0.8; a.push("-fill", track, "-draw", `roundrectangle ${x0},${y},${x0 + w},${y + px(h)} ${px(8)},${px(8)}`, "-fill", fill, "-draw", `roundrectangle ${x0},${y},${x0 + w * p / 100},${y + px(h)} ${px(8)},${px(8)}`); };
   const lines = wrap(text, ctx.short ? 17 : 30);
   switch (type) {
@@ -121,7 +121,7 @@ function main() {
   const work = path.join(out, "render"); fs.rmSync(work, { recursive: true, force: true }); fs.mkdirSync(work, { recursive: true });
   const segs = []; const FPS = 30;
   // Fill gaps so the video covers the whole audio (lead-in before beat 1, tail after the last beat).
-  const audioDur = parseFloat(run("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", audio]) || "0") || 0;
+  const audioDur = parseFloat(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", audio], { encoding: "utf8" })) || 0;
   plan.forEach((shot, i) => {
     const next = plan[i + 1]; let dur = shot.durationSec;
     if (i === 0 && shot.start > 0) dur += shot.start;            // lead-in held on the first graphic
@@ -151,7 +151,7 @@ function main() {
   };
   bundle.render = render; fs.writeFileSync(bundlePath, JSON.stringify(bundle, null, 2) + "\n");
   // contact sheet from the real video
-  try { run("ffmpeg", ["-v", "error", "-y", "-i", video, "-vf", `fps=${(short ? 8 : 14) / Math.max(5, vd)},scale=${short ? 216 : 384}:-2,tile=${short ? 8 : 7}x2`, "-frames:v", "1", path.join(out, "video-contact-sheet.png")]); } catch (e) { /* optional */ }
+  try { run("ffmpeg", ["-v", "error", "-y", "-i", video, "-vf", `fps=1/${Math.max(1, Math.ceil(vd / 12))},scale=${short ? 216 : 384}:-2,tile=${short ? 12 : 4}x${short ? 1 : 3}:padding=4:color=0x0b0c0e`, "-frames:v", "1", path.join(out, "video-contact-sheet.png")]); } catch (e) { /* optional */ }
   fs.rmSync(work, { recursive: true, force: true });
   console.log(`render: ${render.width}x${render.height} ${render.durationSec}s (audio ${render.audioDurationSec}s) decodeErrors=${render.decodeErrors} black=${render.blackFrameSegments} -> ${path.relative(process.cwd(), video)}`);
 }

@@ -2,12 +2,11 @@
 
 ## Verdict: **REVIEW**  
 
-Format: long · Generated 2026-10-06T17:14:36.691Z · **Dry run: nothing was uploaded.**
+Format: long · Generated 2026-10-06T17:54:06.984Z · **Dry run: nothing was uploaded.**
 
 ### Exact reasons
 - REVIEW: quality 85.7 < auto-publish 88
 - REVIEW: narration voice "edge-tts en-US-AndrewMultilingualNeural (fallback voice)" is not certified premium (no human listen recorded)
-- REVIEW: no rendered file inspected (render QA UNKNOWN)
 - REVIEW: narrated duration 355 s is outside the typical 600-1080 s range: the evidence base may be too thin for a premium long-form (do not pad)
 - REVIEW: competitor similarity unverified
 - REVIEW: humanness components unmeasured: insightOriginality
@@ -148,7 +147,6 @@ All evaluated hard gates passed.
 
 Unverified (blocks automatic PUBLISH):
 - ❔ narration voice "edge-tts en-US-AndrewMultilingualNeural (fallback voice)" is not certified premium (no human listen recorded)
-- ❔ no rendered file inspected (render QA UNKNOWN)
 - ❔ narrated duration 355 s is outside the typical 600-1080 s range: the evidence base may be too thin for a premium long-form (do not pad)
 - ❔ competitor similarity unverified
 - ❔ humanness components unmeasured: insightOriginality
