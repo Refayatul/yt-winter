@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-06T21:36:13.155Z
+Generated: 2026-10-06T21:38:20.362Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -24,7 +24,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-04 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.public 1 |
 | Scheduler queue | 1 queued, oldest 2026-10-07 (-1 d) |
-| API quota today | 1705 / 9800 units (project 1012165386949) |
+| API quota today | 0 / 9800 units (project channel:failure-reconstructed) |
 | YPP readiness (estimate) | subs 22/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
@@ -45,7 +45,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-04 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.public 1 |
 | Scheduler queue | 1 queued, oldest 2026-10-07 (-1 d) |
-| API quota today | 0 / 9800 units (project channel:impossible-brief) |
+| API quota today | 1718 / 9800 units (project 684098966511) |
 | YPP readiness (estimate) | subs 4/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
