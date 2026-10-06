@@ -99,3 +99,20 @@ test("collector surfaces quota exhaustion instead of inventing data", async () =
   assert.match(report.stoppedEarly, /HTTP 403/);
   assert.equal(snapshot.channels.length, 0);
 });
+
+// ---------- renderer (pure parts; the ffmpeg run is exercised by the profitdecoded-render workflow) ----------
+test("renderer: motion/transition filters and honest on-screen data (no fake bars)", () => {
+  const R = require("../../scripts/profitdecoded/render");
+  assert.match(R.zoomFilter("push-in", 90, 1080, 1920), /^zoompan=z='min\(1\+0\.10\*on\/90,1\.10\)'.*d=90:s=1080x1920:fps=30$/);
+  assert.match(R.zoomFilter("pan-left", 60, 1920, 1080), /x='\(iw-iw\/zoom\)\*\(1-on\/60\)'/);
+  assert.match(R.zoomFilter("nonsense", 60, 1920, 1080), /min\(1\+0\.10/); // unknown motion degrades to push-in
+  assert.equal(R.fadeFilter("cut", 3), ""); assert.match(R.fadeFilter("dissolve", 3), /fade=t=in/); assert.match(R.fadeFilter("dip-to-ink", 3), /d=0\.28/);
+  const base = { type: "chart", entities: ["a"], numbers: ["5.3"], evidenceClaimId: "c1" };
+  const args = (overlayText) => R.frameArgs({ ...base, overlayText }, { W: 540, H: 960, S: 1, short: true, source: "Source: X" }).join(" ");
+  assert.ok(!/roundrectangle/.test(args("$5.3B in fees")), "a dollar figure must never draw a percentage bar");
+  assert.ok(/roundrectangle/.test(args("51% of operating income")));
+  assert.ok(args("x").includes("Source: X") && args("x").includes("PROFITDECODED"));
+  const bundle = { dossier: { sources: [{ id: "s1", publisher: "SEC" }], claims: [{ id: "c1", sourceIds: ["s1"] }], inferences: [{ id: "i1" }] } };
+  assert.equal(R.sourceTag({ evidenceClaimId: "c1" }, bundle), "Source: SEC");
+  assert.equal(R.sourceTag({ evidenceClaimId: "i1" }, bundle), "Our arithmetic from the cited figures");
+});

@@ -77,10 +77,16 @@ Research dossiers: `channels/profitdecoded/research/`. Ranking: `channels/profit
 5. Review the first dry-runs; record approvals (first 5 videos need human approval).
 6. Only then flip `enabled`, `platforms.youtube.enabled`, set `PD_PUBLISH=1` (Shorts) / `PD_LONGFORM_PUBLISH=1`, and add the channel to `portfolio-production.yml`. Keep `maxConcurrentRenders: 1`.
 
+## Voice, render and live data (added in the follow-up)
+
+* **Voice providers** (`core/profitdecoded/tts-provider.js`): `edge-tts` (fallback, never certified), `openai` (`OPENAI_API_KEY`, gpt-4o-mini-tts) and `elevenlabs` (`ELEVENLABS_API_KEY` + `PD_ELEVENLABS_VOICE_ID`). Select with `PD_TTS_PROVIDER`. A missing key falls back to edge-tts and says so. Premium providers lift the voice cap, but a human listen is still the last word. Pick by ear with `node scripts/profitdecoded/voice-audition.js [--provider openai]` (samples in `channels/profitdecoded/reports/voice-audition/`).
+* **Renderer** (`scripts/profitdecoded/render.js`): brand-system frames (ImageMagick) + zoom/pan/fade per shot (ffmpeg) + the mixed audio -> `out/video.mp4`, then real render QA (probe, decode errors, black frames, duration vs audio) written to `bundle.render`. Every frame carries its source citation. Needs a working ffmpeg: the `profitdecoded-render` workflow builds and uploads the Short on a GitHub runner (artifact `profitdecoded-short-render`).
+* **Live competitor data** (`scripts/profitdecoded/collect-competitors.js`, `core/profitdecoded/yt-collector.js`): `PD_YT_API_KEY=... node scripts/profitdecoded/collect-competitors.js` (use `--dry` to see the quota plan). Resolves handles in `channels/profitdecoded/intel/reference-channels.json` (unresolved ones are reported, never guessed), runs keyword discovery per window (finds small-channel outliers), keeps a quota reserve, and writes `snapshot-*.json`, `breakout-feed-*.json`, `collection-report-*.json`. A full run is about 5,700 of the 10,000 free daily units: run weekly.
+
 ## Known gaps (deliberately not hidden)
 
 * The inventory is 594 **curated hypotheses**, none researched. Ratings are hand-rated 1-5 attributes with documented priors; demand, outlier, saturation, competition and freshness are UNKNOWN until real YouTube data is fed in.
-* No YouTube/competitor API data was available, so the Competitive Intelligence Engine is verified on labelled synthetic fixtures only.
-* The mp4 renderer for ProfitDecoded's motion-graphics look is **not built**; the local ffmpeg on the authoring machine was also broken (`libx265.199`). The dry-runs therefore contain audio + storyboard + thumbnail concept boards, and render QA is UNKNOWN (which keeps both at REVIEW).
-* Voice is edge-tts (fallback). Measured cadence/loudness are real; "sounds human" needs a person's ear.
+* No YouTube API key was available while building, so the collector and the Competitive Intelligence Engine are verified on labelled mock/synthetic data only; no real competitor data has been collected yet.
+* The renderer produces clean typographic/data graphics with simple motion; it is a solid base, not yet the full motion-graphics look (animated charts, real footage). Local render requires a repaired ffmpeg (`sudo xcodebuild -license accept && brew reinstall ffmpeg`) or the CI workflow.
+* Voice defaults to edge-tts (fallback) until a premium key is configured. Measured cadence/loudness are real; "sounds human" needs a person's ear.
 * Competitor-transcript similarity needs transcripts; until supplied it is flagged unverified.
