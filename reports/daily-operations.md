@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-06T14:20:32.130Z
+Generated: 2026-10-06T15:18:14.068Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -22,9 +22,9 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | TikTok today | NOT_SENT |
 | TikTok backlog | 6 |
 | Analytics warehouse | through 2026-10-04 (lag 2 d) |
-| Ops (24 h) | analytics.load 2, publish.public 1, publish.success 1, growth.decision 1 |
+| Ops (24 h) | publish.public 1, publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-06 (0 d) |
-| API quota today | 1641 / 9800 units (project 1012165386949) |
+| API quota today | 1648 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 22/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
@@ -43,9 +43,9 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Ready topic backlog | 491 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-04 (lag 2 d) |
-| Ops (24 h) | publish.success 2, growth.decision 2, analytics.load 2, publish.public 1 |
+| Ops (24 h) | publish.public 1, publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-06 (0 d) |
-| API quota today | 1645 / 9800 units (project 684098966511) |
+| API quota today | 1653 / 9800 units (project 684098966511) |
 | YPP readiness (estimate) | subs 4/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
@@ -64,9 +64,9 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Ready topic backlog | 515 |
 | Errors/review/blocks | 0 |
 | Analytics warehouse | through 2026-10-04 (lag 2 d) |
-| Ops (24 h) | publish.success 2, growth.decision 2, analytics.load 2, publish.public 1 |
+| Ops (24 h) | publish.public 1, publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-06 (0 d) |
-| API quota today | 1645 / 9800 units (project 208987599838) |
+| API quota today | 1653 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
@@ -85,8 +85,8 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Ready topic backlog | 4 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-02 (lag 4 d) · 4 table error(s) |
-| Ops (24 h) | analytics.partial 2 |
+| Ops (24 h) | analytics.partial 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-06 (0 d) |
-| API quota today | 36 / 9800 units (project 739767423116) |
+| API quota today | 43 / 9800 units (project 739767423116) |
 | YPP readiness (estimate) | subs 1/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
