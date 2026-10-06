@@ -5,6 +5,7 @@
 //   edge-tts     free fallback voice (no key). Never certified as premium.
 //   elevenlabs   needs ELEVENLABS_API_KEY (+ voice id)  -- premium
 //   openai       needs OPENAI_API_KEY (gpt-4o-mini-tts)  -- premium
+//   kokoro       free, open-source (Apache-2.0), CPU, no key: PD_KOKORO_MODEL + PD_KOKORO_VOICES (+ PD_KOKORO_PYTHON). NOT auto-certified: a human listen is still required
 //   google       needs GOOGLE_TTS_API_KEY (Cloud Text-to-Speech; Chirp 3 HD / Neural2) -- premium, 1M free chars/month
 //
 // Keys are read from the environment only and are never logged or written.
@@ -36,10 +37,24 @@ function mp3ToSamples(mp3) {
   return W.readWav(fs.readFileSync(b)).samples;
 }
 
+function kokoroConfig(env = process.env) {
+  return { python: env.PD_KOKORO_PYTHON || "python3", model: env.PD_KOKORO_MODEL, voices: env.PD_KOKORO_VOICES, voice: env.PD_KOKORO_VOICE || (channelConfig().voice || {}).kokoroVoice || "am_michael" };
+}
+function kokoroCommand(opts = {}, env = process.env) {
+  const k = kokoroConfig(env);
+  const speed = opts.rate ? 1 + parseFloat(opts.rate) / 100 : 1;
+  return { bin: k.python, args: [path.join(__dirname, "..", "..", "scripts", "profitdecoded", "kokoro_tts.py"), "--model", k.model, "--voices", k.voices, "--voice", opts.provider === "kokoro" && opts.voice && !/^en-/.test(opts.voice) ? opts.voice : k.voice, "--speed", String(speed.toFixed(3))] };
+}
+
 function resolve(env = process.env) {
   const cfg = (channelConfig() || {}).voice || {};
   const name = String(env.PD_TTS_PROVIDER || cfg.provider || "edge-tts").toLowerCase();
   if (name === "elevenlabs" && !env.ELEVENLABS_API_KEY) return { name: "edge-tts", premium: false, fallbackFrom: "elevenlabs", reason: "ELEVENLABS_API_KEY not set" };
+  if (name === "kokoro") {
+    const k = kokoroConfig(env);
+    if (!k.model || !k.voices || !fs.existsSync(k.model) || !fs.existsSync(k.voices)) return { name: "edge-tts", premium: false, fallbackFrom: "kokoro", reason: "PD_KOKORO_MODEL / PD_KOKORO_VOICES not set or files missing" };
+    return { name: "kokoro", premium: false, fallbackFrom: null };
+  }
   if (name === "google" && !env.GOOGLE_TTS_API_KEY) return { name: "edge-tts", premium: false, fallbackFrom: "google", reason: "GOOGLE_TTS_API_KEY not set" };
   if (name === "openai" && !env.OPENAI_API_KEY) return { name: "edge-tts", premium: false, fallbackFrom: "openai", reason: "OPENAI_API_KEY not set" };
   return { name, premium: PREMIUM.has(name), fallbackFrom: null };
@@ -87,6 +102,12 @@ async function synthesize(text, opts = {}, deps = {}) {
     const buf = Buffer.from(await res.arrayBuffer());
     return req.pcm ? pcm16ToFloat(buf) : pcmFromWavBuffer(buf);
   }
+  if (p.name === "kokoro") {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "pd-kokoro-")); const out = path.join(dir, "k.wav");
+    const cmd = kokoroCommand({ ...opts, provider: "kokoro" }, env);
+    (deps.run || ((c, input) => execFileSync(c.bin, [...c.args, "--out", out], { input, stdio: ["pipe", "pipe", "pipe"], maxBuffer: 1 << 26 })))(cmd, text);
+    return pcmFromWavBuffer(fs.readFileSync(out));
+  }
   // edge-tts fallback
   const { MsEdgeTTS, OUTPUT_FORMAT } = deps.edge || require("msedge-tts");
   const tts = deps.ttsInstance || new MsEdgeTTS();
@@ -95,4 +116,4 @@ async function synthesize(text, opts = {}, deps = {}) {
   return mp3ToSamples(mp3);
 }
 
-module.exports = { RATE, PREMIUM, resolve, synthesize, elevenLabsRequest, openAiRequest, googleRequest, pcm16ToFloat, mp3ToSamples };
+module.exports = { RATE, PREMIUM, resolve, synthesize, kokoroCommand, elevenLabsRequest, openAiRequest, googleRequest, pcm16ToFloat, mp3ToSamples };

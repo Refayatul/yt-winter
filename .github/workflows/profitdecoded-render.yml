@@ -27,7 +27,31 @@ jobs:
       - name: System packages (ffmpeg, ImageMagick, fonts)
         run: sudo apt-get update && sudo apt-get install -y ffmpeg imagemagick fonts-dejavu-core fonts-liberation
       - run: npm install --no-audit --no-fund
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Kokoro voice (free, open source, CPU): packages
+        run: pip install --quiet kokoro-onnx soundfile
+      - name: Kokoro model cache
+        id: kokoro-cache
+        uses: actions/cache@v4
+        with:
+          path: kokoro-model
+          key: kokoro-onnx-model-files-v1.0
+      - name: Kokoro model files (download once, then cached)
+        if: steps.kokoro-cache.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p kokoro-model
+          curl -fL --retry 3 -o kokoro-model/kokoro-v1.0.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
+          curl -fL --retry 3 -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+      - name: Model checksums (pin these once reviewed)
+        run: sha256sum kokoro-model/*
       - name: Narration + music (Short)
+        env:
+          PD_TTS_PROVIDER: kokoro
+          PD_KOKORO_MODEL: ${{ github.workspace }}/kokoro-model/kokoro-v1.0.onnx
+          PD_KOKORO_VOICES: ${{ github.workspace }}/kokoro-model/voices-v1.0.bin
+          PD_KOKORO_PYTHON: python
         run: node scripts/profitdecoded/produce-audio.js channels/profitdecoded/dryruns/short-costco-membership/bundle.json
       - name: Render the Short (no upload)
         run: node scripts/profitdecoded/render.js channels/profitdecoded/dryruns/short-costco-membership/bundle.json

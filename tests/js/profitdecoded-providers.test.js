@@ -132,3 +132,25 @@ test("Google Cloud TTS: key in a header only, rate mapped, response decoded, mis
   assert.equal(s.length, 12000);
   assert.equal(PD("narration").qa([{ text: "a", start: 0, end: 1 }], { provider: "google-cloud-tts chirp3-hd" }).certified, true);
 });
+
+test("Kokoro (free, local/CI): falls back when files are missing, builds the command, never auto-certifies", async () => {
+  const T = PD("tts-provider"); const fs = require("fs"); const os = require("os"); const path = require("path");
+  const noFiles = T.resolve({ PD_TTS_PROVIDER: "kokoro" });
+  assert.equal(noFiles.name, "edge-tts"); assert.equal(noFiles.fallbackFrom, "kokoro"); assert.match(noFiles.reason, /PD_KOKORO_MODEL/);
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "kk-")); const m = path.join(dir, "m.onnx"), v = path.join(dir, "v.bin"); fs.writeFileSync(m, "x"); fs.writeFileSync(v, "x");
+  const env = { PD_TTS_PROVIDER: "kokoro", PD_KOKORO_MODEL: m, PD_KOKORO_VOICES: v, PD_KOKORO_PYTHON: "py" };
+  const r = T.resolve(env); assert.equal(r.name, "kokoro"); assert.equal(r.premium, false);
+  const cmd = T.kokoroCommand({ rate: "-3%", voice: "bm_george", provider: "kokoro" }, env);
+  assert.equal(cmd.bin, "py");
+  assert.ok(cmd.args.some((a) => /kokoro_tts\.py$/.test(a)));
+  assert.equal(cmd.args[cmd.args.indexOf("--voice") + 1], "bm_george");
+  assert.equal(cmd.args[cmd.args.indexOf("--speed") + 1], "0.970");
+  // the text goes to the helper on stdin (never argv), and the decoded WAV comes back
+  let seenInput = null;
+  const run = (c, input) => { seenInput = input; fs.writeFileSync(c.args[c.args.length - 1], W.writeWav(new Float32Array(2400).fill(0.1), 24000)); };
+  const samples = await T.synthesize("Hello there", { provider: "kokoro", rate: "+0%" }, { env, run: (c, input) => run({ ...c, args: [...c.args, "--out", path.join(dir, "o.wav")] }, input) }).catch(() => null);
+  assert.equal(samples, null, "a runner that does not honour --out cannot fake audio");
+  assert.equal(seenInput, "Hello there");
+  assert.equal(PD("narration").qa([{ text: "a", start: 0, end: 1 }], { provider: "kokoro-82m (open-source, unreviewed)" }).certified, false);
+  assert.ok(fs.existsSync(path.join(__dirname, "..", "..", "scripts", "profitdecoded", "kokoro_tts.py")));
+});
