@@ -108,7 +108,9 @@ async function synthesize(text, opts = {}, deps = {}) {
     const defaultRun = (c, input) => {
       const r = spawnSync(c.bin, [...c.args, "--out", out], { input, encoding: "utf8", maxBuffer: 1 << 26 });
       const tail = (x) => String(x || "").trim().split("\n").slice(-8).join(" | ").slice(0, 600);
-      if (r.error) throw new Error(`kokoro helper could not start (${r.error.code || r.error.message}): is "${c.bin}" installed with kokoro-onnx and soundfile?`);
+      // EPIPE just means the helper exited before reading stdin (e.g. it crashed): report its real exit code and stderr.
+      if (r.error && r.error.code === "ENOENT") throw new Error(`kokoro helper could not start (ENOENT): is "${c.bin}" installed with kokoro-onnx and soundfile?`);
+      if (r.error && r.status === null && r.error.code !== "EPIPE") throw new Error(`kokoro helper failed (${r.error.code || r.error.message})`);
       if (r.status !== 0) throw new Error(`kokoro helper exited ${r.status}: ${tail(r.stderr) || tail(r.stdout) || "no output"}`);
       if (!fs.existsSync(out) || fs.statSync(out).size < 1000) throw new Error(`kokoro helper reported success but wrote no audio: ${tail(r.stderr) || tail(r.stdout) || "no output"}`);
     };
