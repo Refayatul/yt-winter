@@ -1,16 +1,16 @@
 {
   "channel": "critical-thread",
-  "updatedAt": "2026-10-05T22:48:07.272Z",
+  "updatedAt": "2026-10-06T13:24:50.391Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 4,
     "status": "observing",
     "baselines": {
-      "views": 42,
+      "views": 61,
       "averagePercentageViewed": 71.6,
       "subscribersPer1000Views": 0,
       "watchHoursPer1000Views": 1.01,
-      "engagementPer1000Views": 30.3
+      "engagementPer1000Views": 23.81
     },
     "observations": [
       {
@@ -18,16 +18,96 @@
         "dimension": "hookType",
         "value": "visual_first_reveal",
         "sample": 3,
-        "lift": 0.095,
-        "z": 0.29
+        "lift": 0.042,
+        "z": 0.18
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "hookType",
+        "value": "countdown",
+        "sample": 1,
+        "lift": -0.126,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "ROADS AND BRIDGES",
+        "sample": 1,
+        "lift": 0.506,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "ENERGY",
+        "sample": 1,
+        "lift": -0.11,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "DATA CENTERS",
+        "sample": 1,
+        "lift": -0.126,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "ELECTRICAL GRID",
+        "sample": 1,
+        "lift": -0.27,
+        "z": 0
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 3,
-        "lift": -0.241,
-        "z": -2.58
+        "lift": 0.09,
+        "z": 0.43
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "durationBucket",
+        "value": "26-35s",
+        "sample": 1,
+        "lift": -0.27,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "the-x-that",
+        "sample": 1,
+        "lift": 0.506,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "statement",
+        "sample": 1,
+        "lift": -0.11,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "why",
+        "sample": 1,
+        "lift": -0.126,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "how",
+        "sample": 1,
+        "lift": -0.27,
+        "z": 0
       },
       {
         "stage": "OBSERVATION",
@@ -39,11 +119,59 @@
       },
       {
         "stage": "OBSERVATION",
+        "dimension": "ctaStyle",
+        "value": "NONE",
+        "sample": 2,
+        "lift": 0.19,
+        "z": 0.6
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "ctaStyle",
+        "value": "COMMENT_PROMPT",
+        "sample": 2,
+        "lift": -0.19,
+        "z": -2.38
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "publishHourUTC",
+        "value": "18",
+        "sample": 2,
+        "lift": 0.118,
+        "z": 0.3
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "publishHourUTC",
+        "value": "22",
+        "sample": 2,
+        "lift": -0.118,
+        "z": -15.69
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "publishSlot",
+        "value": "18:00 New York",
+        "sample": 2,
+        "lift": -0.118,
+        "z": -15.69
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "publishSlot",
+        "value": "21:00 TR",
+        "sample": 1,
+        "lift": -0.27,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
         "dimension": "popularityBand",
         "value": "unknown",
         "sample": 3,
-        "lift": 0.02,
-        "z": 0.06
+        "lift": -0.169,
+        "z": -3.31
       },
       {
         "stage": "OBSERVATION",
@@ -62,7 +190,16 @@
         "z": 0
       }
     ],
-    "hypotheses": [],
+    "hypotheses": [
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "popularityBand",
+        "value": "unknown",
+        "sample": 3,
+        "lift": -0.169,
+        "z": -3.31
+      }
+    ],
     "adopted": [],
     "suppressed": [],
     "adoptedWeights": {},

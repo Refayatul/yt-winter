@@ -36,7 +36,7 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 124.8,
+      "ageHours": 139.41,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -58,10 +58,10 @@
         "views": null
       },
       "baselines": {
-        "views": 37.5,
-        "viewsPerHour": 8.375,
+        "views": 51.5,
+        "viewsPerHour": 2.4450000000000003,
         "averagePercentageViewed": 71.6,
-        "engagementRate": 0.027055000000000003,
+        "engagementRate": 0.021374999999999998,
         "subscriberConversion": 0
       },
       "missing": [
@@ -725,20 +725,20 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 50,
-      "classification": "NORMAL",
+      "growthScore": 80.1,
+      "classification": "BREAKOUT",
       "percentiles": {
-        "viewVelocity": 66.7,
+        "viewVelocity": 100,
         "retention": null,
-        "engagement": 0,
+        "engagement": 33.3,
         "subscriberConversion": null,
         "views": 100
       },
       "baselines": {
-        "views": 37.5,
-        "viewsPerHour": 8.375,
+        "views": 51.5,
+        "viewsPerHour": 2.4450000000000003,
         "averagePercentageViewed": 71.6,
-        "engagementRate": 0.027055000000000003,
+        "engagementRate": 0.021374999999999998,
         "subscriberConversion": 0
       },
       "missing": [
@@ -746,7 +746,13 @@
         "subscriberConversion"
       ],
       "plateau": null,
-      "breakout": null,
+      "breakout": {
+        "detected": true,
+        "signals": [
+          "view velocity in channel p100"
+        ],
+        "medianMultiple": 19.48
+      },
       "probableCauses": [],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
     },
@@ -773,336 +779,6 @@
       "searchShare": null
     },
     "latestCheckpoint": "48h"
-  },
-  {
-    "checkpoints": {
-      "1h": {
-        "collectedAt": "2026-10-05T19:19:45.069Z",
-        "metrics": {
-          "views": {
-            "value": 15,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "likes": {
-            "value": 0,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "comments": {
-            "value": 1,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "shares": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_gained": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_lost": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "net_subscribers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_view_duration": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_percentage_viewed": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "watch_time_minutes": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "impressions": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "ctr": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "returning_viewers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed per video by the public API"
-          },
-          "first_30s_retention": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "engaged_views": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "net_subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "engagement_per_1000_views": {
-            "value": 66.67,
-            "status": "DERIVED",
-            "from": "likes+comments+shares / views"
-          },
-          "watch_hours_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          }
-        },
-        "traffic": [],
-        "retention": [],
-        "analyticsStatus": "ok"
-      }
-    },
-    "hookType": "visual_first_reveal",
-    "hookScore": 83,
-    "selectedHook": "Why one failure blacked out 7 million people.",
-    "firstLine": "Why one failure blacked out 7 million people.",
-    "firstSecondsScore": 93,
-    "topicCluster": "ELECTRICAL GRID",
-    "bucket": "A",
-    "viralScore": 76,
-    "viralComponents": {
-      "curiosity_gap": {
-        "value": 91,
-        "basis": "derived"
-      },
-      "immediate_stakes": {
-        "value": 94,
-        "basis": "derived"
-      },
-      "human_consequence": {
-        "value": 95,
-        "basis": "derived"
-      },
-      "recognizability": {
-        "value": 41,
-        "basis": "measured"
-      },
-      "surprise": {
-        "value": 80,
-        "basis": "derived"
-      },
-      "visual_potential": {
-        "value": 91,
-        "basis": "inventory-signal"
-      },
-      "archival_footage_potential": {
-        "value": 35,
-        "basis": "inventory-signal"
-      },
-      "first_frame_potential": {
-        "value": 68,
-        "basis": "derived"
-      },
-      "title_potential": {
-        "value": 85,
-        "basis": "derived",
-        "note": "4 source-backed title seeds"
-      },
-      "emotional_tension": {
-        "value": 97,
-        "basis": "derived"
-      },
-      "contradiction": {
-        "value": 50,
-        "basis": "derived"
-      },
-      "unexpected_cause": {
-        "value": 65,
-        "basis": "derived"
-      },
-      "numerical_anomaly": {
-        "value": 95,
-        "basis": "derived"
-      },
-      "didnt_know_factor": {
-        "value": 81,
-        "basis": "derived"
-      },
-      "shareability": {
-        "value": 82,
-        "basis": "derived"
-      },
-      "channel_fit": {
-        "value": 94,
-        "basis": "derived"
-      },
-      "historical_similarity": {
-        "value": 50,
-        "basis": "neutral",
-        "note": "no same-cluster channel evidence yet"
-      },
-      "subscriber_conversion_potential": {
-        "value": 88,
-        "basis": "derived",
-        "note": "series-depth proxy; no measured conversion yet"
-      },
-      "audience_breadth": {
-        "value": 90,
-        "basis": "inventory-signal"
-      },
-      "hook_potential": {
-        "value": 83,
-        "basis": "derived"
-      },
-      "visual_availability": {
-        "value": 67,
-        "basis": "inventory-signal"
-      },
-      "research_confidence": {
-        "value": 93,
-        "basis": "derived"
-      },
-      "duplicate_risk": {
-        "value": -14,
-        "basis": "penalty",
-        "note": "published-title similarity 0.14"
-      },
-      "saturation_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "0 published / 18 inventory in cluster"
-      },
-      "recent_fatigue_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "0 same-family upload(s) in the last 30 days"
-      },
-      "source_confidence_risk": {
-        "value": -7,
-        "basis": "penalty",
-        "note": "93/100 source quality"
-      },
-      "weak_footage_risk": {
-        "value": -33,
-        "basis": "penalty",
-        "note": "no archival footage confirmed"
-      }
-    },
-    "storyStructure": "HIDDEN_SYSTEM>WHY_IT_MATTERS>WHAT_DEPENDS_ON_IT>BOTTLENECK>FAILURE_CONSEQUENCE>RESILIENCE",
-    "titlePattern": "how",
-    "selectedTitle": "How One Line Blacked Out San Diego",
-    "titleScore": 73,
-    "titleCandidates": 36,
-    "hookCandidates": 14,
-    "topicScore": 82,
-    "popularityScore": 41,
-    "ctaStyle": "COMMENT_PROMPT",
-    "durationBucket": "26-35s",
-    "openingVisual": "TECHNICAL_ILLUSTRATION",
-    "experimentVariant": null,
-    "factors": {
-      "TopicDemandScore": 41,
-      "CuriosityScore": 91,
-      "HookPotentialScore": 83,
-      "VisualImpactScore": 91,
-      "EmotionalImpactScore": 97,
-      "StoryCompressionScore": 84,
-      "RewatchPotentialScore": 69,
-      "SharePotentialScore": 82,
-      "CommentPotentialScore": 53,
-      "SubscriberConversionPotential": 88,
-      "NoveltyScore": 70,
-      "AudienceFitScore": 90,
-      "SourceQualityScore": 93,
-      "ChannelFitScore": 94
-    },
-    "selectionMode": "EXPLOIT",
-    "videoId": "7g6pgV-E0PE",
-    "slug": "when-grid-control-room-becomes-the-bottleneck",
-    "channel": "critical-thread",
-    "contentType": "short",
-    "title": "How One Line Blacked Out San Diego",
-    "publishAt": "2026-10-05T18:00:14Z",
-    "publishHourUTC": 18,
-    "publishSlot": "21:00 TR",
-    "popularityBand": "unknown",
-    "readiness": 90,
-    "normalized": {
-      "ageHours": 1,
-      "viewsPerHour": 15,
-      "recentViewVelocity": null,
-      "likeRate": 0,
-      "commentRate": 0.06667,
-      "shareRate": null,
-      "engagementRate": 0.06667,
-      "engagedViewRate": null,
-      "subscriberConversion": null,
-      "subscribersPer1000Views": null
-    },
-    "performance": {
-      "growthScore": 91.7,
-      "classification": "STRONG",
-      "percentiles": {
-        "viewVelocity": 100,
-        "retention": null,
-        "engagement": 100,
-        "subscriberConversion": null,
-        "views": 66.7
-      },
-      "baselines": {
-        "views": 37.5,
-        "viewsPerHour": 8.375,
-        "averagePercentageViewed": 71.6,
-        "engagementRate": 0.027055000000000003,
-        "subscriberConversion": 0
-      },
-      "missing": [
-        "retention",
-        "subscriberConversion"
-      ],
-      "plateau": null,
-      "breakout": null,
-      "probableCauses": [],
-      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
-    },
-    "durationSeconds": 33,
-    "registeredBy": "analytics-pass",
-    "metrics": {
-      "views": 15,
-      "averagePercentageViewed": null,
-      "averageViewDuration": null,
-      "likes": 0,
-      "comments": 1,
-      "shares": null,
-      "subscribersGained": null,
-      "engagedViews": null,
-      "subscribersLost": null,
-      "netSubscribers": null,
-      "subscribersPer1000Views": null,
-      "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 66.67,
-      "watchHoursPer1000Views": null,
-      "ctr": null,
-      "first30sRetention": null,
-      "shortsFeedShare": null,
-      "searchShare": null
-    },
-    "latestCheckpoint": "1h"
   },
   {
     "checkpoints": {
@@ -1659,20 +1335,20 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 33.3,
-      "classification": "WEAK",
+      "growthScore": 47.3,
+      "classification": "NORMAL",
       "percentiles": {
         "viewVelocity": 33.3,
         "retention": null,
-        "engagement": 33.3,
+        "engagement": 66.7,
         "subscriberConversion": null,
         "views": 33.3
       },
       "baselines": {
-        "views": 37.5,
-        "viewsPerHour": 8.375,
+        "views": 51.5,
+        "viewsPerHour": 2.4450000000000003,
         "averagePercentageViewed": 71.6,
-        "engagementRate": 0.027055000000000003,
+        "engagementRate": 0.021374999999999998,
         "subscriberConversion": 0
       },
       "missing": [
@@ -2387,20 +2063,20 @@
       "subscribersPer1000Views": 0
     },
     "performance": {
-      "growthScore": 38,
-      "classification": "WEAK",
+      "growthScore": 46.5,
+      "classification": "NORMAL",
       "percentiles": {
         "viewVelocity": 0,
         "retention": 50,
-        "engagement": 66.7,
+        "engagement": 100,
         "subscriberConversion": 50,
         "views": 0
       },
       "baselines": {
-        "views": 37.5,
-        "viewsPerHour": 8.375,
+        "views": 51.5,
+        "viewsPerHour": 2.4450000000000003,
         "averagePercentageViewed": 71.6,
-        "engagementRate": 0.027055000000000003,
+        "engagementRate": 0.021374999999999998,
         "subscriberConversion": 0
       },
       "missing": [],
@@ -2432,5 +2108,644 @@
       "searchShare": 0.667
     },
     "latestCheckpoint": "48h"
+  },
+  {
+    "checkpoints": {},
+    "hookType": "visual_first_reveal",
+    "hookScore": 79,
+    "selectedHook": "Your internet depends on hidden seabed cables.",
+    "firstLine": "Your internet depends on hidden seabed cables.",
+    "firstSecondsScore": 81,
+    "topicCluster": "SUBMARINE CABLES",
+    "bucket": "A",
+    "viralScore": 77,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 64,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 80,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 85,
+        "basis": "inventory-signal"
+      },
+      "archival_footage_potential": {
+        "value": 35,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 68,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 85,
+        "basis": "derived",
+        "note": "4 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 50,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 65,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 88,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 50,
+        "basis": "neutral",
+        "note": "no same-cluster channel evidence yet"
+      },
+      "subscriber_conversion_potential": {
+        "value": 88,
+        "basis": "derived",
+        "note": "series-depth proxy; no measured conversion yet"
+      },
+      "audience_breadth": {
+        "value": 90,
+        "basis": "inventory-signal"
+      },
+      "hook_potential": {
+        "value": 71,
+        "basis": "derived"
+      },
+      "visual_availability": {
+        "value": 67,
+        "basis": "inventory-signal"
+      },
+      "research_confidence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "duplicate_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "no published-title collision"
+      },
+      "saturation_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 published / 18 inventory in cluster"
+      },
+      "recent_fatigue_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 same-family upload(s) in the last 30 days"
+      },
+      "source_confidence_risk": {
+        "value": -5,
+        "basis": "penalty",
+        "note": "95/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -33,
+        "basis": "penalty",
+        "note": "no archival footage confirmed"
+      }
+    },
+    "storyStructure": "HIDDEN_SYSTEM>WHY_IT_MATTERS>WHAT_DEPENDS_ON_IT>BOTTLENECK>FAILURE_CONSEQUENCE>RESILIENCE",
+    "titlePattern": "why",
+    "selectedTitle": "Why a Cut Cable Needs a Ship to Fix It",
+    "titleScore": 74,
+    "titleCandidates": 36,
+    "hookCandidates": 8,
+    "topicScore": 81,
+    "popularityScore": 64,
+    "ctaStyle": "COMMENT_PROMPT",
+    "durationBucket": "18-25s",
+    "openingVisual": "TECHNICAL_ILLUSTRATION",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 64,
+      "CuriosityScore": 85,
+      "HookPotentialScore": 71,
+      "VisualImpactScore": 85,
+      "EmotionalImpactScore": 97,
+      "StoryCompressionScore": 84,
+      "RewatchPotentialScore": 69,
+      "SharePotentialScore": 82,
+      "CommentPotentialScore": 53,
+      "SubscriberConversionPotential": 88,
+      "NoveltyScore": 78,
+      "AudienceFitScore": 90,
+      "SourceQualityScore": 95,
+      "ChannelFitScore": 88
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "24eJvZ2cswc",
+    "slug": "why-submarine-fiber-optic-cable-is-so-hard-to-replace",
+    "channel": "critical-thread",
+    "contentType": "short",
+    "title": "Why a Cut Cable Needs a Ship to Fix It",
+    "publishAt": "2026-10-06T18:00:00.000Z",
+    "publishHourUTC": 18,
+    "publishSlot": "21:00 TR",
+    "popularityBand": "unknown",
+    "readiness": 89,
+    "normalized": {
+      "ageHours": 1,
+      "viewsPerHour": null,
+      "recentViewVelocity": null,
+      "likeRate": null,
+      "commentRate": null,
+      "shareRate": null,
+      "engagementRate": null,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": null,
+      "classification": "NORMAL",
+      "percentiles": {
+        "viewVelocity": null,
+        "retention": null,
+        "engagement": null,
+        "subscriberConversion": null,
+        "views": null
+      },
+      "baselines": {
+        "views": 51.5,
+        "viewsPerHour": 2.4450000000000003,
+        "averagePercentageViewed": 71.6,
+        "engagementRate": 0.021374999999999998,
+        "subscriberConversion": 0
+      },
+      "missing": [
+        "viewVelocity",
+        "retention",
+        "engagement",
+        "subscriberConversion",
+        "views"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    }
+  },
+  {
+    "checkpoints": {
+      "1h": {
+        "collectedAt": "2026-10-05T19:19:45.069Z",
+        "metrics": {
+          "views": {
+            "value": 15,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 66.67,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      },
+      "12h": {
+        "collectedAt": "2026-10-06T13:24:50.805Z",
+        "metrics": {
+          "views": {
+            "value": 61,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 16.39,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      }
+    },
+    "hookType": "visual_first_reveal",
+    "hookScore": 83,
+    "selectedHook": "Why one failure blacked out 7 million people.",
+    "firstLine": "Why one failure blacked out 7 million people.",
+    "firstSecondsScore": 93,
+    "topicCluster": "ELECTRICAL GRID",
+    "bucket": "A",
+    "viralScore": 76,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 91,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 41,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 80,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 91,
+        "basis": "inventory-signal"
+      },
+      "archival_footage_potential": {
+        "value": 35,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 68,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 85,
+        "basis": "derived",
+        "note": "4 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 50,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 65,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 81,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 50,
+        "basis": "neutral",
+        "note": "no same-cluster channel evidence yet"
+      },
+      "subscriber_conversion_potential": {
+        "value": 88,
+        "basis": "derived",
+        "note": "series-depth proxy; no measured conversion yet"
+      },
+      "audience_breadth": {
+        "value": 90,
+        "basis": "inventory-signal"
+      },
+      "hook_potential": {
+        "value": 83,
+        "basis": "derived"
+      },
+      "visual_availability": {
+        "value": 67,
+        "basis": "inventory-signal"
+      },
+      "research_confidence": {
+        "value": 93,
+        "basis": "derived"
+      },
+      "duplicate_risk": {
+        "value": -14,
+        "basis": "penalty",
+        "note": "published-title similarity 0.14"
+      },
+      "saturation_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 published / 18 inventory in cluster"
+      },
+      "recent_fatigue_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 same-family upload(s) in the last 30 days"
+      },
+      "source_confidence_risk": {
+        "value": -7,
+        "basis": "penalty",
+        "note": "93/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -33,
+        "basis": "penalty",
+        "note": "no archival footage confirmed"
+      }
+    },
+    "storyStructure": "HIDDEN_SYSTEM>WHY_IT_MATTERS>WHAT_DEPENDS_ON_IT>BOTTLENECK>FAILURE_CONSEQUENCE>RESILIENCE",
+    "titlePattern": "how",
+    "selectedTitle": "How One Line Blacked Out San Diego",
+    "titleScore": 73,
+    "titleCandidates": 36,
+    "hookCandidates": 14,
+    "topicScore": 82,
+    "popularityScore": 41,
+    "ctaStyle": "COMMENT_PROMPT",
+    "durationBucket": "26-35s",
+    "openingVisual": "TECHNICAL_ILLUSTRATION",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 41,
+      "CuriosityScore": 91,
+      "HookPotentialScore": 83,
+      "VisualImpactScore": 91,
+      "EmotionalImpactScore": 97,
+      "StoryCompressionScore": 84,
+      "RewatchPotentialScore": 69,
+      "SharePotentialScore": 82,
+      "CommentPotentialScore": 53,
+      "SubscriberConversionPotential": 88,
+      "NoveltyScore": 70,
+      "AudienceFitScore": 90,
+      "SourceQualityScore": 93,
+      "ChannelFitScore": 94
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "7g6pgV-E0PE",
+    "slug": "when-grid-control-room-becomes-the-bottleneck",
+    "channel": "critical-thread",
+    "contentType": "short",
+    "title": "How One Line Blacked Out San Diego",
+    "publishAt": "2026-10-05T18:00:14Z",
+    "publishHourUTC": 18,
+    "publishSlot": "21:00 TR",
+    "popularityBand": "unknown",
+    "readiness": 90,
+    "normalized": {
+      "ageHours": 19.41,
+      "viewsPerHour": 3.14,
+      "recentViewVelocity": 2.5,
+      "likeRate": 0,
+      "commentRate": 0.01639,
+      "shareRate": null,
+      "engagementRate": 0.01639,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": 38.8,
+      "classification": "WEAK",
+      "percentiles": {
+        "viewVelocity": 66.7,
+        "retention": null,
+        "engagement": 0,
+        "subscriberConversion": null,
+        "views": 66.7
+      },
+      "baselines": {
+        "views": 51.5,
+        "viewsPerHour": 2.4450000000000003,
+        "averagePercentageViewed": 71.6,
+        "engagementRate": 0.021374999999999998,
+        "subscriberConversion": 0
+      },
+      "missing": [
+        "retention",
+        "subscriberConversion"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    },
+    "durationSeconds": 33,
+    "registeredBy": "analytics-pass",
+    "metrics": {
+      "views": 61,
+      "averagePercentageViewed": null,
+      "averageViewDuration": null,
+      "likes": 0,
+      "comments": 1,
+      "shares": null,
+      "subscribersGained": null,
+      "engagedViews": null,
+      "subscribersLost": null,
+      "netSubscribers": null,
+      "subscribersPer1000Views": null,
+      "netSubscribersPer1000Views": null,
+      "engagementPer1000Views": 16.39,
+      "watchHoursPer1000Views": null,
+      "ctr": null,
+      "first30sRetention": null,
+      "shortsFeedShare": null,
+      "searchShare": null
+    },
+    "latestCheckpoint": "12h"
   }
 ]

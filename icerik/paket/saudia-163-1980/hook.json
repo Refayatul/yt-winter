@@ -1,0 +1,48 @@
+{
+  "slug": "saudia-163-1980",
+  "format": "short",
+  "olusturuldu": "2026-10-06T13:13:17.432Z",
+  "ekranHook": "163",
+  "mevcut": {
+    "puan": 60,
+    "pencereler": {
+      "0-5": "Saudia Flight 163 landed after a cargo fire. It landed safely, yet all three",
+      "5-12": "hundred one people aboard died. Smoke came from a fire in the rear cargo hold. The crew returned slowly",
+      "12-20": "and took time to stop. After landing, the jet taxied off the runway. The doors were never opened. Smoke and fire filled",
+      "20-30": "the cabin before rescuers got in. Airlines now stress immediate evacuation when fire is present."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "Saudia Flight 163 landed after a cargo fire, but no one escaped."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a fire in the aft cargo hold after take-off."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a fire in the aft cargo hold after take-off do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is cabin fire and smoke with evacuation never started after landing — and it is why airlines stressed immediate evacuation after landing with a fire."
+      }
+    ],
+    "metin": "Saudia Flight 163 landed after a cargo fire, but no one escaped. It took only a fire in the aft cargo hold after take-off. So how could a fire in the aft cargo hold after take-off do this? The answer is cabin fire and smoke with evacuation never started after landing — and it is why airlines stressed immediate evacuation after landing with a fire.",
+    "puan": 100
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

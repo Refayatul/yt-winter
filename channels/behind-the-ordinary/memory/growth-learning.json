@@ -1,10 +1,10 @@
 {
   "channel": "behind-the-ordinary",
-  "updatedAt": "2026-10-05T22:48:08.083Z",
+  "updatedAt": "2026-10-06T13:24:55.409Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 2,
-    "status": "heuristics-only",
+    "status": "observing",
     "baselines": {
       "views": 99,
       "averagePercentageViewed": null,
@@ -12,7 +12,128 @@
       "watchHoursPer1000Views": null,
       "engagementPer1000Views": 40.4
     },
-    "observations": [],
+    "observations": [
+      {
+        "stage": "OBSERVATION",
+        "dimension": "hookType",
+        "value": "contradiction",
+        "sample": 1,
+        "lift": 0.162,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "hookType",
+        "value": "visual_first_reveal",
+        "sample": 1,
+        "lift": -0.162,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "EVERYDAY MYSTERIES",
+        "sample": 1,
+        "lift": 0.162,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "HIDDEN ENGINEERING",
+        "sample": 1,
+        "lift": -0.162,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "durationBucket",
+        "value": "26-35s",
+        "sample": 2,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "why",
+        "sample": 1,
+        "lift": 0.162,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "how",
+        "sample": 1,
+        "lift": -0.162,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "storyStructure",
+        "value": "VISUAL_MYSTERY>CLEAR_PROMISE>FAST_EXPLANATION>SPECIFIC_PAYOFF",
+        "sample": 2,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "ctaStyle",
+        "value": "COMMENT_PROMPT",
+        "sample": 1,
+        "lift": 0.162,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "ctaStyle",
+        "value": "NONE",
+        "sample": 1,
+        "lift": -0.162,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "publishHourUTC",
+        "value": "22",
+        "sample": 2,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "publishSlot",
+        "value": "18:00 New York",
+        "sample": 2,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "popularityBand",
+        "value": "unknown",
+        "sample": 2,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "openingVisual",
+        "value": "REAL_OBJECT",
+        "sample": 2,
+        "lift": 0,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "bucket",
+        "value": "A",
+        "sample": 2,
+        "lift": 0,
+        "z": 0
+      }
+    ],
     "hypotheses": [],
     "adopted": [],
     "suppressed": [],

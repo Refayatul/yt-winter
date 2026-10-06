@@ -1,6 +1,6 @@
 {
   "channel": "failure-reconstructed",
-  "updatedAt": "2026-10-05T22:48:04.690Z",
+  "updatedAt": "2026-10-06T13:24:37.259Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 15,
@@ -10,67 +10,228 @@
       "averagePercentageViewed": 71.74,
       "subscribersPer1000Views": 2.13,
       "watchHoursPer1000Views": 3.03,
-      "engagementPer1000Views": 32.93
+      "engagementPer1000Views": 25.53
     },
     "observations": [
+      {
+        "stage": "OBSERVATION",
+        "dimension": "hookType",
+        "value": "hidden_cause",
+        "sample": 2,
+        "lift": 0.176,
+        "z": 0.92
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "hookType",
+        "value": "shocking_consequence",
+        "sample": 1,
+        "lift": -0.256,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "hookType",
+        "value": "visual_first_reveal",
+        "sample": 1,
+        "lift": 0.297,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "aviation-failures",
+        "sample": 2,
+        "lift": 0.227,
+        "z": 1.64
+      },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "natural-hazards",
         "sample": 3,
-        "lift": -0.189,
-        "z": -0.53
+        "lift": -0.153,
+        "z": -0.41
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "bridge-failures",
+        "sample": 1,
+        "lift": -0.331,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "nuclear-accidents",
+        "sample": 1,
+        "lift": -0.192,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "spaceflight-disasters",
+        "sample": 2,
+        "lift": 0.504,
+        "z": 254.8
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "maritime-disasters",
+        "sample": 1,
+        "lift": -0.036,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "structural-failures",
+        "sample": 1,
+        "lift": -0.256,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "infrastructure-failures",
+        "sample": 2,
+        "lift": 0.141,
+        "z": 0.91
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "industrial-disasters",
+        "sample": 1,
+        "lift": -0.072,
+        "z": 0
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 4,
-        "lift": 0.234,
-        "z": 0.86
+        "lift": 0.098,
+        "z": 0.68
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "label-colon",
+        "sample": 2,
+        "lift": 0.331,
+        "z": 9.56
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "why",
+        "sample": 1,
+        "lift": -0.256,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "inside",
+        "sample": 1,
+        "lift": -0.014,
+        "z": 0
       },
       {
         "stage": "OBSERVATION",
         "dimension": "storyStructure",
         "value": "CONSEQUENCE>FAILURE>CAUSE>ESCALATION>ENGINEERING_REVEAL",
         "sample": 4,
-        "lift": 0.234,
-        "z": 0.86
+        "lift": 0.098,
+        "z": 0.68
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 4,
-        "lift": 0.234,
-        "z": 0.86
+        "lift": 0.098,
+        "z": 0.68
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "18",
         "sample": 3,
-        "lift": 0.425,
-        "z": 1.53
+        "lift": 0.216,
+        "z": 1.85
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "publishHourUTC",
+        "value": "22",
+        "sample": 1,
+        "lift": -0.256,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "publishSlot",
+        "value": "18:00 New York",
+        "sample": 1,
+        "lift": -0.256,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "publishSlot",
+        "value": "21:00 TR",
+        "sample": 1,
+        "lift": 0.297,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "popularityBand",
+        "value": "unknown",
+        "sample": 2,
+        "lift": 0.02,
+        "z": 0.07
       },
       {
         "stage": "OBSERVATION",
         "dimension": "openingVisual",
         "value": "REAL_ARCHIVAL",
         "sample": 4,
-        "lift": 0.234,
-        "z": 0.86
+        "lift": 0.098,
+        "z": 0.68
       },
       {
         "stage": "OBSERVATION",
         "dimension": "bucket",
         "value": "A",
         "sample": 4,
-        "lift": 0.234,
-        "z": 0.86
+        "lift": 0.098,
+        "z": 0.68
       }
     ],
-    "hypotheses": [],
+    "hypotheses": [
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "topicCluster",
+        "value": "natural-hazards",
+        "sample": 3,
+        "lift": -0.153,
+        "z": -0.41
+      },
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "publishHourUTC",
+        "value": "18",
+        "sample": 3,
+        "lift": 0.216,
+        "z": 1.85
+      }
+    ],
     "adopted": [],
     "suppressed": [],
     "adoptedWeights": {},
