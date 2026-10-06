@@ -83,6 +83,17 @@ Research dossiers: `channels/profitdecoded/research/`. Ranking: `channels/profit
 * **Renderer** (`scripts/profitdecoded/render.js`): brand-system frames (ImageMagick) + zoom/pan/fade per shot (ffmpeg) + the mixed audio -> `out/video.mp4`, then real render QA (probe, decode errors, black frames, duration vs audio) written to `bundle.render`. Every frame carries its source citation. Needs a working ffmpeg: the `profitdecoded-render` workflow builds and uploads the Short on a GitHub runner (artifact `profitdecoded-short-render`).
 * **Live competitor data** (`scripts/profitdecoded/collect-competitors.js`, `core/profitdecoded/yt-collector.js`): `PD_YT_API_KEY=... node scripts/profitdecoded/collect-competitors.js` (use `--dry` to see the quota plan). Resolves handles in `channels/profitdecoded/intel/reference-channels.json` (unresolved ones are reported, never guessed), runs keyword discovery per window (finds small-channel outliers), keeps a quota reserve, and writes `snapshot-*.json`, `breakout-feed-*.json`, `collection-report-*.json`. A full run is about 5,700 of the 10,000 free daily units: run weekly.
 
+## Autonomous production (research -> script -> video, dry run)
+
+`node scripts/profitdecoded/auto-produce.js [--topic <id>] [--format short|long] [--through script|audio|render|assess] [--max-usd 3]` (`--dry` prints the plan without a key). Workflow: `profitdecoded-produce.yml` (manual dispatch, needs the `ANTHROPIC_API_KEY` secret, uploads an artifact, never uploads to YouTube).
+
+1. **Pick** the topic with the decision engine (researched dossiers feed it; topics whose research failed are skipped for 7 days).
+2. **Research** (`core/profitdecoded/auto/research-agent.js`): Claude (`claude-opus-5-5`, adaptive thinking) searches and reads the web with `web_search` / `web_fetch` (citations on) under `prompts/research.md`, then a second call structures the memo into a dossier. **Code verifies it against what the tools really returned**: a source that was never opened is dropped, a claim whose figures are not in the text of its cited sources is dropped, an inference whose basis was dropped is dropped, and the normal research gate decides. Nothing is "fixed" by weakening a gate: an unverifiable topic is reported `research-failed`.
+3. **Script** (`script-agent.js`): hooks (>=6 mechanisms), beats, graphics per beat, 22 titles, 3 thumbnail concepts from the verified claims only, under `prompts/script.md`. Local checks (AI-pattern score, numbers absent from the dossier, hook competition, length, graphics coverage, titles) feed up to 2 targeted rewrite rounds; after that the run fails.
+4. Narration, render and the normal assessment run on the bundle (`out/review-report.md`). The result is PUBLISH / REVIEW / REJECT for a human; the publish guard still blocks upload.
+
+Spend: usage is accumulated per run and estimated from list prices (web search is billed separately); `PD_AUTO_MAX_USD` (default 3) stops the run before the next call. Server-side refusal fallbacks are on by default. The first live run has not happened yet: the code is tested against a mock client only.
+
 ## Channel art and setup
 
 `node scripts/profitdecoded/make-channel-art.js` writes the profile picture, banner (with safe-area and circle previews) to `channels/profitdecoded/brand-assets/`. The description text and the YouTube setup checklist (handle candidates, keywords, upload defaults) are in `brand-assets/description.txt` and `brand-assets/channel-setup.md`.
