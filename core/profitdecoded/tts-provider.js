@@ -14,7 +14,7 @@
 const path = require("path");
 const os = require("os");
 const fs = require("fs");
-const { execFileSync } = require("child_process");
+const { execFileSync, spawnSync } = require("child_process");
 const W = require("./wav");
 const { channelConfig } = require("./config");
 
@@ -105,7 +105,16 @@ async function synthesize(text, opts = {}, deps = {}) {
   if (p.name === "kokoro") {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "pd-kokoro-")); const out = path.join(dir, "k.wav");
     const cmd = kokoroCommand({ ...opts, provider: "kokoro" }, env);
-    (deps.run || ((c, input) => execFileSync(c.bin, [...c.args, "--out", out], { input, stdio: ["pipe", "pipe", "pipe"], maxBuffer: 1 << 26 })))(cmd, text);
+    const defaultRun = (c, input) => {
+      const r = spawnSync(c.bin, [...c.args, "--out", out], { input, encoding: "utf8", maxBuffer: 1 << 26 });
+      const tail = (x) => String(x || "").trim().split("\n").slice(-8).join(" | ").slice(0, 600);
+      // EPIPE just means the helper exited before reading stdin (e.g. it crashed): report its real exit code and stderr.
+      if (r.error && r.error.code === "ENOENT") throw new Error(`kokoro helper could not start (ENOENT): is "${c.bin}" installed with kokoro-onnx and soundfile?`);
+      if (r.error && r.status === null && r.error.code !== "EPIPE") throw new Error(`kokoro helper failed (${r.error.code || r.error.message})`);
+      if (r.status !== 0) throw new Error(`kokoro helper exited ${r.status}: ${tail(r.stderr) || tail(r.stdout) || "no output"}`);
+      if (!fs.existsSync(out) || fs.statSync(out).size < 1000) throw new Error(`kokoro helper reported success but wrote no audio: ${tail(r.stderr) || tail(r.stdout) || "no output"}`);
+    };
+    (deps.run || defaultRun)(cmd, text);
     return pcmFromWavBuffer(fs.readFileSync(out));
   }
   // edge-tts fallback

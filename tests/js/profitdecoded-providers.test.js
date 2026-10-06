@@ -154,3 +154,17 @@ test("Kokoro (free, local/CI): falls back when files are missing, builds the com
   assert.equal(PD("narration").qa([{ text: "a", start: 0, end: 1 }], { provider: "kokoro-82m (open-source, unreviewed)" }).certified, false);
   assert.ok(fs.existsSync(path.join(__dirname, "..", "..", "scripts", "profitdecoded", "kokoro_tts.py")));
 });
+
+test("Kokoro default runner reports the helper's real failure instead of a confusing ENOENT", async () => {
+  const T = PD("tts-provider"); const fs = require("fs"); const os = require("os"); const path = require("path");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "kk2-")); const m = path.join(dir, "m.onnx"), v = path.join(dir, "v.bin"); fs.writeFileSync(m, "x"); fs.writeFileSync(v, "x");
+  const stub = (body) => { const f = path.join(dir, "py" + Math.random().toString(36).slice(2) + ".sh"); fs.writeFileSync(f, "#!/bin/sh\n" + body + "\n"); fs.chmodSync(f, 0o755); return f; };
+  const env = (py) => ({ PD_TTS_PROVIDER: "kokoro", PD_KOKORO_MODEL: m, PD_KOKORO_VOICES: v, PD_KOKORO_PYTHON: py });
+  await assert.rejects(T.synthesize("hi", { provider: "kokoro" }, { env: env(stub('echo "boom: no such voice" >&2; exit 3')) }), /exited 3: boom: no such voice/);
+  await assert.rejects(T.synthesize("hi", { provider: "kokoro" }, { env: env(stub("exit 0")) }), /reported success but wrote no audio/);
+  await assert.rejects(T.synthesize("hi", { provider: "kokoro" }, { env: env(path.join(dir, "does-not-exist")) }), /could not start/);
+  // a helper that really writes a WAV to --out succeeds
+  const writer = stub('while [ "$1" != "--out" ]; do shift; done; cp ' + path.join(dir, "ok.wav") + ' "$2"');
+  fs.writeFileSync(path.join(dir, "ok.wav"), W.writeWav(new Float32Array(24000).fill(0.1), 24000));
+  assert.equal((await T.synthesize("hi", { provider: "kokoro" }, { env: env(writer) })).length, 24000);
+});

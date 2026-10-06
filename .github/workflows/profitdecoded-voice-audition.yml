@@ -43,6 +43,11 @@ jobs:
           mkdir -p kokoro-model
           curl -fL --retry 3 -o kokoro-model/kokoro-v1.0.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
           curl -fL --retry 3 -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+      - name: Kokoro smoke test (helper run directly, output visible)
+        run: |
+          ls -la kokoro-model
+          echo "Costco did not make most of its profit in the aisles." | python scripts/profitdecoded/kokoro_tts.py --model kokoro-model/kokoro-v1.0.onnx --voices kokoro-model/voices-v1.0.bin --voice am_michael --speed 1.0 --out smoke.wav
+          ls -la smoke.wav
       - name: Kokoro voices
         env:
           PD_KOKORO_MODEL: ${{ github.workspace }}/kokoro-model/kokoro-v1.0.onnx
