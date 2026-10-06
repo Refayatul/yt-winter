@@ -45,11 +45,10 @@ const attempts = [];
 let result = null;
 let pass = false;
 let prechecks = 0;
+let lastPlan = null;
 for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
   const topic = nextTopic(attempts);
   if (!topic) break;
-  // Same visual pre-check as production: a picture-poor topic is skipped
-  // before rendering and does not use up a render attempt.
   const shortfall = render && !requested ? visualShortfall(topic, path.join(channel.paths.reports, "dry-runs", topic.slug)) : null;
   if (shortfall && prechecks < MAX_VISUAL_PRECHECKS) {
     prechecks += 1;
@@ -59,6 +58,7 @@ for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt += 1) {
     continue;
   }
   const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true });
+  lastPlan = plan;
   const outputDirectory = path.join(channel.paths.reports, "dry-runs", topic.slug);
   result = Rendering.buildPackage(topic, channel, outputDirectory, { render, growthPlan: plan });
   pass = Object.values(result.validations).every(Boolean);
@@ -80,6 +80,13 @@ if (!pass) {
     for (const name of failed) {
       const reasons = result.validationReasons && result.validationReasons[name];
       if (Array.isArray(reasons) && reasons.length) console.error(`  ${name}: ${reasons.join("; ")}`);
+      if (name === "growthReadiness" && lastPlan && lastPlan.readiness) {
+        const r = lastPlan.readiness;
+        console.error(`  growthReadiness: stage=${r.stage} decision=${r.decision} score=${r.ProductionReadinessScore} thresholds=${JSON.stringify(r.thresholds)}`);
+        console.error(`  growthReadiness dimensions: ${JSON.stringify(r.dimensions)}`);
+        if (r.hardFails && r.hardFails.length) console.error(`  growthReadiness hardFails: ${r.hardFails.join("; ")}`);
+        if (r.unmeasured && r.unmeasured.length) console.error(`  growthReadiness unmeasured: ${r.unmeasured.join(", ")}`);
+      }
     }
     if (render && result.render.video) {
       console.error(`Render evidence: duration=${result.render.video.durationSeconds}s resolution=${result.render.video.width}x${result.render.video.height} audio=${result.render.video.hasAudio} visualChanges=${result.render.video.visualChanges}`);
