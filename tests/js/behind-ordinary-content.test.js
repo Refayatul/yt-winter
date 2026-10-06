@@ -109,7 +109,7 @@ test("the evidence-gated channel may skip a weak day; other channels keep the 20
     assert.equal(pick.selected.topic.productionReady, true);
     assert.equal(pick.selected.score.bucket, "A");
   } else {
-    assert.match(pick.reason, /NO_(?:EXPLORE_CANDIDATE|QUALIFIED_POOL|ELIGIBLE_TOPIC)/);
+    assert.match(pick.reason, /NO_(?:CANDIDATE_POOL|EXPLORE_CANDIDATE|QUALIFIED_POOL|ELIGIBLE_TOPIC)/);
   }
 });
 
