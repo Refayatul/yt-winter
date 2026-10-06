@@ -366,6 +366,30 @@
       "status": "ERROR",
       "reason": "JSON_VALIDATE_FAILED HTTP 400: groq request failed (HTTP 400): {\"error\":{\"message\":\"Failed to validate JSON. Please adjust your prompt. See 'failed_generation' for more details.\",\"type\":\"invalid_request_error\",\"code\":\"json_validate_failed\",\"failed_generation\":\"\"}}",
       "slug": null
+    },
+    "playing-cards-what-explains-corner-indices": {
+      "at": "2026-10-06T03:52:59.083Z",
+      "status": "NOT_ANSWERABLE",
+      "reason": "The provided source excerpt contains no information about why playing cards have corner indices, so the question cannot be answered from the given material.",
+      "slug": null
+    },
+    "office-chairs-what-explains-mesh-backs": {
+      "at": "2026-10-06T03:54:17.483Z",
+      "status": "NOT_ANSWERABLE",
+      "reason": "The provided source excerpt does not contain any information explaining why office chairs have mesh backs.",
+      "slug": null
+    },
+    "waiting-rooms-what-explains-back-to-back-seating": {
+      "at": "2026-10-06T03:55:34.473Z",
+      "status": "NO_PRIMARY_SOURCE",
+      "reason": "fewer than 2 reachable primary-host references cited by Waiting room",
+      "slug": null
+    },
+    "date-formats-what-explains-two-digit-years": {
+      "at": "2026-10-06T03:57:42.174Z",
+      "status": "ERROR",
+      "reason": "INVALID_JSON: groq returned no JSON object",
+      "slug": null
     }
   }
 }
