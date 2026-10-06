@@ -65,7 +65,8 @@ const BAD_HOST = /(^|\.)wikipedia\.org$|(^|\.)wikimedia\.org$|(^|\.)reddit\.com$
 
 // Queries: one aimed at the company's own annual report/filings (restricted to sec.gov), the rest generic.
 async function planQueries(topic, deps) {
-  const r = await LLM.run({ client: deps.client, ledger: deps.ledger, system: "You plan web searches for a business-research desk. Write 4 short, specific search queries (<= 12 words each) that would surface: (1) the company's latest annual report or filing on the topic, (2) regulator or academic evidence, (3) respected business journalism on the mechanism, (4) the key figure or claim implied by the title. No site: operators.", messages: [{ role: "user", content: `TOPIC: ${topic.topic}\nENTITY: ${topic.entity}\nCORE QUESTION: ${topic.coreQuestion}` }], schema: QUERIES_SCHEMA, maxTokens: 1500, effort: "low" });
+  const today = (deps.today || new Date()).toISOString().slice(0, 10);
+  const r = await LLM.run({ client: deps.client, ledger: deps.ledger, light: true, system: `You plan web searches for a business-research desk. Today is ${today}; prefer the most recent filings and sources. The TOPIC title is a hypothesis about HOW A COMPANY EARNS MONEY or why it prices/designs something a certain way. Interpret it as a business-model question (revenue sources, pricing, capacity, incentives, contracts), NOT as news, a trend, remote work, or a pandemic story. Write 4 short, specific search queries (<= 12 words each) that would surface: (1) the company's latest annual report (10-K) or filing that states the figures, (2) regulator or academic evidence on the underlying mechanism, (3) respected business journalism on the mechanism, (4) the key figure or claim implied by the title. No site: operators, no years unless needed.`, messages: [{ role: "user", content: `TOPIC: ${topic.topic}\nENTITY: ${topic.entity}\nCORE QUESTION: ${topic.coreQuestion}\nPILLAR: ${topic.pillar}` }], schema: QUERIES_SCHEMA, maxTokens: 1500, effort: "low" });
   return (r.json.queries || []).map((q) => String(q).trim()).filter(Boolean).slice(0, 4);
 }
 
@@ -73,7 +74,7 @@ async function planQueries(topic, deps) {
 async function discover(topic, deps = {}) {
   const max = Number(process.env.PD_SEARCH_MAX || 5); const fetchImpl = deps.searchFetch;
   const queries = await planQueries(topic, deps);
-  const plan = [{ q: `${topic.entity} latest annual report 10-K`, domains: ["sec.gov"] }, ...queries.map((q) => ({ q, domains: null }))].slice(0, max);
+  const plan = [{ q: `${topic.entity} annual report 10-K ${(deps.today || new Date()).getUTCFullYear() - 1}`, domains: ["sec.gov"] }, ...queries.map((q) => ({ q, domains: null }))].slice(0, max);
   const seen = new Map(); let searches = 0;
   for (const p of plan) {
     let results;

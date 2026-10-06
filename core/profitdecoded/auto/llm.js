@@ -67,7 +67,7 @@ async function runGroq(opts) {
   const { client, system, messages, schema, ledger = newLedger(), maxTokens = 8000, effort = "high" } = opts;
   if (ledger.tokens >= ledger.maxTokens) throw new AutoError("BUDGET", `token guard: ${ledger.tokens} >= PD_AUTO_MAX_TOKENS ${ledger.maxTokens}`);
   const G = require("./groq");
-  const r = await G.chat({ system, messages, schema, tools: opts.tools, maxTokens: Math.min(maxTokens, 30000), effort: effort === "max" || effort === "xhigh" ? "high" : effort, key: client.key, fetchImpl: client.fetch, sleepMs: client.sleep });
+  const r = await G.chat({ system, messages, schema, tools: opts.tools, model: opts.light ? G.LIGHT_MODEL() : undefined, maxTokens: Math.min(maxTokens, 30000), effort: effort === "max" || effort === "xhigh" ? "high" : effort, key: client.key, fetchImpl: client.fetch, sleepMs: client.sleep });
   ledger.calls += 1; ledger.tokens += (r.usage && r.usage.total_tokens) || 0; ledger.usage = addUsage(ledger.usage, { input_tokens: r.usage && r.usage.prompt_tokens, output_tokens: r.usage && r.usage.completion_tokens });
   let json = null;
   if (schema) { json = G.extractJson(r.text); if (!json) throw new AutoError("BAD_JSON", "structured output was not valid JSON"); }
