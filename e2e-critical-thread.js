@@ -29,8 +29,15 @@ if (!launch) throw new Error(`Missing CriticalThread dry-run topic: ${requested 
 function nextTopic(tried) {
   if (!tried.length) return launch;
   if (requested) return null;
-  const selection = Growth.selectShortTopic(channel, { exclude: tried.map((item) => item.topicId) });
-  return selection.selected ? topics.find((item) => item.id === selection.selected.topic.id) : null;
+  // Use the production queue, not repeated daily selectShortTopic() calls.
+  // selectShortTopic() intentionally returns one deterministic exploit/explore
+  // winner; calling it again with exclusions can exhaust a tiny decision pool
+  // after only a few visual rejects. orderedQueue() exposes every remaining
+  // production-qualified A/B (then C when configured), so visual qualification
+  // can actually scan the inventory as the scheduled pipeline is intended to.
+  const queue = Growth.orderedQueue(channel, { exclude: tried.map((item) => item.topicId) }).order;
+  const nextSlug = queue[0];
+  return nextSlug ? topics.find((item) => item.slug === nextSlug) : null;
 }
 
 function portable(result) {
