@@ -460,5 +460,44 @@
       }
     ],
     "at": "2026-10-06T19:36:15.786Z"
+  },
+  {
+    "videoId": "qkzRUqlEy5I",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "14d",
+    "diagnoses": [
+      {
+        "code": "RETENTION_FAILURE",
+        "confidence": "medium",
+        "evidence": "average viewed 64.36% < 65%",
+        "recommendation": "Cut setup sentences; move the mechanism earlier.",
+        "specCode": "RETENTION_WEAK"
+      },
+      {
+        "code": "TOPIC_FAILURE",
+        "confidence": "low",
+        "evidence": "Shorts feed share 50% and weak retention",
+        "recommendation": "Lower this cluster's topic weight until more evidence.",
+        "specCode": "TOPIC_REACH_LIMITED"
+      }
+    ],
+    "at": "2026-10-06T21:05:08.008Z"
+  },
+  {
+    "videoId": "PGOKZhPYo7c",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "14d",
+    "diagnoses": [
+      {
+        "code": "LOW_SUBSCRIBER_CONVERSION",
+        "confidence": "medium",
+        "evidence": "1.92 subs / 1,000 views",
+        "recommendation": "Series-shaped payoff; link a related long-form episode.",
+        "specCode": "SUBSCRIBER_CONVERSION_WEAK"
+      }
+    ],
+    "at": "2026-10-06T21:05:08.008Z"
   }
 ]

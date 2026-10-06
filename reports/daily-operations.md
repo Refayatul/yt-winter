@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-06T20:24:11.770Z
+Generated: 2026-10-06T21:05:15.146Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,64 +8,64 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | saudia-163-1980 |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / 86 |
-| YouTube | scheduled |
-| Publish time | 2026-10-06T18:00:00.000Z |
-| Video ID | ATpXizczEI8 |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 360 |
 | Errors/review/blocks | 5 |
-| TikTok today | NOT_SENT |
+| TikTok today | NO_TODAY_VIDEO |
 | TikTok backlog | 6 |
 | Analytics warehouse | through 2026-10-04 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.public 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-06 (0 d) |
-| API quota today | 1695 / 9800 units (project 1012165386949) |
+| Scheduler queue | 1 queued, oldest 2026-10-07 (-1 d) |
+| API quota today | 1701 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 22/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
 
 | Signal | Status |
 |---|---|
-| Today topic | what-if-you-spent-a-summer-in-death-valley |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / unavailable |
-| YouTube | scheduled |
-| Publish time | 2026-10-06T18:00:00.000Z |
-| Video ID | OFwONtLpIIM |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 491 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-04 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.public 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-06 (0 d) |
-| API quota today | 1707 / 9800 units (project 684098966511) |
+| Scheduler queue | 1 queued, oldest 2026-10-07 (-1 d) |
+| API quota today | 1714 / 9800 units (project 684098966511) |
 | YPP readiness (estimate) | subs 4/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
 
 | Signal | Status |
 |---|---|
-| Today topic | why-submarine-fiber-optic-cable-is-so-hard-to-replace |
-| Short | scheduled |
+| Today topic | unavailable |
+| Short | not-due |
 | Long | due-not-produced |
-| Quality | PUBLISH / unavailable |
-| YouTube | scheduled |
-| Publish time | 2026-10-06T18:00:00.000Z |
-| Video ID | 24eJvZ2cswc |
+| Quality | unavailable / unavailable |
+| YouTube | not-uploaded |
+| Publish time | unavailable |
+| Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 515 |
 | Errors/review/blocks | 0 |
 | Analytics warehouse | through 2026-10-04 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-06 (0 d) |
+| Scheduler queue | 1 queued, oldest 2026-10-07 (-1 d) |
 | API quota today | 1677 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
@@ -81,12 +81,12 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | unavailable |
 | Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | sla-missed-or-channel-disabled |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 4 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-02 (lag 4 d) · 4 table error(s) |
 | Ops (24 h) | analytics.partial 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-06 (0 d) |
-| API quota today | 94 / 9800 units (project 739767423116) |
+| Scheduler queue | 1 queued, oldest 2026-10-07 (-1 d) |
+| API quota today | 100 / 9800 units (project 739767423116) |
 | YPP readiness (estimate) | subs 1/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 

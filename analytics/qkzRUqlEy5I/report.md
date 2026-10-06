@@ -9,14 +9,15 @@ https://youtu.be/qkzRUqlEy5I
 | 1d | 2026-09-24 | 176 | 5 | 0 | — | — | unavailable |
 | 3d | 2026-09-26 | 183 | 5 | 2 | 65.2 | 0 | Shorts feed 54%, Search 43% |
 | 7d | 2026-09-29 | 186 | 5 | 2 | 65.29 | 0 | Shorts feed 51%, Search 44% |
+| 14d | 2026-10-06 | 189 | 5 | 2 | 64.36 | 0 | Shorts feed 50%, Search 44% |
 
-## Diagnosis at 7d
+## Diagnosis at 14d
 
-- **HEALTHY** (low) — No problem pattern detected with available data.
+- **SHORTS_FEED_NOT_PICKED_UP** (low) — Most views are not from the Shorts feed.
 
 ## Suggested interventions
 
-- HEALTHY → no action.
+- NOT IN SHORTS FEED → review the opening frame and first sentence.
 
 ## First major observed retention drop
 
@@ -25,4 +26,4 @@ https://youtu.be/qkzRUqlEy5I
 - Visual type: REAL ARCHIVAL/LICENCED FOOTAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 3d and 7d: 3.
+Views gained between 7d and 14d: 3.
