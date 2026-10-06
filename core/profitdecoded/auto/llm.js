@@ -71,7 +71,7 @@ async function runGroq(opts) {
   ledger.calls += 1; ledger.tokens += (r.usage && r.usage.total_tokens) || 0; ledger.usage = addUsage(ledger.usage, { input_tokens: r.usage && r.usage.prompt_tokens, output_tokens: r.usage && r.usage.completion_tokens });
   let json = null;
   if (schema) { json = G.extractJson(r.text); if (!json) throw new AutoError("BAD_JSON", "structured output was not valid JSON"); }
-  return { text: r.text, json, blocks: [], ledger };
+  return { text: r.text, json, blocks: [], ledger, raw: r.raw };
 }
 
 async function run(opts) {
