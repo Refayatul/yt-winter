@@ -24,8 +24,8 @@
     "publishFlag": "PD_PUBLISH",
     "longFormPublishFlag": "PD_LONGFORM_PUBLISH",
     "requireHumanApprovalForFirstN": 5,
-    "shorts": { "maxPerDay": 1, "targetDurationSeconds": [30, 50], "publishWindowsLocal": [{ "tz": "America/New_York", "time": "12:00" }, { "tz": "America/New_York", "time": "18:30" }], "productionTimeUtc": "08:30" },
-    "longForm": { "perWeek": 1, "targetDurationMinutes": [10, 18], "publishDay": "Saturday", "publishTimeLocal": "09:30", "publishTz": "America/New_York", "productionDays": ["Monday", "Tuesday", "Wednesday", "Thursday"], "productionTimeUtc": "09:30" },
+    "shorts": { "maxPerDay": 1, "targetDurationSeconds": [30, 50], "publishWindowsLocal": [{ "tz": "America/New_York", "time": "12:00" }, { "tz": "America/New_York", "time": "18:30" }], "productionTimeUtc": "11:50" },
+    "longForm": { "perWeek": 1, "targetDurationMinutes": [10, 18], "publishDay": "Saturday", "publishTimeLocal": "09:30", "publishTz": "America/New_York", "productionDays": ["Monday", "Tuesday", "Wednesday", "Thursday"], "productionTimeUtc": "13:50" },
     "qualityOverCadence": true,
     "skipInsteadOfLowering": true,
     "scheduleRationale": "Initial US-Eastern windows (long-form Saturday morning, Shorts lunch/evening). This is an unvalidated starting assumption; the learning engine replaces it with channel analytics (publish-time cohorts) after enough data."
