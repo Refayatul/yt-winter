@@ -57,6 +57,15 @@ let renderAttempts = 0;
 for (let scan = 1; scan <= MAX_TOPIC_SCANS && renderAttempts < MAX_ATTEMPTS; scan += 1) {
   const topic = nextTopic(attempts);
   if (!topic) break;
+  // Match production ordering: editorial/growth readiness is a cheap gate
+  // and must run before the network-heavy visual preflight. This prevents a
+  // visually rich but sub-threshold topic from consuming a render attempt.
+  const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true });
+  if (plan.readiness.decision === "BLOCK") {
+    attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass: false, growthPrecheck: plan.readiness.hardFails || [] });
+    console.log(`CriticalThread E2E growth pre-check: skipped ${topic.topic} — ${(plan.readiness.hardFails || []).join("; ") || plan.readiness.ProductionReadinessScore}`);
+    continue;
+  }
   const shortfall = render && !requested ? visualShortfall(topic, path.join(channel.paths.reports, "dry-runs", topic.slug)) : null;
   if (shortfall) {
     attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass: false, visualPrecheck: shortfall });
@@ -64,7 +73,6 @@ for (let scan = 1; scan <= MAX_TOPIC_SCANS && renderAttempts < MAX_ATTEMPTS; sca
     continue;
   }
   renderAttempts += 1;
-  const plan = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true });
   lastPlan = plan;
   const outputDirectory = path.join(channel.paths.reports, "dry-runs", topic.slug);
   result = Rendering.buildPackage(topic, channel, outputDirectory, { render, growthPlan: plan });
