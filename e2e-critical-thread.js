@@ -16,7 +16,7 @@ const Growth = require("./core/growth");
 const { visualRejection, visualShortfall, MAX_VISUAL_PRECHECKS } = require("./core/pipeline/impossible-brief");
 
 const MAX_ATTEMPTS = 3;
-const MAX_TOPIC_SCANS = Math.max(MAX_ATTEMPTS, MAX_VISUAL_PRECHECKS + MAX_ATTEMPTS);
+const MAX_TOPIC_SCANS = Math.max(MAX_ATTEMPTS, topics.length);
 const channel = Channel.getChannel("critical-thread");
 const render = process.argv.includes("--render");
 const requested = process.argv.slice(2).find((arg) => !arg.startsWith("--"));
@@ -52,7 +52,7 @@ for (let scan = 1; scan <= MAX_TOPIC_SCANS && renderAttempts < MAX_ATTEMPTS; sca
   const topic = nextTopic(attempts);
   if (!topic) break;
   const shortfall = render && !requested ? visualShortfall(topic, path.join(channel.paths.reports, "dry-runs", topic.slug)) : null;
-  if (shortfall && prechecks < MAX_VISUAL_PRECHECKS) {
+  if (shortfall) {
     prechecks += 1;
     attempts.push({ topicId: topic.id, slug: topic.slug, topic: topic.topic, pass: false, visualPrecheck: shortfall });
     console.log(`CriticalThread E2E pre-check: skipped ${topic.topic} — ${shortfall}`);
