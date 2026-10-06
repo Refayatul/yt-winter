@@ -2,7 +2,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const A = (m) => require("../../core/profitdecoded/auto/" + m);
-delete process.env.TAVILY_API_KEY; // tests are hermetic: no real search key
+for (const k of ["TAVILY_API_KEY", "SERPER_API_KEY", "EXA_API_KEY", "PD_SEARCH_PROVIDER"]) delete process.env[k]; // tests are hermetic: no real search key
 process.env.PD_FETCH_CONTACT = "tests@example.org"; // sec.gov refuses undeclared tools; real runs set this to a real contact e-mail
 
 const html = (title, body) => `<html><head><title>${title}</title><script>var x=1;</script></head><body><p>${body}</p></body></html>`;
@@ -361,4 +361,44 @@ test("groq research with a search API: no browsing call at all, discovery URLs g
     assert.ok(client.calls.every((b) => !b.tools));
     assert.ok(r.ledger.tokens > 0 && r.ledger.tokens < 2000, "no browsing: tiny token use in the mock");
   } finally { if (save === undefined) delete process.env.TAVILY_API_KEY; else process.env.TAVILY_API_KEY = save; }
+});
+
+test("search providers: Serper and Exa request shapes, domain restriction, error mapping and provider choice", async () => {
+  const S = A("search"); const calls = [];
+  const sf = async (url, init) => { calls.push({ url, init, body: JSON.parse(init.body) }); return resp({ organic: [{ title: "T1", link: "https://www.sec.gov/a", snippet: "snippet one" }, { title: "T2", link: "https://fortune.com/b", snippet: "snippet two" }, { title: "no link" }] }); };
+  const r = await S.serper("planet fitness 10-K", { key: "SERPER-SECRET", includeDomains: ["sec.gov"], fetchImpl: sf, maxResults: 6 });
+  assert.equal(calls[0].url, "https://google.serper.dev/search"); assert.equal(calls[0].init.headers["x-api-key"], "SERPER-SECRET");
+  assert.equal(calls[0].body.q, "planet fitness 10-K site:sec.gov"); assert.equal(calls[0].body.num, 6); assert.ok(!calls[0].init.body.includes("SERPER-SECRET"));
+  assert.deepEqual(r.map((x) => x.url), ["https://www.sec.gov/a", "https://fortune.com/b"]); assert.ok(r[0].score > r[1].score);
+  const ef = async (url, init) => { calls.push({ url, init, body: JSON.parse(init.body) }); return resp({ results: [{ title: "E1", url: "https://www.sec.gov/e", text: "x".repeat(900), score: 0.8 }, { title: "E2", url: "https://fortune.com/e" }, { title: "no url" }] }); };
+  const e = await S.exa("planet fitness 10-K", { key: "EXA-SECRET", includeDomains: ["sec.gov"], fetchImpl: ef });
+  const c = calls.at(-1); assert.equal(c.url, "https://api.exa.ai/search"); assert.equal(c.init.headers["x-api-key"], "EXA-SECRET");
+  assert.deepEqual(c.body.includeDomains, ["sec.gov"]); assert.equal(c.body.type, "auto"); assert.ok(!c.init.body.includes("EXA-SECRET"));
+  assert.equal(e.length, 2); assert.equal(e[0].content.length, 400); assert.equal(e[0].score, 0.8);
+  const bad = (status, body = {}) => async () => ({ ok: false, status, json: async () => body });
+  await assert.rejects(S.serper("q", { key: "k", fetchImpl: bad(403, { message: "Not enough credits" }) }), (x) => x.code === "RATE_LIMIT" && /Not enough credits/.test(x.message));
+  await assert.rejects(S.exa("q", { key: "k", fetchImpl: bad(402, { error: "out of credits" }) }), (x) => x.code === "RATE_LIMIT" && /out of free credits/.test(x.message));
+  await assert.rejects(S.serper("q", { key: "k", fetchImpl: bad(401, { message: "Unauthorized" }) }), (x) => x.code === "HTTP" && x.status === 401);
+  await assert.rejects(S.serper("q", { key: "", fetchImpl: sf }), (x) => x.code === "NO_KEY");
+  // provider choice: explicit wins, else exa > serper > tavily, else none
+  const save = { ...process.env }; const set = (o) => { for (const k of ["EXA_API_KEY", "SERPER_API_KEY", "TAVILY_API_KEY", "PD_SEARCH_PROVIDER"]) delete process.env[k]; Object.assign(process.env, o); };
+  try {
+    set({}); assert.equal(S.available(), null);
+    set({ TAVILY_API_KEY: "t" }); assert.equal(S.providerName(), "tavily");
+    set({ TAVILY_API_KEY: "t", SERPER_API_KEY: "s" }); assert.equal(S.providerName(), "serper");
+    set({ TAVILY_API_KEY: "t", SERPER_API_KEY: "s", EXA_API_KEY: "e" }); assert.equal(S.providerName(), "exa");
+    set({ TAVILY_API_KEY: "t", SERPER_API_KEY: "s", EXA_API_KEY: "e", PD_SEARCH_PROVIDER: "serper" }); assert.equal(S.providerName(), "serper");
+    set({ SERPER_API_KEY: "s", PD_SEARCH_PROVIDER: "exa" }); assert.equal(S.providerName(), "serper", "forcing a provider without its key falls back to one that has a key");
+  } finally { for (const k of ["EXA_API_KEY", "SERPER_API_KEY", "TAVILY_API_KEY", "PD_SEARCH_PROVIDER"]) { if (save[k] === undefined) delete process.env[k]; else process.env[k] = save[k]; } }
+});
+
+test("search discover works with a Serper key end to end (domain restriction becomes a site: query)", async () => {
+  const S = A("search"); const L = A("llm"); process.env.SERPER_API_KEY = "serper-test";
+  try {
+    const client = routedClient(() => ({ queries: ["q one", "q two", "q three", "q four"] }));
+    const seen = [];
+    const f = async (url, init) => { const b = JSON.parse(init.body); seen.push(b.q); return resp({ organic: [{ title: "x", link: b.q.includes("site:sec.gov") ? SEC : FORT, snippet: "s" }] }); };
+    const d = await S.discover(topic(), { client, ledger: L.newLedger(5), searchFetch: f });
+    assert.ok(seen[0].endsWith("site:sec.gov")); assert.deepEqual(d.urls, [SEC, FORT]); assert.equal(d.searches, 5);
+  } finally { delete process.env.SERPER_API_KEY; }
 });
