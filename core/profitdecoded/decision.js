@@ -44,12 +44,13 @@ function evaluate(topic, evidence = {}, options = {}) {
   const composite = num / den;
   const satPenalty = satClass === "UNKNOWN" ? 0 : w.decisionPenalties.saturation * Comp.SATURATION_PENALTY[satClass];
   const copyright = S.valueOr(topic.copyrightRisk, 40);
-  const factualRisk = research ? Math.max(0, 100 - research.score) : 100 - S.valueOr(sg.evidenceQuality, 40);
+  // Unresearched means unverified: the prior (expected source availability) can never push factual risk below 40.
+  const factualRisk = research ? Math.max(0, 100 - research.score) : Math.max(40, 100 - S.valueOr(sg.evidenceQuality, 40));
   const productionRisk = 100 - S.valueOr(sg.productionFeasibility, 50);
   const penalties = {
     saturation: S.round(satPenalty, 1),
     copyrightRisk: S.round(w.decisionPenalties.copyrightRisk * copyright / 100, 1),
-    factualRisk: S.round(w.decisionPenalties.factualRisk * factualRisk / 100 * (research ? 1 : 0.6), 1),
+    factualRisk: S.round(w.decisionPenalties.factualRisk * factualRisk / 100, 1),
     productionRisk: S.round(w.decisionPenalties.productionRisk * productionRisk / 100, 1),
   };
   const penaltyTotal = Object.values(penalties).reduce((s, x) => s + x, 0);

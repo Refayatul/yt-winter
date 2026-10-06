@@ -5,7 +5,7 @@ const path = require("path");
 const V = require(path.join(__dirname, "..", "..", "core/profitdecoded/visuals"));
 
 function build(bundle) {
-  const shots = V.planShots(bundle.beats.map((b) => ({ id: b.id, text: b.text, start: b.start != null ? b.start : 0, end: b.end != null ? b.end : 6, claimId: b.claimId })), { seed: bundle.id });
+  const shots = V.planShots(bundle.beats.map((b) => ({ id: b.id, text: b.text, start: b.start != null ? b.start : 0, end: b.end != null ? b.end : 6, claimId: b.claimId })), { seed: bundle.id, format: bundle.format });
   const perBeat = {};
   return shots.map((shot) => {
     const specs = bundle.graphicSpecs[shot.beatId] || [];

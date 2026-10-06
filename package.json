@@ -28,7 +28,15 @@
     "growth:backfill": "node growth.js backfill --channel failure-reconstructed",
     "growth:dry-run": "node growth.js dry-run",
     "growth:simulate": "node growth.js simulate",
-    "test:growth": "node --test tests/js/growth.test.js"
+    "test:growth": "node --test tests/js/growth.test.js",
+    "profitdecoded": "node profitdecoded.js",
+    "profitdecoded:inventory": "node scripts/profitdecoded/build-inventory.js",
+    "profitdecoded:rank": "node profitdecoded.js rank --top 20 --write",
+    "profitdecoded:plan": "node profitdecoded.js plan",
+    "profitdecoded:audio": "node scripts/profitdecoded/produce-audio.js",
+    "profitdecoded:dry-run:short": "node profitdecoded.js dry-run channels/profitdecoded/dryruns/short-costco-membership/bundle.json",
+    "profitdecoded:dry-run:long": "node profitdecoded.js dry-run channels/profitdecoded/dryruns/long-planet-fitness-capacity/bundle.json",
+    "test:profitdecoded": "node --test tests/js/profitdecoded-*.test.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",

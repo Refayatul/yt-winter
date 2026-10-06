@@ -84,6 +84,7 @@ function hardGates(ev) {
     need(!ev.render.artifacts, "REJECTED: rendering artifacts detected");
     need(ev.render.textReadable !== false, "REJECTED: unreadable on-screen text in render");
   } else unverified.push("no rendered file inspected (render QA UNKNOWN)");
+  if (ev.duration && ev.duration.inRange === false) unverified.push(`narrated duration ${Math.round(ev.duration.seconds)} s is outside the typical ${ev.duration.target[0]}-${ev.duration.target[1]} s range: ${ev.format === "long" ? "the evidence base may be too thin for a premium long-form (do not pad)" : "tighten or split"}`);
   // writing
   if (ev.aiPatterns) { need(ev.aiPatterns.aiPatternScore < 35, `REJECTED: generic AI writing — pattern score ${ev.aiPatterns.aiPatternScore} >= 35 (${(ev.aiPatterns.findings || []).slice(0, 3).map((f) => f.name).join(", ")})`); }
   // similarity / originality

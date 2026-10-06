@@ -29,7 +29,11 @@ function intentFor(text, claim) {
 }
 
 // Seeded RNG so planning is reproducible but not mechanical.
-function rng(seed) { let s = [...String(seed)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7); return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+function rng(seed) {
+  let h = 1779033703 ^ String(seed).length; for (const ch of String(seed)) { h = Math.imul(h ^ ch.charCodeAt(0), 3432918353); h = (h << 13) | (h >>> 19); }
+  let a = h >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
 
 // Beats: [{id, text, start, end}] -> planned shots with density-driven duration.
 function planShots(beats, options = {}) {
@@ -39,8 +43,9 @@ function planShots(beats, options = {}) {
     const density = Math.min(1, ((beat.text.match(/\b\d[\d,.]*\b/g) || []).length * 0.25) + (T.contentWords(beat.text).length / 28));
     const r = rng(options.seed + ":" + beat.id);
     // High density -> hold the explanatory graphic longer; low density/energy -> quicker beats.
-    const n = dur < 2.2 ? 1 : density > 0.7 ? (dur > 7 ? 2 : 1) : Math.max(1, Math.min(5, Math.round(dur / (2.4 + r() * 3.2))));
-    let cuts = Array.from({ length: n }, () => 0.6 + r() * 1.4); const total = cuts.reduce((s, x) => s + x, 0);
+    const fast = options.format === "short"; // Shorts need a quicker visual rhythm than long-form
+    const n = dur < (fast ? 1.6 : 2.2) ? 1 : density > (fast ? 0.9 : 0.7) ? (dur > (fast ? 5 : 7) ? 2 : 1) : Math.max(1, Math.min(fast ? 7 : 5, Math.round(dur / (fast ? 1.3 + r() * 2.4 : 2.4 + r() * 3.2))));
+    let cuts = Array.from({ length: n }, () => 0.35 + r() * 2.0); const total = cuts.reduce((s, x) => s + x, 0);
     cuts = cuts.map((c) => c / total * dur);
     let at = beat.start;
     const base = intentFor(beat.text, beat.claimId);

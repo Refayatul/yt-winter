@@ -9,6 +9,8 @@ Tek kod tabanı dört bağımsız kanalı çalıştırır:
 - **CriticalThread** — modern dünyayı ayakta tutan görünmez makineler, malzemeler ve altyapı; konu, durum, bellek, analiz ve kimlik bilgileri `channels/critical-thread/` altında izole edilir. Başlangıç kütüphanesi 522 nitelikli konudur.
 - **The Hidden Logic of Things** — gündelik nesnelerdeki gizli tasarım, mühendislik ve tarih; `channels/behind-the-ordinary/` altında izole edilir. 525 doğrulanmış araştırma sorusu vardır; yalnız kaynak/fakt paketi tamamlanan kayıtlar üretime girer.
 
+- **ProfitDecoded** *(shadow, disabled)* — "The business behind everyday life": premium business/economics explainers. Kendi `channels/profitdecoded/` klasörü, `PD_*` kimlikleri ve `core/profitdecoded/` motoru vardır; canlı portföy döngülerine girmez, yayın korumalıdır. Ayrıntı: [docs/PROFITDECODED.md](docs/PROFITDECODED.md).
+
 Her büyük komut `--channel` kabul eder. Bayrak verilmezse güvenli geriye uyumluluk için `failure-reconstructed` seçilir.
 
 ```bash

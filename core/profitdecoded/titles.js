@@ -25,9 +25,17 @@ function scoreTitle(title, ctx = {}) {
   const surprise = /\b(more money when|lose|empty|destroy|trick|forgetting|get lost|stay home|barely)\b/i.test(t) ? 85 : 60;
   const tension = /\b(wants you|on purpose|forgetting|trap|lost|worse|hard to cancel|against you)\b/i.test(t) ? 88 : 58;
   const clarity = /^(why|how|the)\b/i.test(t) && len <= 70 ? 90 : 68;
-  let truth = 92;
+  let truth = 92; let unsupportedPromise = false;
   if (OVERCLAIM.test(t)) { truth -= 45; notes.push("overclaiming/clickbait phrase"); }
-  if (ctx.claims && ctx.claims.length) { const supported = ctx.claims.some((c) => T.wordSetSimilarity(t, c) > 0.25); if (!supported) { truth -= 22; notes.push("promise not matched by any sourced claim"); } }
+  if (ctx.claims && ctx.claims.length) {
+    // The title's promise must be carried by the research: >=2 of its content words (beyond the brand) must
+    // appear together in a single sourced claim, inference or the thesis. Otherwise the promise is unsupported.
+    const brandWords = new Set(T.contentWords(ctx.brand || ""));
+    const tw = [...new Set(T.contentWords(t).filter((w) => !brandWords.has(w)))];
+    const stem = (w) => w.replace(/(ing|ed|es|s)$/, "");
+    const supported = ctx.claims.some((c) => { const cw = new Set(T.contentWords(c).map(stem)); return tw.filter((w) => cw.has(stem(w))).length >= Math.min(2, tw.length); });
+    if (!supported) { truth -= 24; unsupportedPromise = true; notes.push("promise not carried by any single sourced claim/thesis"); }
+  }
   const promise = /\b(why|how|reason)\b/i.test(t) ? 82 : 64;
   let diff = 85;
   const hist = ctx.history || [];
@@ -38,7 +46,7 @@ function scoreTitle(title, ctx = {}) {
   const dims = { curiosity: S.clamp(curiosity), clarity, familiarity: familiar, surprise, emotionalTension: tension, mobileReadability: mobile, promiseStrength: promise, truthfulness: S.clamp(truth), differentiation: S.clamp(diff) };
   const w = { curiosity: 18, clarity: 12, familiarity: 8, surprise: 12, emotionalTension: 10, mobileReadability: 10, promiseStrength: 8, truthfulness: 14, differentiation: 8 };
   const total = Object.entries(w).reduce((s, [k, wt]) => s + wt * dims[k], 0) / Object.values(w).reduce((s, x) => s + x, 0);
-  return { title: t, score: S.round(total, 1), dims, pattern: pat, notes, misleading: truth < 60 };
+  return { title: t, score: S.round(total, 1), dims, pattern: pat, notes, misleading: truth < 60 || unsupportedPromise };
 }
 
 function rankTitles(candidates, ctx = {}) {

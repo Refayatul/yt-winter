@@ -60,13 +60,13 @@ function run(bundle, options = {}) {
   // 3. Hook competition + first 30 seconds.
   const topicWords = T.contentWords(bundle.topic.topic);
   ev.hook = Hooks.compete(bundle.hookCandidates || [], { topicWords });
-  ev.first30 = Hooks.first30(beats, { title: bundle.selectedTitle || bundle.topic.topic });
   // 4. Packaging.
-  const claimTexts = (bundle.dossier.claims || []).map((c) => c.text);
+  const claimTexts = (bundle.dossier.claims || []).map((c) => c.text).concat((bundle.dossier.inferences || []).map((c) => c.text), [bundle.dossier.thesis]);
   ev.title = Titles.rankTitles(bundle.titleCandidates || [], { history: (bundle.history || []).map((h) => h.title), claims: claimTexts, brand: bundle.topic.entity });
   const titleOut = ev.title.selected || { score: 0, misleading: true };
+  ev.first30 = Hooks.first30(beats, { title: titleOut.title || bundle.topic.topic });
   if (ev.title.problems.length) ev.title.misleading = ev.title.misleading || false;
-  const supportedNumbers = (bundle.dossier.claims || []).flatMap((c) => c.text.match(/\d[\d,.]*/g) || []).map((n) => n.replace(/[,.]+$/, ""));
+  const supportedNumbers = (bundle.dossier.claims || []).concat(bundle.dossier.inferences || []).flatMap((c) => ((c.text || "") + " " + (c.numbers || []).join(" ")).match(/\d[\d,.]*/g) || []).map((n) => n.replace(/[,.]+$/, ""));
   ev.thumbnail = Thumbs.rank(bundle.thumbnailCandidates || [], { title: titleOut.title, supportedNumbers, allowedAccusations: bundle.allowedAccusations || [] }, (bundle.history || []).map((h) => h.thumbnailComposition));
   // 5. Narration QA (real audio measured when a take exists).
   const audioFile = bundle.audioFile && fs.existsSync(path.resolve(options.baseDir || ".", bundle.audioFile)) ? path.resolve(options.baseDir || ".", bundle.audioFile) : null;
@@ -98,7 +98,7 @@ function run(bundle, options = {}) {
     sourceDepth,
     insightOriginality: bundle.gap && bundle.gap.reasonToExist ? 85 : null,
     transitions: ev.visuals.pacing,
-    emotionalRhythm: null,
+    emotionalRhythm: ev.narration.measured ? Math.round((ev.narration.parts.cadenceVariation + ev.narration.parts.pauseVariation) / 2) : null, // proxy: variation of pace and pauses across the take
     graphicSpecificity: Math.round(Math.min(100, ev.visuals.graphicShare * 160)),
     topicTreatment: story.score,
   };

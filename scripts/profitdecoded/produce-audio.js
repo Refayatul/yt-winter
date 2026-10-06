@@ -23,7 +23,11 @@ const RATE = 24000;
 const argv = process.argv.slice(2);
 const bundlePath = path.resolve(argv[0] || "");
 const seedText = argv.includes("--seed") ? argv[argv.indexOf("--seed") + 1] : null;
-function rng(seed) { let s = [...String(seed)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 17); return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+function rng(seed) {
+  let h = 1779033703 ^ String(seed).length; for (const ch of String(seed)) { h = Math.imul(h ^ ch.charCodeAt(0), 3432918353); h = (h << 13) | (h >>> 19); }
+  let a = h >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
 
 async function synth(tts, text, rate) {
   for (let attempt = 1; attempt <= 3; attempt += 1) {

@@ -108,7 +108,12 @@ function chooseExploreExploit(candidates, mem, options = {}) {
   const novel = proven.find((c) => !(pillarAgg[c.pillar] && pillarAgg[c.pillar].evidence === "sufficient") || c.portfolioType === "EXPERIMENT");
   return { mode: "explore", pick: novel || proven[0], reason: novel ? "pillar/pattern with insufficient evidence" : "no under-explored candidate; falling back to exploit" };
 }
-function rng(seed) { let s = [...String(seed)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 11); return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
+// mulberry32 over a string hash: well mixed even for sequential seeds ("s1", "s2", ...).
+function rng(seed) {
+  let h = 1779033703 ^ String(seed).length; for (const ch of String(seed)) { h = Math.imul(h ^ ch.charCodeAt(0), 3432918353); h = (h << 13) | (h >>> 19); }
+  let a = h >>> 0;
+  return () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
 
 // ---- Short -> long feedback -----------------------------------------------------
 // Winning Shorts raise related long-form priority. Not blind conversion: the
@@ -134,7 +139,8 @@ function shortToLongBoosts(shortRecords, topics, options = {}) {
       if (boost > 0) boosts.push({ topicId: t.id, fromShort: src.id, boost, basis: `${c.label} (topic ${c.topicScore})`, sameEntity });
     }
     // The Short's own topic is a direct long-form candidate if it is long-suitable.
-    if (src.formats.long && !recentLongClusters.has(src.cluster)) boosts.push({ topicId: src.id, fromShort: src.id, boost: S.round(14 * strength, 1), basis: `own Short ${c.label}`, direct: true });
+    const srcSat = options.saturationById && options.saturationById[src.id];
+    if (src.formats.long && !recentLongClusters.has(src.cluster) && srcSat !== "SATURATED" && srcSat !== "HOT") boosts.push({ topicId: src.id, fromShort: src.id, boost: S.round(14 * strength, 1), basis: `own Short ${c.label}`, direct: true });
   }
   const merged = {};
   for (const b of boosts) { const m = merged[b.topicId] || (merged[b.topicId] = { topicId: b.topicId, boost: 0, sources: [] }); m.boost = Math.min(18, m.boost + b.boost); m.sources.push(b); }
@@ -152,7 +158,7 @@ function retentionCauses(curve, beats, options = {}) {
     if (rate >= threshold) drops.push({ from: curve[i - 1].t, to: curve[i].t, ratePerSec: S.round(rate, 2) });
   }
   return drops.map((d) => {
-    const beat = beats.find((b) => d.from >= b.start - 0.5 && d.from < b.end + 0.5) || {};
+    const mid = (d.from + d.to) / 2; const beat = beats.find((b) => mid >= b.start && mid < b.end) || {};
     const causes = [];
     if (d.from < 8 && beat.titleMismatch) causes.push("misleading packaging");
     else if (d.from < 15 && beat.type === "setup") causes.push("slow setup");
