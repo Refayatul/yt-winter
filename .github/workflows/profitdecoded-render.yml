@@ -30,7 +30,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Kokoro voice (free, open source, CPU): packages
+      - name: Kokoro voice packages (free, open source, CPU)
         run: pip install --quiet kokoro-onnx soundfile
       - name: Kokoro model cache
         id: kokoro-cache

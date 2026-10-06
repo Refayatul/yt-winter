@@ -87,3 +87,16 @@ test("ProfitDecoded files are never imported by the existing channels' productio
     }
   }
 });
+
+test("workflow step names never contain an unquoted ': ' (it breaks YAML and turns the whole suite red)", () => {
+  const dir = path.join(ROOT, ".github", "workflows");
+  for (const file of fs.readdirSync(dir).filter((f) => f.endsWith(".yml"))) {
+    fs.readFileSync(path.join(dir, file), "utf8").split("\n").forEach((line, i) => {
+      const m = line.match(/^\s*-?\s*name:\s*(.+)$/);
+      if (!m) return;
+      const v = m[1].trim();
+      if (/^["'|>]/.test(v)) return;
+      assert.ok(!/: /.test(v) && !/ #/.test(v), `${file}:${i + 1} unquoted name contains ': ' -> ${v}`);
+    });
+  }
+});
