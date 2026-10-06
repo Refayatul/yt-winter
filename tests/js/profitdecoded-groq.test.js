@@ -109,6 +109,10 @@ const dossierDraft = (over = {}) => ({
   ...over,
 });
 const MEMO = `thinking...\nFACT: members and clubs | URL: ${SEC} | QUOTE: "we had approximately 20.8 million members and 2,896 clubs"\nFACT: workouts | URL: ${SEC} | QUOTE: "Members completed more than 650 million workouts in our clubs during the year"\nFACT: attendance | URL: ${AER} | QUOTE: "flat monthly fee of over $70 attend on average 4.3 times per month"\nFACT: price | URL: ${FORT} | QUOTE: "raise the Classic membership from $10 to $15 a month, the first increase since 1998"\nCAVEAT: the filing does not state the non-attendance mechanism`;
+// router: (body) => response, used when calls are not strictly sequential (per-page extraction)
+function routedClient(router) { const calls = []; return { calls, provider: "groq", key: "K", fetch: async (url, init) => { const body = JSON.parse(init.body); calls.push(body); const r = router(body); return resp(chatBody(typeof r === "string" ? r : JSON.stringify(r))); } }; }
+const sysOf = (b) => (b.messages.find((m) => m.role === "system") || {}).content || "";
+const userOf = (b) => (b.messages.find((m) => m.role === "user") || {}).content || "";
 function groqClient(responses) { let i = 0; const calls = []; return { calls, provider: "groq", key: "K", fetch: async (url, init) => { calls.push(JSON.parse(init.body)); const r = responses[Math.min(i, responses.length - 1)]; i += 1; return resp(chatBody(typeof r === "string" ? r : JSON.stringify(r))); } }; }
 const topic = () => ({ id: "hbm-001", topic: "Why Gyms Make More Money When You Stay Home", entity: "Planet Fitness", pillar: "hidden-business-models", coreQuestion: "Why?" });
 
@@ -161,34 +165,48 @@ test("groq: tolerant memo parsing, URL discovery from anywhere in a response, pa
   assert.equal(G.selectPassages("nothing relevant here at all", "planet fitness", 500), "");
 });
 
-test("groq research: unparseable memo falls back to URLs + our own passage selection + verified quote extraction", async () => {
+test("groq research: unparseable memo falls back to URLs + our own passage selection + per-page verified quote extraction", async () => {
   const R = A("research-agent"); const L = A("llm"); const fs = require("fs"); const os = require("os"); const path = require("path");
   const debugDir = fs.mkdtempSync(path.join(os.tmpdir(), "pd-dbg-"));
   const prose = `I looked at the filings. The key page is ${SEC} and the study is at ${AER} (see also ${FORT}). Members are numerous and attendance is modest.`;
-  const quotes = { quotes: [
-    { url: SEC, fact: "members and clubs", quote: "we had approximately 20.8 million members and 2,896 clubs" },
-    { url: SEC, fact: "workouts", quote: "Members completed more than 650 million workouts in our clubs during the year" },
-    { url: AER, fact: "attendance", quote: "attend on average 4.3 times per month" },
-    { url: FORT, fact: "price", quote: "raise the Classic membership from $10 to $15 a month, the first increase since 1998" },
-    { url: SEC, fact: "invented", quote: "the company secretly measures attendance at every club every single day" },
-  ] };
-  const client = groqClient([prose, quotes, dossierDraft()]);
+  const perPage = {
+    [SEC]: [{ url: SEC, fact: "members and clubs", quote: "we had approximately 20.8 million members and 2,896 clubs" }, { url: SEC, fact: "workouts", quote: "Members completed more than 650 million workouts in our clubs during the year" }, { url: SEC, fact: "invented", quote: "the company secretly measures attendance at every club every single day" }],
+    [AER]: [{ url: AER, fact: "attendance", quote: "attend on average 4.3 times per month" }],
+    [FORT]: [{ url: FORT, fact: "price", quote: "raise the Classic membership from $10 to $15 a month, the first increase since 1998" }],
+  };
+  const client = routedClient((b) => {
+    if (b.tools) return prose;
+    if (/You extract evidence/.test(sysOf(b))) { const u = Object.keys(perPage).find((k) => userOf(b).includes(k)); return { quotes: perPage[u] || [] }; }
+    return dossierDraft();
+  });
   const r = await R.research(topic(), "short", { client, ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir, now: new Date("2026-10-06") });
   assert.equal(r.status, "ok", JSON.stringify(r.reasons)); assert.equal(r.usedFallback, true);
   assert.ok(r.dropped.some((d) => /does not appear/.test(d.reason)), "the invented quote is rejected");
-  assert.equal(client.calls.length, 3);
-  assert.equal(client.calls[1].response_format.type, "json_schema");
-  const userMsg = client.calls[1].messages.find((m) => m.role === "user").content;
-  assert.match(userMsg, /PAGES/); assert.match(userMsg, /20\.8 million members/);
+  const extractCalls = client.calls.filter((b) => /You extract evidence/.test(sysOf(b)));
+  assert.equal(extractCalls.length, 3, "one small call per page");
+  assert.ok(extractCalls.every((b) => b.max_completion_tokens === 3000 && b.response_format.type === "json_schema"));
+  assert.ok(extractCalls.every((b) => (userOf(b).match(/https?:\/\//g) || []).length >= 1 && /PAGE:/.test(userOf(b))));
   assert.ok(fs.readdirSync(debugDir).some((f) => /groq-memo\.txt$/.test(f)) && fs.readdirSync(debugDir).some((f) => /groq-quotes\.json$/.test(f)));
-  assert.match(fs.readFileSync(path.join(debugDir, fs.readdirSync(debugDir).find((f) => /memo/.test(f))), "utf8"), /key page is/);
-  // memo with usable lines takes the cheap path (2 verified sources) and skips the fallback call
+  // the structuring step requires a recorded contradiction check
+  const dossierCall = client.calls.find((b) => /convert verified quotes/.test(sysOf(b)));
+  assert.match(sysOf(dossierCall), /contradictions MUST contain at least one entry/);
+  // memo with usable lines takes the cheap path (3 verified sources incl. a primary one) and skips extraction
   const c2 = groqClient([MEMO, dossierDraft()]);
   const ok = await R.research(topic(), "short", { client: c2, ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir, now: new Date("2026-10-06") });
   assert.equal(ok.status, "ok"); assert.equal(ok.usedFallback, false); assert.equal(c2.calls.length, 2);
-  // nothing usable anywhere: still a clean failure, never an invention
   const none = await R.research(topic(), "short", { client: groqClient(["no links, no quotes"]), ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir });
   assert.equal(none.status, "research-failed"); assert.match(none.reasons[0], /no usable FACT/);
+});
+
+test("groq research: extraction stops cleanly on the free-tier rate limit; a rate limit elsewhere is a clean error, never a topic failure", async () => {
+  const R = A("research-agent"); const L = A("llm");
+  let n = 0;
+  const mk = (limitStructuring) => ({ provider: "groq", key: "K", sleep: async () => {}, fetch: async (url, init) => { const b = JSON.parse(init.body); if (b.tools) return resp(chatBody(`see ${SEC} and ${AER}`)); if (/You extract evidence/.test(sysOf(b))) { n += 1; return n === 1 ? resp(chatBody(JSON.stringify({ quotes: [{ url: SEC, fact: "f", quote: "we had approximately 20.8 million members and 2,896 clubs" }] }))) : resp({}, false, 429); } return limitStructuring ? resp({}, false, 429) : resp(chatBody(JSON.stringify(dossierDraft()))); } });
+  const r = await R.research(topic(), "short", { client: mk(false), ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir: require("os").tmpdir() });
+  assert.ok(r.dropped.some((d) => /extraction stopped: .*rate limit/i.test(d.reason)), JSON.stringify(r.dropped));
+  assert.ok(r.evidenceCount >= 1, "what was verified before the limit is kept");
+  n = 0;
+  await assert.rejects(R.research(topic(), "short", { client: mk(true), ledger: L.newLedger(5), groq: { fetchImpl: pageFetch() }, debugDir: require("os").tmpdir() }), (e) => e.code === "RATE_LIMIT");
 });
 
 test("groq research: the discovery prompt asks for a small search budget (free-tier tokens)", async () => {
@@ -245,13 +263,25 @@ test("groq research fallback puts the registrant's latest 10-K first and still v
     const pages = { ...PAGES, [TENK]: PAGES[SEC] };
     const f = async (url, init) => { const u = String(url); if (/company_tickers|data\.sec\.gov/.test(u)) return secFetch()(url, init); return pages[u] ? resp(pages[u]) : resp("nope", false, 404); };
     const prose = `Nothing parseable here, but see ${AER} and ${FORT}.`;
-    const quotes = { quotes: [{ url: TENK, fact: "members", quote: "we had approximately 20.8 million members and 2,896 clubs" }, { url: TENK, fact: "workouts", quote: "Members completed more than 650 million workouts in our clubs during the year" }, { url: AER, fact: "attendance", quote: "attend on average 4.3 times per month" }, { url: FORT, fact: "price", quote: "raise the Classic membership from $10 to $15 a month, the first increase since 1998" }] };
+    const perPage = { [TENK]: [{ url: TENK, fact: "members", quote: "we had approximately 20.8 million members and 2,896 clubs" }, { url: TENK, fact: "workouts", quote: "Members completed more than 650 million workouts in our clubs during the year" }], [AER]: [{ url: AER, fact: "attendance", quote: "attend on average 4.3 times per month" }], [FORT]: [{ url: FORT, fact: "price", quote: "raise the Classic membership from $10 to $15 a month, the first increase since 1998" }] };
     const draft = dossierDraft(); draft.sources[0].url = TENK;
-    const client = groqClient([prose, quotes, draft]);
+    const order = [];
+    const client = routedClient((b) => { if (b.tools) return prose; if (/You extract evidence/.test(sysOf(b))) { const u = Object.keys(perPage).find((k) => userOf(b).includes(k)); order.push(u); return { quotes: perPage[u] || [] }; } return draft; });
     const r = await R.research(topic(), "short", { client, ledger: L.newLedger(5), groq: { fetchImpl: f }, debugDir: require("os").tmpdir(), now: new Date("2026-10-06") });
     assert.equal(r.status, "ok", JSON.stringify(r.reasons)); assert.equal(r.usedFallback, true);
     assert.ok(r.dossier.sources.some((s) => s.url === TENK));
-    const userMsg = client.calls[1].messages.find((m) => m.role === "user").content;
-    assert.ok(userMsg.indexOf(TENK) >= 0 && userMsg.indexOf(TENK) < userMsg.indexOf(AER), "the 10-K is listed before the other pages");
+    assert.equal(order[0], TENK, "the 10-K is processed first");
   } finally { if (save === undefined) delete process.env.PD_FETCH_CONTACT; else process.env.PD_FETCH_CONTACT = save; }
+});
+
+test("EDGAR: errors name the failing URL, and full-text search is the fallback when the ticker file is unavailable", async () => {
+  const E = A("edgar");
+  const seen = [];
+  const ftsHits = { hits: { hits: [{ _id: "0001637207-25-000016:plnt-20241231.htm", _source: { ciks: ["0001637207"], file_date: "2025-02-20", display_names: ["Planet Fitness, Inc.  (PLNT)  (CIK 0001637207)"] } }, { _id: "0001637207-26-000021:plnt10-k12312025_ars.htm", _source: { ciks: ["0001637207"], file_date: "2026-02-20", display_names: ["Planet Fitness, Inc.  (PLNT)"] } }, { _id: "0000000001-26-000001:other.htm", _source: { ciks: ["0000000001"], file_date: "2026-03-01", display_names: ["Totally Different Corp"] } }] } };
+  const f = async (url) => { const u = String(url); seen.push(u); if (u.endsWith("company_tickers.json")) return resp("nope", false, 404); if (u.includes("efts.sec.gov")) return resp(JSON.stringify(ftsHits)); return resp("nope", false, 404); };
+  const c = await E.candidates("Planet Fitness", { fetchImpl: f, contact: "r@example.org" });
+  assert.deepEqual(c.urls, ["https://www.sec.gov/Archives/edgar/data/1637207/000163720726000021/plnt10-k12312025_ars.htm"]);
+  assert.match(c.note, /HTTP 404 for https:\/\/www\.sec\.gov\/files\/company_tickers\.json/); assert.match(c.note, /full-text search/);
+  const all404 = await E.candidates("Planet Fitness", { fetchImpl: async () => resp("nope", false, 404), contact: "r@example.org" });
+  assert.deepEqual(all404.urls, []); assert.match(all404.note, /company_tickers\.json.*efts\.sec\.gov/);
 });
