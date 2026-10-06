@@ -1,0 +1,43 @@
+name: ProfitDecoded competitor intelligence (read-only)
+
+# Collects live competitor and outlier data with the YouTube Data API (read-only key) and builds the
+# breakout feed. Needs the repository secret PD_YT_API_KEY. Never uploads or changes any channel.
+on:
+  workflow_dispatch:
+    inputs:
+      budget:
+        description: 'YouTube API quota units to spend (free daily quota is 10,000)'
+        required: true
+        default: '3000'
+
+permissions:
+  contents: read
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --no-audit --no-fund
+      - name: Check the API key secret exists
+        env:
+          KEY: ${{ secrets.PD_YT_API_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then echo "::error::Repository secret PD_YT_API_KEY is not set (competitive data stays UNKNOWN)"; exit 1; fi
+      - name: Collect snapshot and breakout feed
+        env:
+          PD_YT_API_KEY: ${{ secrets.PD_YT_API_KEY }}
+          BUDGET: ${{ inputs.budget }}
+        run: node scripts/profitdecoded/collect-competitors.js --budget "$BUDGET"
+      - name: Keep the intelligence files
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: profitdecoded-competitor-intel
+          path: channels/profitdecoded/intel/*.json
+          if-no-files-found: warn
+          retention-days: 30
