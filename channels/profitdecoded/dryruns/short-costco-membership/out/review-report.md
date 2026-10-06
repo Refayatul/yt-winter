@@ -2,7 +2,7 @@
 
 ## Verdict: **REVIEW**  
 
-Format: short · Generated 2026-10-06T17:14:36.380Z · **Dry run: nothing was uploaded.**
+Format: short · Generated 2026-10-06T17:35:08.852Z · **Dry run: nothing was uploaded.**
 
 ### Exact reasons
 - REVIEW: quality 84.3 < auto-publish 88

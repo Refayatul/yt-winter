@@ -17,7 +17,7 @@ const T = require(path.join(root, "core/profitdecoded/text"));
 const N = require(path.join(root, "core/profitdecoded/narration"));
 const W = require(path.join(root, "core/profitdecoded/wav"));
 const { channelConfig } = require(path.join(root, "core/profitdecoded/config"));
-const { MsEdgeTTS, OUTPUT_FORMAT } = require(path.join(root, "node_modules/msedge-tts"));
+const TTS = require(path.join(root, "core/profitdecoded/tts-provider"));
 
 const RATE = 24000;
 const argv = process.argv.slice(2);
@@ -29,21 +29,6 @@ function rng(seed) {
   return () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 }
 
-async function synth(tts, text, rate) {
-  for (let attempt = 1; attempt <= 3; attempt += 1) {
-    try {
-      return await new Promise((resolve, reject) => {
-        const { audioStream } = tts.toStream(text, { rate });
-        const chunks = []; audioStream.on("data", (c) => chunks.push(c)); audioStream.on("end", () => resolve(Buffer.concat(chunks))); audioStream.on("error", reject);
-      });
-    } catch (e) { if (attempt === 3) throw e; await new Promise((r) => setTimeout(r, 800 * attempt)); }
-  }
-}
-function toWav(mp3, tmp, name) {
-  const a = path.join(tmp, name + ".mp3"), b = path.join(tmp, name + ".wav");
-  fs.writeFileSync(a, mp3); execFileSync("afconvert", ["-f", "WAVE", "-d", `LEI16@${RATE}`, "-c", "1", a, b]);
-  return W.readWav(fs.readFileSync(b)).samples;
-}
 function trim(x, thresholdDb = -50, keepSec = 0.04) {
   const th = 10 ** (thresholdDb / 20); let s = 0, e = x.length - 1;
   while (s < x.length && Math.abs(x[s]) < th) s += 1; while (e > s && Math.abs(x[e]) < th) e -= 1;
@@ -97,7 +82,7 @@ function envelope(x, win = Math.round(0.05 * RATE)) { const e = new Float32Array
   const bundle = JSON.parse(fs.readFileSync(bundlePath, "utf8")); const outDir = path.join(path.dirname(bundlePath), "out"); fs.mkdirSync(outDir, { recursive: true });
   const cfg = channelConfig(); const voice = cfg.voice.voice; const baseRate = parseInt(cfg.voice.rate, 10) || 0;
   const r = rng((seedText || bundle.id) + ":audio"); const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "pd-audio-"));
-  const tts = new MsEdgeTTS(); await tts.setMetadata(voice, OUTPUT_FORMAT.AUDIO_24KHZ_96KBITRATE_MONO_MP3);
+  const provider = TTS.resolve(); if (provider.fallbackFrom) console.log(`[tts] ${provider.fallbackFrom} unavailable (${provider.reason}); using ${provider.name}`);
   const pieces = []; const timeline = []; let cursor = 0.35; let n = 0; const pron = [];
   bundle.beats.forEach((b) => { b.id = b.id || "b" + (bundle.beats.indexOf(b) + 1); });
   for (const beat of bundle.beats) {
@@ -105,7 +90,7 @@ function envelope(x, win = Math.round(0.05 * RATE)) { const e = new Float32Array
     for (let i = 0; i < sents.length; i += 1) {
       const spoken = N.spokenText(sents[i]); const rate = sentenceRate(sents[i], beat.type, i === 0, r, baseRate);
       process.stdout.write(`\r[tts] ${++n} ${beat.id}  `);
-      const samples = trim(toWav(await synth(tts, spoken, rate), tmp, "s" + n));
+      const samples = trim(await TTS.synthesize(spoken, { rate, voice, provider: provider.name }));
       const start = cursor; const end = start + samples.length / RATE;
       pieces.push({ start, samples }); timeline.push({ beatId: beat.id, text: sents[i], spoken, rate, start: +start.toFixed(3), end: +end.toFixed(3) });
       if (beatStart == null) beatStart = start; beatEnd = end;
@@ -130,12 +115,12 @@ function envelope(x, win = Math.round(0.05 * RATE)) { const e = new Float32Array
     music[i] *= duck * fade * gainMusic;
   }
   const mix = new Float32Array(voiceTrack.length); for (let i = 0; i < mix.length; i += 1) mix[i] = voiceTrack[i] + music[i];
-  const mg = gainTo(mix, -16); for (let i = 0; i < mix.length; i += 1) mix[i] = Math.tanh(mix[i] * mg) * 0.89;  // soft limiter, hard ceiling about -1 dBFS
+  const mg = gainTo(mix, -14.3); for (let i = 0; i < mix.length; i += 1) mix[i] = Math.tanh(mix[i] * mg) * 0.89;  // soft limiter, hard ceiling about -1 dBFS
   fs.writeFileSync(path.join(outDir, "narration-only.wav"), W.writeWav(voiceTrack, RATE));
   fs.writeFileSync(path.join(outDir, "mix.wav"), W.writeWav(mix, RATE));
   fs.writeFileSync(path.join(outDir, "timeline.json"), JSON.stringify(timeline, null, 1) + "\n");
   const musicName = `pd-original-pad-${prog.name}-${T.slugify(bundle.id).slice(0, 12)}`;
-  bundle.audioFile = "out/mix.wav"; bundle.narration = { ...(bundle.narration || {}), provider: `edge-tts ${voice} (fallback voice)`, segments: timeline.map((s) => ({ text: s.text, start: s.start, end: s.end })), humanListenApproved: false };
+  bundle.audioFile = "out/mix.wav"; bundle.narration = { ...(bundle.narration || {}), provider: provider.name === "edge-tts" ? `edge-tts ${voice} (fallback voice)` : provider.name === "openai" ? "openai-tts gpt-4o-mini-tts" : "elevenlabs", segments: timeline.map((s) => ({ text: s.text, start: s.start, end: s.end })), humanListenApproved: false };
   bundle.audio = { music: musicName, assets: [{ id: musicName, kind: "music", license: "owned", note: "procedurally generated by scripts/profitdecoded/produce-audio.js; original, no third-party material" }] };
   fs.writeFileSync(bundlePath, JSON.stringify(bundle, null, 2) + "\n");
   const m = W.analyze(fs.readFileSync(path.join(outDir, "mix.wav")));
