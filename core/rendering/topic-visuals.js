@@ -473,7 +473,7 @@ async function prepareAssets(topic, outputDirectory) {
   // subject-title/description rules still apply. It runs only when the article
   // itself has too few pictures: a broad search returns loosely related photos
   // (an aircraft "over the Atlantic" for an ocean-current topic).
-  if (picked.length < 2) {
+  // Keep the secondary Commons search aligned with the production pre-check:\n  // a topic with 2–3 licensed visuals is still short of the four-image floor.\n  if (picked.length < 4) {
     const subjects = subjectPhrases(topic, articles[0] || "");
     const anchorSubjects = anchorPhrases(topic, articles[0] || "");
     const found = await Commons.commonsStills(subjects, MAX_STILLS - picked.length, null, {
