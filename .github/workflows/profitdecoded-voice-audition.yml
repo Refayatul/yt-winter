@@ -28,7 +28,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: System packages (ffmpeg for mp3 decoding)
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg
+        run: bash scripts/ci-apt.sh ffmpeg
       - run: npm install --no-audit --no-fund
       - run: pip install --quiet kokoro-onnx soundfile
       - name: Kokoro model cache

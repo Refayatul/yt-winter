@@ -44,8 +44,7 @@ jobs:
           node-version: '20'
       - name: Runtime dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation
+          bash scripts/ci-apt.sh --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation
           npm install --no-audit --no-fund
       - name: Replace only after real render + identity + final gates
         run: node scripts/live-replace-validated-shorts.js
