@@ -46,7 +46,9 @@ test("TEST-07: production behaviour reflects the approved 21:00 all-channel sche
   }
   assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name == 'schedule' && '1' \|\| vars\.IB_PUBLISH \}\}/);
   assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name == 'schedule' && '1' \|\| vars\.CT_PUBLISH \}\}/);
-  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name == 'schedule' && '1' \|\| vars\.BTO_PUBLISH \}\}/);
+  // The Hidden Logic of Things publishes only when BTO_PUBLISH=1, even on schedule.
+  assert.match(portfolio, /PUBLISH: \$\{\{ vars\.BTO_PUBLISH == '1' && '1' \|\| '0' \}\}/);
+  assert.doesNotMatch(portfolio, /github\.event_name == 'schedule' && '1' \|\| vars\.BTO_PUBLISH/);
   assert.doesNotMatch(portfolio, /PUBLISH_MODE|PROVENANCE_REQUIRED/, "new platform gates are not silently switched on in production");
   const uploader = read("youtube-yukle.js");
   assert.match(uploader, /let gizlilik = \(env\("YT_PRIVACY"\) \|\| "private"\)\.toLowerCase\(\);/, "default privacy unchanged");
