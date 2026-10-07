@@ -40,3 +40,13 @@ test("series end promise: only channels whose promise is true, drawn in the last
   assert.match(overlay, /text='FOLLOW FOR MORE HIDDEN LOGIC'.*enable='gte\(t,34\.60\)'/);
   assert.doesNotMatch(Rendering.overlayText({ channel: "impossible-brief" }, 30, "motion", "licensed-still", null, null), /gte\(t/);
 });
+
+test("a published row without topicId still marks its topic used (no second upload)", () => {
+  const fs = require("fs"), os = require("os"), path = require("path");
+  const Discovery = require("../../core/discovery");
+  const bto = Channel.getChannel("behind-the-ordinary");
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "used-"));
+  fs.writeFileSync(path.join(dir, "published.json"), JSON.stringify([{ slug: "why-jeans-have-copper-rivets", videoId: "wuVAovuA5ck" }]));
+  const used = Discovery.usedIds({ ...bto, paths: { ...bto.paths, state: dir } });
+  assert.ok(used.has("BTO-017"));
+});
