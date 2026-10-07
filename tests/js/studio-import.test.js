@@ -40,3 +40,11 @@ test("Turkish Studio exports are recognised", () => {
   const saved = JSON.parse(fs.readFileSync(path.join(dir, "DLYpmaQ-EVw", "studio-manual.json"), "utf8"));
   assert.equal(saved.impressions, 1234, "Turkish thousands separator");
 });
+
+test("current Studio exports name them Thumbnail impressions / Thumbnail click-through rate", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "studio-th-"));
+  const csv = "Content,Video title,Returning viewers,Views,Thumbnail impressions,Thumbnail click-through rate (%)\nTotal,,6,12433,14227,2.34\nWlZ2z90pqx8,Inside Van Norman Dam,32,1056,461,1.52\n";
+  const result = Importer.importRows({ paths: { analytics: dir } }, Importer.parseCsv(csv), "2026-10-08");
+  assert.deepEqual(result.columns, ["impressions", "ctr", "returningViewers"]);
+  assert.deepEqual(result.written[0], { id: "WlZ2z90pqx8", impressions: 461, ctr: 1.52, returningViewers: 32 });
+});

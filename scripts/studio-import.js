@@ -18,8 +18,8 @@ const Channel = require("../core/channel-context");
 // English and Turkish Studio column names (Studio exports in its UI language).
 const COLUMNS = {
   id: /^(content|video id|video|İçerik|içerik|video kimliği)$/iu,
-  impressions: /^(impressions|gösterimler|gösterim sayısı|gösterim)$/iu,
-  ctr: /^(impressions click-through rate|gösterimlerin tıklama oranı|gösterim tıklama oranı|tıklama oranı)/iu,
+  impressions: /^((thumbnail )?impressions|(küçük resim )?gösterimler(i)?|gösterim sayısı|gösterim)$/iu,
+  ctr: /^((thumbnail |impressions )click-through rate|(küçük resim )?gösterimlerin(in)? tıklama oranı|gösterim tıklama oranı|tıklama oranı)/iu,
   returningViewers: /^(returning viewers|geri gelen izleyiciler|geri dönen izleyiciler)$/iu,
   stayedToWatch: /stayed to watch|viewed \(vs\.? swiped away\)|viewed vs\.? swiped|izlemeye devam|izlemek için kal|izlendi.*kaydır|kaydırılmadan|izlenen.*kaydırılan/iu,
 };
