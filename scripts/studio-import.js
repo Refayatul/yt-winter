@@ -15,12 +15,13 @@ const fs = require("fs");
 const path = require("path");
 const Channel = require("../core/channel-context");
 
+// English and Turkish Studio column names (Studio exports in its UI language).
 const COLUMNS = {
-  id: /^(content|video id|video)$/i,
-  impressions: /^impressions$/i,
-  ctr: /^impressions click-through rate/i,
-  returningViewers: /^returning viewers$/i,
-  stayedToWatch: /stayed to watch|viewed \(vs\.? swiped away\)|viewed vs\.? swiped/i,
+  id: /^(content|video id|video|İçerik|içerik|video kimliği)$/iu,
+  impressions: /^(impressions|gösterimler|gösterim sayısı|gösterim)$/iu,
+  ctr: /^(impressions click-through rate|gösterimlerin tıklama oranı|gösterim tıklama oranı|tıklama oranı)/iu,
+  returningViewers: /^(returning viewers|geri gelen izleyiciler|geri dönen izleyiciler)$/iu,
+  stayedToWatch: /stayed to watch|viewed \(vs\.? swiped away\)|viewed vs\.? swiped|izlemeye devam|izlemek için kal|izlendi.*kaydır|kaydırılmadan|izlenen.*kaydırılan/iu,
 };
 
 function parseCsv(text) {
@@ -43,9 +44,14 @@ function parseCsv(text) {
   return rows.filter((r) => r.some((cell) => cell.trim() !== ""));
 }
 
-const number = (value) => {
-  const n = Number(String(value || "").replace(/[%,\s]/g, ""));
-  return String(value || "").trim() !== "" && Number.isFinite(n) ? n : null;
+// Counts (impressions, returning viewers) are integers, so "12,345" and
+// "12.345" are thousands; percentages ("4.5", "4,5") use one decimal mark.
+const INTEGER_COLUMNS = new Set(["impressions", "returningViewers"]);
+const number = (value, key) => {
+  const text = String(value || "").replace(/[%\s]/g, "");
+  if (!text) return null;
+  const n = INTEGER_COLUMNS.has(key) ? Number(text.replace(/[.,]/g, "")) : Number(text.replace(",", "."));
+  return Number.isFinite(n) ? n : null;
 };
 
 function importRows(channel, rows, date) {
@@ -53,12 +59,14 @@ function importRows(channel, rows, date) {
   const index = Object.fromEntries(Object.entries(COLUMNS).map(([key, re]) => [key, header.findIndex((cell) => re.test(cell))]));
   if (index.id < 0) throw new Error(`no video id column ("Content") in: ${header.join(", ")}`);
   const found = Object.keys(COLUMNS).filter((key) => key !== "id" && index[key] >= 0);
+  const unmatched = header.filter((cell, i) => !Object.values(index).includes(i));
+  if (unmatched.length) console.log(`(ignored columns: ${unmatched.join(" | ")})`);
   if (!found.length) throw new Error(`none of impressions / CTR / returning viewers / stayed to watch in: ${header.join(", ")}`);
   const written = [];
   for (const row of rows.slice(1)) {
     const id = String(row[index.id] || "").trim();
     if (!/^[A-Za-z0-9_-]{11}$/.test(id)) continue; // skips the "Total" row
-    const values = Object.fromEntries(found.map((key) => [key, number(row[index[key]])]).filter(([, value]) => value != null));
+    const values = Object.fromEntries(found.map((key) => [key, number(row[index[key]], key)]).filter(([, value]) => value != null));
     if (!Object.keys(values).length) continue;
     const file = path.join(channel.paths.analytics, id, "studio-manual.json");
     let current = {};

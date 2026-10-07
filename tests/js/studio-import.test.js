@@ -30,3 +30,13 @@ test("a low stayed-to-watch share is diagnosed as a scroll-stop failure for Shor
   const source = fs.readFileSync(path.join(__dirname, "../../core/growth/diagnosis.js"), "utf8");
   assert.match(source, /SCROLL_STOP_FAILURE/);
 });
+
+test("Turkish Studio exports are recognised", () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "studio-tr-"));
+  const csv = "İçerik,Video başlığı,Gösterimler,Gösterimlerin tıklama oranı (%),Geri gelen izleyiciler\nDLYpmaQ-EVw,Başlık,\"1.234\",4.5,30\n";
+  const result = Importer.importRows({ paths: { analytics: dir } }, Importer.parseCsv(csv), "2026-10-08");
+  assert.deepEqual(result.columns, ["impressions", "ctr", "returningViewers"]);
+  assert.equal(result.written.length, 1);
+  const saved = JSON.parse(fs.readFileSync(path.join(dir, "DLYpmaQ-EVw", "studio-manual.json"), "utf8"));
+  assert.equal(saved.impressions, 1234, "Turkish thousands separator");
+});
