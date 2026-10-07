@@ -22,11 +22,14 @@ const SERILER = {
     aciklama: "Real archival footage of history's greatest disasters and engineering failures - reconstructed in under a minute." },
   stok: { ad: "The Science of Failure",
     aciklama: "How bridges, buildings, planes and ships actually fail - the physics and engineering behind disaster." },
+  everyday: { ad: "Everyday Things, Unexpected Reasons",
+    aciklama: "The hidden logic behind things you see, use and experience every day." },
 };
 function seriAdi(konu) {
   if (konu && konu.playlist) return konu.playlist;
   if (CHANNEL.slug === "critical-thread") return "Systems Holding the World Together";
   if (CHANNEL.slug === "impossible-brief") return "Impossible Questions, Scientific Answers";
+  if (CHANNEL.slug === "behind-the-ordinary") return SERILER.everyday.ad;
   return (konu && konu.tur === "stok") ? SERILER.stok.ad : SERILER.arsiv.ad;
 }
 
