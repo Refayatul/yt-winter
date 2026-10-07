@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-07T21:59:10.639Z
+Generated: 2026-10-07T22:00:00.488Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -45,7 +45,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-05 (lag 2 d) |
 | Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.public 1 |
 | Scheduler queue | 1 queued, oldest 2026-10-08 (-1 d) |
-| API quota today | 1696 / 9800 units (project 684098966511) |
+| API quota today | 0 / 9800 units (project channel:impossible-brief) |
 | YPP readiness (estimate) | subs 5/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
@@ -66,7 +66,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-05 (lag 2 d) |
 | Ops (24 h) | analytics.failure 9, analytics.load 1, publish.public 1 |
 | Scheduler queue | 1 queued, oldest 2026-10-08 (-1 d) |
-| API quota today | 0 / 9800 units (project channel:critical-thread) |
+| API quota today | 21 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
