@@ -1,0 +1,44 @@
+{
+  "decision": "BLOCK",
+  "overall": 93,
+  "components": {
+    "hook": 85,
+    "visualRelevance": 100,
+    "sourceConfidence": 95,
+    "narrationNaturalness": 94,
+    "pacing": 95,
+    "curiosityPayoff": 91
+  },
+  "thresholds": {
+    "publish": 88,
+    "review": 78,
+    "componentMinimums": {
+      "hook": 85,
+      "visualRelevance": 90,
+      "sourceConfidence": 90,
+      "narrationNaturalness": 85,
+      "pacing": 85,
+      "curiosityPayoff": 85
+    }
+  },
+  "blockers": [
+    "Short duration is outside 30–50 seconds"
+  ],
+  "hardFails": [
+    "Short duration is outside 30–50 seconds"
+  ],
+  "checked": [
+    "identity",
+    "central-question",
+    "evidence",
+    "hook",
+    "progressive-reveal",
+    "storyboard",
+    "visuals",
+    "audio",
+    "titles",
+    "thumbnail",
+    "sources",
+    "metadata"
+  ]
+}

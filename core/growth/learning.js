@@ -85,7 +85,9 @@ function learnBlock(records, contentType, config) {
   const hypotheses = [];
   const adopted = [];
   const suppressed = [];
-  for (const dimension of DIMENSIONS[contentType]) {
+  const configured = config.learning && config.learning.featureDimensions && config.learning.featureDimensions[contentType] || [];
+  const dimensions = [...new Set([...DIMENSIONS[contentType], ...configured])];
+  for (const dimension of dimensions) {
     const groups = new Map();
     for (const row of scored) {
       const value = row.record[dimension];

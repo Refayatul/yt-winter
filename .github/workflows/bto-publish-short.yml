@@ -1,0 +1,74 @@
+name: The Hidden Logic of Things — publish one reviewed Short
+
+# Manual only. Renders the named topic, requires every gate to pass, then
+# uploads PRIVATE with the channel's scheduled 21:00 Europe/Istanbul publishAt.
+on:
+  workflow_dispatch:
+    inputs:
+      slug:
+        description: Topic slug (must be productionReady + VERIFIED)
+        required: true
+        default: why-the-bluetooth-logo-looks-like-that
+      dry_run:
+        description: Render and gate only, no upload
+        type: boolean
+        default: false
+
+concurrency:
+  group: bto-publish-short
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      BTO_YT_CLIENT_ID: ${{ secrets.BTO_YT_CLIENT_ID }}
+      BTO_YT_CLIENT_SECRET: ${{ secrets.BTO_YT_CLIENT_SECRET }}
+      BTO_YT_REFRESH_TOKEN: ${{ secrets.BTO_YT_REFRESH_TOKEN }}
+      BTO_YT_CHANNEL_ID: ${{ vars.BTO_YT_CHANNEL_ID }}
+      SHORTS_FONT: DejaVu Sans
+      TTS_PROVIDER: edge
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Runtime dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation python3-pil
+          npm install --no-audit --no-fund
+      - name: Render, gate and upload (private + scheduled)
+        run: node scripts/bto-publish-short.js "${{ inputs.slug }}" ${{ inputs.dry_run && '--dry-run' || '' }}
+      - name: Uploaded media for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bto-short-${{ inputs.slug }}
+          path: |
+            uretim/${{ inputs.slug }}/*.mp4
+            uretim/${{ inputs.slug }}/thumbnail.jpg
+            uretim/${{ inputs.slug }}/quality-gate.json
+            uretim/${{ inputs.slug }}/render.json
+            uretim/${{ inputs.slug }}/metadata.json
+          if-no-files-found: warn
+      - name: Preserve publication state
+        if: ${{ success() && !inputs.dry_run }}
+        run: |
+          git config user.name "bto-publish-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add channels/behind-the-ordinary/state 2>/dev/null || true
+          if git diff --cached --quiet; then echo "No state changes to commit."; exit 0; fi
+          git commit -m "chore(bto): record reviewed Short publication"
+          for i in 1 2 3; do
+            git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
+            sleep $((i * 5))
+          done
+          exit 1

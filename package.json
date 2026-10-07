@@ -18,6 +18,7 @@
     "library:impossible-brief": "node library-health.js --channel impossible-brief",
     "library:behind-the-ordinary": "node library-health.js --channel behind-the-ordinary",
     "topics:behind-the-ordinary": "node scripts/generate-behind-the-ordinary-topics.js",
+    "launch:behind-the-ordinary": "node scripts/bto-launch-plan.js",
     "library:failure-reconstructed:inventory": "node scripts/fr-library/build-inventory.js --write",
     "gate": "node quality-gate.js --all",
     "optimize": "node existing-video-optimizer.js --all",

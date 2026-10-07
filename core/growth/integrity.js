@@ -40,7 +40,10 @@ function visual(topic, config, options = {}) {
   if (!scenes.length) notes.push("no scene plan yet");
   const repeatSources = {};
   for (const scene of topic.visualScenes || []) if (scene.source) repeatSources[scene.source] = (repeatSources[scene.source] || 0) + 1;
-  const evidenceFrames = scenes.filter((scene) => /REAL_ARCHIVAL|REAL_INFRASTRUCTURE|REAL_MAP|DIAGRAM|PROCESS_DIAGRAM|OFFICIAL/.test(scene.sourceClass)).length;
+  const evidenceClass = topic.channel === "behind-the-ordinary"
+    ? /REAL_OBJECT|MACRO_DETAIL|MUSEUM_ARCHIVE|TECHNICAL_ILLUSTRATION|STANDARD_DIAGRAM/
+    : /REAL_ARCHIVAL|REAL_INFRASTRUCTURE|REAL_MAP|DIAGRAM|PROCESS_DIAGRAM|OFFICIAL/;
+  const evidenceFrames = scenes.filter((scene) => evidenceClass.test(scene.sourceClass)).length;
   const score = Math.max(0, Math.min(100, 60 + Math.round(evidenceFrames / Math.max(1, scenes.length) * 30) + (classes.length >= 2 ? 10 : 0) - hardFails.length * 50));
   return { score, scenes, classes, hardFails, notes };
 }

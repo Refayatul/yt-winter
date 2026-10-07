@@ -10,6 +10,8 @@ const Generator = require("../../scripts/generate-behind-the-ordinary-topics");
 const Builder = require("../../scripts/ib-ct-library/build");
 const Channel = require("../../core/channel-context");
 const OAuthHealth = require("../../oauth-health");
+const Editorial = require("../../channels/behind-the-ordinary/editorial");
+const LaunchPlanner = require("../../scripts/bto-launch-plan");
 const universe = () => JSON.parse(fs.readFileSync(path.join(ROOT, "channels/behind-the-ordinary/topics/topic-universe.json"), "utf8"));
 
 test("BTO inventory: 500+ unique, grammatical research questions that never pre-claim an answer", () => {
@@ -43,6 +45,22 @@ test("BTO production-ready records carry primary sources and verbatim-quoted fac
     if (topic.slug !== "why-jeans-have-a-tiny-pocket") for (const fact of topic.facts) assert.ok(String(fact.quote || "").split(/\s+/).length >= 5, `${topic.slug}: fact without verbatim quote`);
     assert.ok(topic.narration.length >= 5 && topic.narration.length <= 8, topic.slug);
   }
+});
+
+test("launch planner ranks 30 research candidates with the declared seven-factor policy", () => {
+  assert.equal(Object.values(Editorial.WEIGHTS).reduce((sum, value) => sum + value, 0), 1);
+  const plan = LaunchPlanner.build(universe());
+  assert.equal(plan.top30.length, 30);
+  assert.equal(plan.top10.length, 10);
+  assert.equal(plan.longFormClusters.length, 3);
+  assert.ok(plan.top30.every((item, index) => item.rank === index + 1 && item.score >= 82));
+  assert.ok(plan.productionQueue.every((item) => item.status === "PRODUCTION_READY" && item.progressiveReveal));
+  assert.equal(plan.recommendedFirstShort.topic, "Why the Bluetooth Logo Looks Like That");
+});
+
+test("verified launch hooks preserve curiosity instead of stating the payoff", () => {
+  const ready = universe().topics.filter((topic) => topic.productionReady);
+  assert.ok(ready.every((topic) => !Editorial.answerLeak(topic)), ready.filter(Editorial.answerLeak).map((topic) => topic.id).join(", "));
 });
 
 test("the research builder's quote check tolerates typography but not paraphrase", () => {

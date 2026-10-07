@@ -34,6 +34,19 @@ function durationBucket(seconds) {
   return "over-60s";
 }
 
+function channelFeatures(channel, topic, estimatedSeconds, plannedSegments) {
+  if (channel.slug !== "behind-the-ordinary") return {};
+  const Editorial = require("../../channels/behind-the-ordinary/editorial");
+  const raw = topic.raw || topic;
+  const density = estimatedSeconds > 0 ? Math.round(plannedSegments.length / estimatedSeconds * 60) : null;
+  return {
+    questionType: Editorial.questionType(raw),
+    payoffType: Editorial.payoffType(raw),
+    narratorSpeed: (channel.config.voice || {}).rate || null,
+    visualDensity: density == null ? null : density >= 24 ? "high" : density >= 16 ? "medium" : "low",
+  };
+}
+
 function optimizeEditorialOpening(lines, selectedHook, config) {
   const original = [...lines];
   if (!config.hooks.applySelectedOpening || !selectedHook || !selectedHook.spoken || !original.length) return { lines: original, changed: false, original: original[0] || null, selected: original[0] || null };
@@ -342,6 +355,7 @@ function planShort(channel, idOrTopic, options = {}) {
       durationBucket: durationBucket(estimatedSeconds),
       openingVisual: first.First3SecondPlan ? first.First3SecondPlan.firstFrame.sourceClass : null,
       experimentVariant: experiment ? `${experiment.experiment_id}:${experiment.arm}` : null,
+      ...channelFeatures(channel, topic, estimatedSeconds, plannedSegments),
       factors: Object.fromEntries(Object.entries(evaluation.score.factors).map(([key, value]) => [key, value.value])),
       selectionMode: options.selection && options.selection.mode || null,
     },
@@ -392,5 +406,5 @@ function printSummary(summaryObject, extra = {}) {
 }
 
 module.exports = {
-  Config, Store, Model, Context, selectShortTopic, orderedQueue, gateMode, planShort, externalFromLegacyGate, summary, printSummary, durationBucket, optimizeEditorialOpening, applyLegacyOverlay, findTopic, decisionCandidate, writeDecision,
+  Config, Store, Model, Context, selectShortTopic, orderedQueue, gateMode, planShort, externalFromLegacyGate, summary, printSummary, durationBucket, channelFeatures, optimizeEditorialOpening, applyLegacyOverlay, findTopic, decisionCandidate, writeDecision,
 };

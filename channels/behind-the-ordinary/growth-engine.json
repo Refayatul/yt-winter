@@ -1,7 +1,20 @@
 {
   "_comment": "The Hidden Logic of Things overrides. The shared engine, analytics, fatigue, experiments and memory remain channel-scoped.",
   "identity": "smart everyday-design and hidden-engineering explainer",
-  "candidatePool": { "minimum": 1, "evidenceGated": true },
+  "candidatePool": { "minimum": 1, "target": 30, "evidenceGated": true },
+  "editorialScoring": {
+    "weights": {
+      "UniversalCuriosity": 0.25,
+      "HookStrength": 0.2,
+      "VisualExplainability": 0.15,
+      "SurprisePayoff": 0.15,
+      "EvidenceAvailability": 0.1,
+      "EvergreenPotential": 0.1,
+      "LongFormExpansion": 0.05
+    },
+    "minimumLaunchResearchScore": 82,
+    "minimumProductionScore": 85
+  },
   "selection": { "exploreBuckets": ["A", "B"] },
   "lexicon": ["why", "design", "detail", "ordinary", "everyday", "object", "purpose", "origin", "shape", "material", "standard", "mechanism", "hidden", "small", "tiny", "inside", "works", "made", "pattern", "symbol"],
   "topic": {
@@ -40,10 +53,32 @@
   },
   "firstSeconds": { "soundCue": "one small tactile click synchronized to the highlighted detail" },
   "longform": {
-    "targetMinutes": [8, 15],
+    "targetMinutes": [8, 12],
     "potentialWeights": { "EvergreenPotential": 1.2, "SearchDemand": 1, "ShortsEvidence": 1.2, "SeriesPotential": 0.7, "ViewerJourneyPotential": 0.8 },
     "derivedShorts": [3, 5],
     "shortCta": "That detail is only one part of the design. The full explanation is in the linked episode."
+  },
+  "pacing": {
+    "shorts": { "laterSegmentSeconds": [1.5, 3] },
+    "longform": { "maxSceneSeconds": 6, "minVisualChangeEverySeconds": 6, "maxAssetReuse": 2, "newInformationEverySeconds": [3, 6] }
+  },
+  "analytics": {
+    "checkpointsHours": [1, 6, 24, 48, 168],
+    "checkpointLabels": ["1h", "6h", "24h", "48h", "7d"]
+  },
+  "learning": {
+    "minimumSampleObservation": 5,
+    "minimumSampleHypothesis": 8,
+    "minimumSampleAdopt": 15,
+    "maxWeightShift": 0.15,
+    "featureDimensions": {
+      "shorts": ["questionType", "payoffType", "narratorSpeed", "visualDensity"],
+      "longform": ["questionType", "payoffType", "narratorSpeed", "visualDensity"]
+    }
+  },
+  "readiness": {
+    "shorts": { "publish": 88, "review": 78 },
+    "longform": { "publish": 88, "review": 78 }
   },
   "captions": { "font": "Liberation Sans", "uppercase": false, "outline": 6, "spacing": 0, "highlightColor": "&H45ADF2&", "maxCharsPerLine": 20 }
 }

@@ -1,9 +1,13 @@
 "use strict";
 
+const Editorial = require("../../channels/behind-the-ordinary/editorial");
 const Scripting = require("../scripting");
 
 const PILLARS = new Set(["EVERYDAY MYSTERIES", "HIDDEN ENGINEERING", "STRANGE ORIGINS", "DESIGN DECISIONS", "ORDINARY SYSTEMS"]);
 const OTHER_CHANNEL = /\b(what if|impossible scenario|failure reconstructed|disaster reconstruction|global chokepoint|critical infrastructure dependency)\b/i;
+const AI_FILLER = /\b(it(?:'s| is) important to note|interestingly|furthermore|in conclusion|delve into|in today's video|welcome back|did you know)\b/i;
+const REQUIRED_SCENE_FIELDS = ["narration", "visualObjective", "visualType", "assetQuery", "assetSource", "animationInstruction", "evidenceReference", "transition", "duration"];
+const clamp = (value) => Math.max(0, Math.min(100, Math.round(Number(value) || 0)));
 
 function evaluateTopic(topic, allTopics = []) {
   const blockers = [];
@@ -21,37 +25,102 @@ function evaluateTopic(topic, allTopics = []) {
     if (!Array.isArray(topic.facts) || topic.facts.length < 5) blockers.push("production topic has fewer than five mapped facts");
     if (!Array.isArray(topic.narration) || topic.narration.length < 5) blockers.push("production topic has no evidence-led narration");
     if (!topic.openingLine || Scripting.FORBIDDEN_OPENINGS.test(topic.openingLine)) blockers.push("weak or forbidden opening");
+    if (!topic.payoff) blockers.push("production topic has no payoff");
+    if (Editorial.answerLeak(topic)) blockers.push("opening gives away the full payoff instead of progressively explaining it");
   }
-  const scores = {
-    centralQuestion: topic.coreQuestion ? 96 : 30,
-    channelFit: topic.quality && topic.quality.channelFit || 0,
-    curiosity: topic.curiosityScore || 0,
-    visualPotential: topic.visualPotential && topic.visualPotential.score || 0,
-    evergreen: topic.evergreenScore || 0,
-    novelty: topic.novelty && topic.novelty.score || 0,
-    audienceBreadth: topic.audienceFit && topic.audienceFit.score || 0,
-    researchability: topic.sourceAvailability && topic.sourceAvailability.score || 0,
-    evidenceReadiness: verified ? 95 : 50,
-    repetition: exact.length ? 0 : 100,
-  };
-  const total = Math.round(Object.values(scores).reduce((sum, value) => sum + value, 0) / Object.keys(scores).length);
-  const decision = blockers.length ? "BLOCK" : verified && total >= 86 ? "PUBLISH" : "REVIEW";
-  return { topicId: topic.id, decision, total, scores, blockers, productionReady: verified, note: verified ? "evidence mapped" : "validated research question; evidence required before production" };
+  const editorial = Editorial.score(topic);
+  const scores = { ...editorial.factors, repetition: exact.length ? 0 : 100 };
+  const total = editorial.total;
+  const decision = blockers.length ? "BLOCK" : verified && total >= 85 ? "PUBLISH" : "REVIEW";
+  return { topicId: topic.id, decision, total, scores, blockers, productionReady: verified, progressiveReveal: editorial.progressiveReveal,
+    note: verified ? "evidence mapped" : "validated research question; evidence required before production" };
+}
+
+function sourceConfidence(topic) {
+  const mapped = (topic.facts || []).filter((fact) => fact.claim && fact.source).length;
+  if (topic.productionReady === true && topic.researchStatus === "VERIFIED" && (topic.sources || []).length >= 2 && mapped >= 5) return 95;
+  return clamp(((topic.sourceQuality || topic.sourceAvailability || {}).score) || 0);
+}
+
+function naturalness(script) {
+  const text = script && script.spoken || "";
+  if (!text || AI_FILLER.test(text)) return 40;
+  const sentences = text.split(/[.!?]+/).map((line) => line.trim()).filter(Boolean);
+  const average = sentences.length ? sentences.reduce((sum, line) => sum + line.split(/\s+/).length, 0) / sentences.length : 99;
+  return average <= 16 ? 94 : average <= 20 ? 86 : 72;
+}
+
+function titleMatchesTopic(title, topic) {
+  const tokens = (value) => new Set(String(value || "").toLowerCase().match(/[a-z0-9]+/g) || []);
+  const selected = tokens(title);
+  const subject = [...tokens(`${topic.canonicalTopic || topic.object} ${topic.designDetail}`)].filter((word) => word.length > 3);
+  return subject.some((word) => selected.has(word));
 }
 
 function evaluatePackage(pkg) {
-  const blockers = [];
-  if (!pkg.topic || pkg.topic.productionReady !== true || pkg.topic.researchStatus !== "VERIFIED") blockers.push("unverified research question cannot become a package");
-  if (!pkg.script || pkg.script.forbiddenOpening) blockers.push("forbidden or missing opening");
-  if (!pkg.titles || pkg.titles.length < 20) blockers.push("fewer than 20 title candidates");
-  if (!pkg.visuals || pkg.visuals.some((scene) => scene.changeRequiredWithinSeconds > 3.5)) blockers.push("visual pacing too slow");
-  if (pkg.renderVisuals && pkg.renderVisuals.visualQuality && pkg.renderVisuals.visualQuality.decision === "BLOCK") {
-    blockers.push(...pkg.renderVisuals.visualQuality.reasons.map((reason) => "rendered visuals: " + reason));
+  const hardFails = [];
+  const topic = pkg.topic || {};
+  const script = pkg.script || {};
+  const growth = pkg.growthPlan || null;
+  const rendered = pkg.render && pkg.render.completed;
+  if (topic.productionReady !== true || topic.researchStatus !== "VERIFIED") hardFails.push("central claim cannot be verified");
+  if (!script.spoken || script.forbiddenOpening) hardFails.push("forbidden or missing opening");
+  if (AI_FILLER.test(script.spoken || "")) hardFails.push("script reads like generic AI prose");
+  if (!topic.payoff) hardFails.push("payoff is missing");
+  if (Editorial.answerLeak(topic)) hardFails.push("opening reveals the full payoff");
+  if (!pkg.titles || pkg.titles.length < 20) hardFails.push("fewer than 20 title candidates");
+  if (pkg.metadata && !titleMatchesTopic(pkg.metadata.title, topic)) hardFails.push("title/payoff mismatch");
+  if (!pkg.visuals || pkg.visuals.length < 5) hardFails.push("missing visual scenes");
+  for (const scene of pkg.visuals || []) {
+    const missing = REQUIRED_SCENE_FIELDS.filter((field) => scene[field] == null || scene[field] === "");
+    if (missing.length) hardFails.push(`scene ${scene.scene} missing storyboard fields: ${missing.join(", ")}`);
   }
-  if (!pkg.sources || pkg.sources.length < 2) blockers.push("insufficient sources");
-  if (!pkg.thumbnail || pkg.thumbnail.maxWords > 4) blockers.push("thumbnail identity missing or too verbose");
-  if (!pkg.metadata || pkg.metadata.uploadChannel !== "behind-the-ordinary") blockers.push("wrong channel metadata");
-  return { decision: blockers.length ? "BLOCK" : "PUBLISH", blockers, checked: ["identity", "central-question", "evidence", "hook", "visuals", "titles", "thumbnail", "sources", "metadata"] };
+  if (!pkg.sources || pkg.sources.length < 2) hardFails.push("insufficient sources");
+  if (!pkg.thumbnail || pkg.thumbnail.maxWords > 4 || pkg.thumbnail.clutter === true) hardFails.push("thumbnail identity missing, cluttered or too verbose");
+  if (!pkg.metadata || pkg.metadata.uploadChannel !== "behind-the-ordinary") hardFails.push("wrong channel metadata");
+
+  const hook = clamp(growth && growth.hooks && growth.hooks.selectedScore || (!script.forbiddenOpening && !Editorial.answerLeak(topic) ? 90 : 60));
+  const visualMeasured = pkg.renderVisuals && pkg.renderVisuals.visualQuality;
+  // Once rendered, visual relevance is the measured score only; the topic's
+  // planning estimate never stands in for what actually reached the screen.
+  const visualRelevance = rendered
+    ? clamp(visualMeasured && Number.isFinite(visualMeasured.score) ? visualMeasured.score : 0)
+    : clamp(Math.max(90, (topic.visualPotential || {}).score || 0));
+  if (rendered) {
+    const renderedSources = pkg.renderVisuals && pkg.renderVisuals.sources || [];
+    for (const scene of pkg.visuals || []) {
+      if (scene.explainer && !renderedSources.some((shot) => shot.claimIndex === scene.scene - 1 && shot.type === "explainer")) {
+        hardFails.push(`visual/narration mismatch: storyboard scene ${scene.scene} (${scene.explainer}) was not rendered as a diagram`);
+      }
+    }
+  }
+  const narrationNaturalness = naturalness(script);
+  const renderedSegments = pkg.renderVisuals && pkg.renderVisuals.segmentSeconds;
+  const pacing = Array.isArray(renderedSegments) && renderedSegments.length
+    ? (Math.max(...renderedSegments) <= 3.2 ? 95 : Math.max(...renderedSegments) <= 3.5 ? 85 : 70)
+    : (pkg.visuals || []).length && pkg.visuals.every((scene) => scene.changeRequiredWithinSeconds <= 3) ? 92 : 70;
+  const curiosityPayoff = clamp(((topic.curiosityScore || 0) + (topic.payoff ? 95 : 0)) / 2);
+  const components = { hook, visualRelevance, sourceConfidence: sourceConfidence(topic), narrationNaturalness, pacing, curiosityPayoff };
+  const minimums = { hook: 85, visualRelevance: 90, sourceConfidence: 90, narrationNaturalness: 85, pacing: 85, curiosityPayoff: 85 };
+  for (const [name, minimum] of Object.entries(minimums)) if (components[name] < minimum) hardFails.push(`${name} ${components[name]} < ${minimum}`);
+
+  if (pkg.renderVisuals && visualMeasured && visualMeasured.decision === "BLOCK") hardFails.push(...(visualMeasured.reasons || []).map((reason) => "rendered visuals: " + reason));
+  if (rendered) {
+    const audio = pkg.render.audio || {};
+    const video = pkg.render.video || {};
+    const thumbnail = pkg.render.thumbnail || {};
+    if (audio.syntheticVoice === false || video.hasAudio === false) hardFails.push("robotic or broken narration");
+    if (!Array.isArray(audio.claimDurations) || audio.claimDurations.length !== (script.claims || []).length) hardFails.push("abnormal silence or broken audio timing");
+    if (video.width !== 1080 || video.height !== 1920) hardFails.push("incorrect aspect ratio");
+    if (!(video.durationSeconds >= 30 && video.durationSeconds <= 50.2)) hardFails.push("Short duration is outside 30–50 seconds");
+    if (!thumbnail.bytes || !["licensed-still", "number-card"].includes(thumbnail.sourceType)) hardFails.push("missing or non-documentary thumbnail asset");
+    if (thumbnail.textWords > 4) hardFails.push("unreadable thumbnail text density");
+    if (!pkg.metadata.description.includes("Visual credits:") && (pkg.renderVisuals.realImageCount || 0) > 0) hardFails.push("missing attribution when required");
+  }
+  const overall = Math.round(Object.values(components).reduce((sum, value) => sum + value, 0) / Object.keys(components).length);
+  const decision = hardFails.length ? "BLOCK" : overall >= 88 ? "PUBLISH" : overall >= 78 ? "REVIEW" : "BLOCK";
+  return { decision, overall, components, thresholds: { publish: 88, review: 78, componentMinimums: minimums }, blockers: [...new Set(hardFails)], hardFails: [...new Set(hardFails)],
+    checked: ["identity", "central-question", "evidence", "hook", "progressive-reveal", "storyboard", "visuals", "audio", "titles", "thumbnail", "sources", "metadata"] };
 }
 
-module.exports = { PILLARS, evaluateTopic, evaluatePackage };
+module.exports = { PILLARS, AI_FILLER, REQUIRED_SCENE_FIELDS, evaluateTopic, evaluatePackage, naturalness, sourceConfidence, titleMatchesTopic };

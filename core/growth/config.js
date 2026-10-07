@@ -72,6 +72,25 @@ function forChannel(channel = Channel.getChannel()) {
   const cadence = channel.config.publishingCadence || {};
   if (cadence.longForm && cadence.longForm.everyDays) merged.longform.cadenceDays = cadence.longForm.everyDays;
   if (cadence.shorts && cadence.shorts.targetDurationSeconds) merged.shortsDurationSeconds = cadence.shorts.targetDurationSeconds;
+  // Channel config may set stricter editorial floors than the portfolio
+  // overlay. The overlay is a minimum standard, never permission to weaken a
+  // premium channel's publish, hook or source requirements.
+  const thresholds = channel.config.qualityThresholds || {};
+  if (Number.isFinite(thresholds.publish)) {
+    merged.readiness.shorts.publish = Math.max(merged.readiness.shorts.publish, thresholds.publish);
+    merged.readiness.longform.publish = Math.max(merged.readiness.longform.publish, thresholds.publish);
+  }
+  if (Number.isFinite(thresholds.review)) {
+    merged.readiness.shorts.review = Math.max(merged.readiness.shorts.review, thresholds.review);
+    merged.readiness.longform.review = Math.max(merged.readiness.longform.review, thresholds.review);
+  }
+  if (Number.isFinite(thresholds.hookMinimum)) {
+    merged.hooks.minimumScore = Math.max(merged.hooks.minimumScore, thresholds.hookMinimum);
+    merged.topic.bucketRequirements.A.hookMinimum = Math.max(merged.topic.bucketRequirements.A.hookMinimum, thresholds.hookMinimum);
+  }
+  if (Number.isFinite(thresholds.sourceQualityMinimum)) {
+    merged.topic.bucketRequirements.A.sourceMinimum = Math.max(merged.topic.bucketRequirements.A.sourceMinimum, thresholds.sourceQualityMinimum);
+  }
   validate(merged);
   const frozen = Object.freeze(merged);
   cache.set(key, frozen);
