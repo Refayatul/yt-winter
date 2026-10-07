@@ -30,6 +30,9 @@ function diagnose(row, baselines, config, options = {}) {
     if (half != null && half < t.depthFailureRetentionAtHalf) add("LONGFORM_DEPTH_FAILURE", sampleConfidence, `retention ${Math.round(half * 100)}% at 50%`, "Middle sections repeat or lack new evidence; restructure around the failure chain.");
     if (Number.isFinite(m.ctr) && m.ctr < t.lowCtr) add("THUMBNAIL_PACKAGING_FAILURE", "low", `CTR ${m.ctr}% < ${t.lowCtr}% (manual Studio value)`, "Test one new thumbnail concept (logged experiment).");
   }
+  // Shorts distribution is decided by how many viewers stay rather than swipe
+  // away in the first second (Studio "Viewed vs swiped away", imported).
+  if (!long && Number.isFinite(m.stayedToWatch) && m.stayedToWatch < (t.lowStayedToWatch || 60)) add("SCROLL_STOP_FAILURE", "medium", `${m.stayedToWatch}% stayed to watch (< ${t.lowStayedToWatch || 60}%, Studio value)`, "The first frame and first line do not stop the scroll: open on the subject itself and state the strange detail immediately.");
   if (Number.isFinite(m.engagementPer1000Views) && m.engagementPer1000Views < t.lowEngagementRatePer1000) add("LOW_ENGAGEMENT", "low", `${m.engagementPer1000Views} engagements / 1,000 views`, "Contextual comment prompt after the payoff.");
   if (Number.isFinite(m.subscribersPer1000Views) && views >= 1000 && m.subscribersPer1000Views < t.lowSubsPer1000) add("LOW_SUBSCRIBER_CONVERSION", sampleConfidence, `${m.subscribersPer1000Views} subs / 1,000 views`, long ? "Stronger series promise and end-screen pathway." : "Series-shaped payoff; link a related long-form episode.");
   const goodRetention = Number.isFinite(m.averagePercentageViewed) && m.averagePercentageViewed >= t.goodAvp;
