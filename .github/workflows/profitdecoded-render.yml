@@ -25,7 +25,7 @@ jobs:
         with:
           node-version: '20'
       - name: System packages (ffmpeg, ImageMagick, fonts)
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg imagemagick fonts-dejavu-core fonts-liberation
+        run: bash scripts/ci-apt.sh ffmpeg imagemagick fonts-dejavu-core fonts-liberation
       - run: npm install --no-audit --no-fund
       - uses: actions/setup-python@v5
         with:

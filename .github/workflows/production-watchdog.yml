@@ -228,8 +228,7 @@ jobs:
           node-version: '20'
       - name: Runtime dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation python3-pil
+          bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
           npm install --no-audit --no-fund
       - name: Recover one ImpossibleBrief Short
         run: |
@@ -364,8 +363,7 @@ jobs:
           node-version: '20'
       - name: Runtime dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation python3-pil
+          bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
           npm install --no-audit --no-fund
       - name: Recover one CriticalThread Short
         run: |
@@ -500,8 +498,7 @@ jobs:
           node-version: '20'
       - name: Runtime dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation python3-pil
+          bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
           npm install --no-audit --no-fund
       - name: Recover one The Hidden Logic of Things Short
         run: |

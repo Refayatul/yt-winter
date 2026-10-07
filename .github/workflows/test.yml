@@ -23,8 +23,7 @@ jobs:
           python-version: '3.12'
       - name: Bagimliliklar
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation python3-pil
+          bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
           npm install --no-audit --no-fund
       - name: JS testleri + sozdizimi
         run: node --test tests/js/*.test.js
@@ -96,7 +95,7 @@ jobs:
         with:
           node-version: '20'
       - name: ffmpeg + font kur
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation python3-pil
+        run: bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
       - name: Bagimliliklar
         run: npm install --no-audit --no-fund
       - id: production
@@ -160,6 +159,6 @@ jobs:
         with:
           node-version: '20'
       - name: ffmpeg kur
-        run: sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+        run: bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core
       - name: Denetim testi (gercek ffmpeg)
         run: node --test tests/js/denetim.test.js

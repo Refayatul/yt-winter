@@ -87,8 +87,7 @@ jobs:
           node-version: '20'
       - name: Runtime dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation python3-pil
+          bash scripts/ci-apt.sh --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation python3-pil
           npm install --no-audit --no-fund
       - name: Portfolio plan
         run: node portfolio-scheduler.js --enqueue

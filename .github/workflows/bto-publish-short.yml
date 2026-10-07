@@ -42,8 +42,7 @@ jobs:
           node-version: '20'
       - name: Runtime dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation python3-pil
+          bash scripts/ci-apt.sh --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation python3-pil
           npm install --no-audit --no-fund
       - name: Render, gate and upload (private + scheduled)
         run: node scripts/bto-publish-short.js "${{ inputs.slug }}" ${{ inputs.dry_run && '--dry-run' || '' }}
