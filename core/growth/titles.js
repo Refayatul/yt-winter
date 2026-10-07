@@ -261,6 +261,15 @@ function vocabulary(topic) {
   return new Set(M.icerikKelimeleri(text).map((word) => word.slice(0, 6)));
 }
 
+// Structural templates that carry no concrete detail. Across the first 15
+// Shorts with >=3 d data they were among the weakest titles ("Eastern 212:
+// What Failed First", "Inside Van Norman Dam: The Failure Chain"), while
+// recognisable subject + concrete detail titles ("Why Challenger Broke Apart
+// 73 Seconds After Launch") led on likes and subscribers. They stay available,
+// but lose points unless the title also carries a number.
+const GENERIC_TEMPLATES = new Set(["failed-first", "inside-chain", "first-crack", "cause-chain-consequence", "engineering-behind", "one-chain", "brand", "how-really", "what-really", "trigger"]);
+const GENERIC_TEMPLATE_PENALTY = 8;
+
 function scoreOne(candidate, topic, config, kind, context = {}) {
   const title = candidate.title;
   const words = title.split(/\s+/).length;
@@ -313,8 +322,11 @@ function scoreOne(candidate, topic, config, kind, context = {}) {
   const repeats = recentPatterns.filter((item) => item === candidate.pattern).length;
   const patternPenalty = Math.min(12, repeats * 4 + (recentPatterns[recentPatterns.length - 1] === candidate.pattern ? 3 : 0));
   s.patternFreshness = clamp(100 - repeats * 30);
-  return { ...candidate, scores: s, total, patternPenalty, templateNaturalnessPenalty,
-    adjustedTotal: Math.max(0, Math.min(100, total + learnedBonus - patternPenalty - templateNaturalnessPenalty)),
+  // A number inside the subject's own name ("Eastern 212") is not a detail.
+  const beyondSubject = title.replace(new RegExp(String(topic.subject || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "ig"), "");
+  const genericTemplatePenalty = kind !== "long" && GENERIC_TEMPLATES.has(candidate.pattern) && !/\d/.test(beyondSubject) ? GENERIC_TEMPLATE_PENALTY : 0;
+  return { ...candidate, scores: s, total, patternPenalty, templateNaturalnessPenalty, genericTemplatePenalty,
+    adjustedTotal: Math.max(0, Math.min(100, total + learnedBonus - patternPenalty - templateNaturalnessPenalty - genericTemplatePenalty)),
     unsupportedWords: unsupported, misleading: s.truthfulness < 60 };
 }
 
@@ -344,4 +356,4 @@ function generate(topic, config, kind = "short", context = {}) {
   };
 }
 
-module.exports = { RECENT_PATTERN_WINDOW, generate, scoreOne, shortCandidates, longCandidates, pattern };
+module.exports = { GENERIC_TEMPLATES, RECENT_PATTERN_WINDOW, generate, scoreOne, shortCandidates, longCandidates, pattern };
