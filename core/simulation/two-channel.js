@@ -37,7 +37,9 @@ function simulate30Days(options = {}) {
     const date = new Date(start.getTime() + (day - 1) * 86400000).toISOString().slice(0, 10);
     for (const channel of Object.keys(states)) {
       const state = states[channel];
-      // The Hidden Logic of Things publishes only evidence-verified records. When the
+      // (The scripted day-3 BTO quality block only fires while verified inventory
+  // remains on day 3; a smaller pool reaches its research gap first.)
+  // The Hidden Logic of Things publishes only evidence-verified records. When the
       // verified pool is used up the day is recorded as a research gap: nothing
       // is published and no question-only record is promoted to fill the slot.
       if (channel === "behind-the-ordinary" && state.shorts.length + state.blockedTopics >= state.initialInventory) {
@@ -99,7 +101,7 @@ function simulate30Days(options = {}) {
     tiktokTodayUsesExactYouTubeMp4: tiktok.todaySent.length === 30 && tiktok.todaySent.every((item) => item.source === "exact-youtube-mp4"),
     tiktokBacklogReducedToZero: tiktok.backlogSent.length === tiktok.initialBacklog,
     analyticsCheckpointsScheduled: Object.values(states).every((state) => state.analyticsCheckpoints > 0),
-    qualityBlocksReplacedNotPublished: states["impossible-brief"].blockedTopics === 1 && states["critical-thread"].blockedTopics === 1 && states["behind-the-ordinary"].blockedTopics === 1 &&
+    qualityBlocksReplacedNotPublished: states["impossible-brief"].blockedTopics === 1 && states["critical-thread"].blockedTopics === 1 && states["behind-the-ordinary"].blockedTopics === (states["behind-the-ordinary"].initialInventory > 2 ? 1 : 0) &&
       !events.some((event) => ["impossible-brief-topic-014", "critical-thread-topic-009", "behind-the-ordinary-topic-003"].includes(event.topic) && event.status === "published"),
     behindOrdinaryEvidenceGate: states["behind-the-ordinary"].shorts.length + states["behind-the-ordinary"].blockedTopics <= states["behind-the-ordinary"].initialInventory &&
       !events.some((event) => event.channel === "behind-the-ordinary" && event.status === "skipped-research-required" && events.some((other) => other.task === event.task && other.status === "published")),
