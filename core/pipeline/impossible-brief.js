@@ -103,6 +103,13 @@ function visualShortfall(topic, output, prepare = (topicFile, directory) => requ
   // render-time gate stays the judge then.
   if (assets.error) return null;
   const count = (assets.stills || []).length + (assets.clips || []).length;
+  // Declared 2D explainer scenes are real visual variety (each is a drawn,
+  // line-specific animation); such a topic still needs two licensed pictures.
+  const explainers = Array.isArray(topic.explainerScenes) ? topic.explainerScenes.length : 0;
+  if (explainers) {
+    if (count < 2) return `${count} licensed pictures/clips < 2 (with ${explainers} explainer scenes)`;
+    return count + explainers < MIN_PRECHECK_VISUALS ? `${count} pictures + ${explainers} explainers < ${MIN_PRECHECK_VISUALS}` : null;
+  }
   return count < MIN_PRECHECK_VISUALS ? `${count} licensed pictures/clips < ${MIN_PRECHECK_VISUALS}` : null;
 }
 
