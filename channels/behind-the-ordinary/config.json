@@ -2,7 +2,8 @@
   "slug": "behind-the-ordinary",
   "name": "The Hidden Logic of Things",
   "handle": "@HiddenLogicOfThings",
-  "tagline": "The hidden reasons behind everyday design.",
+  "tagline": "Everyday things. Unexpected reasons.",
+  "corePromise": "The hidden logic behind things you see, use and experience every day.",
   "enabled": true,
   "onboarding": true,
   "youtubeChannelId": "",
@@ -20,10 +21,17 @@
   "publishTimeZone": "Europe/Istanbul",
   "publishTimeUtc": "18:00",
   "publishingCadence": {
-    "shorts": { "everyDays": 1, "productionTime": "10:30", "targetDurationSeconds": [20, 45] },
-    "longForm": { "everyDays": 7, "targetDurationMinutes": [8, 15], "qualityOverCadence": true }
+    "shorts": { "everyDays": 1, "productionTime": "10:30", "targetDurationSeconds": [30, 50], "skipWhenQualityFails": true },
+    "longForm": { "everyDays": 7, "targetDurationMinutes": [8, 12], "qualityOverCadence": true }
   },
-  "voice": { "provider": "edge-tts", "voice": "en-US-EmmaMultilingualNeural", "rate": "+1%", "style": "smart, conversational curiosity, warm and lightly playful" },
+  "voice": {
+    "provider": "edge-tts",
+    "voice": "en-US-EmmaMultilingualNeural",
+    "rate": "+1%",
+    "style": "smart, conversational curiosity, warm and lightly playful",
+    "evaluatedCandidates": ["en-US-EmmaMultilingualNeural", "en-US-AndrewMultilingualNeural", "en-GB-SoniaNeural"],
+    "selectionNote": "Emma remains the launch voice: clear international English, warm delivery and stable pacing in the existing free Edge TTS path. Re-evaluate only with blind listening samples; never rotate voices per video."
+  },
   "brandStyle": "tactile everyday objects, warm neutral backgrounds, precise detail highlights, intelligent and approachable",
   "contentNiche": "hidden reasons, histories and engineering behind ordinary objects and design choices",
   "topicRules": {
@@ -38,10 +46,14 @@
     "noImpossibleScenarios": true
   },
   "qualityThresholds": {
-    "publish": 86,
-    "review": 72,
-    "sourceQualityMinimum": 78,
-    "hookMinimum": 75,
+    "publish": 88,
+    "review": 78,
+    "sourceQualityMinimum": 90,
+    "hookMinimum": 85,
+    "visualRelevanceMinimum": 90,
+    "narrationNaturalnessMinimum": 85,
+    "pacingMinimum": 85,
+    "curiosityPayoffMinimum": 85,
     "noveltyMinimum": 66,
     "visualPotentialMinimum": 72,
     "channelFitMinimum": 85
@@ -54,14 +66,16 @@
     "secondBeatMaxSeconds": 8,
     "hookVoiceMaxSeconds": 5.5,
     "secondBeatVoiceMaxSeconds": 11,
-    "visualChangeTargetSeconds": [1.5, 3.5]
+    "visualChangeTargetSeconds": [1.5, 3]
   },
   "ctaStrategy": "optional next-curiosity bridge after the specific payoff",
   "thumbnailStyle": "one ordinary object, one highlighted unusual detail, warm dark neutral field, zero to four words",
   "titleStyle": "one accurate why, hidden-purpose, origin or design question; instantly understandable; never generic trivia",
   "analytics": {
-    "checkpointsDays": [1, 3, 7, 14, 28],
-    "minSample": 5,
+    "checkpointsHours": [1, 6, 24, 48, 168],
+    "checkpointLabels": ["1h", "6h", "24h", "48h", "7d"],
+    "checkpointsDays": [1, 2, 7],
+    "minSample": 8,
     "topGeography": true,
     "metrics": ["views", "engagedViews", "watchTime", "averageViewDuration", "averagePercentageViewed", "subscriberGain", "subscriberLoss", "subscriberConversion", "trafficSources", "publicationVelocity", "returningViewers"]
   },

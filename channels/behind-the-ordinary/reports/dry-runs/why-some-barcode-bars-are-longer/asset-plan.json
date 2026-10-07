@@ -1,0 +1,106 @@
+[
+  {
+    "scene": 1,
+    "visualObjective": "Show barcodes and isolate guard bars immediately.",
+    "visualType": "real footage or photography",
+    "query": "barcodes guard bars a UPC barcode on a grocery item",
+    "sourcePriority": "licensed-object-photography",
+    "sourcePolicy": "source from licensed-object-photography; reject unrelated filler",
+    "evidenceReference": {
+      "claim": "The start, middle and end guard bars of a UPC-A barcode extend further down than the digit bars.",
+      "source": "Wikipedia — Universal Product Code",
+      "url": "https://en.wikipedia.org/wiki/Universal_Product_Code"
+    }
+  },
+  {
+    "scene": 2,
+    "visualObjective": "Make the viewer understand this claim: They hold no number at all.",
+    "visualType": "macro/detail shot",
+    "query": "barcodes guard bars macro view of the longer guard bars",
+    "sourcePriority": "macro-detail-photography",
+    "sourcePolicy": "source from macro-detail-photography; reject unrelated filler",
+    "evidenceReference": {
+      "claim": "Guard patterns do not encode a digit; they help decoding.",
+      "source": "Wikipedia — Universal Product Code",
+      "url": "https://en.wikipedia.org/wiki/Universal_Product_Code"
+    }
+  },
+  {
+    "scene": 3,
+    "visualObjective": "Make the viewer understand this claim: On a UPC barcode, the start, middle and end guard bars extend lower.",
+    "visualType": "archival or manufacturer material",
+    "query": "barcodes guard bars labelled start, middle and end guard patterns",
+    "sourcePriority": "manufacturer-archive",
+    "sourcePolicy": "source from manufacturer-archive; reject unrelated filler",
+    "evidenceReference": {
+      "claim": "The start, middle and end guard bars of a UPC-A barcode extend further down than the digit bars.",
+      "source": "Wikipedia — Universal Product Code",
+      "url": "https://en.wikipedia.org/wiki/Universal_Product_Code"
+    }
+  },
+  {
+    "scene": 4,
+    "visualObjective": "Make the viewer understand this claim: They encode no digit; they split the code into two halves.",
+    "visualType": "diagram/cutaway",
+    "query": "barcodes guard bars the two six-digit halves highlighted",
+    "sourcePriority": "standards-diagram",
+    "sourcePolicy": "source from standards-diagram; reject unrelated filler",
+    "evidenceReference": {
+      "claim": "The start, middle and end guard bars of a UPC-A barcode extend further down than the digit bars.",
+      "source": "Wikipedia — Universal Product Code",
+      "url": "https://en.wikipedia.org/wiki/Universal_Product_Code"
+    }
+  },
+  {
+    "scene": 5,
+    "visualObjective": "Make the viewer understand this claim: IBM's George Laurer was assigned to design a supermarket scanner label.",
+    "visualType": "clean 2D animation",
+    "query": "barcodes guard bars a checkout scanner reading the code",
+    "sourcePriority": "labelled-technical-illustration",
+    "sourcePolicy": "source from labelled-technical-illustration; reject unrelated filler",
+    "evidenceReference": {
+      "claim": "IBM assigned George Laurer to determine how to make a supermarket scanner and label.",
+      "source": "Wikipedia — Universal Product Code",
+      "url": "https://en.wikipedia.org/wiki/Universal_Product_Code"
+    }
+  },
+  {
+    "scene": 6,
+    "visualObjective": "Make the viewer understand this claim: His team defined guard bars so a scanner could detect the label.",
+    "visualType": "real object in use",
+    "query": "barcodes guard bars a UPC barcode on a grocery item",
+    "sourcePriority": "object-in-use",
+    "sourcePolicy": "source from object-in-use; reject unrelated filler",
+    "evidenceReference": {
+      "claim": "Laurer and a colleague defined guard bars and how a scanner should detect the label.",
+      "source": "Wikipedia — Universal Product Code",
+      "url": "https://en.wikipedia.org/wiki/Universal_Product_Code"
+    }
+  },
+  {
+    "scene": 7,
+    "visualObjective": "Make the viewer understand this claim: They even told it which half it was reading.",
+    "visualType": "real object in use",
+    "query": "barcodes guard bars macro view of the longer guard bars",
+    "sourcePriority": "object-in-use",
+    "sourcePolicy": "source from object-in-use; reject unrelated filler",
+    "evidenceReference": {
+      "claim": "The guard bars also identified which half of the label was being read and trained the scanner's threshold circuits.",
+      "source": "Wikipedia — Universal Product Code",
+      "url": "https://en.wikipedia.org/wiki/Universal_Product_Code"
+    }
+  },
+  {
+    "scene": 8,
+    "visualObjective": "Make the viewer understand this claim: So the longest bars are signposts, not data.",
+    "visualType": "real object in use",
+    "query": "barcodes guard bars labelled start, middle and end guard patterns",
+    "sourcePriority": "object-in-use",
+    "sourcePolicy": "source from object-in-use; reject unrelated filler",
+    "evidenceReference": {
+      "claim": "Splitting the label into two halves allowed the bars to be cut nearly in half in length.",
+      "source": "Wikipedia — Universal Product Code",
+      "url": "https://en.wikipedia.org/wiki/Universal_Product_Code"
+    }
+  }
+]

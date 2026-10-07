@@ -555,7 +555,10 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
       const offset = Math.max(0, ((shot.clip.duration || shot.duration) - shot.duration) / 2);
       inputs.push({ pre: ["-ss", offset.toFixed(2), "-t", (shot.duration + 0.3).toFixed(2)], file: shot.clip.path });
     } else if (shot.type === "licensed-still") inputs.push(shot.still.path);
-    else if (shot.type === "number-card") {
+    else if (shot.type === "explainer") {
+      shot.clipFile = require("./explainers").renderClip(shot.explainer, shot.duration + 0.3, cardDirectory, ffmpeg);
+      inputs.push(shot.clipFile);
+    } else if (shot.type === "number-card") {
       shot.countUp = countUp(shot);
       const file = path.join(cardDirectory, (shot.sourceId + (shot.backdrop ? "-" + shot.backdrop.cachedFile : "") + (shot.countUp ? "-count" : "")).replace(/[^a-z0-9-]/gi, "-") + ".jpg");
       if (!fs.existsSync(file)) renderNumberCard(file, shot, topic, { omitHeadline: !!shot.countUp });
@@ -587,6 +590,8 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
         + `[vbgb${index}][vfgs${index}]overlay=0:(H-h)/2-170`;
     } else if (shot.type === "stock-video") {
       chain = `[${index}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=${FPS}${colourGrade(topic)}`;
+    } else if (shot.type === "explainer") {
+      chain = `[${index}:v]scale=1080:1920,fps=${FPS}`;
     } else if (shot.type === "licensed-still" && shot.kind === "diagram") {
       // Whole figure, readable, above the caption band, over its own blur.
       chain = `[${index}:v]split=2[bg${index}][fg${index}];`
@@ -603,7 +608,9 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
     }
     // Disclosure stays, as a small corner tag: stills are context for the
     // topic, not footage of the scenario; procedural frames are illustrations.
-    const tag = shot.type === "licensed-still" ? "CONTEXT IMAGE" : shot.type === "stock-video" ? (shot.clip.origin === "nasa-video" ? "NASA VISUALIZATION" : "STOCK FOOTAGE") : shot.type === "procedural" ? "ILLUSTRATION" : null;
+    // The Hidden Logic of Things shows subject photographs (credited in the
+    // description) and drawn diagrams that read as diagrams: no corner tag.
+    const tag = topic.channel === "behind-the-ordinary" ? null : shot.type === "licensed-still" ? "CONTEXT IMAGE" : shot.type === "stock-video" ? (shot.clip.origin === "nasa-video" ? "NASA VISUALIZATION" : "STOCK FOOTAGE") : shot.type === "procedural" ? "ILLUSTRATION" : null;
     if (tag) chain += `,drawtext=expansion=none:text='${tag}':fontcolor=white@0.78:fontsize=26:box=1:boxcolor=0x000000@0.45:boxborderw=10:x=48:y=84`;
     filters.push(`${chain},setsar=1,trim=duration=${shot.duration.toFixed(3)},setpts=PTS-STARTPTS[v${index}]`);
   }
@@ -623,7 +630,10 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
     try { fs.unlinkSync(filterFile); } catch (error) {}
   }
   const metrics = TopicVisuals.visualMetrics(plan, topic);
-  return { ...metrics, opening, visualQuality: TopicVisuals.evaluateVisualQuality(metrics), segmentSeconds: plan.map((shot) => shot.duration), sources: plan.map(({ shot, claimIndex, type, sourceId, numbers }) => ({ shot, claimIndex, type, sourceId, numbers })) };
+  return { ...metrics, opening, visualQuality: TopicVisuals.evaluateVisualQuality(metrics), segmentSeconds: plan.flatMap((shot) => shot.type === "explainer"
+    // An explainer animates in beats (draw, label, move, settle) of at most ~3s.
+    ? Array(Math.max(1, Math.ceil(shot.duration / 3))).fill(shot.duration / Math.max(1, Math.ceil(shot.duration / 3)))
+    : [shot.duration]), sources: plan.map(({ shot, claimIndex, type, sourceId, numbers }) => ({ shot, claimIndex, type, sourceId, numbers })) };
 }
 
 function renderThumbnail(output, topic, assets = { stills: [] }, script = null) {
@@ -635,7 +645,7 @@ function renderThumbnail(output, topic, assets = { stills: [] }, script = null) 
   let generated = null;
   if (assets.stills && assets.stills.length) {
     // A photograph reads at thumbnail size; a paper figure does not.
-    const still = assets.stills.find((item) => TopicVisuals.stillKind(item) === "photo") || assets.stills[0];
+    const still = TopicVisuals.detailStill(topic, assets.stills) || assets.stills.find((item) => TopicVisuals.stillKind(item) === "photo") || assets.stills[0];
     source = still.path;
     sourceType = "licensed-still";
     sourceId = `still:${still.file}`;
@@ -707,7 +717,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     hashtags,
     tags: subject ? [subject, ...baseTags.filter((tag) => tag.toLowerCase() !== subject.toLowerCase())] : baseTags,
   };
-  const pkg = { channel: channel.slug, topic, script, titles, visuals, thumbnail, sources: topic.sources, metadata };
+  const pkg = { channel: channel.slug, topic, script, titles, visuals, thumbnail, sources: topic.sources, metadata, growthPlan: growth };
   pkg.qualityGate = Quality.evaluatePackage(pkg);
   write(path.join(outputDirectory, "topic.json"), topic);
   write(path.join(outputDirectory, "script.json"), script);
@@ -718,6 +728,13 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   } }));
   write(path.join(outputDirectory, "titles.json"), { count: titles.length, selected: titles[0], candidates: titles, scoredCandidates: titleScores });
   write(path.join(outputDirectory, "visuals.json"), visuals);
+  if (isBehindOrdinary) {
+    write(path.join(outputDirectory, "storyboard.json"), { channel: channel.slug, topicId: topic.id, scenes: visuals });
+    write(path.join(outputDirectory, "asset-plan.json"), visuals.map((scene) => ({
+      scene: scene.scene, visualObjective: scene.visualObjective, visualType: scene.visualType, query: scene.assetQuery,
+      sourcePriority: scene.sourcePriority, sourcePolicy: scene.assetSource, evidenceReference: scene.evidenceReference,
+    })));
+  }
   write(path.join(outputDirectory, "thumbnail.json"), thumbnail);
   write(path.join(outputDirectory, "sources.json"), topic.sources);
   write(path.join(outputDirectory, "captions.srt"), captionSrt(script));
@@ -750,12 +767,14 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     applyMeasuredTiming(script, voice.claimDurations, duration);
     visuals = Visuals.plan(topic, script);
     pkg.visuals = visuals;
+    pkg.render = render;
     write(path.join(outputDirectory, "script.json"), script);
     write(path.join(outputDirectory, "visuals.json"), visuals);
+    if (isBehindOrdinary) write(path.join(outputDirectory, "storyboard.json"), { channel: channel.slug, topicId: topic.id, scenes: visuals });
     write(path.join(outputDirectory, "captions.srt"), captionSrt(script));
     write(path.join(outputDirectory, "captions.ass"), captionAss(script));
     const video = path.join(outputDirectory, topic.slug + ".mp4");
-    const minimumSegments = Math.ceil(duration / 3.5);
+    const minimumSegments = Math.ceil(duration / (isBehindOrdinary ? 3 : 3.5));
     const image = path.join(outputDirectory, "thumbnail.jpg");
     // ImpossibleBrief records do not carry their channel; the look, the music
     // mood and the card accent are chosen per channel.
@@ -773,11 +792,14 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     require("../../lib/provenance").write(outputDirectory, require("../../lib/provenance").build({
       channel: channel.slug, slug: topic.slug, stills: assets.stills || [], clips: assets.clips || [], voiceProvider: voice.provider, music: !!music,
     }));
-    try {
-      require("../growth/thumbnails").recordVariants(channel, topic.slug, [{ file: path.relative(ROOT, image), sha256: require("../growth/thumbnails").sha256(image),
-        concept: thumbnailRender.sourceType || "lead-still-with-hook-text", layoutType: "full-bleed-still-text", text: topic.thumbnailText || null, templateVersion: "ib-ct-thumbnail-v1", human: false, selected: true }]);
-    } catch (error) {}
+    if (options.recordState !== false) {
+      try {
+        require("../growth/thumbnails").recordVariants(channel, topic.slug, [{ file: path.relative(ROOT, image), sha256: require("../growth/thumbnails").sha256(image),
+          concept: thumbnailRender.sourceType || "lead-still-with-hook-text", layoutType: "full-bleed-still-text", text: topic.thumbnailText || null, templateVersion: "ib-ct-thumbnail-v1", human: false, selected: true }]);
+      } catch (error) {}
+    }
     pkg.renderVisuals = visualRender;
+    pkg.render = render;
     pkg.qualityGate = Quality.evaluatePackage(pkg);
     write(path.join(outputDirectory, "quality-gate.json"), pkg.qualityGate);
   }
@@ -809,6 +831,10 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     description: metadata.description.includes("Sources:"),
     qualityGate: pkg.qualityGate.decision === "PUBLISH",
     metadata: metadata.uploadChannel === channel.slug && metadata.uploadEnabled === false,
+    ...(isBehindOrdinary ? {
+      storyboard: fs.existsSync(path.join(outputDirectory, "storyboard.json")) && visuals.every((scene) => scene.visualObjective && scene.visualType && scene.assetQuery && scene.evidenceReference),
+      assetPlan: fs.existsSync(path.join(outputDirectory, "asset-plan.json")),
+    } : {}),
     ...(growth ? { growthReadiness: growth.readiness.decision !== "BLOCK" } : {}),
   };
   const validationReasons = {};

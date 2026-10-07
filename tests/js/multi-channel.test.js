@@ -192,6 +192,12 @@ test("The Hidden Logic of Things has 500+ unique research questions and an evide
     assert.equal(Scripting.titleCandidates(topic).length, 20);
     assert.equal(Scripting.longToShortFactory(topic).length, 4);
     assert.equal(JSON.parse(fs.readFileSync(path.join(temp, "thumbnail.json"), "utf8")).maxWords, 4);
+    const storyboard = JSON.parse(fs.readFileSync(path.join(temp, "storyboard.json"), "utf8"));
+    assert.ok(storyboard.scenes.every((scene) => scene.visualObjective && scene.visualType && scene.assetQuery && scene.evidenceReference && scene.duration > 0));
+    assert.ok(fs.existsSync(path.join(temp, "asset-plan.json")));
+    const gate = JSON.parse(fs.readFileSync(path.join(temp, "quality-gate.json"), "utf8"));
+    assert.equal(gate.thresholds.publish, 88);
+    assert.equal(gate.decision, "PUBLISH");
     assert.equal(JSON.parse(fs.readFileSync(path.join(temp, "metadata.json"), "utf8")).uploadChannel, "behind-the-ordinary");
   } finally { fs.rmSync(temp, { recursive: true, force: true }); }
 });

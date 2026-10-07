@@ -5,6 +5,7 @@ const fs = require("fs");
 const path = require("path");
 const cp = require("child_process");
 const { ROOT } = require("../channel-context");
+const Explainers = require("./explainers");
 
 const CACHE_SCHEMA = 2;
 const MAX_HOLD_SECONDS = 4;
@@ -29,7 +30,7 @@ function claimRows(script, duration) {
   return claims.map((claim, index) => ({ ...claim, start: index * piece, end: (index + 1) * piece }));
 }
 
-function timelineBoundaries(claims, duration, pacingSegments) {
+function timelineBoundaries(claims, duration, pacingSegments, maximumPieceSeconds = 3.5) {
   const boundaries = new Set([0, duration]);
   const claimBoundaries = [0, duration];
   for (const claim of claims) {
@@ -56,7 +57,7 @@ function timelineBoundaries(claims, duration, pacingSegments) {
   for (let index = 1; index < sorted.length; index += 1) {
     const start = out[out.length - 1];
     const end = sorted[index];
-    const pieces = Math.ceil((end - start) / 3.5);
+    const pieces = Math.ceil((end - start) / maximumPieceSeconds);
     for (let piece = 1; piece <= pieces; piece += 1) out.push(start + (end - start) * piece / pieces);
   }
   return out;
@@ -131,6 +132,21 @@ function semanticTerms(topic) {
     topic && topic.topic, topic && topic.coreQuestion].flatMap(semanticFieldTerms))];
 }
 
+// A broad Commons result can mention the subject only incidentally in a long
+// description while depicting something else entirely. For this channel,
+// search results outside the curated topic article must name a distinctive
+// subject term in the file title itself. That rejects false positives such as
+// an equine ultrasound photograph whose description merely says Bluetooth.
+function fileNamesSubject(topic, item) {
+  const file = String(item && item.file || "").toLowerCase().replace(/[^a-z0-9]+/g, " ");
+  const terms = [...new Set([
+    ...semanticFieldTerms(topic && topic.canonicalTopic),
+    ...semanticFieldTerms(topic && topic.subject),
+    ...semanticFieldTerms(topic && topic.object),
+  ])].filter((term) => term.length >= 4);
+  return terms.some((term) => new RegExp(`\\b${term.replace(/[.*+?^${}()|[\\]\\]/g, "\\$&")}\\b`, "i").test(file));
+}
+
 function visualAssetText(shot) {
   const asset = shot && (shot.still || shot.clip || shot.backdrop) || {};
   return [asset.file, asset.description, asset.alt, asset.title, asset.origin, shot && shot.scene].filter(Boolean).join(" ");
@@ -183,6 +199,14 @@ function semanticVisualEvidence(topic, shot) {
   };
 }
 
+function detailStill(topic, stills = []) {
+  if (!topic || topic.channel !== "behind-the-ordinary") return null;
+  return stills.find((still) => {
+    const evidence = semanticVisualEvidence(topic, { type: "licensed-still", still });
+    return evidence.designDetailMatch;
+  }) || null;
+}
+
 // Opening experiment, 50/50 by topic: "number" opens on the hook's sourced
 // number card (the original look); "motion" opens on moving footage (or the
 // lead photograph) with the hook words on screen. Recorded in render.json so
@@ -195,13 +219,19 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
   const opening = options.opening || "number";
   const claims = claimRows(script, duration);
   if (!claims.length || !(duration > 0)) return [];
-  const boundaries = timelineBoundaries(claims, duration, pacingSegments);
+  const behindOrdinary = topic && topic.channel === "behind-the-ordinary";
+  const boundaries = timelineBoundaries(claims, duration, pacingSegments, behindOrdinary ? 3 : 3.5);
+  const maximumHoldSeconds = behindOrdinary ? 3.2 : MAX_HOLD_SECONDS;
   const scenes = scenesFor(topic);
+  // Narration lines a topic explains with an animated diagram (explainerScenes).
+  const explainerSpecs = Explainers.forClaims(topic, claims);
   // Photographs first (they carry the story), diagrams after, each in the
   // relevance order prepareAssets produced.
   const semanticFirst = (items) => items.sort((a, b) => Number(semanticVisualEvidence(topic, { type: "licensed-still", still: b }).relevant)
     - Number(semanticVisualEvidence(topic, { type: "licensed-still", still: a }).relevant));
-  const ordered = [...semanticFirst(stills.filter((still) => stillKind(still) === "photo")), ...semanticFirst(stills.filter((still) => stillKind(still) === "diagram"))];
+  let ordered = [...semanticFirst(stills.filter((still) => stillKind(still) === "photo")), ...semanticFirst(stills.filter((still) => stillKind(still) === "diagram"))];
+  const explanatoryLead = detailStill(topic, ordered);
+  if (explanatoryLead) ordered = [explanatoryLead, ...ordered.filter((still) => still !== explanatoryLead)];
   const maxCards = ordered.length >= 2 ? MAX_CARDS_WITH_STILLS : MAX_CARDS_WITHOUT_STILLS;
   const stillUses = new Map();
   const cardedClaims = new Set();
@@ -212,10 +242,22 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
   const plan = [];
   const distinctKeys = () => new Set(plan.map((shot) => shot.visualKey || shot.sourceId));
 
+  // The Hidden Logic of Things: the picture must match the line it sits
+  // under, so stills are ranked by the words they share with that line.
+  const words = (value) => new Set(String(value || "").toLowerCase().split(/[^a-z0-9]+/).filter((word) => word.length > 3));
+  let currentClaimWords = new Set();
+  const lineMatch = (still) => [...words([still.file, still.description, still.title].join(" "))].filter((word) => currentClaimWords.has(word)).length;
   const nextStill = () => {
     const last = plan.length ? plan[plan.length - 1].still : null;
     const candidates = ordered.filter((still) => still !== last);
     if (!candidates.length) return null;
+    if (behindOrdinary) {
+      return candidates.reduce((best, still) => {
+        const usesDelta = (stillUses.get(still.file) || 0) - (stillUses.get(best.file) || 0);
+        if (usesDelta !== 0) return usesDelta < 0 ? still : best;
+        return lineMatch(still) > lineMatch(best) ? still : best;
+      }, candidates[0]);
+    }
     // Unused stills first; once all are used, the least used one returns with
     // a different camera move.
     return candidates.reduce((best, still) => ((stillUses.get(still.file) || 0) < (stillUses.get(best.file) || 0) ? still : best), candidates[0]);
@@ -227,6 +269,29 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     if (end - start < 0.01) continue;
     const claimIndex = activeClaim(claims, start + 0.002);
     const claim = claims[claimIndex];
+    currentClaimWords = words(claim.text);
+    const explainer = explainerSpecs[claimIndex];
+    // No sub-second flashes: a sliver of a line extends the shot before it.
+    const tail = plan[plan.length - 1];
+    if (behindOrdinary && end - start < 0.6 && tail && tail.claimIndex === claimIndex) {
+      tail.end = end;
+      tail.duration = tail.end - tail.start;
+      continue;
+    }
+    if (explainer) {
+      // One continuous animation per narration line; its own beats supply the
+      // visual changes, so later pacing boundaries extend it.
+      const last = plan[plan.length - 1];
+      if (last && last.type === "explainer" && last.claimIndex === claimIndex) {
+        last.end = end;
+        last.duration = last.end - last.start;
+        continue;
+      }
+      const key = `explainer:${claimIndex}:${Explainers.specKey(explainer)}`;
+      plan.push({ shot: plan.length + 1, start, end, duration: end - start, claimIndex, claimText: claim.text, scene: claim.text,
+        type: "explainer", explainer, numbers: [], comparison: [], still: null, sourceId: key, visualKey: key });
+      continue;
+    }
     const numbers = numberTokens(claim.text);
     const eligible = cardTokens(numbers);
     const previous = plan[plan.length - 1];
@@ -250,7 +315,9 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     if (type === "licensed-still") {
       const candidate = nextStill();
       const reused = candidate && (stillUses.get(candidate.file) || 0) > 0;
-      if (reused && distinctKeys().size < 5 && scenes.length) type = "procedural";
+      // The Hidden Logic of Things never uses generic procedural filler; a
+      // relevant still may return once (the visual audit caps reuse at 2).
+      if (reused && distinctKeys().size < 5 && scenes.length && !behindOrdinary) type = "procedural";
     }
 
     // A picture the viewer has already seen reads as a slideshow. Before a
@@ -260,7 +327,7 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
       const candidate = nextStill();
       const reused = candidate && (stillUses.get(candidate.file) || 0) > 0;
       if (reused && previous && ["licensed-still", "stock-video"].includes(previous.type) &&
-        previous.duration + (end - start) <= MAX_HOLD_SECONDS - 0.25) {
+        previous.duration + (end - start) <= maximumHoldSeconds) {
         previous.end = end;
         previous.duration = previous.end - previous.start;
         continue;
@@ -336,6 +403,8 @@ function visualMetrics(plan, topic = null) {
   let runSource = null;
   let runSeconds = 0;
   for (const shot of plan) {
+    // An explainer animates throughout; it is not a static hold.
+    if (shot.type === "explainer") { runSource = null; runSeconds = 0; continue; }
     if (key(shot) === runSource) runSeconds += shot.duration;
     else { runSource = key(shot); runSeconds = shot.duration; }
     maxStaticSeconds = Math.max(maxStaticSeconds, runSeconds);
@@ -345,7 +414,26 @@ function visualMetrics(plan, topic = null) {
   const cardNumbersValid = plan.filter((shot) => shot.type === "number-card")
     .every((shot) => shot.numbers.length > 0 && shot.numbers.every((token) => shot.claimText.includes(token)));
   const openingSemantic = topic && first ? semanticVisualEvidence(topic, first) : { measured: false, relevant: null, reason: "topic not supplied to semantic visual audit" };
+  const uses = new Map();
+  for (const shot of plan) uses.set(key(shot), (uses.get(key(shot)) || 0) + 1);
+  // Per-shot relevance judged on the asset itself (file, caption), never on
+  // the narration it sits under, so filler cannot borrow the line's words.
+  const shotRelevant = (shot) => shot.type === "explainer" || (shot.type === "number-card" && shot.numbers.length > 0)
+    || (["licensed-still", "stock-video"].includes(shot.type) && !!topic && semanticVisualEvidence(topic, { type: shot.type, still: shot.still, clip: shot.clip, claimText: shot.claimText }).relevant);
+  const totalSeconds = plan.reduce((sum, shot) => sum + shot.duration, 0) || 1;
+  const relevantSeconds = plan.filter(shotRelevant).reduce((sum, shot) => sum + shot.duration, 0);
+  const lastClaim = plan.length ? Math.max(...plan.map((shot) => shot.claimIndex)) : -1;
+  const payoffShots = plan.filter((shot) => shot.claimIndex === lastClaim && !shot.loopBack);
   return {
+    strict: !!topic && topic.channel === "behind-the-ordinary",
+    maxVisualUses: Math.max(0, ...uses.values()),
+    explainerShots: plan.filter((shot) => shot.type === "explainer").length,
+    proceduralShots: plan.filter((shot) => shot.type === "procedural").length,
+    relevantShare: Math.round(relevantSeconds / totalSeconds * 1000) / 1000,
+    irrelevantShots: plan.filter((shot) => !shotRelevant(shot)).map((shot) => ({ shot: shot.shot, type: shot.type, asset: shot.still ? shot.still.file : shot.clip ? shot.clip.id : shot.sourceId, line: shot.claimText })),
+    payoffCovered: payoffShots.some((shot) => shot.type === "explainer" || (shot.type === "licensed-still" && shot.kind === "diagram" && shotRelevant(shot))),
+    shotTypes: plan.map((shot) => shot.type),
+
     distinctVisuals: distinct.size,
     realImageCount: real.size,
     numberCardCount: cards.size,
@@ -367,7 +455,17 @@ function evaluateVisualQuality(metrics) {
   if (!metrics || !metrics.openingSemantic || (metrics.openingSemantic.measured && !metrics.openingSemantic.relevant)) {
     reasons.push(metrics && metrics.openingSemantic && metrics.openingSemantic.reason || "opening semantic relevance was not measured");
   }
-  const score = Math.max(0, 100 - reasons.length * 20);
+  let relevance = 100;
+  if (metrics && metrics.strict) {
+    // The Hidden Logic of Things: every visual must explain its line.
+    if (metrics.maxVisualUses > 2) reasons.push(`excessive duplicate visuals: one visual used ${metrics.maxVisualUses} times`);
+    if (metrics.visualChanges && metrics.distinctVisuals / metrics.visualChanges < 0.6) reasons.push(`slideshow: ${metrics.distinctVisuals} distinct visuals across ${metrics.visualChanges} shots`);
+    if (metrics.proceduralShots > 0) reasons.push(`${metrics.proceduralShots} generic procedural filler frame(s)`);
+    if (metrics.relevantShare < 0.9) reasons.push(`visual/narration mismatch: only ${Math.round(metrics.relevantShare * 100)}% of screen time shows a subject-specific visual`);
+    if (!metrics.payoffCovered) reasons.push("payoff line has no explanatory diagram");
+    relevance = Math.round(metrics.relevantShare * 100);
+  }
+  const score = Math.max(0, Math.min(relevance, 100) - reasons.length * 20);
   return { decision: reasons.length ? "BLOCK" : "PUBLISH", score, reasons, semanticEvidence: metrics && metrics.openingSemantic || null };
 }
 
@@ -423,11 +521,25 @@ function subjectPhrases(topic, articleTitle) {
 function cacheDirectory(outputDirectory) { return path.join(outputDirectory, "visual-cache"); }
 function manifestPath(outputDirectory) { return path.join(cacheDirectory(outputDirectory), "manifest.json"); }
 
-function loadManifest(outputDirectory) {
+function curatedVisuals(topic) {
+  return (Array.isArray(topic && topic.curatedVisuals) ? topic.curatedVisuals : []).filter((item) => {
+    try {
+      const host = new URL(item.imageUrl).hostname;
+      return /^https:/.test(item.imageUrl) && ["upload.wikimedia.org", "thumb.wikimedia.org"].includes(host) && item.file && item.sourceUrl && item.licence;
+    } catch (error) { return false; }
+  });
+}
+
+function loadManifest(outputDirectory, topic = null) {
   try {
     const manifest = JSON.parse(fs.readFileSync(manifestPath(outputDirectory), "utf8"));
     if (manifest.schemaVersion !== CACHE_SCHEMA) return null;
-    const stills = (manifest.stills || []).map((still) => ({ ...still, path: path.join(cacheDirectory(outputDirectory), still.cachedFile) }));
+    if (topic && curatedVisuals(topic).some((item) => !(manifest.stills || []).some((still) => still.file === item.file))) return null;
+    const excluded = new Set((Array.isArray(topic && topic.excludeStills) ? topic.excludeStills : [topic && topic.excludeStills]).filter(Boolean).map(String));
+    const stills = (manifest.stills || [])
+      .filter((still) => !excluded.has(still.file))
+      .filter((still) => !topic || topic.channel !== "behind-the-ordinary" || still.origin === "wikipedia-article" || still.origin === "curated-licensed" || fileNamesSubject(topic, still))
+      .map((still) => ({ ...still, path: path.join(cacheDirectory(outputDirectory), still.cachedFile) }));
     const clips = (manifest.clips || []).map((clip) => ({ ...clip, path: path.join(cacheDirectory(outputDirectory), clip.cachedFile) }));
     if (!stills.every((still) => fs.existsSync(still.path)) || !clips.every((clip) => fs.existsSync(clip.path))) return null;
     return { ...manifest, stills, clips };
@@ -450,14 +562,32 @@ function orderStills(items, articles = [], relevanceTerms = []) {
 }
 
 async function prepareAssets(topic, outputDirectory) {
-  const cached = loadManifest(outputDirectory);
+  const cached = loadManifest(outputDirectory, topic);
   if (cached) return cached;
   const Commons = require("../../scripts/fr-library/build");
   const directory = cacheDirectory(outputDirectory);
   fs.mkdirSync(directory, { recursive: true });
-  const picked = [];
+  const baseCached = loadManifest(outputDirectory);
+  // A verified topic may name an exact licensed explainer asset. Enrich an
+  // existing cache in place instead of repeating broad network searches.
+  if (baseCached && curatedVisuals(topic).length) {
+    const manifest = JSON.parse(fs.readFileSync(manifestPath(outputDirectory), "utf8"));
+    for (const item of curatedVisuals(topic)) {
+      if ((manifest.stills || []).some((still) => still.file === item.file)) continue;
+      const response = await Commons.get(item.imageUrl, { binary: true });
+      if (!(response.status >= 200 && response.status < 300) || !Buffer.isBuffer(response.body) || !response.body.length) continue;
+      const extension = /\.png(?:$|\?)/i.test(item.imageUrl) || /\.png$/i.test(item.file) ? ".png" : ".jpg";
+      const cachedFile = shortHash(item.file) + extension;
+      fs.writeFileSync(path.join(directory, cachedFile), response.body);
+      manifest.stills.unshift({ ...item, cachedFile, origin: "curated-licensed", articleRank: -1 });
+    }
+    fs.writeFileSync(manifestPath(outputDirectory), JSON.stringify(manifest, null, 2) + "\n");
+    const enriched = loadManifest(outputDirectory, topic);
+    if (enriched) return enriched;
+  }
+  const picked = curatedVisuals(topic).map((item) => ({ ...item, origin: "curated-licensed", articleRank: -1 }));
   const excluded = (Array.isArray(topic.excludeStills) ? topic.excludeStills : [topic.excludeStills]).filter(Boolean).map(String);
-  const used = new Set(excluded);
+  const used = new Set([...excluded, ...picked.map((item) => item.file)]);
   const articles = wikiTitles(topic);
 
   // articleRank: the story's own article (first fact) leads; a broader
@@ -513,7 +643,8 @@ async function prepareAssets(topic, outputDirectory) {
   // portraits and honorific-titled files.
   if (topic.channel === "behind-the-ordinary") {
     for (let index = picked.length - 1; index >= 0; index -= 1) {
-      if (picked[index].origin !== "wikipedia-article" && PERSON_FILE.test(`${picked[index].file} ${picked[index].description || ""}`)) picked.splice(index, 1);
+      if (picked[index].origin !== "wikipedia-article" &&
+        (PERSON_FILE.test(`${picked[index].file} ${picked[index].description || ""}`) || !fileNamesSubject(topic, picked[index]))) picked.splice(index, 1);
     }
   }
 
@@ -558,6 +689,7 @@ async function prepareAssets(topic, outputDirectory) {
       author: item.author,
       sourceUrl: item.sourceUrl,
       description: item.description,
+      trademarkNotice: item.trademarkNotice || null,
       origin: item.origin,
       score: item.score,
       articleRank: Number.isFinite(item.articleRank) ? item.articleRank : articles.length,
@@ -578,11 +710,13 @@ async function prepareAssets(topic, outputDirectory) {
   }
   const manifest = { schemaVersion: CACHE_SCHEMA, topicId: topic.id, stills, clips };
   fs.writeFileSync(manifestPath(outputDirectory), JSON.stringify(manifest, null, 2) + "\n");
-  return loadManifest(outputDirectory) || { ...manifest, stills: [] };
+  return loadManifest(outputDirectory, topic) || { ...manifest, stills: [] };
 }
 
 function prepareAssetsSync(topicFile, outputDirectory) {
-  const cached = loadManifest(outputDirectory);
+  let topic = null;
+  try { topic = JSON.parse(fs.readFileSync(topicFile, "utf8")); } catch (error) {}
+  const cached = loadManifest(outputDirectory, topic);
   if (cached) return cached;
   const result = cp.spawnSync(process.execPath, [path.join(ROOT, "scripts", "ib-ct-visual-cache.js"), topicFile, outputDirectory], {
     cwd: ROOT,
@@ -590,7 +724,7 @@ function prepareAssetsSync(topicFile, outputDirectory) {
     timeout: 480000,
     env: process.env,
   });
-  const loaded = loadManifest(outputDirectory);
+  const loaded = loadManifest(outputDirectory, topic);
   if (result.status === 0 && loaded) return loaded;
   return { schemaVersion: CACHE_SCHEMA, topicId: null, stills: [], error: (result.stderr || result.error && result.error.message || "visual cache preparation failed").trim() };
 }
@@ -606,6 +740,6 @@ function attributionLines(stills, clips = []) {
 
 module.exports = { PERSON_FILE,
   loopBack, orderStills,
-  CACHE_SCHEMA, MAX_HOLD_SECONDS, GENERIC_VISUAL_TERMS, numberTokens, stillKind, cardTokens, semanticTerms, semanticVisualEvidence, openingVariant, buildVisualPlan, visualMetrics, evaluateVisualQuality,
-  wikiTitles, prepareAssets, prepareAssetsSync, loadManifest, attributionLines,
+  CACHE_SCHEMA, MAX_HOLD_SECONDS, GENERIC_VISUAL_TERMS, numberTokens, stillKind, cardTokens, semanticTerms, fileNamesSubject, semanticVisualEvidence, detailStill, openingVariant, buildVisualPlan, visualMetrics, evaluateVisualQuality,
+  wikiTitles, curatedVisuals, prepareAssets, prepareAssetsSync, loadManifest, attributionLines,
 };
