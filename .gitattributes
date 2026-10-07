@@ -1,0 +1,4 @@
+# Channel state ledgers are appended by several workflows; merge them as JSON
+# (scripts/git-json-merge.js) instead of failing the push with a conflict.
+channels/*/state/**/*.json merge=json-union
+icerik/*.json merge=json-union

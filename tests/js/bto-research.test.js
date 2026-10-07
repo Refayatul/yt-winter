@@ -79,3 +79,22 @@ test("a provider rate limit defers the batch without recording attempts", async 
   const result = await Research.main(["--slug", "zippers-what-explains-locking-sliders"], { get, generate, verify: async () => ({ report: [{ errors: [] }] }) });
   assert.deepEqual(result.outcomes, [], "no attempt recorded, so the question is retried next run");
 });
+
+test("authority pages become non-Wikipedia fact sources in the researched record", () => {
+  const Research = require("../../scripts/bto-research");
+  const topic = { slug: "qr", object: "QR code", designDetail: "corner squares", coreQuestion: "Why do QR codes have three corner squares?", category: "DESIGN DECISIONS" };
+  const sources = [
+    { title: "QR code", url: "https://en.wikipedia.org/wiki/QR_code", text: "x", links: ["https://www.qrcode.com/en/history/", "https://www.denso-wave.com/en/"] },
+    { title: "qrcode.com", url: "https://www.qrcode.com/en/history/", text: "y", links: ["https://www.qrcode.com/en/history/"], authority: true },
+  ];
+  const draft = { answerable: true, title: "Why QR Codes Have Three Corner Squares",
+    facts: [
+      { id: "F1", sourceId: "S1", claim: "QR codes have three finder patterns.", quote: "three finder patterns at the corners" },
+      { id: "F2", sourceId: "S2", claim: "The ratio 1:1:3:1:1 was the least used.", quote: "the least-used ratio on printed matter" },
+    ],
+    narration: [{ text: "Three finder patterns sit at the corners.", facts: ["F1"] }, { text: "Their ratio was the least used on printed matter.", facts: ["F2"] }] };
+  const { record } = Research.toSeedRecord(topic, draft, sources);
+  assert.equal(record.facts[0].source, "Wikipedia — QR code");
+  assert.equal(record.facts[1].source, "qrcode.com");
+  assert.equal(record.facts[1].url, "https://www.qrcode.com/en/history/");
+});

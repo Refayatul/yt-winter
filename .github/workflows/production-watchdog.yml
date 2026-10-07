@@ -152,6 +152,7 @@ jobs:
           node daily-operations-report.js || true
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add icerik/bildirim-durum.json reports
           if git diff --cached --quiet; then echo "Notification state unchanged."; exit 0; fi
           git commit -m "chore: record production SLA notification"
@@ -240,6 +241,7 @@ jobs:
         run: |
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add channels/impossible-brief reports
           if git diff --cached --quiet; then echo "ImpossibleBrief state unchanged."; exit 0; fi
           git commit -m "chore: recover ImpossibleBrief production SLA"
@@ -287,6 +289,7 @@ jobs:
           node daily-operations-report.js || true
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add channels/impossible-brief/state/notification-state.json reports || true
           if git diff --cached --quiet; then echo "ImpossibleBrief verification state unchanged."; exit 0; fi
           git commit -m "chore: record ImpossibleBrief SLA verification"
@@ -374,6 +377,7 @@ jobs:
         run: |
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add channels/critical-thread reports
           if git diff --cached --quiet; then echo "CriticalThread state unchanged."; exit 0; fi
           git commit -m "chore: recover CriticalThread production SLA"
@@ -421,6 +425,7 @@ jobs:
           node daily-operations-report.js || true
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add channels/critical-thread/state/notification-state.json reports || true
           if git diff --cached --quiet; then echo "CriticalThread verification state unchanged."; exit 0; fi
           git commit -m "chore: record CriticalThread SLA verification"
@@ -508,6 +513,7 @@ jobs:
         run: |
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add channels/behind-the-ordinary reports
           if git diff --cached --quiet; then echo "The Hidden Logic of Things state unchanged."; exit 0; fi
           git commit -m "chore: recover The Hidden Logic of Things production SLA"
@@ -555,6 +561,7 @@ jobs:
           node daily-operations-report.js || true
           git config user.name "production-watchdog"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add channels/behind-the-ordinary/state/notification-state.json reports || true
           if git diff --cached --quiet; then echo "The Hidden Logic of Things verification state unchanged."; exit 0; fi
           git commit -m "chore: record The Hidden Logic of Things SLA verification"

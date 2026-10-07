@@ -222,7 +222,13 @@ function haftalikMesaj(v) {
 }
 
 // ---------------- GitHub islemleri ----------------
-const durumOku = () => jsonOku(DURUM, { gonderilen: {} });
+// Older/other writers may leave a state file without the sent-ledger
+// (e.g. {"channel": ..., "events": []}); a missing ledger must not crash.
+const durumOku = () => {
+  const d = jsonOku(DURUM, { gonderilen: {} }) || {};
+  if (!d.gonderilen || typeof d.gonderilen !== "object") d.gonderilen = {};
+  return d;
+};
 function isaretle(d, anahtar) { d.gonderilen[anahtar] = new Date().toISOString(); }
 
 async function issueAc(m) {

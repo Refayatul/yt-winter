@@ -27,6 +27,7 @@ function evaluateTopic(topic, allTopics = []) {
     if (!topic.openingLine || Scripting.FORBIDDEN_OPENINGS.test(topic.openingLine)) blockers.push("weak or forbidden opening");
     if (!topic.payoff) blockers.push("production topic has no payoff");
     if (Editorial.answerLeak(topic)) blockers.push("opening gives away the full payoff instead of progressively explaining it");
+    if (authorityFacts(topic) < 2) blockers.push("fewer than two facts verified on a non-Wikipedia authoritative source");
   }
   const editorial = Editorial.score(topic);
   const scores = { ...editorial.factors, repetition: exact.length ? 0 : 100 };
@@ -36,9 +37,22 @@ function evaluateTopic(topic, allTopics = []) {
     note: verified ? "evidence mapped" : "validated research question; evidence required before production" };
 }
 
+// Facts quote-verified on a page that is not Wikipedia (manufacturer,
+// standards body, archive, museum, university, government). Wikipedia helps
+// discovery but never carries a production video on its own.
+function authorityFacts(topic) {
+  return (topic.facts || []).filter((fact) => {
+    if (!fact.claim || !fact.url) return false;
+    try { return !/(^|\.)wikipedia\.org$/i.test(new URL(fact.url).hostname); } catch (error) { return false; }
+  }).length;
+}
+
 function sourceConfidence(topic) {
   const mapped = (topic.facts || []).filter((fact) => fact.claim && fact.source).length;
-  if (topic.productionReady === true && topic.researchStatus === "VERIFIED" && (topic.sources || []).length >= 2 && mapped >= 5) return 95;
+  if (topic.productionReady === true && topic.researchStatus === "VERIFIED" && (topic.sources || []).length >= 2 && mapped >= 5) {
+    const authority = authorityFacts(topic);
+    return authority >= 2 ? 95 : authority === 1 ? 82 : 70;
+  }
   return clamp(((topic.sourceQuality || topic.sourceAvailability || {}).score) || 0);
 }
 
@@ -123,4 +137,4 @@ function evaluatePackage(pkg) {
     checked: ["identity", "central-question", "evidence", "hook", "progressive-reveal", "storyboard", "visuals", "audio", "titles", "thumbnail", "sources", "metadata"] };
 }
 
-module.exports = { PILLARS, AI_FILLER, REQUIRED_SCENE_FIELDS, evaluateTopic, evaluatePackage, naturalness, sourceConfidence, titleMatchesTopic };
+module.exports = { PILLARS, AI_FILLER, REQUIRED_SCENE_FIELDS, authorityFacts, evaluateTopic, evaluatePackage, naturalness, sourceConfidence, titleMatchesTopic };

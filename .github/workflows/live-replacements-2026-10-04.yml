@@ -60,6 +60,7 @@ jobs:
         run: |
           git config user.name "replacement-bot"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add channels/*/state reports/live-replacements-2026-10-04.json channels/*/reports/packages 2>/dev/null || true
           if git diff --cached --quiet; then echo "No state changes to commit."; exit 0; fi
           git commit -m "chore: record validated replacement publications"

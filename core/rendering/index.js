@@ -592,11 +592,13 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
       chain = `[${index}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=${FPS}${colourGrade(topic)}`;
     } else if (shot.type === "explainer") {
       chain = `[${index}:v]scale=1080:1920,fps=${FPS}`;
-    } else if (shot.type === "licensed-still" && shot.kind === "diagram") {
+    } else if (shot.type === "licensed-still" && (shot.kind === "diagram" || (shot.still && shot.still.fit === true))) {
+      // Diagrams, and photographs a curator marked `fit` (the detail sits at
+      // the edges of a landscape frame), are shown whole instead of cropped.
       // Whole figure, readable, above the caption band, over its own blur.
       chain = `[${index}:v]split=2[bg${index}][fg${index}];`
         + `[bg${index}]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,gblur=sigma=30,eq=brightness=-0.30:saturation=0.65[bgb${index}];`
-        + `[fg${index}]${diagramCrop(shot)}scale=1000:1000:force_original_aspect_ratio=decrease[fgs${index}];`
+        + `[fg${index}]${shot.kind === "diagram" ? diagramCrop(shot) : ""}scale=1000:1000:force_original_aspect_ratio=decrease[fgs${index}];`
         + `[bgb${index}][fgs${index}]overlay=(W-w)/2:210+(1000-h)/2,zoompan=z='1+0.0004*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
     } else if (shot.type === "licensed-still") {
       chain = `[${index}:v]scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,zoompan=${cameraMove(shot.motion || 0, frames)}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
