@@ -237,6 +237,9 @@ test("visual pre-check skips picture-poor topics before a render, but never on a
     assert.match(Pipeline.visualShortfall(topic, dir, fake(2, 1)), /3 licensed/);
     assert.equal(Pipeline.visualShortfall(topic, dir, fake(3, 1)), null);
     assert.equal(Pipeline.visualShortfall(topic, dir, fake(0, 0, "Commons timeout")), null, "outage: let the render gate decide");
+    const explained = { id: "BTO-X", slug: "bto-x", explainerScenes: [{ kind: "diagram" }, { kind: "timeline" }] };
+    assert.equal(Pipeline.visualShortfall(explained, dir, fake(3)), null, "drawn explainer scenes count toward variety");
+    assert.match(Pipeline.visualShortfall(explained, dir, fake(1)), /1 licensed pictures\/clips < 2/, "still needs two real pictures");
     assert.ok(fs.existsSync(path.join(dir, "topic.json")), "the render reuses the same topic file and picture cache");
     const source = fs.readFileSync(path.join(__dirname, "../../core/pipeline/impossible-brief.js"), "utf8");
     assert.match(source, /const shortfall = !noRender && !explicit \? visualShortfall\(topic, output\) : null;/);

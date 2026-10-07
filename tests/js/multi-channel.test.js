@@ -181,11 +181,14 @@ test("The Hidden Logic of Things has 500+ unique research questions and an evide
   const used = Discovery.usedIds(channel);
   assert.equal(discovered.length, universe.topics.filter((item) => item.productionReady === true && !used.has(item.id)).length, "unresearched or already-used questions cannot enter production discovery");
   assert.ok(discovered.every((item) => item.researchStatus === "VERIFIED"));
-  const topic = discovered[0];
+  // Production picks through the growth gate (bucket rules), not raw discovery
+  // order, so the fixture is the first discovered topic that gate admits.
+  const Growth = require("../../core/growth");
+  const topic = discovered.find((item) => Growth.planShort(channel, item.id, { skipDuplicate: true }).readiness.decision !== "BLOCK");
   assert.ok(topic, "at least one verified unused BTO topic must remain discoverable");
   const temp = fs.mkdtempSync(path.join(os.tmpdir(), "bto-e2e-"));
   try {
-    const plan = require("../../core/growth").planShort(channel, topic.id, { skipDuplicate: true });
+    const plan = Growth.planShort(channel, topic.id, { skipDuplicate: true });
     const result = Rendering.buildPackage(topic, channel, temp, { render: false, growthPlan: plan });
     assert.ok(Object.values(result.validations).every(Boolean));
     assert.equal(SharedQuality.engineFor("behind-the-ordinary"), BehindQuality);
