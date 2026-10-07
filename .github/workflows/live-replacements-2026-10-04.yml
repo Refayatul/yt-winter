@@ -1,14 +1,8 @@
 name: Live validated replacements 2026-10-04
 
+# One-shot job (2026-10-04). Manual only: any edit to this file (for example a
+# shared change across workflows) must never re-run real uploads by itself.
 on:
-  push:
-    branches: ['main']
-    paths:
-      - '.github/workflows/live-replacements-2026-10-04.yml'
-  pull_request:
-    branches: ['main']
-    paths:
-      - '.github/replacement-trigger'
   workflow_dispatch:
 
 concurrency:
