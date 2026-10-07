@@ -1,0 +1,49 @@
+{
+  "slug": "uss-thresher-1963",
+  "format": "short",
+  "olusturuldu": "2026-10-07T13:07:12.430Z",
+  "ekranHook": "IT COULDN'T SURFACE",
+  "mevcut": {
+    "puan": 70,
+    "pencereler": {
+      "0-5": "USS Thresher was lost during a deep-diving test. It fell past its crush depth,",
+      "5-12": "and all one hundred twenty nine aboard were lost. Investigators believe a pipe joint leaked in the engine room.",
+      "12-20": "The reactor shut down, and the sub lost power. The crew tried an emergency blow of the ballast tanks. Ice formed in",
+      "20-30": "the air system and blocked it. Without that air, Thresher kept sinking. The Navy then created the SUBSAFE programme."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 3 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "USS Thresher was lost during a deep-diving test."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a likely piping leak in the engine room at test depth."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a likely piping leak in the engine room at test depth do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is probable flooding from a piping joint, reactor shutdown, and ice blocking the emergency ballast blow — and it is why the US Navy created the SUBSAFE programme for submarine systems."
+      }
+    ],
+    "metin": "USS Thresher was lost during a deep-diving test. It took only a likely piping leak in the engine room at test depth. So how could a likely piping leak in the engine room at test depth do this? The answer is probable flooding from a piping joint, reactor shutdown, and ice blocking the emergency ballast blow — and it is why the US Navy created the SUBSAFE programme for submarine systems.",
+    "puan": 75
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

@@ -16995,7 +16995,7 @@
     "popularityBand": "unknown",
     "readiness": 95,
     "normalized": {
-      "ageHours": 47.09,
+      "ageHours": 63.21,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -17491,14 +17491,14 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 35.8,
+      "growthScore": 34.7,
       "classification": "WEAK",
       "percentiles": {
         "viewVelocity": 10,
         "retention": null,
         "engagement": 60,
         "subscriberConversion": null,
-        "views": 40
+        "views": 33.3
       },
       "baselines": {
         "views": 957.5,
@@ -22137,14 +22137,14 @@
       "subscribersPer1000Views": 2.13
     },
     "performance": {
-      "growthScore": 58.4,
+      "growthScore": 57.9,
       "classification": "NORMAL",
       "percentiles": {
         "viewVelocity": 73.3,
         "retention": 50,
         "engagement": 46.7,
         "subscriberConversion": 71.4,
-        "views": 26.7
+        "views": 20
       },
       "baselines": {
         "views": 957.5,
@@ -24484,14 +24484,14 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 31.2,
+      "growthScore": 30.1,
       "classification": "WEAK",
       "percentiles": {
         "viewVelocity": 66.7,
         "retention": null,
         "engagement": 0,
         "subscriberConversion": null,
-        "views": 20
+        "views": 13.3
       },
       "baselines": {
         "views": 957.5,
@@ -25671,336 +25671,6 @@
       "probableCauses": [],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
     }
-  },
-  {
-    "checkpoints": {
-      "1h": {
-        "collectedAt": "2026-10-06T19:36:16.215Z",
-        "metrics": {
-          "views": {
-            "value": 1,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "likes": {
-            "value": 0,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "comments": {
-            "value": 1,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "shares": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_gained": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_lost": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "net_subscribers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_view_duration": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_percentage_viewed": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "watch_time_minutes": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "impressions": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "ctr": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "returning_viewers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed per video by the public API"
-          },
-          "first_30s_retention": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "engaged_views": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "net_subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "engagement_per_1000_views": {
-            "value": 1000,
-            "status": "DERIVED",
-            "from": "likes+comments+shares / views"
-          },
-          "watch_hours_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          }
-        },
-        "traffic": [],
-        "retention": [],
-        "analyticsStatus": "ok"
-      }
-    },
-    "hookType": "shocking_consequence",
-    "hookScore": 80,
-    "selectedHook": "Saudia Flight 163 landed after a cargo fire.",
-    "firstLine": "Saudia Flight 163 landed after a cargo fire.",
-    "firstSecondsScore": 95,
-    "topicCluster": "fire-and-explosions",
-    "bucket": "A",
-    "viralScore": 81,
-    "viralComponents": {
-      "curiosity_gap": {
-        "value": 98,
-        "basis": "derived"
-      },
-      "immediate_stakes": {
-        "value": 94,
-        "basis": "derived"
-      },
-      "human_consequence": {
-        "value": 95,
-        "basis": "derived"
-      },
-      "recognizability": {
-        "value": 65,
-        "basis": "measured"
-      },
-      "surprise": {
-        "value": 90,
-        "basis": "derived"
-      },
-      "visual_potential": {
-        "value": 78,
-        "basis": "derived"
-      },
-      "archival_footage_potential": {
-        "value": 80,
-        "basis": "inventory-signal"
-      },
-      "first_frame_potential": {
-        "value": 82,
-        "basis": "derived"
-      },
-      "title_potential": {
-        "value": 92,
-        "basis": "derived",
-        "note": "4 source-backed title seeds"
-      },
-      "emotional_tension": {
-        "value": 97,
-        "basis": "derived"
-      },
-      "contradiction": {
-        "value": 85,
-        "basis": "derived"
-      },
-      "unexpected_cause": {
-        "value": 82,
-        "basis": "derived"
-      },
-      "numerical_anomaly": {
-        "value": 86,
-        "basis": "derived"
-      },
-      "didnt_know_factor": {
-        "value": 86,
-        "basis": "derived"
-      },
-      "shareability": {
-        "value": 97,
-        "basis": "derived"
-      },
-      "channel_fit": {
-        "value": 82,
-        "basis": "derived"
-      },
-      "historical_similarity": {
-        "value": 50,
-        "basis": "neutral",
-        "note": "no same-cluster channel evidence yet"
-      },
-      "subscriber_conversion_potential": {
-        "value": 80,
-        "basis": "derived",
-        "note": "series-depth proxy; no measured conversion yet"
-      },
-      "audience_breadth": {
-        "value": 85,
-        "basis": "derived"
-      },
-      "hook_potential": {
-        "value": 72,
-        "basis": "derived"
-      },
-      "visual_availability": {
-        "value": 85,
-        "basis": "inventory-signal"
-      },
-      "research_confidence": {
-        "value": 75,
-        "basis": "derived"
-      },
-      "duplicate_risk": {
-        "value": -10,
-        "basis": "penalty",
-        "note": "published-title similarity 0.10"
-      },
-      "saturation_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "0 published / 36 inventory in cluster"
-      },
-      "recent_fatigue_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "0 same-family upload(s) in the last 30 days"
-      },
-      "source_confidence_risk": {
-        "value": -25,
-        "basis": "penalty",
-        "note": "75/100 source quality"
-      },
-      "weak_footage_risk": {
-        "value": -15,
-        "basis": "penalty",
-        "note": "archival stills available"
-      }
-    },
-    "storyStructure": "CONSEQUENCE>FAILURE>CAUSE>ESCALATION>ENGINEERING_REVEAL",
-    "titlePattern": "inside",
-    "selectedTitle": "Inside Saudia 163: The Failure Chain",
-    "titleScore": 86,
-    "titleCandidates": 23,
-    "hookCandidates": 17,
-    "topicScore": 84,
-    "popularityScore": 65,
-    "ctaStyle": "COMMENT_PROMPT",
-    "durationBucket": "18-25s",
-    "openingVisual": "REAL_ARCHIVAL",
-    "experimentVariant": null,
-    "factors": {
-      "TopicDemandScore": 65,
-      "CuriosityScore": 98,
-      "HookPotentialScore": 72,
-      "VisualImpactScore": 78,
-      "EmotionalImpactScore": 97,
-      "StoryCompressionScore": 100,
-      "RewatchPotentialScore": 79,
-      "SharePotentialScore": 97,
-      "CommentPotentialScore": 83,
-      "SubscriberConversionPotential": 80,
-      "NoveltyScore": 74,
-      "AudienceFitScore": 85,
-      "SourceQualityScore": 75,
-      "ChannelFitScore": 82
-    },
-    "selectionMode": "EXPLOIT",
-    "videoId": "ATpXizczEI8",
-    "slug": "saudia-163-1980",
-    "channel": "failure-reconstructed",
-    "contentType": "short",
-    "title": "Inside Saudia 163: The Failure Chain",
-    "publishAt": "2026-10-06T18:00:20Z",
-    "publishHourUTC": 18,
-    "publishSlot": "21:00 TR",
-    "popularityBand": "unknown",
-    "readiness": 92,
-    "normalized": {
-      "ageHours": 1,
-      "viewsPerHour": 1,
-      "recentViewVelocity": null,
-      "likeRate": 0,
-      "commentRate": 1,
-      "shareRate": null,
-      "engagementRate": 1,
-      "engagedViewRate": null,
-      "subscriberConversion": null,
-      "subscribersPer1000Views": null
-    },
-    "performance": {
-      "growthScore": 83.1,
-      "classification": "STRONG",
-      "percentiles": {
-        "viewVelocity": 93.3,
-        "retention": null,
-        "engagement": 100,
-        "subscriberConversion": null,
-        "views": 13.3
-      },
-      "baselines": {
-        "views": 957.5,
-        "viewsPerHour": 6.71,
-        "averagePercentageViewed": 70.38,
-        "engagementRate": 0.029185000000000003,
-        "subscriberConversion": 0.0019850000000000002
-      },
-      "missing": [
-        "retention",
-        "subscriberConversion"
-      ],
-      "plateau": null,
-      "breakout": null,
-      "probableCauses": [],
-      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
-    },
-    "durationSeconds": 25,
-    "registeredBy": "analytics-pass",
-    "metrics": {
-      "views": 1,
-      "averagePercentageViewed": null,
-      "averageViewDuration": null,
-      "likes": 0,
-      "comments": 1,
-      "shares": null,
-      "subscribersGained": null,
-      "engagedViews": null,
-      "subscribersLost": null,
-      "netSubscribers": null,
-      "subscribersPer1000Views": null,
-      "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 1000,
-      "watchHoursPer1000Views": null,
-      "ctr": null,
-      "first30sRetention": null,
-      "shortsFeedShare": null,
-      "searchShare": null
-    },
-    "latestCheckpoint": "1h"
   },
   {
     "checkpoints": {
@@ -35118,14 +34788,14 @@
       "subscribersPer1000Views": 1.92
     },
     "performance": {
-      "growthScore": 54.6,
+      "growthScore": 54.2,
       "classification": "NORMAL",
       "percentiles": {
         "viewVelocity": 33.3,
         "retention": 75,
         "engagement": 73.3,
         "subscriberConversion": 42.9,
-        "views": 33.3
+        "views": 26.7
       },
       "baselines": {
         "views": 957.5,
@@ -35140,5 +34810,644 @@
       "probableCauses": [],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
     }
+  },
+  {
+    "checkpoints": {},
+    "hookType": "shocking_consequence",
+    "hookScore": 80,
+    "selectedHook": "USS Thresher was lost during a deep-diving test.",
+    "firstLine": "USS Thresher was lost during a deep-diving test.",
+    "firstSecondsScore": 97,
+    "topicCluster": "maritime-disasters",
+    "bucket": "A",
+    "viralScore": 80,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 98,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 66,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 90,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 78,
+        "basis": "derived"
+      },
+      "archival_footage_potential": {
+        "value": 80,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 92,
+        "basis": "derived",
+        "note": "4 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 62,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 89,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 89,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 53,
+        "basis": "learned",
+        "note": "1 same-cluster upload(s), breakout rate 0"
+      },
+      "subscriber_conversion_potential": {
+        "value": 88,
+        "basis": "derived",
+        "note": "series-depth proxy; no measured conversion yet"
+      },
+      "audience_breadth": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "hook_potential": {
+        "value": 72,
+        "basis": "derived"
+      },
+      "visual_availability": {
+        "value": 85,
+        "basis": "inventory-signal"
+      },
+      "research_confidence": {
+        "value": 75,
+        "basis": "derived"
+      },
+      "duplicate_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "no published-title collision"
+      },
+      "saturation_risk": {
+        "value": -7,
+        "basis": "penalty",
+        "note": "1 published / 42 inventory in cluster"
+      },
+      "recent_fatigue_risk": {
+        "value": -22,
+        "basis": "penalty",
+        "note": "1 same-family upload(s) in the last 30 days"
+      },
+      "source_confidence_risk": {
+        "value": -25,
+        "basis": "penalty",
+        "note": "75/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -15,
+        "basis": "penalty",
+        "note": "archival stills available"
+      }
+    },
+    "storyStructure": "CONSEQUENCE>FAILURE>CAUSE>ESCALATION>ENGINEERING_REVEAL",
+    "titlePattern": "why",
+    "selectedTitle": "Why USS Thresher Was Lost",
+    "titleScore": 83,
+    "titleCandidates": 23,
+    "hookCandidates": 18,
+    "topicScore": 84,
+    "popularityScore": 66,
+    "ctaStyle": "NONE",
+    "durationBucket": "26-35s",
+    "openingVisual": "REAL_ARCHIVAL",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 66,
+      "CuriosityScore": 98,
+      "HookPotentialScore": 72,
+      "VisualImpactScore": 78,
+      "EmotionalImpactScore": 97,
+      "StoryCompressionScore": 100,
+      "RewatchPotentialScore": 63,
+      "SharePotentialScore": 89,
+      "CommentPotentialScore": 83,
+      "SubscriberConversionPotential": 88,
+      "NoveltyScore": 80,
+      "AudienceFitScore": 85,
+      "SourceQualityScore": 75,
+      "ChannelFitScore": 94
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "8HybydJa-l8",
+    "slug": "uss-thresher-1963",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "title": "Why USS Thresher Was Lost",
+    "publishAt": "2026-10-07T18:00:00.000Z",
+    "publishHourUTC": 18,
+    "publishSlot": "21:00 TR",
+    "popularityBand": "unknown",
+    "readiness": 91,
+    "normalized": {
+      "ageHours": 1,
+      "viewsPerHour": null,
+      "recentViewVelocity": null,
+      "likeRate": null,
+      "commentRate": null,
+      "shareRate": null,
+      "engagementRate": null,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": null,
+      "classification": "NORMAL",
+      "percentiles": {
+        "viewVelocity": null,
+        "retention": null,
+        "engagement": null,
+        "subscriberConversion": null,
+        "views": null
+      },
+      "baselines": {
+        "views": 957.5,
+        "viewsPerHour": 6.71,
+        "averagePercentageViewed": 70.38,
+        "engagementRate": 0.029185000000000003,
+        "subscriberConversion": 0.0019850000000000002
+      },
+      "missing": [
+        "viewVelocity",
+        "retention",
+        "engagement",
+        "subscriberConversion",
+        "views"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    }
+  },
+  {
+    "checkpoints": {
+      "1h": {
+        "collectedAt": "2026-10-06T19:36:16.215Z",
+        "metrics": {
+          "views": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 1000,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      },
+      "12h": {
+        "collectedAt": "2026-10-07T13:12:50.226Z",
+        "metrics": {
+          "views": {
+            "value": 81,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 5,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 74.07,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      }
+    },
+    "hookType": "shocking_consequence",
+    "hookScore": 80,
+    "selectedHook": "Saudia Flight 163 landed after a cargo fire.",
+    "firstLine": "Saudia Flight 163 landed after a cargo fire.",
+    "firstSecondsScore": 95,
+    "topicCluster": "fire-and-explosions",
+    "bucket": "A",
+    "viralScore": 81,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 98,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 65,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 90,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 78,
+        "basis": "derived"
+      },
+      "archival_footage_potential": {
+        "value": 80,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 92,
+        "basis": "derived",
+        "note": "4 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 86,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 86,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 50,
+        "basis": "neutral",
+        "note": "no same-cluster channel evidence yet"
+      },
+      "subscriber_conversion_potential": {
+        "value": 80,
+        "basis": "derived",
+        "note": "series-depth proxy; no measured conversion yet"
+      },
+      "audience_breadth": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "hook_potential": {
+        "value": 72,
+        "basis": "derived"
+      },
+      "visual_availability": {
+        "value": 85,
+        "basis": "inventory-signal"
+      },
+      "research_confidence": {
+        "value": 75,
+        "basis": "derived"
+      },
+      "duplicate_risk": {
+        "value": -10,
+        "basis": "penalty",
+        "note": "published-title similarity 0.10"
+      },
+      "saturation_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 published / 36 inventory in cluster"
+      },
+      "recent_fatigue_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 same-family upload(s) in the last 30 days"
+      },
+      "source_confidence_risk": {
+        "value": -25,
+        "basis": "penalty",
+        "note": "75/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -15,
+        "basis": "penalty",
+        "note": "archival stills available"
+      }
+    },
+    "storyStructure": "CONSEQUENCE>FAILURE>CAUSE>ESCALATION>ENGINEERING_REVEAL",
+    "titlePattern": "inside",
+    "selectedTitle": "Inside Saudia 163: The Failure Chain",
+    "titleScore": 86,
+    "titleCandidates": 23,
+    "hookCandidates": 17,
+    "topicScore": 84,
+    "popularityScore": 65,
+    "ctaStyle": "COMMENT_PROMPT",
+    "durationBucket": "18-25s",
+    "openingVisual": "REAL_ARCHIVAL",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 65,
+      "CuriosityScore": 98,
+      "HookPotentialScore": 72,
+      "VisualImpactScore": 78,
+      "EmotionalImpactScore": 97,
+      "StoryCompressionScore": 100,
+      "RewatchPotentialScore": 79,
+      "SharePotentialScore": 97,
+      "CommentPotentialScore": 83,
+      "SubscriberConversionPotential": 80,
+      "NoveltyScore": 74,
+      "AudienceFitScore": 85,
+      "SourceQualityScore": 75,
+      "ChannelFitScore": 82
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "ATpXizczEI8",
+    "slug": "saudia-163-1980",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "title": "Inside Saudia 163: The Failure Chain",
+    "publishAt": "2026-10-06T18:00:20Z",
+    "publishHourUTC": 18,
+    "publishSlot": "21:00 TR",
+    "popularityBand": "unknown",
+    "readiness": 92,
+    "normalized": {
+      "ageHours": 19.21,
+      "viewsPerHour": 4.22,
+      "recentViewVelocity": 4.39,
+      "likeRate": 0.06173,
+      "commentRate": 0.01235,
+      "shareRate": null,
+      "engagementRate": 0.07407,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": 87.4,
+      "classification": "STRONG",
+      "percentiles": {
+        "viewVelocity": 93.3,
+        "retention": null,
+        "engagement": 100,
+        "subscriberConversion": null,
+        "views": 40
+      },
+      "baselines": {
+        "views": 957.5,
+        "viewsPerHour": 6.71,
+        "averagePercentageViewed": 70.38,
+        "engagementRate": 0.029185000000000003,
+        "subscriberConversion": 0.0019850000000000002
+      },
+      "missing": [
+        "retention",
+        "subscriberConversion"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    },
+    "durationSeconds": 25,
+    "registeredBy": "analytics-pass",
+    "metrics": {
+      "views": 81,
+      "averagePercentageViewed": null,
+      "averageViewDuration": null,
+      "likes": 5,
+      "comments": 1,
+      "shares": null,
+      "subscribersGained": null,
+      "engagedViews": null,
+      "subscribersLost": null,
+      "netSubscribers": null,
+      "subscribersPer1000Views": null,
+      "netSubscribersPer1000Views": null,
+      "engagementPer1000Views": 74.07,
+      "watchHoursPer1000Views": null,
+      "ctr": null,
+      "first30sRetention": null,
+      "shortsFeedShare": null,
+      "searchShare": null
+    },
+    "latestCheckpoint": "12h"
   }
 ]

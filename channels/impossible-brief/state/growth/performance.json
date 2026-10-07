@@ -36,7 +36,7 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 147.09,
+      "ageHours": 163.22,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -58,10 +58,10 @@
         "views": null
       },
       "baselines": {
-        "views": 391,
+        "views": 589,
         "viewsPerHour": 16.29,
         "averagePercentageViewed": 65.05000000000001,
-        "engagementRate": 0.02395,
+        "engagementRate": 0.01868,
         "subscriberConversion": 0.001435
       },
       "missing": [
@@ -725,20 +725,20 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 45.9,
+      "growthScore": 56.4,
       "classification": "NORMAL",
       "percentiles": {
         "viewVelocity": 75,
         "retention": null,
-        "engagement": 25,
+        "engagement": 50,
         "subscriberConversion": null,
         "views": 25
       },
       "baselines": {
-        "views": 391,
+        "views": 589,
         "viewsPerHour": 16.29,
         "averagePercentageViewed": 65.05000000000001,
-        "engagementRate": 0.02395,
+        "engagementRate": 0.01868,
         "subscriberConversion": 0.001435
       },
       "missing": [
@@ -1959,20 +1959,20 @@
       "subscribersPer1000Views": 0
     },
     "performance": {
-      "growthScore": 22.5,
+      "growthScore": 27,
       "classification": "WEAK",
       "percentiles": {
         "viewVelocity": 50,
         "retention": 0,
-        "engagement": 75,
+        "engagement": 100,
         "subscriberConversion": 0,
         "views": 0
       },
       "baselines": {
-        "views": 391,
+        "views": 589,
         "viewsPerHour": 16.29,
         "averagePercentageViewed": 65.05000000000001,
-        "engagementRate": 0.02395,
+        "engagementRate": 0.01868,
         "subscriberConversion": 0.001435
       },
       "missing": [],
@@ -2596,10 +2596,10 @@
         "views": 50
       },
       "baselines": {
-        "views": 391,
+        "views": 589,
         "viewsPerHour": 16.29,
         "averagePercentageViewed": 65.05000000000001,
-        "engagementRate": 0.02395,
+        "engagementRate": 0.01868,
         "subscriberConversion": 0.001435
       },
       "missing": [
@@ -2634,336 +2634,6 @@
       "searchShare": null
     },
     "latestCheckpoint": "24h"
-  },
-  {
-    "checkpoints": {
-      "1h": {
-        "collectedAt": "2026-10-06T19:36:18.681Z",
-        "metrics": {
-          "views": {
-            "value": 20,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "likes": {
-            "value": 0,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "comments": {
-            "value": 1,
-            "status": "DIRECTLY_MEASURED",
-            "source": "Data API"
-          },
-          "shares": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_gained": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_lost": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "net_subscribers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_view_duration": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "average_percentage_viewed": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "watch_time_minutes": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "impressions": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "ctr": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
-          },
-          "returning_viewers": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "not exposed per video by the public API"
-          },
-          "first_30s_retention": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "engaged_views": {
-            "value": null,
-            "status": "UNAVAILABLE",
-            "reason": "analytics unavailable"
-          },
-          "subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "net_subscribers_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          },
-          "engagement_per_1000_views": {
-            "value": 50,
-            "status": "DERIVED",
-            "from": "likes+comments+shares / views"
-          },
-          "watch_hours_per_1000_views": {
-            "value": null,
-            "status": "UNAVAILABLE"
-          }
-        },
-        "traffic": [],
-        "retention": [],
-        "analyticsStatus": "ok"
-      }
-    },
-    "hookType": "visual_first_reveal",
-    "hookScore": 81,
-    "selectedHook": "Death Valley hit 54.4 °C in 2020.",
-    "firstLine": "Death Valley hit 54.4 °C in 2020.",
-    "firstSecondsScore": 91,
-    "topicCluster": "EARTH",
-    "bucket": "A",
-    "viralScore": 82,
-    "viralComponents": {
-      "curiosity_gap": {
-        "value": 97,
-        "basis": "derived"
-      },
-      "immediate_stakes": {
-        "value": 94,
-        "basis": "derived"
-      },
-      "human_consequence": {
-        "value": 95,
-        "basis": "derived"
-      },
-      "recognizability": {
-        "value": 70,
-        "basis": "measured"
-      },
-      "surprise": {
-        "value": 90,
-        "basis": "derived"
-      },
-      "visual_potential": {
-        "value": 89,
-        "basis": "inventory-signal"
-      },
-      "archival_footage_potential": {
-        "value": 35,
-        "basis": "inventory-signal"
-      },
-      "first_frame_potential": {
-        "value": 68,
-        "basis": "derived"
-      },
-      "title_potential": {
-        "value": 84,
-        "basis": "derived",
-        "note": "3 source-backed title seeds"
-      },
-      "emotional_tension": {
-        "value": 93,
-        "basis": "derived"
-      },
-      "contradiction": {
-        "value": 85,
-        "basis": "derived"
-      },
-      "unexpected_cause": {
-        "value": 82,
-        "basis": "derived"
-      },
-      "numerical_anomaly": {
-        "value": 95,
-        "basis": "derived"
-      },
-      "didnt_know_factor": {
-        "value": 90,
-        "basis": "derived"
-      },
-      "shareability": {
-        "value": 97,
-        "basis": "derived"
-      },
-      "channel_fit": {
-        "value": 82,
-        "basis": "derived"
-      },
-      "historical_similarity": {
-        "value": 88,
-        "basis": "learned",
-        "note": "1 same-cluster upload(s), breakout rate 0"
-      },
-      "subscriber_conversion_potential": {
-        "value": 80,
-        "basis": "derived",
-        "note": "series-depth proxy; no measured conversion yet"
-      },
-      "audience_breadth": {
-        "value": 100,
-        "basis": "inventory-signal"
-      },
-      "hook_potential": {
-        "value": 73,
-        "basis": "derived"
-      },
-      "visual_availability": {
-        "value": 67,
-        "basis": "inventory-signal"
-      },
-      "research_confidence": {
-        "value": 98,
-        "basis": "derived"
-      },
-      "duplicate_risk": {
-        "value": 0,
-        "basis": "penalty",
-        "note": "no published-title collision"
-      },
-      "saturation_risk": {
-        "value": -3,
-        "basis": "penalty",
-        "note": "1 published / 100 inventory in cluster"
-      },
-      "recent_fatigue_risk": {
-        "value": -22,
-        "basis": "penalty",
-        "note": "1 same-family upload(s) in the last 30 days"
-      },
-      "source_confidence_risk": {
-        "value": -2,
-        "basis": "penalty",
-        "note": "98/100 source quality"
-      },
-      "weak_footage_risk": {
-        "value": -33,
-        "basis": "penalty",
-        "note": "no archival footage confirmed"
-      }
-    },
-    "storyStructure": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
-    "titlePattern": "question",
-    "selectedTitle": "You Spent a Summer in Death Valley — What Breaks First?",
-    "titleScore": 80,
-    "titleCandidates": 41,
-    "hookCandidates": 14,
-    "topicScore": 86,
-    "popularityScore": 70,
-    "ctaStyle": "COMMENT_PROMPT",
-    "durationBucket": "26-35s",
-    "openingVisual": "ILLUSTRATION",
-    "experimentVariant": null,
-    "factors": {
-      "TopicDemandScore": 70,
-      "CuriosityScore": 97,
-      "HookPotentialScore": 73,
-      "VisualImpactScore": 89,
-      "EmotionalImpactScore": 93,
-      "StoryCompressionScore": 88,
-      "RewatchPotentialScore": 69,
-      "SharePotentialScore": 97,
-      "CommentPotentialScore": 71,
-      "SubscriberConversionPotential": 80,
-      "NoveltyScore": 82,
-      "AudienceFitScore": 100,
-      "SourceQualityScore": 98,
-      "ChannelFitScore": 82
-    },
-    "selectionMode": "EXPLOIT",
-    "videoId": "OFwONtLpIIM",
-    "slug": "what-if-you-spent-a-summer-in-death-valley",
-    "channel": "impossible-brief",
-    "contentType": "short",
-    "title": "You Spent a Summer in Death Valley — What Breaks First?",
-    "publishAt": "2026-10-06T18:00:18Z",
-    "publishHourUTC": 18,
-    "publishSlot": "21:00 TR",
-    "popularityBand": "unknown",
-    "readiness": 91,
-    "normalized": {
-      "ageHours": 1,
-      "viewsPerHour": 20,
-      "recentViewVelocity": null,
-      "likeRate": 0,
-      "commentRate": 0.05,
-      "shareRate": null,
-      "engagementRate": 0.05,
-      "engagedViewRate": null,
-      "subscriberConversion": null,
-      "subscribersPer1000Views": null
-    },
-    "performance": {
-      "growthScore": 95.9,
-      "classification": "STRONG",
-      "percentiles": {
-        "viewVelocity": 100,
-        "retention": null,
-        "engagement": 100,
-        "subscriberConversion": null,
-        "views": 75
-      },
-      "baselines": {
-        "views": 391,
-        "viewsPerHour": 16.29,
-        "averagePercentageViewed": 65.05000000000001,
-        "engagementRate": 0.02395,
-        "subscriberConversion": 0.001435
-      },
-      "missing": [
-        "retention",
-        "subscriberConversion"
-      ],
-      "plateau": null,
-      "breakout": null,
-      "probableCauses": [],
-      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
-    },
-    "durationSeconds": 36,
-    "registeredBy": "analytics-pass",
-    "metrics": {
-      "views": 20,
-      "averagePercentageViewed": null,
-      "averageViewDuration": null,
-      "likes": 0,
-      "comments": 1,
-      "shares": null,
-      "subscribersGained": null,
-      "engagedViews": null,
-      "subscribersLost": null,
-      "netSubscribers": null,
-      "subscribersPer1000Views": null,
-      "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 50,
-      "watchHoursPer1000Views": null,
-      "ctr": null,
-      "first30sRetention": null,
-      "shortsFeedShare": null,
-      "searchShare": null
-    },
-    "latestCheckpoint": "1h"
   },
   {
     "checkpoints": {
@@ -4150,31 +3820,25 @@
       "subscribersPer1000Views": 2.87
     },
     "performance": {
-      "growthScore": 85.5,
-      "classification": "BREAKOUT",
+      "growthScore": 80.3,
+      "classification": "STRONG",
       "percentiles": {
         "viewVelocity": 25,
         "retention": 100,
-        "engagement": 50,
+        "engagement": 75,
         "subscriberConversion": 100,
-        "views": 100
+        "views": 75
       },
       "baselines": {
-        "views": 391,
+        "views": 589,
         "viewsPerHour": 16.29,
         "averagePercentageViewed": 65.05000000000001,
-        "engagementRate": 0.02395,
+        "engagementRate": 0.01868,
         "subscriberConversion": 0.001435
       },
       "missing": [],
       "plateau": null,
-      "breakout": {
-        "detected": true,
-        "signals": [
-          "subscriber conversion in channel p100"
-        ],
-        "medianMultiple": 2.67
-      },
+      "breakout": null,
       "probableCauses": [],
       "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
     },
@@ -4201,5 +3865,644 @@
       "searchShare": 0.02
     },
     "latestCheckpoint": "48h"
+  },
+  {
+    "checkpoints": {},
+    "hookType": "impossible_question",
+    "hookScore": 84,
+    "selectedHook": "What If Ice Sank Instead of Floating?",
+    "firstLine": "What If Ice Sank Instead of Floating?",
+    "firstSecondsScore": 93,
+    "topicCluster": "PHYSICS",
+    "bucket": "A",
+    "viralScore": 81,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 89,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 65,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 90,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 90,
+        "basis": "inventory-signal"
+      },
+      "archival_footage_potential": {
+        "value": 35,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 68,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 84,
+        "basis": "derived",
+        "note": "3 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 86,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 76,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 50,
+        "basis": "neutral",
+        "note": "no same-cluster channel evidence yet"
+      },
+      "subscriber_conversion_potential": {
+        "value": 80,
+        "basis": "derived",
+        "note": "series-depth proxy; no measured conversion yet"
+      },
+      "audience_breadth": {
+        "value": 100,
+        "basis": "inventory-signal"
+      },
+      "hook_potential": {
+        "value": 76,
+        "basis": "derived"
+      },
+      "visual_availability": {
+        "value": 67,
+        "basis": "inventory-signal"
+      },
+      "research_confidence": {
+        "value": 98,
+        "basis": "derived"
+      },
+      "duplicate_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "no published-title collision"
+      },
+      "saturation_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 published / 100 inventory in cluster"
+      },
+      "recent_fatigue_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 same-family upload(s) in the last 30 days"
+      },
+      "source_confidence_risk": {
+        "value": -2,
+        "basis": "penalty",
+        "note": "98/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -33,
+        "basis": "penalty",
+        "note": "no archival footage confirmed"
+      }
+    },
+    "storyStructure": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
+    "titlePattern": "statement",
+    "selectedTitle": "The Real Physics Behind Ice Sank Instead of Floating",
+    "titleScore": 86,
+    "titleCandidates": 42,
+    "hookCandidates": 18,
+    "topicScore": 85,
+    "popularityScore": 65,
+    "ctaStyle": "NONE",
+    "durationBucket": "18-25s",
+    "openingVisual": "ILLUSTRATION",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 65,
+      "CuriosityScore": 89,
+      "HookPotentialScore": 76,
+      "VisualImpactScore": 90,
+      "EmotionalImpactScore": 97,
+      "StoryCompressionScore": 88,
+      "RewatchPotentialScore": 69,
+      "SharePotentialScore": 97,
+      "CommentPotentialScore": 71,
+      "SubscriberConversionPotential": 80,
+      "NoveltyScore": 82,
+      "AudienceFitScore": 100,
+      "SourceQualityScore": 98,
+      "ChannelFitScore": 76
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "wvn-RzNCb-M",
+    "slug": "what-if-ice-sank-instead-of-floating",
+    "channel": "impossible-brief",
+    "contentType": "short",
+    "title": "The Real Physics Behind Ice Sank Instead of Floating",
+    "publishAt": "2026-10-07T18:00:00.000Z",
+    "publishHourUTC": 18,
+    "publishSlot": "21:00 TR",
+    "popularityBand": "unknown",
+    "readiness": 89,
+    "normalized": {
+      "ageHours": 1,
+      "viewsPerHour": null,
+      "recentViewVelocity": null,
+      "likeRate": null,
+      "commentRate": null,
+      "shareRate": null,
+      "engagementRate": null,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": null,
+      "classification": "NORMAL",
+      "percentiles": {
+        "viewVelocity": null,
+        "retention": null,
+        "engagement": null,
+        "subscriberConversion": null,
+        "views": null
+      },
+      "baselines": {
+        "views": 589,
+        "viewsPerHour": 16.29,
+        "averagePercentageViewed": 65.05000000000001,
+        "engagementRate": 0.01868,
+        "subscriberConversion": 0.001435
+      },
+      "missing": [
+        "viewVelocity",
+        "retention",
+        "engagement",
+        "subscriberConversion",
+        "views"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    }
+  },
+  {
+    "checkpoints": {
+      "1h": {
+        "collectedAt": "2026-10-06T19:36:18.681Z",
+        "metrics": {
+          "views": {
+            "value": 20,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 0,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 50,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      },
+      "12h": {
+        "collectedAt": "2026-10-07T13:12:57.008Z",
+        "metrics": {
+          "views": {
+            "value": 697,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 10,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 15.78,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      }
+    },
+    "hookType": "visual_first_reveal",
+    "hookScore": 81,
+    "selectedHook": "Death Valley hit 54.4 °C in 2020.",
+    "firstLine": "Death Valley hit 54.4 °C in 2020.",
+    "firstSecondsScore": 91,
+    "topicCluster": "EARTH",
+    "bucket": "A",
+    "viralScore": 82,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 70,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 90,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 89,
+        "basis": "inventory-signal"
+      },
+      "archival_footage_potential": {
+        "value": 35,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 68,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 84,
+        "basis": "derived",
+        "note": "3 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 93,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 90,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 88,
+        "basis": "learned",
+        "note": "1 same-cluster upload(s), breakout rate 0"
+      },
+      "subscriber_conversion_potential": {
+        "value": 80,
+        "basis": "derived",
+        "note": "series-depth proxy; no measured conversion yet"
+      },
+      "audience_breadth": {
+        "value": 100,
+        "basis": "inventory-signal"
+      },
+      "hook_potential": {
+        "value": 73,
+        "basis": "derived"
+      },
+      "visual_availability": {
+        "value": 67,
+        "basis": "inventory-signal"
+      },
+      "research_confidence": {
+        "value": 98,
+        "basis": "derived"
+      },
+      "duplicate_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "no published-title collision"
+      },
+      "saturation_risk": {
+        "value": -3,
+        "basis": "penalty",
+        "note": "1 published / 100 inventory in cluster"
+      },
+      "recent_fatigue_risk": {
+        "value": -22,
+        "basis": "penalty",
+        "note": "1 same-family upload(s) in the last 30 days"
+      },
+      "source_confidence_risk": {
+        "value": -2,
+        "basis": "penalty",
+        "note": "98/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -33,
+        "basis": "penalty",
+        "note": "no archival footage confirmed"
+      }
+    },
+    "storyStructure": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
+    "titlePattern": "question",
+    "selectedTitle": "You Spent a Summer in Death Valley — What Breaks First?",
+    "titleScore": 80,
+    "titleCandidates": 41,
+    "hookCandidates": 14,
+    "topicScore": 86,
+    "popularityScore": 70,
+    "ctaStyle": "COMMENT_PROMPT",
+    "durationBucket": "26-35s",
+    "openingVisual": "ILLUSTRATION",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 70,
+      "CuriosityScore": 97,
+      "HookPotentialScore": 73,
+      "VisualImpactScore": 89,
+      "EmotionalImpactScore": 93,
+      "StoryCompressionScore": 88,
+      "RewatchPotentialScore": 69,
+      "SharePotentialScore": 97,
+      "CommentPotentialScore": 71,
+      "SubscriberConversionPotential": 80,
+      "NoveltyScore": 82,
+      "AudienceFitScore": 100,
+      "SourceQualityScore": 98,
+      "ChannelFitScore": 82
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "OFwONtLpIIM",
+    "slug": "what-if-you-spent-a-summer-in-death-valley",
+    "channel": "impossible-brief",
+    "contentType": "short",
+    "title": "You Spent a Summer in Death Valley — What Breaks First?",
+    "publishAt": "2026-10-06T18:00:18Z",
+    "publishHourUTC": 18,
+    "publishSlot": "21:00 TR",
+    "popularityBand": "unknown",
+    "readiness": 91,
+    "normalized": {
+      "ageHours": 19.21,
+      "viewsPerHour": 36.28,
+      "recentViewVelocity": 37.18,
+      "likeRate": 0.01435,
+      "commentRate": 0.00143,
+      "shareRate": null,
+      "engagementRate": 0.01578,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": 68.6,
+      "classification": "NORMAL",
+      "percentiles": {
+        "viewVelocity": 100,
+        "retention": null,
+        "engagement": 25,
+        "subscriberConversion": null,
+        "views": 100
+      },
+      "baselines": {
+        "views": 589,
+        "viewsPerHour": 16.29,
+        "averagePercentageViewed": 65.05000000000001,
+        "engagementRate": 0.01868,
+        "subscriberConversion": 0.001435
+      },
+      "missing": [
+        "retention",
+        "subscriberConversion"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    },
+    "durationSeconds": 36,
+    "registeredBy": "analytics-pass",
+    "metrics": {
+      "views": 697,
+      "averagePercentageViewed": null,
+      "averageViewDuration": null,
+      "likes": 10,
+      "comments": 1,
+      "shares": null,
+      "subscribersGained": null,
+      "engagedViews": null,
+      "subscribersLost": null,
+      "netSubscribers": null,
+      "subscribersPer1000Views": null,
+      "netSubscribersPer1000Views": null,
+      "engagementPer1000Views": 15.78,
+      "watchHoursPer1000Views": null,
+      "ctr": null,
+      "first30sRetention": null,
+      "shortsFeedShare": null,
+      "searchShare": null
+    },
+    "latestCheckpoint": "12h"
   }
 ]
