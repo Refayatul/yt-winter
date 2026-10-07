@@ -19,10 +19,20 @@ const requested = process.argv.slice(2).find((arg) => !arg.startsWith("--"));
 // An explicit topic is a reproducible test fixture and may be re-rendered even
 // when historical generated/published state marks it used. Normal unattended
 // discovery still excludes used and blocked records.
-const candidates = requested
-  ? Discovery.universe(channel).topics.filter((item) => item.productionReady === true && item.researchStatus === "VERIFIED")
-  : Discovery.discover(channel, { limit: 50 });
-const topic = candidates.find((item) => !requested || item.slug === requested || item.id === requested);
+const verified = Discovery.universe(channel).topics.filter((item) => item.productionReady === true && item.researchStatus === "VERIFIED");
+const admitted = (item) => Growth.planShort(channel, item.id, { skipDuplicate: true }).readiness.decision !== "BLOCK";
+let topic;
+if (requested) topic = verified.find((item) => item.slug === requested || item.id === requested);
+else {
+  // Like production: the first unused topic the growth gate admits. When the
+  // verified pool is used up, the pipeline is still validated on a verified
+  // fixture and the exhausted pool is reported (research refills it).
+  topic = Discovery.discover(channel, { limit: 50 }).find(admitted);
+  if (!topic) {
+    topic = verified.find(admitted);
+    if (topic) console.log(`::notice::The Hidden Logic of Things: no unused topic passes the growth gate; validating the pipeline on verified fixture ${topic.slug}`);
+  }
+}
 if (!topic) throw new Error(`Missing production-ready The Hidden Logic of Things topic: ${requested || "launch topic"}`);
 
 const plan = Growth.planShort(channel, topic.id, {

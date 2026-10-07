@@ -15,10 +15,26 @@ function universe(channel = getChannel()) {
 function usedIds(channel = getChannel()) {
   const files = ["published.json", "generated.json", "blocked.json"];
   const ids = new Set();
+  // Upload rows (youtube-yukle.js, manual publish runs) carry the slug, not
+  // always the topic id; without this a published topic stayed "unused" and
+  // could be produced and uploaded again.
+  let bySlug = null;
+  const idForSlug = (slug) => {
+    if (!slug) return null;
+    if (!bySlug) {
+      bySlug = new Map();
+      try { for (const topic of universe(channel).topics || []) bySlug.set(topic.slug, topic.id); } catch (error) {}
+    }
+    return bySlug.get(slug) || null;
+  };
   for (const file of files) {
     try {
       const value = JSON.parse(fs.readFileSync(path.join(channel.paths.state, file), "utf8"));
-      if (Array.isArray(value)) value.forEach((item) => ids.add(typeof item === "string" ? item : item.topicId));
+      if (Array.isArray(value)) value.forEach((item) => {
+        if (typeof item === "string") { ids.add(item); return; }
+        const id = item && (item.topicId || idForSlug(item.slug));
+        if (id) ids.add(id);
+      });
       else Object.keys(value || {}).forEach((id) => ids.add(id));
     } catch (error) {}
   }
