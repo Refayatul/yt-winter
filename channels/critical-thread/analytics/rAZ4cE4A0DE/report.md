@@ -7,11 +7,21 @@ https://youtu.be/rAZ4cE4A0DE
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-05 | 42 | 0 | 1 | — | — |  |
+| 3d | 2026-10-07 | 51 | 0 | 1 | 79.23 | 0 | Shorts feed 80%, Search 18% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 42 views after 1 days — too early/small for rate-based conclusions.
+- **INSUFFICIENT_DATA** (high) — 51 views after 3 days — too early/small for rate-based conclusions.
 
 ## Suggested interventions
 
 - INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
+
+## First major observed retention drop
+
+- Timestamp: 5s; magnitude: 24 percentage points.
+- Active sentence: unavailable
+- Visual type: unavailable
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 9.

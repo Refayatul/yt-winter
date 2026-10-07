@@ -7,13 +7,21 @@ https://youtu.be/Vuvx5nEqcaY
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-05 | 994 | 20 | 3 | — | — |  |
+| 3d | 2026-10-07 | 1047 | 22 | 3 | 69.5 | 4 | Shorts feed 96%, Search 3% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 994 views after 1 days — too early/small for rate-based conclusions.
-- **OUTPERFORMER** (low) — 994 views vs channel median 454 (n=4 videos).
+- **OUTPERFORMER** (low) — 1047 views vs channel median 522.5 (n=6 videos).
 
 ## Suggested interventions
 
-- INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
 - OUTPERFORMER → keep as is; reuse its subject/hook shape in the next episode.
+
+## First major observed retention drop
+
+- Timestamp: 5s; magnitude: 22 percentage points.
+- Active sentence: Saturn hovering over a giant bathtub
+- Visual type: AI-GENERATED VISUAL
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 53.

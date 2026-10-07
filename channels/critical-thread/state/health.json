@@ -1,20 +1,29 @@
 {
   "channel": "critical-thread",
   "channelName": "CriticalThread",
-  "tarih": "2026-10-07T17:51:26.831Z",
+  "tarih": "2026-10-07T20:49:23.159Z",
   "aggregateManaged": true,
-  "yuklemeUygun": false,
+  "yuklemeUygun": true,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "kritik",
-      "mesaj": "YOUTUBE_AUTH_FAILURE channel=critical-thread reason=TOKEN_REVOKED",
-      "cozum": "Yerelde `node youtube-yetki.js --channel critical-thread --github` çalıştır. Kalıcı çözüm: Google Auth Platform → Audience → In production."
+      "durum": "ok",
+      "mesaj": "refresh token çalışıyor"
+    },
+    {
+      "ad": "youtube-kapsam",
+      "durum": "ok",
+      "mesaj": "gerekli kapsamlar tamam"
+    },
+    {
+      "ad": "youtube-kanal",
+      "durum": "ok",
+      "mesaj": "doğru kanal doğrulandı (UCBTEWcPZvo4B71hFw9Do_NA)"
     },
     {
       "ad": "oauth-reauth-deadline",
       "durum": "ok",
-      "mesaj": "OAuth publishing mode is unknown; live refresh validation is authoritative"
+      "mesaj": "OAuth app is recorded as In production; no fixed refresh-token expiry is assumed"
     },
     {
       "ad": "gorsel-kaynak",
