@@ -1,6 +1,6 @@
 {
   "channel": "impossible-brief",
-  "updatedAt": "2026-10-07T13:12:56.655Z",
+  "updatedAt": "2026-10-07T13:40:46.831Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 5,
@@ -26,31 +26,31 @@
         "dimension": "topicCluster",
         "value": "SPACE",
         "sample": 3,
-        "lift": 0.135,
-        "z": 0.42
+        "lift": 0.336,
+        "z": 0.98
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "EARTH",
         "sample": 2,
-        "lift": -0.202,
-        "z": -0.32
+        "lift": -0.503,
+        "z": -2.48
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 4,
-        "lift": 0.11,
-        "z": 0.33
+        "lift": 0.078,
+        "z": 0.22
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 1,
-        "lift": -0.438,
+        "lift": -0.311,
         "z": 0
       },
       {
@@ -58,7 +58,7 @@
         "dimension": "titlePattern",
         "value": "statement",
         "sample": 1,
-        "lift": 0.173,
+        "lift": 0.463,
         "z": 0
       },
       {
@@ -66,7 +66,7 @@
         "dimension": "titlePattern",
         "value": "why",
         "sample": 1,
-        "lift": -0.438,
+        "lift": -0.311,
         "z": 0
       },
       {
@@ -74,7 +74,7 @@
         "dimension": "titlePattern",
         "value": "what-if-question",
         "sample": 1,
-        "lift": -0.832,
+        "lift": -0.707,
         "z": 0
       },
       {
@@ -82,8 +82,8 @@
         "dimension": "titlePattern",
         "value": "question",
         "sample": 2,
-        "lift": 0.548,
-        "z": 4.51
+        "lift": 0.277,
+        "z": 0.48
       },
       {
         "stage": "OBSERVATION",
@@ -98,56 +98,56 @@
         "dimension": "ctaStyle",
         "value": "NONE",
         "sample": 2,
-        "lift": -0.329,
-        "z": -0.66
+        "lift": -0.122,
+        "z": -0.21
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 3,
-        "lift": 0.219,
-        "z": 0.65
+        "lift": 0.081,
+        "z": 0.21
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "18",
         "sample": 3,
-        "lift": -0.077,
-        "z": -0.2
+        "lift": -0.181,
+        "z": -0.53
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "22",
         "sample": 2,
-        "lift": 0.116,
-        "z": 0.21
+        "lift": 0.272,
+        "z": 0.47
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "18:00 New York",
         "sample": 2,
-        "lift": 0.116,
-        "z": 0.21
+        "lift": 0.272,
+        "z": 0.47
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "21:00 TR",
         "sample": 2,
-        "lift": -0.202,
-        "z": -0.32
+        "lift": -0.503,
+        "z": -2.48
       },
       {
         "stage": "OBSERVATION",
         "dimension": "popularityBand",
         "value": "unknown",
         "sample": 4,
-        "lift": -0.043,
-        "z": -0.12
+        "lift": -0.116,
+        "z": -0.34
       },
       {
         "stage": "OBSERVATION",
@@ -172,24 +172,24 @@
         "dimension": "topicCluster",
         "value": "SPACE",
         "sample": 3,
-        "lift": 0.135,
-        "z": 0.42
+        "lift": 0.336,
+        "z": 0.98
       },
       {
         "stage": "HYPOTHESIS",
-        "dimension": "durationBucket",
-        "value": "26-35s",
-        "sample": 4,
-        "lift": 0.11,
-        "z": 0.33
-      },
-      {
-        "stage": "HYPOTHESIS",
-        "dimension": "ctaStyle",
-        "value": "COMMENT_PROMPT",
+        "dimension": "publishHourUTC",
+        "value": "18",
         "sample": 3,
-        "lift": 0.219,
-        "z": 0.65
+        "lift": -0.181,
+        "z": -0.53
+      },
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "popularityBand",
+        "value": "unknown",
+        "sample": 4,
+        "lift": -0.116,
+        "z": -0.34
       }
     ],
     "adopted": [],
