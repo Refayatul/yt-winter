@@ -28,3 +28,15 @@ test("analytics tuning: recognition outweighs default demand and Shorts aim for 
   assert.deepEqual(config.script.shorts.targetWords, [70, 88]);
   assert.ok(config.viralScoring.weights.recognizability >= 1.4);
 });
+
+test("series end promise: only channels whose promise is true, drawn in the last seconds", () => {
+  const Series = require("../../core/series");
+  const Rendering = require("../../core/rendering");
+  assert.equal(Series.endLine(Channel.getChannel("failure-reconstructed")), "NEW FAILURE FILE EVERY DAY");
+  assert.equal(Series.endLine(Channel.getChannel("behind-the-ordinary")), "FOLLOW FOR MORE HIDDEN LOGIC");
+  assert.equal(Series.endLine(Channel.getChannel("impossible-brief")), null);
+  assert.equal(Series.endLine(Channel.getChannel("critical-thread")), null);
+  const overlay = Rendering.overlayText({ channel: "behind-the-ordinary", thumbnailText: "VIKING INITIALS" }, 36.8, "motion", "licensed-still", "HIDDEN LOGIC #3", "FOLLOW FOR MORE HIDDEN LOGIC");
+  assert.match(overlay, /text='FOLLOW FOR MORE HIDDEN LOGIC'.*enable='gte\(t,34\.60\)'/);
+  assert.doesNotMatch(Rendering.overlayText({ channel: "impossible-brief" }, 30, "motion", "licensed-still", null, null), /gte\(t/);
+});

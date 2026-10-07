@@ -13,10 +13,10 @@ const fs = require("fs");
 const path = require("path");
 
 const SERIES = Object.freeze({
-  "failure-reconstructed": { name: "FAILURE FILE", tagline: "A new engineering failure, reconstructed every day." },
+  "failure-reconstructed": { name: "FAILURE FILE", tagline: "A new engineering failure, reconstructed every day.", end: "NEW FAILURE FILE EVERY DAY" },
   "impossible-brief": { name: "IMPOSSIBLE BRIEF", tagline: "One impossible scenario, worked through with real science, every day." },
   "critical-thread": { name: "CRITICAL THREAD", tagline: "One hidden system the modern world depends on, every day." },
-  "behind-the-ordinary": { name: "HIDDEN LOGIC", tagline: "One familiar object, one documented reason hidden in plain sight." },
+  "behind-the-ordinary": { name: "HIDDEN LOGIC", tagline: "One familiar object, one documented reason hidden in plain sight.", end: "FOLLOW FOR MORE HIDDEN LOGIC" },
 });
 
 function publishedShorts(channel) {
@@ -54,4 +54,14 @@ function descriptionLine(channel, slug, rows) {
   return `${name} · Episode ${episodeNumber(channel, slug, rows)} · ${series.tagline}`;
 }
 
-module.exports = { SERIES, publishedShorts, episodeNumber, forChannel, label, descriptionLine };
+// The series promise shown on screen in a Short's last seconds (never spoken,
+// so the loop back to the opening stays clean). Only channels whose promise is
+// literally true carry one ("every day" only where the cadence is daily).
+// Subscriber conversion was ~1.8 per 1,000 views with nothing at the end
+// telling a viewer that more of this format is coming.
+function endLine(channel) {
+  const series = forChannel(channel);
+  return series && series.end || null;
+}
+
+module.exports = { SERIES, publishedShorts, episodeNumber, forChannel, label, descriptionLine, endLine };

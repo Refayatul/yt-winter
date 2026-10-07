@@ -67,6 +67,9 @@ jobs:
           git add channels/behind-the-ordinary/state 2>/dev/null || true
           if git diff --cached --quiet; then echo "No state changes to commit."; exit 0; fi
           git commit -m "chore(bto): record reviewed Short publication"
+          # Render outputs (reports/packages, uretim) are not committed here and
+          # may also exist on main; drop them so the rebase cannot stop on them.
+          git checkout -- . && git clean -fdq
           for i in 1 2 3; do
             git pull --rebase --autostash origin main && git push origin HEAD:main && exit 0
             sleep $((i * 5))

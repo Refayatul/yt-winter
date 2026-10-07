@@ -66,6 +66,7 @@ const DFONT = font(true);   // drawtext icin acik font yolu
 const cleanTxt = (s) => String(s || "").replace(/[{}]/g, "").replace(/\\/g, "").replace(/[<>]/g, "");
 const HOOK = cleanTxt(konu.hook).toUpperCase();
 const SERI = require("./core/series").label(CURRENT_CHANNEL, IS);
+const SERI_SON = require("./core/series").endLine(CURRENT_CHANNEL);
 const SORU = cleanTxt(konu.soru);
 const sahneler = konu.sahneler || [];
 if (!sahneler.length) { console.error("konu.json'da sahneler[] yok."); process.exit(1); }
@@ -356,6 +357,14 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
       const bas = Math.max(0, VODUR - 2.8);
       ekstra.push(`Dialogue: 0,${assTime(bas)},${assTime(VODUR)},Pop,,0,0,0,,` +
         `{\\an5\\pos(${cx},${y})\\fs${fs}\\bord${bord}\\1c&H41A4D9&\\fad(200,160)}${assKacis(SORU)}`);
+    }
+    // Seri vaadi: son ~2.2 s, soru varsa onun ustunde, yoksa ayni yerde.
+    if (SERI_SON) {
+      const sfs = Math.round(DEN.sigdir(SERI_SON, W * 0.036, W, 0.84) * k);
+      const sy = Math.round(H * (SORU ? 0.22 : 0.30));
+      const bas = Math.max(0, VODUR - 2.2);
+      ekstra.push(`Dialogue: 0,${assTime(bas)},${assTime(VODUR)},Pop,,0,0,0,,` +
+        `{\\an5\\pos(${cx},${sy})\\fs${sfs}\\bord${Math.max(3, Math.round(W * 0.004))}\\shad2\\1c&H3687D8&\\fad(200,0)}${assKacis(SERI_SON)}`);
     }
     return ekstra.join("\n") + (ekstra.length ? "\n" : "");
   })();

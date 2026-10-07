@@ -480,7 +480,7 @@ function fitFontSize(text, maximum) {
   return Math.max(36, Math.min(maximum, Math.floor(960 / (Math.max(1, String(text).length) * 0.72))));
 }
 
-function overlayText(topic, duration, opening, firstShotType = null, seriesLabel = null) {
+function overlayText(topic, duration, opening, firstShotType = null, seriesLabel = null, endLine = null) {
   const parts = [];
   const on = `enable='lt(t,${HOOK_SECONDS})'`;
   // Series tag ("CRITICAL THREAD #3") sits above the hook in the channel accent:
@@ -489,6 +489,8 @@ function overlayText(topic, duration, opening, firstShotType = null, seriesLabel
   const showHook = opening === "motion" || (firstShotType && firstShotType !== "number-card");
   const hook = showHook ? drawtextSafe(String(topic.thumbnailText || "").toUpperCase()) : "";
   if (hook) parts.push(`drawtext=expansion=none:text='${hook}':fontcolor=white:fontsize=${fitFontSize(hook, 112)}:borderw=8:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=330:${on}`);
+  // Series promise for the last ~2.2 s (on screen only; the loop stays clean).
+  if (endLine && duration > 6) parts.push(`drawtext=expansion=none:text='${drawtextSafe(endLine)}':fontcolor=${channelAccent(topic)}:fontsize=${fitFontSize(endLine, 52)}:borderw=4:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=170:enable='gte(t,${(duration - 2.2).toFixed(2)})'`);
   return parts.length ? "," + parts.join(",") : "";
 }
 
@@ -618,7 +620,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   }
   const concatInputs = plan.map((_, index) => `[v${index}]`).join("");
   const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
-  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening, plan[0] && plan[0].type, options.seriesLabel || null)}[v]`);
+  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening, plan[0] && plan[0].type, options.seriesLabel || null, options.seriesEnd || null)}[v]`);
   const filterFile = path.join(path.dirname(output), ".visual-filter.txt");
   fs.writeFileSync(filterFile, filters.join(";\n") + "\n");
   args.push(ff.filtreBayragi, filterFile, "-map", "[v]", "-map", `${plan.length}:a`, "-t", String(duration), "-r", String(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
@@ -783,7 +785,7 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     const renderTopic = topic.channel ? topic : { ...topic, channel: channel.slug };
     const music = channel.config.music && channel.config.music.enabled === false || process.env.MUSIC === "0" ? null : mixMusicBed(voice.file, duration, renderTopic, outputDirectory);
     const visualRender = renderVideo(music ? music.file : voice.file, duration, video, path.join(outputDirectory, "captions.ass"), renderTopic,
-      { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [], seriesLabel: Series.label(channel, topic.slug) });
+      { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [], seriesLabel: Series.label(channel, topic.slug), seriesEnd: Series.endLine(channel) });
     const thumbnailRender = renderThumbnail(image, renderTopic, assets, script);
     render.completed = true;
     render.audio = { ...voice, ...audioProbe, music: music ? { mood: music.mood, profile: music.profile } : null };
