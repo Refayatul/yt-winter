@@ -88,6 +88,7 @@ jobs:
         run: |
           git config user.name "comment-reply-bot"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           # One path at a time: git add stages nothing when any listed path is missing.
           for STATE in icerik/yanitlanan.json icerik/sabit-yorumlar.json channels/*/state/replied-comments.json channels/*/state/seeded-comments.json; do
             if [ -e "$STATE" ]; then git add "$STATE"; fi

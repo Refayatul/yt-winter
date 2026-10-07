@@ -212,7 +212,10 @@ function build(topic, config) {
   const anomaly = sourcedSentences.find((text) => /\d/.test(text) && /\b(only|more than|less than|times|percent|%|seconds?|minutes?|hours?|crew|people|workers|passengers)\b/i.test(text) && !DATE_OPENING.test(text) && compress(text, max));
   if (anomaly) add(candidate("number_anomaly", compress(anomaly, max), topic, ["evidence"]));
   if (topic.mechanism && topic.subject) {
-    const reveal = compress(`${Model.capital(topic.subject)} failed because ${Model.lower(topic.mechanism)}`, max);
+    // Failure framing belongs to the disaster channels; everyday design is
+    // explained, not diagnosed.
+    const verb = topic.channel === "behind-the-ordinary" ? "looks the way it does because" : "failed because";
+    const reveal = compress(`${Model.capital(topic.subject)} ${verb} ${Model.lower(topic.mechanism)}`, max);
     if (reveal) add(candidate("mechanism_reveal", reveal, topic, ["mechanism", "subject"]));
   }
   return out;

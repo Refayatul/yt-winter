@@ -78,6 +78,7 @@ jobs:
         run: |
           git config user.name "growth-feedback-bot"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add analytics channels/*/analytics channels/*/state/growth channels/*/memory channels/*/state/analytics 2>/dev/null || true
           git add -f reports/feedback-loop-health.json reports/feedback-loop-health.md 2>/dev/null || true
           if git diff --cached --quiet; then

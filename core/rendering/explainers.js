@@ -14,7 +14,7 @@ const fs = require("fs");
 const path = require("path");
 
 const SCRIPT = path.join(__dirname, "..", "..", "channels", "behind-the-ordinary", "explainer", "render_explainer.py");
-const KINDS = new Set(["glyph-merge", "unite", "name-card", "shortlist"]);
+const KINDS = new Set(["glyph-merge", "unite", "name-card", "shortlist", "diagram", "timeline", "qr-finder"]);
 
 let pythonCache;
 function python() {

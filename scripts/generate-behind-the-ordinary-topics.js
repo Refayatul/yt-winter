@@ -275,7 +275,8 @@ function researchedFrom(previous) {
   for (const topic of (previous && previous.topics) || []) {
     // Keyed by inventory id: a researched record may sharpen its object or
     // design detail, but it always replaces the same generated question.
-    if (topic.researchStatus === "VERIFIED" && topic.id) kept.set(topic.id, topic);
+    // NEEDS_PRIMARY_SOURCE keeps its research while it waits for authority evidence.
+    if (["VERIFIED", "NEEDS_PRIMARY_SOURCE"].includes(topic.researchStatus) && topic.id) kept.set(topic.id, topic);
   }
   return kept;
 }

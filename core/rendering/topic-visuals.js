@@ -232,6 +232,9 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
   let ordered = [...semanticFirst(stills.filter((still) => stillKind(still) === "photo")), ...semanticFirst(stills.filter((still) => stillKind(still) === "diagram"))];
   const explanatoryLead = detailStill(topic, ordered);
   if (explanatoryLead) ordered = [explanatoryLead, ...ordered.filter((still) => still !== explanatoryLead)];
+  // A curator can name the opening picture outright (curatedVisuals[].lead).
+  const curatedLead = ordered.find((still) => still.lead === true);
+  if (curatedLead) ordered = [curatedLead, ...ordered.filter((still) => still !== curatedLead)];
   const maxCards = ordered.length >= 2 ? MAX_CARDS_WITH_STILLS : MAX_CARDS_WITHOUT_STILLS;
   const stillUses = new Map();
   const cardedClaims = new Set();
@@ -273,7 +276,7 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     const explainer = explainerSpecs[claimIndex];
     // No sub-second flashes: a sliver of a line extends the shot before it.
     const tail = plan[plan.length - 1];
-    if (behindOrdinary && end - start < 0.6 && tail && tail.claimIndex === claimIndex) {
+    if (behindOrdinary && end - start < 1.2 && tail && tail.claimIndex === claimIndex && tail.duration + (end - start) <= maximumHoldSeconds) {
       tail.end = end;
       tail.duration = tail.end - tail.start;
       continue;
@@ -713,9 +716,22 @@ async function prepareAssets(topic, outputDirectory) {
   return loadManifest(outputDirectory, topic) || { ...manifest, stills: [] };
 }
 
+// A reviewed, licence-checked set of stills committed under
+// channels/<channel>/assets/visual-packs/<slug>/ seeds the cache, so a run
+// never depends on live downloads for a topic a human already approved.
+function seedFromVisualPack(topic, outputDirectory) {
+  if (!topic || !topic.channel || !topic.slug) return false;
+  const pack = path.join(ROOT, "channels", topic.channel, "assets", "visual-packs", topic.slug);
+  if (!fs.existsSync(path.join(pack, "manifest.json")) || fs.existsSync(manifestPath(outputDirectory))) return false;
+  fs.mkdirSync(cacheDirectory(outputDirectory), { recursive: true });
+  for (const file of fs.readdirSync(pack)) fs.copyFileSync(path.join(pack, file), path.join(cacheDirectory(outputDirectory), file));
+  return true;
+}
+
 function prepareAssetsSync(topicFile, outputDirectory) {
   let topic = null;
   try { topic = JSON.parse(fs.readFileSync(topicFile, "utf8")); } catch (error) {}
+  if (seedFromVisualPack(topic, outputDirectory)) console.log(`visual pack: seeded ${topic.slug} from channels/${topic.channel}/assets/visual-packs`);
   const cached = loadManifest(outputDirectory, topic);
   if (cached) return cached;
   const result = cp.spawnSync(process.execPath, [path.join(ROOT, "scripts", "ib-ct-visual-cache.js"), topicFile, outputDirectory], {
@@ -726,6 +742,8 @@ function prepareAssetsSync(topicFile, outputDirectory) {
   });
   const loaded = loadManifest(outputDirectory, topic);
   if (result.status === 0 && loaded) return loaded;
+  // Surface the cause in CI logs instead of failing silently into the gate.
+  console.log(`::warning::visual cache failed for ${topic && topic.slug || topicFile}: ${String(result.stderr || (result.error && result.error.message) || "status " + result.status).trim().slice(-600)}`);
   return { schemaVersion: CACHE_SCHEMA, topicId: null, stills: [], error: (result.stderr || result.error && result.error.message || "visual cache preparation failed").trim() };
 }
 
@@ -738,7 +756,7 @@ function attributionLines(stills, clips = []) {
   ];
 }
 
-module.exports = { PERSON_FILE,
+module.exports = { seedFromVisualPack, PERSON_FILE,
   loopBack, orderStills,
   CACHE_SCHEMA, MAX_HOLD_SECONDS, GENERIC_VISUAL_TERMS, numberTokens, stillKind, cardTokens, semanticTerms, fileNamesSubject, semanticVisualEvidence, detailStill, openingVariant, buildVisualPlan, visualMetrics, evaluateVisualQuality,
   wikiTitles, curatedVisuals, prepareAssets, prepareAssetsSync, loadManifest, attributionLines,

@@ -32,16 +32,6 @@ function renderValidated(channel) {
   const pre = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true, assignExperiment: true, write: !dryRun });
   if (pre.readiness.decision === "BLOCK") throw new Error(`PRE_RENDER_BLOCK: ${(pre.readiness.hardFails || []).join("; ")}`);
   const output = path.join(channel.paths.production, topic.slug);
-  // A reviewed, licence-checked visual pack (the exact stills approved in the
-  // local dry run) is used when committed, so CI never depends on live
-  // Wikimedia downloads that can fail from runner IPs.
-  const pack = path.join(channel.paths.base, "assets", "visual-packs", topic.slug);
-  const cache = path.join(output, "visual-cache");
-  if (fs.existsSync(path.join(pack, "manifest.json")) && !fs.existsSync(path.join(cache, "manifest.json"))) {
-    fs.mkdirSync(cache, { recursive: true });
-    for (const file of fs.readdirSync(pack)) fs.copyFileSync(path.join(pack, file), path.join(cache, file));
-    console.log(`visual pack: ${fs.readdirSync(pack).length - 1} reviewed stills from ${path.relative(ROOT, pack)}`);
-  }
   const result = Rendering.buildPackage(topic, channel, output, { render: true, growthPlan: pre, recordState: !dryRun });
   const failed = Object.entries(result.validations || {}).filter(([, ok]) => !ok).map(([name]) => name);
   if (failed.length) throw new Error(`PACKAGE_VALIDATION_FAILED: ${failed.join(", ")} — ${JSON.stringify(result.validationReasons)}`);

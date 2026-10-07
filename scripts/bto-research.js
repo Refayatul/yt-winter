@@ -8,8 +8,9 @@
 //   node scripts/bto-research.js [--limit 3] [--slug <question-slug>] [--write]
 //
 // Per question:
-//   1. Wikipedia search → the best one or two articles; their plain text is
-//      the only evidence the writer sees (relevant excerpt, not the web).
+//   1. Wikipedia search → the best one or two articles, plus up to two
+//      authoritative pages found directly (scripts/bto-authority-discovery.js);
+//      their plain text is the only evidence the writer sees.
 //   2. The article's own cited external links, filtered to primary hosts
 //      (standards bodies, manufacturers, government, museums, universities)
 //      and checked reachable, become the topic-level sources.
@@ -34,6 +35,10 @@ const Channel = require(path.join(ROOT, "core", "channel-context"));
 const Provider = require(path.join(ROOT, "core", "llm", "longform-provider"));
 const Builder = require(path.join(ROOT, "scripts", "ib-ct-library", "build"));
 const FR = require(path.join(ROOT, "scripts", "fr-library", "build"));
+// Authoritative pages (manufacturer, standards body, archive, museum, .gov,
+// .edu) found directly; their quotes are verified on the page itself, so a
+// record can carry non-Wikipedia evidence for the production source gate.
+const AuthorityDiscovery = require(path.join(ROOT, "scripts", "bto-authority-discovery"));
 
 const SLUG = "behind-the-ordinary";
 const RETRY_AFTER_DAYS = 60;
@@ -236,7 +241,8 @@ function toSeedRecord(topic, draft, sources) {
     visualScenes: (Array.isArray(draft.visualScenes) ? draft.visualScenes : []).map(String).slice(0, 5),
     narration: narration.map(({ facts: cited, ...line }) => ({ ...line, factIds: cited })),
     facts: facts.map((fact) => ({ role: fact.role || "evidence", layer: "VERIFIED FACT", claim: String(fact.claim).trim(), quote: String(fact.quote).trim(),
-      source: `Wikipedia — ${sourceById.get(fact.sourceId).title}`, url: sourceById.get(fact.sourceId).url, factId: fact.id })),
+      source: sourceById.get(fact.sourceId).authority ? sourceById.get(fact.sourceId).title : `Wikipedia — ${sourceById.get(fact.sourceId).title}`,
+      url: sourceById.get(fact.sourceId).url, factId: fact.id })),
     sources: links.slice(0, 3).map((url) => ({ name: new URL(url).hostname.replace(/^www\./, ""), url, type: "primary source cited by the Wikipedia article" })),
     researchMethod: "automated: provider draft from Wikipedia text; verbatim quotes, numbers and sources verified by scripts/ib-ct-library/build.js",
   };
@@ -264,8 +270,15 @@ async function researchOne(topic, deps) {
   const detailWords = contentWords(topic.designDetail).map((word) => word.replace(/(es|s)$/, "")).filter((word) => word.length >= 4);
   const mentionsDetail = (doc) => !detailWords.length || detailWords.some((word) => doc.text.toLowerCase().includes(word));
   const relevant = docs.filter(mentionsDetail);
-  const share = Math.floor(EXCERPT_BUDGET_CHARS / Math.max(1, relevant.length));
-  const sources = relevant.map((doc) => ({ title: doc.title, url: doc.url, text: excerpt(doc.text, keys, share), links: doc.links }));
+  let authority = [];
+  try { authority = await (deps.discoverAuthority || AuthorityDiscovery.discover)(topic, deps.get, { limit: 2 }) || []; }
+  catch (error) { authority = []; }
+  authority = authority.filter((doc) => doc && doc.url && doc.text && mentionsDetail(doc));
+  const share = Math.floor(EXCERPT_BUDGET_CHARS / Math.max(1, relevant.length + authority.length));
+  const sources = [
+    ...relevant.map((doc) => ({ title: doc.title, url: doc.url, text: excerpt(doc.text, keys, share), links: doc.links })),
+    ...authority.map((doc) => ({ title: doc.title, url: doc.url, text: excerpt(doc.text, keys, share), links: [doc.url], authority: true })),
+  ];
   if (!sources.length) return { status: "NO_SOURCE", reason: `no article mentions "${topic.designDetail}"` };
   const user = { question: topic.coreQuestion, object: topic.object, designDetail: topic.designDetail, pillar: topic.category,
     sources: sources.map((source, index) => ({ id: `S${index + 1}`, title: source.title, excerpt: source.text })) };

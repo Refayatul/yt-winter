@@ -147,6 +147,11 @@ async function verify(channelSlug, record, options) {
     const missing = numbers.filter((n) => !supportedRounded(n, [...available]));
     if (missing.length) errors.push(`fact ${index + 1}: ${missing.join(", ")} not found in ${fact.source}`);
   }
+  // Wikipedia helps discovery but cannot carry a production video alone.
+  if (channelSlug === "behind-the-ordinary") {
+    const authority = (record.facts || []).filter((fact) => { try { return !/(^|\.)wikipedia\.org$/i.test(new URL(fact.url).hostname); } catch (error) { return false; } }).length;
+    if (authority < 2) errors.push(`only ${authority} fact(s) sourced to a non-Wikipedia authoritative page; at least 2 are required`);
+  }
   // Spoken / shown numbers must trace to a fact.
   const shown = [record.hook, record.openingLine, record.secondBeat, record.number, record.thumbnailText, record.expectedConsequence, ...(record.narration || []).map((line) => typeof line === "string" ? line : line.text)].join(" ");
   // Bare scale words ("million", "billion") are multipliers, not claims; the

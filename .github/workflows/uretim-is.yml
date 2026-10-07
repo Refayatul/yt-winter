@@ -180,6 +180,7 @@ jobs:
         run: |
           git config user.name  "uretim-bot"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           # Durum + analiz dosyalari (sir icermez; .env ve medya .gitignore'da)
           git add icerik channel analysis analytics experiments migration reports || true
           if git diff --cached --quiet; then echo "Uretimde degisiklik yok."; exit 0; fi

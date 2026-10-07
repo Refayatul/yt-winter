@@ -1,5 +1,7 @@
 "use strict";
 
+const BehindQuality = require("../../core/quality/behind-the-ordinary");
+
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
@@ -36,7 +38,9 @@ test("BTO inventory: regenerating keeps every researched record (by inventory id
 
 test("BTO production-ready records carry primary sources and verbatim-quoted facts", () => {
   const ready = universe().topics.filter((topic) => topic.productionReady === true);
-  assert.ok(ready.length >= 7, `launch batch present (${ready.length})`);
+  // Wikipedia-only records were demoted to NEEDS_PRIMARY_SOURCE on 2026-10-07.
+  assert.ok(ready.length >= 5, `launch batch present (${ready.length})`);
+  for (const topic of ready) assert.ok(BehindQuality.authorityFacts(topic) >= 2, `${topic.slug}: needs two non-Wikipedia facts`);
   for (const topic of ready) {
     assert.equal(topic.researchStatus, "VERIFIED");
     assert.ok(topic.sources.length >= 2, topic.slug);

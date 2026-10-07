@@ -74,6 +74,7 @@ jobs:
         run: |
           git config user.name  "uretim-bot"
           git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add icerik/bildirim-durum.json channels/*/state/notification-state.json 2>/dev/null || true
           if git diff --cached --quiet; then echo "degisiklik yok"; exit 0; fi
           git commit -m "chore: gunluk kontrol (otomatik)"
