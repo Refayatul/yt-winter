@@ -28,6 +28,7 @@ const SUPPORT = Object.freeze({
   retention_curve: { status: "ACCOUNT-DEPENDENT", source: "Analytics API audienceWatchRatio / relativeRetentionPerformance by elapsedVideoTimeRatio" },
   impressions: { status: "UNAVAILABLE", source: "Studio only; manual studio-manual.json entry is labelled as manual" },
   ctr: { status: "UNAVAILABLE", source: "Studio only (impressions click-through rate); manual entry only" },
+  stayed_to_watch: { status: "UNAVAILABLE", source: "Studio only (Shorts 'Viewed vs swiped away'); scripts/studio-import.js" },
   returning_viewers: { status: "UNAVAILABLE", source: "not exposed per video by the public API; manual entry only" },
   viewed_vs_swiped_away: { status: "UNAVAILABLE", source: "Shorts 'viewed vs swiped away' is Studio-only; no Analytics API metric" },
   stayed_to_watch: { status: "UNAVAILABLE", source: "Studio-only Shorts metric" },
@@ -48,7 +49,7 @@ const METRIC_MAP = {
   subscribers_gained: (m) => m.subscribersGained, subscribers_lost: (m) => m.subscribersLost,
   net_subscribers: (m) => m.netSubscribers, average_view_duration: (m) => m.averageViewDuration,
   average_percentage_viewed: (m) => m.averageViewPercentage, watch_time_minutes: (m) => m.watchTimeMinutes,
-  impressions: (m) => m.impressions, ctr: (m) => m.ctr, returning_viewers: (m) => m.returningViewers,
+  impressions: (m) => m.impressions, ctr: (m) => m.ctr, returning_viewers: (m) => m.returningViewers, stayed_to_watch: (m) => m.stayedToWatch,
   first_30s_retention: (m) => m.first30sRetention, engaged_views: (m) => m.engagedViews,
 };
 
@@ -98,7 +99,7 @@ function flatMetrics(snap) {
     engagedViews: pick("engaged_views"),
     subscribersLost: pick("subscribers_lost"), netSubscribers: pick("net_subscribers"),
     subscribersPer1000Views: pick("subscribers_per_1000_views"), netSubscribersPer1000Views: pick("net_subscribers_per_1000_views"), engagementPer1000Views: pick("engagement_per_1000_views"),
-    watchHoursPer1000Views: pick("watch_hours_per_1000_views"), ctr: pick("ctr"), first30sRetention: pick("first_30s_retention"),
+    watchHoursPer1000Views: pick("watch_hours_per_1000_views"), ctr: pick("ctr"), stayedToWatch: pick("stayed_to_watch"), first30sRetention: pick("first_30s_retention"),
     shortsFeedShare: (snap.traffic.find((row) => row.source === "SHORTS") || {}).share ?? null,
     searchShare: snap.traffic.length ? (snap.traffic.find((row) => row.source === "YT_SEARCH") || { share: 0 }).share : null,
   };
