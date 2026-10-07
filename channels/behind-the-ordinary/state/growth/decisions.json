@@ -1620,17 +1620,293 @@
     "channel": "behind-the-ordinary",
     "contentType": "short",
     "date": "2026-10-07",
-    "createdAt": "2026-10-07T20:49:23.823Z",
+    "createdAt": "2026-10-07T21:25:00.844Z",
     "mode": "EXPLORE",
     "modeRoll": 0.166,
     "pool": {
       "minimum": 1,
       "target": 30,
-      "count": 0,
-      "meetsMinimum": false,
-      "candidates": []
+      "count": 1,
+      "meetsMinimum": true,
+      "candidates": [
+        {
+          "topicId": "BTO-017",
+          "slug": "why-jeans-have-copper-rivets",
+          "topic": "Why Jeans Have Copper Rivets",
+          "cluster": "EVERYDAY MYSTERIES",
+          "bucket": "A",
+          "viralScore": 86.6,
+          "videoPotentialScore": 86.6,
+          "selectionScore": 86.6,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 35,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 50,
+              "basis": "inventory-signal"
+            },
+            "surprise": {
+              "value": 80,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 87,
+              "basis": "inventory-signal"
+            },
+            "archival_footage_potential": {
+              "value": 35,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 68,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 84,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 57,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 65,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 91,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 88,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 58,
+              "basis": "learned",
+              "note": "1 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 72,
+              "basis": "derived",
+              "note": "series-depth proxy; no measured conversion yet"
+            },
+            "audience_breadth": {
+              "value": 73,
+              "basis": "inventory-signal"
+            },
+            "hook_potential": {
+              "value": 77,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 60,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": -33,
+              "basis": "penalty",
+              "note": "published-title similarity 0.33"
+            },
+            "saturation_risk": {
+              "value": -100,
+              "basis": "penalty",
+              "note": "1 published / 2 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "1 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -5,
+              "basis": "penalty",
+              "note": "95/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -40,
+              "basis": "penalty",
+              "note": "no archival footage confirmed"
+            }
+          },
+          "selectedHook": {
+            "family": "visual_first_reveal",
+            "spoken": "Those copper dots on jeans started on horse blankets.",
+            "score": 85
+          },
+          "rejectionReasons": [
+            "editorial priority 86.6 meets channel production floor",
+            "hook 85",
+            "source confidence 95"
+          ]
+        }
+      ]
     },
-    "selected": null,
-    "reason": "NO_CANDIDATE_POOL: 0 qualified unused topic(s); minimum 1"
+    "selected": {
+      "topicId": "BTO-017",
+      "slug": "why-jeans-have-copper-rivets",
+      "topic": "Why Jeans Have Copper Rivets",
+      "cluster": "EVERYDAY MYSTERIES",
+      "bucket": "A",
+      "viralScore": 86.6,
+      "videoPotentialScore": 86.6,
+      "selectionScore": 86.6,
+      "viralComponents": {
+        "curiosity_gap": {
+          "value": 89,
+          "basis": "derived"
+        },
+        "immediate_stakes": {
+          "value": 70,
+          "basis": "derived"
+        },
+        "human_consequence": {
+          "value": 35,
+          "basis": "derived"
+        },
+        "recognizability": {
+          "value": 50,
+          "basis": "inventory-signal"
+        },
+        "surprise": {
+          "value": 80,
+          "basis": "derived"
+        },
+        "visual_potential": {
+          "value": 87,
+          "basis": "inventory-signal"
+        },
+        "archival_footage_potential": {
+          "value": 35,
+          "basis": "inventory-signal"
+        },
+        "first_frame_potential": {
+          "value": 68,
+          "basis": "derived"
+        },
+        "title_potential": {
+          "value": 84,
+          "basis": "derived",
+          "note": "4 source-backed title seeds"
+        },
+        "emotional_tension": {
+          "value": 57,
+          "basis": "derived"
+        },
+        "contradiction": {
+          "value": 85,
+          "basis": "derived"
+        },
+        "unexpected_cause": {
+          "value": 65,
+          "basis": "derived"
+        },
+        "numerical_anomaly": {
+          "value": 95,
+          "basis": "derived"
+        },
+        "didnt_know_factor": {
+          "value": 82,
+          "basis": "derived"
+        },
+        "shareability": {
+          "value": 91,
+          "basis": "derived"
+        },
+        "channel_fit": {
+          "value": 88,
+          "basis": "derived"
+        },
+        "historical_similarity": {
+          "value": 58,
+          "basis": "learned",
+          "note": "1 same-cluster upload(s), breakout rate 0"
+        },
+        "subscriber_conversion_potential": {
+          "value": 72,
+          "basis": "derived",
+          "note": "series-depth proxy; no measured conversion yet"
+        },
+        "audience_breadth": {
+          "value": 73,
+          "basis": "inventory-signal"
+        },
+        "hook_potential": {
+          "value": 77,
+          "basis": "derived"
+        },
+        "visual_availability": {
+          "value": 60,
+          "basis": "inventory-signal"
+        },
+        "research_confidence": {
+          "value": 95,
+          "basis": "derived"
+        },
+        "duplicate_risk": {
+          "value": -33,
+          "basis": "penalty",
+          "note": "published-title similarity 0.33"
+        },
+        "saturation_risk": {
+          "value": -100,
+          "basis": "penalty",
+          "note": "1 published / 2 inventory in cluster"
+        },
+        "recent_fatigue_risk": {
+          "value": -22,
+          "basis": "penalty",
+          "note": "1 same-family upload(s) in the last 30 days"
+        },
+        "source_confidence_risk": {
+          "value": -5,
+          "basis": "penalty",
+          "note": "95/100 source quality"
+        },
+        "weak_footage_risk": {
+          "value": -40,
+          "basis": "penalty",
+          "note": "no archival footage confirmed"
+        }
+      },
+      "selectedHook": {
+        "family": "visual_first_reveal",
+        "spoken": "Those copper dots on jeans started on horse blankets.",
+        "score": 85
+      },
+      "rejectionReasons": [
+        "editorial priority 86.6 meets channel production floor",
+        "hook 85",
+        "source confidence 95"
+      ]
+    },
+    "reason": "EXPLORE (0.25): under-sampled cluster EVERYDAY MYSTERIES"
   }
 ]
