@@ -1,24 +1,15 @@
 {
   "channel": "behind-the-ordinary",
   "channelName": "The Hidden Logic of Things",
-  "tarih": "2026-10-08T19:59:35.789Z",
+  "tarih": "2026-10-08T20:43:59.516Z",
   "aggregateManaged": true,
   "yuklemeUygun": true,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "ok",
-      "mesaj": "refresh token çalışıyor"
-    },
-    {
-      "ad": "youtube-kapsam",
-      "durum": "ok",
-      "mesaj": "gerekli kapsamlar tamam"
-    },
-    {
-      "ad": "youtube-kanal",
-      "durum": "ok",
-      "mesaj": "doğru kanal doğrulandı (UCBkloTDoYhsNbswwPkvqLIg)"
+      "durum": "kritik",
+      "mesaj": "YOUTUBE_AUTH_FAILURE channel=behind-the-ordinary reason=INVALID_CLIENT",
+      "cozum": "Yerelde `node youtube-yetki.js --channel behind-the-ordinary --github` çalıştır. Kalıcı çözüm: Google Auth Platform → Audience → In production."
     },
     {
       "ad": "oauth-reauth-deadline",
