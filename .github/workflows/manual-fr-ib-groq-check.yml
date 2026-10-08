@@ -9,6 +9,10 @@ on:
         options:
           - failure-reconstructed
           - impossible-brief
+      resume_run_id:
+        description: Optional previous run ID for same-channel checkpoint (leave blank for fresh run)
+        required: false
+        type: string
       approval:
         description: Type RUN_NO_PUBLISH to authorize Groq API usage
         required: true
@@ -49,6 +53,14 @@ jobs:
           test "$FR_LONGFORM_PUBLISH" = "0"
           test "$IB_LONGFORM_PUBLISH" = "0"
           node -e 'const p=require("./core/llm/longform-provider");if(!p.available()){console.error("Long-form Groq is not configured");process.exit(1)}'
+      - name: Restore previous same-channel checkpoint (optional)
+        if: ${{ inputs.resume_run_id != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          name: longform-resume-${{ inputs.channel }}
+          run-id: ${{ inputs.resume_run_id }}
+          github-token: ${{ github.token }}
+          path: .fr-ib-writer-sandbox/
       - name: Build one script in sandbox only
         run: |
           set -euo pipefail
