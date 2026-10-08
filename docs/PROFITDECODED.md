@@ -55,6 +55,8 @@ node profitdecoded.js rank --top 20 --write      # decision engine over the inve
 node profitdecoded.js breakout --snapshot s.json # outlier/breakout feed from a channel snapshot
 node profitdecoded.js plan                       # shadow schedule
 node profitdecoded.js clusters                   # topic clusters
+node profitdecoded.js freshness [--all]          # topics whose premise may be outdated (sourced watchlist + phrasing)
+node profitdecoded.js rank --top 20 --snapshot channels/profitdecoded/intel/snapshot-YYYY-MM-DD.json --write  # with observed collector data
 node profitdecoded.js publish-check              # lists every reason publishing is blocked
 node scripts/profitdecoded/produce-audio.js <bundle.json>   # voice + original music bed + loudness
 node profitdecoded.js dry-run <bundle.json>      # full assessment + review report (never uploads)
@@ -113,3 +115,7 @@ Spend (Anthropic): usage is accumulated per run and estimated from list prices (
 - `render.js` now writes `out/captions.srt` (phrases timed proportionally inside each narration beat, so timing within a beat is an estimate) and burns the captions into `out/video.mp4` when ffmpeg has libass. The result is recorded in `bundle.render.captions`.
 - `profitdecoded-produce.yml` has a weekday cron (11:50 UTC) that is **off** until the repository variable `PD_AUTO_SCHEDULE` is `true`. Scheduled runs produce one Short as a dry run; nothing is uploaded.
 - `profitdecoded-competitors.yml` (manual) collects live competitor/outlier data with the read-only `PD_YT_API_KEY` secret and uploads the snapshot and breakout feed as an artifact. Without the secret it fails with a clear message and competitive data stays UNKNOWN.
+
+## Topic intelligence (Phase 2)
+
+See `docs/profitdecoded/PHASE-2-IMPLEMENTATION.md`. In short: an editorial lens (`topic-scoring.editorialLens`) adds narrative conflict, competitive saturation and angle originality to the existing signals; oversaturated title templates cost rank but never reject a topic; curated angles live in `channels/profitdecoded/topics/angles.json`; dated, sourced premise changes in `topics/freshness-watchlist.json` (`core/profitdecoded/freshness.js`); manual public-search samples in `intel/coverage-*.json` (INFERRED) and collector snapshots (OBSERVED, `competitive.topicEvidenceFromSnapshot`).
