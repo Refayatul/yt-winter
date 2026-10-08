@@ -1,6 +1,6 @@
 {
   "schema": "feedback-loop-health/1",
-  "generatedAt": "2026-10-08T00:59:22.261Z",
+  "generatedAt": "2026-10-08T07:23:23.896Z",
   "verdict": "CLOSED_LOOP_WORKING",
   "channels": [
     {
@@ -9,9 +9,9 @@
       "mode": "adaptive",
       "publishedVideos": 17,
       "performanceRows": 18,
-      "diagnosisRows": 37,
+      "diagnosisRows": 38,
       "learning": {
-        "updatedAt": "2026-10-08T00:59:17.190Z",
+        "updatedAt": "2026-10-08T07:23:19.417Z",
         "sampleSize": 17,
         "status": "adaptive",
         "observations": 28,
@@ -76,65 +76,9 @@
         }
       ],
       "timing": {
-        "lateCheckpointCount": 60,
+        "lateCheckpointCount": 61,
         "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
         "examples": [
-          {
-            "videoId": "X0jw78mIGdk",
-            "label": "1h",
-            "scheduledHours": 1,
-            "collectedAgeHours": 172.46,
-            "driftHours": 171.46
-          },
-          {
-            "videoId": "ATpXizczEI8",
-            "label": "12h",
-            "scheduledHours": 12,
-            "collectedAgeHours": 19.21,
-            "driftHours": 7.21
-          },
-          {
-            "videoId": "ATpXizczEI8",
-            "label": "6h",
-            "scheduledHours": 6,
-            "collectedAgeHours": 19.67,
-            "driftHours": 13.67
-          },
-          {
-            "videoId": "ATpXizczEI8",
-            "label": "24h",
-            "scheduledHours": 24,
-            "collectedAgeHours": 26.82,
-            "driftHours": 2.82
-          },
-          {
-            "videoId": "PAi4kSZesNE",
-            "label": "12h",
-            "scheduledHours": 12,
-            "collectedAgeHours": 19.4,
-            "driftHours": 7.4
-          },
-          {
-            "videoId": "PAi4kSZesNE",
-            "label": "6h",
-            "scheduledHours": 6,
-            "collectedAgeHours": 19.48,
-            "driftHours": 13.48
-          },
-          {
-            "videoId": "PAi4kSZesNE",
-            "label": "48h",
-            "scheduledHours": 48,
-            "collectedAgeHours": 50.82,
-            "driftHours": 2.82
-          },
-          {
-            "videoId": "NnGoWJOdaW0",
-            "label": "12h",
-            "scheduledHours": 12,
-            "collectedAgeHours": 20.63,
-            "driftHours": 8.63
-          },
           {
             "videoId": "NnGoWJOdaW0",
             "label": "6h",
@@ -148,6 +92,62 @@
             "scheduledHours": 168,
             "collectedAgeHours": 170.82,
             "driftHours": 2.82
+          },
+          {
+            "videoId": "DLYpmaQ-EVw",
+            "label": "24h",
+            "scheduledHours": 24,
+            "collectedAgeHours": 34.97,
+            "driftHours": 10.97
+          },
+          {
+            "videoId": "DLYpmaQ-EVw",
+            "label": "72h",
+            "scheduledHours": 72,
+            "collectedAgeHours": 80.85,
+            "driftHours": 8.85
+          },
+          {
+            "videoId": "DLYpmaQ-EVw",
+            "label": "48h",
+            "scheduledHours": 48,
+            "collectedAgeHours": 156.11,
+            "driftHours": 108.11
+          },
+          {
+            "videoId": "DLYpmaQ-EVw",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 156.57,
+            "driftHours": 144.57
+          },
+          {
+            "videoId": "DLYpmaQ-EVw",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 156.91,
+            "driftHours": 150.91
+          },
+          {
+            "videoId": "DLYpmaQ-EVw",
+            "label": "1h",
+            "scheduledHours": 1,
+            "collectedAgeHours": 157.18,
+            "driftHours": 156.18
+          },
+          {
+            "videoId": "DLYpmaQ-EVw",
+            "label": "7d",
+            "scheduledHours": 168,
+            "collectedAgeHours": 178.94,
+            "driftHours": 10.94
+          },
+          {
+            "videoId": "DLYpmaQ-EVw",
+            "label": "14d",
+            "scheduledHours": 336,
+            "collectedAgeHours": 339.69,
+            "driftHours": 3.69
           }
         ]
       },
@@ -162,11 +162,11 @@
       "performanceRows": 7,
       "diagnosisRows": 14,
       "learning": {
-        "updatedAt": "2026-10-08T00:59:18.494Z",
+        "updatedAt": "2026-10-08T07:23:21.220Z",
         "sampleSize": 6,
         "status": "observing",
         "observations": 21,
-        "hypotheses": 3,
+        "hypotheses": 5,
         "adopted": 0,
         "suppressed": 0
       },
@@ -313,7 +313,7 @@
       "performanceRows": 6,
       "diagnosisRows": 11,
       "learning": {
-        "updatedAt": "2026-10-08T00:59:20.154Z",
+        "updatedAt": "2026-10-08T07:23:22.519Z",
         "sampleSize": 5,
         "status": "observing",
         "observations": 23,
@@ -448,8 +448,8 @@
             "videoId": "24eJvZ2cswc",
             "label": "6h",
             "scheduledHours": 6,
-            "collectedAgeHours": 30.98,
-            "driftHours": 24.98
+            "collectedAgeHours": 37.38,
+            "driftHours": 31.38
           }
         ]
       },
@@ -464,7 +464,7 @@
       "performanceRows": 2,
       "diagnosisRows": 3,
       "learning": {
-        "updatedAt": "2026-10-08T00:59:22.072Z",
+        "updatedAt": "2026-10-08T07:23:23.782Z",
         "sampleSize": 2,
         "status": "observing",
         "observations": 15,
