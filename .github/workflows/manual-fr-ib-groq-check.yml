@@ -27,6 +27,7 @@ jobs:
       FR_LONGFORM_PUBLISH: '0'
       IB_LONGFORM_PUBLISH: '0'
       GROWTH_GATE_MODE: shadow
+      GROWTH_STATE_ROOT: ${{ github.workspace }}/.fr-ib-writer-sandbox
       LONGFORM_LLM_PROVIDER: groq
       GROQ_API_KEY: ${{ secrets.GROQ_API_KEY2 }}
       LONGFORM_LLM_MAX_ATTEMPTS: '1'
