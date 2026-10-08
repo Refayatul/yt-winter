@@ -4,7 +4,7 @@
 // channels/profitdecoded/. NOTHING in this file uploads to YouTube.
 //
 //   node profitdecoded.js inventory                    inventory statistics
-//   node profitdecoded.js rank [--top 20] [--evidence evidence.json] [--write]
+//   node profitdecoded.js rank [--top 20] [--evidence evidence.json] [--snapshot intel/snapshot-*.json] [--write]
 //   node profitdecoded.js breakout --snapshot file.json [--threshold 55]
 //   node profitdecoded.js plan                         shadow schedule + render windows
 //   node profitdecoded.js dry-run <bundle.json>        full assessment + review report
@@ -41,6 +41,12 @@ if (cmd === "inventory") {
   const u = universe(); const evidence = flag("--evidence") ? readJson(path.resolve(flag("--evidence")), {}) : {};
   // --feed breakout-feed-*.json: observed collector output. Each inventory topic gets its strongest matched breakout (OBSERVED).
   if (flag("--feed")) for (const [id, b] of Object.entries(Comp.evidenceFromFeed(readJson(path.resolve(flag("--feed")), { feed: [] })))) evidence[id] = { ...(evidence[id] || {}), breakout: b };
+  // --snapshot snapshot-*.json: observed per-topic coverage (long-form, same-format baselines, ages measured from the snapshot date).
+  let observed = null;
+  if (flag("--snapshot")) {
+    observed = Comp.topicEvidenceFromSnapshot(readJson(path.resolve(flag("--snapshot")), { channels: [] }), u.topics);
+    for (const [id, o] of Object.entries(observed.topics)) if (o.breakout && !(evidence[id] || {}).breakout) evidence[id] = { ...(evidence[id] || {}), breakout: o.breakout };
+  }
   // Researched dossiers on disk feed the decision engine through the real research gate.
   const Research = require(path.join(P, "research")); const rdir = path.join(CHANNEL_DIR, "research");
   if (fs.existsSync(rdir)) for (const f of fs.readdirSync(rdir).filter((x) => x.endsWith(".json"))) {
@@ -62,10 +68,10 @@ if (cmd === "inventory") {
   const titles = top.filter((r) => r.workingTitle !== r.topic || r.titleTemplate.needsAngle).map((r) => `  ${String(top.indexOf(r) + 1).padStart(2)}. ${r.workingTitle !== r.topic ? `angle: "${r.workingTitle}" (${r.angle.premiseStatus})` : `needs angle: "${r.topic}" uses ${r.titleTemplate.class} template ${r.titleTemplate.template}`}`);
   console.log(out);
   if (titles.length) console.log("\nTitles:\n" + titles.join("\n"));
-  console.log("\nNote: ESTIMATED = curation heuristics. Satur* = INFERRED from a manual public-search sample (not API data). UNKNOWN demand/outlier/saturation are never converted into favourable scores; long-form stays blocked until observed evidence exists.");
+  console.log("\nNote: ESTIMATED = curation heuristics. Satur* = INFERRED from a manual public-search sample (not API data); Satur without * = OBSERVED from the collector snapshot. UNKNOWN demand/outlier/saturation are never converted into favourable scores; long-form stays blocked until observed evidence exists.");
   if (has("--write")) {
     fs.mkdirSync(path.join(CHANNEL_DIR, "reports"), { recursive: true });
-    fs.writeFileSync(path.join(CHANNEL_DIR, "reports", "topic-ranking.json"), JSON.stringify({ generatedAt: new Date().toISOString(), top, provenanceNote: "ESTIMATED/UNKNOWN as labelled per input" }, null, 1) + "\n");
+    fs.writeFileSync(path.join(CHANNEL_DIR, "reports", "topic-ranking.json"), JSON.stringify({ generatedAt: new Date().toISOString(), snapshot: flag("--snapshot") ? path.basename(flag("--snapshot")) : null, top, observedCoverage: observed ? Object.fromEntries(top.filter((r) => observed.topics[r.id]).map((r) => [r.id, { related: observed.topics[r.id].related, audienceChannels: observed.topics[r.id].audienceChannels, lowViewUploads: observed.topics[r.id].lowViewUploads, top: observed.topics[r.id].top }])) : null, provenanceNote: "OBSERVED/INFERRED/ESTIMATED/UNKNOWN as labelled per input" }, null, 1) + "\n");
     fs.writeFileSync(path.join(CHANNEL_DIR, "reports", "topic-ranking.txt"), out + (titles.length ? "\n\nTitles:\n" + titles.join("\n") : "") + "\n");
   }
 } else if (cmd === "breakout") {

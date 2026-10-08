@@ -151,13 +151,20 @@ function topicKey(title, inventory) {
   return best && bestSim >= 0.34 ? { id: best.id, topic: best.topic, similarity: S.round(bestSim, 2) } : null;
 }
 
+const SHORT_MAX_SEC = 180;
 function buildBreakoutFeed(snapshot, options = {}) {
   const now = options.now || Date.now();
   const threshold = options.threshold == null ? 55 : options.threshold;
   const windows = options.windows || [7, 30, 90, 365];
   const inventory = options.inventory || [];
+  // options.format "long" | "short": compare like with like. Shorts and long-form views live on different scales,
+  // so each channel's baseline is rebuilt from same-format uploads only. Videos without a known duration are kept
+  // (older snapshots carry none). YouTube Shorts can run up to 180 seconds.
+  const fmt = options.format || null;
+  const keep = (v) => v.durationSec == null || !fmt || (fmt === "long" ? v.durationSec > SHORT_MAX_SEC : v.durationSec <= SHORT_MAX_SEC);
+  const channels = (snapshot.channels || []).map((c) => (fmt ? { ...c, videos: (c.videos || []).filter(keep) } : c));
   const all = [];
-  for (const channel of snapshot.channels || []) for (const v of channel.videos || []) all.push({ channel, video: v });
+  for (const channel of channels) for (const v of channel.videos || []) all.push({ channel, video: v });
   const scored = all.map(({ channel, video }) => ({ channel, video, o: outlierScore(video, channel, { now }) }));
   // Topic recurrence = distinct channels with an outlier on the same matched topic.
   const byKey = new Map();
@@ -184,7 +191,7 @@ function buildBreakoutFeed(snapshot, options = {}) {
     const opportunity = S.round(S.clamp(0.42 * o.score.value + 0.18 * relevance + 0.14 * freshness + 0.1 * evergreen - 25 * SATURATION_PENALTY[sat.class] + 12 * (SATURATION_PENALTY[sat.class] === 0 ? 1 : 0)), 1);
     feed.push({
       window: windows.find((w) => ageDays <= w) || 365,
-      source: { channel: r.channel.name, channelId: r.channel.id, videoId: r.video.id, publishedAt: r.video.publishedAt, subscribers: r.channel.subscribers, views: r.video.views, baselineMedianViews: base.n >= 5 ? Math.round(base.median) : null },
+      source: { channel: r.channel.name, channelId: r.channel.id, videoId: r.video.id, publishedAt: r.video.publishedAt, subscribers: r.channel.subscribers, views: r.video.views, durationSec: r.video.durationSec == null ? null : r.video.durationSec, baselineMedianViews: base.n >= 5 ? Math.round(base.median) : null },
       outlier: o, topic: r.key, titleStructure: titleStructure(r.video.title), viralMechanismCode: viralMechanism(r.video.title),
       thumbnailConcept: r.video.thumbnailNotes || "UNKNOWN (no thumbnail analysis supplied)",
       viewerQuestion: "Why/how does this familiar business behave this way? (derive from audience comments, not the creator's script)",
@@ -193,7 +200,7 @@ function buildBreakoutFeed(snapshot, options = {}) {
     });
   }
   feed.sort((a, b) => b.opportunityScore - a.opportunityScore);
-  return { generatedAt: new Date(now).toISOString(), windows, count: feed.length, feed };
+  return { generatedAt: new Date(now).toISOString(), windows, format: fmt || "all", count: feed.length, feed };
 }
 
 // Observed breakout feed -> per-topic evidence for the decision engine: the strongest matched item per inventory topic.
@@ -205,6 +212,84 @@ function evidenceFromFeed(feed) {
     if (!cur || f.outlier.score.value > cur.outlier.score.value) out[f.topic.id] = f;
   }
   return out;
+}
+
+// ---- Observed topic coverage from a collector snapshot ------------------------------
+// For each inventory topic: which collected long-form videos are about the same subject, how they
+// performed against their own channel (outlier score, OBSERVED) and how crowded the subject is
+// (saturation over the related videos). Matching is deliberately literal and inspectable:
+//   * the topic's entity phrase appears in the title (for entities shared by >=3 topics, one more
+//     subject word from the topic title must appear too), or
+//   * >=2 of the topic title's subject words appear (titles with one subject word, or titles that name
+//     their entity, need the entity).
+// Saturation counts competing creators: each channel contributes its most-viewed related upload once.
+// Titles in non-Latin scripts are skipped (market filter for an English, US-weighted channel).
+// Uploads under minViews are counted as supply ("low-view uploads"), not as audience saturation.
+const GENERIC = new Set(("money make makes making made cost costs price prices pricing business businesses really actually more less expensive cheap cheaper " +
+  "everyone wants want care stay home people company companies sell sells selling pay pays paid free profit profits billion billions million hidden secret real reason " +
+  "truth work works keep keeps every everything become became use uses still need own owns owning economics model explained instead without than when your you they " +
+  "last year years few only break breaks new old big small little rise fall almost much many most never always day days").split(" "));
+const stem = (w) => w.replace(/'s$/, "").replace(/(ies)$/, "y").replace(/(ses|xes|ches|shes)$/, (m) => m.slice(0, -2)).replace(/([^s])s$/, "$1");
+const NON_LATIN = /[\u0370-\u03FF\u0400-\u052F\u0590-\u06FF\u0900-\u0DFF\u0E00-\u0FFF\u1100-\u11FF\u3040-\u30FF\u3400-\u9FFF\uAC00-\uD7AF]/;
+function subjectTerms(text) { return [...new Set(T.contentWords(text).map(stem).filter((w) => !GENERIC.has(w) && w.length > 2))]; }
+function entityPattern(entity) {
+  const e = String(entity || "").trim(); if (!e) return null;
+  const words = e.split(/\s+/).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  const last = words.length - 1; words[last] = words[last].replace(/s$/i, "") + "s?";
+  const caseSensitive = /^[A-Z0-9&]{2,5}$/.test(e); // acronyms such as AMC, HP
+  return new RegExp("\\b" + words.join("\\s+") + "\\b", caseSensitive ? "" : "i");
+}
+function matchesTopic(title, topic, entityShared) {
+  const tw = new Set(T.contentWords(title).map(stem));
+  const terms = subjectTerms(topic.topic);
+  const ent = entityPattern(topic.entity);
+  const entityWords = new Set(subjectTerms(topic.entity || ""));
+  if (ent && ent.test(title)) {
+    if (!entityShared) return true;
+    return terms.some((w) => !entityWords.has(w) && tw.has(w));
+  }
+  // When the topic title names its entity (McDonald's, IKEA, Gift Cards), the video must name it too.
+  if (ent && ent.test(topic.topic)) return false;
+  // One-word subjects are too ambiguous ("for pennies") to match without the entity.
+  if (terms.length < 2) return false;
+  return terms.filter((w) => tw.has(w)).length >= 2;
+}
+
+function topicEvidenceFromSnapshot(snapshot, inventory, options = {}) {
+  const now = options.now || Date.parse(snapshot.fetchedAt) || Date.now();
+  const minViews = options.minViews == null ? 1000 : options.minViews;
+  const fmt = options.format === undefined ? "long" : options.format;
+  const keep = (v) => (v.durationSec == null || !fmt || (fmt === "long" ? v.durationSec > SHORT_MAX_SEC : v.durationSec <= SHORT_MAX_SEC)) && !NON_LATIN.test(v.title || "");
+  const channels = (snapshot.channels || []).map((c) => ({ ...c, videos: (c.videos || []).filter(keep) }));
+  const videos = [];
+  for (const c of channels) for (const v of c.videos) videos.push({ c, v, o: outlierScore(v, c, { now }) });
+  const entityCount = {}; for (const t of inventory || []) entityCount[t.entity] = (entityCount[t.entity] || 0) + 1;
+  const out = {};
+  for (const t of inventory || []) {
+    const rel = videos.filter((x) => matchesTopic(x.v.title, t, entityCount[t.entity] >= 3));
+    if (!rel.length) continue;
+    const bestPerChannel = new Map();
+    for (const x of rel.filter((y) => y.v.views >= minViews)) { const cur = bestPerChannel.get(x.c.id); if (!cur || x.v.views > cur.v.views) bestPerChannel.set(x.c.id, x); }
+    const audience = [...bestPerChannel.values()];
+    const lowView = rel.filter((x) => x.v.views < minViews).length;
+    const lowView90 = new Set(rel.filter((x) => x.v.views < minViews && now - Date.parse(x.v.publishedAt) <= 90 * DAY).map((x) => x.c.id)).size;
+    const related = audience.map((x) => ({ publishedAt: x.v.publishedAt, title: x.v.title, channelId: x.c.id, channelSubscribers: x.c.subscribers, outlier: S.isKnown(x.o.score) ? x.o.score.value : 0 }));
+    let sat = audience.length ? saturation(related, { now }) : null;
+    if (!sat) sat = lowView90 >= 10
+      ? { class: "GROWING", reasons: [`no related upload reached ${minViews} views; ${lowView90} channels posted low-view uploads in 90d (supply, not audience)`], provenance: "OBSERVED" }
+      : null;
+    const scored = audience.filter((x) => S.isKnown(x.o.score)).sort((a, b) => b.o.score.value - a.o.score.value);
+    // Demand needs independent confirmation: one matched channel is an anecdote, not evidence.
+    const minChannels = options.minChannelsForDemand == null ? 2 : options.minChannelsForDemand;
+    const best = scored.length >= minChannels ? scored[0] : null;
+    const top = [...audience].sort((a, b) => b.v.views - a.v.views).slice(0, 5).map((x) => ({ title: x.v.title, channel: x.c.name, subscribers: x.c.subscribers, views: x.v.views, ageDays: Math.round((now - Date.parse(x.v.publishedAt)) / DAY), medianMultiple: x.o.medianMultiple || null }));
+    out[t.id] = {
+      related: rel.length, audienceChannels: audience.length, lowViewUploads: lowView, lowViewChannels90d: lowView90, top,
+      // decision-engine shape: only present when there is something observed to say
+      breakout: sat || best ? { outlier: best ? best.o : { score: S.unknown(scored.length ? `only ${scored.length} matched channel(s); demand needs >=${minChannels}` : "no related video with a channel baseline") }, saturation: sat || { class: "UNKNOWN", reasons: [] }, ageDays: best ? Math.round((now - Date.parse(best.v.publishedAt)) / DAY) : null, source: best ? { channel: best.c.name, videoId: best.v.id, views: best.v.views } : null } : null,
+    };
+  }
+  return { generatedAt: new Date(now).toISOString(), format: fmt || "all", minViews, topics: out, note: "OBSERVED counts from one collector snapshot (reference channels + keyword discovery). A topic missing here was not found in the sample; absence is not proof of an open field." };
 }
 
 // ---- Competitor gap analysis -----------------------------------------------------
@@ -249,4 +334,4 @@ async function fetchSnapshot(channelIds, options = {}) {
   return { fetchedAt: new Date().toISOString(), source: "youtube-data-api-v3", channels };
 }
 
-module.exports = { outlierScore, channelBaseline, ratioScore, saturation, SATURATION_PENALTY, coverageSaturation, buildBreakoutFeed, evidenceFromFeed, gapAnalysis, titleStructure, viralMechanism, classifyPillar, topicKey, fetchSnapshot };
+module.exports = { outlierScore, channelBaseline, ratioScore, saturation, SATURATION_PENALTY, coverageSaturation, buildBreakoutFeed, evidenceFromFeed, subjectTerms, matchesTopic, topicEvidenceFromSnapshot, gapAnalysis, titleStructure, viralMechanism, classifyPillar, topicKey, fetchSnapshot };

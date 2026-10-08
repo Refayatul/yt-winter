@@ -255,3 +255,60 @@ test("collector keeps video duration (Shorts vs long-form) without guessing", ()
   assert.equal(Y.isoSeconds("PT9M"), 540); assert.equal(Y.isoSeconds("PT1H2M3S"), 3723); assert.equal(Y.isoSeconds("PT45S"), 45);
   assert.equal(Y.isoSeconds(undefined), null); assert.equal(Y.isoSeconds("garbage"), null);
 });
+
+// ---------- observed snapshot evidence (SYNTHETIC snapshot, test data only) ----------
+const NOW2 = Date.parse("2026-10-08T00:00:00Z");
+const ago = (d) => new Date(NOW2 - d * 86400000).toISOString();
+const filler = (ch, n, views, dur = 600) => Array.from({ length: n }, (_, i) => ({ id: `${ch}-${i}-${dur}`, title: "Filler upload " + i, publishedAt: ago(30 + i * 7), views, durationSec: dur }));
+
+test("breakout feed can compare like with like: Shorts never set a long-form baseline", () => {
+  const C = PD("competitive");
+  const ch = { id: "c", name: "C", subscribers: 20000, videos: [...filler("c", 8, 900000, 40), ...filler("c", 8, 10000, 600), { id: "hit", title: "Why Parking Lots Earn More Than Stores", publishedAt: ago(10), views: 200000, durationSec: 720 }] };
+  const mixed = C.buildBreakoutFeed({ channels: [ch] }, { now: NOW2, threshold: 50 });
+  const long = C.buildBreakoutFeed({ channels: [ch] }, { now: NOW2, threshold: 50, format: "long" });
+  assert.equal(long.format, "long");
+  const hit = long.feed.find((f) => f.source.videoId === "hit");
+  assert.ok(hit, "long-form breakout found against a long-form baseline");
+  assert.equal(hit.source.durationSec, 720);
+  assert.ok(!mixed.feed.some((f) => f.source.videoId === "hit"), "with Shorts in the baseline the same video looks ordinary");
+});
+
+test("topic matching is literal: entity phrase, or two subject words; one-word subjects need the entity", () => {
+  const C = PD("competitive");
+  const gift = { topic: "How Gift Cards Make Money for Retailers", entity: "Gift cards" };
+  assert.ok(C.matchesTopic("What Happens to Money on Unused Gift Cards?", gift, false));
+  assert.ok(!C.matchesTopic("Why Retailers Love Loyalty Apps", gift, false));
+  const penny = { topic: "Why Pennies Cost More Than a Penny", entity: "US Mint" };
+  assert.ok(!C.matchesTopic("Thrift Store Finds for Pennies", penny, false));
+  assert.ok(C.matchesTopic("Inside the US Mint's Last Penny Run", penny, false));
+  const amc = { topic: "Why AMC Sells Popcorn", entity: "AMC" };
+  assert.ok(!C.matchesTopic("the amc of it all", amc, false)); // acronyms match case-sensitively
+  const shared = { topic: "Why Costco Wants Membership More Than Sales", entity: "Costco" };
+  assert.ok(!C.matchesTopic("How A Single Costco Changes Its Local Economy", shared, true));
+  assert.ok(C.matchesTopic("The Costco Membership Machine", shared, true));
+  assert.deepEqual(C.subjectTerms("How Car Washes Became a Business Everyone Wants"), ["car", "wash"]);
+});
+
+test("snapshot evidence: per-channel saturation, low-view uploads counted as supply, absent topics omitted", () => {
+  const C = PD("competitive");
+  const inv = [{ id: "gc", topic: "How Gift Cards Make Money for Retailers", entity: "Gift cards" }, { id: "none", topic: "Why Lighthouses Still Exist", entity: "Lighthouses" }];
+  const series = { id: "series", name: "Series", subscribers: 50000, videos: [...filler("s", 6, 20000), ...Array.from({ length: 8 }, (_, i) => ({ id: "s-gc" + i, title: "Gift cards secret " + i, publishedAt: ago(5 + i), views: 30000, durationSec: 600 }))] };
+  const clones = Array.from({ length: 11 }, (_, i) => ({ id: "clone" + i, name: "Clone " + i, subscribers: 10, videos: [{ id: "cv" + i, title: "What Happens to Money on Unused Gift Cards", publishedAt: ago(3), views: 12, durationSec: 500 }] }));
+  const hindi = { id: "hi", name: "Hi", subscribers: 9000, videos: [{ id: "h1", title: "गिफ्ट कार्ड Gift Cards का पैसा", publishedAt: ago(2), views: 900000, durationSec: 700 }] };
+  const shorts = { id: "sh", name: "Sh", subscribers: 9000, videos: [{ id: "sh1", title: "Gift cards in 30 seconds", publishedAt: ago(2), views: 900000, durationSec: 30 }] };
+  const ev = C.topicEvidenceFromSnapshot({ fetchedAt: new Date(NOW2).toISOString(), channels: [series, ...clones, hindi, shorts] }, inv);
+  assert.ok(!("none" in ev.topics));
+  const gc = ev.topics.gc;
+  assert.equal(gc.audienceChannels, 1, "an 8-part series from one channel counts once");
+  assert.equal(gc.lowViewUploads, 11);
+  assert.ok(!gc.top.some((t) => /गिफ्ट|30 seconds/.test(t.title)), "non-Latin titles and Shorts excluded");
+  assert.notEqual(gc.breakout.saturation.class, "SATURATED");
+  assert.equal(gc.breakout.saturation.provenance === "OBSERVED" || gc.breakout.saturation.provenance === "INFERRED", true);
+  // only clones -> GROWING (supply), never audience saturation
+  const onlyClones = C.topicEvidenceFromSnapshot({ fetchedAt: new Date(NOW2).toISOString(), channels: clones }, inv);
+  assert.equal(onlyClones.topics.gc.breakout.saturation.class, "GROWING");
+  assert.equal(onlyClones.topics.gc.breakout.outlier.score.provenance, "UNKNOWN");
+  // one audience channel is not demand evidence
+  assert.equal(gc.breakout.outlier.score.provenance, "UNKNOWN");
+  assert.match(gc.breakout.outlier.score.source, /only 1 matched channel/);
+});
