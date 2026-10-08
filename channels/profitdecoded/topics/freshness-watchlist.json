@@ -1,0 +1,156 @@
+{
+ "schema": "profitdecoded.freshness-watchlist.v1",
+ "note": "Dated, sourced events that change the premise of inventory topics. Read by core/profitdecoded/freshness.js. Topic titles are NEVER rewritten from this file: a flagged topic keeps its title and must be researched again. Kinds: CHANGED_CONTEXT (premise may still hold but the facts around it moved), OUTDATED_PREMISE (the title states something that is no longer true), PREMISE_CONTRADICTED (a primary source contradicts the title's claim). Sources are what the reviewer read; the research agent must still confirm them against primary documents.",
+ "verifiedBy": "manual web check during Phase 2",
+ "entries": [
+  {
+   "id": "us-penny-circulating-production-ended",
+   "event": "The US Mint struck the final circulating penny on 2025-11-12 and ended circulating penny production; Treasury put the unit cost at 3.69 cents (FY2024). Pennies remain legal tender; collector versions continue.",
+   "effectiveDate": "2025-11-12",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://www.coinnews.net/2025/11/12/us-mint-marks-end-circulating-penny/", "tier": "secondary (trade press)" },
+    { "url": "https://www.ksl.com/article/51404209/treasurer-strikes-final-pennies-at-philadelphia-mint", "tier": "secondary (news)" },
+    { "url": "https://www.coinworld.com/news/us-coins/final-cent-for-circulation-struck-at-philadelphia-mint", "tier": "secondary (trade press)" }
+   ],
+   "topics": [
+    { "id": "se-064-why-the-us-still-makes-the-penny", "kind": "OUTDATED_PREMISE", "impact": "the title says the US still makes the penny; circulating production ended in 2025" },
+    { "id": "se-063-why-pennies-cost-more-than-a-penny", "kind": "CHANGED_CONTEXT", "impact": "the cost story now has an ending (production stopped); rounding and the remaining coins are the live questions" }
+   ]
+  },
+  {
+   "id": "spirit-airlines-ceased-operations",
+   "event": "Spirit Airlines announced on 2026-05-02 that it ceased all operations, after Chapter 11 filings in November 2024 and August 2025.",
+   "effectiveDate": "2026-05-02",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://www.aerotime.aero/articles/spirit-airlines-collapses-ceases-all-operations/amp", "tier": "secondary (aviation press)" }
+   ],
+   "topics": [
+    { "id": "se-012-why-spirit-airlines-can-charge-for-carry-ons", "kind": "OUTDATED_PREMISE", "impact": "present-tense title about an airline that no longer operates; the story is now a failure story" }
+   ]
+  },
+  {
+   "id": "southwest-ended-bags-fly-free",
+   "event": "Southwest Airlines began charging for checked bags on bookings made on or after 2025-05-28 ($35 first bag, $45 second).",
+   "effectiveDate": "2025-05-28",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://www.foxla.com/news/southwest-airlines-baggage-fee-may-28-bag-price", "tier": "secondary (news)" },
+    { "url": "https://thepointsguy.com/news/southwest-airlines-bag-fees/", "tier": "secondary (travel press)" }
+   ],
+   "topics": [
+    { "id": "se-013-why-southwest-stopped-bags-fly-free", "kind": "CHANGED_CONTEXT", "impact": "the change happened; research must use post-change fees and results, not the pre-2025 debate" }
+   ]
+  },
+  {
+   "id": "us-de-minimis-ended-for-china",
+   "event": "The US de minimis duty exemption for packages from China and Hong Kong ended in May 2025; Temu moved to US-warehouse listings and added import charges, Shein raised prices.",
+   "effectiveDate": "2025-05-02",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://www.nbcwashington.com/news/business/money-report/temu-halts-shipping-direct-from-china-as-de-minimis-tariff-loophole-is-cut-off/3905351/", "tier": "secondary (CNBC syndication)" },
+    { "url": "https://www.yahoo.com/news/budget-retailers-shein-temu-raise-230244435.html", "tier": "secondary (news)" }
+   ],
+   "topics": [
+    { "id": "hbm-124-how-temu-can-sell-products-so-cheaply", "kind": "CHANGED_CONTEXT", "impact": "the duty-free parcel model behind the low prices was cut off; 'can sell so cheaply' must be re-checked" },
+    { "id": "cs-003-how-temu-became-so-big-so-fast", "kind": "CHANGED_CONTEXT", "impact": "growth story must include the 2025 model change" },
+    { "id": "hbm-100-how-shein-makes-money-from-tiny-batches", "kind": "CHANGED_CONTEXT", "impact": "US pricing and shipping changed in 2025" }
+   ]
+  },
+  {
+   "id": "ftc-click-to-cancel-rule-vacated",
+   "event": "The Eighth Circuit vacated the FTC's amended Negative Option ('click-to-cancel') Rule on 2025-07-08, days before compliance. Cancellation practices remain policed case by case and by state laws.",
+   "effectiveDate": "2025-07-08",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://btlaw.com/en/insights/alerts/2025/eighth-circuit-vacates-ftcs-click-to-cancel-rule-days-before-enforcement", "tier": "secondary (law firm alert)" }
+   ],
+   "topics": [
+    { "id": "mt-004-why-free-trials-are-so-hard-to-cancel", "kind": "CHANGED_CONTEXT", "impact": "no federal click-to-cancel rule in force; check current state rules and FTC cases" },
+    { "id": "mt-006-how-cancel-buttons-became-hard-to-find", "kind": "CHANGED_CONTEXT", "impact": "same regulatory change" },
+    { "id": "mt-009-why-adobe-made-cancelling-expensive", "kind": "CHANGED_CONTEXT", "impact": "same regulatory change; check the status of any Adobe-specific case before scripting" },
+    { "id": "pp-119-why-gym-contracts-are-hard-to-cancel", "kind": "CHANGED_CONTEXT", "impact": "same regulatory change" }
+   ]
+  },
+  {
+   "id": "amazon-ftc-prime-settlement",
+   "event": "Amazon agreed on 2025-09-25 to pay $2.5 billion ($1B civil penalty, $1.5B refunds) to settle the FTC's Prime enrollment/cancellation case, with a 10-year order requiring a clear decline option and same-method cancellation.",
+   "effectiveDate": "2025-09-25",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://www.retaildive.com/news/amazon-prime-settlement-ftc-billion/761186/", "tier": "secondary (trade press)" },
+    { "url": "https://news.bloomberglaw.com/antitrust/amazon-ftc-reach-2-5-billion-deal-in-prime-subscription-case", "tier": "secondary (legal press)" }
+   ],
+   "topics": [
+    { "id": "mt-011-why-amazon-prime-cancellation-used-to-take-sever", "kind": "CHANGED_CONTEXT", "impact": "the story now has a resolution (settlement terms); script must use them" }
+   ]
+  },
+  {
+   "id": "ftc-unfair-deceptive-fees-rule",
+   "event": "The FTC Rule on Unfair or Deceptive Fees (16 CFR Part 464) took effect 2025-05-12 for live-event tickets and short-term lodging: the total price including mandatory fees (e.g. resort fees) must be shown up front. The fees themselves are not banned.",
+   "effectiveDate": "2025-05-12",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://hotellaw.jmbm.com/ftc-junk-fee-rule-is-effective-may-12-2025.html", "tier": "secondary (law firm)" },
+    { "url": "https://primarynewssource.org/sourcedocument/ftc-rule-on-unfair-or-deceptive-fees-to-take-effect-on-may-12-2025", "tier": "secondary (copy of FTC release)" }
+   ],
+   "topics": [
+    { "id": "pp-060-why-resort-fees-are-hidden", "kind": "OUTDATED_PREMISE", "impact": "covered lodging must now show the total price including resort fees from the start" },
+    { "id": "pp-058-why-ticket-fees-show-up-last", "kind": "OUTDATED_PREMISE", "impact": "covered live-event tickets must now show the all-in price up front" },
+    { "id": "mt-018-how-hidden-fees-became-legal", "kind": "CHANGED_CONTEXT", "impact": "a federal fee-disclosure rule now covers tickets and lodging" }
+   ]
+  },
+  {
+   "id": "cfpb-overdraft-rule-repealed",
+   "event": "Congress repealed the CFPB's December 2024 overdraft rule (which would have capped fees at large institutions at $5 or cost) under the Congressional Review Act; signed 2025-05-09 (P.L. 119-10).",
+   "effectiveDate": "2025-05-09",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://www.everycrsreport.com/reports/IN12513.html", "tier": "primary (Congressional Research Service)" }
+   ],
+   "topics": [
+    { "id": "mt-019-how-bank-overdraft-fees-made-billions", "kind": "CHANGED_CONTEXT", "impact": "the proposed federal cap is gone; current fee revenue and bank policy changes must be re-researched" },
+    { "id": "mt-030-how-overdraft-protection-became-a-profit-center", "kind": "CHANGED_CONTEXT", "impact": "same regulatory change" }
+   ]
+  },
+  {
+   "id": "federal-tip-income-deduction",
+   "event": "The 2025 federal tax law (One Big Beautiful Bill Act, July 2025) created an income-tax deduction for qualified tips of up to $25,000 per year for 2025-2028 (payroll taxes still apply).",
+   "effectiveDate": "2025-07-04",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://www.taxfyle.com/blog/tip-income-tax-deduction-big-beautiful-bill", "tier": "secondary (tax firm); confirm against IRS guidance" }
+   ],
+   "topics": [
+    { "id": "pp-064-why-tipping-screens-appear-everywhere", "kind": "CHANGED_CONTEXT", "impact": "tipping economics now include a federal tax incentive for qualified tips" },
+    { "id": "pp-065-why-tip-suggestions-start-so-high", "kind": "CHANGED_CONTEXT", "impact": "same tax change" }
+   ]
+  },
+  {
+   "id": "fda-otc-hearing-aids",
+   "event": "FDA's over-the-counter hearing aid category took effect 2022-10-17 for adults with perceived mild-to-moderate hearing loss (no exam or prescription required).",
+   "effectiveDate": "2022-10-17",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://www.wuga.org/local-news/2022-08-22/fda-authorizes-over-the-counter-hearing-aids", "tier": "secondary (public radio)" }
+   ],
+   "topics": [
+    { "id": "pp-087-why-hearing-aids-cost-so-much", "kind": "CHANGED_CONTEXT", "impact": "a cheaper OTC category exists; 'cost so much' must be scoped to prescription devices and current prices" }
+   ]
+  },
+  {
+   "id": "amc-film-exhibition-costs-fy2024",
+   "event": "AMC's FY2024 10-K reports film exhibition costs of 48.4% of admissions revenue company-wide (51.6% in US markets): the chain keeps roughly half of ticket revenue before its operating costs.",
+   "effectiveDate": null,
+   "documentPeriod": "fiscal year ended 2024-12-31",
+   "verifiedOn": "2026-10-08",
+   "sources": [
+    { "url": "https://www.sec.gov/Archives/edgar/data/1411579/000141157925000042/amc-20241231x10k.htm", "tier": "primary (SEC 10-K)" }
+   ],
+   "topics": [
+    { "id": "se-073-why-movie-theaters-make-almost-nothing-from-tick", "kind": "PREMISE_CONTRADICTED", "impact": "'almost nothing from ticket sales' conflicts with the largest US chain keeping about half of admissions revenue; the claim needs a narrower, sourced framing" }
+   ]
+  }
+ ]
+}

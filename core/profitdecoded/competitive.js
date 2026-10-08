@@ -66,6 +66,8 @@ function outlierScore(video, channel, options = {}) {
 
 // ---- Topic keying, viral mechanism, title structure ----------------------------
 const TITLE_PATTERNS = [
+  ["not-what-you-think", /\bnot what you think\b/i], ["business-model-explained", /\bbusiness model,? explained\b/i],
+  ["economics-of-owning", /\beconomics of owning\b/i], ["decline-what-happened", /\bdecline of .+what happened\b/i], ["so-expensive", /\b(is|are) so expensive\b/i],
   ["why-x-wants-you-to", /\bwants? you to\b/i], ["real-reason", /\breal reason\b/i], ["how-x-actually-makes-money", /\bhow .+ (actually |really )?makes? money\b/i],
   ["business-behind", /\bbusiness behind\b/i], ["strange-economics", /\bstrange economics\b/i], ["hidden-cost", /\bhidden cost\b/i],
   ["why-x-question", /^why\b/i], ["how-x", /^how\b/i], ["numbered-list", /^\d+\b/], ["the-x-trick", /\btrick\b/i], ["statement", /./],
@@ -116,6 +118,30 @@ function saturation(related, options = {}) {
   return { class: cls, counts: { recent30: recent30.length, recent90: recent90.length, channels, largeChannels: large }, titleSimilarity, diminishing, reasons, provenance: "OBSERVED" };
 }
 const SATURATION_PENALTY = { EARLY: 0, GROWING: 0.15, HOT: 0.5, SATURATED: 1, DECLINING: 0.6 };
+
+// Saturation from MANUALLY recorded public search results (channels/profitdecoded/intel/coverage-*.json),
+// used only until the API collector has run. The view counts were observed by a person on a dated
+// public page; the class derived here is INFERRED, a sample is never proof of absence, and it never
+// becomes OBSERVED. Videos are tagged "same-angle" or "adjacent"; only same-angle videos count as competition.
+//   SATURATED: >=2 same-angle videos >=300K in the last 365 days, or >=3 same-angle videos >=1M at any age
+//   HOT:       1 same-angle video >=300K in the last 365 days, or >=1 same-angle video >=1M at any age
+//   GROWING:   same-angle videos in the last 365 days that all stayed <300K, or >=10 uploads <30 days old in the sample
+//   EARLY:     none of the above
+function coverageSaturation(entry) {
+  if (!entry || !Array.isArray(entry.videos)) return { class: "UNKNOWN", provenance: "UNKNOWN", reasons: ["no coverage observation"] };
+  const same = entry.videos.filter((v) => v.relation === "same-angle");
+  const recent = same.filter((v) => v.approxAgeDays <= 365);
+  const big365 = recent.filter((v) => v.views >= 300000).length;
+  const mega = same.filter((v) => v.views >= 1000000).length;
+  const clones = Number(entry.uploadsUnder30DaysInSample) || 0;
+  let cls = "EARLY";
+  if (big365 >= 2 || mega >= 3) cls = "SATURATED";
+  else if (big365 === 1 || mega >= 1) cls = "HOT";
+  else if (recent.length || clones >= 10) cls = "GROWING";
+  const reasons = [`${same.length} same-angle video(s) in the sample, ${big365} >=300K in 365d, ${mega} >=1M at any age`, `${clones} upload(s) <30 days old in the sample`];
+  const adjacentDemand = entry.videos.filter((v) => v.relation === "adjacent").reduce((m, v) => Math.max(m, v.views), 0);
+  return { class: cls, provenance: "INFERRED", source: `manual public search sample observed ${entry.observedOn} (query: "${entry.query}")`, reasons, adjacentDemandMaxViews: adjacentDemand || null };
+}
 
 // ---- Breakout feed -------------------------------------------------------------
 function topicKey(title, inventory) {
@@ -212,4 +238,4 @@ async function fetchSnapshot(channelIds, options = {}) {
   return { fetchedAt: new Date().toISOString(), source: "youtube-data-api-v3", channels };
 }
 
-module.exports = { outlierScore, channelBaseline, ratioScore, saturation, SATURATION_PENALTY, buildBreakoutFeed, gapAnalysis, titleStructure, viralMechanism, classifyPillar, topicKey, fetchSnapshot };
+module.exports = { outlierScore, channelBaseline, ratioScore, saturation, SATURATION_PENALTY, coverageSaturation, buildBreakoutFeed, gapAnalysis, titleStructure, viralMechanism, classifyPillar, topicKey, fetchSnapshot };

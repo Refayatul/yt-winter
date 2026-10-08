@@ -1,21 +1,41 @@
 {
-  "_comment": "Reference universe for the Competitive Intelligence Engine. Handles are resolved through the API (forHandle); any handle that does not resolve is reported as unresolved, never guessed. This list is a starting set to confirm by a human, NOT validated data. Small/medium channels are found by keyword discovery, not listed here.",
-  "referenceHandles": ["@WendoverProductions", "@JohnnyHarris", "@PolyMatter", "@EconomicsExplained", "@CNBCMakeIt", "@BusinessInsider", "@Vox", "@MagnatesMedia", "@ColdFusion", "@CNBC", "@Veritasium", "@TheInfographicsShow"],
-  "windowsDays": [7, 30, 90, 365],
-  "maxResultsPerSearch": 15,
-  "baselineVideos": 25,
-  "regionCode": "US",
-  "quotaBudget": 6500,
-  "queries": [
-    "how companies really make money", "why is it so expensive business model", "hidden business model everyday", "how subscriptions trap you", "pricing psychology stores",
-    "why airlines make money", "how costco makes money", "how free apps make money", "strange economics of", "why companies lose money on purpose",
-    "how gyms make money", "business behind everyday products", "hidden fees explained", "how scams make money"
-  ],
-  "pillarQueries": {
-    "hidden-business-models": ["how companies really make money", "hidden business model everyday"],
-    "pricing-psychology": ["pricing psychology stores"],
-    "money-traps": ["how subscriptions trap you", "hidden fees explained", "how scams make money"],
-    "strange-economics": ["strange economics of", "why companies lose money on purpose"],
-    "company-stories": ["how costco makes money", "why airlines make money"]
-  }
+ "_comment": "Reference universe for the Competitive Intelligence Engine (scripts/profitdecoded/collect-competitors.js). Handles are resolved through the API (forHandle); a handle that does not resolve is reported, never guessed. Chosen from the Phase 1 public-page review (docs/profitdecoded/PHASE-1-STRATEGY.md, 2026-10-08): channels whose recent uploads sit inside 'the business behind everyday life', weighted toward small channels with views well above their subscriber count. Large channels are included only as category benchmarks when their topics overlap ours. The phase1Observation text is what a person read on public pages on 2026-10-08; it is context for humans, the collector never reads it as data. Small and new channels are found by keyword discovery (queries), not listed here.",
+ "updatedOn": "2026-10-08",
+ "referenceChannels": [
+  { "handle": "@Micro-Econ-YT", "name": "Micro", "role": "small-channel-outlier", "why": "faceless 3D-rendered consumer/economy documentaries; strongest small-channel ratio in our niche", "phase1Observation": "208K subscribers, 42 videos; Costco local-economy video 3.0M, shipbuilding 3.1M" },
+  { "handle": "@neu-youtube", "name": "Neu", "role": "small-channel-outlier", "why": "faceless 8-10 min 'economics of' explainers; one video at about 16x its subscriber count", "phase1Observation": "37.5K subscribers, 47 videos; 'The Economics of Owning A Ship' 619K" },
+  { "handle": "@EstablishedContext", "name": "Established Context", "role": "small-channel-outlier", "why": "US consumer-economy explainers; one breakout carried the channel", "phase1Observation": "66.7K subscribers; Costco business-model video 1.58M; last upload about 4 months before observation" },
+  { "handle": "@tony99.studios", "name": "Tony Talks Business", "role": "small-channel-outlier", "why": "daily 'how X makes money' uploads; shows what the template earns at volume", "phase1Observation": "12.7K subscribers; best recent uploads 40-54K" },
+  { "handle": "@brimm-tv", "name": "Brimm.", "role": "small-channel-outlier", "why": "8-minute 'economics of X' format; one 15x outlier", "phase1Observation": "21.2K subscribers; Dutch e-commerce video 328K" },
+  { "handle": "@hidden.eco.nomics", "name": "Hidden Economics", "role": "watch", "why": "new channel with an extreme early ratio; cause unknown, watch before drawing conclusions", "phase1Observation": "26 subscribers, 4 visible videos at 7-17K" },
+  { "handle": "@ModernMBA", "name": "Modern MBA", "role": "category-benchmark", "why": "long-form business-model documentaries on everyday businesses (buffets, pizzerias, car rental, theaters)", "phase1Observation": "832K subscribers; recent uploads about 120K-800K" },
+  { "handle": "@Wendoverproductions", "name": "Wendover Productions", "role": "category-benchmark", "why": "covers many of our obvious topics (fast food prices, car dealers, IKEA)", "phase1Observation": "4.92M subscribers; recent uploads about 0.5-2.1M" },
+  { "handle": "@TheFatFiles", "name": "The Fat Files", "role": "category-benchmark", "why": "US consumer-brand stories at about 1-2.8M per video; NOT faceless (host-led), so a demand ceiling, not a format to copy", "phase1Observation": "881K subscribers, 55 videos; Planet Fitness 1.9M, mattress stores 1.96M" },
+  { "handle": "@companyman114", "name": "Company Man", "role": "category-benchmark", "why": "US company decline/success stories; long-running series format", "phase1Observation": "1.8M subscribers; recent uploads about 60K-620K" },
+  { "handle": "@LogicallyAnswered", "name": "Logically Answered", "role": "category-benchmark", "why": "company failure stories (Dollar Shave Club 1.4M); more tech/news-driven than us", "phase1Observation": "928K subscribers; recent uploads about 25K-1.4M" },
+  { "handle": "@misterfinanceyt", "name": "Mr. Finance", "role": "format-watch", "why": "near-daily 'The Economics of Owning a ___' uploads; tracks how saturated that template is", "phase1Observation": "79.8K subscribers; recent uploads about 2K-30K" }
+ ],
+ "removedOn2026-10-08": {
+  "reason": "large or off-niche channels whose baselines would hide outliers in our topics",
+  "handles": ["@JohnnyHarris", "@PolyMatter", "@EconomicsExplained", "@CNBCMakeIt", "@BusinessInsider", "@Vox", "@MagnatesMedia", "@ColdFusion", "@CNBC", "@Veritasium", "@TheInfographicsShow"],
+  "note": "WSJ 'The Economics Of', Business Insider 'So Expensive' and CNBC still prove demand for many topics; they appear in coverage observations and keyword discovery, but their channel baselines are dominated by news uploads"
+ },
+ "windowsDays": [7, 30, 90, 365],
+ "maxResultsPerSearch": 15,
+ "baselineVideos": 25,
+ "regionCode": "US",
+ "quotaBudget": 6500,
+ "queries": [
+  "why is it so expensive now", "how a single store changes", "why suddenly disappeared business", "the decline of what happened company",
+  "business model documentary", "why companies want you to subscribe", "hidden fees explained", "pricing psychology stores",
+  "the economics of owning a", "why fast food got so expensive", "how private equity ruined", "why is this store everywhere",
+  "loses money on purpose", "unused gift cards breakage"
+ ],
+ "pillarQueries": {
+  "hidden-business-models": ["business model documentary", "how a single store changes", "the economics of owning a"],
+  "pricing-psychology": ["pricing psychology stores", "why is it so expensive now", "why fast food got so expensive"],
+  "money-traps": ["why companies want you to subscribe", "hidden fees explained", "unused gift cards breakage"],
+  "strange-economics": ["loses money on purpose", "why is this store everywhere"],
+  "company-stories": ["the decline of what happened company", "why suddenly disappeared business", "how private equity ruined"]
+ }
 }

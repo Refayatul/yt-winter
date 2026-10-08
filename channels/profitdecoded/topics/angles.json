@@ -1,0 +1,153 @@
+{
+ "schema": "profitdecoded.angles.v1",
+ "note": "Curated narrative angles for inventory topics. An angle replaces the generic inventory title in ranking and review, never in the inventory itself. premiseStatus: VERIFIED = the title's factual premise was read in a primary source (quoted below); SUPPORTED_SECONDARY = several independent secondary sources agree, primary not read; NEEDS_RESEARCH = plausible angle whose premise has not been checked. Every angle still has to pass the research gate before scripting. rejectedTitles records wordings that were considered and why they are not accurate.",
+ "angles": [
+  {
+   "topicId": "se-063-why-pennies-cost-more-than-a-penny",
+   "workingTitle": "America Stopped Making Pennies. Who Pays Now?",
+   "premise": "The US Mint ended circulating penny production in November 2025 after the unit cost reached 3.69 cents; cash totals are now rounded in different ways by different retailers.",
+   "premiseStatus": "SUPPORTED_SECONDARY",
+   "checkedOn": "2026-10-08",
+   "evidence": [
+    { "claim": "Final circulating penny struck at the Philadelphia Mint on 2025-11-12", "source": "CoinNews; KSL; Coin World (reporting the US Mint release)", "url": "https://www.coinnews.net/2025/11/12/us-mint-marks-end-circulating-penny/", "tier": "secondary" },
+    { "claim": "Unit cost 3.69 cents in 2024 (0.97 cents in 2005)", "source": "Mint data as cited by CoinNews", "url": "https://www.coinnews.net/2025/11/12/us-mint-marks-end-circulating-penny/", "tier": "secondary" },
+    { "claim": "Retailers round differently (Love's rounds change up; Kwik Trip rounds cash totals down); card payments unaffected", "source": "Scripps News", "url": "https://www.scrippsnews.com/life/money/end-of-the-penny-how-your-cash-transactions-may-change", "tier": "secondary" }
+   ],
+   "primaryToRead": ["https://www.usmint.gov/news/press-releases/united-states-mint-hosts-historic-ceremonial-strike-for-final-production-of-the-circulating-one-cent-coin (bot check blocked automated reading)", "US Mint annual report (unit cost)", "congress.gov status of the Common Cents Act (reports conflict)"],
+   "openQuestions": ["Federal rounding legislation status: sources conflict", "Whether rounding nets out for consumers is a claim from a trade association (NACS), not measured data"]
+  },
+  {
+   "topicId": "hbm-003-why-movie-theaters-care-more-about-popcorn-than-",
+   "workingTitle": "Half Your Movie Ticket Goes to the Studio. The Popcorn Doesn't.",
+   "premise": "In AMC's US markets, film exhibition costs were 51.6% of admissions revenue in 2024 while food and beverage costs were 17.3% of food and beverage revenue. Company-wide, tickets and concessions each left about $1.32 billion after their direct costs.",
+   "premiseStatus": "VERIFIED",
+   "checkedOn": "2026-10-08",
+   "evidence": [
+    { "claim": "US markets: film exhibition costs 51.6% of admissions revenues (2024); food and beverage costs 17.3% of F&B revenues", "source": "AMC Entertainment FY2024 Form 10-K, MD&A", "url": "https://www.sec.gov/Archives/edgar/data/1411579/000141157925000042/amc-20241231x10k.htm", "tier": "primary" },
+    { "claim": "Consolidated 2024: admissions $2,560.5M, film exhibition costs $1,239.2M; food and beverage $1,624.9M, F&B costs $305.6M (our arithmetic: $1,321.3M vs $1,319.3M after direct costs)", "source": "AMC FY2024 Form 10-K, consolidating table", "url": "https://www.sec.gov/Archives/edgar/data/1411579/000141157925000042/amc-20241231x10k.htm", "tier": "primary (inference disclosed)" }
+   ],
+   "rejectedTitles": [
+    { "title": "Your Movie Ticket Barely Pays for the Movie", "reason": "overclaims: AMC keeps about 48-52% of admissions revenue after film costs" },
+    { "title": "Why Movie Theaters Make Almost Nothing From Ticket Sales", "reason": "contradicted by the same 10-K (see freshness watchlist)" }
+   ],
+   "openQuestions": ["One chain; Cinemark/Regal ratios should be added for a fair industry picture"]
+  },
+  {
+   "topicId": "hbm-073-how-gift-cards-make-money-for-retailers",
+   "workingTitle": "Billions Sit on Unused Gift Cards. Who Keeps the Money?",
+   "premise": "Survey estimates put unused US gift card and store-credit balances in the tens of billions; companies recognise the share they expect never to be redeemed as 'breakage' revenue (Starbucks: $222.4M in fiscal 2025), subject to state unclaimed-property laws.",
+   "premiseStatus": "SUPPORTED_SECONDARY",
+   "statusNote": "the mechanism (breakage) is primary-verified; the headline 'billions' rests on a survey extrapolation (Starbucks' $1.75B balance also includes loyalty Stars), so the title premise is secondary-supported",
+   "checkedOn": "2026-10-08",
+   "evidence": [
+    { "claim": "Starbucks recognised breakage revenue of $200.4M (company-operated) and $22.0M (licensed) in fiscal 2025; $187.6M and $20.0M in fiscal 2024", "source": "Starbucks FY2025 Form 10-K, revenue recognition note", "url": "https://www.sec.gov/Archives/edgar/data/829224/000082922425000114/sbux-20250928.htm", "tier": "primary" },
+    { "claim": "Starbucks stored value cards and loyalty program liability $1,751.7M at 2025-09-28", "source": "Starbucks FY2025 Form 10-K", "url": "https://www.sec.gov/Archives/edgar/data/829224/000082922425000114/sbux-20250928.htm", "tier": "primary" },
+    { "claim": "Breakage estimates account for remittance to government agencies under unclaimed property laws", "source": "Starbucks FY2025 Form 10-K", "url": "https://www.sec.gov/Archives/edgar/data/829224/000082922425000114/sbux-20250928.htm", "tier": "primary" },
+    { "claim": "About $27B in unused gift cards, vouchers and store credit; 43% of US adults hold at least one (Sept 2024 survey)", "source": "Bankrate survey as reported", "url": "https://qz.com/americans-27-billion-unused-gift-cards-1851654949", "tier": "secondary (survey estimate)" }
+   ],
+   "rejectedTitles": [
+    { "title": "The Billions Stuck on Gift Cards You Forgot", "reason": "the survey measures unused balances, not forgotten ones" }
+   ],
+   "openQuestions": ["Use the newest Bankrate release if one exists; the 2024 figure is a survey extrapolation, so say so on screen"]
+  },
+  {
+   "topicId": "hbm-143-how-car-washes-became-a-business-everyone-wants",
+   "workingTitle": "Why Your Car Wash Wants a Monthly Subscription",
+   "premise": "At Mister Car Wash, the largest listed US operator, Unlimited Wash Club subscriptions were 75% of wash sales in Q4 2024 with over 2.1 million members across 514 locations.",
+   "premiseStatus": "VERIFIED",
+   "checkedOn": "2026-10-08",
+   "evidence": [
+    { "claim": "UWC sales 75% of total wash sales in Q4 2024 (74% in Q4 2023); over 2.1 million members at 2024-12-31; 514 locations", "source": "Mister Car Wash Q4/FY2024 results, Form 8-K exhibit 99.1", "url": "https://www.sec.gov/Archives/edgar/data/1853513/000095017025023140/mcw-ex99_1.htm", "tier": "primary" },
+    { "claim": "Private equity owns most national express-tunnel platforms; Zips Car Wash filed Chapter 11 in February 2025", "source": "trade and market reports (not read in full)", "url": "https://www.wealthmanagement.com/investment-strategies/private-equity-investors-flood-express-car-wash-industry-fund-massive", "tier": "secondary" }
+   ],
+   "rejectedTitles": [
+    { "title": "Why Car Washes Are Suddenly Everywhere", "reason": "no reliable count of new US car wash sites by year was found; keep it as a research question, not a title claim" }
+   ],
+   "openQuestions": ["Unit growth of express tunnels (Professional Carwashing & Detailing Top 50 list)", "The Zips bankruptcy is the natural conflict beat: confirm filing details"]
+  },
+  {
+   "topicId": "hbm-001-why-gyms-make-more-money-when-you-stay-home",
+   "workingTitle": "How Planet Fitness Fits 7,200 Members Into One Gym",
+   "premise": "Title already selected in the long-form dry-run; its numbers come from the research dossier that passed the gate (score 88).",
+   "premiseStatus": "VERIFIED",
+   "checkedOn": "2026-10-06",
+   "evidence": [
+    { "claim": "Capacity arithmetic from Planet Fitness 10-K filings", "source": "channels/profitdecoded/research/hbm-001-why-gyms-make-more-money-when-you-stay-home.json", "url": null, "tier": "primary (via passing dossier)" }
+   ],
+   "rejectedTitles": [
+    { "title": "Why Gyms Make More Money When You Stay Home", "reason": "the dossier review found it overclaims" }
+   ]
+  },
+  {
+   "topicId": "cs-001-why-costco-wants-membership-more-than-sales",
+   "workingTitle": "Why Costco Wants Membership More Than Sales",
+   "premise": "Title used in the Short dry-run; supported by the passing dossier (score 96).",
+   "premiseStatus": "VERIFIED",
+   "checkedOn": "2026-10-06",
+   "evidence": [
+    { "claim": "Membership fees versus operating income from SEC exhibits (derived figure disclosed)", "source": "channels/profitdecoded/research/cs-001-why-costco-wants-membership-more-than-sales.json", "url": null, "tier": "primary (via passing dossier)" }
+   ]
+  },
+  {
+   "topicId": "pp-060-why-resort-fees-are-hidden",
+   "workingTitle": "The Rule That Forced Hotels to Show the Real Price",
+   "premise": "Since 2025-05-12 the FTC fee rule requires covered lodging and live-event tickets to show the total price including mandatory fees up front; the fees themselves are still allowed.",
+   "premiseStatus": "SUPPORTED_SECONDARY",
+   "checkedOn": "2026-10-08",
+   "evidence": [
+    { "claim": "Rule effective 2025-05-12; all-in price must be most prominent; resort fees not banned", "source": "law-firm summaries", "url": "https://hotellaw.jmbm.com/ftc-junk-fee-rule-is-effective-may-12-2025.html", "tier": "secondary" }
+   ],
+   "primaryToRead": ["16 CFR Part 464 (Federal Register)", "FTC business guidance FAQ"],
+   "openQuestions": ["Any enforcement actions or litigation since 2025"]
+  },
+  {
+   "topicId": "hbm-124-how-temu-can-sell-products-so-cheaply",
+   "workingTitle": "What Happened to Temu's Prices After the Loophole Closed",
+   "premise": "The US de minimis exemption for Chinese parcels ended in May 2025; Temu moved to US-warehouse listings and added import charges.",
+   "premiseStatus": "SUPPORTED_SECONDARY",
+   "checkedOn": "2026-10-08",
+   "evidence": [
+    { "claim": "Temu halted direct-from-China shipping and showed import charges after the exemption ended", "source": "CNBC (syndicated)", "url": "https://www.nbcwashington.com/news/business/money-report/temu-halts-shipping-direct-from-china-as-de-minimis-tariff-loophole-is-cut-off/3905351/", "tier": "secondary" }
+   ],
+   "openQuestions": ["Current Temu US model in 2026", "Later changes to de minimis for other countries"]
+  },
+  {
+   "topicId": "se-012-why-spirit-airlines-can-charge-for-carry-ons",
+   "workingTitle": "How Spirit Airlines Ran Out of Runway",
+   "premise": "Spirit Airlines ceased all operations on 2026-05-02 after two Chapter 11 filings; the ultra-low-cost model is now a failure story.",
+   "premiseStatus": "SUPPORTED_SECONDARY",
+   "checkedOn": "2026-10-08",
+   "evidence": [
+    { "claim": "Spirit ceased all operations 2026-05-02; Chapter 11 in Nov 2024 and Aug 2025", "source": "AeroTime", "url": "https://www.aerotime.aero/articles/spirit-airlines-collapses-ceases-all-operations/amp", "tier": "secondary" }
+   ],
+   "primaryToRead": ["Spirit 10-K/8-K filings and bankruptcy docket"]
+  },
+  {
+   "topicId": "hbm-074-how-store-credit-cards-make-money",
+   "workingTitle": "Why Cashiers Keep Asking You to Open a Store Card",
+   "premise": "Retailers earn a share of card-program profits from their bank partners (e.g. Target reports credit card profit sharing; Macy's reports credit card revenues).",
+   "premiseStatus": "NEEDS_RESEARCH",
+   "checkedOn": null,
+   "evidence": [],
+   "openQuestions": ["Confirm the line items and amounts in the latest Target and Macy's 10-Ks"]
+  },
+  {
+   "topicId": "hbm-085-how-self-storage-makes-money-from-things-you-for",
+   "workingTitle": "Why Americans Rent Rooms for Things They Rarely Use",
+   "premise": "Self-storage REITs earn high margins on rent for stored belongings; 'rarely use' needs survey support.",
+   "premiseStatus": "NEEDS_RESEARCH",
+   "checkedOn": null,
+   "evidence": [],
+   "openQuestions": ["Source for how often renters access units", "Public Storage / Extra Space 10-K margins"]
+  },
+  {
+   "topicId": "hbm-086-how-funeral-homes-make-money",
+   "workingTitle": "Your Local Funeral Home May Not Be Local",
+   "premise": "A listed company (Service Corporation International) owns many funeral homes that keep their local family names.",
+   "premiseStatus": "NEEDS_RESEARCH",
+   "checkedOn": null,
+   "evidence": [],
+   "openQuestions": ["SCI 10-K location count and brand policy", "FTC Funeral Rule status"]
+  }
+ ]
+}

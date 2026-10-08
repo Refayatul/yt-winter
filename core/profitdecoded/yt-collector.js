@@ -60,14 +60,20 @@ async function videoDetails(yt, ids) {
   return out;
 }
 
-// config: { referenceHandles:[...], queries:[...], windowsDays:[7,30,90,365], maxResultsPerSearch, minDurationSec, regionCode }
+// Handles from the structured list (referenceChannels: [{ handle, role, ... }]) and/or the older flat list.
+function referenceHandles(config) {
+  const list = (config.referenceChannels || []).map((c) => c.handle).concat(config.referenceHandles || []);
+  return [...new Set(list.filter(Boolean))];
+}
+
+// config: { referenceChannels:[{handle,...}] | referenceHandles:[...], queries:[...], windowsDays:[7,30,90,365], maxResultsPerSearch, minDurationSec, regionCode }
 async function collect(config, options = {}) {
   const yt = options.client || client(options);
   const now = options.now || Date.now();
   const report = { startedAt: new Date(now).toISOString(), unresolvedHandles: [], searches: 0, notes: [], stoppedEarly: null };
   const channelIds = new Set(); const discovered = new Map();
   try {
-    const { resolved, unresolved } = await resolveHandles(yt, config.referenceHandles || []);
+    const { resolved, unresolved } = await resolveHandles(yt, referenceHandles(config));
     report.unresolvedHandles = unresolved; resolved.forEach((id) => channelIds.add(id));
     outer: for (const days of config.windowsDays || [30]) {
       for (const q of config.queries || []) {
@@ -89,4 +95,4 @@ async function collect(config, options = {}) {
   return { snapshot: { fetchedAt: new Date(now).toISOString(), source: "youtube-data-api-v3", channels }, report: { ...report, channelsCollected: channels.length, quotaUsed: yt.used, quotaBudget: yt.budget } };
 }
 
-module.exports = { client, resolveHandles, channelStats, recentVideos, collect, COST };
+module.exports = { client, resolveHandles, referenceHandles, channelStats, recentVideos, collect, COST };
