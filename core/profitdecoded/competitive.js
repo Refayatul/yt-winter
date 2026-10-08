@@ -196,6 +196,17 @@ function buildBreakoutFeed(snapshot, options = {}) {
   return { generatedAt: new Date(now).toISOString(), windows, count: feed.length, feed };
 }
 
+// Observed breakout feed -> per-topic evidence for the decision engine: the strongest matched item per inventory topic.
+function evidenceFromFeed(feed) {
+  const out = {};
+  for (const f of (feed && feed.feed) || []) {
+    if (!f.topic || !f.topic.id) continue;
+    const cur = out[f.topic.id];
+    if (!cur || f.outlier.score.value > cur.outlier.score.value) out[f.topic.id] = f;
+  }
+  return out;
+}
+
 // ---- Competitor gap analysis -----------------------------------------------------
 const GAP_QUESTIONS = ["covered the mechanism at primary-source depth", "newerEvidenceAvailable", "primarySourcesStronger", "mechanismCanBeVisualized", "canReachBroaderAudience", "canWriteStronger30Seconds", "canDeliverBetterPayoff"];
 function gapAnalysis(input) {
@@ -238,4 +249,4 @@ async function fetchSnapshot(channelIds, options = {}) {
   return { fetchedAt: new Date().toISOString(), source: "youtube-data-api-v3", channels };
 }
 
-module.exports = { outlierScore, channelBaseline, ratioScore, saturation, SATURATION_PENALTY, coverageSaturation, buildBreakoutFeed, gapAnalysis, titleStructure, viralMechanism, classifyPillar, topicKey, fetchSnapshot };
+module.exports = { outlierScore, channelBaseline, ratioScore, saturation, SATURATION_PENALTY, coverageSaturation, buildBreakoutFeed, evidenceFromFeed, gapAnalysis, titleStructure, viralMechanism, classifyPillar, topicKey, fetchSnapshot };

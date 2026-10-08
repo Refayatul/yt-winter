@@ -39,6 +39,8 @@ if (cmd === "inventory") {
   const u = universe(); console.log(JSON.stringify(u.stats, null, 2));
 } else if (cmd === "rank") {
   const u = universe(); const evidence = flag("--evidence") ? readJson(path.resolve(flag("--evidence")), {}) : {};
+  // --feed breakout-feed-*.json: observed collector output. Each inventory topic gets its strongest matched breakout (OBSERVED).
+  if (flag("--feed")) for (const [id, b] of Object.entries(Comp.evidenceFromFeed(readJson(path.resolve(flag("--feed")), { feed: [] })))) evidence[id] = { ...(evidence[id] || {}), breakout: b };
   // Researched dossiers on disk feed the decision engine through the real research gate.
   const Research = require(path.join(P, "research")); const rdir = path.join(CHANNEL_DIR, "research");
   if (fs.existsSync(rdir)) for (const f of fs.readdirSync(rdir).filter((x) => x.endsWith(".json"))) {
@@ -80,14 +82,15 @@ if (cmd === "inventory") {
   const watch = readJson(path.join(CHANNEL_DIR, "topics", "freshness-watchlist.json"), { entries: [] });
   const rdir = path.join(CHANNEL_DIR, "research"); const dated = {};
   if (fs.existsSync(rdir)) for (const f of fs.readdirSync(rdir).filter((x) => x.endsWith(".json"))) { const d = readJson(path.join(rdir, f), null); if (d) dated[d.topicId] = d.researchedAt; }
-  const rows = u.topics.map((t) => ({ t, r: Fresh.check(t, watch, { researchedAt: dated[t.id] }) })).filter((x) => x.r.status !== "CURRENT_UNVERIFIED");
+  const angles = Object.fromEntries((readJson(path.join(CHANNEL_DIR, "topics", "angles.json"), { angles: [] }).angles || []).map((a) => [a.topicId, a]));
+  const rows = u.topics.map((t) => ({ t, r: Fresh.check(t, watch, { researchedAt: dated[t.id], angle: angles[t.id] }) })).filter((x) => x.r.status !== "CURRENT_UNVERIFIED" || x.r.resolvedBy.length);
   const order = (x) => -x.r.severity;
   rows.sort((a, b) => order(a) - order(b));
   const strong = rows.filter((x) => x.r.flags.some((f) => f.source === "watchlist"));
   console.log(`${strong.length} topic(s) flagged by the sourced watchlist, ${rows.length - strong.length} by phrasing only (re-check during research).\n`);
   for (const { t, r } of strong) {
-    console.log(`${r.status.padEnd(20)} ${r.blocksProduction ? "BLOCKS " : "       "}${t.id}\n  "${t.topic}"`);
-    for (const f of r.flags.filter((x) => x.source === "watchlist")) console.log(`  - ${f.event}${f.addressedByResearch ? " [addressed by dossier]" : ""}\n    impact: ${f.impact}\n    sources: ${f.sources.map((s) => s.url).join(" , ")}`);
+    console.log(`${(r.status === "CURRENT_UNVERIFIED" ? "RESOLVED" : r.status).padEnd(20)} ${r.blocksProduction ? "BLOCKS " : "       "}${t.id}\n  "${t.topic}"${angles[t.id] ? `  -> angle: "${angles[t.id].workingTitle}"` : ""}`);
+    for (const f of r.flags.filter((x) => x.source === "watchlist")) console.log(`  - ${f.event}${f.addressedBy ? ` [addressed by ${f.addressedBy}]` : ""}\n    impact: ${f.impact}\n    sources: ${f.sources.map((s) => s.url).join(" , ")}`);
   }
   if (has("--all")) for (const { t, r } of rows.filter((x) => !strong.includes(x))) console.log(`${r.status.padEnd(20)} ${t.id}  (${r.flags.map((f) => f.event).join("; ")})`);
 } else if (cmd === "publish-check") {

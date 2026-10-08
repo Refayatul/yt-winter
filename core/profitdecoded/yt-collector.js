@@ -25,6 +25,13 @@ function client(options = {}) {
   return { call, get used() { return used; }, budget, log };
 }
 
+// ISO-8601 duration (PT1H2M3S) -> seconds; null when absent or unparseable (never guessed).
+function isoSeconds(iso) {
+  const m = /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/.exec(String(iso || ""));
+  if (!m || iso === "P" || iso === "PT") return null;
+  return (+(m[1] || 0)) * 86400 + (+(m[2] || 0)) * 3600 + (+(m[3] || 0)) * 60 + (+(m[4] || 0));
+}
+
 const chunk = (arr, n) => Array.from({ length: Math.ceil(arr.length / n) }, (_, i) => arr.slice(i * n, i * n + n));
 
 async function resolveHandles(yt, handles) {
@@ -89,10 +96,10 @@ async function collect(config, options = {}) {
   for (const [id, st] of Object.entries(stats)) {
     try {
       const vids = await recentVideos(yt, st.uploads, config.baselineVideos || 25);
-      channels.push({ id, name: st.name, subscribers: st.subscribers, videos: vids.filter((v) => v.durationIso !== "P0D").map(({ durationIso, channelId, ...v }) => v) });
+      channels.push({ id, name: st.name, subscribers: st.subscribers, videos: vids.filter((v) => v.durationIso !== "P0D").map(({ durationIso, channelId, ...v }) => ({ ...v, durationSec: isoSeconds(durationIso) })) });
     } catch (e) { report.notes.push(`${st.name}: ${e.message}`); if (e.code === "BUDGET") { report.stoppedEarly = e.message; break; } }
   }
   return { snapshot: { fetchedAt: new Date(now).toISOString(), source: "youtube-data-api-v3", channels }, report: { ...report, channelsCollected: channels.length, quotaUsed: yt.used, quotaBudget: yt.budget } };
 }
 
-module.exports = { client, resolveHandles, referenceHandles, channelStats, recentVideos, collect, COST };
+module.exports = { client, isoSeconds, resolveHandles, referenceHandles, channelStats, recentVideos, collect, COST };

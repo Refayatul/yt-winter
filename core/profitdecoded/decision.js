@@ -26,7 +26,7 @@ function evaluate(topic, evidence = {}, options = {}) {
   // Phase 2: editorial lens + freshness. options.intel is built once per run by rank(); a single
   // evaluate() call builds it on demand.
   const intel = options.intel || TS.buildIntelContext([], options.intelFiles);
-  const freshness = Fresh.check(topic, intel.watchlist, { researchedAt: research && research.researchedAt });
+  const freshness = Fresh.check(topic, intel.watchlist, { researchedAt: research && research.researchedAt, angle: intel.angles[topic.id] });
   const observedSat = breakout ? breakout.saturation : evidence.saturation || null;
   const lens = TS.editorialLens(topic, intel, { research, freshness, observedSaturation: observedSat });
   // Saturation: observed (API breakout / supplied) first, otherwise the manual coverage sample (INFERRED).
@@ -107,7 +107,7 @@ function evaluate(topic, evidence = {}, options = {}) {
     workingTitle: lens.title.workingTitle, angle: lens.title.angle ? { title: lens.title.angle.workingTitle, premiseStatus: lens.title.angle.premiseStatus } : null,
     titleTemplate: { template: lens.title.inventoryTemplate, class: lens.title.inventoryTemplateClass, needsAngle: lens.title.needsAngle },
     lens: { score: lens.score, confidence: lens.confidence, provenance: lens.provenance, dimensions: Object.fromEntries(Object.entries(lens.dimensions).map(([k, v]) => [k, { value: v.value == null ? null : S.round(v.value, 0), provenance: v.provenance }])) },
-    freshness: { status: freshness.status, needsResearch: freshness.needsResearch, flags: freshness.flags.map((f) => ({ kind: f.kind, source: f.source, event: f.event, effectiveDate: f.effectiveDate || null, addressedByResearch: f.addressedByResearch })) },
+    freshness: { status: freshness.status, needsResearch: freshness.needsResearch, resolvedBy: freshness.resolvedBy, flags: freshness.flags.map((f) => ({ kind: f.kind, source: f.source, event: f.event, effectiveDate: f.effectiveDate || null, addressedBy: f.addressedBy })) },
     expectedBusinessValue: ebv, revenueOpportunity: { category: ro.category, provenance: "ESTIMATED" }, penalties, saturation: satClass, saturationProvenance: sat ? (satObserved ? "OBSERVED" : sat.provenance) : "UNKNOWN",
     inputs: Object.fromEntries(Object.entries(inputs).map(([k, v]) => [k, { value: v.value == null ? null : S.round(v.value, 0), provenance: v.provenance }])),
     unknownInputs: Object.entries(inputs).filter(([, v]) => !S.isKnown(v)).map(([k]) => k), blockers, notes,

@@ -37,22 +37,39 @@ function watchlistFlags(topic, watchlist) {
   return out;
 }
 
+// Kinds a curated angle can resolve: the angle was written after the event and is built on the new facts.
+// A contradicted claim (PREMISE_CONTRADICTED) can only be resolved by a research dossier.
+const ANGLE_RESOLVES = new Set(["CHANGED_CONTEXT", "OUTDATED_PREMISE"]);
+const CHECKED_ANGLE = new Set(["VERIFIED", "SUPPORTED_SECONDARY"]);
+
 // options.researchedAt: date of the topic's research dossier, if any. A dossier dated on or after
 // the event has already worked with the changed facts, so that flag no longer blocks.
+// options.angle: the curated angle ({ workingTitle, premiseStatus, checkedOn }) if one exists. Its premise
+// was checked on checkedOn; if that is on or after the event, the angle is the current framing of the topic,
+// so the old title's outdated premise no longer blocks it. The phrasing heuristic reads the working title.
 function check(topic, watchlist, options = {}) {
   const researchedAt = options.researchedAt ? Date.parse(options.researchedAt) : null;
-  const flags = [...watchlistFlags(topic, watchlist), ...heuristicFlags(topic.topic)].map((f) => {
+  const angle = options.angle && CHECKED_ANGLE.has(options.angle.premiseStatus) && options.angle.checkedOn ? options.angle : null;
+  const angleAt = angle ? Date.parse(angle.checkedOn) : null;
+  const title = (options.angle && options.angle.workingTitle) || topic.topic;
+  const flags = [...watchlistFlags(topic, watchlist), ...heuristicFlags(title)].map((f) => {
     // No effective date (e.g. a contradicting filing): any dossier counts, because research checks the claim itself.
-    const addressed = researchedAt != null && (f.effectiveDate == null || researchedAt >= Date.parse(f.effectiveDate));
-    return { ...f, addressedByResearch: addressed };
+    const byDossier = researchedAt != null && (f.effectiveDate == null || researchedAt >= Date.parse(f.effectiveDate));
+    const byAngle = !byDossier && angleAt != null && f.source === "watchlist" && ANGLE_RESOLVES.has(f.kind) && f.effectiveDate != null && angleAt >= Date.parse(f.effectiveDate);
+    const addressedBy = byDossier ? "dossier" : byAngle ? "angle" : null;
+    return { ...f, addressedBy, addressedByResearch: byDossier };
   });
-  const open = flags.filter((f) => !f.addressedByResearch);
+  const open = flags.filter((f) => !f.addressedBy);
   const worst = open.reduce((w, f) => (SEVERITY[f.kind] > SEVERITY[w] ? f.kind : w), "CURRENT_UNVERIFIED");
   const needsResearch = open.some((f) => BLOCKING.has(f.kind) || (f.kind === "CHANGED_CONTEXT" && f.source === "watchlist"));
+  const resolved = flags.filter((f) => f.addressedBy && f.source === "watchlist");
   return {
     status: worst, severity: SEVERITY[worst], needsResearch, blocksProduction: open.some((f) => BLOCKING.has(f.kind)), flags,
-    note: worst === "CURRENT_UNVERIFIED" ? "no known change; the premise is still an unresearched hypothesis" : open.map((f) => `${f.kind}: ${f.event}`).join(" | "),
+    resolvedBy: resolved.length ? [...new Set(resolved.map((f) => f.addressedBy))] : [],
+    note: worst === "CURRENT_UNVERIFIED"
+      ? (resolved.length ? `known change(s) already built into the ${resolved.map((f) => f.addressedBy).join("/")}; premise still needs the research gate` : "no known change; the premise is still an unresearched hypothesis")
+      : open.map((f) => `${f.kind}: ${f.event}`).join(" | "),
   };
 }
 
-module.exports = { check, heuristicFlags, SEVERITY, BLOCKING };
+module.exports = { check, heuristicFlags, SEVERITY, BLOCKING, ANGLE_RESOLVES };
