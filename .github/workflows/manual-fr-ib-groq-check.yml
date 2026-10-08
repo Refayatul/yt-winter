@@ -29,6 +29,7 @@ jobs:
       GROWTH_GATE_MODE: shadow
       LONGFORM_LLM_PROVIDER: groq
       GROQ_API_KEY: ${{ secrets.GROQ_API_KEY2 }}
+      LONGFORM_LLM_MAX_ATTEMPTS: '1'
     steps:
       - name: Checkout reviewed pilot commit (not main production)
         uses: actions/checkout@v4
@@ -63,6 +64,14 @@ jobs:
           console.log(JSON.stringify({channel,topic:x.topic,decision:x.decision,score:x.score,minutes:x.minutes,generator:x.generator,generationStatus:x.generationStatus,llmErrorCode:x.llmErrorCode,llmErrorStage:x.llmErrorStage,llmErrorMessage:x.llmErrorMessage,hardFails:x.hardFails},null,2));
           if(!String(x.generator||"").startsWith("llm:")||x.generationStatus!=="COMPLETE"||x.decision!=="PUBLISH"||!Number.isFinite(x.minutes)||x.minutes<8||(x.hardFails||[]).length)process.exit(1);
           ' "${{ inputs.channel }}"
+      - name: Archive resumable long-form generation checkpoint
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: longform-resume-${{ inputs.channel }}
+          path: .fr-ib-writer-sandbox/
+          retention-days: 7
+          if-no-files-found: warn
       - name: Upload script diagnostic reports (no video / no upload)
         if: always()
         uses: actions/upload-artifact@v4
