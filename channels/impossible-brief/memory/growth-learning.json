@@ -1,16 +1,16 @@
 {
   "channel": "impossible-brief",
-  "updatedAt": "2026-10-07T21:32:08.574Z",
+  "updatedAt": "2026-10-08T13:21:18.798Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 6,
     "status": "observing",
     "baselines": {
-      "views": 589,
+      "views": 713,
       "averagePercentageViewed": 59.92000000000001,
       "subscribersPer1000Views": 0,
       "watchHoursPer1000Views": 1.57,
-      "engagementPer1000Views": 23.95
+      "engagementPer1000Views": 18.68
     },
     "observations": [
       {
@@ -18,15 +18,15 @@
         "dimension": "hookType",
         "value": "visual_first_reveal",
         "sample": 5,
-        "lift": -0.143,
-        "z": -0.69
+        "lift": -0.053,
+        "z": -0.23
       },
       {
         "stage": "OBSERVATION",
         "dimension": "hookType",
         "value": "impossible_question",
         "sample": 1,
-        "lift": 0.714,
+        "lift": 0.263,
         "z": 0
       },
       {
@@ -34,55 +34,55 @@
         "dimension": "topicCluster",
         "value": "SPACE",
         "sample": 3,
-        "lift": 0.136,
-        "z": 0.94
-      },
-      {
-        "stage": "OBSERVATION",
-        "dimension": "topicCluster",
-        "value": "PHYSICS",
-        "sample": 1,
-        "lift": 0.714,
-        "z": 0
+        "lift": 0.228,
+        "z": 1.42
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "EARTH",
         "sample": 2,
-        "lift": -0.56,
-        "z": -2.05
+        "lift": -0.474,
+        "z": -1.33
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "PHYSICS",
+        "sample": 1,
+        "lift": 0.263,
+        "z": 0
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 4,
-        "lift": -0.161,
-        "z": -0.61
+        "lift": -0.052,
+        "z": -0.18
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 2,
-        "lift": 0.323,
-        "z": 0.83
+        "lift": 0.104,
+        "z": 0.66
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "statement",
         "sample": 2,
-        "lift": 0.387,
-        "z": 1.19
+        "lift": 0.249,
+        "z": 18.76
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "why",
         "sample": 1,
-        "lift": -0.068,
+        "lift": -0.054,
         "z": 0
       },
       {
@@ -90,15 +90,15 @@
         "dimension": "titlePattern",
         "value": "question",
         "sample": 2,
-        "lift": 0.064,
-        "z": 0.18
+        "lift": 0.193,
+        "z": 0.62
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "what-if-question",
         "sample": 1,
-        "lift": -0.833,
+        "lift": -0.831,
         "z": 0
       },
       {
@@ -114,56 +114,56 @@
         "dimension": "ctaStyle",
         "value": "NONE",
         "sample": 3,
-        "lift": -0.02,
-        "z": -0.04
+        "lift": -0.111,
+        "z": -0.31
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 3,
-        "lift": 0.02,
-        "z": 0.09
+        "lift": 0.111,
+        "z": 0.56
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "18",
         "sample": 4,
-        "lift": -0.087,
-        "z": -0.27
+        "lift": -0.112,
+        "z": -0.44
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "22",
         "sample": 2,
-        "lift": 0.173,
-        "z": 0.72
+        "lift": 0.225,
+        "z": 0.8
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "18:00 New York",
         "sample": 2,
-        "lift": 0.173,
-        "z": 0.72
+        "lift": 0.225,
+        "z": 0.8
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "21:00 TR",
         "sample": 3,
-        "lift": -0.136,
-        "z": -0.3
+        "lift": -0.228,
+        "z": -0.71
       },
       {
         "stage": "OBSERVATION",
         "dimension": "popularityBand",
         "value": "unknown",
         "sample": 5,
-        "lift": -0.012,
-        "z": -0.04
+        "lift": -0.047,
+        "z": -0.21
       },
       {
         "stage": "OBSERVATION",
@@ -185,35 +185,43 @@
     "hypotheses": [
       {
         "stage": "HYPOTHESIS",
-        "dimension": "hookType",
-        "value": "visual_first_reveal",
-        "sample": 5,
-        "lift": -0.143,
-        "z": -0.69
-      },
-      {
-        "stage": "HYPOTHESIS",
         "dimension": "topicCluster",
         "value": "SPACE",
         "sample": 3,
-        "lift": 0.136,
-        "z": 0.94
+        "lift": 0.228,
+        "z": 1.42
       },
       {
         "stage": "HYPOTHESIS",
-        "dimension": "durationBucket",
-        "value": "26-35s",
+        "dimension": "ctaStyle",
+        "value": "NONE",
+        "sample": 3,
+        "lift": -0.111,
+        "z": -0.31
+      },
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "ctaStyle",
+        "value": "COMMENT_PROMPT",
+        "sample": 3,
+        "lift": 0.111,
+        "z": 0.56
+      },
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "publishHourUTC",
+        "value": "18",
         "sample": 4,
-        "lift": -0.161,
-        "z": -0.61
+        "lift": -0.112,
+        "z": -0.44
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "publishSlot",
         "value": "21:00 TR",
         "sample": 3,
-        "lift": -0.136,
-        "z": -0.3
+        "lift": -0.228,
+        "z": -0.71
       }
     ],
     "adopted": [],

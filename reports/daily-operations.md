@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-07T22:00:19.979Z
+Generated: 2026-10-08T13:21:29.046Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,52 +8,52 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | unavailable |
-| Short | not-due |
+| Today topic | beirut-port-2020 |
+| Short | scheduled |
 | Long | due-not-produced |
-| Quality | unavailable / unavailable |
-| YouTube | not-uploaded |
-| Publish time | unavailable |
-| Video ID | unavailable |
+| Quality | PUBLISH / 92 |
+| YouTube | scheduled |
+| Publish time | 2026-10-08T18:00:00.000Z |
+| Video ID | MdDPiLh09K8 |
 | Analytics | measured |
-| Scheduler | pending-before-deadline |
-| Ready topic backlog | 359 |
+| Scheduler | healthy |
+| Ready topic backlog | 358 |
 | Errors/review/blocks | 5 |
-| TikTok today | NO_TODAY_VIDEO |
-| TikTok backlog | 7 |
-| Analytics warehouse | through 2026-10-05 (lag 2 d) · 1 table error(s) |
-| Ops (24 h) | publish.success 1, growth.decision 1, analytics.partial 1, publish.public 1 |
-| Scheduler queue | 1 queued, oldest 2026-10-08 (-1 d) |
-| API quota today | 0 / 9800 units (project channel:failure-reconstructed) |
+| TikTok today | NOT_SENT |
+| TikTok backlog | 8 |
+| Analytics warehouse | through 2026-10-06 (lag 2 d) |
+| Ops (24 h) | publish.public 1, publish.success 1, growth.decision 1, analytics.load 1 |
+| Scheduler queue | 2 queued, oldest 2026-10-08 (0 d) |
+| API quota today | 1613 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 24/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
 
 | Signal | Status |
 |---|---|
-| Today topic | unavailable |
-| Short | not-due |
+| Today topic | what-if-all-fungi-disappeared |
+| Short | scheduled |
 | Long | due-not-produced |
-| Quality | unavailable / unavailable |
-| YouTube | not-uploaded |
-| Publish time | unavailable |
-| Video ID | unavailable |
+| Quality | PUBLISH / unavailable |
+| YouTube | scheduled |
+| Publish time | 2026-10-08T18:00:00.000Z |
+| Video ID | FezZD3MMg_A |
 | Analytics | measured |
-| Scheduler | pending-before-deadline |
-| Ready topic backlog | 490 |
+| Scheduler | healthy |
+| Ready topic backlog | 489 |
 | Errors/review/blocks | 1 |
-| Analytics warehouse | through 2026-10-05 (lag 2 d) |
-| Ops (24 h) | publish.success 1, growth.decision 1, analytics.load 1, publish.public 1 |
-| Scheduler queue | 1 queued, oldest 2026-10-08 (-1 d) |
-| API quota today | 0 / 9800 units (project channel:impossible-brief) |
-| YPP readiness (estimate) | subs 5/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
+| Analytics warehouse | through 2026-10-06 (lag 2 d) |
+| Ops (24 h) | publish.public 1, publish.success 1, growth.decision 1, analytics.load 1 |
+| Scheduler queue | 2 queued, oldest 2026-10-08 (0 d) |
+| API quota today | 1613 / 9800 units (project 684098966511) |
+| YPP readiness (estimate) | subs 6/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
 
 | Signal | Status |
 |---|---|
 | Today topic | unavailable |
-| Short | not-due |
+| Short | due-not-produced |
 | Long | due-not-produced |
 | Quality | unavailable / unavailable |
 | YouTube | not-uploaded |
@@ -61,32 +61,32 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Video ID | unavailable |
 | Analytics | measured |
 | Scheduler | pending-before-deadline |
-| Ready topic backlog | 515 |
-| Errors/review/blocks | 0 |
-| Analytics warehouse | through 2026-10-05 (lag 2 d) |
-| Ops (24 h) | analytics.failure 9, analytics.load 1, publish.public 1 |
-| Scheduler queue | 1 queued, oldest 2026-10-08 (-1 d) |
-| API quota today | 25 / 9800 units (project 208987599838) |
+| Ready topic backlog | 513 |
+| Errors/review/blocks | 2 |
+| Analytics warehouse | through 2026-10-05 (lag 3 d) |
+| Ops (24 h) | analytics.failure 8, analytics.load 1, publish.public 1 |
+| Scheduler queue | 2 queued, oldest 2026-10-08 (0 d) |
+| API quota today | 7 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
 
 | Signal | Status |
 |---|---|
-| Today topic | why-the-bluetooth-logo-looks-like-that |
-| Short | scheduled |
+| Today topic | why-jeans-have-copper-rivets |
+| Short | uploaded-not-scheduled |
 | Long | due-not-produced |
 | Quality | PUBLISH / unavailable |
-| YouTube | scheduled |
-| Publish time | 2026-10-08T18:00:00.000Z |
-| Video ID | Dibi31XmolY |
+| YouTube | uploaded |
+| Publish time | 2026-10-09T18:00:00.000Z |
+| Video ID | wuVAovuA5ck |
 | Analytics | measured |
-| Scheduler | healthy |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 1 |
 | Errors/review/blocks | 1 |
-| Analytics warehouse | through 2026-10-02 (lag 5 d) · 4 table error(s) |
+| Analytics warehouse | through 2026-10-02 (lag 6 d) · 4 table error(s) |
 | Ops (24 h) | analytics.partial 1 |
-| Scheduler queue | 1 queued, oldest 2026-10-08 (-1 d) |
-| API quota today | 0 / 9800 units (project channel:behind-the-ordinary) |
+| Scheduler queue | 1 queued, oldest 2026-10-08 (0 d) |
+| API quota today | 8 / 9800 units (project 739767423116) |
 | YPP readiness (estimate) | subs 1/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 

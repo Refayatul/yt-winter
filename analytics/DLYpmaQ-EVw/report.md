@@ -9,8 +9,9 @@ https://youtu.be/DLYpmaQ-EVw
 | 1d | 2026-09-25 | 124 | 0 | 2 | — | — |  |
 | 3d | 2026-09-27 | 1351 | 14 | 2 | 59.31999999999999 | 0 | Search 90%, Shorts feed 10% |
 | 7d | 2026-10-01 | 1369 | 14 | 2 | 109.41000000000001 | 2 | Shorts feed 88%, Search 10% |
+| 14d | 2026-10-08 | 1373 | 14 | 2 | 108.57999999999998 | 2 | Shorts feed 88%, Search 11% |
 
-## Diagnosis at 7d
+## Diagnosis at 14d
 
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 45.6/100 in the title engine; best editorial option scores 45.6.
 
@@ -25,4 +26,4 @@ https://youtu.be/DLYpmaQ-EVw
 - Visual type: REAL ARCHIVAL/LICENCED FOOTAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 3d and 7d: 18.
+Views gained between 7d and 14d: 4.
