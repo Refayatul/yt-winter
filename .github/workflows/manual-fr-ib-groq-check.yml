@@ -1,0 +1,73 @@
+name: Manual FR/IB long-form Groq check (NO PUBLISH)
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: Channel for one non-publishing script trial
+        required: true
+        type: choice
+        options:
+          - failure-reconstructed
+          - impossible-brief
+      approval:
+        description: Type RUN_NO_PUBLISH to authorize Groq API usage
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  test-script:
+    if: ${{ inputs.approval == 'RUN_NO_PUBLISH' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      PUBLISH: '0'
+      FR_LONGFORM_PUBLISH: '0'
+      IB_LONGFORM_PUBLISH: '0'
+      GROWTH_GATE_MODE: shadow
+      LONGFORM_LLM_PROVIDER: groq
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY2 }}
+    steps:
+      - name: Checkout reviewed pilot commit (not main production)
+        uses: actions/checkout@v4
+        with:
+          ref: beaa1c6b59be95d787166bfa18756ecaa663066f
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install --package-lock=false --ignore-scripts --no-audit --no-fund
+      - name: Verify setup without exposing API key
+        run: |
+          set -euo pipefail
+          test "$PUBLISH" = "0"
+          test "$FR_LONGFORM_PUBLISH" = "0"
+          test "$IB_LONGFORM_PUBLISH" = "0"
+          node -e 'const p=require("./core/llm/longform-provider");if(!p.available()){console.error("Long-form Groq is not configured");process.exit(1)}'
+      - name: Build one script in sandbox only
+        run: |
+          set -euo pipefail
+          node growth.js dry-run --channel "${{ inputs.channel }}"
+      - name: Verify generated script is complete, sourced and long enough
+        run: |
+          node -e '
+          const fs=require("fs");
+          const channel=process.argv[1];
+          const summary=JSON.parse(fs.readFileSync("reports/dry-runs/summary.json","utf8"));
+          const rows=(summary.results||[]).filter(x=>x.channel===channel);
+          if(rows.length!==1||!rows[0].long) throw Error("Missing single channel result");
+          const x=rows[0].long;
+          console.log(JSON.stringify({channel,topic:x.topic,decision:x.decision,score:x.score,minutes:x.minutes,generator:x.generator,generationStatus:x.generationStatus,hardFails:x.hardFails},null,2));
+          if(!String(x.generator||"").startsWith("llm:")||x.generationStatus!=="COMPLETE"||x.decision!=="PUBLISH"||!Number.isFinite(x.minutes)||x.minutes<8||(x.hardFails||[]).length)process.exit(1);
+          ' "${{ inputs.channel }}"
+      - name: Upload script diagnostic reports (no video / no upload)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: longform-groq-check-${{ inputs.channel }}
+          path: reports/dry-runs/
+          retention-days: 7
+          if-no-files-found: warn
