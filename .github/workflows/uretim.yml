@@ -12,7 +12,7 @@ on:
   schedule:
     # Primary daily scheduler. The independent Cloudflare watchdog dispatches
     # production-watchdog.yml after the configurable SLA deadline.
-    - cron: '53 14 * * *'
+    - cron: '53 8 * * *'
   workflow_dispatch:
     inputs:
       operation:
