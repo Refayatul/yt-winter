@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-08T16:39:55.952Z",
+  "generatedAt": "2026-10-08T17:26:19.464Z",
   "date": "2026-10-08",
   "channels": [
     {
@@ -21,7 +21,7 @@
       "inventory": {
         "channel": "failure-reconstructed",
         "channelName": "Failure Reconstructed",
-        "calculatedAt": "2026-10-08T16:39:55.990Z",
+        "calculatedAt": "2026-10-08T17:26:19.496Z",
         "qualifiedTopics": 377,
         "validatedCandidates": 0,
         "researchBacklog": 0,
@@ -839,7 +839,7 @@
           "analytics.load": 1
         },
         "quota": {
-          "usedToday": 1669,
+          "usedToday": 1676,
           "budget": 9800,
           "project": "1012165386949"
         },
@@ -848,7 +848,7 @@
           "estimate": true,
           "note": "Estimate from the YouTube Analytics API; YouTube decides eligibility.",
           "subscribers": 24,
-          "subscribersAt": "2026-10-08T16:39:48.213Z",
+          "subscribersAt": "2026-10-08T17:26:09.603Z",
           "longWatchHours365": null,
           "shortsViews90": null,
           "percent": {
@@ -896,7 +896,7 @@
       "inventory": {
         "channel": "impossible-brief",
         "channelName": "ImpossibleBrief",
-        "calculatedAt": "2026-10-08T16:39:56.055Z",
+        "calculatedAt": "2026-10-08T17:26:19.547Z",
         "qualifiedTopics": 500,
         "validatedCandidates": 0,
         "researchBacklog": 0,
@@ -998,7 +998,7 @@
           "analytics.load": 1
         },
         "quota": {
-          "usedToday": 1677,
+          "usedToday": 1685,
           "budget": 9800,
           "project": "684098966511"
         },
@@ -1007,7 +1007,7 @@
           "estimate": true,
           "note": "Estimate from the YouTube Analytics API; YouTube decides eligibility.",
           "subscribers": 6,
-          "subscribersAt": "2026-10-08T16:39:50.428Z",
+          "subscribersAt": "2026-10-08T17:26:11.773Z",
           "longWatchHours365": null,
           "shortsViews90": null,
           "percent": {
@@ -1034,7 +1034,7 @@
       "name": "CriticalThread",
       "date": "2026-10-08",
       "todayTopic": null,
-      "shortStatus": "due-not-produced",
+      "shortStatus": "not-due",
       "longStatus": "due-not-produced",
       "qualityScore": null,
       "qualityGate": null,
@@ -1048,7 +1048,7 @@
       "inventory": {
         "channel": "critical-thread",
         "channelName": "CriticalThread",
-        "calculatedAt": "2026-10-08T16:39:56.125Z",
+        "calculatedAt": "2026-10-08T17:26:19.600Z",
         "qualifiedTopics": 522,
         "validatedCandidates": 0,
         "researchBacklog": 0,
@@ -1165,18 +1165,24 @@
         },
         "analyticsFreshness": {
           "channel": "critical-thread",
-          "lastSyncAt": "2026-10-07T20:49:50.406Z",
-          "newestDay": "2026-10-05",
-          "lagDays": 3,
-          "errors": []
+          "lastSyncAt": "2026-10-08T17:26:16.267Z",
+          "newestDay": "2026-10-06",
+          "lagDays": 2,
+          "errors": [
+            {
+              "table": "video_daily",
+              "error": "analytics query failed: Internal error encountered."
+            }
+          ]
         },
         "ops24h": {
-          "analytics.failure": 3,
+          "analytics.failure": 2,
           "analytics.load": 1,
-          "publish.public": 1
+          "publish.public": 1,
+          "analytics.partial": 1
         },
         "quota": {
-          "usedToday": 65,
+          "usedToday": 73,
           "budget": 9800,
           "project": "208987599838"
         },
@@ -1185,7 +1191,7 @@
           "estimate": true,
           "note": "Estimate from the YouTube Analytics API; YouTube decides eligibility.",
           "subscribers": 0,
-          "subscribersAt": "2026-10-08T16:39:52.122Z",
+          "subscribersAt": "2026-10-08T17:26:13.210Z",
           "longWatchHours365": null,
           "shortsViews90": null,
           "percent": {
@@ -1226,7 +1232,7 @@
       "inventory": {
         "channel": "behind-the-ordinary",
         "channelName": "The Hidden Logic of Things",
-        "calculatedAt": "2026-10-08T16:39:56.184Z",
+        "calculatedAt": "2026-10-08T17:26:19.652Z",
         "qualifiedTopics": 525,
         "validatedCandidates": 525,
         "researchBacklog": 520,
@@ -1334,7 +1340,7 @@
           "analytics.partial": 1
         },
         "quota": {
-          "usedToday": 64,
+          "usedToday": 71,
           "budget": 9800,
           "project": "739767423116"
         },
@@ -1343,7 +1349,7 @@
           "estimate": true,
           "note": "Estimate from the YouTube Analytics API; YouTube decides eligibility.",
           "subscribers": 1,
-          "subscribersAt": "2026-10-08T16:39:53.488Z",
+          "subscribersAt": "2026-10-08T17:26:16.743Z",
           "longWatchHours365": null,
           "shortsViews90": null,
           "percent": {
