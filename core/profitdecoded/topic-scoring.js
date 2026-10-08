@@ -185,12 +185,15 @@ function editorialLens(topic, ctx, extra = {}) {
   // Angle originality: generic templates score low, curated angles higher, observed same-angle hits lower.
   let orig = angle ? ({ VERIFIED: 80, SUPPORTED_SECONDARY: 75 }[angle.premiseStatus] || 70) : 60;
   const tplPenalty = { SATURATED: 30, HOT: 15, GROWING: 5 }[title.templateClass] || 0;
+  let titleLoss = tplPenalty; // the part of the loss that comes only from the title's wording
   orig -= tplPenalty;
   // Our own inventory repeating a crowded template (plain "Why ...?" / "How ...?" questions are not templates).
-  if (!angle && title.inventoryTemplateClass && title.inventoryTemplateShare > 0.2) orig -= 10;
+  if (!angle && title.inventoryTemplateClass && title.inventoryTemplateShare > 0.2) { orig -= 10; titleLoss += 10; }
   let origProv = "ESTIMATED"; const origWhy = [angle ? `curated angle (${angle.premiseStatus})` : "inventory title", title.templateClass ? `template ${title.template} is ${title.templateClass}` : `template ${title.template}`];
   if (sat && sat.provenance !== "UNKNOWN" && ["HOT", "SATURATED"].includes(sat.class)) { orig -= sat.class === "SATURATED" ? 20 : 10; origProv = sat.provenance === "OBSERVED" ? "INFERRED" : sat.provenance; origWhy.push(`angle coverage ${sat.class}`); }
   const angleOriginality = S.sig(S.clamp(orig), origProv, origWhy.join("; "));
+  // Same signal with the wording penalties removed: used where a title must not decide the outcome (REJECT gate).
+  const angleOriginalityTitleNeutral = S.sig(S.clamp(orig + titleLoss), origProv, "title-neutral: " + origWhy.join("; "));
 
   // Source reliability: research result (OBSERVED) > verified angle premise (INFERRED) > evidence prior capped for unresearched topics.
   let sourceReliability;
@@ -215,7 +218,7 @@ function editorialLens(topic, ctx, extra = {}) {
   let num = 0, den = 0; for (const k of LENS_DIMENSIONS) { num += (w[k] || 0) * S.valueOr(dims[k]); den += w[k] || 0; }
   return {
     score: S.round(num / den, 1), confidence: S.round(S.confidence(dims, w), 2), provenance: S.provenanceMix(dims),
-    dimensions: dims, title, saturation: sat || { class: "UNKNOWN", provenance: "UNKNOWN" }, freshness: fresh,
+    dimensions: dims, angleOriginalityTitleNeutral, title, saturation: sat || { class: "UNKNOWN", provenance: "UNKNOWN" }, freshness: fresh,
   };
 }
 

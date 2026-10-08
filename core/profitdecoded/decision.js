@@ -54,8 +54,8 @@ function evaluate(topic, evidence = {}, options = {}) {
   let num = 0, den = 0;
   for (const [k, wt] of Object.entries(w.decision)) { num += wt * S.valueOr(inputs[k]); den += wt; }
   const composite = num / den;
-  // A generic title alone must never discard a topic: for the REJECT gate, title-based originality is floored at the neutral UNKNOWN score.
-  const titleOnlyLoss = gap.status === "UNKNOWN" ? Math.max(0, S.UNKNOWN_SCORE - S.valueOr(inputs.originalAngle)) * (w.decision.originalAngle || 0) / den : 0;
+  // A generic title alone must never discard a topic: the REJECT gate uses the title-neutral originality.
+  const titleOnlyLoss = gap.status === "UNKNOWN" ? Math.max(0, S.valueOr(lens.angleOriginalityTitleNeutral) - S.valueOr(inputs.originalAngle)) * (w.decision.originalAngle || 0) / den : 0;
   const gateComposite = composite + titleOnlyLoss;
   const satPenalty = satClass === "UNKNOWN" ? 0 : w.decisionPenalties.saturation * Comp.SATURATION_PENALTY[satClass];
   const copyright = S.valueOr(topic.copyrightRisk, 40);
