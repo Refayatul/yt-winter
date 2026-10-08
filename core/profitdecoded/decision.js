@@ -30,9 +30,10 @@ function evaluate(topic, evidence = {}, options = {}) {
   const observedSat = breakout ? breakout.saturation : evidence.saturation || null;
   const lens = TS.editorialLens(topic, intel, { research, freshness, observedSaturation: observedSat });
   // Saturation: observed (API breakout / supplied) first, otherwise the manual coverage sample (INFERRED).
-  const sat = observedSat || (lens.saturation.class !== "UNKNOWN" ? lens.saturation : null);
+  // Lens picks the more crowded of the observed (collector) and manual readings; only an observed reading can block.
+  const sat = lens.saturation.class !== "UNKNOWN" ? lens.saturation : observedSat;
   const satClass = sat ? sat.class : "UNKNOWN";
-  const satObserved = !!observedSat;
+  const satObserved = !!sat && sat.provenance === "OBSERVED";
   const ro = Rev.revenueOpportunity(topic);
   const ebv = Rev.expectedBusinessValue(topic, options.ctx || {});
   const inputs = {

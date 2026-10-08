@@ -176,8 +176,12 @@ function editorialLens(topic, ctx, extra = {}) {
   const angle = title.angle;
 
   // Competitive saturation: OBSERVED (API) > INFERRED (manual sample) > UNKNOWN. 100 = open field.
-  let sat = extra.observedSaturation && extra.observedSaturation.class ? { ...extra.observedSaturation, provenance: "OBSERVED" } : null;
-  if (!sat && ctx.coverage[topic.id]) sat = Comp.coverageSaturation(ctx.coverage[topic.id]);
+  // The collector sees recent uploads; the manual sample also sees entrenched older hits. They measure
+  // different things, so the more crowded reading wins (and keeps its own provenance).
+  const obsSat = extra.observedSaturation && extra.observedSaturation.class && extra.observedSaturation.class !== "UNKNOWN" ? { ...extra.observedSaturation, provenance: "OBSERVED" } : null;
+  const manSat = ctx.coverage[topic.id] ? Comp.coverageSaturation(ctx.coverage[topic.id]) : null;
+  const pen = (x) => (x && x.class in Comp.SATURATION_PENALTY ? Comp.SATURATION_PENALTY[x.class] : -1);
+  let sat = pen(manSat) > pen(obsSat) ? { ...manSat, reasons: [...(manSat.reasons || []), obsSat ? `collector snapshot reads ${obsSat.class} (recent uploads only)` : "no collector reading"] } : obsSat || manSat;
   const competitiveSaturation = sat && sat.class !== "UNKNOWN"
     ? S.sig(S.round(100 * (1 - Comp.SATURATION_PENALTY[sat.class]), 0), sat.provenance, `${sat.class}: ${(sat.reasons || []).join("; ")}`)
     : S.unknown("no competitor coverage data (needs PD_YT_API_KEY collector run or a manual coverage observation)");

@@ -127,9 +127,12 @@ test("editorial lens: saturation provenance is OBSERVED > INFERRED (manual) > UN
   assert.equal(inferred.dimensions.competitiveSaturation.provenance, "INFERRED");
   assert.equal(inferred.dimensions.competitiveSaturation.value, 0); // SATURATED
   const observed = TS.editorialLens(t, manual, { observedSaturation: { class: "EARLY", reasons: ["api"] }, research: { score: 91 } });
-  assert.equal(observed.dimensions.competitiveSaturation.provenance, "OBSERVED");
-  assert.equal(observed.dimensions.competitiveSaturation.value, 100);
   assert.deepEqual([observed.dimensions.sourceReliability.provenance, observed.dimensions.sourceReliability.value], ["OBSERVED", 91]);
+  // observed EARLY does not hide a manually recorded SATURATED field (older entrenched hits)
+  assert.equal(observed.saturation.class, "SATURATED"); assert.equal(observed.saturation.provenance, "INFERRED");
+  const noManual = TS.editorialLens(t, TS.buildIntelContext([], NO_FILES), { observedSaturation: { class: "EARLY", reasons: ["api"] } });
+  assert.equal(noManual.dimensions.competitiveSaturation.provenance, "OBSERVED");
+  assert.equal(noManual.dimensions.competitiveSaturation.value, 100);
   const stale = TS.editorialLens(t, manual, { freshness: { status: "OUTDATED_PREMISE", needsResearch: true } });
   assert.ok(stale.dimensions.sourceReliability.value <= 40);
   assert.ok(stale.dimensions.evergreenPotential.value < inferred.dimensions.evergreenPotential.value);
