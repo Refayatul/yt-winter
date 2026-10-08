@@ -83,6 +83,7 @@ jobs:
         with:
           name: longform-resume-${{ inputs.channel }}
           path: .fr-ib-writer-sandbox/
+          include-hidden-files: true
           retention-days: 7
           if-no-files-found: warn
       - name: Upload script diagnostic reports (no video / no upload)
