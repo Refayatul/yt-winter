@@ -33,7 +33,7 @@ jobs:
       - name: Checkout reviewed pilot commit (not main production)
         uses: actions/checkout@v4
         with:
-          ref: beaa1c6b59be95d787166bfa18756ecaa663066f
+          ref: d378c71a035f75a8f5ad191aadf606829f3677af
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
@@ -60,7 +60,7 @@ jobs:
           const rows=(summary.results||[]).filter(x=>x.channel===channel);
           if(rows.length!==1||!rows[0].long) throw Error("Missing single channel result");
           const x=rows[0].long;
-          console.log(JSON.stringify({channel,topic:x.topic,decision:x.decision,score:x.score,minutes:x.minutes,generator:x.generator,generationStatus:x.generationStatus,hardFails:x.hardFails},null,2));
+          console.log(JSON.stringify({channel,topic:x.topic,decision:x.decision,score:x.score,minutes:x.minutes,generator:x.generator,generationStatus:x.generationStatus,llmErrorCode:x.llmErrorCode,llmErrorStage:x.llmErrorStage,llmErrorMessage:x.llmErrorMessage,hardFails:x.hardFails},null,2));
           if(!String(x.generator||"").startsWith("llm:")||x.generationStatus!=="COMPLETE"||x.decision!=="PUBLISH"||!Number.isFinite(x.minutes)||x.minutes<8||(x.hardFails||[]).length)process.exit(1);
           ' "${{ inputs.channel }}"
       - name: Upload script diagnostic reports (no video / no upload)
