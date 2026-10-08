@@ -1,21 +1,21 @@
 {
   "schema": "feedback-loop-health/1",
-  "generatedAt": "2026-10-08T07:23:23.896Z",
+  "generatedAt": "2026-10-08T15:35:31.164Z",
   "verdict": "CLOSED_LOOP_WORKING",
   "channels": [
     {
       "channel": "failure-reconstructed",
       "verdict": "CLOSED_LOOP_WORKING",
       "mode": "adaptive",
-      "publishedVideos": 17,
-      "performanceRows": 18,
-      "diagnosisRows": 38,
+      "publishedVideos": 18,
+      "performanceRows": 19,
+      "diagnosisRows": 39,
       "learning": {
-        "updatedAt": "2026-10-08T07:23:19.417Z",
+        "updatedAt": "2026-10-08T15:35:28.208Z",
         "sampleSize": 17,
         "status": "adaptive",
         "observations": 28,
-        "hypotheses": 9,
+        "hypotheses": 7,
         "adopted": 0,
         "suppressed": 0
       },
@@ -76,23 +76,9 @@
         }
       ],
       "timing": {
-        "lateCheckpointCount": 61,
+        "lateCheckpointCount": 63,
         "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
         "examples": [
-          {
-            "videoId": "NnGoWJOdaW0",
-            "label": "6h",
-            "scheduledHours": 6,
-            "collectedAgeHours": 21.52,
-            "driftHours": 15.52
-          },
-          {
-            "videoId": "NnGoWJOdaW0",
-            "label": "7d",
-            "scheduledHours": 168,
-            "collectedAgeHours": 170.82,
-            "driftHours": 2.82
-          },
           {
             "videoId": "DLYpmaQ-EVw",
             "label": "24h",
@@ -146,8 +132,22 @@
             "videoId": "DLYpmaQ-EVw",
             "label": "14d",
             "scheduledHours": 336,
-            "collectedAgeHours": 339.69,
-            "driftHours": 3.69
+            "collectedAgeHours": 345.65,
+            "driftHours": 9.65
+          },
+          {
+            "videoId": "8HybydJa-l8",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 19.34,
+            "driftHours": 7.34
+          },
+          {
+            "videoId": "8HybydJa-l8",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 19.43,
+            "driftHours": 13.43
           }
         ]
       },
@@ -158,15 +158,15 @@
       "channel": "impossible-brief",
       "verdict": "CLOSED_LOOP_WORKING",
       "mode": "observing",
-      "publishedVideos": 8,
-      "performanceRows": 7,
-      "diagnosisRows": 14,
+      "publishedVideos": 9,
+      "performanceRows": 8,
+      "diagnosisRows": 15,
       "learning": {
-        "updatedAt": "2026-10-08T07:23:21.220Z",
+        "updatedAt": "2026-10-08T15:35:29.356Z",
         "sampleSize": 6,
         "status": "observing",
         "observations": 21,
-        "hypotheses": 5,
+        "hypotheses": 7,
         "adopted": 0,
         "suppressed": 0
       },
@@ -227,23 +227,9 @@
         }
       ],
       "timing": {
-        "lateCheckpointCount": 14,
+        "lateCheckpointCount": 16,
         "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
         "examples": [
-          {
-            "videoId": "u0iftg8gF5w",
-            "label": "24h",
-            "scheduledHours": 24,
-            "collectedAgeHours": 40.54,
-            "driftHours": 16.54
-          },
-          {
-            "videoId": "Vuvx5nEqcaY",
-            "label": "12h",
-            "scheduledHours": 12,
-            "collectedAgeHours": 18.29,
-            "driftHours": 6.29
-          },
           {
             "videoId": "Vuvx5nEqcaY",
             "label": "6h",
@@ -299,6 +285,20 @@
             "scheduledHours": 48,
             "collectedAgeHours": 50.82,
             "driftHours": 2.82
+          },
+          {
+            "videoId": "wvn-RzNCb-M",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 19.35,
+            "driftHours": 7.35
+          },
+          {
+            "videoId": "wvn-RzNCb-M",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 19.43,
+            "driftHours": 13.43
           }
         ]
       },
@@ -311,13 +311,13 @@
       "mode": "observing",
       "publishedVideos": 7,
       "performanceRows": 6,
-      "diagnosisRows": 11,
+      "diagnosisRows": 12,
       "learning": {
-        "updatedAt": "2026-10-08T07:23:22.519Z",
+        "updatedAt": "2026-10-08T15:35:30.134Z",
         "sampleSize": 5,
         "status": "observing",
         "observations": 23,
-        "hypotheses": 2,
+        "hypotheses": 1,
         "adopted": 0,
         "suppressed": 0
       },
@@ -378,16 +378,9 @@
         }
       ],
       "timing": {
-        "lateCheckpointCount": 16,
+        "lateCheckpointCount": 17,
         "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
         "examples": [
-          {
-            "videoId": "rAZ4cE4A0DE",
-            "label": "6h",
-            "scheduledHours": 6,
-            "collectedAgeHours": 18.32,
-            "driftHours": 12.32
-          },
           {
             "videoId": "rAZ4cE4A0DE",
             "label": "1h",
@@ -448,8 +441,15 @@
             "videoId": "24eJvZ2cswc",
             "label": "6h",
             "scheduledHours": 6,
-            "collectedAgeHours": 37.38,
-            "driftHours": 31.38
+            "collectedAgeHours": 43.35,
+            "driftHours": 37.35
+          },
+          {
+            "videoId": "24eJvZ2cswc",
+            "label": "1h",
+            "scheduledHours": 1,
+            "collectedAgeHours": 43.43,
+            "driftHours": 42.43
           }
         ]
       },
@@ -464,7 +464,7 @@
       "performanceRows": 2,
       "diagnosisRows": 3,
       "learning": {
-        "updatedAt": "2026-10-08T07:23:23.782Z",
+        "updatedAt": "2026-10-08T15:35:31.073Z",
         "sampleSize": 2,
         "status": "observing",
         "observations": 15,
