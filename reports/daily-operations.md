@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-08T22:04:09.686Z
+Generated: 2026-10-08T22:04:26.327Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -66,7 +66,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-06 (lag 2 d) · 1 table error(s) |
 | Ops (24 h) | analytics.partial 1 |
 | Scheduler queue | 1 queued, oldest 2026-10-09 (-1 d) |
-| API quota today | 113 / 9800 units (project 208987599838) |
+| API quota today | 117 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
