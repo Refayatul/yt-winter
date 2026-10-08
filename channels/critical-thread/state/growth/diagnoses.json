@@ -181,5 +181,28 @@
       }
     ],
     "at": "2026-10-08T13:21:24.436Z"
+  },
+  {
+    "videoId": "24eJvZ2cswc",
+    "channel": "critical-thread",
+    "contentType": "short",
+    "checkpoint": "1h",
+    "diagnoses": [
+      {
+        "code": "BREAKOUT",
+        "confidence": "low",
+        "evidence": "view velocity in channel p100",
+        "recommendation": "Nominate adjacent same-cluster topics without duplicating this event.",
+        "specCode": "POTENTIAL_BREAKOUT"
+      },
+      {
+        "code": "STRONG_DISCOVERY",
+        "confidence": "low",
+        "evidence": "195 views vs channel Shorts median 61",
+        "recommendation": "Study the opening and topic; replicate one variable at a time.",
+        "specCode": "STRONG_DISCOVERY"
+      }
+    ],
+    "at": "2026-10-08T13:26:21.302Z"
   }
 ]

@@ -36,7 +36,7 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 187.36,
+      "ageHours": 187.44,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -725,10 +725,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 65.1,
-      "classification": "NORMAL",
+      "growthScore": 73.5,
+      "classification": "STRONG",
       "percentiles": {
-        "viewVelocity": 80,
+        "viewVelocity": 100,
         "retention": null,
         "engagement": 60,
         "subscriberConversion": null,
@@ -1959,10 +1959,10 @@
       "subscribersPer1000Views": 0
     },
     "performance": {
-      "growthScore": 49.8,
+      "growthScore": 53.4,
       "classification": "NORMAL",
       "percentiles": {
-        "viewVelocity": 60,
+        "viewVelocity": 80,
         "retention": 50,
         "engagement": 100,
         "subscriberConversion": 25,
@@ -3190,10 +3190,10 @@
       "subscribersPer1000Views": 2.87
     },
     "performance": {
-      "growthScore": 79.2,
+      "growthScore": 82.8,
       "classification": "STRONG",
       "percentiles": {
-        "viewVelocity": 20,
+        "viewVelocity": 40,
         "retention": 100,
         "engagement": 80,
         "subscriberConversion": 100,
@@ -3817,10 +3817,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 46.5,
+      "growthScore": 54.9,
       "classification": "NORMAL",
       "percentiles": {
-        "viewVelocity": 40,
+        "viewVelocity": 60,
         "retention": null,
         "engagement": 40,
         "subscriberConversion": null,
@@ -5077,10 +5077,10 @@
       "subscribersPer1000Views": 0
     },
     "performance": {
-      "growthScore": 8.9,
+      "growthScore": 12.5,
       "classification": "WEAK",
       "percentiles": {
-        "viewVelocity": 0,
+        "viewVelocity": 20,
         "retention": 0,
         "engagement": 0,
         "subscriberConversion": 25,
@@ -5538,6 +5538,111 @@
         "traffic": [],
         "retention": [],
         "analyticsStatus": "ok"
+      },
+      "6h": {
+        "collectedAt": "2026-10-08T13:26:19.850Z",
+        "metrics": {
+          "views": {
+            "value": 1100,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 14,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "stayed_to_watch": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "Shorts 'Viewed vs swiped away' is Studio only — import with scripts/studio-import.js"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 13.64,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
       }
     },
     "hookType": "impossible_question",
@@ -5706,9 +5811,9 @@
     "popularityBand": "unknown",
     "readiness": 89,
     "normalized": {
-      "ageHours": 19.35,
-      "viewsPerHour": 56.86,
-      "recentViewVelocity": 40.55,
+      "ageHours": 19.43,
+      "viewsPerHour": 56.61,
+      "recentViewVelocity": 0,
       "likeRate": 0.01273,
       "commentRate": 0.00091,
       "shareRate": null,
@@ -5718,10 +5823,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 66.5,
-      "classification": "NORMAL",
+      "growthScore": 24.7,
+      "classification": "WEAK",
       "percentiles": {
-        "viewVelocity": 100,
+        "viewVelocity": 0,
         "retention": null,
         "engagement": 20,
         "subscriberConversion": null,
@@ -5766,6 +5871,6 @@
       "shortsFeedShare": null,
       "searchShare": null
     },
-    "latestCheckpoint": "12h"
+    "latestCheckpoint": "6h"
   }
 ]
