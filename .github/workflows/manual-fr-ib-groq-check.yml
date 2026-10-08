@@ -39,7 +39,7 @@ jobs:
       - name: Checkout reviewed pilot commit (not main production)
         uses: actions/checkout@v4
         with:
-          ref: a9d4bd58014340b85f8c33fd856f0cc6837753d2
+          ref: 9c2edaea7446ee54a1e3d2334ade3161fc6429ff
           persist-credentials: false
       - uses: actions/setup-node@v4
         with:
