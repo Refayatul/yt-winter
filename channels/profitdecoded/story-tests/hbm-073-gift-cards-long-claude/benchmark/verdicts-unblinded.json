@@ -1,0 +1,234 @@
+{
+ "R1 eval-1 (A=Groq,B=Claude)": {
+  "model": "gemini-3.8-flash",
+  "usage": {
+   "input_tokens": 8320,
+   "output_tokens": 1061,
+   "reasoning_tokens": 1968,
+   "total_tokens": 11349
+  },
+  "publish": "claude",
+  "confidence": "high",
+  "reasoning": "Script B is ready for production. It takes dry financial accounting concepts (breakage, deferred revenue liabilities, escheatment) and turns them into a compelling, tightly structured narrative that directly answers the title question. Its prose is natural, rhythmic, and written for the ear, accompanied by sharp and varied motion-graphic cues. In contrast, Script A is unpublishable: it reads like an unedited draft that repeatedly loops over the exact same facts in multiple segments, commits scoping errors ('households' instead of 'adults'), and even recites internal research dossier citation markers aloud ('as shown in i3').",
+  "groq": {
+   "scores": {
+    "hook": 3,
+    "storytelling": 2,
+    "naturalness": 3,
+    "pacing": 2,
+    "accuracy": 4,
+    "visual": 5
+   },
+   "weighted": 2.95,
+   "strengths": [
+    "Mentions specific breakage figures and distinguishes between company-operated and licensed store streams.",
+    "Accurately references the 12-year redemption period and the 50 basis point sensitivity test from Darden's filing."
+   ],
+   "weaknesses": [
+    "Crippling structural repetition: entire blocks of statistics regarding Starbucks breakage, Darden's unspent pool, and the Bankrate survey are stated nearly identically three to four times across Parts 1-4, Part 7, and Part 9.",
+    "Blatant internal artifact leak where a research dossier reference tag is spoken aloud: 'That leaves the deferred pool roughly flat, as shown in i3.'",
+    "Stiff, bureaucratic tone that sounds like a compliance officer reading financial disclosures rather than an engaging documentary narration.",
+    "Weak, abrupt opening hook ('You've been told gift cards expire, but Starbucks' cards never do.') that fails to draw the viewer in or set up a narrative arc."
+   ],
+   "factual": [
+    {
+     "quote": "That leaves the deferred pool roughly flat, as shown in i3.",
+     "problem": "Voiced the internal dossier research prompt ID ('i3') directly into narrator dialogue.",
+     "severity": "high"
+    },
+    {
+     "quote": "found households hold about $27 billion in unused gift-card value",
+     "problem": "Incorrect demographic scope; the Bankrate survey surveyed US adults, not households.",
+     "severity": "medium"
+    },
+    {
+     "quote": "The estimates are updated each quarter as redemption patterns change.",
+     "problem": "Dossier does not state Starbucks updates breakage estimates quarterly; this detail is unverified.",
+     "severity": "low"
+    }
+   ]
+  },
+  "claude": {
+   "scores": {
+    "hook": 9,
+    "storytelling": 9,
+    "naturalness": 9,
+    "pacing": 9,
+    "accuracy": 9,
+    "visual": 9
+   },
+   "weighted": 9,
+   "strengths": [
+    "Exceptional hook that immediately connects to the audience's real-world experience ('Somewhere in a drawer, a wallet or a coat pocket, there's a gift card with money still on it.') and frames the title's core mystery.",
+    "Brilliant narrative progression and explanatory clarity, translating complex accounting mechanics into vivid mental models ('Picture someone tapping a card for a latte. As that balance gets spent, a matching sliver of the money... moves over into revenue').",
+    "Rigorous editorial discipline: correctly isolates the channel's arithmetic ('by our own math', 'by our arithmetic'), observes the combined nature of Starbucks' liability, and reconciles why some cards expire despite Starbucks and Darden having no expiration dates.",
+    "Dynamic, well-timed bracketed visual cues that match spoken pacing and avoid generic charts."
+   ],
+   "weaknesses": [
+    "Part 1 introduces the Bankrate survey and notes it is an estimate, but omits the specific YouGov online methodology specification (2,373 adults sample in August 2024) mandated by editorial rule 2."
+   ],
+   "factual": [
+    {
+     "quote": "In a 2024 Bankrate survey, 43 percent of American adults said they're holding at least one unused gift card, voucher or store credit. Bankrate puts the national total at about $27 billion. That's a survey estimate, not a count...",
+     "problem": "Omitted the required methodological attribution details specified in editorial rules (YouGov online sample of 2,373 adults, August 2024).",
+     "severity": "low"
+    }
+   ]
+  }
+ },
+ "R2 eval-1 repeat (A=Groq,B=Claude)": {
+  "model": "gemini-3.8-flash",
+  "usage": {
+   "input_tokens": 8320,
+   "output_tokens": 952,
+   "reasoning_tokens": 1597,
+   "total_tokens": 10869
+  },
+  "publish": "claude",
+  "confidence": "high",
+  "reasoning": "Script B is a masterclass in business documentary scriptwriting. It transforms dry 10-K accounting disclosures and federal regulations into a fascinating, well-paced mystery that answers the title's central question with precision. It adheres strictly to every dossier guideline, correctly distinguishes company claims from channel arithmetic, and avoids any factual drift. In contrast, Script A is unpublishable: it reads like an unedited draft with severe narrative stalls, repeats entire data blocks across multiple sections, misattributes adult survey data to households, and inadvertently includes an internal dossier prompt code ('as shown in i3') in the narration voiceover.",
+  "groq": {
+   "scores": {
+    "hook": 3,
+    "storytelling": 2,
+    "naturalness": 3,
+    "pacing": 2,
+    "accuracy": 3,
+    "visual": 4
+   },
+   "weighted": 2.7,
+   "strengths": [
+    "Includes all core data points from the dossier regarding Starbucks, Darden, and federal gift card rules.",
+    "Identifies that breakage calculations are the channel's arithmetic rather than reported company totals in Part 3."
+   ],
+   "weaknesses": [
+    "Extreme, robotic repetition: Parts 7, 8, and 9 mindlessly re-list figures and legal definitions already covered in Parts 1 through 6.",
+    "Narrative flow is fractured and clinical; in Part 4 it introduces Darden's 12-year policy and figures without even naming the company until Part 5.",
+    "Leaves raw internal dossier reference tags directly in spoken narration ('That leaves the deferred pool roughly flat, as shown in i3').",
+    "Confuses unit of analysis by attributing the Bankrate estimate to 'households' rather than US adults."
+   ],
+   "factual": [
+    {
+     "quote": "That leaves the deferred pool roughly flat, as shown in i3.",
+     "problem": "Unedited internal dossier prompt reference ('as shown in i3') is read aloud in the script narration.",
+     "severity": "high"
+    },
+    {
+     "quote": "A 2024 online survey of 2,373 U.S. adults found households hold about $27 billion in unused gift-card value.",
+     "problem": "Scope error: The survey surveyed US adults and calculated balances per adult holder, not households.",
+     "severity": "high"
+    },
+    {
+     "quote": "The breakage estimate comes from Starbucks' historical redemption data. For each market the company looks at when a card was activated, how often it is used, and how long balances typically linger.",
+     "problem": "Dossier specifies timing and business channel of activation/reload, not 'how often it is used, and how long balances typically linger'.",
+     "severity": "medium"
+    }
+   ]
+  },
+  "claude": {
+   "scores": {
+    "hook": 9,
+    "storytelling": 10,
+    "naturalness": 9,
+    "pacing": 9,
+    "accuracy": 10,
+    "visual": 9
+   },
+   "weighted": 9.4,
+   "strengths": [
+    "Compelling, relatable opening hook ('Somewhere in a drawer, a wallet or a coat pocket...') that immediately validates the title and establishes stakes.",
+    "Masterful narrative architecture that turns complex corporate accounting concepts (proportional recognition, breakage sensitivity, deferred revenue) into an intuitive, escalating story.",
+    "Strict compliance with editorial rules: clearly flags arithmetic as the channel's own, treats breakage as an estimate rather than a known fact, and clarifies that Starbucks' $1.75B balance mixes loyalty stars with stored value.",
+    "Visually inventive brackets with diverse, appropriate graphics (flow diagrams, timelines, UI callouts) keyed tightly to the spoken voiceover."
+   ],
+   "weaknesses": [
+    "Could have briefly included the median/average survey numbers ($244 average, $100 median) in Part 1 to ground the individual consumer scale further.",
+    "Touches only briefly on licensed store mechanics compared to company-operated store revenue."
+   ],
+   "factual": []
+  }
+ },
+ "R3 eval-2 swapped (A=Claude,B=Groq)": {
+  "model": "gemini-3.8-flash",
+  "usage": {
+   "input_tokens": 8320,
+   "output_tokens": 883,
+   "reasoning_tokens": 969,
+   "total_tokens": 10172
+  },
+  "publish": "claude",
+  "confidence": "high",
+  "reasoning": "Script A is a masterclass in video-essay scriptwriting: it takes dry SEC accounting disclosures (breakage recognition, deferred revenue pools, unclaimed property escheatment) and builds a gripping, human narrative around them with seamless transitions and vivid analogies. It rigorously attributes channel arithmetic and respects corporate boundaries. Its only minor blemish is omitting the YouGov sample size methodology line from the Bankrate citation. Script B, on the other hand, is unusable: it reads internal prompt codes out loud ('as shown in i3'), constantly loops back to repeat the exact same statistics across multiple sections, misstates adult survey data as household data, and lacks narrative structure.",
+  "claude": {
+   "scores": {
+    "hook": 9,
+    "storytelling": 9,
+    "naturalness": 9,
+    "pacing": 9,
+    "accuracy": 8,
+    "visual": 9
+   },
+   "weighted": 8.85,
+   "strengths": [
+    "Engaging and relatable opening that immediately validates the title and hooks the viewer ('Somewhere in a drawer, a wallet or a coat pocket...').",
+    "Clear and compelling narrative escalation, using intuitive visual metaphors like tapping for a latte to explain breakage accounting over time.",
+    "Meticulous attribution of the channel's own arithmetic versus corporate disclosures ('Together, by our own math...', 'So by our arithmetic...').",
+    "Accurately honors the distinction between gift cards and the broader combined loyalty pool ($1.75 billion) at Starbucks."
+   ],
+   "weaknesses": [
+    "Omits specific survey methodology details required by the editorial rules (YouGov online sample of 2,373 adults, August 2024) when presenting the $27 billion Bankrate estimate in Part 1.",
+    "Does not mention the specific survey metrics for average ($244) or median ($100) unspent balance per holder."
+   ],
+   "factual": [
+    {
+     "quote": "Bankrate puts the national total at about $27 billion. That's a survey estimate, not a count, which means it tells you the scale, not the exact amount.",
+     "problem": "The editorial rules require presenting the estimate with its source and method (YouGov online sample of 2,373 adults, August 2024), which was omitted from the narration.",
+     "severity": "low"
+    }
+   ]
+  },
+  "groq": {
+   "scores": {
+    "hook": 3,
+    "storytelling": 2,
+    "naturalness": 3,
+    "pacing": 2,
+    "accuracy": 4,
+    "visual": 4
+   },
+   "weighted": 2.85,
+   "strengths": [
+    "Mentions the sample size (2,373 adults) and the $244 average and $100 median survey figures.",
+    "Covers the core statutory limits under federal law (five-year minimum expiration and monthly fee limits)."
+   ],
+   "weaknesses": [
+    "Severe, unedited repetition: re-reads the exact same Starbucks breakage figures, Darden activations, and survey statistics three to four times across Parts 1, 2, 3, 7, 8, and 9.",
+    "Unnatural, robotic cadence that reads like an unedited bulleted dossier rather than spoken documentary narration.",
+    "Includes internal dossier prompt labels directly in the spoken narration ('as shown in i3').",
+    "Fails to introduce subjects before launching into numbers (e.g., Part 4 discusses Darden's accounting rules without naming Darden until Part 5)."
+   ],
+   "factual": [
+    {
+     "quote": "That leaves the deferred pool roughly flat, as shown in i3.",
+     "problem": "Narration speaks internal research dossier reference code ('as shown in i3') aloud.",
+     "severity": "high"
+    },
+    {
+     "quote": "A 2024 online survey of 2,373 U.S. adults found households hold about $27 billion in unused gift-card value.",
+     "problem": "Scope error: attributes the finding to 'households' instead of U.S. adults.",
+     "severity": "medium"
+    },
+    {
+     "quote": "The estimates are updated each quarter as redemption patterns change.",
+     "problem": "Unsubstantiated detail: the dossier does not state Starbucks updates estimates quarterly (Darden states it updates periodically).",
+     "severity": "medium"
+    },
+    {
+     "quote": "Starbucks recorded $222.4 million of breakage revenue for fiscal 2025.",
+     "problem": "Attributes the channel's arithmetic sum ($222.4 million) directly to Starbucks as what the company recorded, violating attribution rules.",
+     "severity": "medium"
+    }
+   ]
+  }
+ }
+}
