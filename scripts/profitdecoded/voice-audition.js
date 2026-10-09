@@ -2,9 +2,10 @@
 "use strict";
 // Voice audition: renders the SAME three documentary sentences with every
 // candidate voice so a human can pick by ear. Output: <dir>/<voice>.wav (+ .m4a on macOS).
-//   node scripts/profitdecoded/voice-audition.js [outDir] [--provider edge-tts|kokoro|google|openai|elevenlabs]
+//   node scripts/profitdecoded/voice-audition.js [outDir] [--provider edge-tts|kokoro|google|openai|elevenlabs|cartesia]
 //     [--text-file excerpt.txt] [--voices a,b,c] [--rate -3%]
 // --text-file: one continuous script excerpt (the same text for every voice, for a fair comparison).
+// --voices for cartesia: label=voice-uuid pairs (the label names the file). Characters sent are reported as credits.
 const fs = require("fs");
 const path = require("path");
 const { execFileSync } = require("child_process");
@@ -28,15 +29,19 @@ const VOICES = { "edge-tts": ["en-US-AndrewMultilingualNeural", "en-US-BrianMult
   fs.mkdirSync(outDir, { recursive: true });
   const report = [];
   const voices = opt("--voices") ? opt("--voices").split(",").filter(Boolean) : VOICES[providerArg] || [];
-  for (const voice of voices) {
+  for (const entry of voices) {
+    const [label, voice] = entry.includes("=") ? entry.split("=") : [entry, entry];
     try {
       const samples = await TTS.synthesize(TEXT, { provider: providerArg, voice, rate, ...(providerArg === "openai" ? { voice } : {}) });
-      const file = path.join(outDir, `${providerArg}-${voice}.wav`); fs.writeFileSync(file, W.writeWav(samples, TTS.RATE));
-      if (process.platform === "darwin") execFileSync("afconvert", ["-f", "m4af", "-d", "aac", "-b", "64000", "-c", "1", file, file.replace(/\.wav$/, ".m4a")]);
-      const m = W.analyze(fs.readFileSync(file)); report.push({ voice, seconds: +m.durationSec.toFixed(1), lufs: m.integratedLufs });
+      const file = path.join(outDir, `${providerArg}-${label}.wav`); fs.writeFileSync(file, W.writeWav(samples, TTS.RATE));
+      if (process.platform === "darwin") execFileSync("afconvert", ["-f", "m4af", "-d", "aac", "-b", "128000", "-c", "1", file, file.replace(/\.wav$/, ".m4a")]);
+      else execFileSync("ffmpeg", ["-v", "error", "-y", "-i", file, "-c:a", "aac", "-b:a", "128k", file.replace(/\.wav$/, ".m4a")]);
+      const m = W.analyze(fs.readFileSync(file)); report.push({ label, voice, seconds: +m.durationSec.toFixed(1), lufs: m.integratedLufs });
       console.log(`${voice}: ${m.durationSec.toFixed(1)} s`);
     } catch (e) { console.log(`${voice}: FAILED (${e.message})`); }
   }
   if (!report.length && voices.length) { console.error(`NO voice could be rendered for provider ${providerArg}`); process.exitCode = 1; }
-  fs.writeFileSync(path.join(outDir, `${providerArg}-index.json`), JSON.stringify({ provider: providerArg, rate, textFile, text: TEXT, voices: report }, null, 1));
+  const credits = providerArg === "cartesia" ? { model: process.env.PD_CARTESIA_MODEL || TTS.CARTESIA.model, apiVersion: TTS.CARTESIA.version, requests: TTS.usage.cartesia.requests, charactersBilled: TTS.usage.cartesia.characters, creditsConsumed: TTS.usage.cartesia.characters, note: "Cartesia bills 1 credit per character sent, including requests that failed after sending" } : undefined;
+  if (credits) console.log(`cartesia: ${credits.requests} request(s), ${credits.creditsConsumed} credits (characters sent)`);
+  fs.writeFileSync(path.join(outDir, `${providerArg}-index.json`), JSON.stringify({ provider: providerArg, rate, textFile, text: TEXT, characters: TEXT.length, voices: report, ...(credits ? { credits } : {}) }, null, 1));
 })();

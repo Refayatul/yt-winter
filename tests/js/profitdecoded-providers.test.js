@@ -168,3 +168,38 @@ test("Kokoro default runner reports the helper's real failure instead of a confu
   fs.writeFileSync(path.join(dir, "ok.wav"), W.writeWav(new Float32Array(24000).fill(0.1), 24000));
   assert.equal((await T.synthesize("hi", { provider: "kokoro" }, { env: env(writer) })).length, 24000);
 });
+
+test("Cartesia Sonic: pinned model and API version, key in a header only, raw 24 kHz PCM, credit cap, Kokoro fallback", async () => {
+  const T = PD("tts-provider"); const fs = require("fs"); const os = require("os"); const path = require("path");
+  const voice = "11111111-2222-3333-4444-555555555555";
+  const req = T.cartesiaRequest("Hello", { rate: "-3%", voice }, { PD_CARTESIA_API_KEY: "SECRETC" });
+  assert.equal(req.url, "https://api.cartesia.ai/tts/bytes");
+  assert.equal(req.init.headers.authorization, "Bearer SECRETC"); assert.equal(req.init.headers["cartesia-version"], "2026-08-14");
+  assert.ok(!req.url.includes("SECRETC") && !req.init.body.includes("SECRETC"));
+  const body = JSON.parse(req.init.body);
+  assert.equal(body.model_id, "sonic-3.6-2026-08-27"); assert.deepEqual(body.voice, { id: voice });
+  assert.deepEqual(body.output_format, { container: "raw", encoding: "pcm_s16le", sample_rate: 24000 });
+  assert.ok(Math.abs(body.generation_config.speed - 0.97) < 1e-9);
+  // an edge-tts voice name is never sent as a Cartesia voice id
+  assert.throws(() => T.cartesiaRequest("x", { voice: "en-US-AndrewMultilingualNeural" }, { PD_CARTESIA_API_KEY: "k" }), /voice id/);
+  // no key: free Kokoro when its files exist (never another paid provider), else the uncertified edge voice
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ct-")); const m = path.join(dir, "m.onnx"), v = path.join(dir, "v.bin"); fs.writeFileSync(m, "x"); fs.writeFileSync(v, "x");
+  const fb = T.resolve({ PD_TTS_PROVIDER: "cartesia", PD_KOKORO_MODEL: m, PD_KOKORO_VOICES: v });
+  assert.equal(fb.name, "kokoro"); assert.equal(fb.fallbackFrom, "cartesia");
+  assert.equal(T.resolve({ PD_TTS_PROVIDER: "cartesia" }).name, "edge-tts");
+  assert.equal(T.resolve({ PD_TTS_PROVIDER: "cartesia", PD_CARTESIA_API_KEY: "k" }).premium, true);
+  // credits: counted per character before sending; refused without a cap or past it; one request, no retry
+  const pcm = Buffer.alloc(4800); let calls = 0;
+  const fetch = async () => { calls += 1; return { ok: true, status: 200, arrayBuffer: async () => pcm.buffer.slice(pcm.byteOffset, pcm.byteOffset + pcm.length) }; };
+  const env = { PD_CARTESIA_API_KEY: "k", PD_CARTESIA_VOICE_ID: voice };
+  await assert.rejects(T.synthesize("Hello there.", { provider: "cartesia" }, { env, fetch }), /PD_CARTESIA_MAX_CHARS/);
+  const before = T.usage.cartesia.characters;
+  const s = await T.synthesize("Hello there.", { provider: "cartesia" }, { env: { ...env, PD_CARTESIA_MAX_CHARS: String(before + 20) }, fetch });
+  assert.equal(s.length, 2400); assert.equal(T.usage.cartesia.characters - before, 12);
+  await assert.rejects(T.synthesize("Hello there.", { provider: "cartesia" }, { env: { ...env, PD_CARTESIA_MAX_CHARS: String(before + 20) }, fetch }), /exceed/);
+  assert.equal(calls, 1);
+  const failing = async () => { calls += 1; return { ok: false, status: 402, text: async () => '{"error":"insufficient credits"}' }; };
+  await assert.rejects(T.synthesize("Hi.", { provider: "cartesia" }, { env: { ...env, PD_CARTESIA_MAX_CHARS: "100000" }, fetch: failing }), /cartesia TTS failed: HTTP 402: .*insufficient credits/);
+  assert.equal(calls, 2);
+  assert.equal(PD("narration").qa([{ text: "a", start: 0, end: 1 }], { provider: "cartesia sonic-3.6-2026-08-27 voice x" }).certified, true);
+});

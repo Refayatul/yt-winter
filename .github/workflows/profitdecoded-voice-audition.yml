@@ -3,6 +3,9 @@ name: ProfitDecoded voice audition
 # Renders the same three documentary sentences with free voices (Kokoro open-source voices and the
 # edge-tts fallback) and uploads them as an artifact, so a human can pick the narrator by ear.
 # No secrets, no YouTube.
+# The cartesia job (paid credits, PD_CARTESIA_API_KEY) runs ONLY on a manual dispatch with the cartesia input set:
+#   cartesia=list                         lists en-US voices (metadata only, no credits)
+#   cartesia=label=uuid,label=uuid,...    renders the fixed excerpt once per voice, capped by cartesia_max_chars
 on:
   pull_request:
     paths:
@@ -12,12 +15,22 @@ on:
       - '.github/workflows/profitdecoded-voice-audition.yml'
       - 'channels/profitdecoded/prototypes/**'
   workflow_dispatch:
+    inputs:
+      cartesia:
+        description: 'Cartesia: "list" (free voice list) or label=voice-uuid pairs, comma separated (uses credits). Empty = free voices only.'
+        required: false
+        default: ''
+      cartesia_max_chars:
+        description: 'Credit cap for this run (1 credit = 1 character sent)'
+        required: false
+        default: '2000'
 
 permissions:
   contents: read
 
 jobs:
   audition:
+    if: github.event_name != 'workflow_dispatch' || inputs.cartesia == ''
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -77,3 +90,41 @@ jobs:
           path: audition-out/
           if-no-files-found: warn
           retention-days: 14
+
+  cartesia:
+    if: github.event_name == 'workflow_dispatch' && inputs.cartesia != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    # One run at a time, never cancelled midway: a duplicate dispatch waits instead of paying twice.
+    concurrency:
+      group: profitdecoded-cartesia
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: System packages (ffmpeg for m4a)
+        run: bash scripts/ci-apt.sh ffmpeg
+      - run: npm install --no-audit --no-fund
+      - name: Cartesia voice list (metadata only, no credits)
+        if: inputs.cartesia == 'list'
+        env:
+          PD_CARTESIA_API_KEY: ${{ secrets.PD_CARTESIA_API_KEY }}
+        run: |
+          mkdir -p audition-out
+          node scripts/profitdecoded/cartesia-voices.js --language en-US --out audition-out/cartesia-voices-en-US.json
+      - name: Cartesia auditions (same fixed excerpt, one request per voice, no retries)
+        if: inputs.cartesia != 'list'
+        env:
+          PD_CARTESIA_API_KEY: ${{ secrets.PD_CARTESIA_API_KEY }}
+          PD_CARTESIA_MAX_CHARS: ${{ inputs.cartesia_max_chars }}
+          VOICES: ${{ inputs.cartesia }}
+        run: node scripts/profitdecoded/voice-audition.js audition-out --provider cartesia --rate -3% --text-file channels/profitdecoded/prototypes/gift-cards-first-minute/audition-excerpt.txt --voices "$VOICES"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: profitdecoded-cartesia-audition
+          path: audition-out/
+          if-no-files-found: warn
+          retention-days: 30
