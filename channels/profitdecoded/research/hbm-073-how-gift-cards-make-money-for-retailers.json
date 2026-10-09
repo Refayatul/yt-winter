@@ -166,6 +166,30 @@
      "sourceId": "s1",
      "passage": "Revenue deferred - card activations, card reloads and Stars earned 15,245.8 Revenue recognized - card and Stars redemptions and breakage (15,199.5)"
     }
+   ],
+   "disclose": [
+    {
+     "any": [
+      "loyalty",
+      "Stars"
+     ],
+     "why": "that the balance includes loyalty Stars, not only gift cards (rule x4)",
+     "whenFigures": [
+      "1,751.7",
+      "1,718.7",
+      "1.75",
+      "1.72"
+     ]
+    }
+   ],
+   "figureContext": [
+    {
+     "figure": "15,199.5",
+     "any": [
+      "breakage"
+     ],
+     "label": "card and Stars redemptions and breakage"
+    }
    ]
   },
   {
@@ -212,11 +236,20 @@
     "636.7",
     "2026"
    ],
-   "text": "Darden's deferred gift card revenue went from $628.8 million to $636.7 million in fiscal 2026, with $760.2 million of activations and $751.9 million of redemptions and breakage.",
+   "text": "Darden's deferred gift card revenue went from $628.8 million to $636.7 million in fiscal 2026, with $760.2 million of activations, $751.9 million of redemptions and breakage, and a $0.4 million reduction from the sale of Olive Garden Canada gift card balances.",
    "evidence": [
     {
      "sourceId": "s2",
      "passage": "Beginning balance $ 628.8 $ 620.6 Sale of Olive Garden Canada gift card balances (0.4) — Acquired deferred gift card revenue — 2.6 Activations 760.2 737.0 Redemptions and breakage (751.9) (731.4) Ending balance $ 636.7 $ 628.8"
+    }
+   ],
+   "figureContext": [
+    {
+     "figure": "751.9",
+     "any": [
+      "breakage"
+     ],
+     "label": "redemptions and breakage"
     }
    ]
   },
@@ -305,6 +338,29 @@
      "sourceId": "s6",
      "passage": "The average amount in unused gift cards, gift vouchers or store credit is $244 per person."
     }
+   ],
+   "scope": {
+    "population": "US adults (survey respondents), not households",
+    "avoid": [
+     "households",
+     "families"
+    ]
+   },
+   "disclose": [
+    {
+     "any": [
+      "YouGov",
+      "online"
+     ],
+     "why": "the survey method (rule x2)"
+    },
+    {
+     "any": [
+      "estimate",
+      "extrapolat"
+     ],
+     "why": "that the national total is a survey estimate (rule x2)"
+    }
    ]
   },
   {
@@ -326,7 +382,14 @@
      "sourceId": "s5",
      "passage": "Over one-third of U.S. adults (34%) have lost money due to a gift card misstep such as letting a gift card expire (20%), losing a gift card (17%), or having a store go out of business before they used their gift card (12%)."
     }
-   ]
+   ],
+   "scope": {
+    "population": "US adults (survey respondents), not households",
+    "avoid": [
+     "households",
+     "families"
+    ]
+   }
   },
   {
    "id": "c10",
@@ -360,7 +423,22 @@
     "2024",
     "2023"
    ],
-   "text": "Our arithmetic: adding Starbucks' two breakage lines gives $222.4 million in fiscal 2025, $207.6 million in fiscal 2024 and $215.0 million in fiscal 2023."
+   "text": "Our arithmetic: adding Starbucks' two breakage lines gives $222.4 million in fiscal 2025, $207.6 million in fiscal 2024 and $215.0 million in fiscal 2023.",
+   "kind": "arithmetic",
+   "calc": [
+    {
+     "expr": "200.4 + 22.0",
+     "equals": 222.4
+    },
+    {
+     "expr": "187.6 + 20.0",
+     "equals": 207.6
+    },
+    {
+     "expr": "196.1 + 18.9",
+     "equals": 215.0
+    }
+   ]
   },
   {
    "id": "i2",
@@ -373,7 +451,26 @@
     "760.2",
     "751.9"
    ],
-   "text": "Our arithmetic: Darden took in $760.2 million on new card loads and released $751.9 million through redemptions and breakage, so the unspent pool still grew by $7.9 million over the year."
+   "text": "Our arithmetic: Darden's gift card balance rose $7.9 million in fiscal 2026, from $628.8 million to $636.7 million. Activations ($760.2 million) exceeded redemptions and breakage ($751.9 million) by $8.3 million; the filing also deducts $0.4 million for the sale of Olive Garden Canada gift card balances.",
+   "kind": "arithmetic",
+   "calc": [
+    {
+     "expr": "636.7 - 628.8",
+     "equals": 7.9
+    },
+    {
+     "expr": "760.2 - 751.9",
+     "equals": 8.3
+    },
+    {
+     "expr": "8.3 - 7.9",
+     "equals": 0.4
+    },
+    {
+     "expr": "628.8 - 0.4 + 760.2 - 751.9",
+     "equals": 636.7
+    }
+   ]
   },
   {
    "id": "i3",
@@ -386,7 +483,20 @@
     "15,245.8",
     "15,199.5"
    ],
-   "text": "Our rounding: $15,245.8 million deferred and $15,199.5 million recognized are each about $15.2 billion: almost everything loaded in the year came back out as redemptions and breakage."
+   "text": "Our rounding: $15,245.8 million deferred and $15,199.5 million recognized are each about $15.2 billion: almost everything loaded in the year came back out as redemptions and breakage.",
+   "kind": "rounding",
+   "calc": [
+    {
+     "expr": "15245.8 / 1000",
+     "equals": 15.2,
+     "tolerance": 0.05
+    },
+    {
+     "expr": "15199.5 / 1000",
+     "equals": 15.2,
+     "tolerance": 0.05
+    }
+   ]
   },
   {
    "id": "i4",
@@ -400,7 +510,110 @@
     "1,751.7",
     "1,718.7"
    ],
-   "text": "Our rounding: $1,751.7 million is about $1.75 billion, up from about $1.72 billion ($1,718.7 million) a year earlier."
+   "text": "Our rounding: $1,751.7 million is about $1.75 billion, up from about $1.72 billion ($1,718.7 million) a year earlier.",
+   "kind": "rounding",
+   "calc": [
+    {
+     "expr": "1751.7 / 1000",
+     "equals": 1.75
+    },
+    {
+     "expr": "1718.7 / 1000",
+     "equals": 1.72
+    }
+   ],
+   "disclose": [
+    {
+     "any": [
+      "loyalty",
+      "Stars"
+     ],
+     "why": "that the balance includes loyalty Stars, not only gift cards (rule x4)",
+     "whenFigures": [
+      "1,751.7",
+      "1,718.7",
+      "1.75",
+      "1.72"
+     ]
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "starbucks",
+   "name": "Starbucks",
+   "kind": "company",
+   "aliases": [
+    "Starbucks Corporation"
+   ],
+   "sourceIds": [
+    "s1"
+   ]
+  },
+  {
+   "id": "darden",
+   "name": "Darden",
+   "kind": "company",
+   "aliases": [
+    "Darden Restaurants",
+    "Olive Garden"
+   ],
+   "sourceIds": [
+    "s2"
+   ]
+  },
+  {
+   "id": "bankrate",
+   "name": "Bankrate",
+   "kind": "survey publisher",
+   "aliases": [
+    "YouGov"
+   ],
+   "sourceIds": [
+    "s5",
+    "s6"
+   ]
+  },
+  {
+   "id": "federal",
+   "name": "federal rules",
+   "kind": "regulator",
+   "aliases": [
+    "federal",
+    "CFPB",
+    "Consumer Financial Protection Bureau",
+    "Regulation E"
+   ],
+   "sourceIds": [
+    "s3",
+    "s4"
+   ]
+  }
+ ],
+ "scriptRules": [
+  {
+   "pattern": "\\bgift cards (never|don't|do not|cannot|can't) expire\\b",
+   "reason": "x1: some gift cards can expire (federal rules allow it after at least five years); only Starbucks' and Darden's cards are documented as non-expiring"
+  },
+  {
+   "pattern": "\\b(know|knows|knew) (exactly )?(how much|which|what share|the share)\\b",
+   "reason": "x3: breakage is an estimate; say 'expects' or 'estimates', never 'knows'"
+  }
+ ],
+ "revisedAt": "2026-10-09",
+ "corrections": [
+  {
+   "date": "2026-10-09",
+   "ids": [
+    "i2",
+    "c5"
+   ],
+   "before": {
+    "c5": "Darden's deferred gift card revenue went from $628.8 million to $636.7 million in fiscal 2026, with $760.2 million of activations and $751.9 million of redemptions and breakage.",
+    "i2": "Our arithmetic: Darden took in $760.2 million on new card loads and released $751.9 million through redemptions and breakage, so the unspent pool still grew by $7.9 million over the year."
+   },
+   "why": "i2 said Darden 'took in $760.2 million ... released $751.9 million ..., so the unspent pool still grew by $7.9 million'. 760.2 - 751.9 = 8.3, not 7.9. The balance did grow by $7.9 million ($628.8M to $636.7M) because the filing's rollforward also deducts $0.4 million for the sale of Olive Garden Canada gift card balances (already in c5's evidence passage, now stated in c5's text). i2 now states both figures, and every inference carries a calc that the research gate verifies."
   }
  ]
 }

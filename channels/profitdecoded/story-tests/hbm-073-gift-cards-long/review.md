@@ -1,6 +1,6 @@
 # Story review: How Gift Cards Make Money for Retailers (long)
 
-Working title: **Billions Sit on Unused Gift Cards. Who Keeps the Money?** · generated 2026-10-09T09:34:54.771Z · dry run, nothing uploaded.
+Working title: **Billions Sit on Unused Gift Cards. Who Keeps the Money?** · generated 2026-10-09T13:50:59.507Z · dry run, nothing uploaded.
 
 Every score below is a heuristic reading of the text (ESTIMATED). None of them measures or predicts audience retention.
 
@@ -19,7 +19,7 @@ Every score below is a heuristic reading of the text (ESTIMATED). None of them m
 | 3 | A debt, not a sale | mechanism | c3, i3, i4 | — | — |
 | 4 | Breakage | mechanism | c2, c1, i1 | q2 | — |
 | 5 | A forecast twelve years long | turn | c4, c6, c5, i2 | — | q2 |
-| 6 | Why cards don't just expire | complication | c7, c9 | — | — |
+| 6 | Why cards don't just expire | complication | c7 | — | — |
 | 7 | A third claimant | consequence | c2, c10 | — | — |
 | 8 | Two numbers that don't belong together | caveat | c8, i1, c4 | — | — |
 | 9 | Who keeps it | payoff | c2, c4, c7 | — | q1 |
@@ -29,21 +29,28 @@ Plan checks: all passed.
 ## Hook evaluation
 | Hook | Mechanism | Curiosity | Clarity | Originality | Tension | Visual | Factual | Total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it. | contradiction | 76 | 90 | 80 | 86 | 95 | pass | 85 |
+| In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served. | contradiction | 76 | 90 | 80 | 98 | 95 | pass | 87 |
 | Darden's gift cards have no expiry date. Its accountants still plan, 12 years ahead, for the money that won't come back. | contradiction | 76 | 90 | 81 | 86 | 95 | pass | 85 |
 | 43% of American adults are holding an unused gift card, voucher or store credit, according to one survey. Here is where that money goes. | number | 70 | 90 | 57 | 61 | 95 | pass | 75 |
 | Look at the gift card in your kitchen drawer. The company that sold it has already estimated how likely you are to spend it. | visual mystery | 54 | 90 | 80 | 61 | 80 | pass | 73 |
 | A gift card is money the store owes you. Some of that debt slowly turns into the store's sales. | hidden incentive | 48 | 90 | 77 | 61 | 80 | pass | 71 |
 | When a gift card balance goes unspent, who ends up with the money? | question | 46 | 90 | 57 | 61 | 70 | pass | 66 |
 
-Selected opening: “In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.”
+Selected opening: “In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served.”
 
 ## Draft assessment
 987 words (~6.6 min at 150 wpm) · AI-pattern 0 · spoken naturalness 96 · retention reading 67 · first 30 s 68
 
 Blocking issues:
 - script is 987 words: too short for a long (min 1040)
-- the first beat must be the winning hook (same wording): hook="In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 mill"
+- beat b1: $222.4 million is our calculation, not a reported figure: say so ("by our math") (sentence: "In its latest annual report, Starbucks counted $222.4 million of gift card money as sales.")
+- beat b33: $222.4 million is our calculation, not a reported figure: say so ("by our math") (sentence: "Starbucks' $222.4 million is what one company recorded under accounting rules.")
+- beat b33: $222.4 million is presented as reported by Starbucks, but it is our calculation (sentence: "Starbucks' $222.4 million is what one company recorded under accounting rules.")
+- beat b33: "households" misstates the scope of c8, which is about US adults (survey respondents), not households
+- repeated figure: $222.4 million is stated in sections open, breakage, limits: state it once and refer back
+- repeated figure: $27 billion is stated in sections drawer, limits: state it once and refer back
+- repeated figure: 20% is stated in sections drawer, rules: state it once and refer back
+- the first beat must be the winning hook (same wording): hook="In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million "
 - retention: weak-opening: first-30-seconds reading 68 (0-5s: concrete names/numbers; 15-30s: no explicit mechanism/value statement yet). Fix: open on the tension, validate the title by second 15, deliver the first real fact by second 30
 - retention: unpaid-question: "And if the store isn't simply keeping it, who is?" (open) is never answered. Fix: answer it later with evidence, or remove the question
 - retention: unpaid-question: "So who keeps the money from an unspent gift card?" (payoff) is never answered. Fix: answer it later with evidence, or remove the question
@@ -86,7 +93,7 @@ Keep: The survey-versus-filing caveat (limits section) and the disclosure that t
 Automated readings disputed: The Retention Critic flags the state section as a dead stretch. It does introduce a new idea (the government's claim) but no new evidence, so the reading is fair in substance; fixed by adding Darden's disclosure rather than cutting the section.
 
 ## Final assessment
-1223 words (~8.2 min at 150 wpm) · AI-pattern 0 · spoken naturalness 100 · retention reading 100 · first 30 s 81
+1236 words (~8.2 min at 150 wpm) · AI-pattern 1 · spoken naturalness 100 · retention reading 100 · first 30 s 81
 
 Blocking issues: none.
 
@@ -106,19 +113,20 @@ Changes from draft to final:
 - b36: factual correction: breakage is a forecast, not a transfer; the whole balance stays spendable
 - b4: removed the repeat of b3; the open question now stands on its own
 - b16 moved before b15b so 'that share' sits next to the sentence it refers to
+- Foundation pass (2026-10-09): the hook said the annual report 'counts $222.4 million', but that total is our sum of two lines (i1): now voiced as our math. Repeated figures and scope fixed: b19, b30, b33.
 
 ## Section-by-section editorial report (final)
 | Section | Purpose | Starts (min) | Words | Retention | Naturalness | AI-pattern | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| The money nobody spent | hook | 0 | 87 | 100 | 100 | 6 | 100 | — |
+| The money nobody spent | hook | 0 | 87 | 100 | 100 | 2 | 100 | — |
 | The drawer | evidence | 0.6 | 159 | 100 | 100 | 0 | 100 | — |
 | A debt, not a sale | mechanism | 1.6 | 160 | 100 | 100 | 4 | 100 | — |
-| Breakage | mechanism | 2.7 | 202 | 100 | 100 | 7 | 100 | — |
+| Breakage | mechanism | 2.7 | 208 | 100 | 100 | 10 | 100 | — |
 | A forecast twelve years long | turn | 4.1 | 208 | 100 | 100 | 0 | 100 | — |
-| Why cards don't just expire | complication | 5.4 | 141 | 100 | 100 | 14 | 100 | — |
+| Why cards don't just expire | complication | 5.5 | 142 | 100 | 100 | 14 | 100 | — |
 | A third claimant | consequence | 6.4 | 91 | 100 | 100 | 14 | 100 | — |
-| Two numbers that don't belong together | caveat | 7 | 69 | 100 | 100 | 0 | 100 | — |
-| Who keeps it | payoff | 7.4 | 106 | 100 | 100 | 10 | 100 | — |
+| Two numbers that don't belong together | caveat | 7 | 75 | 100 | 100 | 0 | 100 | — |
+| Who keeps it | payoff | 7.5 | 106 | 100 | 100 | 10 | 100 | — |
 
 Open questions: “Who else ends up with a piece of the money, and what can you still do about yours?” (open → ledger); “If the cards don't expire, how does a company decide that any of the money is gone?” (forecast → forecast); “So who keeps the money from an unspent gift card?” (payoff → payoff)
 
@@ -135,7 +143,7 @@ Open questions: “Who else ends up with a piece of the money, and what can you 
 | b20 | c1: Starbucks recognized breakage revenue of $200.4 million in company-operated store revenues and $22.0 million in licensed store revenues in fiscal 2025, after $187.6 million and $20.0 million in fiscal 2024 and $196.1 million and $18.9 million in fiscal 2023. | supported | Starbucks Corporation (SEC EDGAR), Form 10-K for the fiscal year ended September 28, 2025 (https://www.sec.gov/Archives/edgar/data/829224/000082922425000114/sbux-20250928.htm) | we recognized breakage revenue of $200.4 million, $187.6 million, and $196.1 million in company-operated store revenues, respectively, and $22.0 million, $20.0 million, and $18.9 million in licensed store revenues, respectively |
 | b21, b22, b23, b23b, b26, b34, b37 | c4: Darden recognizes gift card sales when cards are redeemed; its gift cards have no expiration dates or dormancy fees, and it recognizes breakage within sales in proportion to actual redemptions over the expected redemption period, generally 12 years, estimating both the amount of breakage and its timing, which may differ from what actually happens; it updates its redemption-period and breakage-rate estimates periodically. | supported | Darden Restaurants, Inc. (SEC EDGAR), Form 10-K for the fiscal year ended May 31, 2026 (https://www.sec.gov/Archives/edgar/data/940944/000094094426000025/dri-20260531.htm) | Although there are no expiration dates or dormancy fees for our gift cards, based on our analysis of our historical gift card redemption patterns, we can reasonably estimate the amount of gift cards for which redemption is remote, which is referred to as “breakage.” … recognized over the expected period of redemption as the remaining gift card values are redeemed, generally over a period of 12 years |
 | b24 | c6: Darden says a 50 basis point change in its breakage-rate estimates would have changed its breakage income by about $3.6 million for fiscal 2026. | supported | Darden Restaurants, Inc. (SEC EDGAR), Form 10-K for the fiscal year ended May 31, 2026 (https://www.sec.gov/Archives/edgar/data/940944/000094094426000025/dri-20260531.htm) | Changing our breakage-rate estimates by 50 basis points would have resulted in an adjustment in our breakage income of approximately $3.6 million for fiscal 2026. |
-| b25, b25b | i2: Our arithmetic: Darden took in $760.2 million on new card loads and released $751.9 million through redemptions and breakage, so the unspent pool still grew by $7.9 million over the year. | our arithmetic on c5 | Darden Restaurants, Inc. (SEC EDGAR), Form 10-K for the fiscal year ended May 31, 2026 (https://www.sec.gov/Archives/edgar/data/940944/000094094426000025/dri-20260531.htm) | Beginning balance $ 628.8 $ 620.6 Sale of Olive Garden Canada gift card balances (0.4) — Acquired deferred gift card revenue — 2.6 Activations 760.2 737.0 Redemptions and breakage (751.9) (731.4) Ending balance $ 636.7 $ 628.8 |
+| b25, b25b | i2: Our arithmetic: Darden's deferred gift card balance rose from $628.8 million to $636.7 million in fiscal 2026, an increase of $7.9 million. Activations of $760.2 million exceeded redemptions and breakage of $751.9 million by $8.3 million; the other $0.4 million is the sale of Olive Garden Canada gift card balances, which the filing deducts from the balance ($628.8M - $0.4M + $760.2M - $751.9M = $636.7M). | our arithmetic on c5 | Darden Restaurants, Inc. (SEC EDGAR), Form 10-K for the fiscal year ended May 31, 2026 (https://www.sec.gov/Archives/edgar/data/940944/000094094426000025/dri-20260531.htm) | Beginning balance $ 628.8 $ 620.6 Sale of Olive Garden Canada gift card balances (0.4) — Acquired deferred gift card revenue — 2.6 Activations 760.2 737.0 Redemptions and breakage (751.9) (731.4) Ending balance $ 636.7 $ 628.8 |
 | b27, b28, b29, b29b | c7: Under federal rules, a store gift card may carry an expiration date only if its funds stay valid for at least five years after issue or the last load, and a dormancy, inactivity or service fee is allowed only after a year with no activity, no more than one per calendar month. | supported | Consumer Financial Protection Bureau, 12 CFR 1005.20 Requirements for gift cards and gift certificates (Regulation E) (https://www.consumerfinance.gov/rules-policy/regulations/1005/20/); Consumer Financial Protection Bureau, Giving or receiving gift cards? Know the terms and avoid surprises (archived blog) (https://www.consumerfinance.gov/about-us/blog/giving-or-receiving-gift-cards-know-the-terms-and-avoid-surprises/) | Five years after the date the gift certificate was initially issued … There has been no activity with respect to the certificate or card, in the one-year period |
 | b32b | c10: Darden lists unclaimed property laws among the accounting and legal rules relevant to its business that are highly complex and involve many subjective assumptions, estimates and judgments. | supported | Darden Restaurants, Inc. (SEC EDGAR), Form 10-K for the fiscal year ended May 31, 2026 (https://www.sec.gov/Archives/edgar/data/940944/000094094426000025/dri-20260531.htm) | unclaimed property laws and litigation, and stock-based compensation, are highly complex and involve many subjective assumptions, estimates, and judgments by us |
 
@@ -146,7 +154,7 @@ Numbers in the final script that are not in the dossier: none.
 
 **[The money nobody spent]**
 
-In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it. _(b1, i1)_
+In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served. _(b1, i1)_
 
 That money came from unused gift card balances. _(b2, c2)_
 
@@ -197,7 +205,7 @@ Its filing puts the whole idea in one dry line. A portion of stored value cards 
 
 Every time a regular customer taps a card at the register, a small predicted share of the unspent money moves into sales along with it. _(b18, c2)_
 
-Add up the two breakage lines in its filing and you get $222.4 million for fiscal 2025. That addition is ours. The year before, it was $207.6 million. The year before that, $215.0 million. _(b19, i1)_
+Add up the two breakage lines in its filing and you get the number from the start of this video, for fiscal 2025. That addition is ours. The year before, it was $207.6 million. The year before that, $215.0 million. _(b19, i1)_
 
 So money that customers never spend doesn't vanish. It shows up, a little at a time, as revenue the company never had to brew anything for. _(b20, c1)_
 
@@ -231,7 +239,7 @@ Fees for not using the card are allowed only after a full year with no activity,
 
 So the law doesn't let a store run out the clock on you quickly. What's left is the slow version. Wait, watch how people use their cards, and estimate. _(b29b, c7)_
 
-That doesn't mean money never disappears. 20% of adults in the Bankrate survey said they'd let a card expire. That survey covered every kind of card and voucher, and some cards can still expire once the five-year minimum has passed. _(b30, c9)_
+That doesn't mean money never disappears. One in five adults in the Bankrate survey said they'd let a card expire. That survey covered every kind of card and voucher, and some cards can still expire once the five-year minimum has passed. _(b30, c9)_
 
 
 **[A third claimant]**
@@ -245,7 +253,7 @@ Darden is just as careful. It lists unclaimed property laws among the rules that
 
 **[Two numbers that don't belong together]**
 
-It's tempting to put these numbers side by side. Don't. Bankrate's $27 billion is a survey estimate of what households say they hold, across every brand. Starbucks' $222.4 million is what one company recorded under accounting rules. _(b33, c8)_
+It's tempting to put these numbers side by side. Don't. Bankrate's total is a survey estimate of what adults say they hold, across every brand. Starbucks' breakage, which we added up from its two lines, is what one company recorded under accounting rules. _(b33, c8)_
 
 Breakage itself is an estimate too, and the companies say so. Darden updates its breakage rate from time to time. If people spend old cards more than history suggests, the numbers change. _(b34, c4)_
 

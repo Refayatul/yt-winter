@@ -1,6 +1,6 @@
 # Story review: How Gift Cards Make Money for Retailers (short)
 
-Working title: **Who Keeps the Money on Unused Gift Cards?** · generated 2026-10-09T09:35:02.303Z · dry run, nothing uploaded.
+Working title: **Who Keeps the Money on Unused Gift Cards?** · generated 2026-10-09T13:50:59.681Z · dry run, nothing uploaded.
 
 Every score below is a heuristic reading of the text (ESTIMATED). None of them measures or predicts audience retention.
 
@@ -9,7 +9,7 @@ Every score below is a heuristic reading of the text (ESTIMATED). None of them m
 - **Central question:** Who keeps the money on an unspent gift card?
 - **Conflict:** wants The store wants revenue it can count on; the holder wants their balance.; obstacle Cards that never expire can't simply be taken back.; stakes Starbucks booked $222.4 million this way in one year.
 - **Misconception:** The store takes the money when a card expires.
-- **Original angle:** The company's own filing explains the forecast in one line; most explainers stop at 'stores profit from forgotten cards'.
+- **Original angle:** The company's own filing explains the forecast in one line; many explainers stop at 'stores profit from forgotten cards'.
 - **Payoff:** The store keeps the predicted share, a little at a time; part can go to the government; the rest is still yours to spend.
 
 | # | Section | Purpose | Claims | Raises | Resolves |
@@ -25,18 +25,19 @@ Plan checks: all passed.
 ## Hook evaluation
 | Hook | Mechanism | Curiosity | Clarity | Originality | Tension | Visual | Factual | Total |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it. | contradiction | 76 | 90 | 75 | 86 | 95 | pass | 84 |
-| Starbucks booked $222.4 million in its latest fiscal year from card money it doesn't expect to see redeemed. | number | 58 | 90 | 75 | 65 | 85 | pass | 74 |
+| In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served. | contradiction | 76 | 90 | 72 | 98 | 95 | pass | 86 |
+| Starbucks booked $222.4 million in its latest fiscal year from card money it doesn't expect to see redeemed. | number | 58 | 90 | 72 | 65 | 85 | pass | 74 |
 | Look at the gift card in your drawer. The company that sold it has already estimated how likely you are to spend it. | visual mystery | 54 | 90 | 79 | 61 | 80 | pass | 73 |
 | A gift card is money the store owes you. Some of that debt slowly turns into the store's sales. | hidden incentive | 48 | 90 | 76 | 61 | 80 | pass | 70 |
 | Who keeps the money on an unspent gift card? | question | 46 | 86 | 56 | 75 | 70 | pass | 67 |
 
-Selected opening: “In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.”
+Selected opening: “In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served.”
 
 ## Draft assessment
 99 words (~0.7 min at 150 wpm) · AI-pattern 0 · spoken naturalness 100 · retention reading 90 · first 30 s 77
 
 Blocking issues:
+- beat b1: $222.4 million is our calculation, not a reported figure: say so ("by our math") (sentence: "Its latest annual report still counts $222.4 million of card money as sales, and no drink ")
 - retention: unpaid-question: "So who keeps the money?" (payoff) is never answered. Fix: answer it later with evidence, or remove the question
 
 ## Retention critique of the draft (independent Retention Critic)
@@ -64,7 +65,7 @@ Verdict: **revise**
 Keep: The contradiction hook with the filing number; The unclaimed property caveat, stated as the filing states it
 
 ## Final assessment
-111 words (~0.7 min at 150 wpm) · AI-pattern 1 · spoken naturalness 100 · retention reading 100 · first 30 s 77
+111 words (~0.7 min at 150 wpm) · AI-pattern 0 · spoken naturalness 100 · retention reading 100 · first 30 s 77
 
 Blocking issues: none.
 
@@ -75,11 +76,12 @@ Changes from draft to final:
 - b5: the payoff answers the question in its own words and ends on the viewer's move
 - overall: trimmed from 118 to about 107 words for a 35-45 second read
 - b5: factual correction: breakage is a forecast, not a transfer; the whole balance stays spendable
+- Foundation pass (2026-10-09): the hook said the annual report 'counts $222.4 million', but that total is our sum of two lines (i1): now voiced as our math. 
 
 ## Section-by-section editorial report (final)
 | Section | Purpose | Starts (min) | Words | Retention | Naturalness | AI-pattern | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Hook | hook | 0 | 27 | 100 | 91 | 0 | 100 | — |
+| Hook | hook | 0 | 27 | 100 | 100 | 0 | 100 | — |
 | The forecast | mechanism | 0.2 | 22 | 100 | 91 | 0 | 100 | — |
 | In step with others | turn | 0.3 | 18 | 100 | 100 | 0 | 100 | — |
 | The state | caveat | 0.4 | 11 | 100 | 100 | 0 | 100 | — |
@@ -100,7 +102,7 @@ Numbers in the final script that are not in the dossier: none.
 
 **[Hook]**
 
-In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it. _(b1, i1)_
+In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served. _(b1, i1)_
 
 
 **[The forecast]**

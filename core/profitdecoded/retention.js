@@ -8,6 +8,8 @@
 // human or a rewrite; they do not measure, predict or prove real audience retention.
 
 const T = require("./text");
+// crude English stem for matching a question's key words with its answer (keeps/keep, answered/answer)
+const stem = (w) => w.replace(/(ies)$/, "y").replace(/(ing|ed|es|s)$/, "");
 const S = require("./signals");
 const AI = require("./ai-patterns");
 const Hooks = require("./hooks");
@@ -63,9 +65,19 @@ function critique(beats, ctx = {}) {
     // 4. Questions opened here, and whether they are answered later.
     sents.forEach((s) => {
       const isQ = s.trim().endsWith("?");
-      // A later declarative sentence that reuses the question's key words counts as an answer.
-      if (!isQ) for (const oq of openQuestions) if (!oq.answered && oq.words.length && oq.words.filter((w) => T.contentWords(s).includes(w)).length >= Math.min(2, oq.words.length)) oq.answered = sec.id;
-      if (isQ) { questionPositions.push(wordPos); openQuestions.push({ q: s, words: T.contentWords(s), section: sec.id, at: wordPos, answered: false }); }
+      // A later declarative sentence that reuses the question's key words counts as an answer. Words are compared by
+      // stem ("keeps" = "keep"), and the sentence right after a question also answers it when it shares a key word and
+      // delivers a figure ("What is this worth? ... breakage worth $200.4 million").
+      if (!isQ) {
+        const stems = T.contentWords(s).map(stem); const hasFigure = /\d/.test(s);
+        for (const oq of openQuestions) {
+          if (oq.answered || !oq.words.length) continue;
+          const shared = oq.words.filter((w) => stems.includes(w)).length;
+          if (shared >= Math.min(2, oq.words.length) || (oq.next && shared >= 1 && hasFigure)) oq.answered = sec.id;
+        }
+      }
+      for (const oq of openQuestions) oq.next = false;
+      if (isQ) { questionPositions.push(wordPos); openQuestions.push({ q: s, words: T.contentWords(s).map(stem), section: sec.id, at: wordPos, answered: false, next: true }); }
       wordPos += T.words(s).length;
     });
     // 5. Filler: sentences with no content beyond stock words.

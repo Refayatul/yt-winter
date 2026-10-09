@@ -49,7 +49,7 @@ The dossier also has its own error, which every evaluator missed, including the 
 
 Files are in `channels/profitdecoded/story-tests/hbm-073-gift-cards-long-claude/`:
 - `script.md`: narration, claim per line, visual per line, alternative hooks;
-- `story.json`: plan, 51 beats, 51 visuals, hook candidates.
+- `story.json`: plan, 51 beats, 51 visuals, hook candidates (the benchmark version, at commit 5950a10; later superseded by `plan.json` + `latest.json` in the foundation pass).
 
 How it was written:
 - **Author:** Claude Opus 5.5, in this Claude Code session. No Anthropic API call was made.
