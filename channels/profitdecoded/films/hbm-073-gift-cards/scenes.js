@@ -385,10 +385,11 @@ window.SCENES = function (PD) {
 
   shot("answer", B("s9-2").start - lead, { in: "fade", inDur: 0.4, visual: "Three panels revealed beat by beat: on paper the holder; in practice the issuer; where laws apply, the government", asset: "original typography (summary of c2, c4, c10)" }, (lt, t) => {
     const k = (B("s9-2").start < t ? 1 / 3 : 0) * E.out(p(t, B("s9-2").start, B("s9-2").start + 0.6)) + (1 / 3) * E.out(p(t, B("s9-3").start, B("s9-3").start + 0.6)) + (1 / 3) * E.out(p(t, B("s9-4").start, B("s9-4").start + 0.6));
-    return dark(cam(p(lt, 0, 26), 1.0, 1.03, PD.compare({ x: 140, y: 230, w: 1640, h: 600, k: Math.max(0.001, k), columns: [
+    const keys = [{ t: B("s9-2").start, x: 960, y: 540, z: 1.0 }, { t: B("s9-2").start + 1.4, x: 400, y: 560, z: 1.3 }, { t: B("s9-3").start + 0.4, x: 960, y: 560, z: 1.3 }, { t: B("s9-4").start + 0.4, x: 1520, y: 560, z: 1.3 }, { t: B("s9-4").end + 0.6, x: 960, y: 540, z: 1.0 }];
+    return dark(camKeys(t, keys, PD.compare({ x: 140, y: 230, w: 1640, h: 600, k: Math.max(0.001, k), columns: [
       { kicker: "ON PAPER", title: "You", body: ["No expiration date,", "no fees: the balance", "waits for you."] },
       { kicker: "IN PRACTICE", title: "The company", body: ["Forecasts what never", "comes back and books", "it as others spend."], accent: true },
-      { kicker: "WHERE LAWS APPLY", title: "Government", body: ["Unclaimed-property", "laws may take part.", "The filings don't say", "how much."] }] }), 960, 540) + head("Who keeps the money?", ent(lt, 0), 150, 56) + PD.source(SRC.both, ent(lt, 0.4))); });
+      { kicker: "WHERE LAWS APPLY", title: "Government", body: ["Unclaimed-property", "laws may take part.", "The filings don't say", "how much."] }] })) + head("Who keeps the money?", ent(lt, 0) * (1 - E.inOut(p(t, B("s9-2").start + 0.6, B("s9-2").start + 1.4)) + E.inOut(p(t, B("s9-4").end, B("s9-4").end + 0.6))), 150, 56) + PD.source(SRC.both, ent(lt, 0.4))); });
 
   shot("unknowable", B("s9-5").start - lead, { in: "fade", inDur: 0.45, visual: "The card wall again: some cards fade to outlines ('how many of us never come back'), unknowable in advance", asset: "original motion graphic (illustrative, not to scale)" }, (lt, t) => {
     const fade = E.inOut(p(t, BW("s9-5", "never come back") - 1.0, BW("s9-5", "never come back") + 0.6));

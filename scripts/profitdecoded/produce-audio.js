@@ -148,7 +148,7 @@ function envelope(x, win = Math.round(0.05 * RATE)) { const e = new Float32Array
   const long = bundle.score === "long";
   const music = musicBed(total, r, prog); const { e, win } = envelope(voiceTrack);
   if (long) { const pl = pulseLayer(total, prog); for (let i = 0; i < music.length; i += 1) music[i] = 0.8 * music[i] + 0.32 * pl[i]; }
-  let duck = 1; const gainMusic = 10 ** ((long ? -19 : -24) / 20); const under = long ? 0.36 : 0.28;
+  let duck = 1; const gainMusic = 10 ** ((long ? -11 : -24) / 20); const under = long ? 0.36 : 0.28;
   for (let i = 0; i < music.length; i += 1) {
     const speaking = e[Math.min(e.length - 1, Math.floor(i / win))] > 0.012; const target = speaking ? under : 1;
     duck += (target - duck) * (target < duck ? 1 / (0.08 * RATE) : 1 / (0.45 * RATE));
