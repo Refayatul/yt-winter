@@ -141,10 +141,12 @@ test("story plan checks: claim ids, every question resolved, a turn, a caveat, p
   const close = ranked.find((h, i) => i > 0 && h.factual.pass && ranked[0].total - h.total <= 10);
   const ok = W.evaluatePlan({ ...plan, selectedHook: close.text, selectionReason: "more familiar brand" }, d);
   assert.deepEqual(ok.issues, []); assert.equal(ok.selected.text, close.text); assert.ok(ok.override && ok.override.reason);
-  assert.match(W.evaluatePlan({ ...plan, selectedHook: close.text }, d).issues.join(), /selectionReason/);
+  // an invalid override never fails the plan: it is ignored with a warning and the best factual hook opens
+  const noReason = W.evaluatePlan({ ...plan, selectedHook: close.text }, d);
+  assert.deepEqual(noReason.issues, []); assert.match(noReason.warnings.join(), /selectionReason/); assert.equal(noReason.selected.text, ranked[0].text);
   const far = ranked.find((h) => ranked[0].total - h.total > 10);
-  if (far) assert.match(W.evaluatePlan({ ...plan, selectedHook: far.text, selectionReason: "x" }, d).issues.join(), /more than 10 below/);
-  assert.match(W.evaluatePlan({ ...plan, selectedHook: "not a candidate", selectionReason: "x" }, d).issues.join(), /not one of the hook candidates/);
+  if (far) { const f = W.evaluatePlan({ ...plan, selectedHook: far.text, selectionReason: "x" }, d); assert.match(f.warnings.join(), /more than 10 below/); assert.equal(f.selected.text, ranked[0].text); }
+  assert.match(W.evaluatePlan({ ...plan, selectedHook: "not a candidate", selectionReason: "x" }, d).warnings.join(), /not one of the hook candidates/);
 });
 
 // ---------- staged develop() ----------

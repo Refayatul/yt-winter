@@ -167,6 +167,8 @@ test("workflow: schedule and its gate unchanged, Gemini secret checked without p
 test("a failed Groq plan is repaired with one compact, fresh request that fits the per-minute limit", async () => {
   const L = A("llm"); const good = readJson(PKG + "plan.json");
   const broken = { ...good, sections: good.sections.filter((x) => x.purpose !== "caveat"), selectedHook: "Starbucks booked $222 million in breakage revenue last year alone.", selectionReason: "x", hookCandidates: [...good.hookCandidates, { text: "Starbucks booked $222 million in breakage revenue last year alone.", mechanism: "number" }] };
+  const W = A("script-agent"); const ev = W.evaluatePlan(broken, dossier(), "long");
+  assert.match(ev.issues.join(), /caveat/); assert.match(ev.warnings.join(), /factual gate.*222/); assert.ok(ev.selected.factual.pass, "the unsupported hook can never open the film");
   const gq = groqMock([broken, good]); const gm = geminiMock([critiqueOk({ ...CRIT, verdict: "ready", problems: [] })]);
   const r = await runStory({ clients: freeClients(gm, gq, { t: 0, slept: 0 }), ledger: L.newLedger(0), cacheDir: false });
   assert.equal(r.status, "ok", JSON.stringify(r.reasons));

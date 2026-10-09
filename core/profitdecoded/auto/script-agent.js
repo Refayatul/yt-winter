@@ -214,16 +214,20 @@ function evaluatePlan(plan, dossier, format = "long") {
   const hooks = Hooks.engineer(plan.hookCandidates || [], { dossier, topicWords: T.contentWords(dossier.thesis || "") });
   for (const pr of hooks.problems) issues.push("hooks: " + pr);
   // Editorial override: allowed only for a factual hook within 10 points of the heuristic winner, with a stated reason.
-  let selected = hooks.winner; let override = null;
+  // An invalid override is ignored (with a warning) and the best FACTUAL hook opens the film: the factual and
+  // quality guarantees are the same either way, so a weak preference must not fail an otherwise valid plan.
+  let selected = hooks.winner; let override = null; const warnings = [];
   if (plan.selectedHook && hooks.winner) {
     const pick = hooks.ranked.find((h) => h.text === plan.selectedHook);
-    if (!pick) issues.push("selectedHook is not one of the hook candidates");
-    else if (!pick.factual.pass) issues.push("selectedHook fails the factual gate: " + pick.factual.problems.join("; "));
-    else if (hooks.winner.total - pick.total > 10) issues.push(`selectedHook scores ${pick.total}, more than 10 below the best hook (${hooks.winner.total})`);
-    else if (!plan.selectionReason) issues.push("selectedHook needs a selectionReason");
+    let why = null;
+    if (!pick) why = "selectedHook is not one of the hook candidates";
+    else if (!pick.factual.pass) why = "selectedHook fails the factual gate: " + pick.factual.problems.join("; ");
+    else if (hooks.winner.total - pick.total > 10) why = `selectedHook scores ${pick.total}, more than 10 below the best hook (${hooks.winner.total})`;
+    else if (!plan.selectionReason) why = "selectedHook needs a selectionReason";
+    if (why) warnings.push(why + "; override ignored, the best factual hook opens instead");
     else { selected = pick; if (pick !== hooks.winner) override = { chosen: pick.text, heuristicWinner: hooks.winner.text, margin: hooks.winner.total - pick.total, reason: plan.selectionReason }; }
   }
-  return { issues, hooks, selected, override };
+  return { issues, warnings, hooks, selected, override };
 }
 
 // A cached stage never creates a client: re-running a fully cached story costs nothing and needs no key.
@@ -317,7 +321,7 @@ async function develop(topic, dossier, format, deps = {}) {
     current = "plan";
     let planMsgs = stageMessages(topic, dossier, format, ctx, prompt("story.md") + `\n\nFORMAT: ${format === "short" ? "a 35-45 second Short (one question, one turn, one payoff)" : `a ${minutes[0]}-${minutes[1]} minute documentary (${words[0]}-${words[1]} words of narration, 7-10 sections)`}. Return the plan as JSON.`);
     plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: size("plan"), effort: prov("plan") === "groq" ? "medium" : "high" }, getClient, cache, hash({ ...base, s: "plan" }))).json;
-    pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan", issues: pe.issues.length });
+    pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan", issues: pe.issues.length, warnings: pe.warnings });
     if (pe.issues.length) {
       // Providers with a small per-minute limit get a compact, fresh repair request (claim list + plan + issues)
       // instead of the whole conversation; others continue the conversation.
@@ -326,7 +330,7 @@ async function develop(topic, dossier, format, deps = {}) {
         ? [{ role: "user", content: `${prompt("story.md")}\n\nSTAGE: STORY PLAN REPAIR. VERIFIED CLAIMS (ids; * = central; numbers must be quoted exactly as written here):\n${claimList}\n\nCURRENT PLAN:\n${JSON.stringify(plan)}\n\nThe plan failed these checks. Fix exactly these and return the full plan JSON:\n- ${pe.issues.join("\n- ")}` }]
         : [...planMsgs, { role: "assistant", content: JSON.stringify(plan) }, { role: "user", content: "The plan failed these checks. Fix exactly these and return the full JSON:\n- " + pe.issues.join("\n- ") }];
       plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: size("plan"), effort: prov("plan") === "groq" ? "medium" : "high" }, getClient, cache, hash({ ...base, s: "plan-fix", plan }))).json;
-      pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan-fix", issues: pe.issues.length });
+      pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan-fix", issues: pe.issues.length, warnings: pe.warnings });
       if (pe.issues.length) return { status: "plan-failed", reasons: pe.issues, plan, ledger, log };
     }
     const hookTexts = plan.hookCandidates.map((h) => h.text); const winningHook = pe.selected.text;
