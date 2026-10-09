@@ -119,3 +119,8 @@ Spend (Anthropic): usage is accumulated per run and estimated from list prices (
 ## Topic intelligence (Phase 2)
 
 See `docs/profitdecoded/PHASE-2-IMPLEMENTATION.md`. In short: an editorial lens (`topic-scoring.editorialLens`) adds narrative conflict, competitive saturation and angle originality to the existing signals; oversaturated title templates cost rank but never reject a topic; curated angles live in `channels/profitdecoded/topics/angles.json`; dated, sourced premise changes in `topics/freshness-watchlist.json` (`core/profitdecoded/freshness.js`); manual public-search samples in `intel/coverage-*.json` (INFERRED) and collector snapshots (OBSERVED, `competitive.topicEvidenceFromSnapshot`).
+
+## Story engine (Phase 3)
+
+See `docs/profitdecoded/PHASE-3-IMPLEMENTATION.md`. `script-agent.develop` runs research gate -> story plan (thesis, conflict, hooks, outline) -> draft -> independent critique (fresh context) -> targeted rewrites -> final assessment, with a disk stage cache and a prompt-cached shared prefix; the orchestrator uses it by default (`PD_STORY_ENGINE=legacy` for the single-call writer). `hooks.engineer` (six dimensions, factual gate), `ai-patterns.spoken` and `retention.js` (Retention Critic, heuristic) are the new readings. `node profitdecoded.js story-review <dir>` renders a story package with its claim-to-source map.
+
