@@ -57,7 +57,7 @@ function check(out, dossier, format, options = {}) {
   const sc = Research.unsupportedClaimsInScript(script, dossier);
   for (const o of sc.numbersWithoutDossierSupport.slice(0, 6)) issues.push(`number "${o.number}" is not in the dossier (sentence: "${o.sentence.slice(0, 90)}")`);
   const topicWords = T.contentWords(dossier.thesis || "");
-  const hooks = Hooks.compete(out.hookCandidates || [], { topicWords });
+  const hooks = Hooks.compete(options.hookCandidates || out.hookCandidates || [], { topicWords });
   if (!hooks.valid) issues.push("hook candidates: " + hooks.problems.join("; "));
   if (hooks.winner && hooks.winner.score < 60) issues.push(`best hook scores ${hooks.winner.score} (<60): make the first seconds open an information gap with a concrete name/number`);
   const opener = options.winningHook || (hooks.winner && hooks.winner.text);
@@ -155,8 +155,11 @@ function stageCache(dir) {
 }
 
 // ---- shared prefix: system + dossier (prompt-cached across stages) ---------------------------------
-function dossierBlock(topic, dossier, format, ctx = {}) {
+// opts.claimIds: only these claims (and inferences resting on them) -> a small per-section block for providers with low per-minute limits.
+function dossierBlock(topic, dossier, format, ctx = {}, opts = {}) {
   const src = Object.fromEntries((dossier.sources || []).map((x) => [x.id, x]));
+  const want = opts.claimIds ? new Set(opts.claimIds.concat((dossier.inferences || []).filter((i) => opts.claimIds.includes(i.id)).flatMap((i) => i.basisClaimIds || []))) : null;
+  dossier = want ? { ...dossier, claims: (dossier.claims || []).filter((c) => want.has(c.id)), inferences: (dossier.inferences || []).filter((i) => want.has(i.id) || (i.basisClaimIds || []).some((b) => want.has(b))), contradictions: dossier.contradictions } : dossier;
   const claims = (dossier.claims || []).map((c) => ({ id: c.id, central: !!c.central, text: c.text, numbers: c.numbers || [], sources: (c.sourceIds || []).map((id) => src[id] ? `${src[id].publisher} (${src[id].type}${src[id].date ? ", " + src[id].date : ""})` : id) }));
   const ours = (dossier.inferences || []).map((c) => ({ id: c.id, text: c.text, numbers: c.numbers || [], ourArithmetic: true, basis: c.basisClaimIds }));
   const comp = (ctx.competitors || []).map((c) => `- ${c.channel}: "${c.title}" (${c.views != null ? c.views.toLocaleString("en-US") + " views" : "views unknown"}${c.age ? ", " + c.age : ""}). Covers: ${(c.covers || []).join("; ") || "unknown"}. Misses: ${(c.misses || []).join("; ") || "unknown"}`).join("\n");
@@ -164,11 +167,11 @@ function dossierBlock(topic, dossier, format, ctx = {}) {
     `TOPIC: ${topic.topic}`, `ENTITY: ${topic.entity}`, `RESEARCH THESIS: ${dossier.thesis}`, `RESEARCH ANGLE: ${dossier.angle || ""}`,
     "", "VERIFIED CLAIMS (the only facts that exist for this film; 'ourArithmetic' must be said to be our own calculation):", JSON.stringify(claims.concat(ours), null, 1),
     "", "CONTRADICTIONS AND LIMITS FOUND IN RESEARCH:", JSON.stringify(dossier.contradictions || [], null, 1),
-    comp ? "\nCOMPETITOR COVERAGE (do not copy; find what they leave out):\n" + comp : "",
+    comp && !want ? "\nCOMPETITOR COVERAGE (do not copy; find what they leave out):\n" + comp : "",
   ].join("\n");
 }
-function stageMessages(topic, dossier, format, ctx, stageText) {
-  return [{ role: "user", content: [{ type: "text", text: dossierBlock(topic, dossier, format, ctx), cache_control: { type: "ephemeral" } }, { type: "text", text: stageText }] }];
+function stageMessages(topic, dossier, format, ctx, stageText, opts = {}) {
+  return [{ role: "user", content: [{ type: "text", text: dossierBlock(topic, dossier, format, ctx, opts), cache_control: { type: "ephemeral" } }, { type: "text", text: stageText }] }];
 }
 
 // ---- deterministic assessment (used after every writing stage) --------------------------------------
@@ -176,7 +179,7 @@ function assess(out, dossier, format, ctx = {}) {
   const beats = out.beats || [];
   const script = beats.map((b) => b.text).join(" ");
   const hookRows = Hooks.engineer(ctx.hookCandidates || out.hookCandidates || [], { dossier, topicWords: T.contentWords(dossier.thesis || "") });
-  const local = check(out, dossier, format, { winningHook: ctx.winningHook || (hookRows.winner && hookRows.winner.text), words: ctx.words });
+  const local = check(out, dossier, format, { winningHook: ctx.winningHook || (hookRows.winner && hookRows.winner.text), words: ctx.words, hookCandidates: ctx.hookCandidates });
   const retention = Retention.critique(beats, { plan: ctx.plan, format, title: ctx.title || "" });
   const spoken = AI.spoken(script);
   const editorial = Retention.editorialReport(beats, { plan: ctx.plan, dossier, format, title: ctx.title || "" });
@@ -194,6 +197,7 @@ function evaluatePlan(plan, dossier, format = "long") {
   const qids = new Set((plan.questions || []).map((q) => q.id));
   const raised = new Map(); const resolved = new Map();
   (plan.sections || []).forEach((s, i) => {
+    if (!(s.claimIds || []).length) issues.push(`section ${s.id} cites no verified claim (every section must rest on at least one claim id)`);
     for (const c of s.claimIds || []) if (!ids.has(c)) issues.push(`section ${s.id} uses unknown claim id "${c}"`);
     for (const q of s.raises || []) { if (!qids.has(q)) issues.push(`section ${s.id} raises unknown question "${q}"`); raised.set(q, i); }
     for (const q of s.resolves || []) resolved.set(q, i);
@@ -210,81 +214,290 @@ function evaluatePlan(plan, dossier, format = "long") {
   const hooks = Hooks.engineer(plan.hookCandidates || [], { dossier, topicWords: T.contentWords(dossier.thesis || "") });
   for (const pr of hooks.problems) issues.push("hooks: " + pr);
   // Editorial override: allowed only for a factual hook within 10 points of the heuristic winner, with a stated reason.
-  let selected = hooks.winner; let override = null;
+  // An invalid override is ignored (with a warning) and the best FACTUAL hook opens the film: the factual and
+  // quality guarantees are the same either way, so a weak preference must not fail an otherwise valid plan.
+  let selected = hooks.winner; let override = null; const warnings = [];
   if (plan.selectedHook && hooks.winner) {
     const pick = hooks.ranked.find((h) => h.text === plan.selectedHook);
-    if (!pick) issues.push("selectedHook is not one of the hook candidates");
-    else if (!pick.factual.pass) issues.push("selectedHook fails the factual gate: " + pick.factual.problems.join("; "));
-    else if (hooks.winner.total - pick.total > 10) issues.push(`selectedHook scores ${pick.total}, more than 10 below the best hook (${hooks.winner.total})`);
-    else if (!plan.selectionReason) issues.push("selectedHook needs a selectionReason");
+    let why = null;
+    if (!pick) why = "selectedHook is not one of the hook candidates";
+    else if (!pick.factual.pass) why = "selectedHook fails the factual gate: " + pick.factual.problems.join("; ");
+    else if (hooks.winner.total - pick.total > 10) why = `selectedHook scores ${pick.total}, more than 10 below the best hook (${hooks.winner.total})`;
+    else if (!plan.selectionReason) why = "selectedHook needs a selectionReason";
+    if (why) warnings.push(why + "; override ignored, the best factual hook opens instead");
     else { selected = pick; if (pick !== hooks.winner) override = { chosen: pick.text, heuristicWinner: hooks.winner.text, margin: hooks.winner.total - pick.total, reason: plan.selectionReason }; }
   }
-  return { issues, hooks, selected, override };
+  return { issues, warnings, hooks, selected, override };
 }
 
 // A cached stage never creates a client: re-running a fully cached story costs nothing and needs no key.
 async function stage(name, opts, getClient, cache, key) {
   const hit = cache.get(key);
   if (hit) return { json: hit, cached: true };
-  const r = await LLM.run({ ...opts, client: getClient(), stage: name });
+  let r;
+  try { r = await LLM.run({ ...opts, client: getClient(name), stage: name }); }
+  catch (e) {
+    // Safe retry: a truncated reply (reasoning used the output budget) is retried once with lower reasoning effort.
+    if (e.code !== "MAX_TOKENS" || opts.effort === "low") throw e;
+    r = await LLM.run({ ...opts, effort: "low", client: getClient(name), stage: name });
+  }
   cache.set(key, r.json);
   return { json: r.json, cached: false };
 }
 
-// deps: { client, ledger, cacheDir (false disables), competitors, minutes [min,max], maxRewrites, criticModel }
+// ---- providers per stage (free-model validation) -------------------------------------------------
+// PD_STORY_PROVIDERS="plan=groq,draft=groq,rewrite=groq,critique=gemini" (or deps.stageProviders). Unset stages
+// use deps.client / the default provider. A paid provider (anthropic) is refused outright when the paid budget
+// is $0 (PD_AUTO_MAX_USD=0): no silent paid usage, no fallback from a free provider to a paid one.
+const STAGES = ["plan", "draft", "package", "critique", "evaluate", "rewrite"];
+function stageProviders(deps) {
+  const spec = deps.stageProviders || Object.fromEntries(String(process.env.PD_STORY_PROVIDERS || "").split(",").map((x) => x.trim().split("=")).filter((x) => x.length === 2 && x[1]));
+  const out = {}; for (const st of STAGES) if (spec[st]) out[st] = spec[st];
+  if (out.draft && !out.package) out.package = out.draft;
+  if (out.critique && !out.evaluate) out.evaluate = out.critique; // the final evaluation runs where the critique runs
+  return out;
+}
+function clientFactory(deps, ledger) {
+  const providers = stageProviders(deps); const made = {};
+  return (stageName) => {
+    if (deps.clients && deps.clients[stageName]) return deps.clients[stageName];
+    if (stageName === "evaluate" && deps.clients && deps.clients.critique) return deps.clients.critique;
+    const p = providers[stageName] || (deps.client ? null : LLM.provider());
+    if (!p) return deps.client;
+    if (p === "anthropic" && !(ledger.maxUsd > 0)) throw new LLM.AutoError("PAID_DISABLED", `stage "${stageName}" would use Anthropic (paid) but the paid budget is $${ledger.maxUsd}: refusing`);
+    if (!made[p]) made[p] = deps.client && deps.client.provider === p ? deps.client : LLM.createClient({ provider: p });
+    return made[p];
+  };
+}
+// Token sizes per stage. Groq's free tier (8,000 tokens per minute, prompt + max output) needs small, chunked calls.
+const SIZES = { anthropic: { plan: 16000, draft: 48000, critique: 16000, rewrite: 48000, effortDraft: "high" }, groq: { plan: 4500, section: 4200, package: 2600, critique: 4000, rewrite: 3800, effortDraft: "medium" }, gemini: { critique: 24000 } };
+const PAUSE = new Set(["RATE_LIMIT", "QUOTA", "BUDGET", "PAID_DISABLED", "NO_KEY", "UNAVAILABLE"]);
+// The final independent evaluation (narrative quality + fact check). A high-severity factual problem blocks.
+const EVALUATION_SCHEMA = { type: "object", additionalProperties: false, required: ["verdict", "scores", "factualProblems", "summary"], properties: {
+  verdict: { type: "string", enum: ["pass", "fail"] }, summary: { type: "string" },
+  scores: { type: "object", additionalProperties: false, required: ["hook", "structure", "clarity", "naturalness", "pacing", "accuracy"], properties: Object.fromEntries(["hook", "structure", "clarity", "naturalness", "pacing", "accuracy"].map((k) => [k, { type: "integer", minimum: 1, maximum: 10 }])) },
+  factualProblems: { type: "array", items: { type: "object", additionalProperties: false, required: ["section", "beatIds", "severity", "quote", "problem", "fix"], properties: { section: { type: "string" }, beatIds: { type: "array", items: { type: "string" } }, severity: { type: "string", enum: ["high", "medium", "low"] }, quote: { type: "string" }, problem: { type: "string" }, fix: { type: "string" } } } },
+} };
+// If a beat begins with the approved hook and runs on, split it so the hook stands alone (mechanical, no rewording).
+function normalizeOpening(out, hook) {
+  const b0 = (out.beats || [])[0];
+  if (!b0 || !hook || b0.text.trim() === hook.trim() || !b0.text.trim().startsWith(hook.trim())) return out;
+  const rest = b0.text.trim().slice(hook.trim().length).trim();
+  const g0 = (out.graphics || []).find((g) => g.beatId === b0.id);
+  const nb = { ...b0, id: b0.id + "-cont", type: "setup", text: rest };
+  return { ...out, beats: [{ ...b0, text: hook.trim() }, nb, ...out.beats.slice(1)], graphics: [...(out.graphics || []), ...(g0 ? [{ ...g0, beatId: nb.id }] : [])] };
+}
+
+const DRAFT_SECTION_SCHEMA = { type: "object", additionalProperties: false, required: ["beats", "graphics"], properties: { beats: { type: "array", items: BEAT_ITEM }, graphics: { type: "array", items: GRAPHIC_ITEM } } };
+const PACKAGE_SCHEMA = { type: "object", additionalProperties: false, required: ["titleCandidates", "thumbnailCandidates", "learningValue"], properties: { titleCandidates: SCRIPT_SCHEMA.properties.titleCandidates, thumbnailCandidates: SCRIPT_SCHEMA.properties.thumbnailCandidates, learningValue: { type: "string" } } };
+
+// Route every finding (critic problem or deterministic issue) to the plan section it concerns.
+// spoken: the assessment's spoken-naturalness findings; when the spoken gate blocks, every finding that quotes a sentence is
+// routed to the section holding that sentence (the aggregated blocking line only quotes the first few).
+const SPOKEN_FIX = "rewrite as plain spoken English: at most two numbers per sentence (split the rest into short sentences), no semicolons or brackets, fewer than four commas";
+// The critic's own criteria for the first 30 seconds (hooks.first30), stated as writing instructions.
+const OPENING_FIX = "the beat right after the hook is ONE short sentence (under 12 words) that states what is at stake; by second 15 name the title's subject with one concrete fact; between seconds 15 and 30 say how the mechanism works in plain words (\"here is how\", \"because\", \"which means\"); no background or history in the first 30 seconds";
+// AI-pattern repetition located per sentence, so each section is told exactly which of its sentences repeat.
+function repetitionSites(out, blocking) {
+  const line = blocking.find((b) => /^generic AI writing/.test(b)); if (!line) return [];
+  const sents = (out.beats || []).flatMap((b) => T.sentences(b.text).map((t) => ({ t, section: b.section })));
+  const sites = [];
+  for (const m of line.matchAll(/repeated sentence opener \("([^"]+)"\)/g)) {
+    const hits = sents.filter((x) => T.words(x.t).slice(0, 2).join(" ") === m[1]);
+    for (const h of hits.slice(1)) sites.push({ section: h.section, msg: `ai-pattern: ${hits.length} sentences open with "${m[1]}": "${h.t.slice(0, 120)}" -> start this sentence differently (name the subject another way, or lead with the point)` });
+  }
+  if (/near-duplicate sentences/.test(line)) for (let i = 0; i < sents.length; i += 1) for (let j = i + 1; j < sents.length; j += 1) {
+    if (T.words(sents[i].t).length > 5 && T.textSimilarity(sents[i].t, sents[j].t, 2) > 0.7) sites.push({ section: sents[j].section, msg: `ai-pattern: near-duplicate of an earlier line ("${sents[i].t.slice(0, 90)}"): "${sents[j].t.slice(0, 120)}" -> cut it or say something new` });
+  }
+  return sites;
+}
+function routeProblems(problems, blocking, out, plan, spoken = []) {
+  const ids = plan.sections.map((x) => x.id); const first = ids[0]; const last = ids[ids.length - 1];
+  const secOfBeat = Object.fromEntries((out.beats || []).map((b) => [b.id, b.section]));
+  // whitespace is normalised on both sides: models emit narrow no-break spaces (U+202F) that the checks collapse to " "
+  const ws = (x) => String(x || "").replace(/\s+/g, " ");
+  const secOfText = (q) => { const t = ws(q).trim().slice(0, 50); const b = t.length > 12 && (out.beats || []).find((x) => ws(x.text).includes(t)); return b ? b.section : null; };
+  const turn = (plan.sections.find((x) => /turn|complication/.test(x.purpose)) || {}).id || ids[Math.floor(ids.length / 2)];
+  const routed = Object.fromEntries(ids.map((i) => [i, []])); const global = [];
+  const put = (sec, msg) => { if (sec && routed[sec]) routed[sec].push(msg); else global.push(msg); };
+  for (const p of problems) put(ids.includes(p.section) ? p.section : (p.beatIds || []).map((b) => secOfBeat[b]).find(Boolean) || secOfText(p.quote), `[${p.severity}] ${p.type}: "${p.quote}" -> ${p.fix}`);
+  const spokenBlocks = blocking.some((b) => /^spoken naturalness/.test(b));
+  const spokenRouted = spokenBlocks ? spoken.filter((f) => f.sentence && secOfText(f.sentence)) : [];
+  const repeats = repetitionSites(out, blocking); for (const r of repeats) put(r.section, r.msg);
+  for (const f of spokenRouted) put(secOfText(f.sentence), `spoken: ${f.name}: "${f.sentence}" -> ${SPOKEN_FIX}`);
+  for (const b of blocking) {
+    let m;
+    if (spokenRouted.length && /^spoken naturalness/.test(b)) continue;
+    if (repeats.length && /^generic AI writing/.test(b)) continue;
+    if ((m = /^retention \(([^)]+)\)/.exec(b))) put(m[1], b);
+    else if ((m = /\(([\w-]+)\) is never answered/.exec(b))) { put(m[1], b); put(last, b); }
+    else if (/weak-opening/.test(b)) put(first, `${b} -> ${OPENING_FIX}`);
+    else if (/first beat must be the winning hook/.test(b)) put(first, b);
+    else if (/missing-payoff|predictable-ending|essay-ending/.test(b)) put(last, b);
+    else if (/no-escalation/.test(b)) put(turn, b);
+    else if ((m = /beat (\S+) cites unknown claim/.exec(b))) put(secOfBeat[m[1]], b);
+    else if ((m = /beats without a graphic: (.+)$/.exec(b))) for (const id of m[1].split(", ")) put(secOfBeat[id], b);
+    else if ((m = /sentence: "([^"]+)"/.exec(b)) || (m = /\("([^"]{12,})"\)/.exec(b))) put(secOfText(m[1]), b);
+    else global.push(b);
+  }
+  return { routed, global };
+}
+
+// deps: { client | clients{stage}, stageProviders, ledger, cacheDir (false disables), competitors, minutes [min,max],
+//         maxRewrites, criticModel, chunked }
 async function develop(topic, dossier, format, deps = {}) {
   const ledger = deps.ledger || LLM.newLedger(); const cache = stageCache(deps.cacheDir);
   const minutes = deps.minutes || [8, 12]; const words = wordsFor(format, minutes);
   const maxRewrites = deps.maxRewrites == null ? 2 : deps.maxRewrites;
-  const log = [];
+  const log = []; let current = "research";
   // 1. Research verification: the existing gate decides; nothing is written on an unverified dossier.
   const gate = Research.gate(dossier, { format });
   if (!gate.pass) return { status: "research-failed", reasons: gate.rejections, ledger, log };
-  let client = deps.client;
-  const getClient = () => (client = client || LLM.createClient());
+  const getClient = clientFactory(deps, ledger);
+  const prov = (st) => { const p = stageProviders(deps)[st]; const c = deps.clients && (deps.clients[st] || (st === "evaluate" && deps.clients.critique)); return p || (c && c.provider) || (deps.client && deps.client.provider) || "anthropic"; };
+  const size = (st, key) => (SIZES[prov(st)] || SIZES.anthropic)[key || st] || SIZES.anthropic[key || st];
+  const chunked = deps.chunked != null ? deps.chunked : prov("draft") === "groq";
   const system = prompt("system.md");
   const ctx = { competitors: deps.competitors || [] };
-  const base = { dossier: hash(dossier), topic: topic.id, format, words, prompts: promptVersion(), model: LLM.MODEL() };
-  // 2-5. Story plan: thesis, conflict, hooks, structure (one call; one repair round if the plan fails its checks).
-  let planMsgs = stageMessages(topic, dossier, format, ctx, prompt("story.md") + `\n\nFORMAT: ${format === "short" ? "a 35-45 second Short (one question, one turn, one payoff)" : `a ${minutes[0]}-${minutes[1]} minute documentary (${words[0]}-${words[1]} words of narration)`}. Return the plan as JSON.`);
-  let plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: 16000, effort: "high" }, getClient, cache, hash({ ...base, s: "plan" }))).json;
-  let pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan", issues: pe.issues.length });
-  if (pe.issues.length) {
-    planMsgs = [...planMsgs, { role: "assistant", content: JSON.stringify(plan) }, { role: "user", content: "The plan failed these checks. Fix exactly these and return the full JSON:\n- " + pe.issues.join("\n- ") }];
-    plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: 16000, effort: "high" }, getClient, cache, hash({ ...base, s: "plan-fix", plan }))).json;
-    pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan-fix", issues: pe.issues.length });
-    if (pe.issues.length) return { status: "plan-failed", reasons: pe.issues, plan, ledger, log };
-  }
-  const hookTexts = plan.hookCandidates.map((h) => h.text); const winningHook = pe.selected.text;
-  // 6. Draft.
-  const draftText = prompt("script.md") + `\n\nSTAGE: DRAFT. Write the narration for this approved plan.\nAPPROVED PLAN:\n${JSON.stringify(plan, null, 1)}\n\nWINNING HOOK (first beat, same wording): ${winningHook}\nLENGTH: ${words[0]}-${words[1]} words of narration. Tag each beat with its section id. hookCandidates: return the plan's hook texts unchanged. Produce graphics for every beat, >=22 truthful title candidates, 3 thumbnail concepts and learningValue.`;
-  let out = (await stage("draft", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, draftText), schema: SCRIPT_SCHEMA, maxTokens: format === "short" ? 16000 : 48000, effort: "high" }, getClient, cache, hash({ ...base, s: "draft", plan }))).json;
-  out = { ...out, hookCandidates: hookTexts };
-  const actx = { plan, winningHook, hookCandidates: plan.hookCandidates, words, title: topic.topic };
-  let a = assess(out, dossier, format, actx); log.push({ stage: "draft", blocking: a.blocking.length, words: a.local.words, retention: a.retention.score, spoken: a.spoken.score });
-  const draft = { out, assessment: a };
-  // 7. Independent critique: fresh context (no drafting conversation), automated readings attached.
-  const readings = { retention: { score: a.retention.score, global: a.retention.global, weakest: a.retention.weakest, sections: a.retention.sections.map((x) => ({ id: x.id, score: x.score, issues: x.issues })) }, spoken: { score: a.spoken.score, findings: a.spoken.findings.slice(0, 12) }, aiPatternScore: a.local.aiPatternScore, localChecks: a.local.issues, hooks: a.hooks.ranked.map((h) => ({ text: h.text, total: h.total, factual: h.factual })) };
-  const critText = prompt("editor.md") + `\n\nSTORY PLAN:\n${JSON.stringify({ thesis: plan.thesis, centralQuestion: plan.centralQuestion, sections: plan.sections.map((x) => ({ id: x.id, title: x.title, purpose: x.purpose })), payoff: plan.payoff }, null, 1)}\n\nSCRIPT BEATS:\n${JSON.stringify(out.beats, null, 1)}\n\nAUTOMATED READINGS (heuristics):\n${JSON.stringify(readings, null, 1)}`;
-  const critique = (await stage("critique", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, critText), schema: CRITIQUE_SCHEMA, maxTokens: 16000, effort: "medium", model: deps.criticModel || process.env.PD_AUTO_CRITIC_MODEL || undefined }, getClient, cache, hash({ ...base, s: "critique", beats: out.beats }))).json;
-  log.push({ stage: "critique", verdict: critique.verdict, problems: critique.problems.length });
-  // 8. Targeted rewrites: only the problems found; titles, thumbnails and unchanged graphics are kept.
-  let rounds = 0; const changes = [];
-  let problems = [...critique.problems.map((x) => `[${x.severity}] ${x.section} ${x.beatIds.join(",")}: ${x.type}: "${x.quote}" -> ${x.fix}`), ...a.blocking];
-  while ((critique.verdict === "revise" || a.blocking.length) && problems.length && rounds < maxRewrites) {
-    rounds += 1;
-    const rwText = prompt("script.md") + `\n\nSTAGE: TARGETED REWRITE ${rounds}. Fix exactly these problems and nothing else. Keep beat ids for beats you keep; new beats need new ids and a graphic. Keep the winning hook as the first beat. Keep: ${critique.keep.join("; ") || "everything that is not listed"}.\nPROBLEMS:\n- ${problems.join("\n- ")}\n\nCURRENT BEATS:\n${JSON.stringify(out.beats, null, 1)}\n\nReturn all beats (rewritten and unchanged), graphics only for new or changed beats, and a changeLog.`;
-    const rw = (await stage("rewrite", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, rwText), schema: REWRITE_SCHEMA, maxTokens: format === "short" ? 16000 : 48000, effort: "high" }, getClient, cache, hash({ ...base, s: "rewrite", beats: out.beats, problems }))).json;
-    const keepGraphics = (out.graphics || []).filter((g) => rw.beats.some((b) => b.id === g.beatId) && !rw.graphics.some((n) => n.beatId === g.beatId));
-    out = { ...out, beats: rw.beats, graphics: [...keepGraphics, ...rw.graphics] };
-    changes.push(...rw.changeLog);
-    a = assess(out, dossier, format, actx); log.push({ stage: "rewrite-" + rounds, blocking: a.blocking.length, retention: a.retention.score, spoken: a.spoken.score });
-    problems = a.blocking; // later rounds are targeted at what the deterministic checks still find
-    if (!problems.length) break;
+  const base = { dossier: hash(dossier), topic: topic.id, format, words, prompts: promptVersion(), providers: ["plan", "draft", "package", "critique", "rewrite"].map(prov).join(","), chunked }; // fixed list: cache keys must not move when stages are added
+  let plan = null, pe = null, out = null, draft = null, critique = null, a = null, evaluation = null; const changes = []; let rounds = 0;
+  try {
+    // 2-5. Story plan: thesis, conflict, hooks, structure (one call; one repair round if the plan fails its checks).
+    current = "plan";
+    let planMsgs = stageMessages(topic, dossier, format, ctx, prompt("story.md") + `\n\nFORMAT: ${format === "short" ? "a 35-45 second Short (one question, one turn, one payoff)" : `a ${minutes[0]}-${minutes[1]} minute documentary (${words[0]}-${words[1]} words of narration, 7-10 sections)`}. Return the plan as JSON.`);
+    plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: size("plan"), effort: prov("plan") === "groq" ? "medium" : "high" }, getClient, cache, hash({ ...base, s: "plan" }))).json;
+    pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan", issues: pe.issues.length, warnings: pe.warnings });
+    if (pe.issues.length) {
+      // Providers with a small per-minute limit get a compact, fresh repair request (claim list + plan + issues)
+      // instead of the whole conversation; others continue the conversation.
+      const claimList = [...(dossier.claims || []), ...(dossier.inferences || [])].map((c) => `${c.id}${c.central ? "*" : ""}: ${c.text.slice(0, 160)}`).join("\n");
+      planMsgs = prov("plan") === "groq"
+        ? [{ role: "user", content: `${prompt("story.md")}\n\nSTAGE: STORY PLAN REPAIR. VERIFIED CLAIMS (ids; * = central; numbers must be quoted exactly as written here):\n${claimList}\n\nCURRENT PLAN:\n${JSON.stringify(plan)}\n\nThe plan failed these checks. Fix exactly these and return the full plan JSON:\n- ${pe.issues.join("\n- ")}` }]
+        : [...planMsgs, { role: "assistant", content: JSON.stringify(plan) }, { role: "user", content: "The plan failed these checks. Fix exactly these and return the full JSON:\n- " + pe.issues.join("\n- ") }];
+      plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: size("plan"), effort: prov("plan") === "groq" ? "medium" : "high" }, getClient, cache, hash({ ...base, s: "plan-fix", plan }))).json;
+      pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan-fix", issues: pe.issues.length, warnings: pe.warnings });
+      if (pe.issues.length) return { status: "plan-failed", reasons: pe.issues, plan, ledger, log };
+    }
+    const hookTexts = plan.hookCandidates.map((h) => h.text); const winningHook = pe.selected.text;
+    // 6. Draft: one call, or one call per plan section (+ packaging) when the provider's per-minute limit is small.
+    current = "draft";
+    if (!chunked) {
+      const draftText = prompt("script.md") + `\n\nSTAGE: DRAFT. Write the narration for this approved plan.\nAPPROVED PLAN:\n${JSON.stringify(plan, null, 1)}\n\nWINNING HOOK (first beat, same wording): ${winningHook}\nLENGTH: ${words[0]}-${words[1]} words of narration. Tag each beat with its section id. hookCandidates: return the plan's hook texts unchanged. Produce graphics for every beat, >=22 truthful title candidates, 3 thumbnail concepts and learningValue.`;
+      out = (await stage("draft", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, draftText), schema: SCRIPT_SCHEMA, maxTokens: format === "short" ? 16000 : size("draft"), effort: "high" }, getClient, cache, hash({ ...base, s: "draft", plan }))).json;
+    } else {
+      const outline = plan.sections.map((x, i) => `${i + 1}. ${x.id} [${x.purpose}] ${x.title}`).join("\n");
+      const perSection = Math.round((words[0] + words[1]) / 2 / plan.sections.length);
+      const beats = []; const graphics = [];
+      for (const [i, sec] of plan.sections.entries()) {
+        const prev = beats.slice(-2).map((b) => b.text).join(" ");
+        const qs = (plan.questions || []).filter((q) => (sec.raises || []).includes(q.id) || (sec.resolves || []).includes(q.id)).map((q) => `${(sec.raises || []).includes(q.id) ? "RAISE" : "ANSWER"}: ${q.text}`).join("\n");
+        const t = prompt("script.md") + `\n\nSTAGE: DRAFT SECTION ${i + 1}/${plan.sections.length}. Write ONLY this section's narration beats.\nTHESIS: ${plan.thesis}\nCENTRAL QUESTION: ${plan.centralQuestion}\nOUTLINE:\n${outline}\n\nTHIS SECTION: ${sec.id} "${sec.title}" (${sec.purpose}). Use only claim ids: ${sec.claimIds.join(", ")}. Visual idea: ${sec.visualIdea}.\n${qs}\n${i === 0 ? `The FIRST beat must be exactly this hook: ${winningHook}\n` : `Previous lines (continue from here, do not repeat them): ${prev}\n`}${i === plan.sections.length - 1 ? `This is the ending: answer the central question plainly (${plan.payoff}).\n` : ""}LENGTH: about ${perSection} words. Beat ids must start with "${sec.id}-". Set each beat's section to "${sec.id}". One graphic per beat.`;
+        const r = (await stage("draft", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, t, { claimIds: sec.claimIds }), schema: DRAFT_SECTION_SCHEMA, maxTokens: size("draft", "section"), effort: size("draft", "effortDraft") }, getClient, cache, hash({ ...base, s: "draft-section", sec, hook: i === 0 ? winningHook : null, prev }))).json;
+        beats.push(...r.beats.map((b) => ({ ...b, section: sec.id }))); graphics.push(...r.graphics);
+      }
+      current = "package";
+      const pk = `STAGE: PACKAGING. Write >=22 title candidates the verified claims support (no promise beyond the evidence), 3 thumbnail concepts (<=3 elements, one dominant object, <=4 words, a number only if it is in the claims) and learningValue.\nTHESIS: ${plan.thesis}\nOPENING: ${winningHook}\nSECTIONS: ${plan.sections.map((x) => x.title).join(" | ")}`;
+      const p2 = (await stage("package", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, pk), schema: PACKAGE_SCHEMA, maxTokens: size("package"), effort: "low" }, getClient, cache, hash({ ...base, s: "package", thesis: plan.thesis, winningHook }))).json;
+      out = { hookCandidates: hookTexts, beats, graphics, ...p2 };
+    }
+    out = normalizeOpening({ ...out, hookCandidates: hookTexts }, winningHook);
+    const actx = { plan, winningHook, hookCandidates: plan.hookCandidates, words, title: topic.topic };
+    a = assess(out, dossier, format, actx); log.push({ stage: "draft", blocking: a.blocking.length, words: a.local.words, retention: a.retention.score, spoken: a.spoken.score });
+    draft = { out, assessment: a };
+    // 7. Independent critique: fresh context (no drafting conversation), automated readings attached.
+    current = "critique";
+    const readings = { retention: { score: a.retention.score, global: a.retention.global, weakest: a.retention.weakest, sections: a.retention.sections.map((x) => ({ id: x.id, score: x.score, issues: x.issues })) }, spoken: { score: a.spoken.score, findings: a.spoken.findings.slice(0, 12) }, aiPatternScore: a.local.aiPatternScore, localChecks: a.local.issues, hooks: a.hooks.ranked.map((h) => ({ text: h.text, total: h.total, factual: h.factual })) };
+    const critText = prompt("editor.md") + `\n\nSTORY PLAN:\n${JSON.stringify({ thesis: plan.thesis, centralQuestion: plan.centralQuestion, sections: plan.sections.map((x) => ({ id: x.id, title: x.title, purpose: x.purpose })), payoff: plan.payoff }, null, 1)}\n\nSCRIPT BEATS:\n${JSON.stringify(out.beats, null, 1)}\n\nAUTOMATED READINGS (heuristics):\n${JSON.stringify(readings, null, 1)}\n\nUse the plan's section ids in "section".`;
+    critique = (await stage("critique", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, critText), schema: CRITIQUE_SCHEMA, maxTokens: size("critique"), effort: "medium", model: deps.criticModel || process.env.PD_AUTO_CRITIC_MODEL || undefined }, getClient, cache, hash({ ...base, s: "critique", beats: out.beats }))).json;
+    log.push({ stage: "critique", verdict: critique.verdict, problems: critique.problems.length });
+    // 8. Targeted rewrites: only the problems found; titles, thumbnails and unchanged graphics are kept.
+    current = "rewrite";
+    let critProblems = critique.problems;
+    while ((critique.verdict === "revise" || a.blocking.length) && (critProblems.length || a.blocking.length) && rounds < maxRewrites) {
+      rounds += 1;
+      if (!chunked) {
+        const problems = [...critProblems.map((x) => `[${x.severity}] ${x.section} ${x.beatIds.join(",")}: ${x.type}: "${x.quote}" -> ${x.fix}`), ...a.blocking];
+        const rwText = prompt("script.md") + `\n\nSTAGE: TARGETED REWRITE ${rounds}. Fix exactly these problems and nothing else. Keep beat ids for beats you keep; new beats need new ids and a graphic. Keep the winning hook as the first beat. Keep: ${critique.keep.join("; ") || "everything that is not listed"}.\nPROBLEMS:\n- ${problems.join("\n- ")}\n\nCURRENT BEATS:\n${JSON.stringify(out.beats, null, 1)}\n\nReturn all beats (rewritten and unchanged), graphics only for new or changed beats, and a changeLog.`;
+        const rw = (await stage("rewrite", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, rwText), schema: REWRITE_SCHEMA, maxTokens: format === "short" ? 16000 : size("rewrite"), effort: "high" }, getClient, cache, hash({ ...base, s: "rewrite", beats: out.beats, problems }))).json;
+        const keepGraphics = (out.graphics || []).filter((g) => rw.beats.some((b) => b.id === g.beatId) && !rw.graphics.some((n) => n.beatId === g.beatId));
+        out = { ...out, beats: rw.beats, graphics: [...keepGraphics, ...rw.graphics] }; changes.push(...rw.changeLog);
+      } else {
+        const { routed, global } = routeProblems(critProblems, a.blocking, out, plan, a.spoken.findings);
+        const lengthNote = global.filter((g) => /too short|too long/.test(g));
+        const bySize = plan.sections.map((x) => ({ id: x.id, w: T.words(out.beats.filter((b) => b.section === x.id).map((b) => b.text).join(" ")).length })).sort((p, q) => p.w - q.w);
+        if (lengthNote.length && /too short/.test(lengthNote[0])) for (const s2 of bySize.slice(0, 3)) routed[s2.id].push(`${lengthNote[0]}: add supported detail from this section's claims (about 50 more words)`);
+        if (lengthNote.length && /too long/.test(lengthNote[0])) for (const s2 of bySize.slice(-3)) routed[s2.id].push(`${lengthNote[0]}: cut repetition in this section`);
+        for (const sec of plan.sections) {
+          const list = routed[sec.id]; if (!list.length) continue;
+          const secBeats = out.beats.filter((b) => b.section === sec.id);
+          const at = out.beats.findIndex((b) => b.section === sec.id);
+          const before = out.beats.slice(Math.max(0, at - 1), at).map((b) => b.text).join(" ");
+          const after = (out.beats.slice(at + secBeats.length, at + secBeats.length + 1)[0] || {}).text || "";
+          const rwText = prompt("script.md") + `\n\nSTAGE: TARGETED REWRITE ${rounds}, SECTION ${sec.id} "${sec.title}" (${sec.purpose}). Fix exactly these problems in this section and nothing else. Use only claim ids: ${sec.claimIds.join(", ")}. Spoken style: ${SPOKEN_FIX}; numbers only as written in the claims.${sec.id === plan.sections[0].id ? ` The first beat must stay exactly: ${winningHook}` : ""}\nPROBLEMS:\n- ${list.join("\n- ")}\n\nLINE BEFORE THIS SECTION: ${before}\nLINE AFTER THIS SECTION: ${after}\nCURRENT BEATS OF THIS SECTION:\n${JSON.stringify(secBeats, null, 1)}\n\nReturn this section's beats (keep ids of kept beats; new beats get new ids starting with "${sec.id}-"), graphics only for new or changed beats, and a changeLog.`;
+          const rw = (await stage("rewrite", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, rwText, { claimIds: sec.claimIds }), schema: REWRITE_SCHEMA, maxTokens: size("rewrite"), effort: "medium" }, getClient, cache, hash({ ...base, s: "rewrite-section", secBeats, list }))).json;
+          const fresh = rw.beats.map((b) => ({ ...b, section: sec.id }));
+          const nextBeats = [...out.beats.slice(0, at), ...fresh, ...out.beats.slice(at + secBeats.length)];
+          const alive = new Set(nextBeats.map((b) => b.id)); const replaced = new Set(rw.graphics.map((g) => g.beatId));
+          out = { ...out, beats: nextBeats, graphics: [...(out.graphics || []).filter((g) => alive.has(g.beatId) && !replaced.has(g.beatId)), ...rw.graphics] };
+          changes.push(...rw.changeLog.map((c) => `${sec.id}: ${c}`));
+        }
+        if (global.some((g) => /title candidates|thumbnail concepts/.test(g))) {
+          current = "package";
+          const pk = `STAGE: PACKAGING (repair). Fix: ${global.filter((g) => /title|thumbnail/.test(g)).join("; ")}. THESIS: ${plan.thesis}`;
+          const p2 = (await stage("package", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, pk), schema: PACKAGE_SCHEMA, maxTokens: size("package"), effort: "low" }, getClient, cache, hash({ ...base, s: "package-fix", global }))).json;
+          out = { ...out, ...p2 }; current = "rewrite";
+        }
+      }
+      out = normalizeOpening(out, winningHook);
+      a = assess(out, dossier, format, actx); log.push({ stage: "rewrite-" + rounds, blocking: a.blocking.length, retention: a.retention.score, spoken: a.spoken.score });
+      critProblems = []; // later rounds are targeted at what the deterministic checks still find
+      if (!a.blocking.length) break;
+    }
+    // 9a. Independent final evaluation (same provider as the critique): narrative quality scores + fact check against
+    //     the dossier. High-severity factual problems get ONE more targeted rewrite and a re-evaluation; if any remain,
+    //     the script fails. This is an added gate, never a relaxation.
+    if (deps.finalEvaluation !== false && !a.blocking.length) {
+      const evalOnce = async (tag) => {
+        current = "evaluate";
+        const t = prompt("editor.md") + `\n\nSTAGE: FINAL EVALUATION. Score the script 1-10 on hook, structure, clarity, naturalness (spoken English), pacing and accuracy, and list every statement that is factually wrong or says more than its claim id supports (wrong law, wrong scope, invented arithmetic, overstated certainty). Severity high = a viewer would be misinformed. Use the plan's section ids.\nSCRIPT BEATS:\n${JSON.stringify(out.beats, null, 1)}`;
+        return (await stage("evaluate", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, t), schema: EVALUATION_SCHEMA, maxTokens: size("critique"), effort: "medium", model: deps.criticModel || process.env.PD_AUTO_CRITIC_MODEL || undefined }, getClient, cache, hash({ ...base, s: "evaluate", tag, beats: out.beats }))).json;
+      };
+      evaluation = await evalOnce(1);
+      let high = (evaluation.factualProblems || []).filter((x) => x.severity === "high");
+      log.push({ stage: "evaluate", verdict: evaluation.verdict, high: high.length, scores: evaluation.scores });
+      if (high.length) {
+        current = "rewrite"; rounds += 1;
+        const { routed } = routeProblems(high.map((x) => ({ section: x.section, beatIds: x.beatIds, type: "factual", severity: "high", quote: x.quote, fix: `${x.problem} -> ${x.fix}` })), [], out, plan);
+        for (const sec of plan.sections) {
+          const list = routed[sec.id]; if (!list.length) continue;
+          const secBeats = out.beats.filter((b) => b.section === sec.id); const at = out.beats.findIndex((b) => b.section === sec.id);
+          const rwText = prompt("script.md") + `\n\nSTAGE: TARGETED REWRITE ${rounds}, SECTION ${sec.id} "${sec.title}" (${sec.purpose}). Fix these FACTUAL problems found by the independent fact check and nothing else. Use only claim ids: ${sec.claimIds.join(", ")}. Spoken style: ${SPOKEN_FIX}; numbers only as written in the claims.${sec.id === plan.sections[0].id ? ` The first beat must stay exactly: ${winningHook}` : ""}\nPROBLEMS:\n- ${list.join("\n- ")}\n\nCURRENT BEATS OF THIS SECTION:\n${JSON.stringify(secBeats, null, 1)}\n\nReturn this section's beats (keep ids of kept beats), graphics only for new or changed beats, and a changeLog.`;
+          const rw = (await stage("rewrite", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, rwText, { claimIds: sec.claimIds }), schema: REWRITE_SCHEMA, maxTokens: size("rewrite"), effort: "medium" }, getClient, cache, hash({ ...base, s: "fact-fix", secBeats, list }))).json;
+          const fresh = rw.beats.map((b) => ({ ...b, section: sec.id }));
+          const nextBeats = [...out.beats.slice(0, at), ...fresh, ...out.beats.slice(at + secBeats.length)];
+          const alive = new Set(nextBeats.map((b) => b.id)); const replaced = new Set(rw.graphics.map((g) => g.beatId));
+          out = { ...out, beats: nextBeats, graphics: [...(out.graphics || []).filter((g) => alive.has(g.beatId) && !replaced.has(g.beatId)), ...rw.graphics] };
+          changes.push(...rw.changeLog.map((c) => `${sec.id} (fact check): ${c}`));
+        }
+        out = normalizeOpening(out, winningHook);
+        a = assess(out, dossier, format, actx);
+        evaluation = await evalOnce(2);
+        high = (evaluation.factualProblems || []).filter((x) => x.severity === "high");
+        log.push({ stage: "evaluate-2", verdict: evaluation.verdict, high: high.length, blocking: a.blocking.length, scores: evaluation.scores });
+      }
+      if (high.length) a = { ...a, blocking: [...a.blocking, ...high.map((x) => `independent fact check (${x.section}): "${x.quote}" ${x.problem}`)] };
+      // the independent evaluator's own verdict is a gate too: "fail" blocks even when no single factual item is high
+      if (evaluation.verdict === "fail") a = { ...a, blocking: [...a.blocking, `independent evaluation verdict: fail (${evaluation.summary || "no summary"})`] };
+    }
+  } catch (e) {
+    // Stop safely: every completed stage is already in the disk cache, so a later run resumes from here.
+    if (PAUSE.has(e.code)) return { status: "paused", pausedAt: current, reasons: [`${e.code}: ${e.message}`], plan, draft, critique, evaluation, out, assessment: a, changes, rounds, ledger, cacheHits: cache.hits, log };
+    if (e.code) return { status: "provider-error", pausedAt: current, reasons: [`${e.code}: ${e.message}`], plan, draft, critique, evaluation, out, assessment: a, changes, rounds, ledger, cacheHits: cache.hits, log };
+    throw e;
   }
   // 9. Final assessment.
   const status = a.blocking.length ? "script-failed" : "ok";
-  return { status, plan, draft, critique, out, assessment: a, changes, rounds, reasons: a.blocking, winningHook, hookOverride: pe.override, ledger, cacheHits: cache.hits, log };
+  return { status, plan, draft, critique, evaluation, out, assessment: a, changes, rounds, reasons: a.blocking, winningHook: pe.selected.text, hookOverride: pe.override, ledger, cacheHits: cache.hits, log };
 }
 
 // Bundle for the existing production pipeline, plus the story artefacts for human review.
@@ -296,4 +509,4 @@ function bundleFromStory(topic, dossier, res, format, dossierFile) {
   return b;
 }
 
-module.exports = { bundleFromStory, write, check, toBundle, brief, SCRIPT_SCHEMA, BEAT_TYPES, GRAPHIC_TYPES, LENGTH, develop, assess, evaluatePlan, dossierBlock, stageCache, promptVersion, wordsFor, STORY_SCHEMA, CRITIQUE_SCHEMA, REWRITE_SCHEMA, PURPOSES };
+module.exports = { normalizeOpening, EVALUATION_SCHEMA, routeProblems, stageProviders, SIZES, DRAFT_SECTION_SCHEMA, PACKAGE_SCHEMA, bundleFromStory, write, check, toBundle, brief, SCRIPT_SCHEMA, BEAT_TYPES, GRAPHIC_TYPES, LENGTH, develop, assess, evaluatePlan, dossierBlock, stageCache, promptVersion, wordsFor, STORY_SCHEMA, CRITIQUE_SCHEMA, REWRITE_SCHEMA, PURPOSES };

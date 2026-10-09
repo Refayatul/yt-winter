@@ -111,7 +111,7 @@ if (cmd === "inventory") {
   const format = meta.format; const words = W.wordsFor(format, meta.minutes || [8, 12]);
   const Research = require(path.join(P, "research")); const gate = Research.gate(dossier, { format });
   if (!gate.pass) { console.error("research gate FAILED: " + gate.rejections.join("; ")); process.exit(1); }
-  const plan = rj("plan.json"); const draftOut = rj("draft.json"); const critique = rj("critique.json"); const fin = rj("final.json");
+  const plan = rj("plan.json"); const draftOut = rj("draft.json"); const critique = rj("critique.json"); const approved = !!rj("final.json"); const fin = rj("final.json") || rj("latest.json"); // latest.json: a run that did not pass its gates
   const planCheck = W.evaluatePlan(plan, dossier, format); const winningHook = planCheck.selected && planCheck.selected.text;
   const ctx = { plan, winningHook, hookCandidates: plan.hookCandidates, words, title: meta.title };
   const draftFull = { ...draftOut, hookCandidates: plan.hookCandidates.map((h) => h.text) };
@@ -124,9 +124,9 @@ if (cmd === "inventory") {
   const res = { plan, critique, out: finalOut, assessment: finalA, changes: fin.changeLog || [], rounds: 1, winningHook, cacheHits: 0 };
   const pkg = { topic, dossier, format, title: meta.title, generatedAt: new Date().toISOString(), plan, planCheck, critique, claimMap,
     draft: { assessment: draftA }, final: { assessment: finalA, out: finalOut, winningHook, changes: fin.changeLog || [], editorial: Retention.editorialReport(finalOut.beats, { plan, dossier, format, title: meta.title }) } };
-  fs.writeFileSync(path.join(dir, "review.md"), Report.renderStory(pkg));
+  fs.writeFileSync(path.join(dir, "review.md"), (approved ? "" : "> NOT APPROVED: this is the latest script of a run that did not pass its gates (latest.json, not final.json). No bundle is written.\n\n") + Report.renderStory(pkg));
   const rel = path.relative(dir, path.join(CHANNEL_DIR, "research", meta.topicId + ".json"));
-  fs.writeFileSync(path.join(dir, "bundle.json"), JSON.stringify({ ...W.bundleFromStory(topic, dossier, res, format, rel), selectedTitle: meta.title }, null, 1) + "\n");
+  if (approved) fs.writeFileSync(path.join(dir, "bundle.json"), JSON.stringify({ ...W.bundleFromStory(topic, dossier, res, format, rel), selectedTitle: meta.title }, null, 1) + "\n");
   console.log(`plan issues ${planCheck.issues.length} · draft: ${draftA.local.words} words, ${draftA.blocking.length} blocking · final: ${finalA.local.words} words, ${finalA.blocking.length} blocking, retention ${finalA.retention.score}, spoken ${finalA.spoken.score}, AI-pattern ${finalA.local.aiPatternScore}`);
   for (const b of finalA.blocking) console.log("  BLOCKING: " + b);
   console.log("review: " + path.relative(process.cwd(), path.join(dir, "review.md")));

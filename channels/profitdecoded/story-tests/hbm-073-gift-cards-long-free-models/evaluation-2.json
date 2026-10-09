@@ -1,0 +1,65 @@
+{
+ "provenance": "Independent final evaluation (gemini gemini-3.8-flash), fresh context.",
+ "verdict": "fail",
+ "summary": "The script suffers from severe structural repetition—looping through the exact same company numbers across sections 2/3, 7, and 9—while introducing several unverified assertions not present in the dossier (such as quarterly update schedules, external macroeconomic causes, and analyst commentary). It also attributes calculated arithmetic sums directly to Starbucks filings without identifying them as our own arithmetic.",
+ "scores": {
+  "hook": 5,
+  "structure": 3,
+  "clarity": 6,
+  "naturalness": 5,
+  "pacing": 3,
+  "accuracy": 4
+ },
+ "factualProblems": [
+  {
+   "section": "s2",
+   "beatIds": [
+    "s2-2"
+   ],
+   "severity": "high",
+   "quote": "The estimates are updated each quarter as redemption patterns change.",
+   "problem": "The dossier does not state that Starbucks updates its breakage estimates quarterly. This frequency is invented.",
+   "fix": "Cut the claim about quarterly updates. State only that redemption rates are based on historical redemption patterns for each market."
+  },
+  {
+   "section": "s5",
+   "beatIds": [
+    "s5-4"
+   ],
+   "severity": "medium",
+   "quote": "Consumer behavior, economic shifts, or legal changes can alter redemption patterns over the twelve‑year horizon.",
+   "problem": "Claim c4 states that estimated breakage and timing may differ from actual outcomes, but does not cite 'consumer behavior, economic shifts, or legal changes'.",
+   "fix": "Remove the specific speculative drivers. State simply that Darden notes actual breakage and timing may differ from its estimates."
+  },
+  {
+   "section": "s7",
+   "beatIds": [
+    "s7-1"
+   ],
+   "severity": "high",
+   "quote": "Starbucks recorded $222.4 million of breakage revenue for fiscal 2025.",
+   "problem": "Starbucks did not record a single line of $222.4 million; that figure is our arithmetic combining $200.4 million from company-operated stores and $22.0 million from licensed stores. The prompt mandates that ourArithmetic must be explicitly attributed as our own calculation.",
+   "fix": "State clearly: 'Starbucks recorded $200.4 million in company-operated stores and $22.0 million in licensed stores, which by our calculation totals $222.4 million.'"
+  },
+  {
+   "section": "s8",
+   "beatIds": [
+    "s8-2"
+   ],
+   "severity": "medium",
+   "quote": "Analysts treat the figure as an estimate, not a guaranteed revenue stream.",
+   "problem": "The verified claims do not mention analysts or how external market analysts treat the figure.",
+   "fix": "Cut the sentence regarding analysts entirely."
+  },
+  {
+   "section": "s9",
+   "beatIds": [
+    "s9-2"
+   ],
+   "severity": "medium",
+   "quote": "Darden’s filing lists $760.2 million in new card loads and $751.9 million in redemptions.",
+   "problem": "Claim c5 defines $751.9 million as redemptions and breakage combined, not redemptions alone.",
+   "fix": "Specify that $751.9 million represents redemptions and breakage together."
+  }
+ ]
+}

@@ -1,0 +1,305 @@
+{
+ "generatedAt": "2026-10-09T11:07:53.875Z",
+ "note": "Token counts are the providers own usage fields recorded per call (Groq usage, Gemini usageMetadata). Reasoning tokens are included in Groq output tokens; Gemini thinking tokens are reported separately. listPriceEquivalentUsd is what the same tokens would cost on a paid tier: it was NOT charged.",
+ "totals": {
+  "groq": {
+   "calls": 43,
+   "inputTokens": 120585,
+   "outputTokens": 78939,
+   "reasoningTokens": 54847,
+   "listPriceEquivalentUsd": 0.0774
+  },
+  "gemini": {
+   "calls": 3,
+   "inputTokens": 24095,
+   "outputTokens": 3246,
+   "reasoningTokens": 786,
+   "listPriceEquivalentUsd": 0.0331
+  }
+ },
+ "actualChargesUsd": {
+  "anthropic": 0,
+  "groq": 0,
+  "gemini": 0,
+  "basis": "No Anthropic call was made (ANTHROPIC_API_KEY absent, paid budget $0, PAID_DISABLED guard). Groq: free plan, rate-limit headers show the free-plan 8,000 TPM / 1,000 RPD. Gemini: only free-tier-listed models callable. Provider consoles are the billing source of truth."
+ },
+ "gemini503": "Run 37915380644: Gemini returned HTTP 503 (high demand) on every retry; failed requests are not billed and recorded no usage.",
+ "runs": [
+  {
+   "run": "37915032067",
+   "url": "https://github.com/eyazan/youtube-otomasyon/actions/runs/37915032067",
+   "status": "provider-error",
+   "pausedAt": "plan",
+   "byProvider": {
+    "groq": {
+     "calls": 1,
+     "inputTokens": 3463,
+     "outputTokens": 2780,
+     "reasoningTokens": 1528,
+     "models": [
+      "openai/gpt-oss-120b"
+     ],
+     "listPriceEquivalentUsd": 0.0026
+    }
+   },
+   "charges": {
+    "anthropic": {
+     "usd": 0,
+     "basis": "spend ledger (list prices); 0 means no paid call was made"
+    },
+    "groq": {
+     "usd": 0,
+     "basis": "free plan stated by the owner; Groq console billing is the source of truth"
+    },
+    "gemini": {
+     "usd": 0,
+     "basis": "free tier stated by the owner; only free-tier-listed models can be called; AI Studio billing is the source of truth"
+    }
+   }
+  },
+  {
+   "run": "37915235458",
+   "url": "https://github.com/eyazan/youtube-otomasyon/actions/runs/37915235458",
+   "status": "plan-failed",
+   "pausedAt": null,
+   "byProvider": {
+    "groq": {
+     "calls": 1,
+     "inputTokens": 2975,
+     "outputTokens": 2049,
+     "reasoningTokens": 727,
+     "models": [
+      "openai/gpt-oss-120b"
+     ],
+     "listPriceEquivalentUsd": 0.002
+    }
+   },
+   "charges": {
+    "anthropic": {
+     "usd": 0,
+     "basis": "spend ledger (list prices); 0 means no paid call was made"
+    },
+    "groq": {
+     "usd": 0,
+     "basis": "free plan stated by the owner; Groq console billing is the source of truth"
+    },
+    "gemini": {
+     "usd": 0,
+     "basis": "free tier stated by the owner; only free-tier-listed models can be called; AI Studio billing is the source of truth"
+    }
+   }
+  },
+  {
+   "run": "37915380644",
+   "url": "https://github.com/eyazan/youtube-otomasyon/actions/runs/37915380644",
+   "status": "provider-error",
+   "pausedAt": "critique",
+   "byProvider": {
+    "groq": {
+     "calls": 10,
+     "inputTokens": 25570,
+     "outputTokens": 16893,
+     "reasoningTokens": 11764,
+     "models": [
+      "openai/gpt-oss-120b"
+     ],
+     "listPriceEquivalentUsd": 0.0165
+    }
+   },
+   "charges": {
+    "anthropic": {
+     "usd": 0,
+     "basis": "spend ledger (list prices); 0 means no paid call was made"
+    },
+    "groq": {
+     "usd": 0,
+     "basis": "free plan stated by the owner; Groq console billing is the source of truth"
+    },
+    "gemini": {
+     "usd": 0,
+     "basis": "free tier stated by the owner; only free-tier-listed models can be called; AI Studio billing is the source of truth"
+    }
+   }
+  },
+  {
+   "run": "37916803793",
+   "url": "https://github.com/eyazan/youtube-otomasyon/actions/runs/37916803793",
+   "status": "script-failed",
+   "pausedAt": null,
+   "byProvider": {
+    "gemini": {
+     "calls": 1,
+     "inputTokens": 10353,
+     "outputTokens": 1674,
+     "reasoningTokens": 0,
+     "models": [
+      "gemini-3.8-flash"
+     ],
+     "listPriceEquivalentUsd": 0.014
+    },
+    "groq": {
+     "calls": 8,
+     "inputTokens": 22284,
+     "outputTokens": 12334,
+     "reasoningTokens": 8025,
+     "models": [
+      "openai/gpt-oss-120b"
+     ],
+     "listPriceEquivalentUsd": 0.0126
+    }
+   },
+   "charges": {
+    "anthropic": {
+     "usd": 0,
+     "basis": "spend ledger (list prices); 0 means no paid call was made"
+    },
+    "groq": {
+     "usd": 0,
+     "basis": "free plan stated by the owner; Groq console billing is the source of truth"
+    },
+    "gemini": {
+     "usd": 0,
+     "basis": "free tier stated by the owner; only free-tier-listed models can be called; AI Studio billing is the source of truth"
+    }
+   }
+  },
+  {
+   "run": "37918528525",
+   "url": "https://github.com/eyazan/youtube-otomasyon/actions/runs/37918528525",
+   "status": "script-failed",
+   "pausedAt": null,
+   "byProvider": {
+    "groq": {
+     "calls": 8,
+     "inputTokens": 24408,
+     "outputTokens": 16183,
+     "reasoningTokens": 11916,
+     "models": [
+      "openai/gpt-oss-120b"
+     ],
+     "listPriceEquivalentUsd": 0.0158
+    }
+   },
+   "charges": {
+    "anthropic": {
+     "usd": 0,
+     "basis": "spend ledger (list prices); 0 means no paid call was made"
+    },
+    "groq": {
+     "usd": 0,
+     "basis": "free plan stated by the owner; Groq console billing is the source of truth"
+    },
+    "gemini": {
+     "usd": 0,
+     "basis": "free tier stated by the owner; only free-tier-listed models can be called; AI Studio billing is the source of truth"
+    }
+   }
+  },
+  {
+   "run": "37919455632",
+   "url": "https://github.com/eyazan/youtube-otomasyon/actions/runs/37919455632",
+   "status": "paused",
+   "pausedAt": "evaluate",
+   "byProvider": {
+    "groq": {
+     "calls": 9,
+     "inputTokens": 25604,
+     "outputTokens": 20548,
+     "reasoningTokens": 15105,
+     "models": [
+      "openai/gpt-oss-120b"
+     ],
+     "listPriceEquivalentUsd": 0.0193
+    }
+   },
+   "charges": {
+    "anthropic": {
+     "usd": 0,
+     "basis": "spend ledger (list prices); 0 means no paid call was made"
+    },
+    "groq": {
+     "usd": 0,
+     "basis": "free plan stated by the owner; Groq console billing is the source of truth"
+    },
+    "gemini": {
+     "usd": 0,
+     "basis": "free tier stated by the owner; only free-tier-listed models can be called; AI Studio billing is the source of truth"
+    }
+   }
+  },
+  {
+   "run": "37920375941",
+   "url": "https://github.com/eyazan/youtube-otomasyon/actions/runs/37920375941",
+   "status": "paused",
+   "pausedAt": "evaluate",
+   "byProvider": {
+    "gemini": {
+     "calls": 1,
+     "inputTokens": 6913,
+     "outputTokens": 970,
+     "reasoningTokens": 0,
+     "models": [
+      "gemini-3.8-flash"
+     ],
+     "listPriceEquivalentUsd": 0.0088
+    },
+    "groq": {
+     "calls": 6,
+     "inputTokens": 16281,
+     "outputTokens": 8152,
+     "reasoningTokens": 5782,
+     "models": [
+      "openai/gpt-oss-120b"
+     ],
+     "listPriceEquivalentUsd": 0.0086
+    }
+   },
+   "charges": {
+    "anthropic": {
+     "usd": 0,
+     "basis": "spend ledger (list prices); 0 means no paid call was made"
+    },
+    "groq": {
+     "usd": 0,
+     "basis": "free plan stated by the owner; Groq console billing is the source of truth"
+    },
+    "gemini": {
+     "usd": 0,
+     "basis": "free tier stated by the owner; only free-tier-listed models can be called; AI Studio billing is the source of truth"
+    }
+   }
+  },
+  {
+   "run": "37921341822",
+   "url": "https://github.com/eyazan/youtube-otomasyon/actions/runs/37921341822",
+   "status": "script-failed",
+   "pausedAt": null,
+   "byProvider": {
+    "gemini": {
+     "calls": 1,
+     "inputTokens": 6829,
+     "outputTokens": 602,
+     "reasoningTokens": 786,
+     "models": [
+      "gemini-3.8-flash"
+     ],
+     "listPriceEquivalentUsd": 0.0103
+    }
+   },
+   "charges": {
+    "anthropic": {
+     "usd": 0,
+     "basis": "spend ledger (list prices); 0 means no paid call was made"
+    },
+    "groq": {
+     "usd": 0,
+     "basis": "free plan stated by the owner; Groq console billing is the source of truth"
+    },
+    "gemini": {
+     "usd": 0,
+     "basis": "free tier stated by the owner; only free-tier-listed models can be called; AI Studio billing is the source of truth"
+    }
+   }
+  }
+ ]
+}

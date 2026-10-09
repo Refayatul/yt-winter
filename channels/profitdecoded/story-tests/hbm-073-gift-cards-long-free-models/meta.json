@@ -1,0 +1,83 @@
+{
+ "topicId": "hbm-073-how-gift-cards-make-money-for-retailers",
+ "format": "long",
+ "minutes": [
+  8,
+  12
+ ],
+ "title": "How Gift Cards Make Money for Retailers",
+ "status": "script-failed",
+ "pausedAt": null,
+ "reasons": [
+  "independent fact check (s2): \"The estimates are updated each quarter as redemption patterns change.\" The dossier does not state that Starbucks updates its breakage estimates quarterly. This frequency is invented.",
+  "independent fact check (s7): \"Starbucks recorded $222.4 million of breakage revenue for fiscal 2025.\" Starbucks did not record a single line of $222.4 million; that figure is our arithmetic combining $200.4 million from company-operated stores and $22.0 million from licensed stores. The prompt mandates that ourArithmetic must be explicitly attributed as our own calculation.",
+  "independent evaluation verdict: fail (The script suffers from severe structural repetition—looping through the exact same company numbers across sections 2/3, 7, and 9—while introducing several unverified assertions not present in the dossier (such as quarterly update schedules, external macroeconomic causes, and analyst commentary). It also attributes calculated arithmetic sums directly to Starbucks filings without identifying them as our own arithmetic.)"
+ ],
+ "log": [
+  {
+   "stage": "plan",
+   "issues": 2,
+   "warnings": [
+    "selectedHook fails the factual gate: number \"222\" is not in the verified dossier; override ignored, the best factual hook opens instead"
+   ]
+  },
+  {
+   "stage": "plan-fix",
+   "issues": 0,
+   "warnings": [
+    "selectedHook scores 70, more than 10 below the best hook (81); override ignored, the best factual hook opens instead"
+   ]
+  },
+  {
+   "stage": "draft",
+   "blocking": 8,
+   "words": 1429,
+   "retention": 79,
+   "spoken": 29
+  },
+  {
+   "stage": "critique",
+   "verdict": "revise",
+   "problems": 10
+  },
+  {
+   "stage": "rewrite-1",
+   "blocking": 4,
+   "retention": 87,
+   "spoken": 73
+  },
+  {
+   "stage": "rewrite-2",
+   "blocking": 0,
+   "retention": 99,
+   "spoken": 91
+  },
+  {
+   "stage": "evaluate",
+   "verdict": "fail",
+   "high": 7,
+   "scores": {
+    "hook": 4,
+    "structure": 3,
+    "clarity": 5,
+    "naturalness": 4,
+    "pacing": 3,
+    "accuracy": 3
+   }
+  },
+  {
+   "stage": "evaluate-2",
+   "verdict": "fail",
+   "high": 2,
+   "blocking": 0,
+   "scores": {
+    "hook": 5,
+    "structure": 3,
+    "clarity": 6,
+    "naturalness": 5,
+    "pacing": 3,
+    "accuracy": 4
+   }
+  }
+ ]
+}

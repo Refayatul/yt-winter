@@ -1,0 +1,95 @@
+{
+ "provenance": "Independent final evaluation (?), fresh context.",
+ "verdict": "fail",
+ "summary": "The script suffers from severe factual overreach, repetitive loop-like structure, and synthetic pacing. Multiple beats invent legal conclusions (claiming states automatically seize funds after five years, or that breakage drops when cards are spent), attribute non-existent statements to filings (claiming Darden expects to keep the entire $7.9M growth as breakage, or inventing tax implications), and repeat identical number lists across sections s1, s2, s3, s7, and s9.",
+ "scores": {
+  "hook": 4,
+  "structure": 3,
+  "clarity": 5,
+  "naturalness": 4,
+  "pacing": 3,
+  "accuracy": 3
+ },
+ "factualProblems": [
+  {
+   "section": "s1",
+   "beatIds": [
+    "s1-4"
+   ],
+   "severity": "high",
+   "quote": "As cards are spent, the company reduces the estimated breakage and moves the corresponding amount into revenue.",
+   "problem": "Factually inaccurate description of breakage mechanics. Under c2 and GAAP, breakage is recognized in proportion to card redemptions, not by reducing estimated breakage as cards are spent.",
+   "fix": "State that breakage is recognized over time in proportion to actual card redemptions based on historical patterns."
+  },
+  {
+   "section": "s2",
+   "beatIds": [
+    "s2-3"
+   ],
+   "severity": "high",
+   "quote": "The small difference reflects the portion estimated as breakage.",
+   "problem": "Overstates the dossier. The difference between $15,245.8M deferred and $15,199.5M recognized reflects net growth in deferred revenue; breakage is already included inside the $15,199.5M recognized figure (c3), not the net delta.",
+   "fix": "State that the $15,199.5 million recognized already includes both redemptions and breakage, leaving the deferred pool roughly flat as shown in i3."
+  },
+  {
+   "section": "s5",
+   "beatIds": [
+    "s5-3"
+   ],
+   "severity": "high",
+   "quote": "It also changes the balance sheet and tax picture.",
+   "problem": "The dossier (c6) mentions only that a 50 bps change would shift breakage income by about $3.6 million. Mentioning the tax picture is unsourced invention.",
+   "fix": "Cut the reference to the tax picture entirely."
+  },
+  {
+   "section": "s6",
+   "beatIds": [
+    "s6-2"
+   ],
+   "severity": "high",
+   "quote": "When a balance remains unclaimed beyond the period allowed by state unclaimed‑property statutes, the retailer must surrender that money to the state... excess ends up in a state treasury",
+   "problem": "c10 only says Darden lists unclaimed property laws as highly complex involving subjective assumptions. The dossier does not specify state remittance triggers or mandate that excess always ends up in state treasuries.",
+   "fix": "Anchor to c10: state that unclaimed property rules are among the complex laws requiring subjective estimates, without inventing specific remittance mechanics."
+  },
+  {
+   "section": "s7",
+   "beatIds": [
+    "s7-2"
+   ],
+   "severity": "high",
+   "quote": "Management expects to keep that amount as breakage.",
+   "problem": "Invented claim. The $7.9M increase is the net growth of deferred gift card revenue (i2/c5). Darden does not claim this entire amount will be kept as breakage.",
+   "fix": "State only that the deferred unspent balance grew by $7.9 million over the fiscal year as calculated in i2."
+  },
+  {
+   "section": "s7",
+   "beatIds": [
+    "s7-4"
+   ],
+   "severity": "high",
+   "quote": "A state may claim any balance that remains idle after that period.",
+   "problem": "Confuses the federal five-year consumer expiration floor (c7) with state unclaimed property statutes. Federal law does not give states rights to claim funds after five years.",
+   "fix": "Cut the claim linking federal five-year limits to state escheatment rights."
+  },
+  {
+   "section": "s8",
+   "beatIds": [
+    "s8-3"
+   ],
+   "severity": "medium",
+   "quote": "The pocket‑share we report is an informed approximation, not an exact ledger.",
+   "problem": "Refers to an undefined 'pocket-share' calculation not present anywhere in the script or dossier arithmetic.",
+   "fix": "Cut references to 'pocket-share' approximation."
+  },
+  {
+   "section": "s9",
+   "beatIds": [
+    "s9-3"
+   ],
+   "severity": "high",
+   "quote": "That suggests retailers keep most of the unspent value as breakage. The state can claim a share under unclaimed‑property laws. Only a small remainder stays with the cardholder.",
+   "problem": "Sweeping unsupported conclusion. The dossier does not support that 'retailers keep most of the unspent value' or that 'only a small remainder stays with the cardholder.'",
+   "fix": "State what the survey actually shows: households hold an estimated $27 billion in unspent balances, while retailers estimate unredeemed shares under state and federal constraints."
+  }
+ ]
+}

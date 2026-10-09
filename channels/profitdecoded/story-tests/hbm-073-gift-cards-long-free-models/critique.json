@@ -1,0 +1,120 @@
+{
+ "provenance": "Independent critique stage (replayed from the stage cache of an earlier run; see that run's usage.json), fresh context: it never saw the drafting conversation.",
+ "verdict": "revise",
+ "problems": [
+  {
+   "section": "s1",
+   "beatIds": [
+    "s1-3"
+   ],
+   "type": "factual",
+   "severity": "high",
+   "quote": "Federal unclaimed‑property laws require retailers to remit a share of dormant balances to state authorities after a dormancy period.",
+   "fix": "Replace 'Federal unclaimed-property laws' with 'State unclaimed property laws'. Claim c2 and c10 refer strictly to state unclaimed property laws; federal rules (claim c7) govern expiration and dormancy fee restrictions, not unclaimed property remittances."
+  },
+  {
+   "section": "s3",
+   "beatIds": [
+    "s3-1"
+   ],
+   "type": "factual",
+   "severity": "high",
+   "quote": "Federal unclaimed‑property statutes require retailers to hold the balance for at least five years before it can be deemed abandoned.",
+   "fix": "Cut this statement. Federal rules (c7) require funds to stay valid for at least five years before expiration; they do not dictate statutory abandonment periods for unclaimed property."
+  },
+  {
+   "section": "s5",
+   "beatIds": [
+    "s5-3"
+   ],
+   "type": "factual",
+   "severity": "high",
+   "quote": "represents less than one percent of Darden’s total annual revenue",
+   "fix": "Delete 'represents less than one percent of Darden’s total annual revenue'. Darden's total annual revenue is not in the dossier, making this an unverified outside calculation."
+  },
+  {
+   "section": "s2",
+   "beatIds": [
+    "s2-1",
+    "s2-3"
+   ],
+   "type": "factual",
+   "severity": "medium",
+   "quote": "Starbucks reported $1.751 billion in stored‑value and loyalty balances... comparing the $15.245 billion loaded... with the $15.199 billion recognized",
+   "fix": "Use the exact dossier figures ($1,751.7 million, $15,245.8 million, and $15,199.5 million) or label the conversion explicitly as rounding ('about $1.75 billion' and 'about $15.2 billion' under i3 and i4)."
+  },
+  {
+   "section": "s8",
+   "beatIds": [
+    "s8-3"
+   ],
+   "type": "factual",
+   "severity": "medium",
+   "quote": "Our division of the survey total by the number of cards is ours, not the companies’",
+   "fix": "Cut this sentence entirely. No calculation dividing survey totals by card counts appears in the dossier or arithmetic claims."
+  },
+  {
+   "section": "s2",
+   "beatIds": [
+    "s2-2",
+    "s2-4"
+   ],
+   "type": "repetition",
+   "severity": "high",
+   "quote": "At the same time, Starbucks booked $200.4 million of breakage revenue... In fiscal 2025 Starbucks recorded $200.4 million of breakage",
+   "fix": "Delete beat s2-4 and merge s2-2 into section s3. The exact store breakdown ($200.4M and $22.0M) is stated in s2-2 and then repeated word-for-word in s3-2."
+  },
+  {
+   "section": "s8",
+   "beatIds": [
+    "s8-1"
+   ],
+   "type": "repetition",
+   "severity": "high",
+   "quote": "Federal law caps how a retailer can erode a card’s balance. A gift card may only carry an expiration date if the funds stay usable for at least five years",
+   "fix": "Remove s8-1. It duplicates the exact federal rule mechanics already explained in s6-1 word-for-word."
+  },
+  {
+   "section": "s9",
+   "beatIds": [
+    "s9-1",
+    "s9-2",
+    "s9-3"
+   ],
+   "type": "payoff",
+   "severity": "high",
+   "quote": "Our arithmetic shows Starbucks recorded $222.4 million of breakage revenue in fiscal 2025... Darden’s filing shows $760.2 million... A Bankrate‑YouGov survey",
+   "fix": "Rewrite Section 9 to resolve the film's central question ('Who ends up with the money: the company, the state, or the holder?') instead of reciting numbers from s3, s4, and s1. Synthesize how the model locks in breakage while state escheatment and consumer usage battle for the rest."
+  },
+  {
+   "section": "s5",
+   "beatIds": [
+    "s5-2"
+   ],
+   "type": "attention",
+   "severity": "medium",
+   "quote": "Darden records gift‑card revenue only when cards are redeemed. It assumes most cards are used within a twelve‑year window",
+   "fix": "Cut s5-2. Beat s4-1 already explained Darden's 12-year window and redemption recognition, causing the momentum to stall right after s5-1's sensitivity disclosure."
+  },
+  {
+   "section": "s3",
+   "beatIds": [
+    "s3-2",
+    "s3-3"
+   ],
+   "type": "voice",
+   "severity": "medium",
+   "quote": "The prior year showed $187.6 million and $20.0 million, and 2023 reported $196.1 million and $18.9 million respectively. Adding the two lines gives us $222.4 million of breakage revenue for fiscal 2025, $207.6 million for 2024, and $215.0 million for 2023.",
+   "fix": "Break this barrage of eight consecutive numbers into conversational spoken prose. Focus on fiscal 2025's total of $222.4 million first, then mention that prior years hovered consistently above $200 million."
+  }
+ ],
+ "keep": [
+  "The side-by-side comparison of Starbucks (rapid high-volume redemption matching) and Darden (12-year redemption curve).",
+  "The sensitivity analysis showing how a 50 basis point shift moves $3.6 million of Darden's operating income.",
+  "Distinguishing clearly between survey estimates of consumer balances ($27 billion across cards, vouchers, and credits) and actual balance-sheet liabilities recorded by SEC filers.",
+  "Darden's explicit admission that unclaimed property laws require subjective assumptions and estimates."
+ ],
+ "automatedReadingsDisputed": [
+  "Local checks flagged '0.5' as not in the dossier for beat s5-3; 50 basis points mathematically equals 0.5 percentage points (claim c6), so the decimal conversion itself is valid math, though the broader sentence fails on unverified total revenue."
+ ]
+}

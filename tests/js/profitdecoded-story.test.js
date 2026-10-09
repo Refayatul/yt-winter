@@ -141,10 +141,12 @@ test("story plan checks: claim ids, every question resolved, a turn, a caveat, p
   const close = ranked.find((h, i) => i > 0 && h.factual.pass && ranked[0].total - h.total <= 10);
   const ok = W.evaluatePlan({ ...plan, selectedHook: close.text, selectionReason: "more familiar brand" }, d);
   assert.deepEqual(ok.issues, []); assert.equal(ok.selected.text, close.text); assert.ok(ok.override && ok.override.reason);
-  assert.match(W.evaluatePlan({ ...plan, selectedHook: close.text }, d).issues.join(), /selectionReason/);
+  // an invalid override never fails the plan: it is ignored with a warning and the best factual hook opens
+  const noReason = W.evaluatePlan({ ...plan, selectedHook: close.text }, d);
+  assert.deepEqual(noReason.issues, []); assert.match(noReason.warnings.join(), /selectionReason/); assert.equal(noReason.selected.text, ranked[0].text);
   const far = ranked.find((h) => ranked[0].total - h.total > 10);
-  if (far) assert.match(W.evaluatePlan({ ...plan, selectedHook: far.text, selectionReason: "x" }, d).issues.join(), /more than 10 below/);
-  assert.match(W.evaluatePlan({ ...plan, selectedHook: "not a candidate", selectionReason: "x" }, d).issues.join(), /not one of the hook candidates/);
+  if (far) { const f = W.evaluatePlan({ ...plan, selectedHook: far.text, selectionReason: "x" }, d); assert.match(f.warnings.join(), /more than 10 below/); assert.equal(f.selected.text, ranked[0].text); }
+  assert.match(W.evaluatePlan({ ...plan, selectedHook: "not a candidate", selectionReason: "x" }, d).warnings.join(), /not one of the hook candidates/);
 });
 
 // ---------- staged develop() ----------
@@ -156,7 +158,7 @@ test("develop: plan -> draft -> independent critique -> targeted rewrite, shared
   const rewrite = { beats: out.beats, graphics: [], changeLog: ["b5: removed teaser"] };
   const client = mockClient({ plan: [plan], draft: [draft], critique: [critique], rewrite: [rewrite] });
   const ledger = L.newLedger(20);
-  const r = await W.develop(topic(), dossier(), "short", { client, ledger, cacheDir });
+  const r = await W.develop(topic(), dossier(), "short", { client, ledger, cacheDir, finalEvaluation: false });
   assert.equal(r.status, "ok", JSON.stringify(r.reasons));
   assert.deepEqual(client.calls.map((c) => c.stage), ["plan", "draft", "critique", "rewrite"]);
   // shared, prompt-cached prefix: same system, dossier block first with cache_control
@@ -174,7 +176,7 @@ test("develop: plan -> draft -> independent critique -> targeted rewrite, shared
   for (const st of ["plan", "draft", "critique", "rewrite"]) assert.equal(ledger.stages[st].calls, 1, st);
   assert.ok(ledger.usd > 0);
   // a second run reuses every stage from the disk cache: no calls, no client, no key
-  const again = await W.develop(topic(), dossier(), "short", { ledger: L.newLedger(20), cacheDir });
+  const again = await W.develop(topic(), dossier(), "short", { ledger: L.newLedger(20), cacheDir, finalEvaluation: false });
   assert.equal(again.status, "ok"); assert.equal(again.cacheHits, 4); assert.equal(again.ledger.calls, 0);
   // the bundle carries the story artefacts and still feeds the existing pipeline
   const bundle = W.bundleFromStory(topic(), dossier(), r, "short", "../research/x.json");
@@ -192,7 +194,7 @@ test("develop: gates are never relaxed (unverified research, unfixable script)",
   assert.equal(r1.status, "research-failed"); assert.equal(none.calls.length, 0);
   const bad = { ...out, beats: out.beats.map((b) => (b.id === "b3" ? { ...b, text: b.text + " Costco earned $99 billion from it." } : b)) };
   const client = mockClient({ plan: [plan], draft: [bad], critique: [{ verdict: "revise", problems: [], keep: [], automatedReadingsDisputed: [] }], rewrite: [{ beats: bad.beats, graphics: [], changeLog: [] }, { beats: bad.beats, graphics: [], changeLog: [] }] });
-  const r2 = await W.develop(topic(), dossier(), "short", { client, ledger: L.newLedger(5), cacheDir: false, maxRewrites: 2 });
+  const r2 = await W.develop(topic(), dossier(), "short", { client, ledger: L.newLedger(5), cacheDir: false, maxRewrites: 2, finalEvaluation: false });
   assert.equal(r2.status, "script-failed");
   assert.match(r2.reasons.join(), /99/);
   assert.equal(client.calls.filter((c) => c.stage === "rewrite").length, 2);
@@ -204,7 +206,7 @@ test("orchestrator uses the story engine by default; PD_STORY_ENGINE=legacy keep
   const dirs = { research: path.join(tmp, "research"), auto: path.join(tmp, "auto"), state: path.join(tmp, "state") };
   fs.mkdirSync(dirs.research, { recursive: true }); fs.writeFileSync(path.join(dirs.research, topic().id + ".json"), JSON.stringify(dossier()));
   const client = mockClient({ plan: [plan], draft: [out], critique: [{ verdict: "ready", problems: [], keep: ["all"], automatedReadingsDisputed: [] }] });
-  const r = await P.produce({ topic: topic(), universe: [], format: "short", deps: { client, ledger: L.newLedger(10), cacheDir: false }, dirs, now: Date.parse("2026-10-09") });
+  const r = await P.produce({ topic: topic(), universe: [], format: "short", deps: { client, ledger: L.newLedger(10), cacheDir: false, finalEvaluation: false }, dirs, now: Date.parse("2026-10-09") });
   assert.equal(r.status, "bundle-ready", JSON.stringify(r.reasons));
   assert.equal(r.steps[1].engine, "story"); assert.ok(r.steps[1].stages.plan && r.steps[1].stages.critique);
   const written = JSON.parse(fs.readFileSync(r.bundlePath, "utf8"));

@@ -101,6 +101,7 @@ function renderStory(pkg) {
   L.push(row(["#", "Section", "Purpose", "Claims", "Raises", "Resolves"]), row(["---", "---", "---", "---", "---", "---"]));
   plan.sections.forEach((x, i) => L.push(row([i + 1, esc(x.title), x.purpose, x.claimIds.join(", "), x.raises.join(", ") || "—", x.resolves.join(", ") || "—"])));
   L.push("", `Plan checks: ${planCheck.issues.length ? planCheck.issues.map(esc).join("; ") : "all passed"}.`, "");
+  if ((planCheck.warnings || []).length) L.push("Plan warnings: " + planCheck.warnings.map(esc).join("; "), "");
   L.push("## Hook evaluation", row(["Hook", "Mechanism", "Curiosity", "Clarity", "Originality", "Tension", "Visual", "Factual", "Total"]), row(["---", "---", "---", "---", "---", "---", "---", "---", "---"]));
   for (const h of final.assessment.hooks.ranked) L.push(row([esc(h.text), h.mechanism, h.dims.curiosity, h.dims.clarity, h.dims.originality, h.dims.tension, h.dims.visual, h.factual.pass ? "pass" : "FAIL: " + esc(h.factual.problems.join("; ")), h.total]));
   L.push("", `Selected opening: “${esc(final.winningHook)}”`);

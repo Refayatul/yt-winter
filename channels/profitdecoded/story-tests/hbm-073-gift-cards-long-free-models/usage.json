@@ -1,0 +1,52 @@
+{
+ "generatedAt": "2026-10-09T11:04:11.059Z",
+ "paidBudgetUsd": 0,
+ "paidSpendUsd": 0,
+ "tokenGuard": 15000,
+ "tokensCounted": 8217,
+ "stages": [
+  {
+   "stage": "evaluate",
+   "providers": [
+    "gemini"
+   ],
+   "models": [
+    "gemini-3.8-flash"
+   ],
+   "calls": 1,
+   "inputTokens": 6829,
+   "outputTokens": 602,
+   "reasoningTokens": 786,
+   "cacheReadTokens": 0,
+   "paidUsd": 0,
+   "lastRateLimit": null
+  }
+ ],
+ "byProvider": {
+  "gemini": {
+   "calls": 1,
+   "inputTokens": 6829,
+   "outputTokens": 602,
+   "reasoningTokens": 786,
+   "models": [
+    "gemini-3.8-flash"
+   ],
+   "listPriceEquivalentUsd": 0.0103
+  }
+ },
+ "charges": {
+  "anthropic": {
+   "usd": 0,
+   "basis": "spend ledger (list prices); 0 means no paid call was made"
+  },
+  "groq": {
+   "usd": 0,
+   "basis": "free plan stated by the owner; Groq console billing is the source of truth"
+  },
+  "gemini": {
+   "usd": 0,
+   "basis": "free tier stated by the owner; only free-tier-listed models can be called; AI Studio billing is the source of truth"
+  }
+ },
+ "note": "Token counts are the providers' own usage fields. listPriceEquivalentUsd is what the same usage would cost on paid plans; it is not a charge."
+}
