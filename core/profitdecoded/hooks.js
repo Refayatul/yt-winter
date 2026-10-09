@@ -54,7 +54,8 @@ function compete(candidates, ctx = {}) {
   const scored = candidates.map((c) => {
     const text = typeof c === "string" ? c : c.text;
     const s = scoreHook(text, ctx);
-    return { text, mechanism: (c.mechanism && MECHANISMS.includes(c.mechanism)) ? c.mechanism : s.mechanism, ...s };
+    // the author's tag (when valid) wins over the heuristic label: spread the score first, then set the mechanism
+    return { ...s, text, mechanism: (c && c.mechanism && MECHANISMS.includes(c.mechanism)) ? c.mechanism : s.mechanism };
   }).sort((a, b) => b.score - a.score);
   const mechs = new Set(scored.map((c) => c.mechanism));
   const paraphrase = [];

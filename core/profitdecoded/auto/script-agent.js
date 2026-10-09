@@ -292,16 +292,25 @@ const DRAFT_SECTION_SCHEMA = { type: "object", additionalProperties: false, requ
 const PACKAGE_SCHEMA = { type: "object", additionalProperties: false, required: ["titleCandidates", "thumbnailCandidates", "learningValue"], properties: { titleCandidates: SCRIPT_SCHEMA.properties.titleCandidates, thumbnailCandidates: SCRIPT_SCHEMA.properties.thumbnailCandidates, learningValue: { type: "string" } } };
 
 // Route every finding (critic problem or deterministic issue) to the plan section it concerns.
-function routeProblems(problems, blocking, out, plan) {
+// spoken: the assessment's spoken-naturalness findings; when the spoken gate blocks, every finding that quotes a sentence is
+// routed to the section holding that sentence (the aggregated blocking line only quotes the first few).
+const SPOKEN_FIX = "rewrite as plain spoken English: at most two numbers per sentence (split the rest into short sentences), no semicolons or brackets, fewer than four commas";
+function routeProblems(problems, blocking, out, plan, spoken = []) {
   const ids = plan.sections.map((x) => x.id); const first = ids[0]; const last = ids[ids.length - 1];
   const secOfBeat = Object.fromEntries((out.beats || []).map((b) => [b.id, b.section]));
-  const secOfText = (q) => { const t = String(q || "").slice(0, 50); const b = t.length > 12 && (out.beats || []).find((x) => x.text.includes(t)); return b ? b.section : null; };
+  // whitespace is normalised on both sides: models emit narrow no-break spaces (U+202F) that the checks collapse to " "
+  const ws = (x) => String(x || "").replace(/\s+/g, " ");
+  const secOfText = (q) => { const t = ws(q).trim().slice(0, 50); const b = t.length > 12 && (out.beats || []).find((x) => ws(x.text).includes(t)); return b ? b.section : null; };
   const turn = (plan.sections.find((x) => /turn|complication/.test(x.purpose)) || {}).id || ids[Math.floor(ids.length / 2)];
   const routed = Object.fromEntries(ids.map((i) => [i, []])); const global = [];
   const put = (sec, msg) => { if (sec && routed[sec]) routed[sec].push(msg); else global.push(msg); };
   for (const p of problems) put(ids.includes(p.section) ? p.section : (p.beatIds || []).map((b) => secOfBeat[b]).find(Boolean) || secOfText(p.quote), `[${p.severity}] ${p.type}: "${p.quote}" -> ${p.fix}`);
+  const spokenBlocks = blocking.some((b) => /^spoken naturalness/.test(b));
+  const spokenRouted = spokenBlocks ? spoken.filter((f) => f.sentence && secOfText(f.sentence)) : [];
+  for (const f of spokenRouted) put(secOfText(f.sentence), `spoken: ${f.name}: "${f.sentence}" -> ${SPOKEN_FIX}`);
   for (const b of blocking) {
     let m;
+    if (spokenRouted.length && /^spoken naturalness/.test(b)) continue;
     if ((m = /^retention \(([^)]+)\)/.exec(b))) put(m[1], b);
     else if ((m = /\(([\w-]+)\) is never answered/.exec(b))) { put(m[1], b); put(last, b); }
     else if (/weak-opening|first beat must be the winning hook/.test(b)) put(first, b);
@@ -394,7 +403,7 @@ async function develop(topic, dossier, format, deps = {}) {
         const keepGraphics = (out.graphics || []).filter((g) => rw.beats.some((b) => b.id === g.beatId) && !rw.graphics.some((n) => n.beatId === g.beatId));
         out = { ...out, beats: rw.beats, graphics: [...keepGraphics, ...rw.graphics] }; changes.push(...rw.changeLog);
       } else {
-        const { routed, global } = routeProblems(critProblems, a.blocking, out, plan);
+        const { routed, global } = routeProblems(critProblems, a.blocking, out, plan, a.spoken.findings);
         const lengthNote = global.filter((g) => /too short|too long/.test(g));
         const bySize = plan.sections.map((x) => ({ id: x.id, w: T.words(out.beats.filter((b) => b.section === x.id).map((b) => b.text).join(" ")).length })).sort((p, q) => p.w - q.w);
         if (lengthNote.length && /too short/.test(lengthNote[0])) for (const s2 of bySize.slice(0, 3)) routed[s2.id].push(`${lengthNote[0]}: add supported detail from this section's claims (about 50 more words)`);
@@ -405,7 +414,7 @@ async function develop(topic, dossier, format, deps = {}) {
           const at = out.beats.findIndex((b) => b.section === sec.id);
           const before = out.beats.slice(Math.max(0, at - 1), at).map((b) => b.text).join(" ");
           const after = (out.beats.slice(at + secBeats.length, at + secBeats.length + 1)[0] || {}).text || "";
-          const rwText = prompt("script.md") + `\n\nSTAGE: TARGETED REWRITE ${rounds}, SECTION ${sec.id} "${sec.title}" (${sec.purpose}). Fix exactly these problems in this section and nothing else. Use only claim ids: ${sec.claimIds.join(", ")}.${sec.id === plan.sections[0].id ? ` The first beat must stay exactly: ${winningHook}` : ""}\nPROBLEMS:\n- ${list.join("\n- ")}\n\nLINE BEFORE THIS SECTION: ${before}\nLINE AFTER THIS SECTION: ${after}\nCURRENT BEATS OF THIS SECTION:\n${JSON.stringify(secBeats, null, 1)}\n\nReturn this section's beats (keep ids of kept beats; new beats get new ids starting with "${sec.id}-"), graphics only for new or changed beats, and a changeLog.`;
+          const rwText = prompt("script.md") + `\n\nSTAGE: TARGETED REWRITE ${rounds}, SECTION ${sec.id} "${sec.title}" (${sec.purpose}). Fix exactly these problems in this section and nothing else. Use only claim ids: ${sec.claimIds.join(", ")}. Spoken style: ${SPOKEN_FIX}; numbers only as written in the claims.${sec.id === plan.sections[0].id ? ` The first beat must stay exactly: ${winningHook}` : ""}\nPROBLEMS:\n- ${list.join("\n- ")}\n\nLINE BEFORE THIS SECTION: ${before}\nLINE AFTER THIS SECTION: ${after}\nCURRENT BEATS OF THIS SECTION:\n${JSON.stringify(secBeats, null, 1)}\n\nReturn this section's beats (keep ids of kept beats; new beats get new ids starting with "${sec.id}-"), graphics only for new or changed beats, and a changeLog.`;
           const rw = (await stage("rewrite", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, rwText, { claimIds: sec.claimIds }), schema: REWRITE_SCHEMA, maxTokens: size("rewrite"), effort: "medium" }, getClient, cache, hash({ ...base, s: "rewrite-section", secBeats, list }))).json;
           const fresh = rw.beats.map((b) => ({ ...b, section: sec.id }));
           const nextBeats = [...out.beats.slice(0, at), ...fresh, ...out.beats.slice(at + secBeats.length)];
@@ -443,7 +452,7 @@ async function develop(topic, dossier, format, deps = {}) {
         for (const sec of plan.sections) {
           const list = routed[sec.id]; if (!list.length) continue;
           const secBeats = out.beats.filter((b) => b.section === sec.id); const at = out.beats.findIndex((b) => b.section === sec.id);
-          const rwText = prompt("script.md") + `\n\nSTAGE: TARGETED REWRITE ${rounds}, SECTION ${sec.id} "${sec.title}" (${sec.purpose}). Fix these FACTUAL problems found by the independent fact check and nothing else. Use only claim ids: ${sec.claimIds.join(", ")}.${sec.id === plan.sections[0].id ? ` The first beat must stay exactly: ${winningHook}` : ""}\nPROBLEMS:\n- ${list.join("\n- ")}\n\nCURRENT BEATS OF THIS SECTION:\n${JSON.stringify(secBeats, null, 1)}\n\nReturn this section's beats (keep ids of kept beats), graphics only for new or changed beats, and a changeLog.`;
+          const rwText = prompt("script.md") + `\n\nSTAGE: TARGETED REWRITE ${rounds}, SECTION ${sec.id} "${sec.title}" (${sec.purpose}). Fix these FACTUAL problems found by the independent fact check and nothing else. Use only claim ids: ${sec.claimIds.join(", ")}. Spoken style: ${SPOKEN_FIX}; numbers only as written in the claims.${sec.id === plan.sections[0].id ? ` The first beat must stay exactly: ${winningHook}` : ""}\nPROBLEMS:\n- ${list.join("\n- ")}\n\nCURRENT BEATS OF THIS SECTION:\n${JSON.stringify(secBeats, null, 1)}\n\nReturn this section's beats (keep ids of kept beats), graphics only for new or changed beats, and a changeLog.`;
           const rw = (await stage("rewrite", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, rwText, { claimIds: sec.claimIds }), schema: REWRITE_SCHEMA, maxTokens: size("rewrite"), effort: "medium" }, getClient, cache, hash({ ...base, s: "fact-fix", secBeats, list }))).json;
           const fresh = rw.beats.map((b) => ({ ...b, section: sec.id }));
           const nextBeats = [...out.beats.slice(0, at), ...fresh, ...out.beats.slice(at + secBeats.length)];

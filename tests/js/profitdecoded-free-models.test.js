@@ -155,6 +155,19 @@ test("findings are routed to the section they concern", () => {
   assert.deepEqual(global, ["script is 900 words: too short for a long (min 1040)"]);
 });
 
+test("spoken findings reach their sections (narrow no-break spaces included); hook tags count as the author's mechanism", () => {
+  const W = A("script-agent"); const H = require("../../core/profitdecoded/hooks");
+  const plan = { sections: [{ id: "a", purpose: "open" }, { id: "b", purpose: "turn" }] };
+  const out = { beats: [{ id: "a-1", section: "a", text: "Hello there." }, { id: "b-1", section: "b", text: "It held $1.7\u202fbillion, 43\u202fpercent of $244 cards in 2023." }] };
+  const spoken = [{ name: "too many numbers in one sentence", sentence: "It held $1.7 billion, 43 percent of $244 cards in 2023." }];
+  const { routed, global } = W.routeProblems([], ["spoken naturalness 40 (<75): too many numbers in one sentence (\"It held $1.7 billion\")"], out, plan, spoken);
+  assert.equal(routed.b.length, 1); assert.match(routed.b[0], /at most two numbers per sentence/); assert.deepEqual(global, []);
+  // without per-finding routing, the aggregated line still goes somewhere (never dropped)
+  assert.equal(W.routeProblems([], ["spoken naturalness 40 (<75): x"], out, plan, []).global.length, 1);
+  const tagged = ["contradiction", "number", "hidden incentive", "consumer pain", "visual mystery"].map((m, i) => ({ text: `Hook line number ${i} about gift cards and ${["a", "b", "c", "d", "e"][i]} different words here ${i * 7}`, mechanism: m }));
+  assert.equal(H.compete(tagged).distinctMechanisms, 5);
+});
+
 test("workflow: schedule and its gate unchanged, Gemini secret checked without printing values, resumable cache", () => {
   const y = fs.readFileSync(path.join(ROOT, ".github/workflows/profitdecoded-produce.yml"), "utf8");
   assert.match(y, /cron: '50 11 \* \* 1-5'/);
