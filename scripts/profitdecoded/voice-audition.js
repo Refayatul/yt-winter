@@ -19,7 +19,7 @@ const providerArg = args.includes("--provider") ? args[args.indexOf("--provider"
 const opt = (k) => (args.includes(k) ? args[args.indexOf(k) + 1] : null);
 const T = require(path.join(root, "core/profitdecoded/text"));
 const textFile = opt("--text-file"); const rate = opt("--rate") || "+0%";
-const TEXT = textFile ? T.sentences(fs.readFileSync(path.resolve(textFile), "utf8").trim()).map((t) => N.spokenText(t)).join(" ") : [
+const TEXT = textFile ? T.sentences(fs.readFileSync(path.resolve(textFile), "utf8").trim()).map((t) => N.spokenText(t)).map((t) => t.charAt(0).toUpperCase() + t.slice(1)).join(" ") : [
   "Costco did not make most of its profit in the aisles. Of $10.4 billion in operating income, about half came from one line most shoppers never see.",
   "That is easier when the card carries the profit. Fees were about 51% of operating income.",
   "So Costco isn't really selling you groceries at a discount. It sells the discount itself, once a year.",
