@@ -97,7 +97,10 @@ async function main() {
   const n = Math.round((to - from) * FPS); const t0 = Date.now();
   for (let i = 0; i < n; i += 1) {
     await page.evaluate((x) => PD.frame(x), from + i / FPS);
-    const buf = await page.screenshot({ type: "png" });
+    // A transient browser stall (system load, sleep) must not lose a long render: every frame is a pure function of
+    // time, so the same frame is simply captured again (at most twice) with a longer timeout.
+    let buf = null;
+    for (let a = 0; !buf; a += 1) { try { buf = await page.screenshot({ type: "png", timeout: 120000 }); } catch (e) { if (a >= 2) throw e; process.stdout.write(`\n[motion] frame ${i}: screenshot retry ${a + 1} (${String(e.message).split("\n")[0]})\n`); await page.evaluate((x) => PD.frame(x), from + i / FPS); } }
     if (!ff.stdin.write(buf)) await new Promise((r) => ff.stdin.once("drain", r));
     if (i % 150 === 0) process.stdout.write(`\r[motion] frame ${i}/${n}`);
   }
