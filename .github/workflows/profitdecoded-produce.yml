@@ -60,6 +60,18 @@ on:
         options:
           - same
           - gemini
+      model:
+        description: 'Claude model id for an anthropic run (must match the approval; checked on the Models API before any call)'
+        required: false
+        default: 'claude-opus-5-5'
+        type: choice
+        options:
+          - claude-opus-5-5
+          - claude-haiku-5-5
+      script_version:
+        description: 'Script version in the ledger id topic:format:version (empty = repository variable PD_SCRIPT_VERSION or v1)'
+        required: false
+        default: ''
       token_guard:
         description: 'Free-provider token guard for the whole run (PD_AUTO_MAX_TOKENS)'
         required: false
@@ -137,6 +149,8 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PD_GEMINI_MODEL: ${{ vars.PD_GEMINI_MODEL || 'gemini-3.8-flash' }}
           PD_BUDGET_TOKEN: ${{ github.token }}
+          PD_AUTO_MODEL: ${{ inputs.model || 'claude-opus-5-5' }}
+          PD_SCRIPT_VERSION: ${{ inputs.script_version || vars.PD_SCRIPT_VERSION || 'v1' }}
         run: |
           ARGS=(--format "$FORMAT" --pool "$POOL" --max-usd "$MAX_USD")
           if [ -n "$TOPIC" ]; then ARGS+=(--topic "$TOPIC"); fi
@@ -179,7 +193,8 @@ jobs:
           MAX_USD: ${{ inputs.max_usd || '0' }}
           PD_BUDGET_POOL: ${{ inputs.budget_pool || 'script' }}
           PD_BUDGET_TOKEN: ${{ github.token }}
-          PD_SCRIPT_VERSION: ${{ vars.PD_SCRIPT_VERSION || 'v1' }}
+          PD_SCRIPT_VERSION: ${{ inputs.script_version || vars.PD_SCRIPT_VERSION || 'v1' }}
+          PD_AUTO_MODEL: ${{ inputs.model || 'claude-opus-5-5' }}
         run: |
           if [ "$CRITIC" = "gemini" ]; then export PD_STORY_PROVIDERS="plan=$PD_AUTO_PROVIDER,draft=$PD_AUTO_PROVIDER,rewrite=$PD_AUTO_PROVIDER,critique=gemini"; echo "stage providers: $PD_STORY_PROVIDERS"; fi
           if [ -n "$TOPIC" ]; then

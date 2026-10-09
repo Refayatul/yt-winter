@@ -336,6 +336,18 @@ test("paid approval: required, scoped to one script and pool, expires, and is cl
   assert.equal(B.loadPolicy().paidApproval, null, "the committed policy grants no approval");
 });
 
+test("paid approval for a one-model experiment: other models refused, its own cap applies, workflow passes the model", async () => {
+  const exp = { id: "exp-haiku-1", scriptId: "hbm-073:long:haiku55-v1", pool: "experiment", model: "claude-haiku-5-5", maxUsd: 0.5, expiresAt: "2026-10-12T00:00:00Z", approvedBy: "Owner" };
+  const t = Date.parse("2026-10-10T12:00:00Z");
+  const bud = fileBudget({ paidApproval: exp }, { pool: "experiment", scriptId: exp.scriptId, scriptCapUsd: 2 }, () => t);
+  await assert.rejects(bud.reserve({ id: "a", estimateUsd: 0.1, model: "claude-opus-5-5" }), (e) => e.code === "PAID_DISABLED" && /covers model claude-haiku-5-5 only/.test(e.message));
+  await bud.reserve({ id: "plan", estimateUsd: 0.3, model: "claude-haiku-5-5" });
+  await assert.rejects(bud.reserve({ id: "draft", estimateUsd: 0.3, model: "claude-haiku-5-5" }), (e) => e.code === "BUDGET" && /\$0\.50/.test(e.message));
+  assert.match((await bud.status()).approval.detail, /model claude-haiku-5-5, max \$0\.5/);
+  const wf = fs.readFileSync(path.join(ROOT, ".github/workflows/profitdecoded-produce.yml"), "utf8");
+  assert.equal((wf.match(/PD_AUTO_MODEL: \$\{\{ inputs\.model \|\| 'claude-opus-5-5' \}\}/g) || []).length, 2, "preflight and production both use the dispatched model");
+});
+
 test("workflow: ProfitDecoded-only key, approval closed on every outcome of the paid step, schedule cannot run paid", () => {
   const wf = fs.readFileSync(path.join(ROOT, ".github/workflows/profitdecoded-produce.yml"), "utf8");
   assert.doesNotMatch(wf, /secrets\.ANTHROPIC_API_KEY/, "never the repository-wide key other channels read");

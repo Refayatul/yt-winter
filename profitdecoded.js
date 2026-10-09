@@ -193,8 +193,8 @@ if (cmd === "inventory") {
     let ledgerDoc = null; if (policy) { try { ledgerDoc = (await B.storeFromEnv(policy).read()).doc; } catch (e) { ledgerDoc = null; } }
     if (has("--paid") && policy) {
       const want = flag("--topic") ? `${flag("--topic")}:${flag("--format", "long")}:${process.env.PD_SCRIPT_VERSION || "v1"}` : undefined;
-      const ap = ledgerDoc ? B.approvalState(ledgerDoc, policy, Date.now(), { scriptId: want, pool: flag("--pool", "experiment") }) : { ok: false, reason: "ledger unreadable" };
-      ok("paid-approval", ap.ok, ap.ok ? `approval ${ap.approval.id} usable until ${ap.approval.expiresAt} for ${ap.approval.scriptId} (${ap.approval.pool}); it closes when this run's production step ends` : ap.reason);
+      const ap = ledgerDoc ? B.approvalState(ledgerDoc, policy, Date.now(), { scriptId: want, pool: flag("--pool", "experiment"), model: LLMx.MODEL() }) : { ok: false, reason: "ledger unreadable" };
+      ok("paid-approval", ap.ok, ap.ok ? `approval ${ap.approval.id} usable until ${ap.approval.expiresAt} for ${ap.approval.scriptId} (${ap.approval.pool}${ap.approval.model ? ", model " + ap.approval.model : ""}${ap.approval.maxUsd ? ", max $" + ap.approval.maxUsd : ""}); it closes when this run's production step ends` : ap.reason);
     }
     if (policy) {
       try { const st = await new B.Budget({ store: B.storeFromEnv(policy), policy }).status(); const pool = flag("--pool", "experiment"); const left = Math.round((st.limits[pool] - st[pool].committedUsd) * 1e4) / 1e4; const need = Math.min(Number(flag("--max-usd", policy.maxPerScriptUsd)), policy.maxPerScriptUsd);

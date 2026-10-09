@@ -79,6 +79,8 @@ function approvalState(doc, policy, now, req = {}) {
   if (closed) return { ok: false, reason: `paid approval ${a.id} was used and closed at ${closed.at} (${closed.reason || "run finished"}); a new run needs a new approval` };
   if (req.scriptId && a.scriptId && req.scriptId !== a.scriptId) return { ok: false, reason: `paid approval ${a.id} covers ${a.scriptId} only, not ${req.scriptId}` };
   if (req.pool && a.pool && req.pool !== a.pool) return { ok: false, reason: `paid approval ${a.id} covers the ${a.pool} pool only, not ${req.pool}` };
+  // Optional, for one-model experiments: the approval names the exact model id and its own spend cap.
+  if (req.model && a.model && req.model !== a.model) return { ok: false, reason: `paid approval ${a.id} covers model ${a.model} only, not ${req.model}` };
   return { ok: true, approval: a };
 }
 
@@ -96,7 +98,7 @@ function decide(doc, req, policy, now, opts = {}) {
     if (st === "reserved") return { ok: false, code: "IN_FLIGHT", reason: `an identical request is already in flight (entry ${req.id}, run ${prior.runId || "?"})` };
     if ((st === "settled" || st === "uncertain") && opts.allowRepeat !== req.id) return { ok: false, code: "DUPLICATE", reason: `this exact request was already ${st === "settled" ? "paid for" : "sent (outcome uncertain)"} (entry ${req.id}); its output belongs in the stage cache. Paying again needs PD_BUDGET_ALLOW_REPEAT=${req.id}` };
   }
-  const cap = Math.min(policy.maxPerScriptUsd, req.scriptCapUsd != null ? req.scriptCapUsd : Infinity);
+  const cap = Math.min(policy.maxPerScriptUsd, req.scriptCapUsd != null ? req.scriptCapUsd : Infinity, ap.approval.maxUsd > 0 ? ap.approval.maxUsd : Infinity);
   const perScript = totals(doc, policy, now, { scriptId: req.scriptId });
   if (perScript.committedUsd + req.estimateUsd > cap + 1e-9) return { ok: false, code: "BUDGET", reason: `script ${req.scriptId}: $${perScript.committedUsd.toFixed(4)} committed + $${req.estimateUsd.toFixed(4)} maximum for this call exceeds the per-script limit $${cap.toFixed(2)}` };
   const month = totals(doc, policy, now, { month: req.month, pool: req.pool });
@@ -224,7 +226,7 @@ class Budget {
     const a = this.policy.paidApproval; if (!a || !a.id) return null; const now = this.now();
     return this.mutate((doc) => { const prior = doc.entries.find((e) => e.type === "close" && e.approvalId === a.id); if (prior) return prior; const e = { type: "close", id: this.idFor(["close", a.id]), approvalId: a.id, month: monthKey(now), at: new Date(now).toISOString(), runId: this.context.runId || null, reason: reason || "run finished" }; doc.entries.push(e); return e; });
   }
-  async status(month) { const { doc } = await this.store.read(); const now = this.now(); const m = month || monthKey(now); return { month: m, script: totals(doc, this.policy, now, { month: m, pool: "script" }), experiment: totals(doc, this.policy, now, { month: m, pool: "experiment" }), limits: this.policy.monthlyUsd, perScriptLimitUsd: this.policy.maxPerScriptUsd, targetPerScriptUsd: this.policy.targetPerScriptUsd, paidEnabled: this.policy.paidEnabled, approval: (() => { const ap = approvalState(doc, this.policy, now); return { id: (this.policy.paidApproval || {}).id || null, usable: ap.ok, detail: ap.ok ? `usable until ${ap.approval.expiresAt} for ${ap.approval.scriptId || "any script"} (${ap.approval.pool || "any pool"})` : ap.reason }; })() }; }
+  async status(month) { const { doc } = await this.store.read(); const now = this.now(); const m = month || monthKey(now); return { month: m, script: totals(doc, this.policy, now, { month: m, pool: "script" }), experiment: totals(doc, this.policy, now, { month: m, pool: "experiment" }), limits: this.policy.monthlyUsd, perScriptLimitUsd: this.policy.maxPerScriptUsd, targetPerScriptUsd: this.policy.targetPerScriptUsd, paidEnabled: this.policy.paidEnabled, approval: (() => { const ap = approvalState(doc, this.policy, now); return { id: (this.policy.paidApproval || {}).id || null, usable: ap.ok, detail: ap.ok ? `usable until ${ap.approval.expiresAt} for ${ap.approval.scriptId || "any script"} (${ap.approval.pool || "any pool"}${ap.approval.model ? ", model " + ap.approval.model : ""}${ap.approval.maxUsd ? ", max $" + ap.approval.maxUsd : ""})` : ap.reason }; })() }; }
 }
 
 // Human reconciliation of an uncertain (or settled) entry against the provider console.
