@@ -228,7 +228,11 @@ The draft keeps the survey's method and the estimate caveat in full; only the or
 - The card wall adds a second visual register.
 - Voice and music are **not** judged; that is the owner's listen.
 
-**CI:** PR #213 was 8/8 green before this round. The new `motion-prototype` job (clean runner) runs on this push. Its result is reported in the PR and in the session summary.
+**CI, clean runner** (run 37976847812, `motion-prototype` job):
+- The prototype rendered from pinned dependencies only: 1847 frames in 507 s on a GitHub-hosted runner.
+- The same QA figures as the local render (−14.7 LUFS, −2.5 dBTP, A/V 12 ms, 16 caption cues within limits); hard QA PASS.
+- The only failure was the last step: the thumbnail mobile board called ImageMagick, which the runner lacks. Fixed by drawing the board with the pinned headless browser, so the render path no longer needs ImageMagick.
+- All other PR checks passed.
 
 ## 7. Remaining production blockers
 

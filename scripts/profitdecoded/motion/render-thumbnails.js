@@ -6,7 +6,6 @@
 // (the default spec) also a mobile-size board (168x94 and 360x202 previews).
 const fs = require("fs");
 const path = require("path");
-const { execFileSync } = require("child_process");
 
 async function main() {
   const args = process.argv.slice(2); const opt = (k, d) => (args.includes(k) ? args[args.indexOf(k) + 1] : d);
@@ -23,11 +22,14 @@ async function main() {
     await page.evaluate((x) => { const t = window.THUMBS(window.PD).find((y) => y.id === x); document.getElementById("stage").innerHTML = t.html; }, id);
     const f = path.join(out, `${prefix}-${id}.png`); await page.screenshot({ path: f }); files.push(f);
   }
+  if (specName !== "thumbnails.js") { await browser.close(); console.log(`stills: ${files.map((f) => path.basename(f)).join(", ")}`); return; }
+  // Mobile check board, drawn with the same pinned browser (no ImageMagick): each concept at the home-feed phone
+  // size (360x202) and YouTube's small list size (168x94).
+  const board = path.join(out, "thumbnails-mobile-check.png"); const imgs = files.map((f) => "data:image/png;base64," + fs.readFileSync(f).toString("base64"));
+  await page.setViewportSize({ width: 560, height: 210 * files.length + 10 });
+  await page.setContent(`<html><body style="margin:0;background:#0b0c0e">${imgs.map((src) => `<div style="display:flex;gap:12px;padding:4px"><img src="${src}" style="width:360px;height:202px"><img src="${src}" style="width:168px;height:94px"></div>`).join("")}</body></html>`, { waitUntil: "load" });
+  await page.screenshot({ path: board, fullPage: true });
   await browser.close();
-  if (specName !== "thumbnails.js") { console.log(`stills: ${files.map((f) => path.basename(f)).join(", ")}`); return; }
-  // Mobile check board: each concept at YouTube's small list size (168x94) and home-feed phone size (360x202).
-  const board = path.join(out, "thumbnails-mobile-check.png");
-  execFileSync("magick", ["-background", "#0b0c0e", ...files.flatMap((f) => ["(", "(", f, "-resize", "360x202", ")", "(", f, "-resize", "168x94", "-gravity", "north", "-background", "#0b0c0e", "-extent", "180x202", ")", "+append", ")"]), "-append", board]);
   console.log(`thumbnails: ${files.map((f) => path.basename(f)).join(", ")} + ${path.basename(board)}`);
 }
 main().catch((e) => { console.error("THUMBNAILS FAILED:", e.message); process.exit(1); });
