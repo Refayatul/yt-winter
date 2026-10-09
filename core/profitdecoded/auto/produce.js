@@ -98,8 +98,10 @@ function writeStoryPackage(dir, topic, format, w, ledger, deps) {
   put("meta.json", { topicId: topic.id, format, minutes: deps.minutes || [8, 12], title: deps.title || topic.topic, status: w.status, pausedAt: w.pausedAt || null, reasons: w.reasons || [], log: w.log || [] });
   put("plan.json", w.plan);
   if (w.draft) put("draft.json", { ...w.draft.out, hookCandidates: [] });
-  if (w.critique) put("critique.json", { provenance: `Independent critique stage (${((ledger.stages || {}).critique || {}).providers || "?"} ${((ledger.stages || {}).critique || {}).models || ""}), fresh context: it never saw the drafting conversation.`, ...w.critique });
-  if (w.evaluation) put("evaluation.json", { provenance: `Independent final evaluation (${((ledger.stages || {}).critique || {}).models || "?"}), fresh context.`, ...w.evaluation });
+  // provider + model of the stage as recorded in this run's ledger; a stage replayed from the disk cache made no call in this run
+  const who = (st) => { const r = (ledger.stages || {})[st]; return r && r.models && r.models.length ? `${[].concat(r.providers || []).join(",")} ${[].concat(r.models).join(",")}` : "replayed from the stage cache of an earlier run; see that run's usage.json"; };
+  if (w.critique) put("critique.json", { provenance: `Independent critique stage (${who("critique")}), fresh context: it never saw the drafting conversation.`, ...w.critique });
+  if (w.evaluation) put("evaluation.json", { provenance: `Independent final evaluation (${who("evaluate")}), fresh context.`, ...w.evaluation });
   if (w.out && w.status === "ok") put("final.json", { beats: w.out.beats, graphics: w.out.graphics, changeLog: w.changes || [] });
   else if (w.out && w.draft) put("latest.json", { status: w.status, beats: w.out.beats, graphics: w.out.graphics, changeLog: w.changes || [], blocking: (w.assessment || {}).blocking || [] });
   put("usage.json", usageReport(ledger, deps));

@@ -486,6 +486,8 @@ async function develop(topic, dossier, format, deps = {}) {
         log.push({ stage: "evaluate-2", verdict: evaluation.verdict, high: high.length, blocking: a.blocking.length, scores: evaluation.scores });
       }
       if (high.length) a = { ...a, blocking: [...a.blocking, ...high.map((x) => `independent fact check (${x.section}): "${x.quote}" ${x.problem}`)] };
+      // the independent evaluator's own verdict is a gate too: "fail" blocks even when no single factual item is high
+      if (evaluation.verdict === "fail") a = { ...a, blocking: [...a.blocking, `independent evaluation verdict: fail (${evaluation.summary || "no summary"})`] };
     }
   } catch (e) {
     // Stop safely: every completed stage is already in the disk cache, so a later run resumes from here.

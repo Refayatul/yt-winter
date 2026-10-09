@@ -220,6 +220,10 @@ test("final independent evaluation: a high factual problem gets one targeted fix
   const gq2 = groqMock(); const gm2 = geminiMock([critiqueOk({ ...CRIT, verdict: "ready", problems: [] }), evalOk(HIGH, "fail"), evalOk(HIGH, "fail")]);
   const r2 = await runStory({ clients: freeClients(gm2, gq2, { t: 0, slept: 0 }), ledger: L.newLedger(0), cacheDir: false });
   assert.equal(r2.status, "script-failed"); assert.match(r2.reasons.join(), /independent fact check \(state\)/);
+  // a "fail" verdict blocks on its own, even with no high factual item left
+  const gq3 = groqMock(); const gm3 = geminiMock([critiqueOk({ ...CRIT, verdict: "ready", problems: [] }), evalOk([], "fail")]);
+  const r3 = await runStory({ clients: freeClients(gm3, gq3, { t: 0, slept: 0 }), ledger: L.newLedger(0), cacheDir: false });
+  assert.equal(r3.status, "script-failed"); assert.match(r3.reasons.join(), /independent evaluation verdict: fail/);
 });
 
 test("the approved hook is split from a beat that runs on past it (no rewording)", () => {
