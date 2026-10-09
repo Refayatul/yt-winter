@@ -40,9 +40,24 @@ function retryDelayMs(body) {
 }
 const isDailyQuota = (body) => /per ?day|PerDay|daily/i.test(JSON.stringify((body && body.error) || {}));
 
+// Free models tried, in order, when the chosen one is overloaded (503). All must be on the free-tier allowlist.
+const FALLBACKS = () => String(process.env.PD_GEMINI_FALLBACK_MODELS || "gemini-3.7-flash,gemini-2.5-flash").split(",").map((x) => x.trim()).filter(Boolean);
+
 // messages: [{ role: "user"|"assistant", content: string | [{type:"text", text}] }]
-async function chat({ system, messages, schema, maxTokens = 16384, model, key, fetchImpl, sleepMs = sleep, maxRetries = 3, maxWaitMs = 90000 }) {
-  const m = model || MODEL();
+// A model that stays overloaded (503 after retries) is replaced by the next free fallback; if every free model is
+// overloaded the error is UNAVAILABLE so the caller pauses (resumable) instead of failing.
+async function chat(opts) {
+  const chain = [opts.model || MODEL(), ...(opts.fallbacks || FALLBACKS())].filter((x, i, a) => a.indexOf(x) === i);
+  let last;
+  for (const model of chain) {
+    try { return await chatOne({ ...opts, model }); }
+    catch (e) { if (e.status !== 503) throw e; last = e; }
+  }
+  throw new AutoError("UNAVAILABLE", `every free Gemini model tried is overloaded (${chain.join(", ")}): ${last && last.message}`, { status: 503 });
+}
+
+async function chatOne({ system, messages, schema, maxTokens = 16384, model, key, fetchImpl, sleepMs = sleep, maxRetries = 4, maxWaitMs = 90000 }) {
+  const m = model;
   if (!FREE_TIER_MODELS.includes(m)) throw new AutoError("NOT_FREE", `Gemini model "${m}" is not on the free-tier allowlist (${FREE_TIER_MODELS.join(", ")}): refusing to call a possibly paid model`);
   const k = key || apiKey();
   if (!k) throw new AutoError("NO_KEY", "GEMINI_API_KEY is not set (env or .env)");
@@ -68,10 +83,10 @@ async function chat({ system, messages, schema, maxTokens = 16384, model, key, f
     const msg = j && j.error ? String(j.error.message || "").slice(0, 300) : "";
     if (res.status === 429 && isDailyQuota(j)) throw new AutoError("QUOTA", `Gemini free-tier daily quota exhausted for ${m}: ${msg}`, { status: 429 });
     const retryable = res.status === 429 || res.status >= 500;
-    const wait = retryDelayMs(j) || 4000 * 2 ** attempt;
+    const wait = retryDelayMs(j) || (res.status === 503 ? 5000 : 4000) * 2 ** attempt;
     if (!retryable || attempt >= maxRetries || wait > maxWaitMs) throw new AutoError(res.status === 429 ? "RATE_LIMIT" : "HTTP", `Gemini request failed: HTTP ${res.status}${msg ? " (" + msg + ")" : ""}`, { status: res.status });
     await sleepMs(wait);
   }
 }
 
-module.exports = { chat, apiKey, MODEL, FREE_TIER_MODELS, PAID_EQUIVALENT, retryDelayMs };
+module.exports = { chat, apiKey, MODEL, FALLBACKS, FREE_TIER_MODELS, PAID_EQUIVALENT, retryDelayMs };

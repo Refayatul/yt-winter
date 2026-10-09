@@ -104,7 +104,8 @@ test("free pipeline: Groq plans, drafts per section and rewrites only flagged se
   assert.ok(gq.calls.every((c) => c.max <= 4600), "every Groq request fits the free per-minute limit");
   assert.ok(clock.slept > 0, "calls were paced against the 8,000 tokens-per-minute window");
   assert.deepEqual(gq.calls.filter((c) => c.stage === "rewrite").length, 1, "only the flagged section was rewritten");
-  assert.equal(gm.calls.length, 1); assert.equal(gm.calls[0].body.contents.length, 1, "the critic sees one fresh turn");
+  assert.equal(gm.calls.length, 2, "critique + final evaluation"); assert.equal(gm.calls[0].body.contents.length, 1, "the critic sees one fresh turn");
+  assert.match(JSON.stringify(gm.calls[1].body), /STAGE: FINAL EVALUATION/); assert.deepEqual(ledger.stages.evaluate.providers, ["gemini"]);
   assert.deepEqual(ledger.stages.critique.providers, ["gemini"]); assert.deepEqual(ledger.stages.plan.providers, ["groq"]);
   assert.equal(ledger.stages.critique.reasoningTokens, 1200); assert.equal(ledger.stages.plan.reasoningTokens, 400);
   assert.equal(ledger.usd, 0); assert.equal(r.out.beats[0].text, r.winningHook);
@@ -139,7 +140,7 @@ test("paid budget $0: a paid provider is refused before any request, never used 
   const saved = process.env.PD_AUTO_PROVIDER; process.env.PD_AUTO_PROVIDER = "anthropic";
   try { const r2 = await runStory({ ledger: L.newLedger(0), cacheDir: false }); assert.match(r2.reasons[0], /PAID_DISABLED/); }
   finally { if (saved == null) delete process.env.PD_AUTO_PROVIDER; else process.env.PD_AUTO_PROVIDER = saved; }
-  assert.deepEqual(A("script-agent").stageProviders({ stageProviders: { plan: "groq", draft: "groq", critique: "gemini" } }), { plan: "groq", draft: "groq", package: "groq", critique: "gemini" });
+  assert.deepEqual(A("script-agent").stageProviders({ stageProviders: { plan: "groq", draft: "groq", critique: "gemini" } }), { plan: "groq", draft: "groq", package: "groq", critique: "gemini", evaluate: "gemini" });
 });
 
 test("findings are routed to the section they concern", () => {
@@ -175,5 +176,40 @@ test("a failed Groq plan is repaired with one compact, fresh request that fits t
   assert.equal(gq.calls.repairs.length, 1);
   assert.deepEqual([gq.calls.repairs[0].messages, gq.calls.repairs[0].hasDossierBlock], [1, false]);
   assert.match(JSON.stringify(r.log), /plan-fix/);
+});
+
+const evalOk = (problems = [], verdict = "pass") => critiqueOk({ verdict, summary: "s", scores: { hook: 8, structure: 7, clarity: 8, naturalness: 7, pacing: 7, accuracy: problems.length ? 4 : 9 }, factualProblems: problems });
+const HIGH = [{ section: "state", beatIds: ["b31"], severity: "high", quote: "unclaimed property laws", problem: "calls them federal", fix: "they are state laws" }];
+
+test("final independent evaluation: a high factual problem gets one targeted fix and a re-check; if it remains, the script fails", async () => {
+  const L = A("llm");
+  const gq = groqMock(); const gm = geminiMock([critiqueOk({ ...CRIT, verdict: "ready", problems: [] }), evalOk(HIGH, "fail"), evalOk([])]);
+  const r = await runStory({ clients: freeClients(gm, gq, { t: 0, slept: 0 }), ledger: L.newLedger(0), cacheDir: false });
+  assert.equal(r.status, "ok", JSON.stringify(r.reasons));
+  assert.equal(gq.calls.filter((c) => c.stage === "rewrite").length, 1, "only the section with the factual problem is rewritten");
+  assert.equal(r.evaluation.scores.accuracy, 9);
+  assert.ok(r.log.some((x) => x.stage === "evaluate-2"));
+  const gq2 = groqMock(); const gm2 = geminiMock([critiqueOk({ ...CRIT, verdict: "ready", problems: [] }), evalOk(HIGH, "fail"), evalOk(HIGH, "fail")]);
+  const r2 = await runStory({ clients: freeClients(gm2, gq2, { t: 0, slept: 0 }), ledger: L.newLedger(0), cacheDir: false });
+  assert.equal(r2.status, "script-failed"); assert.match(r2.reasons.join(), /independent fact check \(state\)/);
+});
+
+test("the approved hook is split from a beat that runs on past it (no rewording)", () => {
+  const W = A("script-agent");
+  const out = { beats: [{ id: "s1-1", type: "hook", text: "Hook line here. And then more text.", claimId: "c2", section: "s1" }], graphics: [{ beatId: "s1-1", type: "typography", entities: [], overlayText: "x", numbers: [], evidenceClaimId: "c2" }] };
+  const n = W.normalizeOpening(out, "Hook line here.");
+  assert.deepEqual(n.beats.map((b) => b.text), ["Hook line here.", "And then more text."]);
+  assert.ok(n.graphics.some((g) => g.beatId === "s1-1-cont"));
+  assert.equal(W.normalizeOpening(out, "Different hook."), out);
+});
+
+test("gemini overload: a free fallback model is tried, and if every free model is overloaded the run pauses", async () => {
+  const G = A("gemini"); const busy = json(503, { error: { code: 503, message: "The model is overloaded" } });
+  const seen = [];
+  const fetch = async (url) => { seen.push(/models\/([^:]+)/.exec(url)[1]); return seen[seen.length - 1] === "gemini-3.7-flash" ? critiqueOk({ ok: 1 }) : busy; };
+  const r = await G.chat({ messages: [{ role: "user", content: "x" }], schema: { type: "object" }, key: "K", fetchImpl: fetch, sleepMs: async () => {}, fallbacks: ["gemini-3.7-flash"] });
+  assert.deepEqual(JSON.parse(r.text), { ok: 1 }); assert.equal(seen[0], "gemini-3.8-flash"); assert.equal(seen.at(-1), "gemini-3.7-flash");
+  await assert.rejects(G.chat({ messages: [{ role: "user", content: "x" }], key: "K", fetchImpl: async () => busy, sleepMs: async () => {}, fallbacks: ["gemini-2.5-flash"] }), (e) => e.code === "UNAVAILABLE");
+  await assert.rejects(G.chat({ messages: [{ role: "user", content: "x" }], key: "K", fetchImpl: async () => busy, sleepMs: async () => {}, fallbacks: ["gemini-3.1-pro-preview"] }), (e) => e.code === "NOT_FREE" || e.code === "UNAVAILABLE");
 });
 

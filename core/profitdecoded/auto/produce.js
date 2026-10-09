@@ -99,7 +99,9 @@ function writeStoryPackage(dir, topic, format, w, ledger, deps) {
   put("plan.json", w.plan);
   if (w.draft) put("draft.json", { ...w.draft.out, hookCandidates: [] });
   if (w.critique) put("critique.json", { provenance: `Independent critique stage (${((ledger.stages || {}).critique || {}).providers || "?"} ${((ledger.stages || {}).critique || {}).models || ""}), fresh context: it never saw the drafting conversation.`, ...w.critique });
+  if (w.evaluation) put("evaluation.json", { provenance: `Independent final evaluation (${((ledger.stages || {}).critique || {}).models || "?"}), fresh context.`, ...w.evaluation });
   if (w.out && w.status === "ok") put("final.json", { beats: w.out.beats, graphics: w.out.graphics, changeLog: w.changes || [] });
+  else if (w.out && w.draft) put("latest.json", { status: w.status, beats: w.out.beats, graphics: w.out.graphics, changeLog: w.changes || [], blocking: (w.assessment || {}).blocking || [] });
   put("usage.json", usageReport(ledger, deps));
   return dir;
 }

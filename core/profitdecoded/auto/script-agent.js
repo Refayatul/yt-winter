@@ -57,7 +57,7 @@ function check(out, dossier, format, options = {}) {
   const sc = Research.unsupportedClaimsInScript(script, dossier);
   for (const o of sc.numbersWithoutDossierSupport.slice(0, 6)) issues.push(`number "${o.number}" is not in the dossier (sentence: "${o.sentence.slice(0, 90)}")`);
   const topicWords = T.contentWords(dossier.thesis || "");
-  const hooks = Hooks.compete(out.hookCandidates || [], { topicWords });
+  const hooks = Hooks.compete(options.hookCandidates || out.hookCandidates || [], { topicWords });
   if (!hooks.valid) issues.push("hook candidates: " + hooks.problems.join("; "));
   if (hooks.winner && hooks.winner.score < 60) issues.push(`best hook scores ${hooks.winner.score} (<60): make the first seconds open an information gap with a concrete name/number`);
   const opener = options.winningHook || (hooks.winner && hooks.winner.text);
@@ -179,7 +179,7 @@ function assess(out, dossier, format, ctx = {}) {
   const beats = out.beats || [];
   const script = beats.map((b) => b.text).join(" ");
   const hookRows = Hooks.engineer(ctx.hookCandidates || out.hookCandidates || [], { dossier, topicWords: T.contentWords(dossier.thesis || "") });
-  const local = check(out, dossier, format, { winningHook: ctx.winningHook || (hookRows.winner && hookRows.winner.text), words: ctx.words });
+  const local = check(out, dossier, format, { winningHook: ctx.winningHook || (hookRows.winner && hookRows.winner.text), words: ctx.words, hookCandidates: ctx.hookCandidates });
   const retention = Retention.critique(beats, { plan: ctx.plan, format, title: ctx.title || "" });
   const spoken = AI.spoken(script);
   const editorial = Retention.editorialReport(beats, { plan: ctx.plan, dossier, format, title: ctx.title || "" });
@@ -249,17 +249,19 @@ async function stage(name, opts, getClient, cache, key) {
 // PD_STORY_PROVIDERS="plan=groq,draft=groq,rewrite=groq,critique=gemini" (or deps.stageProviders). Unset stages
 // use deps.client / the default provider. A paid provider (anthropic) is refused outright when the paid budget
 // is $0 (PD_AUTO_MAX_USD=0): no silent paid usage, no fallback from a free provider to a paid one.
-const STAGES = ["plan", "draft", "package", "critique", "rewrite"];
+const STAGES = ["plan", "draft", "package", "critique", "evaluate", "rewrite"];
 function stageProviders(deps) {
   const spec = deps.stageProviders || Object.fromEntries(String(process.env.PD_STORY_PROVIDERS || "").split(",").map((x) => x.trim().split("=")).filter((x) => x.length === 2 && x[1]));
   const out = {}; for (const st of STAGES) if (spec[st]) out[st] = spec[st];
   if (out.draft && !out.package) out.package = out.draft;
+  if (out.critique && !out.evaluate) out.evaluate = out.critique; // the final evaluation runs where the critique runs
   return out;
 }
 function clientFactory(deps, ledger) {
   const providers = stageProviders(deps); const made = {};
   return (stageName) => {
     if (deps.clients && deps.clients[stageName]) return deps.clients[stageName];
+    if (stageName === "evaluate" && deps.clients && deps.clients.critique) return deps.clients.critique;
     const p = providers[stageName] || (deps.client ? null : LLM.provider());
     if (!p) return deps.client;
     if (p === "anthropic" && !(ledger.maxUsd > 0)) throw new LLM.AutoError("PAID_DISABLED", `stage "${stageName}" would use Anthropic (paid) but the paid budget is $${ledger.maxUsd}: refusing`);
@@ -269,7 +271,22 @@ function clientFactory(deps, ledger) {
 }
 // Token sizes per stage. Groq's free tier (8,000 tokens per minute, prompt + max output) needs small, chunked calls.
 const SIZES = { anthropic: { plan: 16000, draft: 48000, critique: 16000, rewrite: 48000, effortDraft: "high" }, groq: { plan: 4500, section: 4200, package: 2600, critique: 4000, rewrite: 3800, effortDraft: "medium" }, gemini: { critique: 24000 } };
-const PAUSE = new Set(["RATE_LIMIT", "QUOTA", "BUDGET", "PAID_DISABLED", "NO_KEY"]);
+const PAUSE = new Set(["RATE_LIMIT", "QUOTA", "BUDGET", "PAID_DISABLED", "NO_KEY", "UNAVAILABLE"]);
+// The final independent evaluation (narrative quality + fact check). A high-severity factual problem blocks.
+const EVALUATION_SCHEMA = { type: "object", additionalProperties: false, required: ["verdict", "scores", "factualProblems", "summary"], properties: {
+  verdict: { type: "string", enum: ["pass", "fail"] }, summary: { type: "string" },
+  scores: { type: "object", additionalProperties: false, required: ["hook", "structure", "clarity", "naturalness", "pacing", "accuracy"], properties: Object.fromEntries(["hook", "structure", "clarity", "naturalness", "pacing", "accuracy"].map((k) => [k, { type: "integer", minimum: 1, maximum: 10 }])) },
+  factualProblems: { type: "array", items: { type: "object", additionalProperties: false, required: ["section", "beatIds", "severity", "quote", "problem", "fix"], properties: { section: { type: "string" }, beatIds: { type: "array", items: { type: "string" } }, severity: { type: "string", enum: ["high", "medium", "low"] }, quote: { type: "string" }, problem: { type: "string" }, fix: { type: "string" } } } },
+} };
+// If a beat begins with the approved hook and runs on, split it so the hook stands alone (mechanical, no rewording).
+function normalizeOpening(out, hook) {
+  const b0 = (out.beats || [])[0];
+  if (!b0 || !hook || b0.text.trim() === hook.trim() || !b0.text.trim().startsWith(hook.trim())) return out;
+  const rest = b0.text.trim().slice(hook.trim().length).trim();
+  const g0 = (out.graphics || []).find((g) => g.beatId === b0.id);
+  const nb = { ...b0, id: b0.id + "-cont", type: "setup", text: rest };
+  return { ...out, beats: [{ ...b0, text: hook.trim() }, nb, ...out.beats.slice(1)], graphics: [...(out.graphics || []), ...(g0 ? [{ ...g0, beatId: nb.id }] : [])] };
+}
 
 const DRAFT_SECTION_SCHEMA = { type: "object", additionalProperties: false, required: ["beats", "graphics"], properties: { beats: { type: "array", items: BEAT_ITEM }, graphics: { type: "array", items: GRAPHIC_ITEM } } };
 const PACKAGE_SCHEMA = { type: "object", additionalProperties: false, required: ["titleCandidates", "thumbnailCandidates", "learningValue"], properties: { titleCandidates: SCRIPT_SCHEMA.properties.titleCandidates, thumbnailCandidates: SCRIPT_SCHEMA.properties.thumbnailCandidates, learningValue: { type: "string" } } };
@@ -309,13 +326,13 @@ async function develop(topic, dossier, format, deps = {}) {
   const gate = Research.gate(dossier, { format });
   if (!gate.pass) return { status: "research-failed", reasons: gate.rejections, ledger, log };
   const getClient = clientFactory(deps, ledger);
-  const prov = (st) => { const p = stageProviders(deps)[st]; return p || (deps.clients && deps.clients[st] && deps.clients[st].provider) || (deps.client && deps.client.provider) || "anthropic"; };
+  const prov = (st) => { const p = stageProviders(deps)[st]; const c = deps.clients && (deps.clients[st] || (st === "evaluate" && deps.clients.critique)); return p || (c && c.provider) || (deps.client && deps.client.provider) || "anthropic"; };
   const size = (st, key) => (SIZES[prov(st)] || SIZES.anthropic)[key || st] || SIZES.anthropic[key || st];
   const chunked = deps.chunked != null ? deps.chunked : prov("draft") === "groq";
   const system = prompt("system.md");
   const ctx = { competitors: deps.competitors || [] };
-  const base = { dossier: hash(dossier), topic: topic.id, format, words, prompts: promptVersion(), providers: STAGES.map(prov).join(","), chunked };
-  let plan = null, pe = null, out = null, draft = null, critique = null, a = null; const changes = []; let rounds = 0;
+  const base = { dossier: hash(dossier), topic: topic.id, format, words, prompts: promptVersion(), providers: ["plan", "draft", "package", "critique", "rewrite"].map(prov).join(","), chunked }; // fixed list: cache keys must not move when stages are added
+  let plan = null, pe = null, out = null, draft = null, critique = null, a = null, evaluation = null; const changes = []; let rounds = 0;
   try {
     // 2-5. Story plan: thesis, conflict, hooks, structure (one call; one repair round if the plan fails its checks).
     current = "plan";
@@ -355,7 +372,7 @@ async function develop(topic, dossier, format, deps = {}) {
       const p2 = (await stage("package", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, pk), schema: PACKAGE_SCHEMA, maxTokens: size("package"), effort: "low" }, getClient, cache, hash({ ...base, s: "package", thesis: plan.thesis, winningHook }))).json;
       out = { hookCandidates: hookTexts, beats, graphics, ...p2 };
     }
-    out = { ...out, hookCandidates: hookTexts };
+    out = normalizeOpening({ ...out, hookCandidates: hookTexts }, winningHook);
     const actx = { plan, winningHook, hookCandidates: plan.hookCandidates, words, title: topic.topic };
     a = assess(out, dossier, format, actx); log.push({ stage: "draft", blocking: a.blocking.length, words: a.local.words, retention: a.retention.score, spoken: a.spoken.score });
     draft = { out, assessment: a };
@@ -403,19 +420,54 @@ async function develop(topic, dossier, format, deps = {}) {
           out = { ...out, ...p2 }; current = "rewrite";
         }
       }
+      out = normalizeOpening(out, winningHook);
       a = assess(out, dossier, format, actx); log.push({ stage: "rewrite-" + rounds, blocking: a.blocking.length, retention: a.retention.score, spoken: a.spoken.score });
       critProblems = []; // later rounds are targeted at what the deterministic checks still find
       if (!a.blocking.length) break;
     }
+    // 9a. Independent final evaluation (same provider as the critique): narrative quality scores + fact check against
+    //     the dossier. High-severity factual problems get ONE more targeted rewrite and a re-evaluation; if any remain,
+    //     the script fails. This is an added gate, never a relaxation.
+    if (deps.finalEvaluation !== false && !a.blocking.length) {
+      const evalOnce = async (tag) => {
+        current = "evaluate";
+        const t = prompt("editor.md") + `\n\nSTAGE: FINAL EVALUATION. Score the script 1-10 on hook, structure, clarity, naturalness (spoken English), pacing and accuracy, and list every statement that is factually wrong or says more than its claim id supports (wrong law, wrong scope, invented arithmetic, overstated certainty). Severity high = a viewer would be misinformed. Use the plan's section ids.\nSCRIPT BEATS:\n${JSON.stringify(out.beats, null, 1)}`;
+        return (await stage("evaluate", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, t), schema: EVALUATION_SCHEMA, maxTokens: size("critique"), effort: "medium", model: deps.criticModel || process.env.PD_AUTO_CRITIC_MODEL || undefined }, getClient, cache, hash({ ...base, s: "evaluate", tag, beats: out.beats }))).json;
+      };
+      evaluation = await evalOnce(1);
+      let high = (evaluation.factualProblems || []).filter((x) => x.severity === "high");
+      log.push({ stage: "evaluate", verdict: evaluation.verdict, high: high.length, scores: evaluation.scores });
+      if (high.length) {
+        current = "rewrite"; rounds += 1;
+        const { routed } = routeProblems(high.map((x) => ({ section: x.section, beatIds: x.beatIds, type: "factual", severity: "high", quote: x.quote, fix: `${x.problem} -> ${x.fix}` })), [], out, plan);
+        for (const sec of plan.sections) {
+          const list = routed[sec.id]; if (!list.length) continue;
+          const secBeats = out.beats.filter((b) => b.section === sec.id); const at = out.beats.findIndex((b) => b.section === sec.id);
+          const rwText = prompt("script.md") + `\n\nSTAGE: TARGETED REWRITE ${rounds}, SECTION ${sec.id} "${sec.title}" (${sec.purpose}). Fix these FACTUAL problems found by the independent fact check and nothing else. Use only claim ids: ${sec.claimIds.join(", ")}.${sec.id === plan.sections[0].id ? ` The first beat must stay exactly: ${winningHook}` : ""}\nPROBLEMS:\n- ${list.join("\n- ")}\n\nCURRENT BEATS OF THIS SECTION:\n${JSON.stringify(secBeats, null, 1)}\n\nReturn this section's beats (keep ids of kept beats), graphics only for new or changed beats, and a changeLog.`;
+          const rw = (await stage("rewrite", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, rwText, { claimIds: sec.claimIds }), schema: REWRITE_SCHEMA, maxTokens: size("rewrite"), effort: "medium" }, getClient, cache, hash({ ...base, s: "fact-fix", secBeats, list }))).json;
+          const fresh = rw.beats.map((b) => ({ ...b, section: sec.id }));
+          const nextBeats = [...out.beats.slice(0, at), ...fresh, ...out.beats.slice(at + secBeats.length)];
+          const alive = new Set(nextBeats.map((b) => b.id)); const replaced = new Set(rw.graphics.map((g) => g.beatId));
+          out = { ...out, beats: nextBeats, graphics: [...(out.graphics || []).filter((g) => alive.has(g.beatId) && !replaced.has(g.beatId)), ...rw.graphics] };
+          changes.push(...rw.changeLog.map((c) => `${sec.id} (fact check): ${c}`));
+        }
+        out = normalizeOpening(out, winningHook);
+        a = assess(out, dossier, format, actx);
+        evaluation = await evalOnce(2);
+        high = (evaluation.factualProblems || []).filter((x) => x.severity === "high");
+        log.push({ stage: "evaluate-2", verdict: evaluation.verdict, high: high.length, blocking: a.blocking.length, scores: evaluation.scores });
+      }
+      if (high.length) a = { ...a, blocking: [...a.blocking, ...high.map((x) => `independent fact check (${x.section}): "${x.quote}" ${x.problem}`)] };
+    }
   } catch (e) {
     // Stop safely: every completed stage is already in the disk cache, so a later run resumes from here.
-    if (PAUSE.has(e.code)) return { status: "paused", pausedAt: current, reasons: [`${e.code}: ${e.message}`], plan, draft, critique, out, assessment: a, changes, rounds, ledger, cacheHits: cache.hits, log };
-    if (e.code) return { status: "provider-error", pausedAt: current, reasons: [`${e.code}: ${e.message}`], plan, draft, critique, out, assessment: a, changes, rounds, ledger, cacheHits: cache.hits, log };
+    if (PAUSE.has(e.code)) return { status: "paused", pausedAt: current, reasons: [`${e.code}: ${e.message}`], plan, draft, critique, evaluation, out, assessment: a, changes, rounds, ledger, cacheHits: cache.hits, log };
+    if (e.code) return { status: "provider-error", pausedAt: current, reasons: [`${e.code}: ${e.message}`], plan, draft, critique, evaluation, out, assessment: a, changes, rounds, ledger, cacheHits: cache.hits, log };
     throw e;
   }
   // 9. Final assessment.
   const status = a.blocking.length ? "script-failed" : "ok";
-  return { status, plan, draft, critique, out, assessment: a, changes, rounds, reasons: a.blocking, winningHook: pe.selected.text, hookOverride: pe.override, ledger, cacheHits: cache.hits, log };
+  return { status, plan, draft, critique, evaluation, out, assessment: a, changes, rounds, reasons: a.blocking, winningHook: pe.selected.text, hookOverride: pe.override, ledger, cacheHits: cache.hits, log };
 }
 
 // Bundle for the existing production pipeline, plus the story artefacts for human review.
@@ -427,4 +479,4 @@ function bundleFromStory(topic, dossier, res, format, dossierFile) {
   return b;
 }
 
-module.exports = { routeProblems, stageProviders, SIZES, DRAFT_SECTION_SCHEMA, PACKAGE_SCHEMA, bundleFromStory, write, check, toBundle, brief, SCRIPT_SCHEMA, BEAT_TYPES, GRAPHIC_TYPES, LENGTH, develop, assess, evaluatePlan, dossierBlock, stageCache, promptVersion, wordsFor, STORY_SCHEMA, CRITIQUE_SCHEMA, REWRITE_SCHEMA, PURPOSES };
+module.exports = { normalizeOpening, EVALUATION_SCHEMA, routeProblems, stageProviders, SIZES, DRAFT_SECTION_SCHEMA, PACKAGE_SCHEMA, bundleFromStory, write, check, toBundle, brief, SCRIPT_SCHEMA, BEAT_TYPES, GRAPHIC_TYPES, LENGTH, develop, assess, evaluatePlan, dossierBlock, stageCache, promptVersion, wordsFor, STORY_SCHEMA, CRITIQUE_SCHEMA, REWRITE_SCHEMA, PURPOSES };
