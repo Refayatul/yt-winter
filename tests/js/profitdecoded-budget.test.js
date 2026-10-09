@@ -17,7 +17,8 @@ const X = require("../../core/profitdecoded/exceptions");
 const DOSSIER = "channels/profitdecoded/research/hbm-073-how-gift-cards-make-money-for-retailers.json";
 const PKG = "channels/profitdecoded/story-tests/hbm-073-gift-cards-long/";
 const tmp = () => fs.mkdtempSync(path.join(os.tmpdir(), "pd-budget-"));
-const policy = (over = {}) => ({ ...B.loadPolicy(), paidEnabled: true, ...over });
+// a paid-enabled policy with an open, unrestricted approval (the committed policy has neither)
+const policy = (over = {}) => ({ ...B.loadPolicy(), paidEnabled: true, paidApproval: { id: "test-approval", expiresAt: "2099-01-01T00:00:00Z" }, ...over });
 const fileBudget = (over = {}, ctx = {}, now) => { const f = path.join(tmp(), "ledger.json"); fs.writeFileSync(f, JSON.stringify(B.emptyLedger())); return new B.Budget({ store: new B.FileStore(f), policy: policy(over), context: { pool: "script", topicId: "t", scriptId: "t:long:v1", runId: "r1", ...ctx }, ...(now ? { now } : {}) }); };
 const read = async (bud) => (await bud.store.read()).doc;
 
@@ -303,8 +304,8 @@ test("workflow: write token not persisted, re-run safe cache keys, preflight gat
   assert.ok(pre > 0 && pre < produce, "the preflight runs before production");
   assert.match(wf, /if: inputs\.through == 'preflight' \|\| inputs\.provider == 'anthropic'/);
   assert.match(wf, /preflight --paid --probe-gemini/);
-  assert.match(wf, /name: Autonomous production \(dry run, no upload\)\s*\n\s*if: inputs\.through != 'preflight'/);
-  assert.equal((wf.match(/PD_BUDGET_TOKEN: \$\{\{ github\.token \}\}/g) || []).length, 3, "the token is passed to the preflight, production and ledger-status steps only");
+  assert.match(wf, /name: Autonomous production \(dry run, no upload\)\s*\n(\s*id: produce\s*\n)?\s*if: inputs\.through != 'preflight'/);
+  assert.equal((wf.match(/PD_BUDGET_TOKEN: \$\{\{ github\.token \}\}/g) || []).length, 4, "the token is passed to the preflight, production, approval-close and ledger-status steps only");
 });
 
 test("preflight: NO-GO for a paid run while the committed policy keeps paid calls disabled (no network needed)", () => {
@@ -314,4 +315,48 @@ test("preflight: NO-GO for a paid run while the committed policy keeps paid call
   assert.equal(r.status, 1);
   assert.match(r.stdout, /FAIL\s+paid-enabled\s+paidEnabled=false/); assert.match(r.stdout, /FAIL\s+budget-ledger/); assert.match(r.stdout, /FAIL\s+anthropic-key/);
   assert.match(r.stdout, /PASS\s+eligibility\s+ELIGIBLE/); assert.match(r.stdout, /PASS\s+publishing-blocked/); assert.match(r.stdout, /PREFLIGHT: NO-GO/);
+});
+
+// ---- single-use paid approval and schedule isolation --------------------------------------------------------------
+test("paid approval: required, scoped to one script and pool, expires, and is closed after the run (resumes refused)", async () => {
+  const exp = { id: "exp-gc-1", scriptId: "hbm-073:long:v1", pool: "experiment", expiresAt: "2026-10-12T00:00:00Z", approvedBy: "Owner" };
+  let t = Date.parse("2026-10-10T12:00:00Z");
+  const mk = (over, ctx = {}) => fileBudget({ paidApproval: exp, ...over }, { pool: "experiment", scriptId: "hbm-073:long:v1", ...ctx }, () => t);
+  await assert.rejects(fileBudget({ paidApproval: null }).reserve({ id: "a", estimateUsd: 0.1 }), (e) => e.code === "PAID_DISABLED" && /no paidApproval/.test(e.message));
+  await assert.rejects(mk({}, { scriptId: "other:long:v1" }).reserve({ id: "a", estimateUsd: 0.1 }), (e) => e.code === "PAID_DISABLED" && /covers hbm-073:long:v1 only/.test(e.message));
+  await assert.rejects(mk({}, { pool: "script" }).reserve({ id: "a", estimateUsd: 0.1 }), (e) => /covers the experiment pool only/.test(e.message));
+  const bud = mk({});
+  await bud.reserve({ id: "plan", estimateUsd: 0.3 }); await bud.settle("plan", 0.1);
+  const c1 = await bud.closeApproval("production step ended: failure"); const c2 = await bud.closeApproval("again");
+  assert.equal(c1.approvalId, "exp-gc-1"); assert.equal(c2.at, c1.at, "closing is idempotent");
+  await assert.rejects(bud.reserve({ id: "draft", estimateUsd: 0.6 }), (e) => e.code === "PAID_DISABLED" && /used and closed/.test(e.message));
+  const st = await bud.status(); assert.equal(st.approval.usable, false);
+  t = Date.parse("2026-10-13T00:00:00Z");
+  await assert.rejects(mk({ paidApproval: { ...exp, id: "exp-gc-2" } }).reserve({ id: "x", estimateUsd: 0.1 }), (e) => /expired/.test(e.message));
+  assert.equal(B.loadPolicy().paidApproval, null, "the committed policy grants no approval");
+});
+
+test("workflow: ProfitDecoded-only key, approval closed on every outcome of the paid step, schedule cannot run paid", () => {
+  const wf = fs.readFileSync(path.join(ROOT, ".github/workflows/profitdecoded-produce.yml"), "utf8");
+  assert.doesNotMatch(wf, /secrets\.ANTHROPIC_API_KEY/, "never the repository-wide key other channels read");
+  assert.equal((wf.match(/secrets\.PD_ANTHROPIC_API_KEY/g) || []).length, 3);
+  assert.match(wf, /name: Close the paid approval \(single use\)\s*\n\s*if: always\(\) && inputs\.provider == 'anthropic' && inputs\.through != 'preflight' && steps\.produce\.outcome != 'skipped'/);
+  assert.ok(wf.indexOf("name: Close the paid approval") > wf.indexOf("name: Autonomous production") && wf.indexOf("name: Close the paid approval") < wf.indexOf("name: Save story stage cache"), "closed right after production, before anything else");
+  // a scheduled run has no inputs: provider groq, paid limit 0, no preflight, and the job itself is gated off
+  assert.match(wf, /PD_AUTO_PROVIDER: \$\{\{ inputs\.provider \|\| 'groq' \}\}/); assert.match(wf, /MAX_USD: \$\{\{ inputs\.max_usd \|\| '0' \}\}/);
+  assert.match(wf, /if: github\.event_name == 'workflow_dispatch' \|\| vars\.PD_AUTO_SCHEDULE == 'true'/);
+  for (const other of ["portfolio-production.yml", "bto-research.yml"]) assert.doesNotMatch(fs.readFileSync(path.join(ROOT, ".github/workflows", other), "utf8"), /PD_ANTHROPIC_API_KEY/, other + " cannot read the ProfitDecoded key");
+});
+
+test("schedule isolation: a free (groq) run creates no budget and any Anthropic call in it is refused", async () => {
+  const saved = process.env.NODE_TEST_CONTEXT; delete process.env.NODE_TEST_CONTEXT;
+  try {
+    const ledger = L.newLedger(0); // scheduled runs: max_usd 0, no budget ledger attached
+    const client = anthropicMock({ other: {} });
+    await assert.rejects(L.run({ client, system: "s", messages: [], ledger }), (e) => ["PAID_DISABLED", "BUDGET"].includes(e.code));
+    assert.equal(client.calls.length, 0, "refused before the provider is contacted");
+    await assert.rejects(L.run({ client, system: "s", messages: [], ledger: L.newLedger(5) }), (e) => e.code === "PAID_DISABLED", "even with a non-zero limit, no ledger means no paid call");
+  } finally { process.env.NODE_TEST_CONTEXT = saved; }
+  const W2 = require("../../core/profitdecoded/auto/script-agent");
+  assert.ok(!Object.values(W2.stageProviders({})).includes("anthropic"), "no stage defaults to Anthropic without PD_STORY_PROVIDERS");
 });

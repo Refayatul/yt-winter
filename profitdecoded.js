@@ -154,6 +154,7 @@ if (cmd === "inventory") {
   (async () => {
     const policy = B.loadPolicy(); const store = B.storeFromEnv(policy);
     if (sub === "init") { if (!store.init) throw new Error("init applies to the GitHub ledger"); console.log(JSON.stringify(await store.init())); return; }
+    if (sub === "close") { const bud = new B.Budget({ store, policy, context: { runId: process.env.GITHUB_RUN_ID ? `gh-${process.env.GITHUB_RUN_ID}-${process.env.GITHUB_RUN_ATTEMPT || 1}` : `local-${Date.now()}` } }); const c = await bud.closeApproval(flag("--reason")); console.log(c ? `paid approval ${c.approvalId} closed at ${c.at} (${c.reason})` : "no paid approval in the policy: nothing to close"); return; }
     if (sub === "reconcile") {
       const id = argv[2]; let done = null;
       const bud = new B.Budget({ store, policy }); await bud.mutate((doc) => { done = B.reconcile(doc, id, Number(flag("--actual")), flag("--by"), flag("--reason")); return done; });
@@ -189,6 +190,12 @@ if (cmd === "inventory") {
     let policy = null;
     try { policy = B.loadPolicy(); ok("budget-policy", true, `paidEnabled=${policy.paidEnabled}, per script $${policy.maxPerScriptUsd}, monthly script $${policy.monthlyUsd.script} / experiment $${policy.monthlyUsd.experiment}`); } catch (e) { ok("budget-policy", false, e.message); }
     if (has("--paid")) ok("paid-enabled", policy && policy.paidEnabled, policy && policy.paidEnabled ? "paid calls enabled by the committed policy" : "paidEnabled=false: a paid run would be refused (expected until the approval PR is merged)");
+    let ledgerDoc = null; if (policy) { try { ledgerDoc = (await B.storeFromEnv(policy).read()).doc; } catch (e) { ledgerDoc = null; } }
+    if (has("--paid") && policy) {
+      const want = flag("--topic") ? `${flag("--topic")}:${flag("--format", "long")}:${process.env.PD_SCRIPT_VERSION || "v1"}` : undefined;
+      const ap = ledgerDoc ? B.approvalState(ledgerDoc, policy, Date.now(), { scriptId: want, pool: flag("--pool", "experiment") }) : { ok: false, reason: "ledger unreadable" };
+      ok("paid-approval", ap.ok, ap.ok ? `approval ${ap.approval.id} usable until ${ap.approval.expiresAt} for ${ap.approval.scriptId} (${ap.approval.pool}); it closes when this run's production step ends` : ap.reason);
+    }
     if (policy) {
       try { const st = await new B.Budget({ store: B.storeFromEnv(policy), policy }).status(); const pool = flag("--pool", "experiment"); const left = Math.round((st.limits[pool] - st[pool].committedUsd) * 1e4) / 1e4; const need = Math.min(Number(flag("--max-usd", policy.maxPerScriptUsd)), policy.maxPerScriptUsd);
         ok("budget-ledger", true, `ledger readable; ${st.month} ${pool}: $${st[pool].committedUsd} committed of $${st.limits[pool]} ($${left} left; this run may use up to $${need})`);

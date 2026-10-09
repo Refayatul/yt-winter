@@ -2,7 +2,8 @@ name: ProfitDecoded autonomous production (dry run)
 
 # Research (web search + fetch with citations) -> verified dossier -> script -> narration -> render ->
 # assessment, all in the cloud. It NEVER uploads: output is an artifact for human review.
-# Needs ONE of the repository secrets GROQ_API_KEY (free tier) or ANTHROPIC_API_KEY. Spend/token guards stop the run.
+# Needs ONE of the repository secrets GROQ_API_KEY (free tier) or PD_ANTHROPIC_API_KEY (ProfitDecoded-only name: other
+# channels read ANTHROPIC_API_KEY). Paid runs also need the committed budget policy approval; spend/token guards stop the run.
 # Daily schedule is OFF until the repository variable PD_AUTO_SCHEDULE is set to true (Settings, Variables).
 # Scheduled runs produce one Short (provider groq) at the channel's US-friendly production time; never upload.
 on:
@@ -115,13 +116,13 @@ jobs:
         env:
           PROVIDER: ${{ inputs.provider || 'groq' }}
           CRITIC: ${{ inputs.critic || 'same' }}
-          ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_KEY: ${{ secrets.PD_ANTHROPIC_API_KEY }}
           GROQ_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           for n in GROQ_KEY GEMINI_KEY ANTHROPIC_KEY; do if [ -n "${!n}" ]; then echo "$n: present (value not shown)"; else echo "$n: missing"; fi; done
           if [ "$PROVIDER" = "groq" ] && [ -z "$GROQ_KEY" ]; then echo "::error::Repository secret GROQ_API_KEY is not set"; exit 1; fi
-          if [ "$PROVIDER" = "anthropic" ] && [ -z "$ANTHROPIC_KEY" ]; then echo "::error::Repository secret ANTHROPIC_API_KEY is not set"; exit 1; fi
+          if [ "$PROVIDER" = "anthropic" ] && [ -z "$ANTHROPIC_KEY" ]; then echo "::error::Repository secret PD_ANTHROPIC_API_KEY is not set"; exit 1; fi
           if [ "$CRITIC" = "gemini" ] && [ -z "$GEMINI_KEY" ]; then echo "::error::Repository secret GEMINI_API_KEY is not set"; exit 1; fi
       - name: Preflight (no paid call; paid runs stop here unless the reviewer, key, ledger and policy are ready)
         if: inputs.through == 'preflight' || inputs.provider == 'anthropic'
@@ -132,7 +133,7 @@ jobs:
           FORMAT: ${{ inputs.format || 'short' }}
           POOL: ${{ inputs.budget_pool || 'script' }}
           MAX_USD: ${{ inputs.max_usd || '0' }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.PD_ANTHROPIC_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PD_GEMINI_MODEL: ${{ vars.PD_GEMINI_MODEL || 'gemini-3.8-flash' }}
           PD_BUDGET_TOKEN: ${{ github.token }}
@@ -140,7 +141,10 @@ jobs:
           ARGS=(--format "$FORMAT" --pool "$POOL" --max-usd "$MAX_USD")
           if [ -n "$TOPIC" ]; then ARGS+=(--topic "$TOPIC"); fi
           # A real paid run also probes the Gemini daily quota with ONE minimal request before any paid writing.
-          if [ "$PROVIDER" = "anthropic" ] && [ "$THROUGH" != "preflight" ]; then node profitdecoded.js preflight --paid --probe-gemini "${ARGS[@]}"; else node profitdecoded.js preflight "${ARGS[@]}"; fi
+          # A dry preflight for an Anthropic run checks the same paid conditions (policy, approval, headroom, key) without the probe.
+          if [ "$PROVIDER" = "anthropic" ] && [ "$THROUGH" != "preflight" ]; then node profitdecoded.js preflight --paid --probe-gemini "${ARGS[@]}"
+          elif [ "$PROVIDER" = "anthropic" ]; then node profitdecoded.js preflight --paid "${ARGS[@]}"
+          else node profitdecoded.js preflight "${ARGS[@]}"; fi
       - run: mkdir -p channels/profitdecoded/state/story-cache
         if: inputs.through != 'preflight'
       - name: Story stage cache (resume an interrupted run)
@@ -151,10 +155,11 @@ jobs:
           key: pd-story-${{ inputs.topic || 'auto' }}-${{ inputs.format || 'short' }}-${{ github.run_id }}-${{ github.run_attempt }}
           restore-keys: pd-story-${{ inputs.topic || 'auto' }}-${{ inputs.format || 'short' }}-
       - name: Autonomous production (dry run, no upload)
+        id: produce
         if: inputs.through != 'preflight'
         env:
           PD_AUTO_PROVIDER: ${{ inputs.provider || 'groq' }}
-          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ANTHROPIC_API_KEY: ${{ secrets.PD_ANTHROPIC_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PD_GEMINI_MODEL: ${{ vars.PD_GEMINI_MODEL || 'gemini-3.8-flash' }}
@@ -182,6 +187,15 @@ jobs:
           else
             node scripts/profitdecoded/auto-produce.js --format "$FORMAT" --max-usd "$MAX_USD" --through "$THROUGH"
           fi
+      # The single-use paid approval is closed as soon as the paid production step has run, whatever its outcome
+      # (success, failure, pause, cancellation). Re-runs and resumes then need a new, reviewed approval.
+      - name: Close the paid approval (single use)
+        if: always() && inputs.provider == 'anthropic' && inputs.through != 'preflight' && steps.produce.outcome != 'skipped' && steps.produce.outcome != ''
+        env:
+          PD_BUDGET_TOKEN: ${{ github.token }}
+          OUTCOME: ${{ steps.produce.outcome }}
+        run: |
+          node profitdecoded.js budget close --reason "run ${{ github.run_id }}/${{ github.run_attempt }} production step ended: $OUTCOME"
       # run_attempt in the key: a GitHub "re-run" keeps run_id, and a cache key can be written only once.
       - name: Save story stage cache (also after a pause or failure)
         if: always() && inputs.through != 'preflight'
