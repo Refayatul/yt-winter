@@ -1,6 +1,11 @@
 # ProfitDecoded: first full documentary ("Billions Sit on Unused Gift Cards. Who Keeps the Money?")
 
-Status on 2026-10-09: stopped at two approvals (Haiku spend, narrator). Nothing is published; no YouTube upload; no merge.
+Status on 2026-10-09 (update 2):
+- **Narrator approved by the owner:** Carl, "Steady Storyteller".
+- **Haiku:** one run approved by the owner, but it waits for the merges of #211 and #215 and a Console check (section 2b).
+- **Film package:** built, and its script passes every gate. Narration waits for the script selection.
+
+Nothing is published, nothing is uploaded and nothing has been merged.
 
 ## 1. Production readiness
 
@@ -52,6 +57,20 @@ gh workflow run profitdecoded-produce.yml -R eyazan/youtube-otomasyon --ref main
 ```
 
 Worst case by the ledger's own reservations is far below $0.50 at Haiku prices. The run has no automatic retries and no fallback to another Claude model, and the approval closes when the step ends.
+
+## 2b. Haiku: what has to happen before the one paid call
+
+| Check (owner's list) | State |
+| --- | --- |
+| PR #211 merged | **No.** Open, CI green. |
+| Model-specific single-use approval | Prepared in **PR #215**, stacked on #211: `exp-2026-10-haiku55-gift-cards-1`, model `claude-haiku-5-5` only, `maxUsd` 0.5, experiment pool, one script id. **Not merged.** |
+| paidEnabled and scope | `true` in #215 only; `main` stays closed until it is merged. |
+| Persistent ledger | `profitdecoded-budget-ledger`: empty, readable. |
+| Exact model id | `claude-haiku-5-5` from Anthropic's model documentation. The run's preflight confirms it on the Models API (not billed) before any paid call; the dry check was blocked by a local permission rule. |
+| Not expired | Expires 2026-10-12T18:00Z. |
+| Anthropic workspace spend limit | **Cannot be read with a normal API key** (it needs an Admin key). The owner confirms it in the Console. |
+
+The Gemini free quota goes first to the Haiku review (preflight probe, critique, one blind comparison). The older Gemini benchmark waits.
 
 ## 3. Opening: the PR #213 draft, evaluated on the whole Opus script
 
@@ -106,6 +125,32 @@ Auditions (run 37982635291, artifact `profitdecoded-cartesia-audition`):
 No voice has been selected. Measurements cannot judge naturalness, and nobody has listened to these yet.
 
 Estimated full-film narration: about 7,000 credits, inside the Pro allowance.
+
+## 4b. Film package (built while Haiku waits): `channels/profitdecoded/films/hbm-073-gift-cards/`
+
+- **Script candidate:** `story/`. It is the Opus reference, plus the #213 opening, plus additions drawn only from verified facts, to tell the story fully. No filler, and no figures outside the research file:
+  - Starbucks' three-year breakage series;
+  - Darden recording a sale only when the card is redeemed;
+  - Darden's own words, cards "for which redemption is remote";
+  - the +$7.9 million change in Darden's balance (our arithmetic);
+  - the name of the rule, Regulation E;
+  - the average unused balance, $244.
+- **Measurements:**
+  - 1,180 words, about 8.6 minutes with Carl's measured pace and natural pauses (estimate);
+  - `story-review`: 0 plan issues and 0 blocking findings;
+  - retention 100, spoken naturalness 97, AI-pattern score 0, opening 85.
+- **Storyboard:** `scenes.js`, 46 original shots covering all 54 beats.
+  - Each shot records its narration beat, visual purpose, exact claim, source line, asset type and licence (exported to `out/shots.json`).
+  - Durations follow the narration.
+  - Exact filing wording appears only inside quotation marks.
+  - There are no logos, stock footage or facsimiles.
+- **Audio:**
+  - Cartesia Carl, one pass;
+  - every sentence is cached, so re-mixes are free, and `--tts-cache-only` refuses to synthesize anything;
+  - an owned original score;
+  - mastered to −14 LUFS, true peak no higher than −1 dBTP.
+- **Licences:** `licenses.json`.
+- **Thumbnails:** A, B and C. **Titles:** 22 candidates.
 
 ## 5. Next, after both approvals
 
