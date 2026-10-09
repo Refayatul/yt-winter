@@ -10,6 +10,7 @@ const Research = require("../research");
 const Decision = require("../decision");
 const Agent = require("./research-agent");
 const Writer = require("./script-agent");
+const Eligibility = require("../eligibility");
 const { CHANNEL_DIR, readJson } = require("../config");
 
 const COOLDOWN_DAYS = 7;
@@ -44,7 +45,18 @@ function selectTopic(universe, dirs, format, now = Date.now()) {
 
 async function produce({ topic, universe, format = "short", deps = {}, dirs = dirsDefault(), now = Date.now() }) {
   const steps = []; const ledger = deps.ledger || LLM.newLedger(deps.maxUsd);
-  const finish = (status, extra = {}) => { const run = { at: new Date(now).toISOString(), topicId: topic.id, format, status, usd: ledger.usd, calls: ledger.calls, reasons: extra.reasons || [] }; if (!deps.noRecord) saveRun(dirs, run); return { status, topic, steps, ledger, ...extra }; };
+  const OUTCOME = { "bundle-ready": "accepted", "script-failed": "rejected", "research-failed": "rejected", paused: "paused", deferred: "deferred" };
+  // the outcome (accepted / rejected / paused / deferred) is written to the budget ledger for cost-per-accepted-script
+  // accounting; a failure to record it is reported, never turned into a success
+  const finish = async (status, extra = {}) => { const run = { at: new Date(now).toISOString(), topicId: topic.id, format, status, usd: ledger.usd, calls: ledger.calls, reasons: extra.reasons || [] }; if (!deps.noRecord) saveRun(dirs, run); if (ledger.budget) extra.outcomeRecorded = await ledger.budget.recordOutcome({ status: OUTCOME[status] || status, format, reasons: (extra.reasons || []).slice(0, 5) }).then(() => true, (e) => ({ error: e.message })); return { status, topic, steps, ledger, ...extra }; };
+  // 0. Paid runs: the free pre-generation filter decides before any paid call (research included). A topic without a
+  //    verified dossier, or one the decision engine has not cleared, is deferred: no paid tokens on weak topics.
+  if (ledger.budget) {
+    const onDisk = readJson(path.join(dirs.research, topic.id + ".json"), null);
+    const el = Eligibility.check(topic, onDisk, { format, pool: ledger.budget.context.pool || "script", now });
+    steps.push({ step: "eligibility", status: el.status, pool: el.pool, reasons: el.reasons, warnings: el.warnings });
+    if (el.status !== "ELIGIBLE") return { ...(await finish("deferred", { reasons: el.reasons })), eligibility: el };
+  }
   // 1. research (reuse a passing dossier; otherwise research live)
   let dossier; const reused = existingDossier(dirs, topic.id, format);
   if (reused) { dossier = reused.dossier; steps.push({ step: "research", reused: true, score: reused.gate.score }); }

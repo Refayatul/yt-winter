@@ -31,9 +31,17 @@ on:
           - groq
           - anthropic
       max_usd:
-        description: 'Paid-API spend guard in USD (0 = paid providers are refused)'
+        description: 'Paid-API limit for this script in USD (0 = paid providers are refused). Also capped by channels/profitdecoded/budget-policy.json, which must have paidEnabled=true.'
         required: true
-        default: '3'
+        default: '0'
+      budget_pool:
+        description: 'Paid budget pool: script (production, needs decision-engine clearance) or experiment'
+        required: false
+        default: 'script'
+        type: choice
+        options:
+          - script
+          - experiment
       through:
         description: 'Stop after: script (story only) or assess (narration + render + assessment)'
         required: false
@@ -55,8 +63,15 @@ on:
         required: false
         default: '400000'
 
+# contents: write is used only by the paid-API budget ledger (GitHub Contents API, branch profitdecoded-budget-ledger).
 permissions:
-  contents: read
+  contents: write
+
+# One run per topic+format at a time: a duplicate dispatch waits instead of paying twice (the ledger also refuses
+# an identical request that is in flight or already paid).
+concurrency:
+  group: profitdecoded-produce-${{ inputs.topic || 'auto' }}-${{ inputs.format || 'short' }}
+  cancel-in-progress: false
 
 jobs:
   produce:
@@ -130,7 +145,10 @@ jobs:
           PD_KOKORO_PYTHON: python
           TOPIC: ${{ inputs.topic }}
           FORMAT: ${{ inputs.format || 'short' }}
-          MAX_USD: ${{ inputs.max_usd || '3' }}
+          MAX_USD: ${{ inputs.max_usd || '0' }}
+          PD_BUDGET_POOL: ${{ inputs.budget_pool || 'script' }}
+          PD_BUDGET_TOKEN: ${{ github.token }}
+          PD_SCRIPT_VERSION: ${{ vars.PD_SCRIPT_VERSION || 'v1' }}
         run: |
           if [ "$CRITIC" = "gemini" ]; then export PD_STORY_PROVIDERS="plan=$PD_AUTO_PROVIDER,draft=$PD_AUTO_PROVIDER,rewrite=$PD_AUTO_PROVIDER,critique=gemini"; echo "stage providers: $PD_STORY_PROVIDERS"; fi
           if [ -n "$TOPIC" ]; then
