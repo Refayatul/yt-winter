@@ -123,7 +123,7 @@ test("budget: GitHub ledger uses the blob sha for compare-and-swap, and refuses 
 
 test("budget: fail closed (policy off, no ledger, runner-local file in Actions, paid call without a ledger)", async () => {
   await assert.rejects(fileBudget({ paidEnabled: false }).reserve({ id: "a", estimateUsd: 0.1 }), (e) => e.code === "PAID_DISABLED");
-  assert.equal(B.loadPolicy().paidEnabled, false, "the committed policy keeps paid calls disabled");
+  assertCommittedPolicyClosedOrScoped();
   assert.throws(() => B.storeFromEnv(policy({ ledger: { store: "file" } }), { GITHUB_ACTIONS: "true" }), (e) => e.code === "NO_STORE");
   const f = path.join(tmp(), "none.json");
   await assert.rejects(new B.Budget({ store: new B.FileStore(f), policy: policy(), context: { scriptId: "a" } }).reserve({ id: "a", estimateUsd: 0.1 }), (e) => e.code === "STATE_MISSING");
@@ -313,11 +313,25 @@ test("preflight: NO-GO for a paid run while the committed policy keeps paid call
   const env = { ...process.env }; for (const k of ["GEMINI_API_KEY", "ANTHROPIC_API_KEY", "PD_BUDGET_TOKEN", "GITHUB_TOKEN"]) delete env[k];
   const r = spawnSync("node", [path.join(ROOT, "profitdecoded.js"), "preflight", "--paid", "--topic", "hbm-073-how-gift-cards-make-money-for-retailers", "--format", "long", "--pool", "experiment", "--max-usd", "2"], { cwd: ROOT, env, encoding: "utf8" });
   assert.equal(r.status, 1);
-  assert.match(r.stdout, /FAIL\s+paid-enabled\s+paidEnabled=false/); assert.match(r.stdout, /FAIL\s+budget-ledger/); assert.match(r.stdout, /FAIL\s+anthropic-key/);
+  // closed policy: paid-enabled fails; an approval PR: it passes, and the run still stops without a ledger and a key
+  assert.match(r.stdout, B.loadPolicy().paidEnabled ? /PASS\s+paid-enabled/ : /FAIL\s+paid-enabled\s+paidEnabled=false/); assert.match(r.stdout, /FAIL\s+budget-ledger/); assert.match(r.stdout, /FAIL\s+anthropic-key/);
   assert.match(r.stdout, /PASS\s+eligibility\s+ELIGIBLE/); assert.match(r.stdout, /PASS\s+publishing-blocked/); assert.match(r.stdout, /PREFLIGHT: NO-GO/);
 });
 
 // ---- single-use paid approval and schedule isolation --------------------------------------------------------------
+// The committed policy is either closed (paidEnabled false, no approval) or open through exactly ONE narrow approval:
+// one script, the experiment pool, an expiry at most 7 days after its own approval date, a named approver and a cap.
+function assertCommittedPolicyClosedOrScoped() {
+  const p = B.loadPolicy(); const a = p.paidApproval;
+  if (!p.paidEnabled) { assert.equal(a, null, "a closed policy carries no approval"); return; }
+  assert.ok(a && a.id && a.approvedBy, "paidEnabled needs a named, single-use approval");
+  assert.match(a.scriptId || "", /^[a-z0-9-]+:(long|short):[a-z0-9.-]+$/, "the approval covers one script id");
+  assert.equal(a.pool, "experiment", "an approval in the committed policy is for the experiment pool");
+  assert.ok(a.maxUsd > 0 && a.maxUsd <= p.maxPerScriptUsd, "the approval has its own spend cap");
+  assert.ok(!a.model || /^claude-[a-z0-9-]+$/.test(a.model));
+  const days = (Date.parse(a.expiresAt) - Date.parse((String(a.approvedBy).match(/\d{4}-\d{2}-\d{2}/) || [])[0])) / 864e5;
+  assert.ok(days > 0 && days <= 7, "the approval names its approval date and expires within 7 days of it");
+}
 test("paid approval: required, scoped to one script and pool, expires, and is closed after the run (resumes refused)", async () => {
   const exp = { id: "exp-gc-1", scriptId: "hbm-073:long:v1", pool: "experiment", expiresAt: "2026-10-12T00:00:00Z", approvedBy: "Owner" };
   let t = Date.parse("2026-10-10T12:00:00Z");
@@ -333,7 +347,7 @@ test("paid approval: required, scoped to one script and pool, expires, and is cl
   const st = await bud.status(); assert.equal(st.approval.usable, false);
   t = Date.parse("2026-10-13T00:00:00Z");
   await assert.rejects(mk({ paidApproval: { ...exp, id: "exp-gc-2" } }).reserve({ id: "x", estimateUsd: 0.1 }), (e) => /expired/.test(e.message));
-  assert.equal(B.loadPolicy().paidApproval, null, "the committed policy grants no approval");
+  assertCommittedPolicyClosedOrScoped();
 });
 
 test("paid approval for a one-model experiment: other models refused, its own cap applies, workflow passes the model", async () => {
