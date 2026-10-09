@@ -1,0 +1,82 @@
+{
+ "groq": {
+  "planIssues": [],
+  "planWarnings": [
+   "selectedHook scores 70, more than 10 below the best hook (81); override ignored, the best factual hook opens instead"
+  ],
+  "openingHook": "You’ve been told gift cards expire, but Starbucks’ cards never do.",
+  "words": 1143,
+  "minutes130": 8.8,
+  "sentences": 94,
+  "avgSentenceWords": 12.2,
+  "numberMentions": 67,
+  "distinctNumbers": 36,
+  "repeatedNumbers": {
+   "2023": 3,
+   "2024": 5,
+   "2,373": 3,
+   "$27": 3,
+   "2025.": 6,
+   "$200.4": 2,
+   "$22.0": 2,
+   "$222.4": 3,
+   "$207.6": 3,
+   "$215.0": 3,
+   "$760.2": 3,
+   "$751.9": 3,
+   "$7.9": 3,
+   "$3.6": 2,
+   "2026,": 2
+  },
+  "blocking": [],
+  "retention": 99,
+  "first30": 85,
+  "spoken": 91,
+  "aiPattern": 7,
+  "hookRanked": [
+   "81 contradiction pass",
+   "79 consumer pain pass",
+   "72 hidden incentive pass",
+   "70 number pass",
+   "69 financial paradox pass",
+   "63 visual mystery FAIL"
+  ],
+  "weakest": []
+ },
+ "claude": {
+  "planIssues": [],
+  "planWarnings": [],
+  "openingHook": "Somewhere in a drawer, a wallet or a coat pocket, there's a gift card with money still on it. Maybe it's yours.",
+  "words": 1025,
+  "minutes130": 7.9,
+  "sentences": 93,
+  "avgSentenceWords": 11,
+  "numberMentions": 20,
+  "distinctNumbers": 18,
+  "repeatedNumbers": {
+   "12": 2,
+   "$15.2": 2
+  },
+  "blocking": [
+   "script is 1025 words: too short for a long (min 1040)",
+   "number \"$200\" is not in the dossier (sentence: \"And in each of the two years before, our total comes out above $200 million too.\")",
+   "retention: weak-opening: first-30-seconds reading 71 (0-5s: opens an unresolved tension (contradiction); 15-30s: no explicit mechanism/value statement yet). Fix: open on the tension, validate the title by second 15, deliver the first real fact by second 30",
+   "retention: unpaid-question: \"So how much is this worth to Starbucks?\" (s4) is never answered. Fix: answer it later with evidence, or remove the question",
+   "retention: unpaid-question: \"Remember that phrase about government agencies?\" (s7) is never answered. Fix: answer it later with evidence, or remove the question",
+   "retention: unpaid-question: \"So, who keeps the money?\" (s9) is never answered. Fix: answer it later with evidence, or remove the question"
+  ],
+  "retention": 59,
+  "first30": 71,
+  "spoken": 100,
+  "aiPattern": 5,
+  "hookRanked": [
+   "78 visual mystery pass",
+   "78 contradiction pass",
+   "77 unexpected consequence pass",
+   "75 number pass",
+   "69 question pass",
+   "64 hidden incentive FAIL"
+  ],
+  "weakest": []
+ }
+}
