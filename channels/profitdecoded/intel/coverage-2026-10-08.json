@@ -1,0 +1,1233 @@
+{
+ "schema": "profitdecoded.coverage-observations.v1",
+ "observedOn": "2026-10-08",
+ "method": "Manual reading of public YouTube search-result and channel pages in a browser (no API). Relevance-ranked samples of about 20 results per query; the session ran in a Turkish locale, so ranking may differ from a US viewer's. Views and ages are as YouTube displayed them (ages rounded by YouTube; approxAgeDays is the lower bound). 'same-angle' = the video answers the same question as our topic; 'adjacent' = proves audience interest in the subject but answers a different question. uploadsUnder30DaysInSample counts results under 30 days old in the largest sample for that topic.",
+ "provenanceRule": "Counts are observed facts about a sample. The saturation CLASS derived from them by competitive.coverageSaturation() is INFERRED and never treated as OBSERVED API data. Superseded topic-by-topic by collector runs (PD_YT_API_KEY).",
+ "titleTemplates": {
+  "how-x-actually-makes-money": {
+   "class": "SATURATED",
+   "evidence": "query 'how costco makes money': 12 of 20 results were same-template uploads from the last ~5 months with 2-505 views (Phase 1 report said 13; recount gives 12); 'how mcdonalds really makes money' and 'why gas stations dont make money on gas' each showed 7 same-template uploads under 30 days old"
+  },
+  "not-what-you-think": {
+   "class": "HOT",
+   "evidence": "suffix seen on several low-view clone titles in the Costco and McDonald's samples (e.g. 381, 332 and 49 views)"
+  },
+  "business-model-explained": {
+   "class": "HOT",
+   "evidence": "suffix seen on several low-view clone titles in the Costco, cruise and McDonald's samples"
+  },
+  "economics-of-owning": {
+   "class": "HOT",
+   "evidence": "'the economics of owning a' query: at least 6 channels using the template, most uploads under 30 days old (Mr. Finance near-daily, Useless Money, Actually Costs, Outlay, Mr. MoneyWise, HinExp); observed hits: Neu 619K, Useless Money 212K, HinExp 77K (Indian market)"
+  },
+  "so-expensive": {
+   "class": "HOT",
+   "evidence": "'why is it so expensive' query: 16 of 17 shown results were Business Insider (So Expensive series) or CNBC, many above 1M views"
+  },
+  "decline-what-happened": {
+   "class": "HOT",
+   "evidence": "a competitor's series title: all 12 results for 'company man the decline of' were Company Man videos (55K-3.4M)"
+  }
+ },
+ "entries": [
+  {
+   "id": "penny",
+   "topicIds": [
+    "se-063-why-pennies-cost-more-than-a-penny",
+    "se-064-why-the-us-still-makes-the-penny"
+   ],
+   "angle": "end of the US penny / who pays when cash is rounded",
+   "query": "end of the penny who benefits | penny rounding nearest nickel explained | why the penny was discontinued explained",
+   "uploadsUnder30DaysInSample": 1,
+   "videos": [
+    {
+     "title": "Canada Killed the Penny and Nothing Broke",
+     "channel": "CGP Grey",
+     "views": 3641044,
+     "ageAsDisplayed": "14 years",
+     "approxAgeDays": 5110,
+     "relation": "same-angle",
+     "note": "rounding consequences, Canada"
+    },
+    {
+     "title": "Death to Pennies",
+     "channel": "CGP Grey",
+     "views": 10697994,
+     "ageAsDisplayed": "14 years",
+     "approxAgeDays": 5110,
+     "relation": "adjacent"
+    },
+    {
+     "title": "The Penny Is Dead",
+     "channel": "DeFranco News Clips",
+     "views": 1044629,
+     "ageAsDisplayed": "10 months",
+     "approxAgeDays": 300,
+     "relation": "adjacent",
+     "note": "news commentary"
+    },
+    {
+     "title": "The End of The Penny (and of Congress??)",
+     "channel": "vlogbrothers",
+     "views": 419668,
+     "ageAsDisplayed": "10 months",
+     "approxAgeDays": 300,
+     "relation": "adjacent"
+    },
+    {
+     "title": "What should you do with pennies after they stop production?",
+     "channel": "WTAJ",
+     "views": 338903,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "adjacent"
+    },
+    {
+     "title": "End of the penny: US Treasury Department produces last batch",
+     "channel": "TODAY",
+     "views": 181637,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "movie-concessions",
+   "topicIds": [
+    "hbm-003-why-movie-theaters-care-more-about-popcorn-than-",
+    "pp-010-why-movie-theater-popcorn-comes-in-absurd-sizes",
+    "se-073-why-movie-theaters-make-almost-nothing-from-tick"
+   ],
+   "angle": "theater economics: ticket split vs concessions",
+   "query": "why movie theaters make money on concessions | movie theater popcorn profit margin explained | movie theaters make money popcorn",
+   "uploadsUnder30DaysInSample": 17,
+   "videos": [
+    {
+     "title": "Sneaky Ways Movie Theaters Get You To Spend More Money",
+     "channel": "Business Insider",
+     "views": 4954161,
+     "ageAsDisplayed": "7 years",
+     "approxAgeDays": 2555,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Movie Theaters Are Just Airlines With Popcorn",
+     "channel": "Modern MBA",
+     "views": 161103,
+     "ageAsDisplayed": "5 months",
+     "approxAgeDays": 150,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Do Movie Theaters Sell Popcorn?",
+     "channel": "BrainStuff - HowStuffWorks",
+     "views": 247294,
+     "ageAsDisplayed": "10 years",
+     "approxAgeDays": 3650,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "gift-card-breakage",
+   "topicIds": [
+    "hbm-073-how-gift-cards-make-money-for-retailers",
+    "pp-133-why-gift-cards-are-rarely-fully-used"
+   ],
+   "angle": "unused gift card balances and breakage",
+   "query": "unused gift cards where does the money go | gift card breakage starbucks | gift card breakage companies profit",
+   "uploadsUnder30DaysInSample": 5,
+   "videos": [
+    {
+     "title": "What Happens To Unspent Gift Cards?",
+     "channel": "CNBC",
+     "views": 696381,
+     "ageAsDisplayed": "6 years",
+     "approxAgeDays": 2190,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Unused Gift Cards Power Delaware's Economy",
+     "channel": "PolyMatter",
+     "views": 250862,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Starbucks Operates Like a Bank",
+     "channel": "WSJ The Economics Of",
+     "views": 2672056,
+     "ageAsDisplayed": "4 years",
+     "approxAgeDays": 1460,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "car-wash",
+   "topicIds": [
+    "hbm-143-how-car-washes-became-a-business-everyone-wants"
+   ],
+   "angle": "express car wash boom and unlimited memberships",
+   "query": "car wash subscription business model | why are there so many express car washes | why are there so many car washes",
+   "uploadsUnder30DaysInSample": 11,
+   "videos": [
+    {
+     "title": "How Private Equity Drove America's Car Wash Obsession",
+     "channel": "Bloomberg Originals",
+     "views": 328293,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "same-angle"
+    },
+    {
+     "title": "The Car Wash Conspiracy",
+     "channel": "All Time",
+     "views": 149847,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "adjacent",
+     "note": "content not checked"
+    }
+   ]
+  },
+  {
+   "id": "self-storage",
+   "topicIds": [
+    "hbm-085-how-self-storage-makes-money-from-things-you-for"
+   ],
+   "angle": "self-storage business model",
+   "query": "self storage business model",
+   "uploadsUnder30DaysInSample": 1,
+   "videos": [
+    {
+     "title": "How Self Storage Thrives Off The American Dream",
+     "channel": "Modern MBA",
+     "views": 1207554,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Self-Storage Companies Make Billions",
+     "channel": "CNBC",
+     "views": 373444,
+     "ageAsDisplayed": "5 years",
+     "approxAgeDays": 1825,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Much Money Does Self Storage Make?",
+     "channel": "Self Storage Income",
+     "views": 542095,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "adjacent",
+     "note": "investor how-to"
+    },
+    {
+     "title": "How Self-Storage Facilities Actually Make Money",
+     "channel": "Useless Money",
+     "views": 1200,
+     "ageAsDisplayed": "1 month",
+     "approxAgeDays": 30,
+     "relation": "same-angle"
+    },
+    {
+     "title": "The Economics of Owning a Storage Facility",
+     "channel": "Mr. Finance",
+     "views": 11000,
+     "ageAsDisplayed": "3 weeks",
+     "approxAgeDays": 21,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "store-credit-cards",
+   "topicIds": [
+    "hbm-074-how-store-credit-cards-make-money"
+   ],
+   "angle": "why retailers push store cards",
+   "query": "store credit card macys target redcard why",
+   "uploadsUnder30DaysInSample": 0,
+   "videos": [
+    {
+     "title": "Who Actually Pays For Credit Card Rewards?",
+     "channel": "CNBC",
+     "views": 1511003,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Why Americans are Hooked on Credit Cards",
+     "channel": "Modern MBA",
+     "views": 428274,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Kohl's: The Poison Pill That Broke This $8B Retail King",
+     "channel": "JunkBondInvestor",
+     "views": 499349,
+     "ageAsDisplayed": "2 months",
+     "approxAgeDays": 60,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "costco-membership",
+   "topicIds": [
+    "cs-001-why-costco-wants-membership-more-than-sales",
+    "hbm-008-how-costco-turned-membership-into-a-money-machin"
+   ],
+   "angle": "Costco membership model",
+   "query": "how costco makes money",
+   "uploadsUnder30DaysInSample": 8,
+   "videos": [
+    {
+     "title": "How Costco Mastered Capitalism Without Being Greedy",
+     "channel": "Established Context",
+     "views": 1579584,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Costco Became A Massive \"Members Only\" Retailer",
+     "channel": "CNBC",
+     "views": 4842058,
+     "ageAsDisplayed": "6 years",
+     "approxAgeDays": 2190,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Costco Refuses to Play the Game",
+     "channel": "Established Context",
+     "views": 95000,
+     "ageAsDisplayed": "6 months",
+     "approxAgeDays": 180,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Costco Makes Money",
+     "channel": "Tony Talks Business",
+     "views": 28907,
+     "ageAsDisplayed": "3 weeks",
+     "approxAgeDays": 21,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How A Single Costco Changes Its Local Economy",
+     "channel": "Micro",
+     "views": 3063172,
+     "ageAsDisplayed": "10 months",
+     "approxAgeDays": 300,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Why Costco Went All in on Kirkland — and How It Paid Off",
+     "channel": "The Wall Street Journal",
+     "views": 5231244,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Behind Costco's Treasure-Hunt Shopping Strategy",
+     "channel": "WSJ The Economics Of",
+     "views": 2625249,
+     "ageAsDisplayed": "5 years",
+     "approxAgeDays": 1825,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "gym-membership",
+   "topicIds": [
+    "hbm-001-why-gyms-make-more-money-when-you-stay-home"
+   ],
+   "angle": "budget gyms sized for members who do not come",
+   "query": "planet fitness business model | why cheap gyms are actually genius",
+   "uploadsUnder30DaysInSample": 6,
+   "videos": [
+    {
+     "title": "The Gym That Doesn't Want You There - Planet Fitness",
+     "channel": "The Fat Files",
+     "views": 1900000,
+     "ageAsDisplayed": "5 months",
+     "approxAgeDays": 150,
+     "relation": "same-angle",
+     "note": "views as shown on channel page (1.9M, rounded)"
+    },
+    {
+     "title": "Why Gym Memberships are a SCAM",
+     "channel": "Levi Hildebrand",
+     "views": 657942,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Cheap Gyms Are Actually Genius",
+     "channel": "Brimm.",
+     "views": 8533,
+     "ageAsDisplayed": "4 months",
+     "approxAgeDays": 120,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Planet Fitness Became Hated By The World",
+     "channel": "SunnyV2",
+     "views": 10076657,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "adjacent"
+    },
+    {
+     "title": "What Planet Fitness And Lifetime's Performance Tells Us About The 'K-shaped' economy",
+     "channel": "CNBC",
+     "views": 196429,
+     "ageAsDisplayed": "7 months",
+     "approxAgeDays": 210,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "mattress",
+   "topicIds": [
+    "hbm-130-how-mattress-companies-make-money"
+   ],
+   "angle": "why there are so many mattress stores",
+   "query": "mattress store business model",
+   "uploadsUnder30DaysInSample": 9,
+   "videos": [
+    {
+     "title": "The Mattress Industry Is Built On Lies",
+     "channel": "Zackary Smigel",
+     "views": 2294105,
+     "ageAsDisplayed": "4 months",
+     "approxAgeDays": 120,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Money Laundering? - Why Are There So Many Mattress Stores",
+     "channel": "The Fat Files",
+     "views": 1957573,
+     "ageAsDisplayed": "9 months",
+     "approxAgeDays": 270,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "airline-cards",
+   "topicIds": [
+    "hbm-034-how-airlines-make-money-from-credit-cards",
+    "hbm-035-how-airlines-make-more-money-from-miles-than-sea"
+   ],
+   "angle": "airlines as credit card / loyalty businesses",
+   "query": "airlines make money from credit cards",
+   "uploadsUnder30DaysInSample": 5,
+   "videos": [
+    {
+     "title": "How Airlines Quietly Became Banks",
+     "channel": "Wendover Productions",
+     "views": 7347429,
+     "ageAsDisplayed": "4 years",
+     "approxAgeDays": 1460,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Airlines Can't Survive Without Loyalty Programs",
+     "channel": "WSJ Case Study",
+     "views": 1352738,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Who Actually Pays For Credit Card Rewards?",
+     "channel": "CNBC",
+     "views": 1511003,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Why Banks Bet Big on Risky Credit Card Partnerships",
+     "channel": "WSJ",
+     "views": 505786,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "adjacent"
+    },
+    {
+     "title": "The Insanely Lucrative Business of Credit Cards",
+     "channel": "Wall Street Millennial",
+     "views": 104580,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "mcdonalds-real-estate",
+   "topicIds": [
+    "hbm-002-how-mcdonalds-really-makes-money",
+    "hbm-021-why-fast-food-chains-are-really-real-estate-comp"
+   ],
+   "angle": "McDonald's as a real-estate business",
+   "query": "how mcdonalds really makes money",
+   "uploadsUnder30DaysInSample": 7,
+   "videos": [
+    {
+     "title": "How McDonald's Really Makes Money",
+     "channel": "PolyMatter",
+     "views": 3976832,
+     "ageAsDisplayed": "5 years",
+     "approxAgeDays": 1825,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How McDonald's Really Makes Their Money (It's Not What You Think)",
+     "channel": "Dan Lok",
+     "views": 85166,
+     "ageAsDisplayed": "6 years",
+     "approxAgeDays": 2190,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How McDonalds Actually Makes Profits",
+     "channel": "Enterprises Explained",
+     "views": 10818,
+     "ageAsDisplayed": "5 years",
+     "approxAgeDays": 1825,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Much Mcdonald's Franchise Owners Really Make Per Year",
+     "channel": "Mashed",
+     "views": 2189735,
+     "ageAsDisplayed": "6 years",
+     "approxAgeDays": 2190,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Why You Will Go Broke Owning a McDonalds Franchise",
+     "channel": "The Infographics Show",
+     "views": 1748133,
+     "ageAsDisplayed": "5 years",
+     "approxAgeDays": 1825,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "gas-stations",
+   "topicIds": [
+    "hbm-009-why-gas-stations-dont-want-to-sell-you-gas"
+   ],
+   "angle": "gas stations earn from the store, not the fuel",
+   "query": "why gas stations dont make money on gas",
+   "uploadsUnder30DaysInSample": 7,
+   "videos": [
+    {
+     "title": "Why Most Gas Stations Don't Make Money From Selling Gas",
+     "channel": "Hustlenomics | The Hustle",
+     "views": 175440,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Gas Stations Don't Make Money on Gas (The Real Business Model)",
+     "channel": "The Business Model Breakdown",
+     "views": 329,
+     "ageAsDisplayed": "8 months",
+     "approxAgeDays": 240,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Gas Stations Don't Make Money Selling Gas",
+     "channel": "Zane Explainer",
+     "views": 248,
+     "ageAsDisplayed": "7 months",
+     "approxAgeDays": 210,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "dollar-stores",
+   "topicIds": [
+    "hbm-024-how-dollar-stores-make-money-on-things-that-cost"
+   ],
+   "angle": "dollar store economics",
+   "query": "how dollar general makes money",
+   "uploadsUnder30DaysInSample": 5,
+   "videos": [
+    {
+     "title": "How Dollar Stores Quietly Consumed America",
+     "channel": "Wendover Productions",
+     "views": 4240649,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "What makes dollar stores so cheap?",
+     "channel": "Big Tugg",
+     "views": 1565207,
+     "ageAsDisplayed": "8 months",
+     "approxAgeDays": 240,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Dollar Stores Really Make Their Money",
+     "channel": "Mashed",
+     "views": 976451,
+     "ageAsDisplayed": "6 years",
+     "approxAgeDays": 2190,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Behind Dollar General's Strategy to Dominate Rural America",
+     "channel": "WSJ The Economics Of",
+     "views": 924005,
+     "ageAsDisplayed": "5 years",
+     "approxAgeDays": 1825,
+     "relation": "same-angle"
+    },
+    {
+     "title": "The Explosive Rise Of Dollar Stores",
+     "channel": "CNBC",
+     "views": 569651,
+     "ageAsDisplayed": "4 years",
+     "approxAgeDays": 1460,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Dollar Stores Make Money",
+     "channel": "Tony Talks Business",
+     "views": 179259,
+     "ageAsDisplayed": "2 months",
+     "approxAgeDays": 60,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "tipping-screens",
+   "topicIds": [
+    "pp-064-why-tipping-screens-appear-everywhere",
+    "pp-065-why-tip-suggestions-start-so-high"
+   ],
+   "angle": "tip prompts on payment screens",
+   "query": "tipping screens everywhere why",
+   "uploadsUnder30DaysInSample": 12,
+   "videos": [
+    {
+     "title": "Why You're Being Forced to Tip Everywhere Now",
+     "channel": "Informed Insights",
+     "views": 350618,
+     "ageAsDisplayed": "9 months",
+     "approxAgeDays": 270,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Tipping Culture Took Over the U.S.",
+     "channel": "WSJ",
+     "views": 198620,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "same-angle"
+    },
+    {
+     "title": "The EVIL GENIUS behind Tipflation",
+     "channel": "Phil Edwards",
+     "views": 184938,
+     "ageAsDisplayed": "8 months",
+     "approxAgeDays": 240,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Are We Tipping EVERYWHERE Now?",
+     "channel": "Marissa Van",
+     "views": 112376,
+     "ageAsDisplayed": "10 months",
+     "approxAgeDays": 300,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Tipping Should Be Banned - Adam Ruins Everything",
+     "channel": "Dropout",
+     "views": 15769276,
+     "ageAsDisplayed": "11 years",
+     "approxAgeDays": 4015,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "uber-drivers",
+   "topicIds": [
+    "hbm-016-how-uber-makes-money-when-drivers-barely-do"
+   ],
+   "angle": "Uber's take vs driver pay",
+   "query": "why uber is so expensive now",
+   "uploadsUnder30DaysInSample": 5,
+   "videos": [
+    {
+     "title": "We Investigated Uber Again. It's Worse Than Last Time.",
+     "channel": "More Perfect Union",
+     "views": 1436172,
+     "ageAsDisplayed": "1 month",
+     "approxAgeDays": 30,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Uber Is Losing Money",
+     "channel": "CNBC",
+     "views": 1496473,
+     "ageAsDisplayed": "7 years",
+     "approxAgeDays": 2555,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Why Uber Is More Expensive ... For Some People",
+     "channel": "Business Insider",
+     "views": 1259959,
+     "ageAsDisplayed": "1 month",
+     "approxAgeDays": 30,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "uber-pricing",
+   "topicIds": [
+    "pp-056-why-uber-prices-surge"
+   ],
+   "angle": "Uber pricing",
+   "query": "why uber is so expensive now",
+   "uploadsUnder30DaysInSample": 5,
+   "videos": [
+    {
+     "title": "Why Uber Is More Expensive ... For Some People",
+     "channel": "Business Insider",
+     "views": 1259959,
+     "ageAsDisplayed": "1 month",
+     "approxAgeDays": 30,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Uber And Lyft Rides Got So Expensive",
+     "channel": "CNBC",
+     "views": 611986,
+     "ageAsDisplayed": "5 years",
+     "approxAgeDays": 1825,
+     "relation": "same-angle"
+    },
+    {
+     "title": "We Investigated Uber Again. It's Worse Than Last Time.",
+     "channel": "More Perfect Union",
+     "views": 1436172,
+     "ageAsDisplayed": "1 month",
+     "approxAgeDays": 30,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "bnpl",
+   "topicIds": [
+    "pp-130-why-buy-now-pay-later-makes-you-spend-more"
+   ],
+   "angle": "buy now pay later economics",
+   "query": "why buy now pay later klarna make money",
+   "uploadsUnder30DaysInSample": 5,
+   "videos": [
+    {
+     "title": "The 'Buy Now Pay Later' Trap, Explained",
+     "channel": "Grant Rudow",
+     "views": 5998868,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How 'Buy Now, Pay Later' Makes Billions From 'Free' Loans",
+     "channel": "WSJ The Economics Of",
+     "views": 1906415,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Buy Now Default Later",
+     "channel": "How Money Works",
+     "views": 1542079,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "same-angle"
+    },
+    {
+     "title": "People are CANCELING Klarna, Afterpay and Buy Now Pay Later in 2025!",
+     "channel": "Social Symone",
+     "views": 297904,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "printer-ink",
+   "topicIds": [
+    "hbm-052-how-printers-make-money-on-ink-not-printers",
+    "se-002-why-printer-ink-costs-more-than-luxury-products",
+    "mt-015-why-printers-now-reject-cheaper-ink",
+    "mt-016-why-printer-subscriptions-exist"
+   ],
+   "angle": "printer ink pricing",
+   "query": "printer ink so expensive",
+   "uploadsUnder30DaysInSample": 5,
+   "videos": [
+    {
+     "title": "Ink Cartridges Are A Scam",
+     "channel": "AustinMcConnell",
+     "views": 10874199,
+     "ageAsDisplayed": "8 years",
+     "approxAgeDays": 2920,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Printer Ink, It's a SCAM",
+     "channel": "Fstoppers",
+     "views": 10642989,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Printer Ink Is So Expensive",
+     "channel": "Business Insider (So Expensive)",
+     "views": 3933281,
+     "ageAsDisplayed": "7 years",
+     "approxAgeDays": 2555,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "chick-fil-a",
+   "topicIds": [
+    "hbm-020-how-chick-fil-a-makes-so-much-per-restaurant"
+   ],
+   "angle": "Chick-fil-A operator model",
+   "query": "chick-fil-a franchise model",
+   "uploadsUnder30DaysInSample": 2,
+   "videos": [
+    {
+     "title": "Behind Chick-fil-A's Unconventional Franchise Model",
+     "channel": "WSJ The Economics Of",
+     "views": 4680153,
+     "ageAsDisplayed": "4 years",
+     "approxAgeDays": 1460,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Food Theory: Skip School! Own A Chick Fil A!",
+     "channel": "The Food Theorists",
+     "views": 4507332,
+     "ageAsDisplayed": "4 years",
+     "approxAgeDays": 1460,
+     "relation": "same-angle"
+    },
+    {
+     "title": "A Chick-Fil-A Franchise Costs only $10,000 and Makes 4.5 Million - What's the Catch?",
+     "channel": "Franchise Inspectors",
+     "views": 1151808,
+     "ageAsDisplayed": "5 years",
+     "approxAgeDays": 1825,
+     "relation": "same-angle"
+    },
+    {
+     "title": "I Turned Down a Chick-Fil-A Franchise. Here's Why.",
+     "channel": "Connor Groce",
+     "views": 81891,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "aldi",
+   "topicIds": [
+    "hbm-026-how-aldi-prices-so-low"
+   ],
+   "angle": "how Aldi keeps prices low",
+   "query": "how aldi is so cheap",
+   "uploadsUnder30DaysInSample": 4,
+   "videos": [
+    {
+     "title": "Why Aldi Is America's Fastest Growing Grocery Store",
+     "channel": "WSJ The Economics Of",
+     "views": 4676352,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "same-angle"
+    },
+    {
+     "title": "The Truth About Aldi's Really Low Prices",
+     "channel": "Mashed",
+     "views": 3544248,
+     "ageAsDisplayed": "8 years",
+     "approxAgeDays": 2920,
+     "relation": "same-angle"
+    },
+    {
+     "title": "ALDI The Best Grocery Store On Earth - Unhinged Case Studies",
+     "channel": "The Fat Files",
+     "views": 2108231,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "same-angle"
+    },
+    {
+     "title": "ALDI - Why They're Successful",
+     "channel": "Company Man",
+     "views": 1637893,
+     "ageAsDisplayed": "7 years",
+     "approxAgeDays": 2555,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How ALDI Wins Where Everyone Else Fails",
+     "channel": "Micro",
+     "views": 416137,
+     "ageAsDisplayed": "7 months",
+     "approxAgeDays": 210,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "trader-joes",
+   "topicIds": [
+    "hbm-025-how-trader-joes-makes-money-without-brands",
+    "cs-015-how-trader-joes-turned-groceries-into-a-cult"
+   ],
+   "angle": "Trader Joe's model",
+   "query": "why trader joes has no online store",
+   "uploadsUnder30DaysInSample": 3,
+   "videos": [
+    {
+     "title": "Why You Spend So Much Money At Trader Joe's",
+     "channel": "CNBC Make It",
+     "views": 3133406,
+     "ageAsDisplayed": "6 years",
+     "approxAgeDays": 2190,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Is Trader Joe's So Cheap and Popular?",
+     "channel": "WSJ The Economics Of",
+     "views": 2809842,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Sneaky Ways Trader Joe's Gets You To Spend Money",
+     "channel": "Business Insider",
+     "views": 1254437,
+     "ageAsDisplayed": "7 years",
+     "approxAgeDays": 2555,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Trader Joe's is So Ridiculously Cheap",
+     "channel": "PolyMatter",
+     "views": 825217,
+     "ageAsDisplayed": "6 years",
+     "approxAgeDays": 2190,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "ticketmaster",
+   "topicIds": [
+    "hbm-044-how-ticketmaster-makes-money-without-selling-tic",
+    "pp-058-why-ticket-fees-show-up-last"
+   ],
+   "angle": "Ticketmaster fees and market power",
+   "query": "ticketmaster fees why",
+   "uploadsUnder30DaysInSample": 8,
+   "videos": [
+    {
+     "title": "Ticketmaster is Finally Getting What it Deserves",
+     "channel": "The Infographics Show",
+     "views": 326810,
+     "ageAsDisplayed": "4 months",
+     "approxAgeDays": 120,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Going To Concerts Is Harder Than Ever",
+     "channel": "Business Insider",
+     "views": 518544,
+     "ageAsDisplayed": "9 months",
+     "approxAgeDays": 270,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Ticket Prices Are Disgusting",
+     "channel": "Scott Cramer",
+     "views": 247938,
+     "ageAsDisplayed": "7 months",
+     "approxAgeDays": 210,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "hearing-aids",
+   "topicIds": [
+    "pp-087-why-hearing-aids-cost-so-much"
+   ],
+   "angle": "hearing aid pricing",
+   "query": "why hearing aids are so expensive | costco hearing aids why cheap",
+   "uploadsUnder30DaysInSample": 0,
+   "videos": [
+    {
+     "title": "Why Hearing Aids Are So Expensive And How That's Changing",
+     "channel": "CNBC",
+     "views": 287392,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Costco Hearing Aids [The GOOD, The BAD, & The UGLY]",
+     "channel": "(as shown)",
+     "views": 188053,
+     "ageAsDisplayed": "7 years",
+     "approxAgeDays": 2555,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Why I No Longer Recommend Costco Hearing Aids",
+     "channel": "Doctor Cliff, AuD",
+     "views": 175998,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "funeral",
+   "topicIds": [
+    "hbm-086-how-funeral-homes-make-money"
+   ],
+   "angle": "funeral home economics / consolidation",
+   "query": "why are funeral costs so high | service corporation international funeral homes owned",
+   "uploadsUnder30DaysInSample": 8,
+   "videos": [
+    {
+     "title": "Why Funerals Are So Expensive In The U.S.",
+     "channel": "CNBC",
+     "views": 405753,
+     "ageAsDisplayed": "5 years",
+     "approxAgeDays": 1825,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Are Funerals So Expensive?",
+     "channel": "Caitlin Doughty",
+     "views": 436828,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Expensive Is It To Die?",
+     "channel": "BuzzFeed Multiplayer",
+     "views": 1541303,
+     "ageAsDisplayed": "9 years",
+     "approxAgeDays": 3285,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "shrinkflation",
+   "topicIds": [
+    "pp-023-why-shrinkflation-works-even-when-you-notice"
+   ],
+   "angle": "shrinkflation",
+   "query": "shrinkflation explained",
+   "uploadsUnder30DaysInSample": 0,
+   "videos": [
+    {
+     "title": "Food Theory: They're STEALING Your Food!",
+     "channel": "The Food Theorists",
+     "views": 3476180,
+     "ageAsDisplayed": "4 years",
+     "approxAgeDays": 1460,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Shrinkflation May Leave Fewer Chips in Your Bag",
+     "channel": "WSJ Price Index",
+     "views": 125507,
+     "ageAsDisplayed": "4 years",
+     "approxAgeDays": 1460,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why everything feels more expensive now",
+     "channel": "It's Complicated",
+     "views": 5426712,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "adjacent"
+    },
+    {
+     "title": "How Scamming Consumers Became Normalised",
+     "channel": "ColdFusion",
+     "views": 646343,
+     "ageAsDisplayed": "10 months",
+     "approxAgeDays": 300,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "resort-fees",
+   "topicIds": [
+    "pp-060-why-resort-fees-are-hidden"
+   ],
+   "angle": "resort / junk fees",
+   "query": "hotel resort fees why",
+   "uploadsUnder30DaysInSample": 7,
+   "videos": [
+    {
+     "title": "What is a Resort Fee and Do You Have to Pay It?",
+     "channel": "Yellow Productions",
+     "views": 50239,
+     "ageAsDisplayed": "7 years",
+     "approxAgeDays": 2555,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Las Vegas Hotels With NO Resort Fee",
+     "channel": "JacobslifeinVegas",
+     "views": 213632,
+     "ageAsDisplayed": "2 years",
+     "approxAgeDays": 730,
+     "relation": "adjacent"
+    },
+    {
+     "title": "Vegas Hotels Are Finally Waiving Resort Fees!",
+     "channel": "JacobslifeinVegas2",
+     "views": 67078,
+     "ageAsDisplayed": "2 days",
+     "approxAgeDays": 2,
+     "relation": "adjacent"
+    }
+   ]
+  },
+  {
+   "id": "textbooks",
+   "topicIds": [
+    "pp-088-why-textbooks-cost-so-much"
+   ],
+   "angle": "college textbook pricing",
+   "query": "why college textbooks so expensive | textbook inclusive access fees students",
+   "uploadsUnder30DaysInSample": 2,
+   "videos": [
+    {
+     "title": "Why College Textbooks Are So Expensive",
+     "channel": "Business Insider (So Expensive)",
+     "views": 436710,
+     "ageAsDisplayed": "7 years",
+     "approxAgeDays": 2555,
+     "relation": "same-angle"
+    },
+    {
+     "title": "College Textbooks are a Scam",
+     "channel": "Into the Shadows",
+     "views": 89423,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "same-angle"
+    }
+   ]
+  },
+  {
+   "id": "subscriptions",
+   "topicIds": [
+    "mt-008-why-everything-is-becoming-a-subscription",
+    "mt-001-the-subscription-business-is-designed-around-you"
+   ],
+   "angle": "why everything is a subscription",
+   "query": "why is everything a subscription now",
+   "uploadsUnder30DaysInSample": 4,
+   "videos": [
+    {
+     "title": "Subscriptions Are Ruining Our Lives. Here's Why They're Everywhere Now.",
+     "channel": "More Perfect Union",
+     "views": 3283560,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Is Everything A Monthly Subscription Now...?",
+     "channel": "Haylo Hayley",
+     "views": 307101,
+     "ageAsDisplayed": "1 year",
+     "approxAgeDays": 365,
+     "relation": "same-angle"
+    },
+    {
+     "title": "How Everything Became A Subscription.",
+     "channel": "How Money Works",
+     "views": 518734,
+     "ageAsDisplayed": "3 years",
+     "approxAgeDays": 1095,
+     "relation": "same-angle"
+    },
+    {
+     "title": "EVERYTHING IS A SUBSCRIPTION NOW",
+     "channel": "Sir Popo",
+     "views": 25864,
+     "ageAsDisplayed": "7 months",
+     "approxAgeDays": 210,
+     "relation": "same-angle"
+    },
+    {
+     "title": "Why Owning Nothing Is So Expensive",
+     "channel": "Business Insider",
+     "views": 3690285,
+     "ageAsDisplayed": "8 months",
+     "approxAgeDays": 240,
+     "relation": "adjacent"
+    }
+   ]
+  }
+ ]
+}

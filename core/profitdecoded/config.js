@@ -16,8 +16,12 @@ const DEFAULT_WEIGHTS = Object.freeze({
   ebv: { viralPotential: 1.0, revenueOpportunity: 1.2, longformPotential: 1.2, evergreenValue: 1.0, subscriberQuality: 0.8, sponsorFit: 0.6, brandFit: 1.0 },
   ebvFloor: 20,
   // Final decision composition.
-  decision: { demand: 8, outlierEvidence: 8, broadAppeal: 8, curiosity: 8, brandFit: 8, originalAngle: 6, researchQuality: 7, visualPotential: 6, longformPotential: 7, revenueOpportunity: 7, evergreenValue: 6, subscriberValue: 5 },
-  decisionPenalties: { saturation: 18, copyrightRisk: 14, factualRisk: 16, productionRisk: 10 },
+  decision: { demand: 8, outlierEvidence: 8, broadAppeal: 8, curiosity: 8, brandFit: 8, originalAngle: 6, narrativeConflict: 5, researchQuality: 7, visualPotential: 6, longformPotential: 7, revenueOpportunity: 7, evergreenValue: 6, subscriberValue: 5 },
+  // genericTitle: an oversaturated title template with no curated narrative angle (scaled by the template's saturation).
+  decisionPenalties: { saturation: 18, copyrightRisk: 14, factualRisk: 16, productionRisk: 10, genericTitle: 8 },
+  // Editorial lens (topic-scoring.editorialLens): a readable summary of eight dimensions. Most of them
+  // feed the decision through existing inputs; the lens score itself is reported, not added again.
+  lens: { audienceCuriosity: 1.2, competitiveSaturation: 1.2, narrativeConflict: 1, evergreenPotential: 0.8, advertiserRelevance: 0.8, visualFeasibility: 0.8, sourceReliability: 1, angleOriginality: 1.2 },
   // Quality score (spec section 23).
   quality: { topic: 15, hook: 15, storytelling: 15, visual: 15, visualScriptMatch: 10, narration: 10, research: 8, editing: 5, title: 4, thumbnail: 3 },
   // Humanness (spec section 56): weights sum to 100.
@@ -33,6 +37,17 @@ function deepMerge(base, extra) {
 
 function channelConfig() { return readJson(path.join(CHANNEL_DIR, "config.json"), null); }
 function weights() { return deepMerge(DEFAULT_WEIGHTS, readJson(path.join(CHANNEL_DIR, "decision-weights.json"), {})); }
+// Topic-intelligence data (all optional; a missing file means "no curated data", never a default value).
+function intelFiles() {
+  const topics = path.join(CHANNEL_DIR, "topics"); const intel = path.join(CHANNEL_DIR, "intel");
+  const coverage = fs.existsSync(intel) ? fs.readdirSync(intel).filter((f) => /^coverage-.*\.json$/.test(f)).sort() : [];
+  return {
+    angles: readJson(path.join(topics, "angles.json"), { angles: [] }),
+    watchlist: readJson(path.join(topics, "freshness-watchlist.json"), { entries: [] }),
+    // Latest coverage file wins for any topic it lists; older files fill the rest.
+    coverage: coverage.map((f) => readJson(path.join(intel, f), { entries: [] })),
+  };
+}
 function thresholds() { return (channelConfig() || {}).qualityThresholds || { autoPublish: 88, review: 76, humanness: { target: 90, hardReject: 85 }, firstThirtySeconds: 80, narration: 88, researchGate: 80, visualScriptMatch: 85, topicDecisionMinimum: 60 }; }
 
-module.exports = { ROOT, CHANNEL_DIR, readJson, DEFAULT_WEIGHTS, deepMerge, channelConfig, weights, thresholds };
+module.exports = { ROOT, CHANNEL_DIR, readJson, DEFAULT_WEIGHTS, deepMerge, channelConfig, weights, thresholds, intelFiles };

@@ -113,4 +113,117 @@ function scoreTopic(signals, overrideWeights) {
   };
 }
 
-module.exports = { DIMENSIONS, titlePotential, deriveSignals, copyrightRisk, coreFormula, scoreTopic, CLUSTER_ADVERTISER, CLUSTER_AUDIENCE, PILLAR_BASE };
+// ---- Editorial lens (Phase 2) ------------------------------------------------
+// Eight dimensions an editor would check before commissioning a documentary. Each is a
+// provenance-tagged signal; most reuse existing signals, three are new (narrative conflict,
+// competitive saturation, angle originality). Curated data comes from config.intelFiles().
+
+const LENS_DIMENSIONS = ["audienceCuriosity", "competitiveSaturation", "narrativeConflict", "evergreenPotential", "advertiserRelevance", "visualFeasibility", "sourceReliability", "angleOriginality"];
+
+// Narrative conflict: does the title promise a tension (a loss, a contradiction, a winner and a loser)?
+// Base by viral mechanism; title markers add to it. ESTIMATED, a reading of the title only.
+const MECH_CONFLICT = { CD: 70, PL: 70, CF: 66, HP: 62, CH: 62, FP: 60, CB: 58, FH: 55, NA: 55, FC: 50 };
+const CONFLICT_MARKERS = [
+  [/\b(lose|loses|losing|lost|fail(ed|s)?|collaps\w*|bankrupt\w*|stopped|ended|killed|disappear\w*|ran out|gave up)\b/i, 16],
+  [/\bwho (pays|keeps|wins|loses|profits)\b/i, 14],
+  [/\b(but|yet|instead|without|despite|even when|more than|less than|cheaper than)\b/i, 12],
+  [/\b(barely|never|nobody|no one|can'?t|won'?t|refuses?|doesn'?t|don'?t|isn'?t|not)\b/i, 10],
+  [/\?|\. \S/, 6],
+];
+function narrativeConflict(title, mech) {
+  let v = MECH_CONFLICT[mech] || 55; let add = 0;
+  for (const [re, pts] of CONFLICT_MARKERS) if (re.test(title)) add += pts;
+  v += Math.min(30, add);
+  return S.estimated(S.clamp(v), "title/mechanism conflict heuristic (reads the working title only)");
+}
+
+// Index curated data once per ranking run.
+function buildIntelContext(inventory, files) {
+  const Comp = require("./competitive");
+  const f = files || require("./config").intelFiles();
+  const angles = {}; for (const a of (f.angles && f.angles.angles) || []) angles[a.topicId] = a;
+  const coverage = {}; const templates = {};
+  for (const file of f.coverage || []) {
+    for (const e of file.entries || []) for (const id of e.topicIds || []) coverage[id] = e;
+    for (const [name, t] of Object.entries(file.titleTemplates || {})) templates[name] = t;
+  }
+  // Within-inventory repetition (INFERRED): how many of our own titles share each template.
+  const share = {}; const n = (inventory || []).length || 1;
+  for (const t of inventory || []) { const k = Comp.titleStructure(t.topic); share[k] = (share[k] || 0) + 1 / n; }
+  return { angles, coverage, templates, templateShare: share, watchlist: f.watchlist || { entries: [] } };
+}
+
+function titleInfo(topic, ctx) {
+  const Comp = require("./competitive");
+  const angle = ctx.angles[topic.id] || null;
+  const working = angle ? angle.workingTitle : topic.topic;
+  const template = Comp.titleStructure(working);
+  const tpl = ctx.templates[template] || null;
+  const inventoryTemplate = Comp.titleStructure(topic.topic);
+  const invTpl = ctx.templates[inventoryTemplate] || null;
+  // A topic "needs an angle" when its inventory title uses an oversaturated template and nobody has written a better one yet.
+  const needsAngle = !angle && !!invTpl && ["SATURATED", "HOT"].includes(invTpl.class);
+  return { inventoryTitle: topic.topic, workingTitle: working, angle, template, templateClass: tpl ? tpl.class : null, inventoryTemplate, inventoryTemplateClass: invTpl ? invTpl.class : null, inventoryTemplateShare: S.round(ctx.templateShare[inventoryTemplate] || 0, 2), needsAngle };
+}
+
+// research: Research.gate() result or null; freshness: freshness.check() result; observedSaturation: competitive.saturation() result from API data.
+function editorialLens(topic, ctx, extra = {}) {
+  const Comp = require("./competitive");
+  const sg = topic.signals; const v = (k, d) => S.valueOr(sg[k], d);
+  const title = titleInfo(topic, ctx);
+  const fresh = extra.freshness || { status: "CURRENT_UNVERIFIED", severity: 0, needsResearch: false };
+  const research = extra.research || null;
+  const angle = title.angle;
+
+  // Competitive saturation: OBSERVED (API) > INFERRED (manual sample) > UNKNOWN. 100 = open field.
+  // The collector sees recent uploads; the manual sample also sees entrenched older hits. They measure
+  // different things, so the more crowded reading wins (and keeps its own provenance).
+  const obsSat = extra.observedSaturation && extra.observedSaturation.class && extra.observedSaturation.class !== "UNKNOWN" ? { ...extra.observedSaturation, provenance: "OBSERVED" } : null;
+  const manSat = ctx.coverage[topic.id] ? Comp.coverageSaturation(ctx.coverage[topic.id]) : null;
+  const pen = (x) => (x && x.class in Comp.SATURATION_PENALTY ? Comp.SATURATION_PENALTY[x.class] : -1);
+  let sat = pen(manSat) > pen(obsSat) ? { ...manSat, reasons: [...(manSat.reasons || []), obsSat ? `collector snapshot reads ${obsSat.class} (recent uploads only)` : "no collector reading"] } : obsSat || manSat;
+  const competitiveSaturation = sat && sat.class !== "UNKNOWN"
+    ? S.sig(S.round(100 * (1 - Comp.SATURATION_PENALTY[sat.class]), 0), sat.provenance, `${sat.class}: ${(sat.reasons || []).join("; ")}`)
+    : S.unknown("no competitor coverage data (needs PD_YT_API_KEY collector run or a manual coverage observation)");
+
+  // Angle originality: generic templates score low, curated angles higher, observed same-angle hits lower.
+  let orig = angle ? ({ VERIFIED: 80, SUPPORTED_SECONDARY: 75 }[angle.premiseStatus] || 70) : 60;
+  const tplPenalty = { SATURATED: 30, HOT: 15, GROWING: 5 }[title.templateClass] || 0;
+  let titleLoss = tplPenalty; // the part of the loss that comes only from the title's wording
+  orig -= tplPenalty;
+  // Our own inventory repeating a crowded template (plain "Why ...?" / "How ...?" questions are not templates).
+  if (!angle && title.inventoryTemplateClass && title.inventoryTemplateShare > 0.2) { orig -= 10; titleLoss += 10; }
+  let origProv = "ESTIMATED"; const origWhy = [angle ? `curated angle (${angle.premiseStatus})` : "inventory title", title.templateClass ? `template ${title.template} is ${title.templateClass}` : `template ${title.template}`];
+  if (sat && sat.provenance !== "UNKNOWN" && ["HOT", "SATURATED"].includes(sat.class)) { orig -= sat.class === "SATURATED" ? 20 : 10; origProv = sat.provenance === "OBSERVED" ? "INFERRED" : sat.provenance; origWhy.push(`angle coverage ${sat.class}`); }
+  const angleOriginality = S.sig(S.clamp(orig), origProv, origWhy.join("; "));
+  // Same signal with the wording penalties removed: used where a title must not decide the outcome (REJECT gate).
+  const angleOriginalityTitleNeutral = S.sig(S.clamp(orig + titleLoss), origProv, "title-neutral: " + origWhy.join("; "));
+
+  // Source reliability: research result (OBSERVED) > verified angle premise (INFERRED) > evidence prior capped for unresearched topics.
+  let sourceReliability;
+  if (research) sourceReliability = S.observed(research.score, "research gate result");
+  else if (angle && angle.premiseStatus === "VERIFIED") sourceReliability = S.inferred(70, "angle premise checked against primary sources; full dossier still needed");
+  else if (angle && angle.premiseStatus === "SUPPORTED_SECONDARY") sourceReliability = S.inferred(60, "angle premise supported by secondary sources only");
+  else sourceReliability = S.estimated(Math.min(70, v("evidenceQuality", 40)), "expected source availability (prior), capped while unresearched");
+  if (fresh.needsResearch) sourceReliability = S.sig(Math.min(40, sourceReliability.value), sourceReliability.provenance, sourceReliability.source + "; capped: premise needs renewed research (" + fresh.status + ")");
+
+  const evergreenDrop = { TIME_SENSITIVE: 8, CHANGED_CONTEXT: 12, OUTDATED_PREMISE: 20, PREMISE_CONTRADICTED: 20 }[fresh.status] || 0;
+  const dims = {
+    audienceCuriosity: sg.curiosityGap,
+    competitiveSaturation,
+    narrativeConflict: narrativeConflict(title.workingTitle, topic.viralMechanismCode),
+    evergreenPotential: S.estimated(S.clamp(v("evergreen") - evergreenDrop), evergreenDrop ? `evergreen prior minus ${evergreenDrop} (freshness ${fresh.status})` : "evergreen prior"),
+    advertiserRelevance: sg.advertiserFit,
+    visualFeasibility: S.estimated(S.clamp(0.5 * v("visualAvailability") + 0.5 * v("productionFeasibility") - (S.valueOr(topic.copyrightRisk, 30) > 45 ? 10 : 0)), "visual availability + production feasibility, minus IP-risk"),
+    sourceReliability,
+    angleOriginality,
+  };
+  const w = require("./config").weights().lens;
+  let num = 0, den = 0; for (const k of LENS_DIMENSIONS) { num += (w[k] || 0) * S.valueOr(dims[k]); den += w[k] || 0; }
+  return {
+    score: S.round(num / den, 1), confidence: S.round(S.confidence(dims, w), 2), provenance: S.provenanceMix(dims),
+    dimensions: dims, angleOriginalityTitleNeutral, title, saturation: sat || { class: "UNKNOWN", provenance: "UNKNOWN" }, freshness: fresh,
+  };
+}
+
+module.exports = { DIMENSIONS, titlePotential, deriveSignals, copyrightRisk, coreFormula, scoreTopic, CLUSTER_ADVERTISER, CLUSTER_AUDIENCE, PILLAR_BASE, LENS_DIMENSIONS, narrativeConflict, buildIntelContext, titleInfo, editorialLens };

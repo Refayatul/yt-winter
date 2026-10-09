@@ -4,12 +4,13 @@
 // channels/profitdecoded/. NOTHING in this file uploads to YouTube.
 //
 //   node profitdecoded.js inventory                    inventory statistics
-//   node profitdecoded.js rank [--top 20] [--evidence evidence.json] [--write]
+//   node profitdecoded.js rank [--top 20] [--evidence evidence.json] [--snapshot intel/snapshot-*.json] [--write]
 //   node profitdecoded.js breakout --snapshot file.json [--threshold 55]
 //   node profitdecoded.js plan                         shadow schedule + render windows
 //   node profitdecoded.js dry-run <bundle.json>        full assessment + review report
 //   node profitdecoded.js publish-check                show why publishing is blocked
 //   node profitdecoded.js clusters                     topic clusters (Shorts -> long-form chains)
+//   node profitdecoded.js freshness                    topics whose premise may be outdated (needs renewed research)
 
 const fs = require("fs");
 const path = require("path");
@@ -38,11 +39,19 @@ if (cmd === "inventory") {
   const u = universe(); console.log(JSON.stringify(u.stats, null, 2));
 } else if (cmd === "rank") {
   const u = universe(); const evidence = flag("--evidence") ? readJson(path.resolve(flag("--evidence")), {}) : {};
+  // --feed breakout-feed-*.json: observed collector output. Each inventory topic gets its strongest matched breakout (OBSERVED).
+  if (flag("--feed")) for (const [id, b] of Object.entries(Comp.evidenceFromFeed(readJson(path.resolve(flag("--feed")), { feed: [] })))) evidence[id] = { ...(evidence[id] || {}), breakout: b };
+  // --snapshot snapshot-*.json: observed per-topic coverage (long-form, same-format baselines, ages measured from the snapshot date).
+  let observed = null;
+  if (flag("--snapshot")) {
+    observed = Comp.topicEvidenceFromSnapshot(readJson(path.resolve(flag("--snapshot")), { channels: [] }), u.topics);
+    for (const [id, o] of Object.entries(observed.topics)) if (o.breakout && !(evidence[id] || {}).breakout) evidence[id] = { ...(evidence[id] || {}), breakout: o.breakout };
+  }
   // Researched dossiers on disk feed the decision engine through the real research gate.
   const Research = require(path.join(P, "research")); const rdir = path.join(CHANNEL_DIR, "research");
   if (fs.existsSync(rdir)) for (const f of fs.readdirSync(rdir).filter((x) => x.endsWith(".json"))) {
     const d = readJson(path.join(rdir, f), null); if (!d) continue;
-    evidence[d.topicId] = { ...(evidence[d.topicId] || {}), research: Research.gate(d, { format: d.format }) };
+    evidence[d.topicId] = { ...(evidence[d.topicId] || {}), research: { ...Research.gate(d, { format: d.format }), researchedAt: d.researchedAt } };
   }
   const rows = Decision.rank(u.topics, evidence); const byId = Object.fromEntries(u.topics.map((t) => [t.id, t]));
   const top = Decision.selectDiverse(rows, +flag("--top", 20), { topicById: byId });
@@ -50,14 +59,20 @@ if (cmd === "inventory") {
     { h: "#", f: (r) => top.indexOf(r) + 1 }, { h: "Topic", f: (r) => r.topic.slice(0, 52) }, { h: "Pillar", f: (r) => r.pillar.slice(0, 14) }, { h: "Type", f: (r) => r.portfolioType },
     { h: "Demand", f: (r) => r.inputs.demand.provenance === "UNKNOWN" ? "UNKNOWN" : r.inputs.demand.value }, { h: "Outlier", f: (r) => r.inputs.outlierEvidence.provenance === "UNKNOWN" ? "UNKNOWN" : r.inputs.outlierEvidence.value },
     { h: "Appeal", f: (r) => r.inputs.broadAppeal.value }, { h: "Curio", f: (r) => r.inputs.curiosity.value }, { h: "RevOpp", f: (r) => r.revenueOpportunity.category }, { h: "Evergr", f: (r) => r.inputs.evergreenValue.value },
-    { h: "Long", f: (r) => r.inputs.longformPotential.value }, { h: "Visual", f: (r) => r.inputs.visualPotential.value }, { h: "Satur", f: (r) => r.saturation }, { h: "EBV", f: (r) => r.expectedBusinessValue.score }, { h: "Decision", f: (r) => r.decision },
+    { h: "Long", f: (r) => r.inputs.longformPotential.value }, { h: "Visual", f: (r) => r.inputs.visualPotential.value },
+    { h: "Satur", f: (r) => r.saturation === "UNKNOWN" ? "UNKNOWN" : `${r.saturation}${r.saturationProvenance === "OBSERVED" ? "" : "*"}` },
+    { h: "Conflict", f: (r) => r.inputs.narrativeConflict.value }, { h: "Angle", f: (r) => r.inputs.originalAngle.value }, { h: "Lens", f: (r) => r.lens.score },
+    { h: "Fresh", f: (r) => r.freshness.status === "CURRENT_UNVERIFIED" ? "-" : r.freshness.status.replace("_PREMISE", "").replace("PREMISE_", "").replace("_CONTEXT", "").replace("TIME_SENSITIVE", "TIME") },
+    { h: "EBV", f: (r) => r.expectedBusinessValue.score }, { h: "Rank", f: (r) => r.rankScore }, { h: "Decision", f: (r) => r.decision },
   ]);
+  const titles = top.filter((r) => r.workingTitle !== r.topic || r.titleTemplate.needsAngle).map((r) => `  ${String(top.indexOf(r) + 1).padStart(2)}. ${r.workingTitle !== r.topic ? `angle: "${r.workingTitle}" (${r.angle.premiseStatus})` : `needs angle: "${r.topic}" uses ${r.titleTemplate.class} template ${r.titleTemplate.template}`}`);
   console.log(out);
-  console.log("\nNote: ESTIMATED = curation heuristics. UNKNOWN demand/outlier/saturation/originality are never converted into favourable scores; long-form stays blocked until observed evidence exists.");
+  if (titles.length) console.log("\nTitles:\n" + titles.join("\n"));
+  console.log("\nNote: ESTIMATED = curation heuristics. Satur* = INFERRED from a manual public-search sample (not API data); Satur without * = OBSERVED from the collector snapshot. UNKNOWN demand/outlier/saturation are never converted into favourable scores; long-form stays blocked until observed evidence exists.");
   if (has("--write")) {
     fs.mkdirSync(path.join(CHANNEL_DIR, "reports"), { recursive: true });
-    fs.writeFileSync(path.join(CHANNEL_DIR, "reports", "topic-ranking.json"), JSON.stringify({ generatedAt: new Date().toISOString(), top, provenanceNote: "ESTIMATED/UNKNOWN as labelled per input" }, null, 1) + "\n");
-    fs.writeFileSync(path.join(CHANNEL_DIR, "reports", "topic-ranking.txt"), out + "\n");
+    fs.writeFileSync(path.join(CHANNEL_DIR, "reports", "topic-ranking.json"), JSON.stringify({ generatedAt: new Date().toISOString(), snapshot: flag("--snapshot") ? path.basename(flag("--snapshot")) : null, top, observedCoverage: observed ? Object.fromEntries(top.filter((r) => observed.topics[r.id]).map((r) => [r.id, { related: observed.topics[r.id].related, audienceChannels: observed.topics[r.id].audienceChannels, lowViewUploads: observed.topics[r.id].lowViewUploads, top: observed.topics[r.id].top }])) : null, provenanceNote: "OBSERVED/INFERRED/ESTIMATED/UNKNOWN as labelled per input" }, null, 1) + "\n");
+    fs.writeFileSync(path.join(CHANNEL_DIR, "reports", "topic-ranking.txt"), out + (titles.length ? "\n\nTitles:\n" + titles.join("\n") : "") + "\n");
   }
 } else if (cmd === "breakout") {
   const snap = readJson(path.resolve(flag("--snapshot", "")), null);
@@ -68,6 +83,22 @@ if (cmd === "inventory") {
   console.log(JSON.stringify(Sched.plan(new Date(), readJson(path.join(CHANNEL_DIR, "state", "published.json"), [])), null, 2));
 } else if (cmd === "clusters") {
   console.log(JSON.stringify(Port.buildClusters(universe().topics).slice(0, 12), null, 1));
+} else if (cmd === "freshness") {
+  const u = universe(); const Fresh = require(path.join(P, "freshness"));
+  const watch = readJson(path.join(CHANNEL_DIR, "topics", "freshness-watchlist.json"), { entries: [] });
+  const rdir = path.join(CHANNEL_DIR, "research"); const dated = {};
+  if (fs.existsSync(rdir)) for (const f of fs.readdirSync(rdir).filter((x) => x.endsWith(".json"))) { const d = readJson(path.join(rdir, f), null); if (d) dated[d.topicId] = d.researchedAt; }
+  const angles = Object.fromEntries((readJson(path.join(CHANNEL_DIR, "topics", "angles.json"), { angles: [] }).angles || []).map((a) => [a.topicId, a]));
+  const rows = u.topics.map((t) => ({ t, r: Fresh.check(t, watch, { researchedAt: dated[t.id], angle: angles[t.id] }) })).filter((x) => x.r.status !== "CURRENT_UNVERIFIED" || x.r.resolvedBy.length);
+  const order = (x) => -x.r.severity;
+  rows.sort((a, b) => order(a) - order(b));
+  const strong = rows.filter((x) => x.r.flags.some((f) => f.source === "watchlist"));
+  console.log(`${strong.length} topic(s) flagged by the sourced watchlist, ${rows.length - strong.length} by phrasing only (re-check during research).\n`);
+  for (const { t, r } of strong) {
+    console.log(`${(r.status === "CURRENT_UNVERIFIED" ? "RESOLVED" : r.status).padEnd(20)} ${r.blocksProduction ? "BLOCKS " : "       "}${t.id}\n  "${t.topic}"${angles[t.id] ? `  -> angle: "${angles[t.id].workingTitle}"` : ""}`);
+    for (const f of r.flags.filter((x) => x.source === "watchlist")) console.log(`  - ${f.event}${f.addressedBy ? ` [addressed by ${f.addressedBy}]` : ""}\n    impact: ${f.impact}\n    sources: ${f.sources.map((s) => s.url).join(" , ")}`);
+  }
+  if (has("--all")) for (const { t, r } of rows.filter((x) => !strong.includes(x))) console.log(`${r.status.padEnd(20)} ${t.id}  (${r.flags.map((f) => f.event).join("; ")})`);
 } else if (cmd === "publish-check") {
   const g = Sched.publishGuard({}); console.log(g.allowed ? "ALLOWED" : "BLOCKED"); for (const b of g.blocks) console.log(" - " + b);
 } else if (cmd === "dry-run") {

@@ -25,6 +25,13 @@ function client(options = {}) {
   return { call, get used() { return used; }, budget, log };
 }
 
+// ISO-8601 duration (PT1H2M3S) -> seconds; null when absent or unparseable (never guessed).
+function isoSeconds(iso) {
+  const m = /^P(?:(\d+)D)?(?:T(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?)?$/.exec(String(iso || ""));
+  if (!m || iso === "P" || iso === "PT") return null;
+  return (+(m[1] || 0)) * 86400 + (+(m[2] || 0)) * 3600 + (+(m[3] || 0)) * 60 + (+(m[4] || 0));
+}
+
 const chunk = (arr, n) => Array.from({ length: Math.ceil(arr.length / n) }, (_, i) => arr.slice(i * n, i * n + n));
 
 async function resolveHandles(yt, handles) {
@@ -60,14 +67,20 @@ async function videoDetails(yt, ids) {
   return out;
 }
 
-// config: { referenceHandles:[...], queries:[...], windowsDays:[7,30,90,365], maxResultsPerSearch, minDurationSec, regionCode }
+// Handles from the structured list (referenceChannels: [{ handle, role, ... }]) and/or the older flat list.
+function referenceHandles(config) {
+  const list = (config.referenceChannels || []).map((c) => c.handle).concat(config.referenceHandles || []);
+  return [...new Set(list.filter(Boolean))];
+}
+
+// config: { referenceChannels:[{handle,...}] | referenceHandles:[...], queries:[...], windowsDays:[7,30,90,365], maxResultsPerSearch, minDurationSec, regionCode }
 async function collect(config, options = {}) {
   const yt = options.client || client(options);
   const now = options.now || Date.now();
   const report = { startedAt: new Date(now).toISOString(), unresolvedHandles: [], searches: 0, notes: [], stoppedEarly: null };
   const channelIds = new Set(); const discovered = new Map();
   try {
-    const { resolved, unresolved } = await resolveHandles(yt, config.referenceHandles || []);
+    const { resolved, unresolved } = await resolveHandles(yt, referenceHandles(config));
     report.unresolvedHandles = unresolved; resolved.forEach((id) => channelIds.add(id));
     outer: for (const days of config.windowsDays || [30]) {
       for (const q of config.queries || []) {
@@ -83,10 +96,10 @@ async function collect(config, options = {}) {
   for (const [id, st] of Object.entries(stats)) {
     try {
       const vids = await recentVideos(yt, st.uploads, config.baselineVideos || 25);
-      channels.push({ id, name: st.name, subscribers: st.subscribers, videos: vids.filter((v) => v.durationIso !== "P0D").map(({ durationIso, channelId, ...v }) => v) });
+      channels.push({ id, name: st.name, subscribers: st.subscribers, videos: vids.filter((v) => v.durationIso !== "P0D").map(({ durationIso, channelId, ...v }) => ({ ...v, durationSec: isoSeconds(durationIso) })) });
     } catch (e) { report.notes.push(`${st.name}: ${e.message}`); if (e.code === "BUDGET") { report.stoppedEarly = e.message; break; } }
   }
   return { snapshot: { fetchedAt: new Date(now).toISOString(), source: "youtube-data-api-v3", channels }, report: { ...report, channelsCollected: channels.length, quotaUsed: yt.used, quotaBudget: yt.budget } };
 }
 
-module.exports = { client, resolveHandles, channelStats, recentVideos, collect, COST };
+module.exports = { client, isoSeconds, resolveHandles, referenceHandles, channelStats, recentVideos, collect, COST };

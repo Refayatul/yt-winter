@@ -13,9 +13,16 @@ const cfg = JSON.parse(fs.readFileSync(path.join(root, "channels/profitdecoded/i
 const universe = JSON.parse(fs.readFileSync(path.join(root, "channels/profitdecoded/topics/topic-universe.json"), "utf8")).topics;
 const budget = +flag("--budget", cfg.quotaBudget);
 const searches = cfg.queries.length * cfg.windowsDays.length;
-const planned = searches * C.COST.search + cfg.referenceHandles.length + 60 * 2;
-console.log(`plan: ${searches} searches x ${C.COST.search} + handles + about 60 channels (stats + uploads + videos) ~ ${planned} units (budget ${budget}; free daily quota is 10,000)`);
+const handles = C.referenceHandles(cfg);
+const planned = searches * C.COST.search + handles.length + 60 * 2;
+console.log(`plan: ${searches} searches x ${C.COST.search} + ${handles.length} handles + about 60 channels (stats + uploads + videos) ~ ${planned} units (budget ${budget}; free daily quota is 10,000)`);
 if (argv.includes("--dry")) process.exit(0);
+if (!process.env.PD_YT_API_KEY) {
+  console.error("PD_YT_API_KEY is not set: no snapshot written, competitive data stays UNKNOWN.\n" +
+    "Needed: a YouTube Data API v3 key (Google Cloud project -> enable 'YouTube Data API v3' -> Credentials -> API key, restricted to that API).\n" +
+    "Local: PD_YT_API_KEY=... node scripts/profitdecoded/collect-competitors.js   CI: repository secret PD_YT_API_KEY, then run the 'ProfitDecoded competitor intelligence' workflow.");
+  process.exit(2);
+}
 (async () => {
   const { snapshot, report } = await C.collect(cfg, { quotaBudget: budget });
   const dir = path.join(root, "channels/profitdecoded/intel"); const stamp = new Date().toISOString().slice(0, 10);
