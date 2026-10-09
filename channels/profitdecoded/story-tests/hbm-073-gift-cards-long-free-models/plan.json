@@ -1,0 +1,210 @@
+{
+ "thesis": "Retailers turn the money left on unused gift cards into predictable revenue, not lost cash, by estimating breakage and recording it over time.",
+ "centralQuestion": "Who ultimately pockets the value of unspent gift cards: the retailer, the state, or the consumer?",
+ "conflict": {
+  "wants": "Retailers want to recognize breakage as revenue while regulators require unclaimed balances to be remitted to the state; consumers assume unused balances are lost to them",
+  "obstacle": "Accounting estimates, federal unclaimed‑property rules, and the opacity of corporate filings",
+  "stakes": "Viewers learn where hidden profits hide, which informs consumer choices and policy debates"
+ },
+ "misconception": "Most people think an unused gift‑card balance is a loss for the retailer and a dead‑end for the consumer.",
+ "originalAngle": "We follow a single card through the SEC filings of Starbucks and Darden, compare those hard numbers to a national survey, and reveal the exact split of unspent balances among company, state, and holder.",
+ "hookCandidates": [
+  {
+   "mechanism": "contradiction",
+   "text": "You’ve been told gift cards expire, but Starbucks’ cards never do."
+  },
+  {
+   "mechanism": "number",
+   "text": "Starbucks booked $222.4 million in breakage revenue in fiscal 2025."
+  },
+  {
+   "mechanism": "hidden incentive",
+   "text": "Every time a consumer reloads a Starbucks card, the company already knows how much of that money will never be spent."
+  },
+  {
+   "mechanism": "consumer pain",
+   "text": "43 % of Americans hold an average of $244 in gift cards they’ll never use."
+  },
+  {
+   "mechanism": "visual mystery",
+   "text": "Imagine a $1 billion pile of stored value sitting on a balance sheet, waiting to become profit."
+  },
+  {
+   "mechanism": "financial paradox",
+   "text": "Unclaimed gift‑card balances boost a retailer’s earnings while the money never leaves the consumer’s wallet."
+  }
+ ],
+ "questions": [
+  {
+   "id": "q1",
+   "text": "How do retailers estimate the portion of loaded value that will never be redeemed?"
+  },
+  {
+   "id": "q2",
+   "text": "What federal rules limit how quickly a retailer can claim unspent balances?"
+  },
+  {
+   "id": "q3",
+   "text": "How much of the national pool of unused gift‑card value ends up as breakage revenue?"
+  },
+  {
+   "id": "q4",
+   "text": "What happens to balances that remain truly unclaimed?"
+  }
+ ],
+ "sections": [
+  {
+   "id": "s1",
+   "title": "The hidden profit in your unused gift card",
+   "purpose": "hook",
+   "claimIds": [
+    "c8",
+    "c2"
+   ],
+   "raises": [
+    "q1",
+    "q2",
+    "q3",
+    "q4"
+   ],
+   "resolves": [],
+   "visualIdea": "Close‑up of a plastic gift card sliding into a cash register drawer, then dissolving into numbers."
+  },
+  {
+   "id": "s2",
+   "title": "Gift cards on the balance sheet",
+   "purpose": "setup",
+   "claimIds": [
+    "c3",
+    "c1"
+   ],
+   "raises": [
+    "q1"
+   ],
+   "resolves": [],
+   "visualIdea": "Animated spreadsheet showing $1.75 billion of stored‑value balances and the breakage line items."
+  },
+  {
+   "id": "s3",
+   "title": "Starbucks’ breakage accounting",
+   "purpose": "evidence",
+   "claimIds": [
+    "c1",
+    "c2",
+    "i1"
+   ],
+   "raises": [
+    "q1",
+    "q2"
+   ],
+   "resolves": [
+    "q1"
+   ],
+   "visualIdea": "Excerpt from Starbucks’ 2025 10‑K highlighting the $200.4 M and $22.0 M breakage figures."
+  },
+  {
+   "id": "s4",
+   "title": "Darden’s breakage model",
+   "purpose": "evidence",
+   "claimIds": [
+    "c4",
+    "c5",
+    "i2",
+    "c10"
+   ],
+   "raises": [
+    "q1"
+   ],
+   "resolves": [
+    "q1"
+   ],
+   "visualIdea": "Timeline graphic of a Darden gift card from activation ($760.2 M) through redemption and breakage ($751.9 M)."
+  },
+  {
+   "id": "s5",
+   "title": "When estimates miss the mark",
+   "purpose": "complication",
+   "claimIds": [
+    "c6",
+    "c4"
+   ],
+   "raises": [
+    "q3"
+   ],
+   "resolves": [],
+   "visualIdea": "Bar chart showing how a 50‑basis‑point shift would change breakage income by $3.6 M."
+  },
+  {
+   "id": "s6",
+   "title": "The state’s claim on unclaimed balances",
+   "purpose": "turn",
+   "claimIds": [
+    "c7",
+    "c10"
+   ],
+   "raises": [
+    "q2",
+    "q4"
+   ],
+   "resolves": [
+    "q2"
+   ],
+   "visualIdea": "Map of state unclaimed‑property offices with arrows pulling money from retailer balances."
+  },
+  {
+   "id": "s7",
+   "title": "Who really pockets the money?",
+   "purpose": "consequence",
+   "claimIds": [
+    "i1",
+    "i2",
+    "c8",
+    "c7"
+   ],
+   "raises": [
+    "q3",
+    "q4"
+   ],
+   "resolves": [
+    "q3",
+    "q4"
+   ],
+   "visualIdea": "Pie chart splitting unspent value among retailer (breakage), state (unclaimed property), and consumer (remaining balances)."
+  },
+  {
+   "id": "s8",
+   "title": "Limits of the evidence",
+   "purpose": "caveat",
+   "claimIds": [
+    "c7",
+    "c10"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "Overlay of legal text and footnotes highlighting assumptions behind breakage estimates."
+  },
+  {
+   "id": "s9",
+   "title": "The hidden revenue stream",
+   "purpose": "payoff",
+   "claimIds": [
+    "i1",
+    "i2",
+    "c8"
+   ],
+   "raises": [],
+   "resolves": [
+    "centralQuestion"
+   ],
+   "visualIdea": "Animated flow of money from loaded cards to breakage revenue, with brief captions summarizing the split."
+  }
+ ],
+ "selectedHook": "Starbucks booked $222.4 million in breakage revenue in fiscal 2025.",
+ "selectionReason": "A concrete, eye‑catching number instantly shows the scale of the hidden profit and ties directly to the central thesis.",
+ "payoff": "Retailers capture most of the unspent gift‑card value as breakage revenue, the state claims a portion under unclaimed‑property laws, and only a small slice stays with the consumer. Knowing this lets viewers see the true cost of unused balances and understand why the industry pushes for non‑expiring cards.",
+ "caveats": [
+  "Breakage figures are estimates based on historical redemption patterns and may differ from future actual redemptions.",
+  "The $27 billion national unused‑gift‑card estimate includes vouchers and store credit, not just retailer‑issued cards.",
+  "Federal rules allow expiration only after at least five years and limit dormancy fees, so some cards can still become unredeemable after that period."
+ ]
+}

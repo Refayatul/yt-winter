@@ -24,7 +24,7 @@ if (argv.includes("--dry")) { console.log(`plan: [provider: ${LLM.provider()}] r
 (async () => {
   const run = (label, args) => { console.log(`> ${label}`); const p = spawnSync("node", args, { stdio: "inherit", cwd: root }); if (p.status !== 0) { console.error(`${label} failed (${p.status})`); process.exit(p.status || 1); } };
   const r = await Produce.produce({ topic, universe, format, deps: { maxUsd: flag("--max-usd") ? Number(flag("--max-usd")) : undefined, ledger: LLM.newLedger(flag("--max-usd") ? Number(flag("--max-usd")) : undefined) }, dirs });
-  console.log(`${r.status}  (${r.ledger.calls} API calls, ${r.ledger.tokens ? r.ledger.tokens + " Groq tokens" : "estimated spend $" + r.ledger.usd.toFixed(2)})`);
+  console.log(`${r.status}  (${r.ledger.calls} API calls, ${r.ledger.tokens ? r.ledger.tokens + " free-provider tokens (all providers; per-provider split in usage.json)" : "estimated spend $" + r.ledger.usd.toFixed(2)})`);
   for (const s of r.steps) console.log("  - " + JSON.stringify({ ...s, stages: undefined, log: undefined }));
   for (const [name, st] of Object.entries(r.ledger.stages || {})) console.log(`  cost ${name.padEnd(9)} ${st.calls} call(s)  in ${st.usage.input_tokens || 0}  cache-write ${st.usage.cache_creation_input_tokens || 0}  cache-read ${st.usage.cache_read_input_tokens || 0}  out ${st.usage.output_tokens || 0}  ~$${st.usd.toFixed(3)}`);
   if (r.storyDir) console.log("story package: " + path.relative(process.cwd(), r.storyDir) + " (usage.json has per-provider tokens and charges)");
