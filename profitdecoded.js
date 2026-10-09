@@ -148,6 +148,23 @@ if (cmd === "inventory") {
   if (flag("--out")) fs.writeFileSync(path.resolve(flag("--out")), JSON.stringify(out) + "\n");
   console.log(JSON.stringify(inv.summary, null, 1));
   console.log(table(short, [{ h: "#", f: (r) => short.indexOf(r) + 1 }, { h: "Working title", f: (r) => (r.workingTitle || r.topic).slice(0, 58) }, { h: "Pillar", f: (r) => r.pillar.slice(0, 14) }, { h: "Tier", f: (r) => r.tier }, { h: "Demand", f: (r) => (r.flags.demandObserved ? r.flags.demandValue + " OBS" : "UNKNOWN") }, { h: "Sat", f: (r) => r.flags.oversaturated ? "HOT/SAT" : "-" }, { h: "Rank", f: (r) => r.rankScore }]));
+} else if (cmd === "calendar") {
+  // 104-topic pool (52 primary + 52 backup) and a 52-week calendar from the decision engine + readiness classification.
+  // Local data only (topic universe, newest snapshot, dossiers, curated notes): no API call. Rebuilt monthly.
+  //   calendar [--start YYYY-MM-DD] [--out file.json]
+  const E = require(path.join(P, "eligibility")); const Cal = require(path.join(P, "calendar")); const Research = require(path.join(P, "research"));
+  const u = universe(); const evidence = {}; const dossiers = {};
+  const snapFile = flag("--snapshot") || (fs.readdirSync(path.join(CHANNEL_DIR, "intel")).filter((f) => /^snapshot-.*\.json$/.test(f)).sort().map((f) => path.join(CHANNEL_DIR, "intel", f)).pop());
+  if (snapFile) for (const [id, o] of Object.entries(Comp.topicEvidenceFromSnapshot(readJson(snapFile, { channels: [] }), u.topics).topics)) if (o.breakout) evidence[id] = { breakout: o.breakout };
+  for (const f of fs.readdirSync(path.join(CHANNEL_DIR, "research")).filter((x) => x.endsWith(".json"))) { const d = readJson(path.join(CHANNEL_DIR, "research", f), null); if (!d) continue; dossiers[d.topicId] = d; evidence[d.topicId] = { ...(evidence[d.topicId] || {}), research: { ...Research.gate(d, { format: d.format }), researchedAt: d.researchedAt } }; }
+  const rows = Decision.rank(u.topics, evidence); const inv = E.inventory({ topics: u.topics, rows, dossiers });
+  const pool = Cal.buildPool({ rows, inv, topics: u.topics }); const weeks = Cal.schedule(pool, flag("--start", "2026-11-02"));
+  const notes = readJson(path.join(CHANNEL_DIR, "topics", "calendar-notes.json"), { notes: {} }).notes || {};
+  for (const w of weeks) { w.notes = notes[w.primary.id] || null; if (w.backup) w.backupNotes = notes[w.backup.id] || null; }
+  const out = { generatedAt: new Date().toISOString(), snapshot: snapFile ? path.relative(process.cwd(), snapFile) : null, start: flag("--start", "2026-11-02"), standards: Object.keys(Cal.STANDARDS), poolAudit: pool.audit, duplicatesRemoved: pool.duplicates, candidatesMeetingStandards: pool.candidatesMeetingStandards, classesAmongCandidates: pool.classes, primary: pool.primary, backup: pool.backup, weeks, provenanceNote: "demand = OBSERVED competitor outlier evidence (2026-10-08 snapshot), never this channel's audience data; narrative, angle, long-form, visual, evergreen and advertiser signals are ESTIMATED curation heuristics; only VERIFIED topics have a checked research dossier." };
+  if (flag("--out")) fs.writeFileSync(path.resolve(flag("--out")), JSON.stringify(out, null, 1) + "\n");
+  console.log(`candidates meeting standards ${pool.candidatesMeetingStandards} (after ${pool.duplicates.length} duplicate subjects removed); pool ${pool.primary.length} primary + ${pool.backup.length} backup`);
+  console.log(table(weeks, [{ h: "Wk", f: (w) => w.week }, { h: "Week of", f: (w) => w.weekOf }, { h: "Category", f: (w) => w.primary.category.slice(0, 22) }, { h: "Class", f: (w) => w.primary.class }, { h: "Primary", f: (w) => ((w.notes && w.notes.workingTitle) || w.primary.workingTitle).slice(0, 56) }, { h: "Backup", f: (w) => (w.backup ? w.backup.workingTitle : "-").slice(0, 40) }]));
 } else if (cmd === "budget") {
   // budget status [--month YYYY-MM] | budget init | budget reconcile <entryId> --actual <usd> --by <name> --reason <text>
   const B = require(path.join(P, "budget")); const sub = argv[1];
