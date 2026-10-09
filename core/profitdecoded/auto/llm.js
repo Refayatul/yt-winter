@@ -2,8 +2,9 @@
 // Thin, testable Claude boundary for the autonomous ProfitDecoded stages.
 // * Model: claude-opus-5-5 (override with PD_AUTO_MODEL), adaptive thinking, streaming.
 // * pause_turn (long server-tool turns) is resumed explicitly; refusal and max_tokens are errors.
-// * Server-side refusal fallbacks are on by default (PD_AUTO_FALLBACKS=0 disables).
-// * A spend guard (PD_AUTO_MAX_USD, default 3) stops a run before it can run away.
+// * Server-side refusal fallbacks are off unless PD_AUTO_FALLBACKS=1, and never used under a budget.
+// * Every paid call is reserved at its maximum cost in the persistent budget ledger (../budget.js) before it is sent;
+//   without a ledger a paid call is refused. PD_AUTO_MAX_USD remains an in-run guard.
 // * The API key is read from ANTHROPIC_API_KEY (env or .env) and never logged.
 
 const fs = require("fs");
@@ -59,7 +60,8 @@ function createClient(options = {}) {
   const key = options.apiKey || apiKey();
   if (!key) throw new AutoError("NO_KEY", "ANTHROPIC_API_KEY is not set (env or .env): the autonomous research/script stages cannot run");
   const Anthropic = require("@anthropic-ai/sdk");
-  return new (Anthropic.default || Anthropic)({ apiKey: key });
+  // maxRetries 0: the SDK must not resend a paid request on its own; every attempt is reserved in the budget first.
+  return new (Anthropic.default || Anthropic)({ apiKey: key, maxRetries: 0 });
 }
 
 // usage.input_tokens excludes cached tokens: cache writes and reads are billed separately.
@@ -137,6 +139,23 @@ async function runGemini(opts) {
   return { text: r.text, json, blocks: [], ledger, raw: r.raw };
 }
 
+// Maximum possible cost of one paid request, computed BEFORE it is sent: every input token priced as a cache write
+// (the most expensive input rate), the whole max_tokens budget as output (adaptive thinking is billed as output and
+// counts against max_tokens), and every allowed web search. Character count is converted with a deliberately low
+// chars-per-token ratio so the estimate errs high.
+function estimateMaxUsd(params, policy = {}) {
+  const est = policy.estimator || {};
+  const p = priceFor(params.model);
+  const chars = JSON.stringify({ s: params.system, m: params.messages, t: params.tools || [], o: params.output_config || {} }).length;
+  const inTok = Math.ceil(chars / (est.charsPerToken || 2.8));
+  const inRate = p.input * (est.inputPricedAsCacheWrite === false ? 1 : PRICE.cacheWriteMultiplier);
+  const searches = (params.tools || []).filter((t) => /web_search/.test(t.type || t.name || "")).reduce((n, t) => n + (t.max_uses || est.webSearchesIfUnspecified || 10), 0);
+  return Math.round((inTok / 1e6 * inRate + params.max_tokens / 1e6 * p.output + searches / 1000 * PRICE.webSearchPer1k) * 1e6) / 1e6;
+}
+// Did the provider definitely NOT bill this failed request? Rejections before processing (4xx except 408, and 529
+// overloaded) did not; anything else (timeouts, dropped streams, other 5xx) may have, so it stays charged.
+const definitelyUnbilled = (e) => { const s = e && (e.status || (e.error && e.error.status)); return (s >= 400 && s < 500 && s !== 408) || s === 529; };
+
 async function run(opts) {
   if (opts.client && opts.client.provider === "groq") return runGroq(opts);
   if (opts.client && opts.client.provider === "gemini") return runGemini(opts);
@@ -153,12 +172,36 @@ async function run(opts) {
       output_config: { effort, ...(schema ? { format: { type: "json_schema", schema } } : {}) },
       ...(tools && tools.length ? { tools } : {}),
     };
-    const useFallback = process.env.PD_AUTO_FALLBACKS !== "0";
-    const stream = useFallback
-      ? client.beta.messages.stream({ ...params, betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" })
-      : client.messages.stream(params);
-    const msg = await stream.finalMessage();
-    const cost = spend(msg.usage, model);
+    // Server-side refusal fallbacks may answer with another model: opt-in only (PD_AUTO_FALLBACKS=1), never under a budget.
+    const budget = ledger.budget;
+    if (!budget && !process.env.NODE_TEST_CONTEXT) throw new AutoError("PAID_DISABLED", "paid call without the persistent budget ledger: refused (fail closed)");
+    const useFallback = !budget && process.env.PD_AUTO_FALLBACKS === "1";
+    let reservation = null;
+    if (budget) {
+      const estimateUsd = estimateMaxUsd(params, budget.policy);
+      reservation = await budget.reserve({ id: budget.idFor([budget.context.scriptId, opts.stage || "call", params]), stage: opts.stage || null, category: opts.category || (opts.stage === "research" ? "research" : ["critique", "evaluate"].includes(opts.stage) ? "review" : "script"), provider: "anthropic", model, estimateUsd });
+    }
+    let msg;
+    try {
+      const stream = useFallback
+        ? client.beta.messages.stream({ ...params, betas: ["server-side-fallback-2026-07-01"], fallbacks: "default" })
+        : client.messages.stream(params);
+      msg = await stream.finalMessage();
+    } catch (e) {
+      if (reservation) await (definitelyUnbilled(e) ? budget.release(reservation.id, `provider rejected the request (HTTP ${e.status})`) : budget.markUncertain(reservation.id, `outcome unknown: ${String(e.message || e).slice(0, 160)}`));
+      throw e;
+    }
+    const cost = spend(msg.usage, msg.model || model);
+    if (reservation) {
+      try { await budget.settle(reservation.id, cost, msg.usage); }
+      catch (e) {
+        // Paid for, but the ledger could not record it: the reservation stays counted at its maximum (never lost), the
+        // output is handed back on the error so the stage cache keeps what was paid for, and the run stops.
+        const text0 = (msg.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
+        let json0 = null; try { json0 = schema ? JSON.parse(text0) : null; } catch (x) { json0 = null; }
+        throw new AutoError(e.code && /^STATE_|CONFLICT/.test(e.code) ? "STATE_UNCONFIRMED" : (e.code || "STATE_UNCONFIRMED"), `paid call succeeded but the budget ledger did not confirm settlement (reservation ${reservation.id} stays charged at its maximum): ${e.message}`, { paidResult: msg.stop_reason === "end_turn" && (!schema || json0) ? { text: text0, json: json0 } : null });
+      }
+    }
     ledger.calls += 1; ledger.usage = addUsage(ledger.usage, msg.usage); ledger.usd = Math.round((ledger.usd + cost) * 1000) / 1000;
     recordStage(ledger, opts.stage, msg.usage, cost, { provider: "anthropic", model: msg.model || model });
     blocks.push(...(msg.content || [])); lastStop = msg.stop_reason;
@@ -174,4 +217,4 @@ async function run(opts) {
   return { text, json, blocks, ledger };
 }
 
-module.exports = { MODEL, PRICE, PRICES, priceFor, AutoError, apiKey, envKey, provider, createClient, run, runGroq, runGemini, spend, newLedger, recordStage, flatten, paceTokens, estTokens };
+module.exports = { estimateMaxUsd, definitelyUnbilled, MODEL, PRICE, PRICES, priceFor, AutoError, apiKey, envKey, provider, createClient, run, runGroq, runGemini, spend, newLedger, recordStage, flatten, paceTokens, estTokens };

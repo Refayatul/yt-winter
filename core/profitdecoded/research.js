@@ -238,6 +238,17 @@ function attributionIssues(beats, dossier) {
 // Plan-level evidence checks: the thesis and payoff must cite claims, may not conclude more than those claims say,
 // and a figure-bearing fact gets one home section (the payoff may refer back to it).
 const OVERCLAIM = /\b(most|majority|the bulk|bulk of|nearly all|almost all|virtually all|only a (small|tiny)|small slice|tiny slice|small remainder|exact|exactly|precise|precisely|always|never|every|all of|nobody|no one|guarantee[sd]?|proves?|proven|certainly|knows?|the biggest|the largest|the most|the only)\b/gi;
+// Quantity / precision / certainty words only: used where the text is a researcher's own summary (the dossier thesis),
+// where "never expire" may correctly paraphrase "no expiration date".
+const QUANT_OVERCLAIM = /\b(most|majority|the bulk|bulk of|nearly all|almost all|virtually all|only a (small|tiny)|small slice|tiny slice|small remainder|exact|exactly|precise|precisely|all of|nobody|no one|guarantee[sd]?|proves?|proven|certainly|knows?|the biggest|the largest|the only)\b/gi;
+// Does a piece of text conclude more than its supporting claims? (overclaim words not in the support, figures not in it)
+function textEvidenceIssues(field, text, supportText, options = {}) {
+  const issues = []; const re = options.pattern || OVERCLAIM;
+  for (const m of new Set((String(text || "").match(re) || []).map((x) => x.toLowerCase()))) if (!new RegExp("\\b" + esc(m) + "\\b", "i").test(supportText)) issues.push(`${field} overclaims: "${m}" is not supported by ${options.supportLabel || "its cited claims"}. Conclude only what the evidence states, and say plainly what it does not show`);
+  const known = new Set(figuresOf(supportText).map((f) => f.value));
+  for (const f of figuresOf(text)) if (!known.has(f.value)) issues.push(`${field} states ${f.raw}, which ${options.supportLabel || "its cited claims"} do not contain`);
+  return issues;
+}
 function planEvidenceIssues(plan, dossier) {
   const issues = []; const warnings = [];
   const all = [...(dossier.claims || []), ...(dossier.inferences || [])]; const byId = Object.fromEntries(all.map((c) => [c.id, c]));
@@ -251,9 +262,7 @@ function planEvidenceIssues(plan, dossier) {
   for (const [field, ids] of fields) {
     const text = String(plan[field] || ""); if (!text) continue;
     const support = (ids || []).map((id) => (byId[id] || {}).text || "").join(" ") + " " + (dossier.thesis || "");
-    for (const m of new Set((text.match(OVERCLAIM) || []).map((x) => x.toLowerCase()))) if (!new RegExp("\\b" + esc(m) + "\\b", "i").test(support)) issues.push(`${field} overclaims: "${m}" is not supported by its cited claims (${(ids || []).join(", ") || "none"}). Conclude only what the evidence states, and say plainly what it does not show`);
-    const known = new Set(figuresOf(support).map((f) => f.value));
-    for (const f of figuresOf(text)) if (!known.has(f.value)) issues.push(`${field} states ${f.raw}, which its cited claims do not contain`);
+    issues.push(...textEvidenceIssues(field, text, support, { supportLabel: `its cited claims (${(ids || []).join(", ") || "none"})` }).map((x) => x.replace(/ which its cited claims \([^)]*\) do not contain$/, " which its cited claims do not contain")));
     for (const r of dossier.scriptRules || []) { const m = new RegExp(r.pattern, r.flags || "i").exec(text); if (m) issues.push(`${field} breaks an editorial rule ("${m[0]}"): ${r.reason}`); }
   }
   // Repeated facts across planned sections.
@@ -270,4 +279,4 @@ function planEvidenceIssues(plan, dossier) {
   return { issues, warnings };
 }
 
-module.exports = { classifySource, gate, unsupportedClaimsInScript, host, figuresOf, evalExpr, inferenceArithmetic, entityIndex, attributionIssues, planEvidenceIssues, OVERCLAIM };
+module.exports = { classifySource, gate, unsupportedClaimsInScript, host, figuresOf, evalExpr, inferenceArithmetic, entityIndex, attributionIssues, planEvidenceIssues, textEvidenceIssues, OVERCLAIM, QUANT_OVERCLAIM };

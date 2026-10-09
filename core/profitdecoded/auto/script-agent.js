@@ -12,6 +12,7 @@ const AI = require("../ai-patterns");
 const Hooks = require("../hooks");
 const Titles = require("../titles");
 const Research = require("../research");
+const Exceptions = require("../exceptions");
 const { CHANNEL_DIR } = require("../config");
 
 const prompt = (name) => fs.readFileSync(path.join(CHANNEL_DIR, "prompts", name), "utf8");
@@ -59,6 +60,12 @@ function check(out, dossier, format, options = {}) {
   // attribution: our math voiced as ours, figures tied to the right company, no spoken ids, companies named before use,
   // claim scope and required context kept, no figure restated across sections
   issues.push(...Research.attributionIssues(beats, dossier));
+  // source coverage: a long-form script must cite every central claim (directly or through our arithmetic built on it)
+  if (format === "long") {
+    const basis = Object.fromEntries((dossier.inferences || []).map((i) => [i.id, i.basisClaimIds || []]));
+    const cited = new Set(beats.flatMap((b) => [b.claimId, ...(basis[b.claimId] || [])]));
+    for (const c of (dossier.claims || []).filter((x) => x.central && !cited.has(x.id))) issues.push(`central claim ${c.id} is not covered by any line of the script ("${String(c.text).slice(0, 70)}")`);
+  }
   const topicWords = T.contentWords(dossier.thesis || "");
   const hooks = Hooks.compete(options.hookCandidates || out.hookCandidates || [], { topicWords });
   if (!hooks.valid) issues.push("hook candidates: " + hooks.problems.join("; "));
@@ -244,8 +251,11 @@ async function stage(name, opts, getClient, cache, key) {
   let r;
   try { r = await LLM.run({ ...opts, client: getClient(name), stage: name }); }
   catch (e) {
+    // a paid result whose settlement could not be confirmed is still cached (it was paid for); the run then stops
+    if (e.paidResult && e.paidResult.json != null) cache.set(key, e.paidResult.json);
     // Safe retry: a truncated reply (reasoning used the output budget) is retried once with lower reasoning effort.
-    if (e.code !== "MAX_TOKENS" || opts.effort === "low") throw e;
+    // Never for paid calls: that would be an automatic full regeneration; the run stops and the limit is reviewed.
+    if (e.code !== "MAX_TOKENS" || opts.effort === "low" || (opts.ledger && opts.ledger.budget)) throw e;
     r = await LLM.run({ ...opts, effort: "low", client: getClient(name), stage: name });
   }
   cache.set(key, r.json);
@@ -278,7 +288,9 @@ function clientFactory(deps, ledger) {
 }
 // Token sizes per stage. Groq's free tier (8,000 tokens per minute, prompt + max output) needs small, chunked calls.
 const SIZES = { anthropic: { plan: 16000, draft: 48000, critique: 16000, rewrite: 48000, effortDraft: "high" }, groq: { plan: 4300, section: 4200, package: 2600, critique: 4000, rewrite: 3800, effortDraft: "medium" }, gemini: { critique: 24000 } };
-const PAUSE = new Set(["RATE_LIMIT", "QUOTA", "BUDGET", "PAID_DISABLED", "NO_KEY", "UNAVAILABLE"]);
+// Safe stops: nothing is lost (completed stages are cached) and nothing is approved. Budget-ledger states are among them:
+// a missing, unreachable or contended ledger, an in-flight or already-paid identical request all stop the run.
+const PAUSE = new Set(["RATE_LIMIT", "QUOTA", "BUDGET", "PAID_DISABLED", "NO_KEY", "UNAVAILABLE", "IN_FLIGHT", "DUPLICATE", "NO_POLICY", "BAD_POLICY", "NO_STORE", "STATE_MISSING", "STATE_UNREACHABLE", "STATE_UNCONFIRMED", "STATE_CORRUPT", "STATE_CONTENDED"]);
 // The final independent evaluation (narrative quality + fact check). A high-severity factual problem blocks.
 const EVALUATION_SCHEMA = { type: "object", additionalProperties: false, required: ["verdict", "scores", "factualProblems", "summary"], properties: {
   verdict: { type: "string", enum: ["pass", "fail"] }, summary: { type: "string" },
@@ -355,14 +367,21 @@ function routeProblems(problems, blocking, out, plan, spoken = []) {
 async function develop(topic, dossier, format, deps = {}) {
   const ledger = deps.ledger || LLM.newLedger(); const cache = stageCache(deps.cacheDir);
   const minutes = deps.minutes || [8, 12]; const words = wordsFor(format, minutes);
-  const maxRewrites = deps.maxRewrites == null ? 2 : deps.maxRewrites;
+  // Paid runs (a budget ledger is attached) follow the budget policy: at most maxAutoRewrites automatic targeted
+  // rewrites in total (the fact-fix counts), output limits from the policy, and an independent reviewer.
+  const policy = ledger.budget ? ledger.budget.policy : null;
+  const maxRewrites = policy ? Math.min(deps.maxRewrites == null ? policy.maxAutoRewrites : deps.maxRewrites, policy.maxAutoRewrites) : deps.maxRewrites == null ? 2 : deps.maxRewrites;
   const log = []; let current = "research";
   // 1. Research verification: the existing gate decides; nothing is written on an unverified dossier.
   const gate = Research.gate(dossier, { format });
   if (!gate.pass) return { status: "research-failed", reasons: gate.rejections, ledger, log };
   const getClient = clientFactory(deps, ledger);
   const prov = (st) => { const p = stageProviders(deps)[st]; const c = deps.clients && (deps.clients[st] || (st === "evaluate" && deps.clients.critique)); return p || (c && c.provider) || (deps.client && deps.client.provider) || "anthropic"; };
-  const size = (st, key) => (SIZES[prov(st)] || SIZES.anthropic)[key || st] || SIZES.anthropic[key || st];
+  const size = (st, key) => (policy && prov(st) === "anthropic" && (policy.anthropicMaxTokens || {})[key || st]) || (SIZES[prov(st)] || SIZES.anthropic)[key || st] || SIZES.anthropic[key || st];
+  if (policy && policy.requireIndependentReviewer !== false) {
+    const writers = ["plan", "draft", "rewrite"].map(prov);
+    for (const st of ["critique", "evaluate"]) if (writers.includes(prov(st))) return { status: "config-error", reasons: [`independent review required: the ${st} stage would use ${prov(st)}, the same provider that writes the script (set critique=gemini)`], ledger, log };
+  }
   const chunked = deps.chunked != null ? deps.chunked : prov("draft") === "groq";
   const system = prompt("system.md");
   const ctx = { competitors: deps.competitors || [] };
@@ -472,7 +491,7 @@ async function develop(topic, dossier, format, deps = {}) {
       evaluation = await evalOnce(1);
       let high = (evaluation.factualProblems || []).filter((x) => x.severity === "high");
       log.push({ stage: "evaluate", verdict: evaluation.verdict, high: high.length, scores: evaluation.scores });
-      if (high.length) {
+      if (high.length && (!policy || rounds < maxRewrites)) { // paid: the fact-fix is the one automatic rewrite only if none was used
         current = "rewrite"; rounds += 1;
         const { routed } = routeProblems(high.map((x) => ({ section: x.section, beatIds: x.beatIds, type: "factual", severity: "high", quote: x.quote, fix: `${x.problem} -> ${x.fix}` })), [], out, plan);
         for (const sec of plan.sections) {
@@ -502,9 +521,12 @@ async function develop(topic, dossier, format, deps = {}) {
     if (e.code) return { status: "provider-error", pausedAt: current, reasons: [`${e.code}: ${e.message}`], plan, draft, critique, evaluation, out, assessment: a, changes, rounds, ledger, cacheHits: cache.hits, log };
     throw e;
   }
-  // 9. Final assessment.
+  // 9. Final assessment. A committed, human-approved editorial exception may accept one retention-heuristic finding for
+  //    this exact script version (core/profitdecoded/exceptions.js); every other finding still blocks.
+  const ex = Exceptions.apply(a.blocking, { topicId: topic.id, format, beats: out.beats }, deps.exceptions);
+  a = { ...a, blocking: ex.blocking, waived: ex.waived, exceptionsRejected: ex.rejected };
   const status = a.blocking.length ? "script-failed" : "ok";
-  return { status, plan, draft, critique, evaluation, out, assessment: a, changes, rounds, reasons: a.blocking, winningHook: pe.selected.text, hookOverride: pe.override, ledger, cacheHits: cache.hits, log };
+  return { status, plan, draft, critique, evaluation, out, assessment: a, changes, rounds, reasons: a.blocking, waived: ex.waived, winningHook: pe.selected.text, hookOverride: pe.override, ledger, cacheHits: cache.hits, log };
 }
 
 // Bundle for the existing production pipeline, plus the story artefacts for human review.

@@ -41,7 +41,8 @@ function retryDelayMs(body) {
 const isDailyQuota = (body) => /per ?day|PerDay|daily/i.test(JSON.stringify((body && body.error) || {}));
 
 // Free models tried, in order, when the chosen one is overloaded (503). All must be on the free-tier allowlist.
-const FALLBACKS = () => String(process.env.PD_GEMINI_FALLBACK_MODELS || "gemini-3.7-flash,gemini-2.5-flash").split(",").map((x) => x.trim()).filter(Boolean);
+// (gemini-2.5-flash was dropped from the default chain: Google answered 404 "no longer available to new users" on 2026-10-09.)
+const FALLBACKS = () => String(process.env.PD_GEMINI_FALLBACK_MODELS || "gemini-3.7-flash,gemini-3.6-flash").split(",").map((x) => x.trim()).filter(Boolean);
 
 // messages: [{ role: "user"|"assistant", content: string | [{type:"text", text}] }]
 // A model that stays overloaded (503 after retries) is replaced by the next free fallback; if every free model is

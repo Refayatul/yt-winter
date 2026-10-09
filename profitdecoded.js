@@ -118,19 +118,108 @@ if (cmd === "inventory") {
   const keepG = (draftFull.graphics || []).filter((g) => fin.beats.some((b) => b.id === g.beatId) && !(fin.graphics || []).some((n) => n.beatId === g.beatId));
   const finalOut = { ...draftFull, beats: fin.beats, graphics: [...keepG, ...(fin.graphics || [])], ...(fin.titleCandidates ? { titleCandidates: fin.titleCandidates } : {}) };
   const draftA = W.assess(draftFull, dossier, format, ctx); const finalA = W.assess(finalOut, dossier, format, ctx);
+  // committed, human-approved editorial exceptions (one retention heuristic, this exact script version) are applied and listed
+  const Ex = require(path.join(P, "exceptions")); const exr = Ex.apply(finalA.blocking, { topicId: meta.topicId, format, beats: finalOut.beats }); finalA.blocking = exr.blocking; finalA.waived = exr.waived;
+  const exNote = (exr.waived.length || exr.rejected.length) ? "\n\n## Editorial exceptions\n" + exr.waived.map((w) => `- WAIVED ${w.finding} (${w.id}), approved by ${w.approvedBy} on ${w.approvedAt}: ${w.reason}. Finding: ${w.findingText}`).join("\n") + (exr.rejected.length ? "\n" + exr.rejected.map((r) => `- NOT APPLIED ${r.id}: ${r.why.join("; ")}`).join("\n") : "") + "\n" : "";
   const gateClaims = Object.fromEntries(gate.claims.map((c) => [c.id, c.status]));
   const all = [...dossier.claims, ...dossier.inferences]; const srcs = Object.fromEntries(dossier.sources.map((x) => [x.id, x]));
   const claimMap = [...new Set(finalOut.beats.map((b) => b.claimId))].map((id) => { const c = all.find((x) => x.id === id) || { text: "UNKNOWN CLAIM", sourceIds: [] }; const base = c.basisClaimIds ? c.basisClaimIds.flatMap((b) => (all.find((x) => x.id === b) || {}).sourceIds || []) : c.sourceIds; return { claimId: id, beatIds: finalOut.beats.filter((b) => b.claimId === id).map((b) => b.id), text: c.text, status: c.basisClaimIds ? "our arithmetic on " + c.basisClaimIds.join("+") : gateClaims[id] || "UNKNOWN", sources: [...new Set(base)].map((s) => srcs[s] ? `${srcs[s].publisher}, ${srcs[s].title} (${srcs[s].url})` : s), passages: (c.evidence || (c.basisClaimIds || []).flatMap((b) => (all.find((x) => x.id === b) || {}).evidence || [])).map((e) => e.passage).slice(0, 2) }; });
   const res = { plan, critique, out: finalOut, assessment: finalA, changes: fin.changeLog || [], rounds: 1, winningHook, cacheHits: 0 };
   const pkg = { topic, dossier, format, title: meta.title, generatedAt: new Date().toISOString(), plan, planCheck, critique, claimMap,
     draft: { assessment: draftA }, final: { assessment: finalA, out: finalOut, winningHook, changes: fin.changeLog || [], editorial: Retention.editorialReport(finalOut.beats, { plan, dossier, format, title: meta.title }) } };
-  fs.writeFileSync(path.join(dir, "review.md"), (approved ? "" : "> NOT APPROVED: this is the latest script of a run that did not pass its gates (latest.json, not final.json). No bundle is written.\n\n") + Report.renderStory(pkg));
+  fs.writeFileSync(path.join(dir, "review.md"), (approved ? "" : "> NOT APPROVED: this is the latest script of a run that did not pass its gates (latest.json, not final.json). No bundle is written.\n\n") + Report.renderStory(pkg) + exNote);
   const rel = path.relative(dir, path.join(CHANNEL_DIR, "research", meta.topicId + ".json"));
   if (approved) fs.writeFileSync(path.join(dir, "bundle.json"), JSON.stringify({ ...W.bundleFromStory(topic, dossier, res, format, rel), selectedTitle: meta.title }, null, 1) + "\n");
   console.log(`plan issues ${planCheck.issues.length} · draft: ${draftA.local.words} words, ${draftA.blocking.length} blocking · final: ${finalA.local.words} words, ${finalA.blocking.length} blocking, retention ${finalA.retention.score}, spoken ${finalA.spoken.score}, AI-pattern ${finalA.local.aiPatternScore}`);
   for (const b of finalA.blocking) console.log("  BLOCKING: " + b);
+  for (const w of exr.waived) console.log(`  WAIVED (editorial exception ${w.id}, approved by ${w.approvedBy}): ${w.findingText}`);
+  for (const r of exr.rejected) console.log(`  EXCEPTION NOT APPLIED (${r.id}): ${r.why.join("; ")}`);
   console.log("review: " + path.relative(process.cwd(), path.join(dir, "review.md")));
   process.exitCode = finalA.blocking.length || planCheck.issues.length ? 1 : 0;
+} else if (cmd === "readiness") {
+  // Inventory readiness from local data only (topic universe, observed snapshot, dossiers): no API calls.
+  const E = require(path.join(P, "eligibility")); const Research = require(path.join(P, "research")); const u = universe(); const evidence = {}; const dossiers = {};
+  const snapFile = flag("--snapshot") || (fs.readdirSync(path.join(CHANNEL_DIR, "intel")).filter((f) => /^snapshot-.*\.json$/.test(f)).sort().map((f) => path.join(CHANNEL_DIR, "intel", f)).pop());
+  if (snapFile) for (const [id, o] of Object.entries(Comp.topicEvidenceFromSnapshot(readJson(snapFile, { channels: [] }), u.topics).topics)) if (o.breakout) evidence[id] = { breakout: o.breakout };
+  const rdir = path.join(CHANNEL_DIR, "research");
+  for (const f of fs.readdirSync(rdir).filter((x) => x.endsWith(".json"))) { const d = readJson(path.join(rdir, f), null); if (!d) continue; dossiers[d.topicId] = d; evidence[d.topicId] = { ...(evidence[d.topicId] || {}), research: { ...Research.gate(d, { format: d.format }), researchedAt: d.researchedAt } }; }
+  const rows = Decision.rank(u.topics, evidence); const inv = E.inventory({ topics: u.topics, rows, dossiers }); const short = E.shortlist(inv, rows, u.topics, +flag("--top", 20));
+  const out = { generatedAt: new Date().toISOString(), snapshot: snapFile ? path.relative(process.cwd(), snapFile) : null, provenanceNote: "demand = OBSERVED competitor outlier evidence (collector snapshot), never audience data for this channel; long-form suitability, visual potential and US focus are ESTIMATED heuristics; primary sources only where a verified dossier exists", summary: inv.summary, shortlist: short, topics: inv.topics };
+  if (flag("--out")) fs.writeFileSync(path.resolve(flag("--out")), JSON.stringify(out) + "\n");
+  console.log(JSON.stringify(inv.summary, null, 1));
+  console.log(table(short, [{ h: "#", f: (r) => short.indexOf(r) + 1 }, { h: "Working title", f: (r) => (r.workingTitle || r.topic).slice(0, 58) }, { h: "Pillar", f: (r) => r.pillar.slice(0, 14) }, { h: "Tier", f: (r) => r.tier }, { h: "Demand", f: (r) => (r.flags.demandObserved ? r.flags.demandValue + " OBS" : "UNKNOWN") }, { h: "Sat", f: (r) => r.flags.oversaturated ? "HOT/SAT" : "-" }, { h: "Rank", f: (r) => r.rankScore }]));
+} else if (cmd === "budget") {
+  // budget status [--month YYYY-MM] | budget init | budget reconcile <entryId> --actual <usd> --by <name> --reason <text>
+  const B = require(path.join(P, "budget")); const sub = argv[1];
+  (async () => {
+    const policy = B.loadPolicy(); const store = B.storeFromEnv(policy);
+    if (sub === "init") { if (!store.init) throw new Error("init applies to the GitHub ledger"); console.log(JSON.stringify(await store.init())); return; }
+    if (sub === "reconcile") {
+      const id = argv[2]; let done = null;
+      const bud = new B.Budget({ store, policy }); await bud.mutate((doc) => { done = B.reconcile(doc, id, Number(flag("--actual")), flag("--by"), flag("--reason")); return done; });
+      console.log("reconciled: " + JSON.stringify(done)); return;
+    }
+    const bud = new B.Budget({ store, policy }); console.log(JSON.stringify(await bud.status(flag("--month")), null, 1));
+  })().catch((e) => { console.error(`${e.code || "ERROR"}: ${e.message}`); process.exitCode = 1; });
+} else if (cmd === "costs") {
+  // Cost accounting from the paid-API ledger (actual vs estimated); free providers are reported per run in usage.json.
+  const B = require(path.join(P, "budget"));
+  (async () => { const policy = B.loadPolicy(); const store = B.storeFromEnv(policy); const { doc } = await store.read(); console.log(JSON.stringify(B.costReport(doc, policy, Date.now(), { month: flag("--month") }), null, 1)); })().catch((e) => { console.error(`${e.code || "ERROR"}: ${e.message}`); process.exitCode = 1; });
+} else if (cmd === "editorial-exception") {
+  // editorial-exception <storyDir> --finding retention:<type> --approver "<person>" --reason "<why>" [--ref <PR or note>]
+  // Builds the record for ONE heuristic finding of the script in <storyDir> (final.json or latest.json) and writes it to
+  // channels/profitdecoded/editorial-exceptions.json. Committing that file is the approval; it is reviewed like code.
+  const Ex = require(path.join(P, "exceptions")); const W = require(path.join(P, "auto", "script-agent"));
+  const dir = path.resolve(argv[1] || ""); const rj = (f) => readJson(path.join(dir, f), null); const meta = rj("meta.json"); const plan = rj("plan.json"); const fin = rj("final.json") || rj("latest.json");
+  if (!meta || !plan || !fin) { console.error("usage: editorial-exception <storyDir> --finding retention:<type> --approver <name> --reason <text>"); process.exit(2); }
+  const dossier = readJson(path.join(CHANNEL_DIR, "research", meta.topicId + ".json"), null); const pe = W.evaluatePlan(plan, dossier, meta.format);
+  const a = W.assess({ ...fin, hookCandidates: plan.hookCandidates.map((h) => h.text) }, dossier, meta.format, { plan, winningHook: pe.selected && pe.selected.text, hookCandidates: plan.hookCandidates, words: W.wordsFor(meta.format, meta.minutes || [8, 12]), title: meta.title });
+  const finding = a.blocking.find((b) => Ex.findingKey(b) === flag("--finding"));
+  if (!finding) { console.error(`no current blocking finding of type ${flag("--finding")}; current blocking: ${a.blocking.join(" | ")}`); process.exit(1); }
+  try { const x = Ex.propose({ topicId: meta.topicId, format: meta.format, beats: fin.beats, findingText: finding, approvedBy: flag("--approver"), reason: flag("--reason"), approvalRef: flag("--ref") || null }); Ex.save(x); console.log("exception recorded (commit channels/profitdecoded/editorial-exceptions.json to approve it):\n" + JSON.stringify(x, null, 1)); }
+  catch (e) { console.error(e.message); process.exit(1); }
+} else if (cmd === "preflight") {
+  // Paid-run preflight. No paid call, no Groq call. Gemini: model metadata only (does not use generation quota);
+  // --probe-gemini adds ONE minimal generation request so an exhausted daily quota is found before paid writing starts.
+  // Anthropic: the Models API (not billed) confirms the key and the model. Exit 1 = NO-GO.
+  //   preflight [--paid] [--probe-gemini] [--topic id] [--format long] [--pool experiment] [--max-usd 2]
+  const B = require(path.join(P, "budget")); const E = require(path.join(P, "eligibility")); const Gm = require(path.join(P, "auto", "gemini")); const LLMx = require(path.join(P, "auto", "llm"));
+  const checks = []; const ok = (name, pass, detail) => checks.push({ check: name, pass: !!pass, detail });
+  (async () => {
+    let policy = null;
+    try { policy = B.loadPolicy(); ok("budget-policy", true, `paidEnabled=${policy.paidEnabled}, per script $${policy.maxPerScriptUsd}, monthly script $${policy.monthlyUsd.script} / experiment $${policy.monthlyUsd.experiment}`); } catch (e) { ok("budget-policy", false, e.message); }
+    if (has("--paid")) ok("paid-enabled", policy && policy.paidEnabled, policy && policy.paidEnabled ? "paid calls enabled by the committed policy" : "paidEnabled=false: a paid run would be refused (expected until the approval PR is merged)");
+    if (policy) {
+      try { const st = await new B.Budget({ store: B.storeFromEnv(policy), policy }).status(); const pool = flag("--pool", "experiment"); const left = Math.round((st.limits[pool] - st[pool].committedUsd) * 1e4) / 1e4; const need = Math.min(Number(flag("--max-usd", policy.maxPerScriptUsd)), policy.maxPerScriptUsd);
+        ok("budget-ledger", true, `ledger readable; ${st.month} ${pool}: $${st[pool].committedUsd} committed of $${st.limits[pool]} ($${left} left; this run may use up to $${need})`);
+        if (has("--paid")) ok("budget-headroom", left > 0, `$${left} left in the ${pool} pool`);
+      } catch (e) { ok("budget-ledger", false, `${e.code || "ERROR"}: ${e.message}`); }
+    }
+    const gkey = LLMx.envKey("GEMINI_API_KEY");
+    if (!gkey) ok("gemini-key", false, "GEMINI_API_KEY missing: the independent reviewer cannot run");
+    else {
+      const models = [Gm.MODEL(), ...Gm.FALLBACKS()]; const avail = [];
+      for (const m of models) { try { const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}`, { headers: { "x-goog-api-key": gkey } }); avail.push(`${m}: ${res.ok ? "available" : "HTTP " + res.status}`); } catch (e) { avail.push(`${m}: unreachable`); } }
+      ok("gemini-models", avail.some((x) => /available/.test(x)) && /available/.test(avail[0]), avail.join("; ") + " (metadata only, no generation quota used)");
+      if (has("--probe-gemini")) {
+        try { const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(Gm.MODEL())}:generateContent`, { method: "POST", headers: { "x-goog-api-key": gkey, "content-type": "application/json" }, body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: "Reply with: ok" }] }], generationConfig: { maxOutputTokens: 16 } }) });
+          const body = res.ok ? null : await res.json().catch(() => null);
+          ok("gemini-quota", res.ok, res.ok ? `one probe request accepted by ${Gm.MODEL()} (1 request of the free daily quota used)` : `HTTP ${res.status}${body && body.error ? ": " + String(body.error.message || "").slice(0, 160) : ""}`);
+        } catch (e) { ok("gemini-quota", false, "probe failed: " + e.message); }
+      }
+    }
+    const akey = LLMx.envKey("ANTHROPIC_API_KEY");
+    if (!akey) ok("anthropic-key", !has("--paid"), "ANTHROPIC_API_KEY missing" + (has("--paid") ? "" : " (expected before the Console setup)"));
+    else { try { const res = await fetch(`https://api.anthropic.com/v1/models/${LLMx.MODEL()}`, { headers: { "x-api-key": akey, "anthropic-version": "2023-06-01" } }); ok("anthropic-key", res.ok, res.ok ? `key valid, model ${LLMx.MODEL()} available (Models API, not billed)` : `HTTP ${res.status} from the Models API`); } catch (e) { ok("anthropic-key", false, "Models API unreachable: " + e.message); } }
+    if (flag("--topic")) {
+      const t = universe().topics.find((x) => x.id === flag("--topic")); const d = readJson(path.join(CHANNEL_DIR, "research", flag("--topic") + ".json"), null);
+      const el = t ? E.check(t, d, { format: flag("--format", "long"), pool: flag("--pool", "experiment") }) : null;
+      ok("eligibility", el && el.status === "ELIGIBLE", el ? `${el.status}${el.reasons.length ? ": " + el.reasons.join("; ") : ""}${el.warnings.length ? " (" + el.warnings.join("; ") + ")" : ""}` : "unknown topic");
+    }
+    const g = Sched.publishGuard({}); ok("publishing-blocked", !g.allowed, g.allowed ? "PUBLISHING WOULD BE ALLOWED" : g.blocks.slice(0, 3).join("; "));
+    for (const c of checks) console.log(`${c.pass ? "PASS" : "FAIL"}  ${c.check.padEnd(18)} ${c.detail}`);
+    const go = checks.every((c) => c.pass); console.log(go ? "PREFLIGHT: GO" : "PREFLIGHT: NO-GO"); process.exitCode = go ? 0 : 1;
+  })().catch((e) => { console.error(`preflight error: ${e.message}`); process.exitCode = 1; });
 } else if (cmd === "publish-check") {
   const g = Sched.publishGuard({}); console.log(g.allowed ? "ALLOWED" : "BLOCKED"); for (const b of g.blocks) console.log(" - " + b);
 } else if (cmd === "dry-run") {

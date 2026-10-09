@@ -19,18 +19,19 @@ const msg = (content, stop = "end_turn", u = usage()) => ({ content, stop_reason
 const textMsg = (text, extra = {}) => msg([{ type: "text", text }], "end_turn", usage(extra));
 
 // ---------- llm.js ----------
-test("llm.run: adaptive thinking, structured output, streaming, fallbacks on by default and switchable", async () => {
+test("llm.run: adaptive thinking, structured output, streaming; server-side model fallbacks are opt-in only", async () => {
   const L = A("llm");
   const c = mockClient([textMsg('{"a":1}')]);
   const r = await L.run({ client: c, system: "s", messages: [{ role: "user", content: "x" }], schema: { type: "object" }, ledger: L.newLedger(5) });
   assert.deepEqual(r.json, { a: 1 });
   const p = c.calls[0];
-  assert.equal(p.beta, true); assert.equal(p.params.fallbacks, "default"); assert.deepEqual(p.params.betas, ["server-side-fallback-2026-07-01"]);
+  // default: no fallback to another model (no silent switch of the paid model)
+  assert.equal(p.beta, false); assert.ok(!("fallbacks" in p.params));
   assert.equal(p.params.model, "claude-opus-5-5"); assert.deepEqual(p.params.thinking, { type: "adaptive" });
   assert.equal(p.params.output_config.format.type, "json_schema"); assert.equal(p.params.output_config.effort, "high");
   assert.ok(!("temperature" in p.params) && !("budget_tokens" in (p.params.thinking || {})));
-  process.env.PD_AUTO_FALLBACKS = "0";
-  try { const c2 = mockClient([textMsg("hi")]); await L.run({ client: c2, system: "s", messages: [], ledger: L.newLedger(5) }); assert.equal(c2.calls[0].beta, false); assert.ok(!("fallbacks" in c2.calls[0].params)); }
+  process.env.PD_AUTO_FALLBACKS = "1";
+  try { const c2 = mockClient([textMsg("hi")]); await L.run({ client: c2, system: "s", messages: [], ledger: L.newLedger(5) }); assert.equal(c2.calls[0].beta, true); assert.equal(c2.calls[0].params.fallbacks, "default"); assert.deepEqual(c2.calls[0].params.betas, ["server-side-fallback-2026-07-01"]); }
   finally { delete process.env.PD_AUTO_FALLBACKS; }
 });
 

@@ -1,0 +1,38 @@
+{
+ "schema": "ProfitDecoded paid-API budget policy. Read by core/profitdecoded/budget.js before every paid call. Enabling paid calls is a reviewed change to this file (paidEnabled: true), never a runtime flag.",
+ "paidEnabled": false,
+ "targetPerScriptUsd": 1.0,
+ "maxPerScriptUsd": 2.0,
+ "monthlyUsd": {
+  "script": 8.0,
+  "experiment": 2.0
+ },
+ "maxAutoRewrites": 1,
+ "allowFullRegeneration": false,
+ "allowPaidResearch": false,
+ "requireIndependentReviewer": true,
+ "reservationTtlMinutes": 120,
+ "estimator": {
+  "charsPerToken": 2.8,
+  "inputPricedAsCacheWrite": true,
+  "webSearchesIfUnspecified": 10
+ },
+ "anthropicMaxTokens": {
+  "plan": 12000,
+  "draft": 32000,
+  "package": 8000,
+  "rewrite": 24000
+ },
+ "ledger": {
+  "store": "github",
+  "repo": "eyazan/youtube-otomasyon",
+  "branch": "profitdecoded-budget-ledger",
+  "file": "ledger.json"
+ },
+ "notes": [
+  "targetPerScriptUsd is an optimisation goal; maxPerScriptUsd is enforced before each call against the maximum possible cost.",
+  "A script is topicId:format:version (PD_SCRIPT_VERSION, default v1). All attempts and resumed runs of that script share the per-script limit.",
+  "Pools: script (production) and experiment. A run declares its pool; each pool has its own monthly limit (UTC calendar month).",
+  "Application limits do not cap provider billing. Set a monthly spend limit in the Anthropic Console as the backstop."
+ ]
+}

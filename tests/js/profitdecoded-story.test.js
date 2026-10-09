@@ -56,7 +56,8 @@ test("spend: cache writes cost 1.25x input, reads are listed, prices follow the 
 
 test("llm.run sends top-level prompt caching and a per-call model override, and records the stage", async () => {
   const L = A("llm"); const calls = [];
-  const client = { beta: { messages: { stream: (p) => { calls.push(p); return { finalMessage: async () => ({ content: [{ type: "text", text: "{}" }], stop_reason: "end_turn", usage: { input_tokens: 100, output_tokens: 10 } }) }; } } } };
+  const stream = (p) => { calls.push(p); return { finalMessage: async () => ({ content: [{ type: "text", text: "{}" }], stop_reason: "end_turn", usage: { input_tokens: 100, output_tokens: 10 } }) }; };
+  const client = { beta: { messages: { stream } }, messages: { stream } };
   const ledger = L.newLedger(5);
   await L.run({ client, system: "s", messages: [{ role: "user", content: "x" }], schema: { type: "object" }, ledger, stage: "critique", model: "claude-sonnet-5-5" });
   assert.deepEqual(calls[0].cache_control, { type: "ephemeral" });
