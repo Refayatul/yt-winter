@@ -197,6 +197,7 @@ function evaluatePlan(plan, dossier, format = "long") {
   const qids = new Set((plan.questions || []).map((q) => q.id));
   const raised = new Map(); const resolved = new Map();
   (plan.sections || []).forEach((s, i) => {
+    if (!(s.claimIds || []).length) issues.push(`section ${s.id} cites no verified claim (every section must rest on at least one claim id)`);
     for (const c of s.claimIds || []) if (!ids.has(c)) issues.push(`section ${s.id} uses unknown claim id "${c}"`);
     for (const q of s.raises || []) { if (!qids.has(q)) issues.push(`section ${s.id} raises unknown question "${q}"`); raised.set(q, i); }
     for (const q of s.resolves || []) resolved.set(q, i);
@@ -318,7 +319,12 @@ async function develop(topic, dossier, format, deps = {}) {
     plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: size("plan"), effort: prov("plan") === "groq" ? "medium" : "high" }, getClient, cache, hash({ ...base, s: "plan" }))).json;
     pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan", issues: pe.issues.length });
     if (pe.issues.length) {
-      planMsgs = [...planMsgs, { role: "assistant", content: JSON.stringify(plan) }, { role: "user", content: "The plan failed these checks. Fix exactly these and return the full JSON:\n- " + pe.issues.join("\n- ") }];
+      // Providers with a small per-minute limit get a compact, fresh repair request (claim list + plan + issues)
+      // instead of the whole conversation; others continue the conversation.
+      const claimList = [...(dossier.claims || []), ...(dossier.inferences || [])].map((c) => `${c.id}${c.central ? "*" : ""}: ${c.text.slice(0, 160)}`).join("\n");
+      planMsgs = prov("plan") === "groq"
+        ? [{ role: "user", content: `${prompt("story.md")}\n\nSTAGE: STORY PLAN REPAIR. VERIFIED CLAIMS (ids; * = central; numbers must be quoted exactly as written here):\n${claimList}\n\nCURRENT PLAN:\n${JSON.stringify(plan)}\n\nThe plan failed these checks. Fix exactly these and return the full plan JSON:\n- ${pe.issues.join("\n- ")}` }]
+        : [...planMsgs, { role: "assistant", content: JSON.stringify(plan) }, { role: "user", content: "The plan failed these checks. Fix exactly these and return the full JSON:\n- " + pe.issues.join("\n- ") }];
       plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: size("plan"), effort: prov("plan") === "groq" ? "medium" : "high" }, getClient, cache, hash({ ...base, s: "plan-fix", plan }))).json;
       pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan-fix", issues: pe.issues.length });
       if (pe.issues.length) return { status: "plan-failed", reasons: pe.issues, plan, ledger, log };

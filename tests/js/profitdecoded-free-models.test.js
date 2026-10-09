@@ -16,14 +16,14 @@ const headers = (o) => ({ get: (n) => (o[n.toLowerCase()] != null ? String(o[n.t
 const json = (status, body, h = {}) => ({ ok: status < 300, status, headers: headers(h), json: async () => body });
 
 // Groq mock: answers by the STAGE marker in the prompt, reports free-plan rate-limit headers.
-function groqMock() {
-  const plan = readJson(PKG + "plan.json"); const fin = readJson(PKG + "final.json"); const draft = readJson(PKG + "draft.json");
+function groqMock(planQueue) {
+  const goodPlan = readJson(PKG + "plan.json"); const fin = readJson(PKG + "final.json"); const draft = readJson(PKG + "draft.json");
   const calls = [];
   const fetch = async (url, init) => {
     const body = JSON.parse(init.body); const text = body.messages.map((m) => m.content).join("\n");
     assert.match(String(init.headers.authorization), /^Bearer /);
     let out; let stage;
-    if (/STAGE: STORY PLAN/.test(text)) { stage = "plan"; out = plan; }
+    if (/STAGE: STORY PLAN/.test(text)) { stage = "plan"; out = planQueue && planQueue.length ? planQueue.shift() : goodPlan; calls.repairs = (calls.repairs || []).concat(/STORY PLAN REPAIR/.test(text) ? [{ messages: body.messages.filter((m) => m.role !== "system").length, hasDossierBlock: /VERIFIED CLAIMS \(the only facts/.test(text), max: body.max_completion_tokens }] : []); }
     else if ((stage = "draft") && /STAGE: DRAFT SECTION/.test(text)) { const sec = /THIS SECTION: (\S+)/.exec(text)[1]; const beats = fin.beats.filter((b) => b.section === sec); out = { beats, graphics: beats.map((b) => ({ beatId: b.id, type: "typography", entities: ["x"], overlayText: "x", numbers: [], evidenceClaimId: b.claimId })) }; }
     else if (/STAGE: PACKAGING/.test(text)) { stage = "package"; out = { titleCandidates: draft.titleCandidates, thumbnailCandidates: draft.thumbnailCandidates, learningValue: "x" }; }
     else if (/STAGE: TARGETED REWRITE/.test(text)) { stage = "rewrite"; const sec = /SECTION (\S+) "/.exec(text)[1]; out = { beats: fin.beats.filter((b) => b.section === sec), graphics: [], changeLog: ["no change needed"] }; }
@@ -163,3 +163,15 @@ test("workflow: schedule and its gate unchanged, Gemini secret checked without p
   assert.match(y, /actions\/cache\/save@v4/); assert.match(y, /if: always\(\)\n\s+uses: actions\/cache\/save/);
   assert.match(y, /critique=gemini/);
 });
+
+test("a failed Groq plan is repaired with one compact, fresh request that fits the per-minute limit", async () => {
+  const L = A("llm"); const good = readJson(PKG + "plan.json");
+  const broken = { ...good, sections: good.sections.filter((x) => x.purpose !== "caveat"), selectedHook: "Starbucks booked $222 million in breakage revenue last year alone.", selectionReason: "x", hookCandidates: [...good.hookCandidates, { text: "Starbucks booked $222 million in breakage revenue last year alone.", mechanism: "number" }] };
+  const gq = groqMock([broken, good]); const gm = geminiMock([critiqueOk({ ...CRIT, verdict: "ready", problems: [] })]);
+  const r = await runStory({ clients: freeClients(gm, gq, { t: 0, slept: 0 }), ledger: L.newLedger(0), cacheDir: false });
+  assert.equal(r.status, "ok", JSON.stringify(r.reasons));
+  assert.equal(gq.calls.repairs.length, 1);
+  assert.deepEqual([gq.calls.repairs[0].messages, gq.calls.repairs[0].hasDossierBlock], [1, false]);
+  assert.match(JSON.stringify(r.log), /plan-fix/);
+});
+
