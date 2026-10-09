@@ -7,11 +7,21 @@ https://youtu.be/24eJvZ2cswc
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-07 | 162 | 4 | 1 | — | — |  |
+| 3d | 2026-10-09 | 330 | 5 | 2 | 49.95 | 0 | Shorts feed 96%, Browse/other YouTube 3% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 162 views after 1 days — too early/small for rate-based conclusions.
+- **OUTPERFORMER** (low) — 330 views vs channel median 62 (n=5 videos).
 
 ## Suggested interventions
 
-- INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
+- OUTPERFORMER → keep as is; reuse its subject/hook shape in the next episode.
+
+## First major observed retention drop
+
+- Timestamp: 8s; magnitude: 16 percentage points.
+- Active sentence: unavailable
+- Visual type: unavailable
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 168.

@@ -1,48 +1,53 @@
 {
   "channel": "critical-thread",
-  "status": "insufficient-data",
+  "status": "sample-floor-met",
   "minimumSample": 5,
-  "sampleSize": 4,
+  "sampleSize": 5,
   "learnedRules": [
     {
       "key": "hookType",
-      "value": null,
+      "value": "number-or-countdown",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "number-or-countdown",
           "sample": 4,
-          "averagePercentageViewed": 76.23
+          "averagePercentageViewed": 75.24
+        },
+        {
+          "value": "statement",
+          "sample": 1,
+          "averagePercentageViewed": 49.95
         }
       ]
     },
     {
       "key": "durationRange",
-      "value": null,
+      "value": "25-35s",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "25-35s",
-          "sample": 4,
-          "averagePercentageViewed": 76.23
+          "sample": 5,
+          "averagePercentageViewed": 70.18
         }
       ]
     },
     {
       "key": "secondBeat",
-      "value": null,
+      "value": "context",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "context",
-          "sample": 4,
-          "averagePercentageViewed": 76.23
+          "sample": 5,
+          "averagePercentageViewed": 70.18
         }
       ]
     },
@@ -50,21 +55,21 @@
       "key": "visualChangeFrequency",
       "value": null,
       "weakValue": null,
-      "evidenceVideos": 4,
+      "evidenceVideos": 5,
       "confidence": "INSUFFICIENT_DATA",
       "aggregates": []
     },
     {
       "key": "questionStyle",
-      "value": null,
+      "value": "question",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "question",
-          "sample": 4,
-          "averagePercentageViewed": 76.23
+          "sample": 5,
+          "averagePercentageViewed": 70.18
         }
       ]
     },
@@ -72,13 +77,13 @@
       "key": "category",
       "value": null,
       "weakValue": null,
-      "evidenceVideos": 4,
+      "evidenceVideos": 5,
       "confidence": "INSUFFICIENT_DATA",
       "aggregates": [
         {
           "value": "ROADS AND BRIDGES",
           "sample": 1,
-          "averagePercentageViewed": 111
+          "averagePercentageViewed": 107.02
         },
         {
           "value": "ENERGY",
@@ -91,6 +96,11 @@
           "averagePercentageViewed": 66.64
         },
         {
+          "value": "SUBMARINE CABLES",
+          "sample": 1,
+          "averagePercentageViewed": 49.95
+        },
+        {
           "value": "ELECTRICAL GRID",
           "sample": 1,
           "averagePercentageViewed": 48.06
@@ -99,19 +109,19 @@
     },
     {
       "key": "ctaStyle",
-      "value": null,
+      "value": "optional system-dependency bridge after the factual payoff",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "optional system-dependency bridge after the factual payoff",
-          "sample": 4,
-          "averagePercentageViewed": 76.23
+          "sample": 5,
+          "averagePercentageViewed": 70.18
         }
       ]
     }
   ],
-  "lastUpdated": "2026-10-09T17:29:02.817Z",
+  "lastUpdated": "2026-10-09T18:26:06.917Z",
   "caveat": "Observed associations only; topic, timing and packaging can confound retention. No causal claim."
 }

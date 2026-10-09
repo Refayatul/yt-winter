@@ -1,53 +1,63 @@
 {
   "channel": "impossible-brief",
-  "status": "insufficient-data",
+  "status": "sample-floor-met",
   "minimumSample": 5,
-  "sampleSize": 4,
+  "sampleSize": 5,
   "learnedRules": [
     {
       "key": "hookType",
-      "value": null,
+      "value": "number-or-countdown",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "number-or-countdown",
-          "sample": 3,
-          "averagePercentageViewed": 61.52
+          "sample": 4,
+          "averagePercentageViewed": 62.58
         },
         {
           "value": "statement",
           "sample": 1,
-          "averagePercentageViewed": 57.01
+          "averagePercentageViewed": 57.58
         }
       ]
     },
     {
       "key": "durationRange",
-      "value": null,
+      "value": "25-35s",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
+        {
+          "value": "over-35s",
+          "sample": 1,
+          "averagePercentageViewed": 65.76
+        },
         {
           "value": "25-35s",
           "sample": 4,
-          "averagePercentageViewed": 60.39
+          "averagePercentageViewed": 60.54
         }
       ]
     },
     {
       "key": "secondBeat",
-      "value": null,
+      "value": "context",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
+        {
+          "value": "technical",
+          "sample": 1,
+          "averagePercentageViewed": 65.76
+        },
         {
           "value": "context",
           "sample": 4,
-          "averagePercentageViewed": 60.39
+          "averagePercentageViewed": 60.54
         }
       ]
     },
@@ -55,58 +65,58 @@
       "key": "visualChangeFrequency",
       "value": null,
       "weakValue": null,
-      "evidenceVideos": 4,
+      "evidenceVideos": 5,
       "confidence": "INSUFFICIENT_DATA",
       "aggregates": []
     },
     {
       "key": "questionStyle",
-      "value": null,
+      "value": "question",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "question",
-          "sample": 4,
-          "averagePercentageViewed": 60.39
+          "sample": 5,
+          "averagePercentageViewed": 61.58
         }
       ]
     },
     {
       "key": "category",
-      "value": null,
-      "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "value": "SPACE",
+      "weakValue": "EARTH",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "SPACE",
           "sample": 3,
-          "averagePercentageViewed": 63.61
+          "averagePercentageViewed": 63.8
         },
         {
           "value": "EARTH",
-          "sample": 1,
-          "averagePercentageViewed": 50.74
+          "sample": 2,
+          "averagePercentageViewed": 58.25
         }
       ]
     },
     {
       "key": "ctaStyle",
-      "value": null,
+      "value": "optional curiosity bridge after the scientific payoff",
       "weakValue": null,
-      "evidenceVideos": 4,
-      "confidence": "INSUFFICIENT_DATA",
+      "evidenceVideos": 5,
+      "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "optional curiosity bridge after the scientific payoff",
-          "sample": 4,
-          "averagePercentageViewed": 60.39
+          "sample": 5,
+          "averagePercentageViewed": 61.58
         }
       ]
     }
   ],
-  "lastUpdated": "2026-10-09T17:29:01.335Z",
+  "lastUpdated": "2026-10-09T18:25:57.418Z",
   "caveat": "Observed associations only; topic, timing and packaging can confound retention. No causal claim."
 }

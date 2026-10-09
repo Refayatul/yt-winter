@@ -8,11 +8,12 @@ https://youtu.be/fGE8kZOaQZ4
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-03 | 938 | 15 | 3 | — | — |  |
 | 3d | 2026-10-05 | 1040 | 16 | 3 | 111.00000000000001 | 0 | Shorts feed 98%, Browse/other YouTube 1% |
+| 7d | 2026-10-09 | 1049 | 16 | 3 | 107.02000000000001 | 0 | Shorts feed 95%, Search 4% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **HIGH_VIEWS_LOW_SUB_CONVERSION** (medium) — 0.0 subscribers per 1,000 views.
-- **OUTPERFORMER** (low) — 1040 views vs channel median 37 (n=4 videos).
+- **OUTPERFORMER** (low) — 1049 views vs channel median 62 (n=5 videos).
 
 ## Suggested interventions
 
@@ -21,9 +22,9 @@ https://youtu.be/fGE8kZOaQZ4
 
 ## First major observed retention drop
 
-- Timestamp: 6s; magnitude: 11 percentage points.
+- Timestamp: 6s; magnitude: 10 percentage points.
 - Active sentence: unavailable
 - Visual type: unavailable
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 102.
+Views gained between 3d and 7d: 9.

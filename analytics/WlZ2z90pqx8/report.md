@@ -8,8 +8,9 @@ https://youtu.be/WlZ2z90pqx8
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-03 | 1023 | 10 | 1 | — | — |  |
 | 3d | 2026-10-05 | 1053 | 9 | 1 | 65.06 | 0 | Shorts feed 97%, Search 2% |
+| 7d | 2026-10-09 | 1057 | 9 | 1 | 64.45 | 0 | Shorts feed 95%, Search 4% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **HIGH_VIEWS_LOW_SUB_CONVERSION** (medium) — 0.0 subscribers per 1,000 views.
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 46.3/100 in the title engine; best editorial option scores 53.3.
@@ -26,4 +27,4 @@ https://youtu.be/WlZ2z90pqx8
 - Visual type: REAL ARCHIVAL IMAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 30.
+Views gained between 3d and 7d: 4.

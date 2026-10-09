@@ -1,15 +1,15 @@
 {
   "channel": "failure-reconstructed",
-  "updatedAt": "2026-10-09T17:28:59.071Z",
+  "updatedAt": "2026-10-09T18:25:42.707Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 18,
     "status": "adaptive",
     "baselines": {
-      "views": 976,
-      "averagePercentageViewed": 71.74,
-      "subscribersPer1000Views": 2.05,
-      "watchHoursPer1000Views": 2.77,
+      "views": 978,
+      "averagePercentageViewed": 70.38,
+      "subscribersPer1000Views": 1.92,
+      "watchHoursPer1000Views": 2.61,
       "engagementPer1000Views": 25.53
     },
     "observations": [
@@ -18,71 +18,63 @@
         "dimension": "hookType",
         "value": "shocking_consequence",
         "sample": 3,
-        "lift": 0.219,
-        "z": 0.94
-      },
-      {
-        "stage": "OBSERVATION",
-        "dimension": "hookType",
-        "value": "hidden_cause",
-        "sample": 2,
-        "lift": 0.1,
-        "z": 0.96
+        "lift": 0.183,
+        "z": 0.74
       },
       {
         "stage": "OBSERVATION",
         "dimension": "hookType",
         "value": "visual_first_reveal",
         "sample": 2,
-        "lift": -0.054,
-        "z": -0.45
+        "lift": 0.268,
+        "z": 1.13
       },
       {
         "stage": "OBSERVATION",
-        "dimension": "topicCluster",
-        "value": "natural-hazards",
-        "sample": 3,
-        "lift": 0.099,
-        "z": 0.32
+        "dimension": "hookType",
+        "value": "hidden_cause",
+        "sample": 2,
+        "lift": -0.18,
+        "z": -0.47
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "spaceflight-disasters",
         "sample": 2,
-        "lift": 0.101,
-        "z": 0.24
+        "lift": 0.123,
+        "z": 0.31
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "structural-failures",
         "sample": 1,
-        "lift": -0.241,
+        "lift": -0.309,
         "z": 0
-      },
-      {
-        "stage": "OBSERVATION",
-        "dimension": "topicCluster",
-        "value": "infrastructure-failures",
-        "sample": 2,
-        "lift": 0.03,
-        "z": 0.87
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "industrial-disasters",
         "sample": 1,
-        "lift": 0.075,
+        "lift": 0.094,
         "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "natural-hazards",
+        "sample": 3,
+        "lift": 0.074,
+        "z": 0.23
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "bridge-failures",
         "sample": 1,
-        "lift": -0.494,
+        "lift": -0.515,
         "z": 0
       },
       {
@@ -90,23 +82,31 @@
         "dimension": "topicCluster",
         "value": "aviation-failures",
         "sample": 2,
-        "lift": 0.139,
-        "z": 2.11
+        "lift": 0.141,
+        "z": 2.32
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "infrastructure-failures",
+        "sample": 2,
+        "lift": -0.265,
+        "z": -0.89
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "maritime-disasters",
         "sample": 2,
-        "lift": 0.143,
-        "z": 0.39
+        "lift": 0.152,
+        "z": 0.47
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "nuclear-accidents",
         "sample": 1,
-        "lift": -0.213,
+        "lift": -0.198,
         "z": 0
       },
       {
@@ -114,55 +114,55 @@
         "dimension": "topicCluster",
         "value": "fire-and-explosions",
         "sample": 2,
-        "lift": 0.109,
-        "z": 0.39
+        "lift": 0.443,
+        "z": 7.19
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 5,
-        "lift": 0.083,
-        "z": 0.79
+        "lift": -0.051,
+        "z": -0.3
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 2,
-        "lift": 0.167,
-        "z": 0.49
+        "lift": 0.49,
+        "z": 33.4
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "why",
         "sample": 2,
-        "lift": 0.133,
-        "z": 0.36
-      },
-      {
-        "stage": "OBSERVATION",
-        "dimension": "titlePattern",
-        "value": "inside",
-        "sample": 2,
-        "lift": 0.193,
-        "z": 0.98
+        "lift": 0.083,
+        "z": 0.21
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "label-colon",
         "sample": 2,
-        "lift": 0.135,
-        "z": 1.93
+        "lift": 0.116,
+        "z": 1.37
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "inside",
+        "sample": 2,
+        "lift": -0.09,
+        "z": -0.19
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "statement",
         "sample": 1,
-        "lift": -0.173,
+        "lift": 0.505,
         "z": 0
       },
       {
@@ -170,31 +170,31 @@
         "dimension": "storyStructure",
         "value": "CONSEQUENCE>FAILURE>CAUSE>ESCALATION>ENGINEERING_REVEAL",
         "sample": 7,
-        "lift": 0.107,
-        "z": 1.02
+        "lift": 0.103,
+        "z": 0.67
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 5,
-        "lift": 0.083,
-        "z": 0.79
+        "lift": -0.051,
+        "z": -0.3
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "NONE",
         "sample": 2,
-        "lift": 0.167,
-        "z": 0.49
+        "lift": 0.49,
+        "z": 33.4
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "22",
         "sample": 1,
-        "lift": -0.241,
+        "lift": -0.309,
         "z": 0
       },
       {
@@ -202,15 +202,15 @@
         "dimension": "publishHourUTC",
         "value": "18",
         "sample": 6,
-        "lift": 0.165,
-        "z": 1.59
+        "lift": 0.172,
+        "z": 1.05
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "18:00 New York",
         "sample": 1,
-        "lift": -0.241,
+        "lift": -0.309,
         "z": 0
       },
       {
@@ -218,32 +218,32 @@
         "dimension": "publishSlot",
         "value": "21:00 TR",
         "sample": 4,
-        "lift": 0.198,
-        "z": 1.28
+        "lift": 0.348,
+        "z": 3.2
       },
       {
         "stage": "OBSERVATION",
         "dimension": "popularityBand",
         "value": "unknown",
         "sample": 5,
-        "lift": 0.11,
-        "z": 0.74
+        "lift": 0.217,
+        "z": 1.39
       },
       {
         "stage": "OBSERVATION",
         "dimension": "openingVisual",
         "value": "REAL_ARCHIVAL",
         "sample": 7,
-        "lift": 0.107,
-        "z": 1.02
+        "lift": 0.103,
+        "z": 0.67
       },
       {
         "stage": "OBSERVATION",
         "dimension": "bucket",
         "value": "A",
         "sample": 7,
-        "lift": 0.107,
-        "z": 1.02
+        "lift": 0.103,
+        "z": 0.67
       }
     ],
     "hypotheses": [
@@ -252,56 +252,56 @@
         "dimension": "hookType",
         "value": "shocking_consequence",
         "sample": 3,
-        "lift": 0.219,
-        "z": 0.94
+        "lift": 0.183,
+        "z": 0.74
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "storyStructure",
         "value": "CONSEQUENCE>FAILURE>CAUSE>ESCALATION>ENGINEERING_REVEAL",
         "sample": 7,
-        "lift": 0.107,
-        "z": 1.02
+        "lift": 0.103,
+        "z": 0.67
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "publishHourUTC",
         "value": "18",
         "sample": 6,
-        "lift": 0.165,
-        "z": 1.59
+        "lift": 0.172,
+        "z": 1.05
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "publishSlot",
         "value": "21:00 TR",
         "sample": 4,
-        "lift": 0.198,
-        "z": 1.28
+        "lift": 0.348,
+        "z": 3.2
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "popularityBand",
         "value": "unknown",
         "sample": 5,
-        "lift": 0.11,
-        "z": 0.74
+        "lift": 0.217,
+        "z": 1.39
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "openingVisual",
         "value": "REAL_ARCHIVAL",
         "sample": 7,
-        "lift": 0.107,
-        "z": 1.02
+        "lift": 0.103,
+        "z": 0.67
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "bucket",
         "value": "A",
         "sample": 7,
-        "lift": 0.107,
-        "z": 1.02
+        "lift": 0.103,
+        "z": 0.67
       }
     ],
     "adopted": [],
