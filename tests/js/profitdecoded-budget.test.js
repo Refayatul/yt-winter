@@ -278,3 +278,40 @@ test("publishing: blocked by default on every condition; the produce workflow ne
   assert.doesNotMatch(wf, /youtube.*upload|videos\.insert|PD_PUBLISH: /i);
   assert.match(wf, /max_usd:[\s\S]*?default: '0'/); assert.match(wf, /concurrency:\s*\n\s*group: profitdecoded-produce-/);
 });
+
+// ---- preflight hardening ---------------------------------------------------------------------------------------------
+test("crash safety: a paid result whose settlement cannot be confirmed is cached, stays charged, and the run pauses", async () => {
+  const f = path.join(tmp(), "ledger.json"); fs.writeFileSync(f, JSON.stringify(B.emptyLedger()));
+  const store = new B.FileStore(f); let failSettle = true;
+  const flaky = { kind: "file", read: () => store.read(), write: async (doc, v) => { if (failSettle && doc.entries.some((e) => e.status === "settled")) throw new B.BudgetError("STATE_UNCONFIRMED", "write timed out"); return store.write(doc, v); } };
+  const bud = new B.Budget({ store: flaky, policy: policy(), context: { pool: "experiment", scriptId: "c:long:v1", runId: "r1" } });
+  const cacheDir = tmp();
+  const first = await runPaid({ budget: bud, cacheDir });
+  assert.equal(first.r.status, "paused"); assert.match(first.r.reasons[0], /STATE_UNCONFIRMED/);
+  assert.equal(first.a.calls.length, 1, "the plan was paid for once");
+  const doc = (await store.read()).doc; assert.equal(doc.entries[0].status, "reserved", "still counted at its maximum");
+  failSettle = false;
+  const again = await runPaid({ budget: bud, cacheDir });
+  assert.equal(again.a.calls.filter((c) => c.st === "plan").length, 0, "the paid plan came back from the cache: not paid twice");
+});
+
+test("workflow: write token not persisted, re-run safe cache keys, preflight gate before any Anthropic call, no publish step", () => {
+  const wf = fs.readFileSync(path.join(ROOT, ".github/workflows/profitdecoded-produce.yml"), "utf8");
+  assert.match(wf, /actions\/checkout@v4\s*\n\s*with:\s*\n\s*persist-credentials: false/);
+  for (const m of wf.matchAll(/key: pd-story-[^\n]*/g)) assert.match(m[0], /github\.run_id \}\}-\$\{\{ github\.run_attempt \}\}/);
+  const pre = wf.indexOf("name: Preflight"); const produce = wf.indexOf("name: Autonomous production");
+  assert.ok(pre > 0 && pre < produce, "the preflight runs before production");
+  assert.match(wf, /if: inputs\.through == 'preflight' \|\| inputs\.provider == 'anthropic'/);
+  assert.match(wf, /preflight --paid --probe-gemini/);
+  assert.match(wf, /name: Autonomous production \(dry run, no upload\)\s*\n\s*if: inputs\.through != 'preflight'/);
+  assert.equal((wf.match(/PD_BUDGET_TOKEN: \$\{\{ github\.token \}\}/g) || []).length, 3, "the token is passed to the preflight, production and ledger-status steps only");
+});
+
+test("preflight: NO-GO for a paid run while the committed policy keeps paid calls disabled (no network needed)", () => {
+  const { spawnSync } = require("child_process");
+  const env = { ...process.env }; for (const k of ["GEMINI_API_KEY", "ANTHROPIC_API_KEY", "PD_BUDGET_TOKEN", "GITHUB_TOKEN"]) delete env[k];
+  const r = spawnSync("node", [path.join(ROOT, "profitdecoded.js"), "preflight", "--paid", "--topic", "hbm-073-how-gift-cards-make-money-for-retailers", "--format", "long", "--pool", "experiment", "--max-usd", "2"], { cwd: ROOT, env, encoding: "utf8" });
+  assert.equal(r.status, 1);
+  assert.match(r.stdout, /FAIL\s+paid-enabled\s+paidEnabled=false/); assert.match(r.stdout, /FAIL\s+budget-ledger/); assert.match(r.stdout, /FAIL\s+anthropic-key/);
+  assert.match(r.stdout, /PASS\s+eligibility\s+ELIGIBLE/); assert.match(r.stdout, /PASS\s+publishing-blocked/); assert.match(r.stdout, /PREFLIGHT: NO-GO/);
+});

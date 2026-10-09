@@ -192,7 +192,16 @@ async function run(opts) {
       throw e;
     }
     const cost = spend(msg.usage, msg.model || model);
-    if (reservation) await budget.settle(reservation.id, cost, msg.usage);
+    if (reservation) {
+      try { await budget.settle(reservation.id, cost, msg.usage); }
+      catch (e) {
+        // Paid for, but the ledger could not record it: the reservation stays counted at its maximum (never lost), the
+        // output is handed back on the error so the stage cache keeps what was paid for, and the run stops.
+        const text0 = (msg.content || []).filter((b) => b.type === "text").map((b) => b.text).join("");
+        let json0 = null; try { json0 = schema ? JSON.parse(text0) : null; } catch (x) { json0 = null; }
+        throw new AutoError(e.code && /^STATE_|CONFLICT/.test(e.code) ? "STATE_UNCONFIRMED" : (e.code || "STATE_UNCONFIRMED"), `paid call succeeded but the budget ledger did not confirm settlement (reservation ${reservation.id} stays charged at its maximum): ${e.message}`, { paidResult: msg.stop_reason === "end_turn" && (!schema || json0) ? { text: text0, json: json0 } : null });
+      }
+    }
     ledger.calls += 1; ledger.usage = addUsage(ledger.usage, msg.usage); ledger.usd = Math.round((ledger.usd + cost) * 1000) / 1000;
     recordStage(ledger, opts.stage, msg.usage, cost, { provider: "anthropic", model: msg.model || model });
     blocks.push(...(msg.content || [])); lastStop = msg.stop_reason;

@@ -189,7 +189,7 @@ test("workflow: schedule and its gate unchanged, Gemini secret checked without p
   assert.match(y, /if: github\.event_name == 'workflow_dispatch' \|\| vars\.PD_AUTO_SCHEDULE == 'true'/);
   assert.match(y, /GEMINI_KEY: \$\{\{ secrets\.GEMINI_API_KEY \}\}/);
   assert.doesNotMatch(y, /echo[^\n]*\$(GEMINI_KEY|GROQ_KEY|ANTHROPIC_KEY|GEMINI_API_KEY|GROQ_API_KEY)\b/);
-  assert.match(y, /actions\/cache\/save@v4/); assert.match(y, /if: always\(\)\n\s+uses: actions\/cache\/save/);
+  assert.match(y, /actions\/cache\/save@v4/); assert.match(y, /if: always\(\)( && inputs\.through != 'preflight')?\n\s+uses: actions\/cache\/save/); // saved after failures and pauses too
   assert.match(y, /critique=gemini/);
 });
 

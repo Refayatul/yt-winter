@@ -42,6 +42,11 @@ if (argv.includes("--dry")) { console.log(`plan: [provider: ${LLM.provider()}] r
   for (const s of r.steps) console.log("  - " + JSON.stringify({ ...s, stages: undefined, log: undefined }));
   for (const [name, st] of Object.entries(r.ledger.stages || {})) console.log(`  cost ${name.padEnd(9)} ${st.calls} call(s)  in ${st.usage.input_tokens || 0}  cache-write ${st.usage.cache_creation_input_tokens || 0}  cache-read ${st.usage.cache_read_input_tokens || 0}  out ${st.usage.output_tokens || 0}  ~$${st.usd.toFixed(3)}`);
   if (r.storyDir) console.log("story package: " + path.relative(process.cwd(), r.storyDir) + " (usage.json has per-provider tokens and charges)");
+  // Review + source-validation report (review.md: claim-by-claim sources, numbers outside the dossier, every gate) for
+  // accepted, failed and paused scripts alike, whenever a plan and a script exist. Informational: it never changes the status.
+  if (r.storyDir && r.status !== "bundle-ready" && fs.existsSync(path.join(r.storyDir, "plan.json")) && (fs.existsSync(path.join(r.storyDir, "latest.json")) || fs.existsSync(path.join(r.storyDir, "final.json")))) {
+    console.log("> story review (source validation)"); spawnSync("node", ["profitdecoded.js", "story-review", path.relative(root, r.storyDir)], { stdio: "inherit", cwd: root });
+  }
   if (r.status === "paused") { for (const x of r.reasons || []) console.log("  PAUSED: " + x); console.log(`Stopped safely at stage "${r.pausedAt}". Completed stages are cached; re-run the same command to resume. No fallback to a paid provider.`); process.exit(0); }
   if (r.status === "deferred") { for (const x of r.reasons || []) console.log("  DEFERRED: " + x); console.log("The topic did not pass the free pre-generation filter: no paid call was made."); process.exit(0); }
   if (r.status !== "bundle-ready") { for (const x of r.reasons || []) console.log("  REASON: " + x); console.log("Nothing was produced. Gates were not relaxed."); process.exit(1); }

@@ -178,6 +178,48 @@ if (cmd === "inventory") {
   if (!finding) { console.error(`no current blocking finding of type ${flag("--finding")}; current blocking: ${a.blocking.join(" | ")}`); process.exit(1); }
   try { const x = Ex.propose({ topicId: meta.topicId, format: meta.format, beats: fin.beats, findingText: finding, approvedBy: flag("--approver"), reason: flag("--reason"), approvalRef: flag("--ref") || null }); Ex.save(x); console.log("exception recorded (commit channels/profitdecoded/editorial-exceptions.json to approve it):\n" + JSON.stringify(x, null, 1)); }
   catch (e) { console.error(e.message); process.exit(1); }
+} else if (cmd === "preflight") {
+  // Paid-run preflight. No paid call, no Groq call. Gemini: model metadata only (does not use generation quota);
+  // --probe-gemini adds ONE minimal generation request so an exhausted daily quota is found before paid writing starts.
+  // Anthropic: the Models API (not billed) confirms the key and the model. Exit 1 = NO-GO.
+  //   preflight [--paid] [--probe-gemini] [--topic id] [--format long] [--pool experiment] [--max-usd 2]
+  const B = require(path.join(P, "budget")); const E = require(path.join(P, "eligibility")); const Gm = require(path.join(P, "auto", "gemini")); const LLMx = require(path.join(P, "auto", "llm"));
+  const checks = []; const ok = (name, pass, detail) => checks.push({ check: name, pass: !!pass, detail });
+  (async () => {
+    let policy = null;
+    try { policy = B.loadPolicy(); ok("budget-policy", true, `paidEnabled=${policy.paidEnabled}, per script $${policy.maxPerScriptUsd}, monthly script $${policy.monthlyUsd.script} / experiment $${policy.monthlyUsd.experiment}`); } catch (e) { ok("budget-policy", false, e.message); }
+    if (has("--paid")) ok("paid-enabled", policy && policy.paidEnabled, policy && policy.paidEnabled ? "paid calls enabled by the committed policy" : "paidEnabled=false: a paid run would be refused (expected until the approval PR is merged)");
+    if (policy) {
+      try { const st = await new B.Budget({ store: B.storeFromEnv(policy), policy }).status(); const pool = flag("--pool", "experiment"); const left = Math.round((st.limits[pool] - st[pool].committedUsd) * 1e4) / 1e4; const need = Math.min(Number(flag("--max-usd", policy.maxPerScriptUsd)), policy.maxPerScriptUsd);
+        ok("budget-ledger", true, `ledger readable; ${st.month} ${pool}: $${st[pool].committedUsd} committed of $${st.limits[pool]} ($${left} left; this run may use up to $${need})`);
+        if (has("--paid")) ok("budget-headroom", left > 0, `$${left} left in the ${pool} pool`);
+      } catch (e) { ok("budget-ledger", false, `${e.code || "ERROR"}: ${e.message}`); }
+    }
+    const gkey = LLMx.envKey("GEMINI_API_KEY");
+    if (!gkey) ok("gemini-key", false, "GEMINI_API_KEY missing: the independent reviewer cannot run");
+    else {
+      const models = [Gm.MODEL(), ...Gm.FALLBACKS()]; const avail = [];
+      for (const m of models) { try { const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(m)}`, { headers: { "x-goog-api-key": gkey } }); avail.push(`${m}: ${res.ok ? "available" : "HTTP " + res.status}`); } catch (e) { avail.push(`${m}: unreachable`); } }
+      ok("gemini-models", avail.some((x) => /available/.test(x)) && /available/.test(avail[0]), avail.join("; ") + " (metadata only, no generation quota used)");
+      if (has("--probe-gemini")) {
+        try { const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(Gm.MODEL())}:generateContent`, { method: "POST", headers: { "x-goog-api-key": gkey, "content-type": "application/json" }, body: JSON.stringify({ contents: [{ role: "user", parts: [{ text: "Reply with: ok" }] }], generationConfig: { maxOutputTokens: 16 } }) });
+          const body = res.ok ? null : await res.json().catch(() => null);
+          ok("gemini-quota", res.ok, res.ok ? `one probe request accepted by ${Gm.MODEL()} (1 request of the free daily quota used)` : `HTTP ${res.status}${body && body.error ? ": " + String(body.error.message || "").slice(0, 160) : ""}`);
+        } catch (e) { ok("gemini-quota", false, "probe failed: " + e.message); }
+      }
+    }
+    const akey = LLMx.envKey("ANTHROPIC_API_KEY");
+    if (!akey) ok("anthropic-key", !has("--paid"), "ANTHROPIC_API_KEY missing" + (has("--paid") ? "" : " (expected before the Console setup)"));
+    else { try { const res = await fetch(`https://api.anthropic.com/v1/models/${LLMx.MODEL()}`, { headers: { "x-api-key": akey, "anthropic-version": "2023-06-01" } }); ok("anthropic-key", res.ok, res.ok ? `key valid, model ${LLMx.MODEL()} available (Models API, not billed)` : `HTTP ${res.status} from the Models API`); } catch (e) { ok("anthropic-key", false, "Models API unreachable: " + e.message); } }
+    if (flag("--topic")) {
+      const t = universe().topics.find((x) => x.id === flag("--topic")); const d = readJson(path.join(CHANNEL_DIR, "research", flag("--topic") + ".json"), null);
+      const el = t ? E.check(t, d, { format: flag("--format", "long"), pool: flag("--pool", "experiment") }) : null;
+      ok("eligibility", el && el.status === "ELIGIBLE", el ? `${el.status}${el.reasons.length ? ": " + el.reasons.join("; ") : ""}${el.warnings.length ? " (" + el.warnings.join("; ") + ")" : ""}` : "unknown topic");
+    }
+    const g = Sched.publishGuard({}); ok("publishing-blocked", !g.allowed, g.allowed ? "PUBLISHING WOULD BE ALLOWED" : g.blocks.slice(0, 3).join("; "));
+    for (const c of checks) console.log(`${c.pass ? "PASS" : "FAIL"}  ${c.check.padEnd(18)} ${c.detail}`);
+    const go = checks.every((c) => c.pass); console.log(go ? "PREFLIGHT: GO" : "PREFLIGHT: NO-GO"); process.exitCode = go ? 0 : 1;
+  })().catch((e) => { console.error(`preflight error: ${e.message}`); process.exitCode = 1; });
 } else if (cmd === "publish-check") {
   const g = Sched.publishGuard({}); console.log(g.allowed ? "ALLOWED" : "BLOCKED"); for (const b of g.blocks) console.log(" - " + b);
 } else if (cmd === "dry-run") {

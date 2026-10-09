@@ -251,6 +251,8 @@ async function stage(name, opts, getClient, cache, key) {
   let r;
   try { r = await LLM.run({ ...opts, client: getClient(name), stage: name }); }
   catch (e) {
+    // a paid result whose settlement could not be confirmed is still cached (it was paid for); the run then stops
+    if (e.paidResult && e.paidResult.json != null) cache.set(key, e.paidResult.json);
     // Safe retry: a truncated reply (reasoning used the output budget) is retried once with lower reasoning effort.
     // Never for paid calls: that would be an automatic full regeneration; the run stops and the limit is reviewed.
     if (e.code !== "MAX_TOKENS" || opts.effort === "low" || (opts.ledger && opts.ledger.budget)) throw e;
