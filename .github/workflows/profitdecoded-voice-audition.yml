@@ -6,6 +6,8 @@ name: ProfitDecoded voice audition
 # The cartesia job (paid credits, PD_CARTESIA_API_KEY) runs ONLY on a manual dispatch with the cartesia input set:
 #   cartesia=list                         lists en-US voices (metadata only, no credits)
 #   cartesia=label=uuid,label=uuid,...    renders the fixed excerpt once per voice, capped by cartesia_max_chars
+#   cartesia=narrate                      narrates cartesia_bundle with the configured voice (config voice.cartesiaVoiceId),
+#                                         once; every sentence is cached and uploaded so re-mixes never call Cartesia again
 on:
   pull_request:
     paths:
@@ -17,13 +19,17 @@ on:
   workflow_dispatch:
     inputs:
       cartesia:
-        description: 'Cartesia: "list" (free voice list) or label=voice-uuid pairs, comma separated (uses credits). Empty = free voices only.'
+        description: 'Cartesia: "list" (free voice list), label=voice-uuid pairs (auditions), or "narrate" (cartesia_bundle). Uses credits except list. Empty = free voices only.'
         required: false
         default: ''
       cartesia_max_chars:
         description: 'Credit cap for this run (1 credit = 1 character sent)'
         required: false
         default: '2000'
+      cartesia_bundle:
+        description: 'Bundle to narrate when cartesia=narrate'
+        required: false
+        default: 'channels/profitdecoded/films/hbm-073-gift-cards/bundle.json'
 
 permissions:
   contents: read
@@ -115,12 +121,23 @@ jobs:
           mkdir -p audition-out
           node scripts/profitdecoded/cartesia-voices.js --language en-US --out audition-out/cartesia-voices-en-US.json
       - name: Cartesia auditions (same fixed excerpt, one request per voice, no retries)
-        if: inputs.cartesia != 'list'
+        if: inputs.cartesia != 'list' && inputs.cartesia != 'narrate'
         env:
           PD_CARTESIA_API_KEY: ${{ secrets.PD_CARTESIA_API_KEY }}
           PD_CARTESIA_MAX_CHARS: ${{ inputs.cartesia_max_chars }}
           VOICES: ${{ inputs.cartesia }}
         run: node scripts/profitdecoded/voice-audition.js audition-out --provider cartesia --rate -3% --text-file channels/profitdecoded/prototypes/gift-cards-first-minute/audition-excerpt.txt --voices "$VOICES"
+      - name: Cartesia full narration (configured voice, one pass, per-sentence cache, no retries)
+        if: inputs.cartesia == 'narrate'
+        env:
+          PD_TTS_PROVIDER: cartesia
+          PD_CARTESIA_API_KEY: ${{ secrets.PD_CARTESIA_API_KEY }}
+          PD_CARTESIA_MAX_CHARS: ${{ inputs.cartesia_max_chars }}
+          BUNDLE: ${{ inputs.cartesia_bundle }}
+        run: |
+          node scripts/profitdecoded/produce-audio.js "$BUNDLE"
+          D=$(dirname "$BUNDLE"); mkdir -p audition-out/narration
+          cp -R "$D/out" audition-out/narration/out; cp -R "$D/tts-cache" audition-out/narration/tts-cache; cp "$BUNDLE" audition-out/narration/bundle.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

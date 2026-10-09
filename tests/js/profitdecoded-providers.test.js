@@ -180,8 +180,9 @@ test("Cartesia Sonic: pinned model and API version, key in a header only, raw 24
   assert.equal(body.model_id, "sonic-3.6-2026-08-27"); assert.deepEqual(body.voice, { id: voice });
   assert.deepEqual(body.output_format, { container: "raw", encoding: "pcm_s16le", sample_rate: 24000 });
   assert.ok(Math.abs(body.generation_config.speed - 0.97) < 1e-9);
-  // an edge-tts voice name is never sent as a Cartesia voice id
-  assert.throws(() => T.cartesiaRequest("x", { voice: "en-US-AndrewMultilingualNeural" }, { PD_CARTESIA_API_KEY: "k" }), /voice id/);
+  // an edge-tts voice name is never sent as a Cartesia voice id: the configured Cartesia voice is used instead
+  const cfgVoice = require("../../core/profitdecoded/config").channelConfig().voice.cartesiaVoiceId;
+  assert.equal(JSON.parse(T.cartesiaRequest("x", { voice: "en-US-AndrewMultilingualNeural" }, { PD_CARTESIA_API_KEY: "k" }).init.body).voice.id, cfgVoice);
   // no key: free Kokoro when its files exist (never another paid provider), else the uncertified edge voice
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "ct-")); const m = path.join(dir, "m.onnx"), v = path.join(dir, "v.bin"); fs.writeFileSync(m, "x"); fs.writeFileSync(v, "x");
   const fb = T.resolve({ PD_TTS_PROVIDER: "cartesia", PD_KOKORO_MODEL: m, PD_KOKORO_VOICES: v });
