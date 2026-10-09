@@ -134,8 +134,10 @@ jobs:
           PD_CARTESIA_API_KEY: ${{ secrets.PD_CARTESIA_API_KEY }}
           PD_CARTESIA_MAX_CHARS: ${{ inputs.cartesia_max_chars }}
           BUNDLE: ${{ inputs.cartesia_bundle }}
+          # Credits this repository has spent this month, from channels/profitdecoded/reports/voice-audition/cartesia/*-index.json
+          RECORDED: '2082'
         run: |
-          node scripts/profitdecoded/cartesia-credits.js --need "$PD_CARTESIA_MAX_CHARS"
+          node scripts/profitdecoded/cartesia-credits.js --need "$PD_CARTESIA_MAX_CHARS" --recorded-used "$RECORDED"
           node scripts/profitdecoded/produce-audio.js "$BUNDLE"
           D=$(dirname "$BUNDLE"); mkdir -p audition-out/narration
           cp -R "$D/out" audition-out/narration/out; cp -R "$D/tts-cache" audition-out/narration/tts-cache; cp "$BUNDLE" audition-out/narration/bundle.json
