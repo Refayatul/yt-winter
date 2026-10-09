@@ -56,6 +56,9 @@ function check(out, dossier, format, options = {}) {
   if (ai.aiPatternScore >= 35) issues.push(`generic AI writing: pattern score ${ai.aiPatternScore} (>=35). Fix: ${ai.findings.slice(0, 5).map((f) => f.name + (f.example ? ` ("${f.example}")` : "")).join("; ")}`);
   const sc = Research.unsupportedClaimsInScript(script, dossier);
   for (const o of sc.numbersWithoutDossierSupport.slice(0, 6)) issues.push(`number "${o.number}" is not in the dossier (sentence: "${o.sentence.slice(0, 90)}")`);
+  // attribution: our math voiced as ours, figures tied to the right company, no spoken ids, companies named before use,
+  // claim scope and required context kept, no figure restated across sections
+  issues.push(...Research.attributionIssues(beats, dossier));
   const topicWords = T.contentWords(dossier.thesis || "");
   const hooks = Hooks.compete(options.hookCandidates || out.hookCandidates || [], { topicWords });
   if (!hooks.valid) issues.push("hook candidates: " + hooks.problems.join("; "));
@@ -116,8 +119,9 @@ const Retention = require("../retention");
 const PURPOSES = ["hook", "setup", "question", "evidence", "mechanism", "complication", "turn", "consequence", "caveat", "payoff"];
 const STORY_SCHEMA = {
   type: "object", additionalProperties: false,
-  required: ["thesis", "centralQuestion", "conflict", "misconception", "originalAngle", "hookCandidates", "questions", "sections", "payoff", "caveats"],
+  required: ["thesis", "thesisClaimIds", "centralQuestion", "conflict", "misconception", "originalAngle", "hookCandidates", "questions", "sections", "payoff", "payoffClaimIds", "caveats"],
   properties: {
+    thesisClaimIds: { type: "array", items: { type: "string" } }, payoffClaimIds: { type: "array", items: { type: "string" } },
     thesis: { type: "string" }, centralQuestion: { type: "string" }, misconception: { type: "string" }, originalAngle: { type: "string" }, payoff: { type: "string" },
     conflict: { type: "object", additionalProperties: false, required: ["wants", "obstacle", "stakes"], properties: { wants: { type: "string" }, obstacle: { type: "string" }, stakes: { type: "string" } } },
     hookCandidates: { type: "array", items: { type: "object", additionalProperties: false, required: ["text", "mechanism"], properties: { text: { type: "string" }, mechanism: { type: "string", enum: Hooks.MECHANISMS } } } },
@@ -207,6 +211,9 @@ function evaluatePlan(plan, dossier, format = "long") {
   const central = (dossier.claims || []).filter((x) => x.central);
   if (format === "short") { if (central.length && !central.some((c) => used.has(c.id))) issues.push("a Short must use at least one central claim"); }
   else for (const c of central) if (!used.has(c.id)) issues.push(`central claim ${c.id} is not used by any section`);
+  // Evidence: the thesis and payoff cite claims and conclude nothing beyond them; figure-bearing facts get one home.
+  const ev = Research.planEvidenceIssues(plan, dossier);
+  issues.push(...ev.issues);
   const purposes = (plan.sections || []).map((s) => s.purpose);
   if (!purposes.some((p) => ["complication", "turn"].includes(p))) issues.push("no complication or turn section");
   if (purposes[purposes.length - 1] !== "payoff") issues.push("the last section must be the payoff");
@@ -216,7 +223,7 @@ function evaluatePlan(plan, dossier, format = "long") {
   // Editorial override: allowed only for a factual hook within 10 points of the heuristic winner, with a stated reason.
   // An invalid override is ignored (with a warning) and the best FACTUAL hook opens the film: the factual and
   // quality guarantees are the same either way, so a weak preference must not fail an otherwise valid plan.
-  let selected = hooks.winner; let override = null; const warnings = [];
+  let selected = hooks.winner; let override = null; const warnings = [...ev.warnings];
   if (plan.selectedHook && hooks.winner) {
     const pick = hooks.ranked.find((h) => h.text === plan.selectedHook);
     let why = null;
@@ -270,7 +277,7 @@ function clientFactory(deps, ledger) {
   };
 }
 // Token sizes per stage. Groq's free tier (8,000 tokens per minute, prompt + max output) needs small, chunked calls.
-const SIZES = { anthropic: { plan: 16000, draft: 48000, critique: 16000, rewrite: 48000, effortDraft: "high" }, groq: { plan: 4500, section: 4200, package: 2600, critique: 4000, rewrite: 3800, effortDraft: "medium" }, gemini: { critique: 24000 } };
+const SIZES = { anthropic: { plan: 16000, draft: 48000, critique: 16000, rewrite: 48000, effortDraft: "high" }, groq: { plan: 4300, section: 4200, package: 2600, critique: 4000, rewrite: 3800, effortDraft: "medium" }, gemini: { critique: 24000 } };
 const PAUSE = new Set(["RATE_LIMIT", "QUOTA", "BUDGET", "PAID_DISABLED", "NO_KEY", "UNAVAILABLE"]);
 // The final independent evaluation (narrative quality + fact check). A high-severity factual problem blocks.
 const EVALUATION_SCHEMA = { type: "object", additionalProperties: false, required: ["verdict", "scores", "factualProblems", "summary"], properties: {

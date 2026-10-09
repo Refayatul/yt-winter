@@ -1,16 +1,20 @@
 # Billions Sit on Unused Gift Cards. Who Keeps the Money?
 
-> Claude Opus 5.5, written in a Claude Code session (no API call) from the verified dossier only. 1068 words of narration, about 8.2 min at 130 wpm or 7.1 min at 150 wpm. Each line ends with the claim it rests on; the visual note follows in italics. Disclosure: written after the author had read the Groq script (see MODEL-BENCHMARK.md).
+> Claude Opus 5.5, written in a Claude Code session (no API call) from the verified dossier only. Foundation-pass revision of the benchmark script (benchmark version: commit 5950a10). 1098 words, about 8.4 min at 130 wpm (7.3 min at 150 wpm). Each line ends with its claim; the visual follows in italics. Status: not final, see review.md (packaging not produced; one heuristic opening reading at 79 vs 80).
+
+**Thesis** (c2, c4, c1, c7): An unused balance on a non-expiring gift card stays spendable, but the issuer estimates from its own redemption history how much will not be redeemed and books that share as revenue little by little as other cards are redeemed; unclaimed-property laws may send part of it to government agencies, and federal rules block the quickest ways of taking it.
+
+**Payoff** (c2, c4, c10): On paper, the holder keeps a non-expiring balance: it stays spendable, with no fees. In practice, the issuer books the share it does not expect to be redeemed, gradually and from its own history. Where unclaimed-property laws apply, part may go to government agencies, and the filings do not say how much. Only the holder decides whether a given balance gets spent.
 
 ## The card in the drawer
 
 Somewhere in a drawer, a wallet or a coat pocket, there's a gift card with money still on it. Maybe it's yours. `[c8]`
 *Visual (typography): Money still on it*
 
-In a 2024 Bankrate survey, 43 percent of American adults said they're holding at least one unused gift card, voucher or store credit. `[c8]`
-*Visual (animated-number): 43% of US adults hold an unused gift card, voucher or store credit*
+43 percent of American adults say they're holding at least one unused gift card, voucher or store credit. That's from a Bankrate survey, run online by YouGov in August 2024 with 2,373 adults. `[c8]`
+*Visual (animated-number): Bankrate · YouGov online survey · 2,373 US adults · Aug 2024 → 43% hold unused value*
 
-Bankrate puts the national total at about $27 billion. That's a survey estimate, not a count, which means it tells you the scale, not the exact amount. `[c8]`
+Bankrate puts the national total at about $27 billion. That's an estimate from the survey, not a count, and Bankrate doesn't publish how it calculated it, which means it tells you the scale, not the exact amount. `[c8]`
 *Visual (animated-number): ~$27 billion (survey estimate)*
 
 So here's the question none of those cards answer. If the money never gets spent, who ends up with it? `[c8]`
@@ -28,7 +32,7 @@ Start with Starbucks. In the US and its other company-operated markets, Starbuck
 Nothing quietly eats the balance. The money just waits. `[c2]`
 *Visual (animated-number): Balance unchanged*
 
-And yet every year, Starbucks turns part of that waiting money into revenue. `[c1]`
+And yet Starbucks still turns part of that waiting money into revenue. `[c2]`
 *Visual (money-flow): Unspent balance → revenue?*
 
 The accounting name for it is breakage: the share of card value a company doesn't expect anyone to ever redeem. `[c2]`
@@ -79,8 +83,8 @@ In that same year, about $15.2 billion went onto Starbucks cards and into its lo
 And about $15.2 billion came back out, as card purchases, Star redemptions and breakage. `[i3]`
 *Visual (money-flow): Out: ~$15.2B (redemptions + breakage)*
 
-In other words, the money flowing out almost matches the money flowing in. Breakage is a thin slice of a very wide river. `[i3]`
-*Visual (money-flow): Breakage: a thin slice of the river*
+In other words, the money flowing out almost matches the money flowing in. And breakage is only one part of that outflow. `[i3]`
+*Visual (money-flow): Out = redemptions + breakage*
 
 
 ## Twelve years
@@ -100,17 +104,17 @@ And the pool isn't shrinking. In fiscal 2026, people loaded $760.2 million onto 
 Redemptions and breakage together took out $751.9 million. `[c5]`
 *Visual (money-flow): Redemptions + breakage*
 
-So by our arithmetic, the unspent pool grew by $7.9 million over the year, to $636.7 million. `[i2]`
-*Visual (animated-number): Unspent pool: $628.8M → $636.7M (our arithmetic: +$7.9M)*
+More went in than came out. So the pool didn't shrink: it ended the year at $636.7 million, up from $628.8 million. `[c5]`
+*Visual (animated-number): Unspent pool: $628.8M → $636.7M*
+
+Darden is careful to say it's a forecast. If people redeem differently than it expects, actual breakage income may differ from what it recorded, and it updates its estimates periodically. `[c4]`
+*Visual (filing-excerpt): "actual gift card breakage income may differ from the amounts recorded"*
 
 
 ## Half a point
 
-Here's what turns this from bookkeeping into a story. Breakage isn't counted. It's predicted. `[c4]`
+Here's what turns this from bookkeeping into a story. Breakage isn't counted. It's predicted. `[c6]`
 *Visual (typography): Not counted. Predicted.*
-
-Darden says it plainly. If people redeem differently than it expects, actual breakage income may differ from what it recorded. So it updates its estimates periodically. `[c4]`
-*Visual (filing-excerpt): "actual gift card breakage income may differ from the amounts recorded"*
 
 It even puts a price on being wrong. Move the breakage-rate estimate by 50 basis points, that's half of one percentage point, and breakage income shifts by about $3.6 million for the year. `[c6]`
 *Visual (unit-economics): ±50 basis points → ~$3.6M breakage income (FY2026)*
@@ -151,7 +155,7 @@ Those rules close off the quickest ways of draining a card. What they can't do i
 In that same Bankrate survey, 34 percent of adults said they'd lost money through a gift card mistake. `[c9]`
 *Visual (chart): Lost money through a gift card mistake*
 
-One in five had let a card expire. That's possible, because not every card works like Starbucks' or Darden's, and federal rules do allow expiry after five years. `[c9]`
+One in five adults said they'd let a card expire. That's possible, because not every card works like Starbucks' or Darden's, and federal rules do allow expiry after five years. `[c9]`
 *Visual (chart): Let a card expire*
 
 Seventeen percent had lost a card. And 12 percent saw the store go out of business before they could use it. `[c9]`

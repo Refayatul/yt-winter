@@ -10,7 +10,7 @@
  "originalAngle": "Follow the money through the companies' own current filings (Starbucks fiscal 2025, Darden fiscal 2026): the card as a debt, breakage as a forecast spread over years, the federal floor, and the state's claim. Competitors covered the Delaware escheat angle (PolyMatter, 2023), market size and unspent totals (CNBC, 2020) and Starbucks' payments float (WSJ, 2022); none walks through how the predicted leftovers are booked or separates the survey estimate from what companies record.",
  "hookCandidates": [
   {
-   "text": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+   "text": "In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served.",
    "mechanism": "contradiction"
   },
   {
@@ -120,8 +120,7 @@
    "title": "Why cards don't just expire",
    "purpose": "complication",
    "claimIds": [
-    "c7",
-    "c9"
+    "c7"
    ],
    "raises": [],
    "resolves": [],
@@ -174,6 +173,17 @@
   "Breakage is a company estimate that is revised.",
   "Starbucks' $1.75 billion balance mixes cards and loyalty rewards."
  ],
- "selectedHook": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
- "selectionReason": "Same contradiction as the heuristic winner, but built on Starbucks, a brand nearly every US viewer has used, and on the film's headline number; Darden is less familiar to a general audience and its 12-year detail pays off better mid-film."
+ "selectedHook": "In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served.",
+ "selectionReason": "Same contradiction as the heuristic winner, but built on Starbucks, a brand nearly every US viewer has used, and on the film's headline number; Darden is less familiar to a general audience and its 12-year detail pays off better mid-film.",
+ "thesisClaimIds": [
+  "c2",
+  "c4",
+  "c7"
+ ],
+ "payoffClaimIds": [
+  "c2",
+  "c4",
+  "c7",
+  "c10"
+ ]
 }

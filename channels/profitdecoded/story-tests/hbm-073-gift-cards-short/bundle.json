@@ -12,7 +12,7 @@
  "learningValue": "Tests whether the filing-backed forecast angle earns viewed-vs-swiped and shares on the same facts as the long-form.",
  "selectedTitle": "Who Keeps the Money on Unused Gift Cards?",
  "hookCandidates": [
-  "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+  "In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served.",
   "Look at the gift card in your drawer. The company that sold it has already estimated how likely you are to spend it.",
   "Who keeps the money on an unspent gift card?",
   "A gift card is money the store owes you. Some of that debt slowly turns into the store's sales.",
@@ -22,7 +22,7 @@
   {
    "id": "b1",
    "type": "hook",
-   "text": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+   "text": "In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served.",
    "claimId": "i1"
   },
   {
@@ -189,7 +189,7 @@
  "authoring": {
   "stage": "story-engine",
   "model": "claude-opus-5-5",
-  "winningHook": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+  "winningHook": "In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served.",
   "rewriteRounds": 1,
   "cacheHits": 0
  },
@@ -202,10 +202,10 @@
    "stakes": "Starbucks booked $222.4 million this way in one year."
   },
   "misconception": "The store takes the money when a card expires.",
-  "originalAngle": "The company's own filing explains the forecast in one line; most explainers stop at 'stores profit from forgotten cards'.",
+  "originalAngle": "The company's own filing explains the forecast in one line; many explainers stop at 'stores profit from forgotten cards'.",
   "hookCandidates": [
    {
-    "text": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+    "text": "In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served.",
     "mechanism": "contradiction"
    },
    {
@@ -295,6 +295,12 @@
   "payoff": "The store keeps the predicted share, a little at a time; part can go to the government; the rest is still yours to spend.",
   "caveats": [
    "Breakage is an estimate."
+  ],
+  "thesisClaimIds": [
+   "c2"
+  ],
+  "payoffClaimIds": [
+   "c2"
   ]
  },
  "editorial": {
@@ -355,7 +361,8 @@
    "b4: tightened the caveat to the filing's own claim",
    "b5: the payoff answers the question in its own words and ends on the viewer's move",
    "overall: trimmed from 118 to about 107 words for a 35-45 second read",
-   "b5: factual correction: breakage is a forecast, not a transfer; the whole balance stays spendable"
+   "b5: factual correction: breakage is a forecast, not a transfer; the whole balance stays spendable",
+   "Foundation pass (2026-10-09): the hook said the annual report 'counts $222.4 million', but that total is our sum of two lines (i1): now voiced as our math. "
   ],
   "retention": {
    "score": 100,
@@ -368,14 +375,14 @@
   },
   "hooks": [
    {
-    "text": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+    "text": "In the US, Starbucks cards don't expire. Yet by our math, Starbucks booked $222.4 million of card money as sales in fiscal 2025, with no drink served.",
     "mechanism": "contradiction",
-    "total": 84,
+    "total": 86,
     "dims": {
      "curiosity": 76,
      "clarity": 90,
-     "originality": 75,
-     "tension": 86,
+     "originality": 72,
+     "tension": 98,
      "visual": 95,
      "factual": 100
     },
@@ -388,7 +395,7 @@
     "dims": {
      "curiosity": 58,
      "clarity": 90,
-     "originality": 75,
+     "originality": 72,
      "tension": 65,
      "visual": 85,
      "factual": 100

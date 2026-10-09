@@ -25,9 +25,9 @@ function story() {
   const graphics = Object.entries(b.graphicSpecs).flatMap(([beatId, gs]) => gs.map((g) => ({ beatId, type: g.type, entities: g.entities, overlayText: g.overlayText, numbers: g.numbers, evidenceClaimId: g.evidenceClaimId })));
   const out = { hookCandidates: hooks.map((h) => h.text), beats, graphics, titleCandidates: b.titleCandidates, thumbnailCandidates: b.thumbnailCandidates.map(({ brandLogo, face, ...t }) => t), learningValue: b.learningValue };
   const S = (id, purpose, claimIds, raises = [], resolves = []) => ({ id, title: id, purpose, claimIds, raises, resolves, visualIdea: "filing excerpt" });
-  const plan = { thesis: dossier().thesis, centralQuestion: "What is Costco really selling?", conflict: { wants: "low prices", obstacle: "thin margins", stakes: "where your fee goes" }, misconception: "Costco profits from groceries", originalAngle: "the income-statement gap", hookCandidates: hooks,
+  const plan = { thesis: dossier().thesis, thesisClaimIds: ["c1", "c2", "c3"], payoffClaimIds: ["c3"], centralQuestion: "What is Costco really selling?", conflict: { wants: "low prices", obstacle: "thin margins", stakes: "where your fee goes" }, misconception: "Costco profits from groceries", originalAngle: "the income-statement gap", hookCandidates: hooks,
     questions: [{ id: "q1", text: "What is Costco really selling?" }],
-    sections: [S("open", "hook", ["c1"], ["q1"]), S("proof", "evidence", ["c1", "c2"]), S("mechanism", "mechanism", ["c3"]), S("turn", "turn", ["c2"]), S("caveat", "caveat", ["c4"]), S("payoff", "payoff", ["c3"], [], ["q1"])],
+    sections: [S("open", "hook", ["c1"], ["q1"]), S("proof", "evidence", ["c1", "c2"]), S("mechanism", "mechanism", ["c3"]), S("turn", "turn", ["c4"]), S("caveat", "caveat", ["c4"]), S("payoff", "payoff", ["c3"], [], ["q1"])],
     payoff: "Costco sells the discount itself", caveats: ["fees are one year of data"] };
   return { plan, out, winner };
 }

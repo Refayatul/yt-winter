@@ -1,203 +1,4 @@
 {
- "provenance": "Written by Claude Opus 5.5 inside a Claude Code session (no Anthropic API call), 2026-10-09, from the verified dossier channels/profitdecoded/research/hbm-073-how-gift-cards-make-money-for-retailers.json only. Disclosure: the author had already read the Groq script while writing its Phase 3.5 source verification, so this draft is not blind to it.",
- "title": "Billions Sit on Unused Gift Cards. Who Keeps the Money?",
- "plan": {
-  "thesis": "An unused balance on a non-expiring gift card is still the holder's on paper, but the issuer forecasts from its own history how much will never be spent and books that share as revenue little by little as other cards are redeemed; unclaimed-property laws may send part of it to government, and federal rules block the quickest ways of taking it.",
-  "centralQuestion": "If a gift card balance is never spent, who ends up with the money: the company, the government, or the holder?",
-  "conflict": {
-   "wants": "The holder assumes an unspent balance is simply lost; the issuer wants to recognize the share it expects never to be redeemed",
-   "obstacle": "The cards never expire, so the company cannot wait for a balance to die; it can only predict, and the prediction can be wrong",
-   "stakes": "Hundreds of millions of dollars a year in reported revenue at one company, and an estimated $27 billion sitting with US adults"
-  },
-  "misconception": "That the store simply keeps an unused balance when the card runs out.",
-  "originalAngle": "Read the issuers' own filings to show that breakage is a forecast booked gradually, not a forfeited balance; separate what the survey estimates from what companies record; state plainly what the filings do not reveal (how much goes to government).",
-  "hookCandidates": [
-   {
-    "text": "Somewhere in a drawer, a wallet or a coat pocket, there's a gift card with money still on it. Maybe it's yours.",
-    "mechanism": "visual mystery"
-   },
-   {
-    "text": "43 percent of American adults say they're holding at least one unused gift card, voucher or store credit.",
-    "mechanism": "number"
-   },
-   {
-    "text": "Starbucks cards have no expiration date. Starbucks still turns part of the money on them into revenue every year.",
-    "mechanism": "contradiction"
-   },
-   {
-    "text": "Every time someone spends a Starbucks card, a sliver of money the company doesn't expect anyone to spend becomes revenue.",
-    "mechanism": "hidden incentive"
-   },
-   {
-    "text": "If you never spend a gift card, who ends up with the money?",
-    "mechanism": "question"
-   },
-   {
-    "text": "Darden's gift card forecast stretches over 12 years, and moving it by half a percentage point shifts its income by about $3.6 million.",
-    "mechanism": "unexpected consequence"
-   }
-  ],
-  "selectedHook": "Somewhere in a drawer, a wallet or a coat pocket, there's a gift card with money still on it. Maybe it's yours.",
-  "selectionReason": "Puts the viewer's own card on screen before any company or number; the survey validates it within ten seconds.",
-  "questions": [
-   {
-    "id": "q1",
-    "text": "How can a company book money on cards that never expire?"
-   },
-   {
-    "id": "q2",
-    "text": "How much is it actually worth to a company?"
-   },
-   {
-    "id": "q3",
-    "text": "How reliable is the forecast?"
-   },
-   {
-    "id": "q4",
-    "text": "Does anyone besides the company and the holder get a share?"
-   }
-  ],
-  "sections": [
-   {
-    "id": "s1",
-    "title": "The card in the drawer",
-    "purpose": "hook",
-    "claimIds": [
-     "c8",
-     "c2"
-    ],
-    "raises": [
-     "q1"
-    ],
-    "resolves": [],
-    "visualIdea": "Macro shots of a kitchen drawer, a gift card half under takeout menus; survey number types on."
-   },
-   {
-    "id": "s2",
-    "title": "A card with no end date",
-    "purpose": "setup",
-    "claimIds": [
-     "c2",
-     "c1"
-    ],
-    "raises": [
-     "q1"
-    ],
-    "resolves": [],
-    "visualIdea": "Card terms panel: no expiration, no fees; a balance counter that does not move."
-   },
-   {
-    "id": "s3",
-    "title": "Forecasting what won't be spent",
-    "purpose": "mechanism",
-    "claimIds": [
-     "c2"
-    ],
-    "raises": [
-     "q2",
-     "q4"
-    ],
-    "resolves": [
-     "q1"
-    ],
-    "visualIdea": "Animated money flow: each redemption tips a matching sliver from a 'not expected to be redeemed' bucket into revenue."
-   },
-   {
-    "id": "s4",
-    "title": "How big the slice is",
-    "purpose": "evidence",
-    "claimIds": [
-     "c1",
-     "i1",
-     "i4",
-     "i3"
-    ],
-    "raises": [
-     "q3"
-    ],
-    "resolves": [
-     "q2"
-    ],
-    "visualIdea": "Two stacked bars for the breakage lines, then a river graphic dwarfing them."
-   },
-   {
-    "id": "s5",
-    "title": "Twelve years",
-    "purpose": "evidence",
-    "claimIds": [
-     "c4",
-     "c5",
-     "i2"
-    ],
-    "raises": [],
-    "resolves": [],
-    "visualIdea": "Timeline from a birthday card to a graduation; a pool that fills slightly faster than it drains."
-   },
-   {
-    "id": "s6",
-    "title": "Half a point",
-    "purpose": "turn",
-    "claimIds": [
-     "c4",
-     "c6"
-    ],
-    "raises": [],
-    "resolves": [
-     "q3"
-    ],
-    "visualIdea": "Filing excerpt highlighted; a dial nudged by 50 basis points moves an income figure."
-   },
-   {
-    "id": "s7",
-    "title": "The third player",
-    "purpose": "complication",
-    "claimIds": [
-     "c2",
-     "c10"
-    ],
-    "raises": [],
-    "resolves": [
-     "q4"
-    ],
-    "visualIdea": "Third chair appears at the table labelled 'government agencies'; the share is a question mark."
-   },
-   {
-    "id": "s8",
-    "title": "What the law protects, and what it can't",
-    "purpose": "caveat",
-    "claimIds": [
-     "c7",
-     "c9"
-    ],
-    "raises": [],
-    "resolves": [],
-    "visualIdea": "Rule card from the federal regulation; survey bars for the ways people lost money."
-   },
-   {
-    "id": "s9",
-    "title": "Who keeps the money",
-    "purpose": "payoff",
-    "claimIds": [
-     "c2",
-     "c4",
-     "c10",
-     "c8"
-    ],
-    "raises": [],
-    "resolves": [
-     "centralQuestion"
-    ],
-    "visualIdea": "Three claimants side by side, then back to the drawer."
-   }
-  ],
-  "payoff": "On paper the holder keeps a non-expiring balance; in practice the issuer books the share it expects never to come back, gradually, from its own history; where unclaimed-property laws apply part may go to government in amounts the filings do not disclose; only the holder decides whether a given balance is spent.",
-  "caveats": [
-   "Breakage is an estimate; Darden says actual breakage may differ and it updates estimates periodically.",
-   "The $27 billion is a survey estimate that includes vouchers and store credit.",
-   "Not every gift card is non-expiring: federal rules allow expiry after at least five years.",
-   "The filings do not disclose how much unspent money goes to government."
-  ]
- },
  "beats": [
   {
    "id": "s1-1",
@@ -211,14 +12,14 @@
    "section": "s1",
    "type": "setup",
    "claimId": "c8",
-   "text": "In a 2024 Bankrate survey, 43 percent of American adults said they're holding at least one unused gift card, voucher or store credit."
+   "text": "43 percent of American adults say they're holding at least one unused gift card, voucher or store credit. That's from a Bankrate survey, run online by YouGov in August 2024 with 2,373 adults."
   },
   {
    "id": "s1-3",
    "section": "s1",
    "type": "setup",
    "claimId": "c8",
-   "text": "Bankrate puts the national total at about $27 billion. That's a survey estimate, not a count, which means it tells you the scale, not the exact amount."
+   "text": "Bankrate puts the national total at about $27 billion. That's an estimate from the survey, not a count, and Bankrate doesn't publish how it calculated it, which means it tells you the scale, not the exact amount."
   },
   {
    "id": "s1-4",
@@ -252,8 +53,8 @@
    "id": "s2-3",
    "section": "s2",
    "type": "turn",
-   "claimId": "c1",
-   "text": "And yet every year, Starbucks turns part of that waiting money into revenue."
+   "claimId": "c2",
+   "text": "And yet Starbucks still turns part of that waiting money into revenue."
   },
   {
    "id": "s2-4",
@@ -358,7 +159,7 @@
    "section": "s4",
    "type": "mini-payoff",
    "claimId": "i3",
-   "text": "In other words, the money flowing out almost matches the money flowing in. Breakage is a thin slice of a very wide river."
+   "text": "In other words, the money flowing out almost matches the money flowing in. And breakage is only one part of that outflow."
   },
   {
    "id": "s5-1",
@@ -398,23 +199,23 @@
   {
    "id": "s5-6",
    "section": "s5",
-   "type": "proof",
-   "claimId": "i2",
-   "text": "So by our arithmetic, the unspent pool grew by $7.9 million over the year, to $636.7 million."
+   "type": "evidence",
+   "claimId": "c5",
+   "text": "More went in than came out. So the pool didn't shrink: it ended the year at $636.7 million, up from $628.8 million."
+  },
+  {
+   "id": "s5-7",
+   "section": "s5",
+   "type": "caveat",
+   "claimId": "c4",
+   "text": "Darden is careful to say it's a forecast. If people redeem differently than it expects, actual breakage income may differ from what it recorded, and it updates its estimates periodically."
   },
   {
    "id": "s6-1",
    "section": "s6",
    "type": "turn",
-   "claimId": "c4",
+   "claimId": "c6",
    "text": "Here's what turns this from bookkeeping into a story. Breakage isn't counted. It's predicted."
-  },
-  {
-   "id": "s6-2",
-   "section": "s6",
-   "type": "evidence",
-   "claimId": "c4",
-   "text": "Darden says it plainly. If people redeem differently than it expects, actual breakage income may differ from what it recorded. So it updates its estimates periodically."
   },
   {
    "id": "s6-3",
@@ -498,7 +299,7 @@
    "section": "s8",
    "type": "caveat",
    "claimId": "c9",
-   "text": "One in five had let a card expire. That's possible, because not every card works like Starbucks' or Darden's, and federal rules do allow expiry after five years."
+   "text": "One in five adults said they'd let a card expire. That's possible, because not every card works like Starbucks' or Darden's, and federal rules do allow expiry after five years."
   },
   {
    "id": "s8-7",
@@ -573,8 +374,9 @@
     "Bankrate",
     "YouGov"
    ],
-   "overlayText": "43% of US adults hold an unused gift card, voucher or store credit",
+   "overlayText": "Bankrate · YouGov online survey · 2,373 US adults · Aug 2024 → 43% hold unused value",
    "numbers": [
+    "2,373",
     "43%"
    ],
    "evidenceClaimId": "c8"
@@ -636,7 +438,7 @@
    ],
    "overlayText": "Unspent balance → revenue?",
    "numbers": [],
-   "evidenceClaimId": "c1"
+   "evidenceClaimId": "c2"
   },
   {
    "beatId": "s2-4",
@@ -780,7 +582,7 @@
    "entities": [
     "Starbucks"
    ],
-   "overlayText": "Breakage: a thin slice of the river",
+   "overlayText": "Out = redemptions + breakage",
    "numbers": [],
    "evidenceClaimId": "i3"
   },
@@ -846,12 +648,12 @@
    "entities": [
     "Darden"
    ],
-   "overlayText": "Unspent pool: $628.8M → $636.7M (our arithmetic: +$7.9M)",
+   "overlayText": "Unspent pool: $628.8M → $636.7M",
    "numbers": [
-    "$7.9M",
+    "$628.8M",
     "$636.7M"
    ],
-   "evidenceClaimId": "i2"
+   "evidenceClaimId": "c5"
   },
   {
    "beatId": "s6-1",
@@ -859,10 +661,10 @@
    "entities": [],
    "overlayText": "Not counted. Predicted.",
    "numbers": [],
-   "evidenceClaimId": "c4"
+   "evidenceClaimId": "c6"
   },
   {
-   "beatId": "s6-2",
+   "beatId": "s5-7",
    "type": "filing-excerpt",
    "entities": [
     "Darden"
@@ -1073,5 +875,7 @@
    "evidenceClaimId": "c3"
   }
  ],
- "revision": "One revision pass against the same deterministic gates the Groq script was rewritten against (length, a threshold number not in the dossier, an absolute in a hook, question-answer echo, first-30s value statement). Draft v1 readings are kept in MODEL-BENCHMARK.md."
+ "changeLog": [
+  "One revision pass against the same deterministic gates the Groq script was rewritten against (length, a threshold number not in the dossier, an absolute in a hook, question-answer echo, first-30s value statement). Draft v1 readings are kept in MODEL-BENCHMARK.md. Foundation pass (2026-10-09): survey method added (rule x2); Darden pool line states reported balances instead of the dossier's mistaken 'so' arithmetic (i2 corrected); 'one in five adults' scope; 'every year' and the breakage-share image softened to what the claims state; each figure-bearing fact has one home section; thesis and payoff cite their claims."
+ ]
 }
