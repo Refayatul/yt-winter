@@ -36,7 +36,7 @@
     "publishHourUTC": 18,
     "readiness": 91,
     "normalized": {
-      "ageHours": 195.42,
+      "ageHours": 211.13,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -58,7 +58,7 @@
         "views": null
       },
       "baselines": {
-        "views": 589,
+        "views": 1044,
         "viewsPerHour": 21.75,
         "averagePercentageViewed": 59.92000000000001,
         "engagementRate": 0.01868,
@@ -735,7 +735,7 @@
         "views": 33.3
       },
       "baselines": {
-        "views": 589,
+        "views": 1044,
         "viewsPerHour": 21.75,
         "averagePercentageViewed": 59.92000000000001,
         "engagementRate": 0.01868,
@@ -1959,17 +1959,17 @@
       "subscribersPer1000Views": 0
     },
     "performance": {
-      "growthScore": 42,
+      "growthScore": 45,
       "classification": "NORMAL",
       "percentiles": {
         "viewVelocity": 33.3,
         "retention": 50,
-        "engagement": 83.3,
+        "engagement": 100,
         "subscriberConversion": 25,
         "views": 0
       },
       "baselines": {
-        "views": 589,
+        "views": 1044,
         "viewsPerHour": 21.75,
         "averagePercentageViewed": 59.92000000000001,
         "engagementRate": 0.01868,
@@ -3190,17 +3190,17 @@
       "subscribersPer1000Views": 2.87
     },
     "performance": {
-      "growthScore": 75.5,
+      "growthScore": 78.5,
       "classification": "STRONG",
       "percentiles": {
         "viewVelocity": 16.7,
         "retention": 100,
-        "engagement": 66.7,
+        "engagement": 83.3,
         "subscriberConversion": 100,
         "views": 50
       },
       "baselines": {
-        "views": 589,
+        "views": 1044,
         "viewsPerHour": 21.75,
         "averagePercentageViewed": 59.92000000000001,
         "engagementRate": 0.01868,
@@ -4457,7 +4457,7 @@
         "views": 16.7
       },
       "baselines": {
-        "views": 589,
+        "views": 1044,
         "viewsPerHour": 21.75,
         "averagePercentageViewed": 59.92000000000001,
         "engagementRate": 0.01868,
@@ -5099,7 +5099,7 @@
         "views": 83.3
       },
       "baselines": {
-        "views": 589,
+        "views": 1044,
         "viewsPerHour": 21.75,
         "averagePercentageViewed": 59.92000000000001,
         "engagementRate": 0.01868,
@@ -5835,7 +5835,7 @@
         "views": 66.7
       },
       "baselines": {
-        "views": 589,
+        "views": 1044,
         "viewsPerHour": 21.75,
         "averagePercentageViewed": 59.92000000000001,
         "engagementRate": 0.01868,
@@ -5874,6 +5874,215 @@
       "searchShare": null
     },
     "latestCheckpoint": "48h"
+  },
+  {
+    "checkpoints": {},
+    "hookType": "countdown",
+    "hookScore": 79,
+    "selectedHook": "Jeanne Calment lived 122 years and 164 days.",
+    "firstLine": "Jeanne Calment lived 122 years and 164 days.",
+    "firstSecondsScore": 91,
+    "topicCluster": "HUMAN",
+    "bucket": "A",
+    "viralScore": 77,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 93,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 65,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 78,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 90,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 85,
+        "basis": "inventory-signal"
+      },
+      "archival_footage_potential": {
+        "value": 35,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 68,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 84,
+        "basis": "derived",
+        "note": "3 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 70,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 86,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 93,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 74,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 50,
+        "basis": "neutral",
+        "note": "no same-cluster channel evidence yet"
+      },
+      "subscriber_conversion_potential": {
+        "value": 70,
+        "basis": "derived",
+        "note": "series-depth proxy; no measured conversion yet"
+      },
+      "audience_breadth": {
+        "value": 100,
+        "basis": "inventory-signal"
+      },
+      "hook_potential": {
+        "value": 71,
+        "basis": "derived"
+      },
+      "visual_availability": {
+        "value": 67,
+        "basis": "inventory-signal"
+      },
+      "research_confidence": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "duplicate_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "no published-title collision"
+      },
+      "saturation_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 published / 50 inventory in cluster"
+      },
+      "recent_fatigue_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "0 same-family upload(s) in the last 30 days"
+      },
+      "source_confidence_risk": {
+        "value": -5,
+        "basis": "penalty",
+        "note": "95/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -33,
+        "basis": "penalty",
+        "note": "no archival footage confirmed"
+      }
+    },
+    "storyStructure": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
+    "titlePattern": "question",
+    "selectedTitle": "A Person Lived Past 120: What Happens Next?",
+    "titleScore": 81,
+    "titleCandidates": 42,
+    "hookCandidates": 14,
+    "topicScore": 80,
+    "popularityScore": 78,
+    "ctaStyle": "NONE",
+    "durationBucket": "18-25s",
+    "openingVisual": "ILLUSTRATION",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 78,
+      "CuriosityScore": 93,
+      "HookPotentialScore": 71,
+      "VisualImpactScore": 85,
+      "EmotionalImpactScore": 70,
+      "StoryCompressionScore": 68,
+      "RewatchPotentialScore": 66,
+      "SharePotentialScore": 93,
+      "CommentPotentialScore": 68,
+      "SubscriberConversionPotential": 70,
+      "NoveltyScore": 79,
+      "AudienceFitScore": 100,
+      "SourceQualityScore": 95,
+      "ChannelFitScore": 74
+    },
+    "selectionMode": "EXPLORE",
+    "videoId": "sielLySz6r8",
+    "slug": "what-if-you-lived-to-122",
+    "channel": "impossible-brief",
+    "contentType": "short",
+    "title": "A Person Lived Past 120: What Happens Next?",
+    "publishAt": "2026-10-09T18:00:00.000Z",
+    "publishHourUTC": 18,
+    "publishSlot": "21:00 TR",
+    "popularityBand": "unknown",
+    "readiness": 88,
+    "normalized": {
+      "ageHours": 1,
+      "viewsPerHour": null,
+      "recentViewVelocity": null,
+      "likeRate": null,
+      "commentRate": null,
+      "shareRate": null,
+      "engagementRate": null,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": null,
+      "classification": "NORMAL",
+      "percentiles": {
+        "viewVelocity": null,
+        "retention": null,
+        "engagement": null,
+        "subscriberConversion": null,
+        "views": null
+      },
+      "baselines": {
+        "views": 1044,
+        "viewsPerHour": 21.75,
+        "averagePercentageViewed": 59.92000000000001,
+        "engagementRate": 0.01868,
+        "subscriberConversion": 0
+      },
+      "missing": [
+        "viewVelocity",
+        "retention",
+        "engagement",
+        "subscriberConversion",
+        "views"
+      ],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    }
   },
   {
     "checkpoints": {
@@ -5970,6 +6179,111 @@
           },
           "engagement_per_1000_views": {
             "value": 32.26,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
+      },
+      "12h": {
+        "collectedAt": "2026-10-09T13:07:58.112Z",
+        "metrics": {
+          "views": {
+            "value": 1046,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 23,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "stayed_to_watch": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "Shorts 'Viewed vs swiped away' is Studio only — import with scripts/studio-import.js"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 22.94,
             "status": "DERIVED",
             "from": "likes+comments+shares / views"
           },
@@ -6149,29 +6463,29 @@
     "popularityBand": "unknown",
     "readiness": 88,
     "normalized": {
-      "ageHours": 1,
-      "viewsPerHour": 62,
-      "recentViewVelocity": null,
-      "likeRate": 0.03226,
-      "commentRate": 0,
+      "ageHours": 19.13,
+      "viewsPerHour": 54.69,
+      "recentViewVelocity": 54.28,
+      "likeRate": 0.02199,
+      "commentRate": 0.00096,
       "shareRate": null,
-      "engagementRate": 0.03226,
+      "engagementRate": 0.02294,
       "engagedViewRate": null,
       "subscriberConversion": null,
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 100,
+      "growthScore": 86.1,
       "classification": "STRONG",
       "percentiles": {
         "viewVelocity": 100,
         "retention": null,
-        "engagement": 100,
+        "engagement": 66.7,
         "subscriberConversion": null,
         "views": 100
       },
       "baselines": {
-        "views": 589,
+        "views": 1044,
         "viewsPerHour": 21.75,
         "averagePercentageViewed": 59.92000000000001,
         "engagementRate": 0.01868,
@@ -6189,11 +6503,11 @@
     "durationSeconds": 25,
     "registeredBy": "analytics-pass",
     "metrics": {
-      "views": 62,
+      "views": 1046,
       "averagePercentageViewed": null,
       "averageViewDuration": null,
-      "likes": 2,
-      "comments": 0,
+      "likes": 23,
+      "comments": 1,
       "shares": null,
       "subscribersGained": null,
       "engagedViews": null,
@@ -6201,7 +6515,7 @@
       "netSubscribers": null,
       "subscribersPer1000Views": null,
       "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 32.26,
+      "engagementPer1000Views": 22.94,
       "watchHoursPer1000Views": null,
       "ctr": null,
       "stayedToWatch": null,
@@ -6209,6 +6523,6 @@
       "shortsFeedShare": null,
       "searchShare": null
     },
-    "latestCheckpoint": "1h"
+    "latestCheckpoint": "12h"
   }
 ]
