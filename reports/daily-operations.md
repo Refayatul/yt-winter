@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-09T18:26:12.654Z
+Generated: 2026-10-09T18:51:57.174Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -24,7 +24,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-07 (lag 2 d) |
 | Ops (24 h) | publish.public 2, publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-09 (0 d) |
-| API quota today | 1677 / 9800 units (project 1012165386949) |
+| API quota today | 1683 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 24/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
@@ -45,8 +45,8 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-07 (lag 2 d) |
 | Ops (24 h) | publish.public 2, publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-09 (0 d) |
-| API quota today | 1686 / 9800 units (project 684098966511) |
-| YPP readiness (estimate) | subs 7/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
+| API quota today | 1693 / 9800 units (project 684098966511) |
+| YPP readiness (estimate) | subs 8/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
 
@@ -66,7 +66,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-07 (lag 2 d) |
 | Ops (24 h) | analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-09 (0 d) |
-| API quota today | 73 / 9800 units (project 208987599838) |
+| API quota today | 80 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
@@ -85,7 +85,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Ready topic backlog | 1 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-02 (lag 7 d) · 4 table error(s) |
-| Ops (24 h) | analytics.failure 10 |
+| Ops (24 h) | analytics.failure 11 |
 | Scheduler queue | 1 queued, oldest 2026-10-09 (0 d) |
 | API quota today | 0 / 9800 units (project 739767423116) |
 | YPP readiness (estimate) | subs 1/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
