@@ -4,6 +4,7 @@
 //   node scripts/profitdecoded/auto-produce.js [--topic <id>] [--format short|long]
 //        [--through script|audio|render|assess] [--max-usd 3] [--dry]
 // Needs ANTHROPIC_API_KEY for the research/script stages. --dry only selects the topic and prints the plan.
+// Script stage: the staged story engine (PD_STORY_ENGINE=legacy for the single-call writer); per-stage cost is printed.
 const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
@@ -23,7 +24,8 @@ if (argv.includes("--dry")) { console.log(`plan: [provider: ${LLM.provider()}] r
 (async () => {
   const r = await Produce.produce({ topic, universe, format, deps: { maxUsd: flag("--max-usd") ? Number(flag("--max-usd")) : undefined }, dirs });
   console.log(`${r.status}  (${r.ledger.calls} API calls, ${r.ledger.tokens ? r.ledger.tokens + " Groq tokens" : "estimated spend $" + r.ledger.usd.toFixed(2)})`);
-  for (const s of r.steps) console.log("  - " + JSON.stringify(s));
+  for (const s of r.steps) console.log("  - " + JSON.stringify({ ...s, stages: undefined, log: undefined }));
+  for (const [name, st] of Object.entries(r.ledger.stages || {})) console.log(`  cost ${name.padEnd(9)} ${st.calls} call(s)  in ${st.usage.input_tokens || 0}  cache-write ${st.usage.cache_creation_input_tokens || 0}  cache-read ${st.usage.cache_read_input_tokens || 0}  out ${st.usage.output_tokens || 0}  ~$${st.usd.toFixed(3)}`);
   if (r.status !== "bundle-ready") { for (const x of r.reasons || []) console.log("  REASON: " + x); console.log("Nothing was produced. Gates were not relaxed."); process.exit(1); }
   console.log("bundle: " + path.relative(process.cwd(), r.bundlePath));
   const run = (label, args) => { console.log(`> ${label}`); const p = spawnSync("node", args, { stdio: "inherit", cwd: root }); if (p.status !== 0) { console.error(`${label} failed (${p.status})`); process.exit(p.status || 1); } };

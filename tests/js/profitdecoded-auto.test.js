@@ -216,7 +216,7 @@ test("orchestrator: research -> script -> bundle on disk, spend recorded, failur
   const dirs = { research: path.join(tmp, "research"), auto: path.join(tmp, "auto"), state: path.join(tmp, "state") };
   const t = topic();
   const client = mockClient([msg(researchBlocks()), textMsg(JSON.stringify(draft())), textMsg(JSON.stringify(gymOutput()))]);
-  const r = await P.produce({ topic: t, universe: [t], format: "short", deps: { client, ledger: L.newLedger(20), now: new Date("2026-10-06") }, dirs, now: Date.parse("2026-10-06") });
+  const r = await P.produce({ topic: t, universe: [t], format: "short", deps: { client, ledger: L.newLedger(20), now: new Date("2026-10-06"), storyEngine: "legacy" }, dirs, now: Date.parse("2026-10-06") });
   assert.equal(r.status, "bundle-ready", JSON.stringify(r.reasons));
   assert.deepEqual(r.steps.map((x) => x.step), ["research", "script"]);
   assert.equal(r.steps[0].reused, false);
@@ -243,7 +243,7 @@ test("orchestrator reuses a passing dossier instead of paying for research again
   fs.mkdirSync(dirs.research, { recursive: true });
   const costco = costcoDossier(); fs.writeFileSync(path.join(dirs.research, costcoTopic().id + ".json"), JSON.stringify(costco));
   const c = mockClient([textMsg(JSON.stringify(goodOutput()))]);
-  const r = await P.produce({ topic: costcoTopic(), universe: [], format: "short", deps: { client: c, ledger: L.newLedger(10) }, dirs, now: Date.parse("2026-10-06") });
+  const r = await P.produce({ topic: costcoTopic(), universe: [], format: "short", deps: { client: c, ledger: L.newLedger(10), storyEngine: "legacy" }, dirs, now: Date.parse("2026-10-06") });
   assert.equal(r.status, "bundle-ready"); assert.equal(r.steps[0].reused, true); assert.equal(c.calls.length, 1);
   const written = JSON.parse(fs.readFileSync(r.bundlePath, "utf8"));
   assert.equal(written.format, "short"); assert.match(written.dossierFile, /research/);

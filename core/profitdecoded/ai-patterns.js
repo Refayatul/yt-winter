@@ -8,7 +8,7 @@ const T = require("./text");
 const S = require("./signals");
 
 const PHRASES = [
-  [/\bbut here'?s (the )?(twist|thing|catch|kicker)\b/gi, 10, "stock twist transition"],
+  [/\bbut here(?:'?s| is) (the )?(twist|thing|catch|kicker)\b/gi, 10, "stock twist transition"],
   [/\bbut that'?s not all\b/gi, 10, "stock escalation"],
   [/\bhere'?s where (things|it) get(s)? interesting\b/gi, 10, "stock suspense"],
   [/\b(have you ever wondered|did you know|in today'?s video|welcome back|before we (dive|begin|get started)|let'?s dive in|buckle up|stay tuned|without further ado)\b/gi, 14, "banned generic opener/filler"],
@@ -83,4 +83,44 @@ function analyze(script, options = {}) {
   };
 }
 
-module.exports = { analyze, PHRASES };
+// ---- Spoken naturalness (Phase 3) -----------------------------------------------------------------
+// Narration is heard once, at speed. Separate from aiPatternScore (which keeps its calibration): this asks
+// whether a sentence is easy to SAY and to FOLLOW by ear. Each finding names the sentence it came from.
+const CORPORATE = /\b(leverag(e|es|ed|ing)|utili[sz](e|es|ed|ing|ation)|facilitat\w+|stakeholders?|synerg\w+|robust|paradigm|ecosystem|holistic|actionable|granular|going forward|in terms of|with respect to|a significant (portion|number) of|aforementioned|notwithstanding|thereby|hence|whereby|furthermore|moreover|in order to|value proposition|best-in-class|key takeaway)\b/gi;
+const FILLER = /\b(basically|essentially|literally|actually|really|very|quite|simply|just)\b/gi;
+const SPOKEN_OK_ACRONYMS = new Set(["US", "USA", "CEO", "TV", "ID", "OK", "ATM", "FBI", "IRS", "AM", "PM", "UK", "EU", "AI", "SEC", "CNBC", "WSJ", "AMC", "IKEA", "NBA", "NFL"]);
+
+function spoken(script, options = {}) {
+  const text = String(script || ""); const sents = T.sentences(text); const wc = T.words(text).length || 1;
+  const findings = []; let penalty = 0;
+  const add = (name, pts, sentence, detail) => { penalty += pts; findings.push({ name, penalty: pts, sentence: sentence ? sentence.slice(0, 140) : null, detail: detail || null }); };
+  const maxLen = options.maxSentenceWords || 32;
+  for (const s of sents) {
+    const n = T.words(s).length;
+    if (n > maxLen) add("sentence too long to follow by ear", Math.min(6, 2 + (n - maxLen) * 0.25), s, `${n} words`);
+    const nums = (s.match(/\$?\d[\d,.]*\d|\$?\d/g) || []).length;
+    if (nums >= 3) add("too many numbers in one sentence", 3, s, `${nums} numbers`);
+    if (/[;()\[\]]/.test(s)) add("written punctuation that does not survive narration (; or brackets)", 2, s);
+    const commas = (s.match(/,/g) || []).length;
+    if (commas >= 4) add("nested clauses (4+ commas)", 2, s, `${commas} commas`);
+  }
+  const corp = text.match(CORPORATE) || [];
+  if (corp.length) add("corporate/academic wording", Math.min(12, corp.length * 3), null, [...new Set(corp.map((x) => x.toLowerCase()))].join(", "));
+  const fill = text.match(FILLER) || [];
+  const fillRate = fill.length / (wc / 100);
+  if (fillRate > 1.2) add("filler adverbs", Math.min(8, Math.round((fillRate - 1.2) * 4)), null, `${fill.length} (e.g. ${[...new Set(fill.map((x) => x.toLowerCase()))].slice(0, 4).join(", ")})`);
+  const acr = [...new Set((text.match(/\b[A-Z]{2,6}\b/g) || []).filter((a) => !SPOKEN_OK_ACRONYMS.has(a)))];
+  for (const a of acr) {
+    const first = text.indexOf(a);
+    const around = text.slice(Math.max(0, first - 90), first + a.length + 90);
+    if (!/\(|stands for|short for|called|known as/i.test(around)) add("acronym not explained on first use", 2, null, a);
+  }
+  const passive = sents.filter((s) => /\b(is|are|was|were|been|being|be)\s+(\w+ly\s+)?\w+(ed|en)\b/i.test(s)).length / Math.max(1, sents.length);
+  if (passive > 0.3) add("passive voice dominates", Math.min(8, Math.round((passive - 0.3) * 30)), null, `${Math.round(passive * 100)}% of sentences`);
+  const avg = wc / Math.max(1, sents.length);
+  if (avg > 22) add("average sentence too long for narration", Math.min(8, Math.round((avg - 22) * 1.5)), null, `${avg.toFixed(1)} words`);
+  const score = S.clamp(Math.round(100 - penalty * 1.5));
+  return { score, findings, stats: { sentences: sents.length, words: wc, avgSentenceWords: S.round(avg, 1), passiveShare: S.round(passive, 2) }, verdict: score >= (options.passAt || 80) ? "OK" : "REWRITE", provenance: "ESTIMATED" };
+}
+
+module.exports = { analyze, spoken, PHRASES };

@@ -55,12 +55,15 @@ async function produce({ topic, universe, format = "short", deps = {}, dirs = di
     dossier = { ...r.dossier, topicId: topic.id, format };
     fs.mkdirSync(dirs.research, { recursive: true }); fs.writeFileSync(path.join(dirs.research, topic.id + ".json"), JSON.stringify(dossier, null, 2) + "\n");
   }
-  // 2. script, hooks, titles, graphics (rewrite loop inside)
-  const w = await Writer.write(topic, dossier, format, { ...deps, ledger });
-  steps.push({ step: "script", status: w.status, rounds: w.rounds, usd: ledger.usd });
+  // 2. script: the staged story engine (plan -> hooks -> draft -> independent critique -> targeted rewrite).
+  //    PD_STORY_ENGINE=legacy keeps the original single-call writer.
+  const legacy = (deps.storyEngine || process.env.PD_STORY_ENGINE) === "legacy";
+  const w = legacy ? await Writer.write(topic, dossier, format, { ...deps, ledger }) : await Writer.develop(topic, dossier, format, { ...deps, ledger });
+  steps.push({ step: "script", engine: legacy ? "legacy" : "story", status: w.status, rounds: w.rounds, log: w.log, usd: ledger.usd, stages: ledger.stages });
   if (w.status !== "ok") return finish("script-failed", { reasons: w.reasons, draft: w.out });
   // 3. bundle on disk
-  const bundle = Writer.toBundle(topic, dossier, w.out, format, path.relative(path.join(dirs.auto, `${topic.id}-${format}`), path.join(dirs.research, topic.id + ".json")));
+  const rel = path.relative(path.join(dirs.auto, `${topic.id}-${format}`), path.join(dirs.research, topic.id + ".json"));
+  const bundle = legacy ? Writer.toBundle(topic, dossier, w.out, format, rel) : Writer.bundleFromStory(topic, dossier, w, format, rel);
   const dir = path.join(dirs.auto, `${topic.id}-${format}`); fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, "bundle.json"), JSON.stringify(bundle, null, 2) + "\n");
   return finish("bundle-ready", { bundlePath: path.join(dir, "bundle.json"), bundle, spendUsd: ledger.usd });

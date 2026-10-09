@@ -45,6 +45,14 @@ function render(result, bundle, extra = {}) {
   for (const f of ev.aiPatterns.findings) L.push(`- ${f.name}${f.count ? " ×" + f.count : ""}${f.example ? ` (“${f.example}”)` : ""} −${Math.round(f.penalty)}`);
   L.push(`Storytelling score ${result.story.score}. ${result.story.notes.join("; ")}`);
   L.push("");
+  if (ev.spoken) { L.push(`Spoken naturalness **${ev.spoken.score}** (heuristic; rewrite below 75).`); for (const f of ev.spoken.findings.slice(0, 6)) L.push(`- ${f.name}${f.detail ? " (" + esc(f.detail) + ")" : ""}${f.sentence ? `: “${esc(f.sentence.slice(0, 90))}”` : ""}`); L.push(""); }
+  if (ev.retention) {
+    L.push("## Retention critic (heuristic)"); L.push(`Reading **${ev.retention.score}**. ${ev.retention.disclaimer}`); L.push("");
+    L.push(row(["Section", "Starts (min)", "Words", "Score", "Issues"])); L.push(row(["---", "---", "---", "---", "---"]));
+    for (const sec of ev.retention.sections) L.push(row([esc(sec.title), sec.startsAtMin, sec.words, sec.score, esc(sec.issues.map((i) => i.type).join(", ") || "—")]));
+    for (const g of ev.retention.global) L.push(`- ${g.severity.toUpperCase()} ${g.type}: ${esc(g.evidence)} → ${esc(g.recommendation)}`);
+    L.push("");
+  }
   L.push("## Narration QA"); const n = ev.narration;
   L.push(`Provider: ${esc(n.provider)} · certified premium: **${n.certified ? "yes" : "NO"}** · naturalness **${n.naturalness}** (required ${extra.narrationRequired || 88}) · measured from rendered take: ${n.measured ? "yes" : "no"}`);
   if (n.audio && n.audio.status === "OBSERVED") L.push(`Audio: ${n.audio.integratedLufs} LUFS integrated, true peak ${n.audio.truePeakDbfs} dBFS, ${n.audio.silenceCount} pauses ≥0.35s.`);
