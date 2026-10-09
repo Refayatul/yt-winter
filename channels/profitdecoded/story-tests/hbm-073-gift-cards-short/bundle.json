@@ -1,0 +1,442 @@
+{
+ "id": "auto-short-how-gift-cards-make-money-for-retailers",
+ "format": "short",
+ "dossierFile": "../../research/hbm-073-how-gift-cards-make-money-for-retailers.json",
+ "topic": {
+  "id": "hbm-073-how-gift-cards-make-money-for-retailers",
+  "topic": "How Gift Cards Make Money for Retailers",
+  "entity": "Gift cards",
+  "pillar": "hidden-business-models",
+  "viralMechanism": "Cheap Product + Hidden Revenue Source"
+ },
+ "learningValue": "Tests whether the filing-backed forecast angle earns viewed-vs-swiped and shares on the same facts as the long-form.",
+ "selectedTitle": "Who Keeps the Money on Unused Gift Cards?",
+ "hookCandidates": [
+  "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+  "Look at the gift card in your drawer. The company that sold it has already estimated how likely you are to spend it.",
+  "Who keeps the money on an unspent gift card?",
+  "A gift card is money the store owes you. Some of that debt slowly turns into the store's sales.",
+  "Starbucks booked $222.4 million in its latest fiscal year from card money it doesn't expect to see redeemed."
+ ],
+ "beats": [
+  {
+   "id": "b1",
+   "type": "hook",
+   "text": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+   "claimId": "i1"
+  },
+  {
+   "id": "b2",
+   "type": "mechanism",
+   "text": "The reason is a forecast. From its own history, Starbucks estimates how much will never be redeemed, and calls that share breakage.",
+   "claimId": "c2"
+  },
+  {
+   "id": "b3",
+   "type": "turn",
+   "text": "None of this touches your balance. Each time a card gets spent, a predicted slice moves into sales.",
+   "claimId": "c2"
+  },
+  {
+   "id": "b4",
+   "type": "caveat",
+   "text": "Part can also go to the government under unclaimed property laws.",
+   "claimId": "c2"
+  },
+  {
+   "id": "b5",
+   "type": "payoff",
+   "text": "So who keeps the money? The store keeps the money it predicted you'd never spend, but only if you never do. Your balance is still yours. Spend it, and prove the forecast wrong.",
+   "claimId": "c2"
+  }
+ ],
+ "graphicSpecs": {
+  "b1": [
+   {
+    "type": "filing-excerpt",
+    "entities": [
+     "Starbucks",
+     "annual report"
+    ],
+    "overlayText": "No expiry · $222.4M",
+    "numbers": [
+     "222.4"
+    ],
+    "evidenceClaimId": "i1",
+    "asset": "graphic:b1-filing-excerpt-1"
+   }
+  ],
+  "b2": [
+   {
+    "type": "chart",
+    "entities": [
+     "card history",
+     "estimate"
+    ],
+    "overlayText": "History → forecast",
+    "numbers": [],
+    "evidenceClaimId": "c2",
+    "asset": "graphic:b2-chart-2"
+   }
+  ],
+  "b3": [
+   {
+    "type": "price-animation",
+    "entities": [
+     "card taps",
+     "breakage"
+    ],
+    "overlayText": "Booked in step",
+    "numbers": [],
+    "evidenceClaimId": "c2",
+    "asset": "graphic:b3-price-animation-3"
+   }
+  ],
+  "b4": [
+   {
+    "type": "filing-excerpt",
+    "entities": [
+     "unclaimed property laws"
+    ],
+    "overlayText": "“unclaimed property laws”",
+    "numbers": [],
+    "evidenceClaimId": "c2",
+    "asset": "graphic:b4-filing-excerpt-4"
+   }
+  ],
+  "b5": [
+   {
+    "type": "typography",
+    "entities": [
+     "store",
+     "you"
+    ],
+    "overlayText": "Spend it",
+    "numbers": [],
+    "evidenceClaimId": "c2",
+    "asset": "graphic:b5-typography-5"
+   }
+  ]
+ },
+ "titleCandidates": [
+  "Who Keeps the Money on Unused Gift Cards?",
+  "Starbucks Counted $222.4 Million of Card Money as Sales",
+  "Your Unused Gift Card Was Forecast",
+  "Why Starbucks Expects Some Card Money to Stay Unspent",
+  "Gift Card Breakage in 40 Seconds",
+  "Where Unspent Gift Card Money Goes",
+  "The Gift Card Money That Becomes Sales",
+  "Starbucks Cards Don't Expire. Here's the Catch",
+  "How Stores Book Gift Cards You Never Use",
+  "The Forecast Behind Your Gift Card",
+  "What Happens to an Unspent Starbucks Card",
+  "Unused Gift Cards Turn Into Sales Slowly",
+  "The Store, the State and Your Gift Card",
+  "Your Gift Card Balance Is a Prediction",
+  "Why a Store Plans for Gift Cards You Won't Use",
+  "Starbucks and the Money Nobody Spent",
+  "Gift Cards: Who Keeps the Leftovers?",
+  "The Quiet Revenue Inside Gift Cards",
+  "What Starbucks' Filing Says About Gift Cards",
+  "A Gift Card Is a Debt the Store Owes You",
+  "Breakage: The Word for Money You Won't Spend",
+  "Spend Your Gift Card. Here's Why."
+ ],
+ "thumbnailCandidates": [
+  {
+   "id": "t1",
+   "dominantObject": "a coffee card in a kitchen drawer",
+   "text": "WHO KEEPS IT?",
+   "elementCount": 2,
+   "contradiction": "your card, their sales",
+   "composition": "drawer-card",
+   "contrast": "high",
+   "numberShown": null,
+   "brandLogo": false,
+   "face": false
+  },
+  {
+   "id": "t2",
+   "dominantObject": "a card on a filing page",
+   "text": "$222.4M",
+   "elementCount": 2,
+   "contradiction": "sales without a sale",
+   "composition": "card-on-filing",
+   "contrast": "high",
+   "numberShown": "222.4",
+   "brandLogo": false,
+   "face": false
+  },
+  {
+   "id": "t3",
+   "dominantObject": "a card with a forecast line across it",
+   "text": "FORECAST",
+   "elementCount": 2,
+   "contradiction": "no expiry, still counted",
+   "composition": "card-forecast",
+   "contrast": "medium",
+   "numberShown": null,
+   "brandLogo": false,
+   "face": false
+  }
+ ],
+ "history": [],
+ "competitorTranscripts": [],
+ "gap": {
+  "status": "UNKNOWN",
+  "reasonToExist": false
+ },
+ "authoring": {
+  "stage": "story-engine",
+  "model": "claude-opus-5-5",
+  "winningHook": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+  "rewriteRounds": 1,
+  "cacheHits": 0
+ },
+ "storyPlan": {
+  "thesis": "Unspent gift card money is not grabbed when a card goes quiet: companies predict from their own history how much will never be spent and book that share as sales, a little at a time.",
+  "centralQuestion": "Who keeps the money on an unspent gift card?",
+  "conflict": {
+   "wants": "The store wants revenue it can count on; the holder wants their balance.",
+   "obstacle": "Cards that never expire can't simply be taken back.",
+   "stakes": "Starbucks booked $222.4 million this way in one year."
+  },
+  "misconception": "The store takes the money when a card expires.",
+  "originalAngle": "The company's own filing explains the forecast in one line; most explainers stop at 'stores profit from forgotten cards'.",
+  "hookCandidates": [
+   {
+    "text": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+    "mechanism": "contradiction"
+   },
+   {
+    "text": "Look at the gift card in your drawer. The company that sold it has already estimated how likely you are to spend it.",
+    "mechanism": "visual mystery"
+   },
+   {
+    "text": "Who keeps the money on an unspent gift card?",
+    "mechanism": "question"
+   },
+   {
+    "text": "A gift card is money the store owes you. Some of that debt slowly turns into the store's sales.",
+    "mechanism": "hidden incentive"
+   },
+   {
+    "text": "Starbucks booked $222.4 million in its latest fiscal year from card money it doesn't expect to see redeemed.",
+    "mechanism": "number"
+   }
+  ],
+  "questions": [
+   {
+    "id": "q1",
+    "text": "Who keeps the money on an unspent gift card?"
+   }
+  ],
+  "sections": [
+   {
+    "id": "open",
+    "title": "Hook",
+    "purpose": "hook",
+    "claimIds": [
+     "i1"
+    ],
+    "raises": [
+     "q1"
+    ],
+    "resolves": [],
+    "visualIdea": "card on a 10-K page"
+   },
+   {
+    "id": "mechanism",
+    "title": "The forecast",
+    "purpose": "mechanism",
+    "claimIds": [
+     "c2"
+    ],
+    "raises": [],
+    "resolves": [],
+    "visualIdea": "history chart"
+   },
+   {
+    "id": "turn",
+    "title": "In step with others",
+    "purpose": "turn",
+    "claimIds": [
+     "c2"
+    ],
+    "raises": [],
+    "resolves": [],
+    "visualIdea": "taps moving a slice"
+   },
+   {
+    "id": "caveat",
+    "title": "The state",
+    "purpose": "caveat",
+    "claimIds": [
+     "c2"
+    ],
+    "raises": [],
+    "resolves": [],
+    "visualIdea": "filing excerpt"
+   },
+   {
+    "id": "payoff",
+    "title": "Who keeps it",
+    "purpose": "payoff",
+    "claimIds": [
+     "c2"
+    ],
+    "raises": [],
+    "resolves": [
+     "q1"
+    ],
+    "visualIdea": "card back in the drawer"
+   }
+  ],
+  "payoff": "The store keeps the predicted share, a little at a time; part can go to the government; the rest is still yours to spend.",
+  "caveats": [
+   "Breakage is an estimate."
+  ]
+ },
+ "editorial": {
+  "critique": {
+   "provenance": "Editorial critique written by Claude Opus 5.5 in this Claude Code session (not an independent model call; no ANTHROPIC_API_KEY was available). The deterministic Retention Critic readings are independent of the writer.",
+   "verdict": "revise",
+   "problems": [
+    {
+     "section": "payoff",
+     "beatIds": [
+      "b5"
+     ],
+     "type": "factual",
+     "severity": "high",
+     "quote": "The store keeps the money it predicted you'd never spend. The rest is still yours.",
+     "fix": "Implies part of the balance is no longer the holder's. It is: the card has no expiry and no balance-reducing fees. The store keeps it only if the holder never spends it. (Found in the final editorial read, after the automated checks passed.)"
+    },
+    {
+     "section": "payoff",
+     "beatIds": [
+      "b5"
+     ],
+     "type": "payoff",
+     "severity": "high",
+     "quote": "The store keeps the share it predicted you'd never spend.",
+     "fix": "Answer the question in its own words: 'the store keeps the money it predicted you'd never spend', then end on what the viewer can do."
+    },
+    {
+     "section": "mechanism",
+     "beatIds": [
+      "b2"
+     ],
+     "type": "clarity",
+     "severity": "low",
+     "quote": "Starbucks estimates how much money will never be redeemed.",
+     "fix": "Name the thing: the company calls that share breakage. One plain word the viewer can repeat."
+    },
+    {
+     "section": "turn",
+     "beatIds": [
+      "b3"
+     ],
+     "type": "voice",
+     "severity": "low",
+     "quote": "It doesn't take that money from anyone.",
+     "fix": "Keep; it corrects the misconception directly. Tighten the second sentence so the timing is clear: a slice moves into sales each time someone else uses a card."
+    }
+   ],
+   "keep": [
+    "The contradiction hook with the filing number",
+    "The unclaimed property caveat, stated as the filing states it"
+   ],
+   "automatedReadingsDisputed": []
+  },
+  "changes": [
+   "b2: named the share (breakage) in a tighter sentence",
+   "b3: states exactly what the filing supports (no fees reduce balances; breakage moves with redemptions) instead of a broad 'nothing is taken'",
+   "b4: tightened the caveat to the filing's own claim",
+   "b5: the payoff answers the question in its own words and ends on the viewer's move",
+   "overall: trimmed from 118 to about 107 words for a 35-45 second read",
+   "b5: factual correction: breakage is a forecast, not a transfer; the whole balance stays spendable"
+  ],
+  "retention": {
+   "score": 100,
+   "global": [],
+   "weakest": [],
+   "disclaimer": "Heuristic reading of the script text. It points at likely weak spots; it does not measure or predict audience retention. Real retention is known only from YouTube Analytics after publishing."
+  },
+  "spoken": {
+   "score": 100
+  },
+  "hooks": [
+   {
+    "text": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+    "mechanism": "contradiction",
+    "total": 84,
+    "dims": {
+     "curiosity": 76,
+     "clarity": 90,
+     "originality": 75,
+     "tension": 86,
+     "visual": 95,
+     "factual": 100
+    },
+    "factual": true
+   },
+   {
+    "text": "Starbucks booked $222.4 million in its latest fiscal year from card money it doesn't expect to see redeemed.",
+    "mechanism": "number",
+    "total": 74,
+    "dims": {
+     "curiosity": 58,
+     "clarity": 90,
+     "originality": 75,
+     "tension": 65,
+     "visual": 85,
+     "factual": 100
+    },
+    "factual": true
+   },
+   {
+    "text": "Look at the gift card in your drawer. The company that sold it has already estimated how likely you are to spend it.",
+    "mechanism": "visual mystery",
+    "total": 73,
+    "dims": {
+     "curiosity": 54,
+     "clarity": 90,
+     "originality": 79,
+     "tension": 61,
+     "visual": 80,
+     "factual": 100
+    },
+    "factual": true
+   },
+   {
+    "text": "A gift card is money the store owes you. Some of that debt slowly turns into the store's sales.",
+    "mechanism": "hidden incentive",
+    "total": 70,
+    "dims": {
+     "curiosity": 48,
+     "clarity": 90,
+     "originality": 76,
+     "tension": 61,
+     "visual": 80,
+     "factual": 100
+    },
+    "factual": true
+   },
+   {
+    "text": "Who keeps the money on an unspent gift card?",
+    "mechanism": "question",
+    "total": 67,
+    "dims": {
+     "curiosity": 46,
+     "clarity": 86,
+     "originality": 56,
+     "tension": 75,
+     "visual": 70,
+     "factual": 100
+    },
+    "factual": true
+   }
+  ]
+ }
+}

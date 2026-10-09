@@ -1,0 +1,51 @@
+{
+ "provenance": "Editorial critique written by Claude Opus 5.5 in this Claude Code session (not an independent model call; no ANTHROPIC_API_KEY was available). The deterministic Retention Critic readings are independent of the writer.",
+ "verdict": "revise",
+ "problems": [
+  {
+   "section": "payoff",
+   "beatIds": [
+    "b5"
+   ],
+   "type": "factual",
+   "severity": "high",
+   "quote": "The store keeps the money it predicted you'd never spend. The rest is still yours.",
+   "fix": "Implies part of the balance is no longer the holder's. It is: the card has no expiry and no balance-reducing fees. The store keeps it only if the holder never spends it. (Found in the final editorial read, after the automated checks passed.)"
+  },
+  {
+   "section": "payoff",
+   "beatIds": [
+    "b5"
+   ],
+   "type": "payoff",
+   "severity": "high",
+   "quote": "The store keeps the share it predicted you'd never spend.",
+   "fix": "Answer the question in its own words: 'the store keeps the money it predicted you'd never spend', then end on what the viewer can do."
+  },
+  {
+   "section": "mechanism",
+   "beatIds": [
+    "b2"
+   ],
+   "type": "clarity",
+   "severity": "low",
+   "quote": "Starbucks estimates how much money will never be redeemed.",
+   "fix": "Name the thing: the company calls that share breakage. One plain word the viewer can repeat."
+  },
+  {
+   "section": "turn",
+   "beatIds": [
+    "b3"
+   ],
+   "type": "voice",
+   "severity": "low",
+   "quote": "It doesn't take that money from anyone.",
+   "fix": "Keep; it corrects the misconception directly. Tighten the second sentence so the timing is clear: a slice moves into sales each time someone else uses a card."
+  }
+ ],
+ "keep": [
+  "The contradiction hook with the filing number",
+  "The unclaimed property caveat, stated as the filing states it"
+ ],
+ "automatedReadingsDisputed": []
+}

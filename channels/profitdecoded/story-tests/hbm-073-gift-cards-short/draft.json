@@ -1,0 +1,155 @@
+{
+ "hookCandidates": [],
+ "beats": [
+  {
+   "id": "b1",
+   "type": "hook",
+   "text": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+   "claimId": "i1",
+   "section": "open"
+  },
+  {
+   "id": "b2",
+   "type": "mechanism",
+   "text": "The reason is a forecast. From years of card data, Starbucks estimates how much money will never be redeemed.",
+   "claimId": "c2",
+   "section": "mechanism"
+  },
+  {
+   "id": "b3",
+   "type": "turn",
+   "text": "It doesn't take that money from anyone. It books it slowly, in step with the cards people do spend.",
+   "claimId": "c2",
+   "section": "turn"
+  },
+  {
+   "id": "b4",
+   "type": "caveat",
+   "text": "Its filing also says part may go to government agencies under unclaimed property laws.",
+   "claimId": "c2",
+   "section": "caveat"
+  },
+  {
+   "id": "b5",
+   "type": "payoff",
+   "text": "So who keeps the money? The store keeps the share it predicted you'd never spend. The rest is still yours.",
+   "claimId": "c2",
+   "section": "payoff"
+  }
+ ],
+ "graphics": [
+  {
+   "beatId": "b1",
+   "type": "filing-excerpt",
+   "entities": [
+    "Starbucks",
+    "annual report"
+   ],
+   "overlayText": "No expiry · $222.4M",
+   "numbers": [
+    "222.4"
+   ],
+   "evidenceClaimId": "i1"
+  },
+  {
+   "beatId": "b2",
+   "type": "chart",
+   "entities": [
+    "card history",
+    "estimate"
+   ],
+   "overlayText": "History → forecast",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b3",
+   "type": "price-animation",
+   "entities": [
+    "card taps",
+    "breakage"
+   ],
+   "overlayText": "Booked in step",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b4",
+   "type": "filing-excerpt",
+   "entities": [
+    "unclaimed property laws"
+   ],
+   "overlayText": "“unclaimed property laws”",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b5",
+   "type": "typography",
+   "entities": [
+    "store",
+    "you"
+   ],
+   "overlayText": "Spend it",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  }
+ ],
+ "titleCandidates": [
+  "Who Keeps the Money on Unused Gift Cards?",
+  "Starbucks Counted $222.4 Million of Card Money as Sales",
+  "Your Unused Gift Card Was Forecast",
+  "Why Starbucks Expects Some Card Money to Stay Unspent",
+  "Gift Card Breakage in 40 Seconds",
+  "Where Unspent Gift Card Money Goes",
+  "The Gift Card Money That Becomes Sales",
+  "Starbucks Cards Don't Expire. Here's the Catch",
+  "How Stores Book Gift Cards You Never Use",
+  "The Forecast Behind Your Gift Card",
+  "What Happens to an Unspent Starbucks Card",
+  "Unused Gift Cards Turn Into Sales Slowly",
+  "The Store, the State and Your Gift Card",
+  "Your Gift Card Balance Is a Prediction",
+  "Why a Store Plans for Gift Cards You Won't Use",
+  "Starbucks and the Money Nobody Spent",
+  "Gift Cards: Who Keeps the Leftovers?",
+  "The Quiet Revenue Inside Gift Cards",
+  "What Starbucks' Filing Says About Gift Cards",
+  "A Gift Card Is a Debt the Store Owes You",
+  "Breakage: The Word for Money You Won't Spend",
+  "Spend Your Gift Card. Here's Why."
+ ],
+ "thumbnailCandidates": [
+  {
+   "id": "t1",
+   "dominantObject": "a coffee card in a kitchen drawer",
+   "text": "WHO KEEPS IT?",
+   "elementCount": 2,
+   "contradiction": "your card, their sales",
+   "composition": "drawer-card",
+   "contrast": "high",
+   "numberShown": null
+  },
+  {
+   "id": "t2",
+   "dominantObject": "a card on a filing page",
+   "text": "$222.4M",
+   "elementCount": 2,
+   "contradiction": "sales without a sale",
+   "composition": "card-on-filing",
+   "contrast": "high",
+   "numberShown": "222.4"
+  },
+  {
+   "id": "t3",
+   "dominantObject": "a card with a forecast line across it",
+   "text": "FORECAST",
+   "elementCount": 2,
+   "contradiction": "no expiry, still counted",
+   "composition": "card-forecast",
+   "contrast": "medium",
+   "numberShown": null
+  }
+ ],
+ "learningValue": "Tests whether the filing-backed forecast angle earns viewed-vs-swiped and shares on the same facts as the long-form."
+}

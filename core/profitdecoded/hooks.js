@@ -95,4 +95,68 @@ function first30(script, ctx = {}) {
   return { score, parts, notes, windows: { "0-5": w05, "5-15": w515, "15-30": w1530 }, aiPatternScore: ai.aiPatternScore };
 }
 
-module.exports = { MECHANISMS, classify, scoreHook, compete, first30, BANNED_OPENERS };
+// ---- Hook engineering (Phase 3): six editorial dimensions + a factual-accuracy gate ----------------
+// Every dimension is a heuristic reading of the text (ESTIMATED). Factual accuracy is a GATE, not a score
+// to trade off: a hook whose numbers are not in the verified dossier, or that makes an absolute/superlative
+// claim the dossier does not make, can never win.
+const VISUAL_NOUNS = /\b(card|cards|receipt|register|drawer|wallet|coin|coins|penny|ticket|price tag|tag|label|shelf|aisle|screen|app|bill|balance|cup|counter|box|bucket|map|chart|filing|statement|ledger)\b/i;
+const ABSOLUTES = /\b(always|never|everyone|everybody|nobody|no one|all of|every single|guaranteed|the only|the biggest|the largest|the most|the best|the worst|secretly)\b/i;
+const JARGON = /\b(breakage|deferred revenue|liabilit(y|ies)|escheat\w*|asc 606|recogni[sz]ed revenue|stored value)\b/i;
+
+function numbersIn(text) { return (String(text).match(/\$?\d[\d,.]*\d|\$?\d/g) || []).map((n) => n.replace(/^\$/, "").replace(/[,.]+$/, "")).filter((n) => n.length > 1 || /\d/.test(n)); }
+function dossierNumbers(dossier) {
+  const all = ((dossier && dossier.claims) || []).concat((dossier && dossier.inferences) || []);
+  return new Set(all.flatMap((c) => numbersIn((c.text || "") + " " + (c.numbers || []).join(" "))));
+}
+
+function evaluateHook(text, ctx = {}) {
+  const t = String(text || "").trim(); const w = T.words(t).length; const base = scoreHook(t, ctx);
+  const sents = T.sentences(t).length || 1;
+  const others = (ctx.others || []).filter((o) => o !== t);
+  const dims = {};
+  // Curiosity: the existing information-gap score.
+  dims.curiosity = base.score;
+  // Clarity: lands in one breath, at most two sentences, no unexplained jargon.
+  dims.clarity = S.clamp(90 - Math.max(0, w - 28) * 3 - Math.max(0, 10 - w) * 4 - (sents > 2 ? 15 : 0) - (JARGON.test(t) ? 18 : 0) - (/[;()]/.test(t) ? 10 : 0));
+  // Originality: not a banned/stock opener, not a crowded title template, not a paraphrase of a sibling candidate.
+  const AI = require("./ai-patterns");
+  const sib = others.length ? Math.max(...others.map((o) => T.wordSetSimilarity(t, o))) : 0;
+  dims.originality = S.clamp(85 - (BANNED_OPENERS.test(t) ? 50 : 0) - Math.round(sib * 40) - (AI.analyze(t).aiPatternScore >= 20 ? 20 : 0) - (/\b(makes? money|not what you think|here'?s why)\b/i.test(t) ? 15 : 0));
+  // Tension: does it set two things against each other, or name a winner and a loser?
+  const TS = require("./topic-scoring");
+  dims.tension = TS.narrativeConflict(t, { contradiction: "CD", "financial paradox": "PL", "hidden incentive": "CF", "consumer pain": "CF" }[base.mechanism] || "FH").value;
+  // Visual potential: a concrete object or number a viewer can see on screen.
+  dims.visual = S.clamp(40 + (VISUAL_NOUNS.test(t) ? 30 : 0) + (numbersIn(t).length ? 15 : 0) + (/\b[A-Z][a-z]+(?: [A-Z][a-z]+)*\b/.test(t.slice(1)) ? 10 : 0));
+  // Factual accuracy (gate): every number must be in the dossier; absolutes must be backed by the dossier's own wording.
+  const known = dossierNumbers(ctx.dossier);
+  const orphan = ctx.dossier ? numbersIn(t).filter((n) => !known.has(n) && !/^(19|20)\d\d$/.test(n)) : [];
+  const dossierText = ctx.dossier ? ((ctx.dossier.claims || []).map((c) => c.text).join(" ") + " " + (ctx.dossier.thesis || "")) : "";
+  const absolute = (t.match(ABSOLUTES) || [])[0];
+  const absoluteUnbacked = absolute && !new RegExp("\\b" + absolute.replace(/\s+/g, "\\s+") + "\\b", "i").test(dossierText);
+  const factual = { pass: !orphan.length && !absoluteUnbacked, problems: [...orphan.map((n) => `number "${n}" is not in the verified dossier`), ...(absoluteUnbacked ? [`absolute/superlative "${absolute}" is not supported by the dossier`] : [])] };
+  dims.factual = factual.pass ? 100 : 0;
+  const W = { curiosity: 0.28, clarity: 0.18, originality: 0.16, tension: 0.18, visual: 0.12, factual: 0.08 };
+  const total = Math.round(Object.entries(W).reduce((sum, [k, wt]) => sum + wt * dims[k], 0));
+  return { text: t, mechanism: base.mechanism, total, dims, factual, notes: base.notes, provenance: "ESTIMATED" };
+}
+
+// Rank >=5 candidates on the six dimensions; the winner is the best FACTUAL hook. Mechanism diversity is still required.
+function engineer(candidates, ctx = {}) {
+  const texts = candidates.map((c) => (typeof c === "string" ? c : c.text));
+  const rows = candidates.map((c, i) => {
+    const e = evaluateHook(texts[i], { ...ctx, others: texts });
+    const tagged = typeof c === "object" && c.mechanism && MECHANISMS.includes(c.mechanism) ? c.mechanism : null;
+    return { ...e, mechanism: tagged || e.mechanism };
+  }).sort((a, b) => b.total - a.total);
+  const problems = [];
+  if (rows.length < 5) problems.push(`only ${rows.length} hook candidates (need >=5)`);
+  const mechs = new Set(rows.map((r) => r.mechanism));
+  if (mechs.size < 4) problems.push(`only ${mechs.size} distinct hook mechanisms (need >=4)`);
+  const factual = rows.filter((r) => r.factual.pass);
+  if (!factual.length) problems.push("no candidate passes the factual-accuracy gate");
+  const winner = factual[0] || null;
+  if (winner && winner.total < 65) problems.push(`best factual hook scores ${winner.total} (<65)`);
+  return { winner, ranked: rows, distinctMechanisms: mechs.size, problems, valid: problems.length === 0, note: "heuristic editorial scores; they rank candidates, they do not predict audience retention" };
+}
+
+module.exports = { MECHANISMS, classify, scoreHook, compete, first30, BANNED_OPENERS, evaluateHook, engineer };

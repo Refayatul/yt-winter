@@ -45,6 +45,14 @@ function render(result, bundle, extra = {}) {
   for (const f of ev.aiPatterns.findings) L.push(`- ${f.name}${f.count ? " ×" + f.count : ""}${f.example ? ` (“${f.example}”)` : ""} −${Math.round(f.penalty)}`);
   L.push(`Storytelling score ${result.story.score}. ${result.story.notes.join("; ")}`);
   L.push("");
+  if (ev.spoken) { L.push(`Spoken naturalness **${ev.spoken.score}** (heuristic; rewrite below 75).`); for (const f of ev.spoken.findings.slice(0, 6)) L.push(`- ${f.name}${f.detail ? " (" + esc(f.detail) + ")" : ""}${f.sentence ? `: “${esc(f.sentence.slice(0, 90))}”` : ""}`); L.push(""); }
+  if (ev.retention) {
+    L.push("## Retention critic (heuristic)"); L.push(`Reading **${ev.retention.score}**. ${ev.retention.disclaimer}`); L.push("");
+    L.push(row(["Section", "Starts (min)", "Words", "Score", "Issues"])); L.push(row(["---", "---", "---", "---", "---"]));
+    for (const sec of ev.retention.sections) L.push(row([esc(sec.title), sec.startsAtMin, sec.words, sec.score, esc(sec.issues.map((i) => i.type).join(", ") || "—")]));
+    for (const g of ev.retention.global) L.push(`- ${g.severity.toUpperCase()} ${g.type}: ${esc(g.evidence)} → ${esc(g.recommendation)}`);
+    L.push("");
+  }
   L.push("## Narration QA"); const n = ev.narration;
   L.push(`Provider: ${esc(n.provider)} · certified premium: **${n.certified ? "yes" : "NO"}** · naturalness **${n.naturalness}** (required ${extra.narrationRequired || 88}) · measured from rendered take: ${n.measured ? "yes" : "no"}`);
   if (n.audio && n.audio.status === "OBSERVED") L.push(`Audio: ${n.audio.integratedLufs} LUFS integrated, true peak ${n.audio.truePeakDbfs} dBFS, ${n.audio.silenceCount} pauses ≥0.35s.`);
@@ -83,4 +91,53 @@ function render(result, bundle, extra = {}) {
   return L.join("\n");
 }
 
-module.exports = { render };
+// ---- Story package review (Phase 3): plan check, hooks, draft -> critique -> final, sections, claim map ----
+function renderStory(pkg) {
+  const { topic, dossier, format, plan, planCheck, draft, critique, final, claimMap } = pkg;
+  const L = [];
+  L.push(`# Story review: ${esc(topic.topic)} (${format})`, "", `Working title: **${esc(pkg.title || plan.thesis)}** · generated ${pkg.generatedAt} · dry run, nothing uploaded.`, "");
+  L.push("Every score below is a heuristic reading of the text (ESTIMATED). None of them measures or predicts audience retention.", "");
+  L.push("## Story plan", `- **Thesis:** ${esc(plan.thesis)}`, `- **Central question:** ${esc(plan.centralQuestion)}`, `- **Conflict:** wants ${esc(plan.conflict.wants)}; obstacle ${esc(plan.conflict.obstacle)}; stakes ${esc(plan.conflict.stakes)}`, `- **Misconception:** ${esc(plan.misconception)}`, `- **Original angle:** ${esc(plan.originalAngle)}`, `- **Payoff:** ${esc(plan.payoff)}`, "");
+  L.push(row(["#", "Section", "Purpose", "Claims", "Raises", "Resolves"]), row(["---", "---", "---", "---", "---", "---"]));
+  plan.sections.forEach((x, i) => L.push(row([i + 1, esc(x.title), x.purpose, x.claimIds.join(", "), x.raises.join(", ") || "—", x.resolves.join(", ") || "—"])));
+  L.push("", `Plan checks: ${planCheck.issues.length ? planCheck.issues.map(esc).join("; ") : "all passed"}.`, "");
+  L.push("## Hook evaluation", row(["Hook", "Mechanism", "Curiosity", "Clarity", "Originality", "Tension", "Visual", "Factual", "Total"]), row(["---", "---", "---", "---", "---", "---", "---", "---", "---"]));
+  for (const h of final.assessment.hooks.ranked) L.push(row([esc(h.text), h.mechanism, h.dims.curiosity, h.dims.clarity, h.dims.originality, h.dims.tension, h.dims.visual, h.factual.pass ? "pass" : "FAIL: " + esc(h.factual.problems.join("; ")), h.total]));
+  L.push("", `Selected opening: “${esc(final.winningHook)}”`);
+  if (planCheck.override) L.push(`Editorial override of the heuristic winner (“${esc(planCheck.override.heuristicWinner)}”, ${planCheck.override.margin} points higher): ${esc(planCheck.override.reason)}`);
+  L.push("");
+  const stage = (name, st) => {
+    const a = st.assessment;
+    L.push(`## ${name}`, `${a.local.words} words (~${(a.local.words / 150).toFixed(1)} min at 150 wpm) · AI-pattern ${a.local.aiPatternScore} · spoken naturalness ${a.spoken.score} · retention reading ${a.retention.score} · first 30 s ${a.retention.first30.score}`, "");
+    L.push(a.blocking.length ? "Blocking issues:" : "Blocking issues: none.");
+    for (const b of a.blocking) L.push("- " + esc(b));
+    L.push("");
+  };
+  stage("Draft assessment", draft);
+  L.push("## Retention critique of the draft (independent Retention Critic)", draft.assessment.retention.disclaimer, "");
+  L.push(row(["Section", "Starts (min)", "Words", "New claims/numbers/names", "Score", "Issues"]), row(["---", "---", "---", "---", "---", "---"]));
+  for (const x of draft.assessment.retention.sections) L.push(row([esc(x.title), x.startsAtMin, x.words, `${x.novelty.newClaims}/${x.novelty.newNumbers}/${x.novelty.newNames}`, x.score, esc(x.issues.map((i) => `${i.type}: ${i.evidence} → ${i.recommendation}`).join(" · ") || "—")]));
+  for (const g of draft.assessment.retention.global) L.push(`- **${g.severity}** ${g.type}: ${esc(g.evidence)} → ${esc(g.recommendation)}`);
+  L.push("");
+  if (critique) {
+    L.push("## Editorial critique of the draft", critique.provenance ? `_${esc(critique.provenance)}_` : "", "", `Verdict: **${critique.verdict}**`, "");
+    for (const p of critique.problems) L.push(`- **${p.severity}** [${esc(p.section)} ${p.beatIds.join(",")}] ${p.type}: “${esc(p.quote)}” → ${esc(p.fix)}`);
+    if (critique.keep.length) L.push("", "Keep: " + critique.keep.map(esc).join("; "));
+    if (critique.automatedReadingsDisputed.length) L.push("", "Automated readings disputed: " + critique.automatedReadingsDisputed.map(esc).join("; "));
+    L.push("");
+  }
+  stage("Final assessment", final);
+  if (final.changes && final.changes.length) { L.push("Changes from draft to final:"); for (const c of final.changes) L.push("- " + esc(c)); L.push(""); }
+  L.push("## Section-by-section editorial report (final)", row(["Section", "Purpose", "Starts (min)", "Words", "Retention", "Naturalness", "AI-pattern", "Evidence", "Notes"]), row(["---", "---", "---", "---", "---", "---", "---", "---", "---"]));
+  for (const x of final.editorial.sections) L.push(row([esc(x.title), x.purpose || "—", x.startsAtMin, x.words, x.grades.retention, x.grades.naturalness, x.grades.genericness, x.grades.evidence, esc(x.issues.map((i) => i.type + ": " + i.recommendation).join(" · ") || "—")]));
+  L.push("", "Open questions: " + (final.editorial.openQuestions.map((q) => `“${esc(q.question)}” (${q.raisedIn} → ${q.answeredIn || "UNANSWERED"})`).join("; ") || "none"), "");
+  L.push("## Claim-to-source map (final script)", row(["Beat", "Claim", "Status", "Source", "Verbatim passage"]), row(["---", "---", "---", "---", "---"]));
+  for (const m of claimMap) L.push(row([m.beatIds.join(", "), esc(m.claimId + ": " + m.text), m.status, esc(m.sources.join("; ")), esc(m.passages.join(" … "))]));
+  L.push("", "Numbers in the final script that are not in the dossier: " + (final.assessment.local.issues.filter((i) => /is not in the dossier/.test(i)).length ? final.assessment.local.issues.filter((i) => /is not in the dossier/.test(i)).map(esc).join("; ") : "none") + ".", "");
+  L.push("## Final script", "");
+  let sec = null;
+  for (const b of final.out.beats) { if (b.section !== sec) { sec = b.section; const t = plan.sections.find((x) => x.id === sec); L.push("", `**[${esc(t ? t.title : sec)}]**`, ""); } L.push(`${b.text} _(${b.id}, ${b.claimId})_`, ""); }
+  return L.join("\n") + "\n";
+}
+
+module.exports = { renderStory, render };

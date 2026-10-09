@@ -19,6 +19,7 @@ const Vis = require("./visuals");
 const Sim = require("./similarity");
 const Quality = require("./quality");
 const Sched = require("./schedule");
+const Retention = require("./retention");
 const { CHANNEL_DIR, thresholds } = require("./config");
 
 function storyStats(beats) {
@@ -57,6 +58,9 @@ function run(bundle, options = {}) {
   ev.scriptClaims = Research.unsupportedClaimsInScript(script, bundle.dossier);
   // 2. Writing quality.
   ev.aiPatterns = AI.analyze(script);
+  // 2b. Spoken naturalness and the Retention Critic (heuristic readings for review; they add no new gate here).
+  ev.spoken = AI.spoken(script);
+  ev.retention = Retention.critique(beats, { plan: bundle.storyPlan, format, title: bundle.selectedTitle || bundle.topic.topic });
   // 3. Hook competition + first 30 seconds.
   const topicWords = T.contentWords(bundle.topic.topic);
   ev.hook = Hooks.compete(bundle.hookCandidates || [], { topicWords });
