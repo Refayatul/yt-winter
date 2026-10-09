@@ -1,0 +1,406 @@
+{
+ "topicId": "hbm-073-how-gift-cards-make-money-for-retailers",
+ "format": "long",
+ "researchedAt": "2026-10-09",
+ "researcher": "Claude Opus 5.5 in a Claude Code session: primary filings and regulation read directly (SEC EDGAR, consumerfinance.gov, bankrate.com); every claim carries the verbatim passage it rests on. No ANTHROPIC_API_KEY was available, so the automated research agent did not run.",
+ "thesis": "An unused gift card balance is not simply lost money: issuers of cards that never expire predict from their own redemption history how much will never be spent, and book that share as revenue little by little as other cards are redeemed, while federal rules block the quickest ways of taking the balance from the holder.",
+ "angle": "Follow one card through the company's own books with current filings (Starbucks fiscal 2025, Darden fiscal 2026), separate the survey estimate of what households hold from what companies actually record, and answer who ends up with the money: the company, the state, or the holder.",
+ "contradictionsChecked": true,
+ "contradictions": [
+  {
+   "id": "x1",
+   "status": "resolved",
+   "note": "Bankrate's survey says 20% of US adults lost money by letting a gift card expire, while Starbucks and Darden say their cards do not expire. Both can be true: the survey covers all brands plus vouchers and store credit, and federal rules allow some cards to expire after at least five years. The script must not say that gift cards never expire."
+  },
+  {
+   "id": "x2",
+   "status": "resolved",
+   "note": "The $27 billion national total is a survey-based estimate. Bankrate's release states the total but not how it was calculated, and it includes gift vouchers and store credit. It must be presented as an estimate with its source and method (YouGov online sample of 2,373 adults, August 2024)."
+  },
+  {
+   "id": "x3",
+   "status": "resolved",
+   "note": "Breakage is an accounting estimate, not a count of forgotten cards. Darden states that actual breakage may differ from the amounts recorded and that it updates its estimates periodically. Say 'expects' or 'estimates', never 'knows'."
+  },
+  {
+   "id": "x4",
+   "status": "resolved",
+   "note": "Starbucks' $1,751.7 million balance combines stored value cards and loyalty program benefits (Stars). It is not the amount of unused gift cards and must not be presented as such."
+  }
+ ],
+ "sources": [
+  {
+   "id": "s1",
+   "type": "10-k",
+   "publisher": "Starbucks Corporation (SEC EDGAR)",
+   "title": "Form 10-K for the fiscal year ended September 28, 2025",
+   "url": "https://www.sec.gov/Archives/edgar/data/829224/000082922425000114/sbux-20250928.htm",
+   "date": "2025-11-14",
+   "accessed": "2026-10-09"
+  },
+  {
+   "id": "s2",
+   "type": "10-k",
+   "publisher": "Darden Restaurants, Inc. (SEC EDGAR)",
+   "title": "Form 10-K for the fiscal year ended May 31, 2026",
+   "url": "https://www.sec.gov/Archives/edgar/data/940944/000094094426000025/dri-20260531.htm",
+   "date": "2026-07-24",
+   "accessed": "2026-10-09"
+  },
+  {
+   "id": "s3",
+   "type": "regulator",
+   "publisher": "Consumer Financial Protection Bureau",
+   "title": "12 CFR 1005.20 Requirements for gift cards and gift certificates (Regulation E)",
+   "url": "https://www.consumerfinance.gov/rules-policy/regulations/1005/20/",
+   "date": "",
+   "accessed": "2026-10-09",
+   "note": "current regulation text; the eCFR copy was behind a bot check and was not used"
+  },
+  {
+   "id": "s4",
+   "type": "regulator",
+   "publisher": "Consumer Financial Protection Bureau",
+   "title": "Giving or receiving gift cards? Know the terms and avoid surprises (archived blog)",
+   "url": "https://www.consumerfinance.gov/about-us/blog/giving-or-receiving-gift-cards-know-the-terms-and-avoid-surprises/",
+   "date": "2012-12-21",
+   "accessed": "2026-10-09",
+   "note": "archived page; corroborates s3, which is the operative text"
+  },
+  {
+   "id": "s5",
+   "type": "company-primary",
+   "publisher": "Bankrate (survey publisher)",
+   "title": "Over 2 in 5 U.S. Adults Have at Least One Unused Gift Card, Totaling About $27 Billion (press release)",
+   "url": "https://bankrate.com/f/102997/x/c53caa68d4/gift-card-survey-press-release.pdf",
+   "date": "2024-09-23",
+   "accessed": "2026-10-09",
+   "note": "primary source for what the survey reported, not independent verification of the total"
+  },
+  {
+   "id": "s6",
+   "type": "company-primary",
+   "publisher": "Bankrate (survey publisher)",
+   "title": "Gift cards survey (article with methodology)",
+   "url": "https://www.bankrate.com/credit-cards/news/gift-cards-survey/",
+   "date": "2024-09-23",
+   "accessed": "2026-10-09"
+  }
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s1"
+   ],
+   "numbers": [
+    "200.4",
+    "22.0",
+    "187.6",
+    "20.0",
+    "196.1",
+    "18.9",
+    "2025",
+    "2024",
+    "2023"
+   ],
+   "text": "Starbucks recognized breakage revenue of $200.4 million in company-operated store revenues and $22.0 million in licensed store revenues in fiscal 2025, after $187.6 million and $20.0 million in fiscal 2024 and $196.1 million and $18.9 million in fiscal 2023.",
+   "evidence": [
+    {
+     "sourceId": "s1",
+     "passage": "we recognized breakage revenue of $200.4 million, $187.6 million, and $196.1 million in company-operated store revenues, respectively, and $22.0 million, $20.0 million, and $18.9 million in licensed store revenues, respectively"
+    }
+   ]
+  },
+  {
+   "id": "c2",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s1"
+   ],
+   "numbers": [],
+   "text": "In company-operated markets including the US, Starbucks stored value cards have no expiration date and no service fees; based on historical redemption rates, the portion not expected to be redeemed is recognized as breakage over time in proportion to card redemptions, and the estimate accounts for remittance to government agencies under unclaimed property laws where applicable; the redemption rates are based on historical redemption patterns for each market, including the timing and business channel in which a card was activated or reloaded.",
+   "evidence": [
+    {
+     "sourceId": "s1",
+     "passage": "our stored value cards do not have an expiration date, nor do we charge service fees that cause a decrement to customer balances. Based on historical redemption rates, a portion of stored value cards is not expected to be redeemed and will be recognized as breakage over time in proportion to stored value card redemptions."
+    },
+    {
+     "sourceId": "s1",
+     "passage": "remittance to government agencies under unclaimed property laws, if applicable"
+    },
+    {
+     "sourceId": "s1",
+     "passage": "The redemption rates are based on historical redemption patterns for each market, including the timing and business channel in which the card was activated or reloaded"
+    }
+   ]
+  },
+  {
+   "id": "c3",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s1"
+   ],
+   "numbers": [
+    "1,751.7",
+    "1,718.7",
+    "15,245.8",
+    "15,199.5",
+    "2025"
+   ],
+   "text": "Starbucks reported a combined stored value cards and loyalty program balance of $1,751.7 million at September 28, 2025 (from $1,718.7 million a year earlier); during fiscal 2025, $15,245.8 million was deferred from card activations, reloads and Stars earned, and $15,199.5 million was recognized from card and Stars redemptions and breakage.",
+   "evidence": [
+    {
+     "sourceId": "s1",
+     "passage": "Stored value cards and loyalty program at September 29, 2024 $ 1,718.7 Revenue deferred - card activations, card reloads and Stars earned 15,245.8"
+    },
+    {
+     "sourceId": "s1",
+     "passage": "Stored value cards and loyalty program at September 28, 2025(2) $ 1,751.7"
+    },
+    {
+     "sourceId": "s1",
+     "passage": "Revenue deferred - card activations, card reloads and Stars earned 15,245.8 Revenue recognized - card and Stars redemptions and breakage (15,199.5)"
+    }
+   ]
+  },
+  {
+   "id": "c4",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s2"
+   ],
+   "numbers": [
+    "12"
+   ],
+   "text": "Darden recognizes gift card sales when cards are redeemed; its gift cards have no expiration dates or dormancy fees, and it recognizes breakage within sales in proportion to actual redemptions over the expected redemption period, generally 12 years, estimating both the amount of breakage and its timing, which may differ from what actually happens; it updates its redemption-period and breakage-rate estimates periodically.",
+   "evidence": [
+    {
+     "sourceId": "s2",
+     "passage": "Although there are no expiration dates or dormancy fees for our gift cards, based on our analysis of our historical gift card redemption patterns, we can reasonably estimate the amount of gift cards for which redemption is remote, which is referred to as “breakage.”"
+    },
+    {
+     "sourceId": "s2",
+     "passage": "recognized over the expected period of redemption as the remaining gift card values are redeemed, generally over a period of 12 years"
+    },
+    {
+     "sourceId": "s2",
+     "passage": "If actual redemption patterns vary from our estimates, actual gift card breakage income may differ from the amounts recorded."
+    },
+    {
+     "sourceId": "s2",
+     "passage": "We update our estimates of our redemption period and our breakage rate periodically and apply that rate to gift card redemptions on a prospective basis."
+    }
+   ]
+  },
+  {
+   "id": "c5",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s2"
+   ],
+   "numbers": [
+    "628.8",
+    "760.2",
+    "751.9",
+    "636.7",
+    "2026"
+   ],
+   "text": "Darden's deferred gift card revenue went from $628.8 million to $636.7 million in fiscal 2026, with $760.2 million of activations and $751.9 million of redemptions and breakage.",
+   "evidence": [
+    {
+     "sourceId": "s2",
+     "passage": "Beginning balance $ 628.8 $ 620.6 Sale of Olive Garden Canada gift card balances (0.4) — Acquired deferred gift card revenue — 2.6 Activations 760.2 737.0 Redemptions and breakage (751.9) (731.4) Ending balance $ 636.7 $ 628.8"
+    }
+   ]
+  },
+  {
+   "id": "c6",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s2"
+   ],
+   "numbers": [
+    "50",
+    "3.6",
+    "2026"
+   ],
+   "text": "Darden says a 50 basis point change in its breakage-rate estimates would have changed its breakage income by about $3.6 million for fiscal 2026.",
+   "evidence": [
+    {
+     "sourceId": "s2",
+     "passage": "Changing our breakage-rate estimates by 50 basis points would have resulted in an adjustment in our breakage income of approximately $3.6 million for fiscal 2026."
+    }
+   ]
+  },
+  {
+   "id": "c7",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s3",
+    "s4"
+   ],
+   "numbers": [
+    "five",
+    "one"
+   ],
+   "text": "Under federal rules, a store gift card may carry an expiration date only if its funds stay valid for at least five years after issue or the last load, and a dormancy, inactivity or service fee is allowed only after a year with no activity, no more than one per calendar month.",
+   "evidence": [
+    {
+     "sourceId": "s3",
+     "passage": "Five years after the date the gift certificate was initially issued"
+    },
+    {
+     "sourceId": "s3",
+     "passage": "There has been no activity with respect to the certificate or card, in the one-year period"
+    },
+    {
+     "sourceId": "s3",
+     "passage": "Not more than one dormancy, inactivity, or service fee is imposed in any given calendar month."
+    },
+    {
+     "sourceId": "s4",
+     "passage": "Under current federal law, a gift card cannot be sold that will expire in less than five years."
+    }
+   ]
+  },
+  {
+   "id": "c8",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s5",
+    "s6"
+   ],
+   "numbers": [
+    "43",
+    "27",
+    "244",
+    "100",
+    "2,373",
+    "2024",
+    "19",
+    "21",
+    "1,010"
+   ],
+   "text": "A Bankrate survey run by YouGov online with 2,373 US adults (1,010 of whom had unused value) on August 19-21, 2024 estimated that 43% of adults hold at least one unused gift card, gift voucher or store credit, about $27 billion nationwide, with an average of $244 and a median of $100 per person among holders.",
+   "evidence": [
+    {
+     "sourceId": "s5",
+     "passage": "Over 2 in 5 U.S. adults (43%) have at least one unused gift card, gift voucher, or store credit, totaling about $27 billion in outstanding value nationwide"
+    },
+    {
+     "sourceId": "s5",
+     "passage": "The total sample size was 2,373 U.S. adults, of which 1,010 have unused gift cards, gift vouchers, or store credits . Fieldwork was undertaken between August 19-21, 2024."
+    },
+    {
+     "sourceId": "s6",
+     "passage": "The average amount in unused gift cards, gift vouchers or store credit is $244 per person."
+    }
+   ]
+  },
+  {
+   "id": "c9",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s5"
+   ],
+   "numbers": [
+    "34",
+    "20",
+    "17",
+    "12"
+   ],
+   "text": "In the same survey, 34% of US adults said they had lost money through a gift card mistake: 20% let a card expire, 17% lost one, and 12% saw a store go out of business before using it.",
+   "evidence": [
+    {
+     "sourceId": "s5",
+     "passage": "Over one-third of U.S. adults (34%) have lost money due to a gift card misstep such as letting a gift card expire (20%), losing a gift card (17%), or having a store go out of business before they used their gift card (12%)."
+    }
+   ]
+  },
+  {
+   "id": "c10",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s2"
+   ],
+   "numbers": [],
+   "text": "Darden lists unclaimed property laws among the accounting and legal rules relevant to its business that are highly complex and involve many subjective assumptions, estimates and judgments.",
+   "evidence": [
+    {
+     "sourceId": "s2",
+     "passage": "unclaimed property laws and litigation, and stock-based compensation, are highly complex and involve many subjective assumptions, estimates, and judgments by us"
+    }
+   ]
+  }
+ ],
+ "inferences": [
+  {
+   "id": "i1",
+   "disclosed": true,
+   "basisClaimIds": [
+    "c1"
+   ],
+   "numbers": [
+    "222.4",
+    "207.6",
+    "215.0",
+    "2025",
+    "2024",
+    "2023"
+   ],
+   "text": "Our arithmetic: adding Starbucks' two breakage lines gives $222.4 million in fiscal 2025, $207.6 million in fiscal 2024 and $215.0 million in fiscal 2023."
+  },
+  {
+   "id": "i2",
+   "disclosed": true,
+   "basisClaimIds": [
+    "c5"
+   ],
+   "numbers": [
+    "7.9",
+    "760.2",
+    "751.9"
+   ],
+   "text": "Our arithmetic: Darden took in $760.2 million on new card loads and released $751.9 million through redemptions and breakage, so the unspent pool still grew by $7.9 million over the year."
+  },
+  {
+   "id": "i3",
+   "disclosed": true,
+   "basisClaimIds": [
+    "c3"
+   ],
+   "numbers": [
+    "15.2",
+    "15,245.8",
+    "15,199.5"
+   ],
+   "text": "Our rounding: $15,245.8 million deferred and $15,199.5 million recognized are each about $15.2 billion: almost everything loaded in the year came back out as redemptions and breakage."
+  },
+  {
+   "id": "i4",
+   "disclosed": true,
+   "basisClaimIds": [
+    "c3"
+   ],
+   "numbers": [
+    "1.75",
+    "1.72",
+    "1,751.7",
+    "1,718.7"
+   ],
+   "text": "Our rounding: $1,751.7 million is about $1.75 billion, up from about $1.72 billion ($1,718.7 million) a year earlier."
+  }
+ ]
+}

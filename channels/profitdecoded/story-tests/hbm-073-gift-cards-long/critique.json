@@ -1,0 +1,98 @@
+{
+ "provenance": "Editorial critique written by Claude Opus 5.5 in this Claude Code session after reading the draft and the automated readings. It is NOT an independent model call: no ANTHROPIC_API_KEY was available, so the engine's fresh-context critic stage could not run. The deterministic Retention Critic above is independent of the writer.",
+ "verdict": "revise",
+ "problems": [
+  {
+   "section": "payoff",
+   "beatIds": [
+    "b36"
+   ],
+   "type": "factual",
+   "severity": "high",
+   "quote": "The store keeps part of the money... The rest still belongs to the person holding the card.",
+   "fix": "Implies the predicted share stops being the holder's. It doesn't: Starbucks cards have no expiry and no fees that reduce balances, so breakage is an accounting forecast, not a transfer. Say the balance is still the holder's to spend. (Found in the final editorial read, after the automated checks passed.)"
+  },
+  {
+   "section": "open",
+   "beatIds": [
+    "b1"
+   ],
+   "type": "hook",
+   "severity": "high",
+   "quote": "In its latest annual report, Starbucks counted $222.4 million...",
+   "fix": "Open with the approved contradiction hook: the cards don't expire, yet $222.4 million of card money became sales. The tension is in one line instead of two."
+  },
+  {
+   "section": "open",
+   "beatIds": [
+    "b3",
+    "b4"
+   ],
+   "type": "attention",
+   "severity": "high",
+   "quote": "The answer runs through an accounting rule, a federal law, and a forecast...",
+   "fix": "By second 30 give the first real answer: the company predicted the unspent share from its own history and books it as sales. Keep 'who ends up with it' for the payoff. Cut the three-part teaser."
+  },
+  {
+   "section": "payoff",
+   "beatIds": [
+    "b35",
+    "b36"
+   ],
+   "type": "payoff",
+   "severity": "high",
+   "quote": "The company does, but only the share...",
+   "fix": "Answer the question in its own words ('the store keeps part of the money') so the payoff clearly closes the question opened in the first minute."
+  },
+  {
+   "section": "state",
+   "beatIds": [
+    "b31",
+    "b32"
+   ],
+   "type": "story",
+   "severity": "medium",
+   "quote": "There's also a third party with a claim...",
+   "fix": "The section only restates one Starbucks line. Add Darden's own wording that unclaimed property laws involve subjective estimates and judgments: it shows the state's share is itself uncertain."
+  },
+  {
+   "section": "forecast",
+   "beatIds": [
+    "b25"
+   ],
+   "type": "clarity",
+   "severity": "medium",
+   "quote": "Darden took in $760.2 million on new cards and released $751.9 million...",
+   "fix": "Three numbers in one sentence. Split in, out and growth into separate sentences."
+  },
+  {
+   "section": "ledger",
+   "beatIds": [
+    "b12",
+    "b14"
+   ],
+   "type": "story",
+   "severity": "medium",
+   "quote": "Almost all of it comes back out again, as drinks and food.",
+   "fix": "Show the evidence for 'almost all': the same filing table puts both money in and money out at about $15.2 billion. Name the table so the viewer sees it is the company's own record."
+  },
+  {
+   "section": "drawer",
+   "beatIds": [
+    "b7"
+   ],
+   "type": "clarity",
+   "severity": "low",
+   "quote": "The median was $100.",
+   "fix": "Say what a median means in plain words: half of the people with leftover value had $100 or less."
+  }
+ ],
+ "keep": [
+  "The survey-versus-filing caveat (limits section) and the disclosure that the addition is ours",
+  "Darden's 12-year forecast and the half-point sensitivity: the strongest proof that breakage is a prediction",
+  "The plain-language explanation of deferred revenue"
+ ],
+ "automatedReadingsDisputed": [
+  "The Retention Critic flags the state section as a dead stretch. It does introduce a new idea (the government's claim) but no new evidence, so the reading is fair in substance; fixed by adding Darden's disclosure rather than cutting the section."
+ ]
+}

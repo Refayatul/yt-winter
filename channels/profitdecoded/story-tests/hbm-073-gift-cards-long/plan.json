@@ -1,0 +1,179 @@
+{
+ "thesis": "An unused gift card balance is not simply lost money: issuers of cards that never expire predict from their own redemption history how much will never be spent, and book that share as revenue little by little as other cards are redeemed, while federal rules block the quickest ways of taking the balance from the holder.",
+ "centralQuestion": "When a gift card balance goes unspent, who ends up with the money?",
+ "conflict": {
+  "wants": "Retailers want the cash up front and revenue they can count on; card holders want the value they were given.",
+  "obstacle": "Accounting rules stop a store from calling the cash sales until something is sold, and federal rules stop it from simply expiring the card.",
+  "stakes": "Survey estimates put tens of billions of dollars in American drawers; for one company the predicted leftovers were $222.4 million in a year."
+ },
+ "misconception": "That a store gets the money when a card is forgotten or expires, all at once.",
+ "originalAngle": "Follow the money through the companies' own current filings (Starbucks fiscal 2025, Darden fiscal 2026): the card as a debt, breakage as a forecast spread over years, the federal floor, and the state's claim. Competitors covered the Delaware escheat angle (PolyMatter, 2023), market size and unspent totals (CNBC, 2020) and Starbucks' payments float (WSJ, 2022); none walks through how the predicted leftovers are booked or separates the survey estimate from what companies record.",
+ "hookCandidates": [
+  {
+   "text": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Look at the gift card in your kitchen drawer. The company that sold it has already estimated how likely you are to spend it.",
+   "mechanism": "visual mystery"
+  },
+  {
+   "text": "When a gift card balance goes unspent, who ends up with the money?",
+   "mechanism": "question"
+  },
+  {
+   "text": "Darden's gift cards have no expiry date. Its accountants still plan, 12 years ahead, for the money that won't come back.",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "A gift card is money the store owes you. Some of that debt slowly turns into the store's sales.",
+   "mechanism": "hidden incentive"
+  },
+  {
+   "text": "43% of American adults are holding an unused gift card, voucher or store credit, according to one survey. Here is where that money goes.",
+   "mechanism": "number"
+  }
+ ],
+ "questions": [
+  {
+   "id": "q1",
+   "text": "When a gift card balance goes unspent, who ends up with the money?"
+  },
+  {
+   "id": "q2",
+   "text": "If the cards never expire, how does a company decide any of the money is gone?"
+  }
+ ],
+ "sections": [
+  {
+   "id": "open",
+   "title": "The money nobody spent",
+   "purpose": "hook",
+   "claimIds": [
+    "i1",
+    "c2"
+   ],
+   "raises": [
+    "q1"
+   ],
+   "resolves": [],
+   "visualIdea": "a Starbucks card on a counter; the $222.4 million line rises out of the 10-K"
+  },
+  {
+   "id": "drawer",
+   "title": "The drawer",
+   "purpose": "evidence",
+   "claimIds": [
+    "c8",
+    "c9"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "a kitchen drawer opening on a pile of cards; survey bars for 43%, $244, $100"
+  },
+  {
+   "id": "ledger",
+   "title": "A debt, not a sale",
+   "purpose": "mechanism",
+   "claimIds": [
+    "c3",
+    "i3",
+    "i4"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "money flow: cash in, liability box, redemptions out"
+  },
+  {
+   "id": "breakage",
+   "title": "Breakage",
+   "purpose": "mechanism",
+   "claimIds": [
+    "c2",
+    "c1",
+    "i1"
+   ],
+   "raises": [
+    "q2"
+   ],
+   "resolves": [],
+   "visualIdea": "two piles: redeemed and predicted-unredeemed; slice moving into sales with each tap"
+  },
+  {
+   "id": "forecast",
+   "title": "A forecast twelve years long",
+   "purpose": "turn",
+   "claimIds": [
+    "c4",
+    "c6",
+    "c5",
+    "i2"
+   ],
+   "raises": [],
+   "resolves": [
+    "q2"
+   ],
+   "visualIdea": "a 12-year timeline; a dial labelled breakage rate moving by half a point"
+  },
+  {
+   "id": "rules",
+   "title": "Why cards don't just expire",
+   "purpose": "complication",
+   "claimIds": [
+    "c7",
+    "c9"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "a calendar marking five years and a one-year inactivity window"
+  },
+  {
+   "id": "state",
+   "title": "A third claimant",
+   "purpose": "consequence",
+   "claimIds": [
+    "c2",
+    "c10"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "filing excerpt: unclaimed property laws"
+  },
+  {
+   "id": "limits",
+   "title": "Two numbers that don't belong together",
+   "purpose": "caveat",
+   "claimIds": [
+    "c8",
+    "i1",
+    "c4"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "comparison panel: survey estimate vs company record"
+  },
+  {
+   "id": "payoff",
+   "title": "Who keeps it",
+   "purpose": "payoff",
+   "claimIds": [
+    "c2",
+    "c4",
+    "c7"
+   ],
+   "raises": [],
+   "resolves": [
+    "q1"
+   ],
+   "visualIdea": "the card back in the drawer, the forecast line printed across it"
+  }
+ ],
+ "payoff": "The company keeps the share its own history says will not come back, recorded a little at a time; part may go to a state under unclaimed property laws; the rest still belongs to the holder, and at Starbucks and Darden it does not expire.",
+ "caveats": [
+  "The $27 billion total is a survey estimate whose calculation is not published.",
+  "Breakage is a company estimate that is revised.",
+  "Starbucks' $1.75 billion balance mixes cards and loyalty rewards."
+ ],
+ "selectedHook": "In the US, Starbucks cards don't expire. Its latest annual report still counts $222.4 million of card money as sales, and no drink was served for it.",
+ "selectionReason": "Same contradiction as the heuristic winner, but built on Starbucks, a brand nearly every US viewer has used, and on the film's headline number; Darden is less familiar to a general audience and its 12-year detail pays off better mid-film."
+}

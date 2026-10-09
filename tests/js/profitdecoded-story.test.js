@@ -98,7 +98,7 @@ test("spoken naturalness flags what is hard to say or follow, and leaves plain n
 });
 
 // ---------- Retention Critic ----------
-test("retention critic: dead stretches, repetition, teasers, unpaid questions, missing payoff, mechanical loops", () => {
+test("retention critic: repetition, teasers, filler, unpaid questions, missing payoff, mechanical loops", () => {
   const R = PD("retention");
   const b = (id, section, text, claimId = "c1", type = "evidence") => ({ id, section, text, claimId, type });
   const r = R.critique([
@@ -109,7 +109,7 @@ test("retention critic: dead stretches, repetition, teasers, unpaid questions, m
     b("b5", "end", "So the balances stay on the books for a while.", "c1", "payoff"),
   ], { format: "long" });
   const all = JSON.stringify(r);
-  for (const t of ["forced-drama", "repetition", "dead-stretch", "unpaid-question", "missing-payoff"]) assert.match(all, new RegExp(t), t);
+  for (const t of ["forced-drama", "repetition", "filler", "unpaid-question", "missing-payoff"]) assert.match(all, new RegExp(t), t);
   assert.equal(r.provenance, "ESTIMATED"); assert.match(r.disclaimer, /does not measure or predict/);
   assert.ok(r.weakest.length >= 1 && r.weakest[0].fix);
   // questions on a metronome
@@ -136,6 +136,15 @@ test("story plan checks: claim ids, every question resolved, a turn, a caveat, p
   const broken = { ...plan, sections: plan.sections.filter((s) => !["turn", "caveat", "payoff"].includes(s.id)).map((s) => (s.id === "proof" ? { ...s, claimIds: ["c1", "nope"] } : s)), hookCandidates: plan.hookCandidates.slice(0, 3) };
   const issues = W.evaluatePlan(broken, d).issues.join("\n");
   for (const t of ["unknown claim id", "never resolved", "no complication or turn", "payoff", "caveat", "hook"]) assert.match(issues, new RegExp(t), t);
+  // editorial hook override: allowed for a close factual hook with a reason, refused otherwise
+  const ranked = W.evaluatePlan(plan, d).hooks.ranked;
+  const close = ranked.find((h, i) => i > 0 && h.factual.pass && ranked[0].total - h.total <= 10);
+  const ok = W.evaluatePlan({ ...plan, selectedHook: close.text, selectionReason: "more familiar brand" }, d);
+  assert.deepEqual(ok.issues, []); assert.equal(ok.selected.text, close.text); assert.ok(ok.override && ok.override.reason);
+  assert.match(W.evaluatePlan({ ...plan, selectedHook: close.text }, d).issues.join(), /selectionReason/);
+  const far = ranked.find((h) => ranked[0].total - h.total > 10);
+  if (far) assert.match(W.evaluatePlan({ ...plan, selectedHook: far.text, selectionReason: "x" }, d).issues.join(), /more than 10 below/);
+  assert.match(W.evaluatePlan({ ...plan, selectedHook: "not a candidate", selectionReason: "x" }, d).issues.join(), /not one of the hook candidates/);
 });
 
 // ---------- staged develop() ----------
@@ -200,4 +209,35 @@ test("orchestrator uses the story engine by default; PD_STORY_ENGINE=legacy keep
   assert.equal(r.steps[1].engine, "story"); assert.ok(r.steps[1].stages.plan && r.steps[1].stages.critique);
   const written = JSON.parse(fs.readFileSync(r.bundlePath, "utf8"));
   assert.ok(written.storyPlan && written.editorial); assert.equal(written.authoring.stage, "story-engine");
+});
+
+test("calibration: a Short needs one central claim, long-form all; a dead stretch needs duration", () => {
+  const W = A("script-agent"); const R = PD("retention"); const { plan } = story(); const d = dossier();
+  const oneIdea = { ...plan, sections: plan.sections.map((s) => ({ ...s, claimIds: s.claimIds.filter((c) => c !== "c2" && c !== "c3") })).map((s) => (s.claimIds.length ? s : { ...s, claimIds: ["c1"] })) };
+  assert.ok(W.evaluatePlan(oneIdea, d, "long").issues.some((i) => /central claim/.test(i)));
+  assert.ok(!W.evaluatePlan(oneIdea, d, "short").issues.some((i) => /central claim/.test(i)));
+  const b = (id, section, text) => ({ id, section, text, claimId: "c1", type: "evidence" });
+  const short = R.critique([b("a", "s1", "Starbucks counted $222.4 million of card money as sales in fiscal 2025."), b("b", "s2", "It books that money slowly, as other cards are spent.")], { format: "short" });
+  assert.ok(!JSON.stringify(short).includes("dead-stretch"), "a one-sentence beat is not a stretch");
+  const long = R.critique([b("a", "s1", "Starbucks counted $222.4 million of card money as sales in fiscal 2025."), b("b", "s2", "It books that money slowly, as other cards are spent, and it does this every single year, quietly, in the background, without anyone noticing very much at all, while the money keeps moving from one line of the accounts to another line of the accounts.")], { format: "long" });
+  assert.ok(JSON.stringify(long).includes("dead-stretch"));
+});
+
+test("production test packages (gift cards) pass the research gate and every story check, with no number outside the dossier", () => {
+  const { execFileSync } = require("child_process");
+  for (const pkg of ["hbm-073-gift-cards-long", "hbm-073-gift-cards-short"]) {
+    const dir = path.join(ROOT, "channels/profitdecoded/story-tests", pkg);
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "pd-pkg-"));
+    for (const f of ["meta.json", "plan.json", "draft.json", "critique.json", "final.json"]) fs.copyFileSync(path.join(dir, f), path.join(tmp, f));
+    const outText = execFileSync("node", [path.join(ROOT, "profitdecoded.js"), "story-review", tmp], { cwd: ROOT, encoding: "utf8" });
+    assert.match(outText, /final: \d+ words, 0 blocking/, outText);
+    const review = fs.readFileSync(path.join(tmp, "review.md"), "utf8");
+    assert.match(review, /Numbers in the final script that are not in the dossier: none/);
+    assert.match(review, /does not measure or predict audience retention/);
+    const bundle = JSON.parse(fs.readFileSync(path.join(tmp, "bundle.json"), "utf8"));
+    assert.ok(bundle.storyPlan && bundle.editorial && bundle.beats.length);
+  }
+  const d = readJson("channels/profitdecoded/research/hbm-073-how-gift-cards-make-money-for-retailers.json");
+  for (const f of ["long", "short"]) assert.equal(PD("research").gate(d, { format: f }).pass, true, f);
+  for (const c of d.claims) assert.ok((c.evidence || []).length >= 1, c.id + " has a verbatim passage");
 });

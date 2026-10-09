@@ -1,0 +1,784 @@
+{
+ "hookCandidates": [],
+ "beats": [
+  {
+   "id": "b1",
+   "type": "hook",
+   "text": "In its latest annual report, Starbucks counted $222.4 million of gift card money as sales. It didn't serve a single drink for it.",
+   "claimId": "i1",
+   "section": "open"
+  },
+  {
+   "id": "b2",
+   "type": "setup",
+   "text": "That money came from cards people loaded and then stopped using. The company didn't seize it. Its cards don't even expire.",
+   "claimId": "c2",
+   "section": "open"
+  },
+  {
+   "id": "b3",
+   "type": "setup",
+   "text": "So how does a balance that nobody spent turn into sales? And if the store isn't simply keeping it, who is?",
+   "claimId": "c2",
+   "section": "open"
+  },
+  {
+   "id": "b4",
+   "type": "setup",
+   "text": "The answer runs through an accounting rule, a federal law, and a forecast about you that existed before you ever got the card.",
+   "claimId": "c7",
+   "section": "open"
+  },
+  {
+   "id": "b5",
+   "type": "evidence",
+   "text": "Start with the drawer. In August 2024, Bankrate paid the polling firm YouGov to ask 2,373 American adults about gift cards they hadn't used.",
+   "claimId": "c8",
+   "section": "drawer"
+  },
+  {
+   "id": "b6",
+   "type": "evidence",
+   "text": "43% said they had at least one unused gift card, voucher or store credit.",
+   "claimId": "c8",
+   "section": "drawer"
+  },
+  {
+   "id": "b7",
+   "type": "evidence",
+   "text": "The average holder was sitting on $244. The median was $100.",
+   "claimId": "c8",
+   "section": "drawer"
+  },
+  {
+   "id": "b8",
+   "type": "evidence",
+   "text": "Bankrate turned that into a national figure of about $27 billion. Treat that as an estimate. It comes from an online survey, it counts vouchers and store credit too, and Bankrate doesn't publish the calculation behind the total.",
+   "claimId": "c8",
+   "section": "drawer"
+  },
+  {
+   "id": "b9",
+   "type": "consequence",
+   "text": "The same survey found that 34% of adults had already lost money to a gift card mistake. 20% let a card expire. 17% lost one. 12% watched the store close before they could spend it.",
+   "claimId": "c9",
+   "section": "drawer"
+  },
+  {
+   "id": "b10",
+   "type": "mechanism",
+   "text": "Now look at the other side of the counter. When you load money onto a card, the store gets the cash right away. But it can't call that cash sales, because it hasn't sold you anything yet.",
+   "claimId": "c3",
+   "section": "ledger"
+  },
+  {
+   "id": "b11",
+   "type": "mechanism",
+   "text": "Until you spend it, the money sits on the company's books as something it owes you. Accountants call it deferred revenue.",
+   "claimId": "c3",
+   "section": "ledger"
+  },
+  {
+   "id": "b12",
+   "type": "evidence",
+   "text": "At Starbucks, card loads, reloads and loyalty rewards added about $15.2 billion to that pile in fiscal 2025.",
+   "claimId": "i3",
+   "section": "ledger"
+  },
+  {
+   "id": "b13",
+   "type": "evidence",
+   "text": "By the end of that year, Starbucks still owed customers about $1.75 billion, up from about $1.72 billion a year earlier. That figure mixes card balances with loyalty rewards, so it isn't a count of forgotten gift cards.",
+   "claimId": "i4",
+   "section": "ledger"
+  },
+  {
+   "id": "b14",
+   "type": "mini-payoff",
+   "text": "Almost all of it comes back out again, as drinks and food. The interesting part is the slice that doesn't.",
+   "claimId": "i3",
+   "section": "ledger"
+  },
+  {
+   "id": "b15",
+   "type": "mechanism",
+   "text": "Starbucks has years of data on how people use its cards. From that history, it estimates how much of the money will not be redeemed.",
+   "claimId": "c2",
+   "section": "breakage"
+  },
+  {
+   "id": "b16",
+   "type": "mechanism",
+   "text": "Accountants have a name for that share. They call it breakage.",
+   "claimId": "c2",
+   "section": "breakage"
+  },
+  {
+   "id": "b17",
+   "type": "mechanism",
+   "text": "Starbucks doesn't wait for a card to go quiet and then take the balance. It books breakage gradually, in step with the cards that do get spent.",
+   "claimId": "c2",
+   "section": "breakage"
+  },
+  {
+   "id": "b18",
+   "type": "mechanism",
+   "text": "Every time a regular customer taps a card at the register, a small predicted share of the unspent money moves into sales along with it.",
+   "claimId": "c2",
+   "section": "breakage"
+  },
+  {
+   "id": "b19",
+   "type": "evidence",
+   "text": "Add up the two breakage lines in its filing and you get $222.4 million for fiscal 2025. That addition is ours. The year before, it was $207.6 million. The year before that, $215.0 million.",
+   "claimId": "i1",
+   "section": "breakage"
+  },
+  {
+   "id": "b20",
+   "type": "mini-payoff",
+   "text": "So money that customers never spend doesn't vanish. It shows up, a little at a time, as revenue the company never had to brew anything for.",
+   "claimId": "c1",
+   "section": "breakage"
+  },
+  {
+   "id": "b21",
+   "type": "turn",
+   "text": "Which raises an awkward question. If the cards don't expire, how does a company decide that any of the money is gone?",
+   "claimId": "c4",
+   "section": "forecast"
+  },
+  {
+   "id": "b22",
+   "type": "turn",
+   "text": "It makes a forecast. Darden, the company that runs Olive Garden, spells this out in its own annual report.",
+   "claimId": "c4",
+   "section": "forecast"
+  },
+  {
+   "id": "b23",
+   "type": "mechanism",
+   "text": "Its gift cards have no expiry date and no dormancy fees. It still estimates how much will never be used, and it spreads that money into sales over the expected life of the cards, generally 12 years.",
+   "claimId": "c4",
+   "section": "forecast"
+  },
+  {
+   "id": "b24",
+   "type": "evidence",
+   "text": "It also admits the estimate could be off. Darden says moving its breakage rate by half a percentage point would have changed its breakage income by about $3.6 million in fiscal 2026.",
+   "claimId": "c6",
+   "section": "forecast"
+  },
+  {
+   "id": "b25",
+   "type": "evidence",
+   "text": "And the pool of unspent cards isn't shrinking. In fiscal 2026, Darden took in $760.2 million on new cards and released $751.9 million through spending and breakage. By our math, the pile still grew by $7.9 million.",
+   "claimId": "i2",
+   "section": "forecast"
+  },
+  {
+   "id": "b26",
+   "type": "consequence",
+   "text": "So breakage isn't a tally of cards people forgot. It's a bet, placed years in advance, on how a whole crowd of card holders will behave.",
+   "claimId": "c4",
+   "section": "forecast"
+  },
+  {
+   "id": "b27",
+   "type": "turn",
+   "text": "There's a reason companies plan this way instead of letting cards die. Federal rules make that hard.",
+   "claimId": "c7",
+   "section": "rules"
+  },
+  {
+   "id": "b28",
+   "type": "evidence",
+   "text": "A store gift card in the US can only carry an expiration date if its money stays good for at least five years from when it was issued or last loaded.",
+   "claimId": "c7",
+   "section": "rules"
+  },
+  {
+   "id": "b29",
+   "type": "evidence",
+   "text": "Fees for not using the card are allowed only after a full year with no activity, and then no more than one a month.",
+   "claimId": "c7",
+   "section": "rules"
+  },
+  {
+   "id": "b30",
+   "type": "caveat",
+   "text": "That doesn't mean money never disappears. 20% of adults in the Bankrate survey said they'd let a card expire. That survey covered every kind of card and voucher, and some cards can still expire once the five-year minimum has passed.",
+   "claimId": "c9",
+   "section": "rules"
+  },
+  {
+   "id": "b31",
+   "type": "consequence",
+   "text": "There's also a third party with a claim. Starbucks says its breakage estimate takes into account money it may have to hand over to government agencies under unclaimed property laws.",
+   "claimId": "c2",
+   "section": "state"
+  },
+  {
+   "id": "b32",
+   "type": "caveat",
+   "text": "The filing doesn't say how much goes where. It only confirms that part of an unspent balance can end up with the government instead of the company.",
+   "claimId": "c2",
+   "section": "state"
+  },
+  {
+   "id": "b33",
+   "type": "caveat",
+   "text": "It's tempting to put these numbers side by side. Don't. Bankrate's $27 billion is a survey estimate of what households say they hold, across every brand. Starbucks' $222.4 million is what one company recorded under accounting rules.",
+   "claimId": "c8",
+   "section": "limits"
+  },
+  {
+   "id": "b34",
+   "type": "caveat",
+   "text": "Breakage itself is an estimate too, and the companies say so. Darden updates its breakage rate from time to time. If people spend old cards more than history suggests, the numbers change.",
+   "claimId": "c4",
+   "section": "limits"
+  },
+  {
+   "id": "b35",
+   "type": "payoff",
+   "text": "So who keeps the money from an unspent gift card?",
+   "claimId": "c2",
+   "section": "payoff"
+  },
+  {
+   "id": "b36",
+   "type": "payoff",
+   "text": "The company does, but only the share its own history says won't come back, and only a little at a time. Some of it may go to the state. The rest still belongs to the person holding the card.",
+   "claimId": "c2",
+   "section": "payoff"
+  },
+  {
+   "id": "b37",
+   "type": "payoff",
+   "text": "At Starbucks and Darden, that balance has no expiry date. The forecast about you was made long before the card reached your drawer. Spending it is the only way to prove the forecast wrong.",
+   "claimId": "c4",
+   "section": "payoff"
+  }
+ ],
+ "graphics": [
+  {
+   "beatId": "b1",
+   "type": "filing-excerpt",
+   "entities": [
+    "Starbucks",
+    "annual report",
+    "breakage"
+   ],
+   "overlayText": "$222.4 million",
+   "numbers": [
+    "222.4"
+   ],
+   "evidenceClaimId": "i1"
+  },
+  {
+   "beatId": "b2",
+   "type": "typography",
+   "entities": [
+    "Starbucks card",
+    "no expiration date"
+   ],
+   "overlayText": "No expiration date",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b3",
+   "type": "diagram",
+   "entities": [
+    "card balance",
+    "sales",
+    "?"
+   ],
+   "overlayText": "Unspent balance → sales?",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b4",
+   "type": "timeline",
+   "entities": [
+    "accounting rule",
+    "federal law",
+    "forecast"
+   ],
+   "overlayText": "Three things decide it",
+   "numbers": [],
+   "evidenceClaimId": "c7"
+  },
+  {
+   "beatId": "b5",
+   "type": "typography",
+   "entities": [
+    "Bankrate",
+    "YouGov",
+    "2,373 adults"
+   ],
+   "overlayText": "Survey of 2,373 adults, Aug 2024",
+   "numbers": [
+    "2,373",
+    "2024"
+   ],
+   "evidenceClaimId": "c8"
+  },
+  {
+   "beatId": "b6",
+   "type": "chart",
+   "entities": [
+    "US adults",
+    "unused card, voucher or credit"
+   ],
+   "overlayText": "43%",
+   "numbers": [
+    "43"
+   ],
+   "evidenceClaimId": "c8"
+  },
+  {
+   "beatId": "b7",
+   "type": "comparison-panel",
+   "entities": [
+    "average",
+    "median"
+   ],
+   "overlayText": "$244 average · $100 median",
+   "numbers": [
+    "244",
+    "100"
+   ],
+   "evidenceClaimId": "c8"
+  },
+  {
+   "beatId": "b8",
+   "type": "typography",
+   "entities": [
+    "Bankrate",
+    "estimate"
+   ],
+   "overlayText": "≈$27 billion (survey estimate)",
+   "numbers": [
+    "27"
+   ],
+   "evidenceClaimId": "c8"
+  },
+  {
+   "beatId": "b9",
+   "type": "chart",
+   "entities": [
+    "let a card expire",
+    "lost a card",
+    "store closed"
+   ],
+   "overlayText": "34% lost money",
+   "numbers": [
+    "34",
+    "20",
+    "17",
+    "12"
+   ],
+   "evidenceClaimId": "c9"
+  },
+  {
+   "beatId": "b10",
+   "type": "money-flow",
+   "entities": [
+    "customer",
+    "store",
+    "cash"
+   ],
+   "overlayText": "Cash in, nothing sold",
+   "numbers": [],
+   "evidenceClaimId": "c3"
+  },
+  {
+   "beatId": "b11",
+   "type": "diagram",
+   "entities": [
+    "balance sheet",
+    "deferred revenue",
+    "owed to you"
+   ],
+   "overlayText": "Owed to you",
+   "numbers": [],
+   "evidenceClaimId": "c3"
+  },
+  {
+   "beatId": "b12",
+   "type": "animated-number",
+   "entities": [
+    "Starbucks",
+    "loads",
+    "reloads",
+    "Stars"
+   ],
+   "overlayText": "≈$15.2 billion in",
+   "numbers": [
+    "15.2"
+   ],
+   "evidenceClaimId": "i3"
+  },
+  {
+   "beatId": "b13",
+   "type": "comparison-panel",
+   "entities": [
+    "Starbucks",
+    "card balances",
+    "loyalty rewards"
+   ],
+   "overlayText": "≈$1.75B owed (cards + rewards)",
+   "numbers": [
+    "1.75",
+    "1.72"
+   ],
+   "evidenceClaimId": "i4"
+  },
+  {
+   "beatId": "b14",
+   "type": "money-flow",
+   "entities": [
+    "loaded",
+    "redeemed",
+    "left over"
+   ],
+   "overlayText": "In ≈ out",
+   "numbers": [],
+   "evidenceClaimId": "i3"
+  },
+  {
+   "beatId": "b15",
+   "type": "chart",
+   "entities": [
+    "redemption history",
+    "estimate"
+   ],
+   "overlayText": "History → estimate",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b16",
+   "type": "typography",
+   "entities": [
+    "breakage"
+   ],
+   "overlayText": "BREAKAGE",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b17",
+   "type": "diagram",
+   "entities": [
+    "redemptions",
+    "breakage"
+   ],
+   "overlayText": "Booked in step with redemptions",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b18",
+   "type": "price-animation",
+   "entities": [
+    "register",
+    "card tap",
+    "breakage share"
+   ],
+   "overlayText": "Each tap moves a slice",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b19",
+   "type": "chart",
+   "entities": [
+    "Starbucks",
+    "breakage",
+    "fiscal 2023-2025"
+   ],
+   "overlayText": "$215.0M · $207.6M · $222.4M",
+   "numbers": [
+    "215.0",
+    "207.6",
+    "222.4"
+   ],
+   "evidenceClaimId": "i1"
+  },
+  {
+   "beatId": "b20",
+   "type": "typography",
+   "entities": [
+    "unspent",
+    "revenue"
+   ],
+   "overlayText": "Unspent → revenue",
+   "numbers": [],
+   "evidenceClaimId": "c1"
+  },
+  {
+   "beatId": "b21",
+   "type": "typography",
+   "entities": [
+    "no expiry",
+    "gone?"
+   ],
+   "overlayText": "No expiry. Gone?",
+   "numbers": [],
+   "evidenceClaimId": "c4"
+  },
+  {
+   "beatId": "b22",
+   "type": "filing-excerpt",
+   "entities": [
+    "Darden",
+    "annual report"
+   ],
+   "overlayText": "Darden 10-K",
+   "numbers": [],
+   "evidenceClaimId": "c4"
+  },
+  {
+   "beatId": "b23",
+   "type": "timeline",
+   "entities": [
+    "Darden",
+    "12 years",
+    "breakage"
+   ],
+   "overlayText": "Spread over ≈12 years",
+   "numbers": [
+    "12"
+   ],
+   "evidenceClaimId": "c4"
+  },
+  {
+   "beatId": "b24",
+   "type": "price-animation",
+   "entities": [
+    "breakage rate",
+    "half a point"
+   ],
+   "overlayText": "±0.5 pt ≈ $3.6M",
+   "numbers": [
+    "3.6"
+   ],
+   "evidenceClaimId": "c6"
+  },
+  {
+   "beatId": "b25",
+   "type": "unit-economics",
+   "entities": [
+    "activations",
+    "redemptions and breakage",
+    "growth"
+   ],
+   "overlayText": "+$760.2M · −$751.9M · +$7.9M",
+   "numbers": [
+    "760.2",
+    "751.9",
+    "7.9"
+   ],
+   "evidenceClaimId": "i2"
+  },
+  {
+   "beatId": "b26",
+   "type": "typography",
+   "entities": [
+    "breakage",
+    "forecast"
+   ],
+   "overlayText": "A bet on the crowd",
+   "numbers": [],
+   "evidenceClaimId": "c4"
+  },
+  {
+   "beatId": "b27",
+   "type": "typography",
+   "entities": [
+    "federal rules"
+   ],
+   "overlayText": "Federal floor",
+   "numbers": [],
+   "evidenceClaimId": "c7"
+  },
+  {
+   "beatId": "b28",
+   "type": "timeline",
+   "entities": [
+    "issued or last loaded",
+    "five years"
+   ],
+   "overlayText": "≥ five years",
+   "numbers": [],
+   "evidenceClaimId": "c7"
+  },
+  {
+   "beatId": "b29",
+   "type": "timeline",
+   "entities": [
+    "one year",
+    "one fee a month"
+   ],
+   "overlayText": "Fees only after a year",
+   "numbers": [],
+   "evidenceClaimId": "c7"
+  },
+  {
+   "beatId": "b30",
+   "type": "comparison-panel",
+   "entities": [
+    "no-expiry cards",
+    "cards that can expire"
+   ],
+   "overlayText": "20% let one expire",
+   "numbers": [
+    "20"
+   ],
+   "evidenceClaimId": "c9"
+  },
+  {
+   "beatId": "b31",
+   "type": "filing-excerpt",
+   "entities": [
+    "Starbucks",
+    "unclaimed property laws",
+    "government agencies"
+   ],
+   "overlayText": "“unclaimed property laws”",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b32",
+   "type": "map",
+   "entities": [
+    "government",
+    "company",
+    "card holder"
+   ],
+   "overlayText": "A share can go to the state",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b33",
+   "type": "comparison-panel",
+   "entities": [
+    "survey estimate",
+    "company record"
+   ],
+   "overlayText": "$27B survey vs $222.4M recorded",
+   "numbers": [
+    "27",
+    "222.4"
+   ],
+   "evidenceClaimId": "c8"
+  },
+  {
+   "beatId": "b34",
+   "type": "chart",
+   "entities": [
+    "breakage rate",
+    "revisions"
+   ],
+   "overlayText": "Estimates get revised",
+   "numbers": [],
+   "evidenceClaimId": "c4"
+  },
+  {
+   "beatId": "b35",
+   "type": "typography",
+   "entities": [
+    "who keeps it"
+   ],
+   "overlayText": "Who keeps it?",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b36",
+   "type": "money-flow",
+   "entities": [
+    "company",
+    "state",
+    "card holder"
+   ],
+   "overlayText": "Company · State · You",
+   "numbers": [],
+   "evidenceClaimId": "c2"
+  },
+  {
+   "beatId": "b37",
+   "type": "typography",
+   "entities": [
+    "forecast",
+    "spend it"
+   ],
+   "overlayText": "Prove the forecast wrong",
+   "numbers": [],
+   "evidenceClaimId": "c4"
+  }
+ ],
+ "titleCandidates": [
+  "Billions Sit on Unused Gift Cards. Who Keeps the Money?",
+  "Starbucks Booked $222.4 Million From Gift Card Money Left Unspent",
+  "Who Keeps the Money on Your Unused Gift Card?",
+  "What Happens to the Gift Card in Your Drawer",
+  "The Forecast Behind Every Gift Card",
+  "Why Stores Plan for Gift Cards You Won't Spend",
+  "Gift Card Breakage, Explained by the Companies Themselves",
+  "How Unspent Gift Cards Turn Into Sales",
+  "The 12-Year Bet Behind a Restaurant Gift Card",
+  "Your Unused Gift Card Is a Debt the Store Owes You",
+  "Where Unspent Gift Card Money Goes",
+  "Starbucks, Darden and the Money Nobody Spent",
+  "Why Gift Cards Rarely Get Fully Used, and Who Benefits",
+  "The Accounting Trick That Isn't a Trick: Gift Card Breakage",
+  "What Starbucks' Filing Says About Your Gift Card",
+  "Gift Cards Don't Expire. So Where Does the Money Go?",
+  "The Gift Card Money That Becomes Revenue",
+  "Inside the Gift Card Ledger",
+  "Unspent Gift Cards: The Store, the State and You",
+  "How Companies Predict You Won't Use Your Gift Card",
+  "The Real Owner of an Unspent Gift Card Balance",
+  "$27 Billion in Drawers? What the Gift Card Numbers Really Mean"
+ ],
+ "thumbnailCandidates": [
+  {
+   "id": "t1",
+   "dominantObject": "a gift card half-buried in a kitchen drawer",
+   "text": "WHO KEEPS IT?",
+   "elementCount": 2,
+   "contradiction": "your card, their revenue",
+   "composition": "drawer-card",
+   "contrast": "high",
+   "numberShown": null
+  },
+  {
+   "id": "t2",
+   "dominantObject": "a coffee card on a filing page",
+   "text": "$222.4M",
+   "elementCount": 2,
+   "contradiction": "sales without a sale",
+   "composition": "card-on-filing",
+   "contrast": "high",
+   "numberShown": "222.4"
+  },
+  {
+   "id": "t3",
+   "dominantObject": "a gift card with a 12-year timeline printed across it",
+   "text": "12-YEAR BET",
+   "elementCount": 2,
+   "contradiction": "no expiry, still counted",
+   "composition": "card-timeline",
+   "contrast": "medium",
+   "numberShown": "12"
+  }
+ ],
+ "learningValue": "Tests whether a primary-filing money-flow story with honest estimates holds attention on a consumer subject; a weak result with strong first-minute retention would point at the middle accounting sections."
+}

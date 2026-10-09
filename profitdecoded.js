@@ -11,6 +11,7 @@
 //   node profitdecoded.js publish-check                show why publishing is blocked
 //   node profitdecoded.js clusters                     topic clusters (Shorts -> long-form chains)
 //   node profitdecoded.js freshness                    topics whose premise may be outdated (needs renewed research)
+//   node profitdecoded.js story-review <dir>           assess a story package (plan/draft/critique/final) -> review.md + bundle.json
 
 const fs = require("fs");
 const path = require("path");
@@ -99,6 +100,37 @@ if (cmd === "inventory") {
     for (const f of r.flags.filter((x) => x.source === "watchlist")) console.log(`  - ${f.event}${f.addressedBy ? ` [addressed by ${f.addressedBy}]` : ""}\n    impact: ${f.impact}\n    sources: ${f.sources.map((s) => s.url).join(" , ")}`);
   }
   if (has("--all")) for (const { t, r } of rows.filter((x) => !strong.includes(x))) console.log(`${r.status.padEnd(20)} ${t.id}  (${r.flags.map((f) => f.event).join("; ")})`);
+} else if (cmd === "story-review") {
+  // A story package is what the story engine produces stage by stage (or what a human/LLM writer supplies):
+  //   meta.json {topicId, format, minutes, title}, plan.json, draft.json, critique.json (optional), final.json {beats, graphics, changeLog}
+  const W = require(path.join(P, "auto", "script-agent")); const Retention = require(path.join(P, "retention"));
+  const dir = path.resolve(argv[1] || ""); const rj = (f) => readJson(path.join(dir, f), null);
+  const meta = rj("meta.json"); if (!meta) { console.error("usage: story-review <dir with meta.json, plan.json, draft.json, final.json>"); process.exit(2); }
+  const topic = universe().topics.find((t) => t.id === meta.topicId); const dossier = readJson(path.join(CHANNEL_DIR, "research", meta.topicId + ".json"), null);
+  if (!topic || !dossier) { console.error("unknown topic or missing research dossier for " + meta.topicId); process.exit(2); }
+  const format = meta.format; const words = W.wordsFor(format, meta.minutes || [8, 12]);
+  const Research = require(path.join(P, "research")); const gate = Research.gate(dossier, { format });
+  if (!gate.pass) { console.error("research gate FAILED: " + gate.rejections.join("; ")); process.exit(1); }
+  const plan = rj("plan.json"); const draftOut = rj("draft.json"); const critique = rj("critique.json"); const fin = rj("final.json");
+  const planCheck = W.evaluatePlan(plan, dossier, format); const winningHook = planCheck.selected && planCheck.selected.text;
+  const ctx = { plan, winningHook, hookCandidates: plan.hookCandidates, words, title: meta.title };
+  const draftFull = { ...draftOut, hookCandidates: plan.hookCandidates.map((h) => h.text) };
+  const keepG = (draftFull.graphics || []).filter((g) => fin.beats.some((b) => b.id === g.beatId) && !(fin.graphics || []).some((n) => n.beatId === g.beatId));
+  const finalOut = { ...draftFull, beats: fin.beats, graphics: [...keepG, ...(fin.graphics || [])], ...(fin.titleCandidates ? { titleCandidates: fin.titleCandidates } : {}) };
+  const draftA = W.assess(draftFull, dossier, format, ctx); const finalA = W.assess(finalOut, dossier, format, ctx);
+  const gateClaims = Object.fromEntries(gate.claims.map((c) => [c.id, c.status]));
+  const all = [...dossier.claims, ...dossier.inferences]; const srcs = Object.fromEntries(dossier.sources.map((x) => [x.id, x]));
+  const claimMap = [...new Set(finalOut.beats.map((b) => b.claimId))].map((id) => { const c = all.find((x) => x.id === id) || { text: "UNKNOWN CLAIM", sourceIds: [] }; const base = c.basisClaimIds ? c.basisClaimIds.flatMap((b) => (all.find((x) => x.id === b) || {}).sourceIds || []) : c.sourceIds; return { claimId: id, beatIds: finalOut.beats.filter((b) => b.claimId === id).map((b) => b.id), text: c.text, status: c.basisClaimIds ? "our arithmetic on " + c.basisClaimIds.join("+") : gateClaims[id] || "UNKNOWN", sources: [...new Set(base)].map((s) => srcs[s] ? `${srcs[s].publisher}, ${srcs[s].title} (${srcs[s].url})` : s), passages: (c.evidence || (c.basisClaimIds || []).flatMap((b) => (all.find((x) => x.id === b) || {}).evidence || [])).map((e) => e.passage).slice(0, 2) }; });
+  const res = { plan, critique, out: finalOut, assessment: finalA, changes: fin.changeLog || [], rounds: 1, winningHook, cacheHits: 0 };
+  const pkg = { topic, dossier, format, title: meta.title, generatedAt: new Date().toISOString(), plan, planCheck, critique, claimMap,
+    draft: { assessment: draftA }, final: { assessment: finalA, out: finalOut, winningHook, changes: fin.changeLog || [], editorial: Retention.editorialReport(finalOut.beats, { plan, dossier, format, title: meta.title }) } };
+  fs.writeFileSync(path.join(dir, "review.md"), Report.renderStory(pkg));
+  const rel = path.relative(dir, path.join(CHANNEL_DIR, "research", meta.topicId + ".json"));
+  fs.writeFileSync(path.join(dir, "bundle.json"), JSON.stringify({ ...W.bundleFromStory(topic, dossier, res, format, rel), selectedTitle: meta.title }, null, 1) + "\n");
+  console.log(`plan issues ${planCheck.issues.length} · draft: ${draftA.local.words} words, ${draftA.blocking.length} blocking · final: ${finalA.local.words} words, ${finalA.blocking.length} blocking, retention ${finalA.retention.score}, spoken ${finalA.spoken.score}, AI-pattern ${finalA.local.aiPatternScore}`);
+  for (const b of finalA.blocking) console.log("  BLOCKING: " + b);
+  console.log("review: " + path.relative(process.cwd(), path.join(dir, "review.md")));
+  process.exitCode = finalA.blocking.length || planCheck.issues.length ? 1 : 0;
 } else if (cmd === "publish-check") {
   const g = Sched.publishGuard({}); console.log(g.allowed ? "ALLOWED" : "BLOCKED"); for (const b of g.blocks) console.log(" - " + b);
 } else if (cmd === "dry-run") {

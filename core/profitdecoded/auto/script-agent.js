@@ -124,6 +124,8 @@ const STORY_SCHEMA = {
     questions: { type: "array", items: { type: "object", additionalProperties: false, required: ["id", "text"], properties: { id: { type: "string" }, text: { type: "string" } } } },
     sections: { type: "array", items: { type: "object", additionalProperties: false, required: ["id", "title", "purpose", "claimIds", "raises", "resolves", "visualIdea"], properties: { id: { type: "string" }, title: { type: "string" }, purpose: { type: "string", enum: PURPOSES }, claimIds: { type: "array", items: { type: "string" } }, raises: { type: "array", items: { type: "string" } }, resolves: { type: "array", items: { type: "string" } }, visualIdea: { type: "string" } } } },
     caveats: { type: "array", items: { type: "string" } },
+    // Optional editorial pick among the hooks (e.g. a more familiar brand); bounded by evaluatePlan().
+    selectedHook: { type: "string" }, selectionReason: { type: "string" },
   },
 };
 const PROBLEM_TYPES = ["factual", "story", "attention", "voice", "hook", "payoff", "repetition", "forced-drama", "clarity"];
@@ -185,7 +187,8 @@ function assess(out, dossier, format, ctx = {}) {
   return { blocking, local, retention, spoken, editorial, hooks: { winner: hookRows.winner, ranked: hookRows.ranked, problems: hookRows.problems } };
 }
 
-function evaluatePlan(plan, dossier) {
+// format "short": a Short carries one idea, so it must use at least one central claim (long-form: all of them).
+function evaluatePlan(plan, dossier, format = "long") {
   const issues = [];
   const ids = new Set([...(dossier.claims || []), ...(dossier.inferences || [])].map((c) => c.id));
   const qids = new Set((plan.questions || []).map((q) => q.id));
@@ -197,14 +200,26 @@ function evaluatePlan(plan, dossier) {
   });
   for (const [q, i] of raised) if (!resolved.has(q) || resolved.get(q) < i) issues.push(`question ${q} is raised but never resolved later`);
   const used = new Set((plan.sections || []).flatMap((s) => s.claimIds || []));
-  for (const c of (dossier.claims || []).filter((x) => x.central)) if (!used.has(c.id)) issues.push(`central claim ${c.id} is not used by any section`);
+  const central = (dossier.claims || []).filter((x) => x.central);
+  if (format === "short") { if (central.length && !central.some((c) => used.has(c.id))) issues.push("a Short must use at least one central claim"); }
+  else for (const c of central) if (!used.has(c.id)) issues.push(`central claim ${c.id} is not used by any section`);
   const purposes = (plan.sections || []).map((s) => s.purpose);
   if (!purposes.some((p) => ["complication", "turn"].includes(p))) issues.push("no complication or turn section");
   if (purposes[purposes.length - 1] !== "payoff") issues.push("the last section must be the payoff");
   if (!purposes.includes("caveat")) issues.push("no caveat section (state the limits of the evidence)");
   const hooks = Hooks.engineer(plan.hookCandidates || [], { dossier, topicWords: T.contentWords(dossier.thesis || "") });
   for (const pr of hooks.problems) issues.push("hooks: " + pr);
-  return { issues, hooks };
+  // Editorial override: allowed only for a factual hook within 10 points of the heuristic winner, with a stated reason.
+  let selected = hooks.winner; let override = null;
+  if (plan.selectedHook && hooks.winner) {
+    const pick = hooks.ranked.find((h) => h.text === plan.selectedHook);
+    if (!pick) issues.push("selectedHook is not one of the hook candidates");
+    else if (!pick.factual.pass) issues.push("selectedHook fails the factual gate: " + pick.factual.problems.join("; "));
+    else if (hooks.winner.total - pick.total > 10) issues.push(`selectedHook scores ${pick.total}, more than 10 below the best hook (${hooks.winner.total})`);
+    else if (!plan.selectionReason) issues.push("selectedHook needs a selectionReason");
+    else { selected = pick; if (pick !== hooks.winner) override = { chosen: pick.text, heuristicWinner: hooks.winner.text, margin: hooks.winner.total - pick.total, reason: plan.selectionReason }; }
+  }
+  return { issues, hooks, selected, override };
 }
 
 // A cached stage never creates a client: re-running a fully cached story costs nothing and needs no key.
@@ -233,14 +248,14 @@ async function develop(topic, dossier, format, deps = {}) {
   // 2-5. Story plan: thesis, conflict, hooks, structure (one call; one repair round if the plan fails its checks).
   let planMsgs = stageMessages(topic, dossier, format, ctx, prompt("story.md") + `\n\nFORMAT: ${format === "short" ? "a 35-45 second Short (one question, one turn, one payoff)" : `a ${minutes[0]}-${minutes[1]} minute documentary (${words[0]}-${words[1]} words of narration)`}. Return the plan as JSON.`);
   let plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: 16000, effort: "high" }, getClient, cache, hash({ ...base, s: "plan" }))).json;
-  let pe = evaluatePlan(plan, dossier); log.push({ stage: "plan", issues: pe.issues.length });
+  let pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan", issues: pe.issues.length });
   if (pe.issues.length) {
     planMsgs = [...planMsgs, { role: "assistant", content: JSON.stringify(plan) }, { role: "user", content: "The plan failed these checks. Fix exactly these and return the full JSON:\n- " + pe.issues.join("\n- ") }];
     plan = (await stage("plan", { ledger, system, messages: planMsgs, schema: STORY_SCHEMA, maxTokens: 16000, effort: "high" }, getClient, cache, hash({ ...base, s: "plan-fix", plan }))).json;
-    pe = evaluatePlan(plan, dossier); log.push({ stage: "plan-fix", issues: pe.issues.length });
+    pe = evaluatePlan(plan, dossier, format); log.push({ stage: "plan-fix", issues: pe.issues.length });
     if (pe.issues.length) return { status: "plan-failed", reasons: pe.issues, plan, ledger, log };
   }
-  const hookTexts = plan.hookCandidates.map((h) => h.text); const winningHook = pe.hooks.winner.text;
+  const hookTexts = plan.hookCandidates.map((h) => h.text); const winningHook = pe.selected.text;
   // 6. Draft.
   const draftText = prompt("script.md") + `\n\nSTAGE: DRAFT. Write the narration for this approved plan.\nAPPROVED PLAN:\n${JSON.stringify(plan, null, 1)}\n\nWINNING HOOK (first beat, same wording): ${winningHook}\nLENGTH: ${words[0]}-${words[1]} words of narration. Tag each beat with its section id. hookCandidates: return the plan's hook texts unchanged. Produce graphics for every beat, >=22 truthful title candidates, 3 thumbnail concepts and learningValue.`;
   let out = (await stage("draft", { ledger, system, messages: stageMessages(topic, dossier, format, ctx, draftText), schema: SCRIPT_SCHEMA, maxTokens: format === "short" ? 16000 : 48000, effort: "high" }, getClient, cache, hash({ ...base, s: "draft", plan }))).json;
@@ -269,7 +284,7 @@ async function develop(topic, dossier, format, deps = {}) {
   }
   // 9. Final assessment.
   const status = a.blocking.length ? "script-failed" : "ok";
-  return { status, plan, draft, critique, out, assessment: a, changes, rounds, reasons: a.blocking, winningHook, ledger, cacheHits: cache.hits, log };
+  return { status, plan, draft, critique, out, assessment: a, changes, rounds, reasons: a.blocking, winningHook, hookOverride: pe.override, ledger, cacheHits: cache.hits, log };
 }
 
 // Bundle for the existing production pipeline, plus the story artefacts for human review.

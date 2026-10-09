@@ -49,7 +49,8 @@ function critique(beats, ctx = {}) {
     const newNums = [...new Set(numbersOf(text))].filter((n) => !seenNums.has(n));
     const newEnt = [...new Set(entitiesOf(text))].filter((e) => !seenEnt.has(e) && !/^(The|A|An|But|And|So|This|That|It|In|On|Now|Then|When|If|For|One|What|Why|How)$/.test(e));
     const novelty = newClaims.length * 3 + newNums.length * 2 + Math.min(4, newEnt.length);
-    if (si > 0 && novelty === 0) issue("dead-stretch", "high", `section "${sec.title}" adds no new claim, number or name`, "cut it or give it one new piece of evidence that moves the story forward");
+    // A dead stretch is a matter of duration: a single short beat (under ~15 s) cannot be one.
+    if (si > 0 && novelty === 0 && words >= 40) issue("dead-stretch", "high", `section "${sec.title}" adds no new claim, number or name`, "cut it or give it one new piece of evidence that moves the story forward");
     else if (si > 0 && words > 120 && novelty / (words / 100) < 1.5) issue("thin-section", "medium", `${novelty} new items in ${words} words`, "tighten: say it once, with the strongest number, then move on");
     // 2. Repetition against everything said before.
     for (const s of sents) {
