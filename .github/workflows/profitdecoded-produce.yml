@@ -31,9 +31,29 @@ on:
           - groq
           - anthropic
       max_usd:
-        description: 'Spend guard in USD'
+        description: 'Paid-API spend guard in USD (0 = paid providers are refused)'
         required: true
         default: '3'
+      through:
+        description: 'Stop after: script (story only) or assess (narration + render + assessment)'
+        required: false
+        default: 'assess'
+        type: choice
+        options:
+          - assess
+          - script
+      critic:
+        description: 'Independent critique provider: same (as the writer) or gemini (free tier)'
+        required: false
+        default: 'same'
+        type: choice
+        options:
+          - same
+          - gemini
+      token_guard:
+        description: 'Free-provider token guard for the whole run (PD_AUTO_MAX_TOKENS)'
+        required: false
+        default: '400000'
 
 permissions:
   contents: read
@@ -42,44 +62,64 @@ jobs:
   produce:
     if: github.event_name == 'workflow_dispatch' || vars.PD_AUTO_SCHEDULE == 'true'
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
       - uses: actions/setup-python@v5
+        if: inputs.through != 'script'
         with:
           python-version: '3.12'
       - name: System packages (ffmpeg, ImageMagick, fonts)
+        if: inputs.through != 'script'
         run: bash scripts/ci-apt.sh ffmpeg imagemagick fonts-dejavu-core fonts-liberation
       - run: npm install --no-audit --no-fund
       - run: pip install --quiet kokoro-onnx soundfile
+        if: inputs.through != 'script'
       - name: Kokoro model cache
+        if: inputs.through != 'script'
         id: kokoro-cache
         uses: actions/cache@v4
         with:
           path: kokoro-model
           key: kokoro-onnx-model-files-v1.0
       - name: Kokoro model files (download once, then cached)
-        if: steps.kokoro-cache.outputs.cache-hit != 'true'
+        if: inputs.through != 'script' && steps.kokoro-cache.outputs.cache-hit != 'true'
         run: |
           mkdir -p kokoro-model
           curl -fL --retry 3 -o kokoro-model/kokoro-v1.0.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
           curl -fL --retry 3 -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
-      - name: Check the selected provider's API key secret exists
+      - name: Check the selected providers' API key secrets exist (values are never printed)
         env:
           PROVIDER: ${{ inputs.provider || 'groq' }}
+          CRITIC: ${{ inputs.critic || 'same' }}
           ANTHROPIC_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
+          for n in GROQ_KEY GEMINI_KEY ANTHROPIC_KEY; do if [ -n "${!n}" ]; then echo "$n: present (value not shown)"; else echo "$n: missing"; fi; done
           if [ "$PROVIDER" = "groq" ] && [ -z "$GROQ_KEY" ]; then echo "::error::Repository secret GROQ_API_KEY is not set"; exit 1; fi
           if [ "$PROVIDER" = "anthropic" ] && [ -z "$ANTHROPIC_KEY" ]; then echo "::error::Repository secret ANTHROPIC_API_KEY is not set"; exit 1; fi
+          if [ "$CRITIC" = "gemini" ] && [ -z "$GEMINI_KEY" ]; then echo "::error::Repository secret GEMINI_API_KEY is not set"; exit 1; fi
+      - run: mkdir -p channels/profitdecoded/state/story-cache
+      - name: Story stage cache (resume an interrupted run)
+        uses: actions/cache/restore@v4
+        with:
+          path: channels/profitdecoded/state/story-cache
+          key: pd-story-${{ inputs.topic || 'auto' }}-${{ inputs.format || 'short' }}-${{ github.run_id }}
+          restore-keys: pd-story-${{ inputs.topic || 'auto' }}-${{ inputs.format || 'short' }}-
       - name: Autonomous production (dry run, no upload)
         env:
           PD_AUTO_PROVIDER: ${{ inputs.provider || 'groq' }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PD_GEMINI_MODEL: ${{ vars.PD_GEMINI_MODEL || 'gemini-3.8-flash' }}
+          PD_AUTO_MAX_TOKENS: ${{ inputs.token_guard || '400000' }}
+          CRITIC: ${{ inputs.critic || 'same' }}
+          THROUGH: ${{ inputs.through || 'assess' }}
           TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
           SERPER_API_KEY: ${{ secrets.SERPER_API_KEY }}
           EXA_API_KEY: ${{ secrets.EXA_API_KEY }}
@@ -92,11 +132,18 @@ jobs:
           FORMAT: ${{ inputs.format || 'short' }}
           MAX_USD: ${{ inputs.max_usd || '3' }}
         run: |
+          if [ "$CRITIC" = "gemini" ]; then export PD_STORY_PROVIDERS="plan=$PD_AUTO_PROVIDER,draft=$PD_AUTO_PROVIDER,rewrite=$PD_AUTO_PROVIDER,critique=gemini"; echo "stage providers: $PD_STORY_PROVIDERS"; fi
           if [ -n "$TOPIC" ]; then
-            node scripts/profitdecoded/auto-produce.js --topic "$TOPIC" --format "$FORMAT" --max-usd "$MAX_USD" --through assess
+            node scripts/profitdecoded/auto-produce.js --topic "$TOPIC" --format "$FORMAT" --max-usd "$MAX_USD" --through "$THROUGH"
           else
-            node scripts/profitdecoded/auto-produce.js --format "$FORMAT" --max-usd "$MAX_USD" --through assess
+            node scripts/profitdecoded/auto-produce.js --format "$FORMAT" --max-usd "$MAX_USD" --through "$THROUGH"
           fi
+      - name: Save story stage cache (also after a pause or failure)
+        if: always()
+        uses: actions/cache/save@v4
+        with:
+          path: channels/profitdecoded/state/story-cache
+          key: pd-story-${{ inputs.topic || 'auto' }}-${{ inputs.format || 'short' }}-${{ github.run_id }}
       - name: Keep review artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -112,5 +159,7 @@ jobs:
             channels/profitdecoded/research/*.json
             channels/profitdecoded/state/auto-runs.json
             channels/profitdecoded/state/auto-debug/**
+            channels/profitdecoded/auto/**/story/**
+            channels/profitdecoded/state/story-cache/**
           if-no-files-found: warn
           retention-days: 14

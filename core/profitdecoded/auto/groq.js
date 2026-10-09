@@ -54,7 +54,10 @@ async function chat({ system, messages, tools, schema, maxTokens = 8000, effort 
     if (res.ok) {
       const j = await res.json(); const c = (j.choices || [])[0] || {};
       if (c.finish_reason === "length") throw new AutoError("MAX_TOKENS", "Groq response hit the token limit: output would be truncated");
-      return { text: (c.message && c.message.content) || "", usage: j.usage || {}, finish: c.finish_reason, raw: j };
+      // Org rate-limit state reported by Groq (used for pacing and as evidence of the plan's limits).
+      const h = (n) => (res.headers && res.headers.get ? res.headers.get(n) : null);
+      const rate = { limitTokens: Number(h("x-ratelimit-limit-tokens")) || null, remainingTokens: Number(h("x-ratelimit-remaining-tokens")) || null, limitRequests: Number(h("x-ratelimit-limit-requests")) || null, remainingRequests: Number(h("x-ratelimit-remaining-requests")) || null, resetTokens: h("x-ratelimit-reset-tokens") || null };
+      return { text: (c.message && c.message.content) || "", usage: j.usage || {}, finish: c.finish_reason, raw: j, rate, model: j.model || body.model };
     }
     // The error body says WHY (never contains the key). Read it, keep it short.
     let detail = null;

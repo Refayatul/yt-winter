@@ -46,10 +46,15 @@ function apiKey() {
 }
 
 function createClient(options = {}) {
+  if (options.provider === "gemini") {
+    const k = options.apiKey || envKey("GEMINI_API_KEY");
+    if (!k) throw new AutoError("NO_KEY", "GEMINI_API_KEY is not set (env or .env)");
+    return { provider: "gemini", key: k, model: options.model || process.env.PD_GEMINI_MODEL || undefined };
+  }
   if ((options.provider || provider()) === "groq") {
     const gk = options.apiKey || envKey("GROQ_API_KEY");
     if (!gk) throw new AutoError("NO_KEY", "GROQ_API_KEY is not set (env or .env): the autonomous research/script stages cannot run");
-    return { provider: "groq", key: gk };
+    return { provider: "groq", key: gk, pace: options.pace !== false };
   }
   const key = options.apiKey || apiKey();
   if (!key) throw new AutoError("NO_KEY", "ANTHROPIC_API_KEY is not set (env or .env): the autonomous research/script stages cannot run");
@@ -70,12 +75,33 @@ const addUsage = (a, b) => { const o = { ...a }; for (const k of ["input_tokens"
 // ledger is shared across calls in one run: { usd, usage, calls }
 // stages: per-stage usage so a run reports what each step cost ({ plan: { calls, usd, usage }, ... }).
 function newLedger(maxUsd) { return { maxUsd: maxUsd == null ? Number(process.env.PD_AUTO_MAX_USD || 3) : maxUsd, maxTokens: Number(process.env.PD_AUTO_MAX_TOKENS || 400000), tokens: 0, usd: 0, usage: {}, calls: 0, stages: {} }; }
-function recordStage(ledger, stage, usage, usd) {
+function recordStage(ledger, stage, usage, usd, meta = {}) {
   if (!stage) return;
   ledger.stages = ledger.stages || {};
-  const st = ledger.stages[stage] || { calls: 0, usd: 0, usage: {} };
+  const st = ledger.stages[stage] || { calls: 0, usd: 0, usage: {}, reasoningTokens: 0, providers: [], models: [] };
   st.calls += 1; st.usd = Math.round((st.usd + usd) * 1000) / 1000; st.usage = addUsage(st.usage, usage);
+  st.reasoningTokens = (st.reasoningTokens || 0) + (meta.reasoningTokens || 0);
+  for (const [k, v] of [["providers", meta.provider], ["models", meta.model]]) if (v && !(st[k] || []).includes(v)) st[k] = [...(st[k] || []), v];
+  if (meta.rate) st.lastRate = meta.rate;
   ledger.stages[stage] = st;
+}
+
+// Groq free tier counts prompt + max_completion_tokens against tokens-per-minute (8,000 for gpt-oss-120b on the
+// free plan). Requests are paced inside a rolling 60-second window per client; a single request larger than the
+// limit is refused up front with a clear error instead of a 413/429 loop.
+const estTokens = (system, messages) => Math.ceil((String(system || "").length + JSON.stringify(flatten(messages || [])).length) / 3.5);
+async function paceTokens(client, requested, now = Date.now, sleep = (ms) => new Promise((r) => setTimeout(r, ms))) {
+  const limit = client.tpm || Number(process.env.PD_GROQ_TPM || 8000);
+  if (requested > limit) throw new AutoError("REQUEST_TOO_LARGE", `request needs ~${requested} tokens (prompt + max output) but the tokens-per-minute limit is ${limit}: split the stage`);
+  client.window = client.window || [];
+  for (;;) {
+    const t = now(); client.window = client.window.filter((x) => t - x.t < 60000);
+    const used = client.window.reduce((s2, x) => s2 + x.tokens, 0);
+    if (used + requested <= limit) { client.window.push({ t, tokens: requested }); return { waitedMs: 0 }; }
+    const wait = 60000 - (t - client.window[0].t) + 250;
+    client.waitedMs = (client.waitedMs || 0) + wait;
+    await sleep(wait);
+  }
 }
 // Groq takes plain-string message content; Anthropic-style text blocks (with cache_control) are flattened.
 const flatten = (messages) => messages.map((m) => (Array.isArray(m.content) ? { ...m, content: m.content.filter((b) => b.type === "text").map((b) => b.text).join("\n\n") } : m));
@@ -85,16 +111,35 @@ async function runGroq(opts) {
   const { client, system, messages, schema, ledger = newLedger(), maxTokens = 8000, effort = "high" } = opts;
   if (ledger.tokens >= ledger.maxTokens) throw new AutoError("BUDGET", `token guard: ${ledger.tokens} >= PD_AUTO_MAX_TOKENS ${ledger.maxTokens}`);
   const G = require("./groq");
-  const r = await G.chat({ system, messages: flatten(messages), schema, tools: opts.tools, model: opts.light ? G.LIGHT_MODEL() : undefined, maxTokens: Math.min(maxTokens, 30000), effort: effort === "max" || effort === "xhigh" ? "high" : effort, key: client.key, fetchImpl: client.fetch, sleepMs: client.sleep });
+  const maxOut = Math.min(maxTokens, 30000);
+  if (client.pace) await paceTokens(client, estTokens(system, messages) + maxOut, client.now, client.sleep);
+  const r = await G.chat({ system, messages: flatten(messages), schema, tools: opts.tools, model: opts.light ? G.LIGHT_MODEL() : undefined, maxTokens: maxOut, effort: effort === "max" || effort === "xhigh" ? "high" : effort, key: client.key, fetchImpl: client.fetch, sleepMs: client.sleep });
+  if (r.rate && r.rate.limitTokens) client.tpm = r.rate.limitTokens; // the org's real TPM, as reported by Groq
   ledger.calls += 1; ledger.tokens += (r.usage && r.usage.total_tokens) || 0; ledger.usage = addUsage(ledger.usage, { input_tokens: r.usage && r.usage.prompt_tokens, output_tokens: r.usage && r.usage.completion_tokens });
-  recordStage(ledger, opts.stage, { input_tokens: r.usage && r.usage.prompt_tokens, output_tokens: r.usage && r.usage.completion_tokens }, 0);
+  const reasoning = (r.usage && r.usage.completion_tokens_details && r.usage.completion_tokens_details.reasoning_tokens) || 0;
+  recordStage(ledger, opts.stage, { input_tokens: r.usage && r.usage.prompt_tokens, output_tokens: r.usage && r.usage.completion_tokens }, 0, { provider: "groq", model: r.model, reasoningTokens: reasoning, rate: r.rate });
   let json = null;
   if (schema) { json = G.extractJson(r.text); if (!json) throw new AutoError("BAD_JSON", "structured output was not valid JSON"); }
   return { text: r.text, json, blocks: [], ledger, raw: r.raw };
 }
 
+// Gemini path (free-tier models only, see gemini.js): used for the independent editorial critique.
+async function runGemini(opts) {
+  const { client, system, messages, schema, ledger = newLedger(), maxTokens = 16384 } = opts;
+  if (ledger.tokens >= ledger.maxTokens) throw new AutoError("BUDGET", `token guard: ${ledger.tokens} >= PD_AUTO_MAX_TOKENS ${ledger.maxTokens}`);
+  const Gm = require("./gemini");
+  const r = await Gm.chat({ system, messages, schema, maxTokens, model: client.model, key: client.key, fetchImpl: client.fetch, sleepMs: client.sleep });
+  ledger.calls += 1; ledger.tokens += r.usage.total_tokens || 0;
+  ledger.usage = addUsage(ledger.usage, { input_tokens: r.usage.input_tokens, output_tokens: r.usage.output_tokens + r.usage.reasoning_tokens });
+  recordStage(ledger, opts.stage, { input_tokens: r.usage.input_tokens, output_tokens: r.usage.output_tokens }, 0, { provider: "gemini", model: r.model, reasoningTokens: r.usage.reasoning_tokens });
+  let json = null;
+  if (schema) { json = require("./groq").extractJson(r.text); if (!json) throw new AutoError("BAD_JSON", "structured output was not valid JSON"); }
+  return { text: r.text, json, blocks: [], ledger, raw: r.raw };
+}
+
 async function run(opts) {
   if (opts.client && opts.client.provider === "groq") return runGroq(opts);
+  if (opts.client && opts.client.provider === "gemini") return runGemini(opts);
   const { client, system, messages, tools, schema, ledger = newLedger(), maxTokens = 32000, effort = "high", maxPauses = 6 } = opts;
   const convo = [...messages]; const blocks = []; let lastStop = null;
   for (let i = 0; i <= maxPauses; i += 1) {
@@ -115,7 +160,7 @@ async function run(opts) {
     const msg = await stream.finalMessage();
     const cost = spend(msg.usage, model);
     ledger.calls += 1; ledger.usage = addUsage(ledger.usage, msg.usage); ledger.usd = Math.round((ledger.usd + cost) * 1000) / 1000;
-    recordStage(ledger, opts.stage, msg.usage, cost);
+    recordStage(ledger, opts.stage, msg.usage, cost, { provider: "anthropic", model: msg.model || model });
     blocks.push(...(msg.content || [])); lastStop = msg.stop_reason;
     if (msg.stop_reason === "refusal") throw new AutoError("REFUSAL", "model declined the request (stop_reason=refusal)", { details: msg.stop_details || null });
     if (msg.stop_reason === "max_tokens") throw new AutoError("MAX_TOKENS", "response hit max_tokens: output would be truncated");
@@ -129,4 +174,4 @@ async function run(opts) {
   return { text, json, blocks, ledger };
 }
 
-module.exports = { MODEL, PRICE, PRICES, priceFor, AutoError, apiKey, envKey, provider, createClient, run, runGroq, spend, newLedger, recordStage, flatten };
+module.exports = { MODEL, PRICE, PRICES, priceFor, AutoError, apiKey, envKey, provider, createClient, run, runGroq, runGemini, spend, newLedger, recordStage, flatten, paceTokens, estTokens };
