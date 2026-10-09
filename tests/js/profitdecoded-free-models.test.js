@@ -168,6 +168,21 @@ test("spoken findings reach their sections (narrow no-break spaces included); ho
   assert.equal(H.compete(tagged).distinctMechanisms, 5);
 });
 
+test("AI-pattern repetition and a weak opening are routed with concrete instructions, not left global", () => {
+  const W = A("script-agent");
+  const plan = { sections: [{ id: "a", purpose: "open" }, { id: "b", purpose: "turn" }] };
+  const out = { beats: [
+    { id: "a-1", section: "a", text: "The company sells cards. The company books breakage." },
+    { id: "b-1", section: "b", text: "The company owes states some balances. Gift card balances sit unused for many years in drawers." },
+    { id: "b-2", section: "b", text: "Gift card balances sit unused for many years in drawers." }] };
+  const blocking = ['generic AI writing: pattern score 50 (>=35). Fix: repeated sentence opener ("the company"); near-duplicate sentences', "retention: weak-opening: first-30-seconds reading 57"];
+  const { routed, global } = W.routeProblems([], blocking, out, plan, []);
+  assert.deepEqual(global, []);
+  assert.ok(routed.a.some((x) => /open with "the company"/.test(x)) && routed.b.some((x) => /open with "the company"/.test(x)));
+  assert.ok(routed.b.some((x) => /near-duplicate/.test(x)));
+  assert.ok(routed.a.some((x) => /weak-opening.*ONE short sentence/.test(x)));
+});
+
 test("workflow: schedule and its gate unchanged, Gemini secret checked without printing values, resumable cache", () => {
   const y = fs.readFileSync(path.join(ROOT, ".github/workflows/profitdecoded-produce.yml"), "utf8");
   assert.match(y, /cron: '50 11 \* \* 1-5'/);

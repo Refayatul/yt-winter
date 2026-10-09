@@ -295,6 +295,22 @@ const PACKAGE_SCHEMA = { type: "object", additionalProperties: false, required: 
 // spoken: the assessment's spoken-naturalness findings; when the spoken gate blocks, every finding that quotes a sentence is
 // routed to the section holding that sentence (the aggregated blocking line only quotes the first few).
 const SPOKEN_FIX = "rewrite as plain spoken English: at most two numbers per sentence (split the rest into short sentences), no semicolons or brackets, fewer than four commas";
+// The critic's own criteria for the first 30 seconds (hooks.first30), stated as writing instructions.
+const OPENING_FIX = "the beat right after the hook is ONE short sentence (under 12 words) that states what is at stake; by second 15 name the title's subject with one concrete fact; between seconds 15 and 30 say how the mechanism works in plain words (\"here is how\", \"because\", \"which means\"); no background or history in the first 30 seconds";
+// AI-pattern repetition located per sentence, so each section is told exactly which of its sentences repeat.
+function repetitionSites(out, blocking) {
+  const line = blocking.find((b) => /^generic AI writing/.test(b)); if (!line) return [];
+  const sents = (out.beats || []).flatMap((b) => T.sentences(b.text).map((t) => ({ t, section: b.section })));
+  const sites = [];
+  for (const m of line.matchAll(/repeated sentence opener \("([^"]+)"\)/g)) {
+    const hits = sents.filter((x) => T.words(x.t).slice(0, 2).join(" ") === m[1]);
+    for (const h of hits.slice(1)) sites.push({ section: h.section, msg: `ai-pattern: ${hits.length} sentences open with "${m[1]}": "${h.t.slice(0, 120)}" -> start this sentence differently (name the subject another way, or lead with the point)` });
+  }
+  if (/near-duplicate sentences/.test(line)) for (let i = 0; i < sents.length; i += 1) for (let j = i + 1; j < sents.length; j += 1) {
+    if (T.words(sents[i].t).length > 5 && T.textSimilarity(sents[i].t, sents[j].t, 2) > 0.7) sites.push({ section: sents[j].section, msg: `ai-pattern: near-duplicate of an earlier line ("${sents[i].t.slice(0, 90)}"): "${sents[j].t.slice(0, 120)}" -> cut it or say something new` });
+  }
+  return sites;
+}
 function routeProblems(problems, blocking, out, plan, spoken = []) {
   const ids = plan.sections.map((x) => x.id); const first = ids[0]; const last = ids[ids.length - 1];
   const secOfBeat = Object.fromEntries((out.beats || []).map((b) => [b.id, b.section]));
@@ -307,13 +323,16 @@ function routeProblems(problems, blocking, out, plan, spoken = []) {
   for (const p of problems) put(ids.includes(p.section) ? p.section : (p.beatIds || []).map((b) => secOfBeat[b]).find(Boolean) || secOfText(p.quote), `[${p.severity}] ${p.type}: "${p.quote}" -> ${p.fix}`);
   const spokenBlocks = blocking.some((b) => /^spoken naturalness/.test(b));
   const spokenRouted = spokenBlocks ? spoken.filter((f) => f.sentence && secOfText(f.sentence)) : [];
+  const repeats = repetitionSites(out, blocking); for (const r of repeats) put(r.section, r.msg);
   for (const f of spokenRouted) put(secOfText(f.sentence), `spoken: ${f.name}: "${f.sentence}" -> ${SPOKEN_FIX}`);
   for (const b of blocking) {
     let m;
     if (spokenRouted.length && /^spoken naturalness/.test(b)) continue;
+    if (repeats.length && /^generic AI writing/.test(b)) continue;
     if ((m = /^retention \(([^)]+)\)/.exec(b))) put(m[1], b);
     else if ((m = /\(([\w-]+)\) is never answered/.exec(b))) { put(m[1], b); put(last, b); }
-    else if (/weak-opening|first beat must be the winning hook/.test(b)) put(first, b);
+    else if (/weak-opening/.test(b)) put(first, `${b} -> ${OPENING_FIX}`);
+    else if (/first beat must be the winning hook/.test(b)) put(first, b);
     else if (/missing-payoff|predictable-ending|essay-ending/.test(b)) put(last, b);
     else if (/no-escalation/.test(b)) put(turn, b);
     else if ((m = /beat (\S+) cites unknown claim/.exec(b))) put(secOfBeat[m[1]], b);
