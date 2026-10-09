@@ -1,0 +1,123 @@
+{
+ "file": "prototype.mp4",
+ "observedAt": "2026-10-09T18:56:11.918Z",
+ "pass": true,
+ "checks": [
+  {
+   "name": "resolution",
+   "ok": true,
+   "measured": "1920x1080",
+   "target": "1920x1080",
+   "hard": true
+  },
+  {
+   "name": "frame rate",
+   "ok": true,
+   "measured": "30/1",
+   "target": "30/1",
+   "hard": true
+  },
+  {
+   "name": "codec",
+   "ok": true,
+   "measured": "h264 High yuv420p",
+   "target": "h264 yuv420p",
+   "hard": true
+  },
+  {
+   "name": "colour tags",
+   "ok": true,
+   "measured": "bt709/bt709/bt709",
+   "target": "bt709",
+   "hard": true
+  },
+  {
+   "name": "audio",
+   "ok": true,
+   "measured": "aac 2ch 48000 Hz",
+   "target": "stereo 48 kHz",
+   "hard": true
+  },
+  {
+   "name": "decode errors",
+   "ok": true,
+   "measured": 0,
+   "target": 0,
+   "hard": true
+  },
+  {
+   "name": "black frames >= 0.2 s",
+   "ok": true,
+   "measured": 0,
+   "target": 0,
+   "hard": true
+  },
+  {
+   "name": "integrated loudness",
+   "ok": true,
+   "measured": "-14.7 LUFS",
+   "target": "-14 +/- 1 LUFS",
+   "hard": true
+  },
+  {
+   "name": "true peak",
+   "ok": true,
+   "measured": "-2.5 dBTP",
+   "target": "<= -1 dBTP",
+   "hard": true
+  },
+  {
+   "name": "loudness range",
+   "ok": true,
+   "measured": "1.8 LU",
+   "target": "<= 8 LU",
+   "hard": true
+  },
+  {
+   "name": "unintended silence >= 0.8 s",
+   "ok": true,
+   "measured": 0,
+   "target": 0,
+   "hard": true
+  },
+  {
+   "name": "static holds > 3 s",
+   "ok": true,
+   "measured": "27.5s+1.8, 59.0s+1.8",
+   "target": "none over 3 s",
+   "hard": true
+  },
+  {
+   "name": "a/v duration match",
+   "ok": true,
+   "measured": "0.013 s",
+   "target": "<= 0.1 s",
+   "hard": true
+  },
+  {
+   "name": "duration",
+   "ok": false,
+   "measured": "61.58 s",
+   "target": "45-60 s",
+   "hard": false
+  },
+  {
+   "name": "captions",
+   "ok": true,
+   "measured": "16 cues, 0 out of limits",
+   "target": "<= 2x42 chars, >= 1 s, <= 20 chars/s",
+   "hard": true
+  }
+ ],
+ "freezes": [
+  {
+   "start": 27.533333,
+   "duration": 1.8
+  },
+  {
+   "start": 59,
+   "duration": 1.8
+  }
+ ],
+ "bitrateKbps": 3031
+}

@@ -19,11 +19,13 @@ const dir = path.resolve(args.find((a) => !a.startsWith("--")) || ".");
 const FPS = +opt("--fps", 30);
 const W = 1920, H = 1080;
 
+const Fonts = require("./fonts");
+// playwright-core is an exact-pinned devDependency; its Chromium headless shell is installed with
+// `npx playwright-core install --only-shell chromium` (PD_CHROMIUM overrides the executable).
 function loadPlaywright() {
-  const tries = [process.env.PD_PLAYWRIGHT_CORE, "playwright-core", "playwright"].filter(Boolean);
-  for (const t of tries) { try { return require(t); } catch (e) { /* next */ } }
-  throw new Error("playwright-core not found: install it or set PD_PLAYWRIGHT_CORE to its path");
+  try { return require("playwright-core"); } catch (e) { throw new Error("playwright-core missing: run npm install (it is a pinned devDependency)"); }
 }
+const launchOptions = () => (process.env.PD_CHROMIUM ? { executablePath: process.env.PD_CHROMIUM } : {});
 
 // Captions: sentence text split into cues of at most 2 lines x 42 characters, timed in proportion to
 // the spoken characters inside each measured sentence (the TTS gives sentence, not word, timings).
@@ -65,13 +67,13 @@ async function main() {
   const audio = path.join(out, "mix.wav"); if (!fs.existsSync(audio)) throw new Error("out/mix.wav missing: run produce-audio.js first");
   const audioDur = parseFloat(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", audio], { encoding: "utf8" }));
   const lib = fs.readFileSync(path.join(__dirname, "brand-lib.js"), "utf8"); const scenes = fs.readFileSync(path.join(dir, "scenes.js"), "utf8");
-  const html = `<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:#000}#stage{position:relative;width:${W}px;height:${H}px;overflow:hidden}.layer{position:absolute;inset:0}</style></head><body><div id="stage"></div><script>${lib}</script><script>${scenes}</script></body></html>`;
+  const html = `<!doctype html><html><head><meta charset="utf-8"><style>${Fonts.css()}\nhtml,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:#000}#stage{position:relative;width:${W}px;height:${H}px;overflow:hidden}.layer{position:absolute;inset:0}</style></head><body><div id="stage"></div><script>${lib}</script><script>${scenes}</script></body></html>`;
   const { chromium } = loadPlaywright();
-  const browser = await chromium.launch(process.env.PD_CHROMIUM ? { executablePath: process.env.PD_CHROMIUM } : {});
+  const browser = await chromium.launch(launchOptions());
   const page = await browser.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: 1 });
   const errors = []; page.on("pageerror", (e) => errors.push(e.message)); page.on("console", (m) => { if (m.type() === "error") errors.push(m.text()); });
   await page.setContent(html, { waitUntil: "load" });
-  await page.evaluate(() => document.fonts.ready);
+  await page.evaluate(Fonts.PAGE_CHECK);
   const meta = await page.evaluate((a) => PD.init(a.timeline, a.audioDur), { timeline, audioDur });
   if (errors.length) throw new Error("scene errors: " + errors.join(" | "));
   const total = Math.max(audioDur, meta.duration);
@@ -106,4 +108,4 @@ async function main() {
   console.log(`\n[motion] ${n} frames in ${((Date.now() - t0) / 1000).toFixed(0)} s -> ${path.relative(process.cwd(), video)} (${(to - from).toFixed(2)} s)`);
 }
 if (require.main === module) main().catch((e) => { console.error("MOTION RENDER FAILED:", e.message); process.exit(1); });
-module.exports = { captions, toSrt };
+module.exports = { captions, toSrt, loadPlaywright, launchOptions };

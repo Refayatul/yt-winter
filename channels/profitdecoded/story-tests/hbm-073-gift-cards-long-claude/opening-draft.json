@@ -1,0 +1,68 @@
+{
+ "status": "DRAFT - not applied. Keep until the final writing model is selected; that model (or the editor) reviews it, and the full story gates re-run on the whole script.",
+ "replaces": "beats s1-1..s1-4 of latest.json (s1-5 onward unchanged)",
+ "author": "Claude Opus 5.5 (Claude Code session, no API call), targeted editorial revision",
+ "date": "2026-10-09",
+ "diagnosis": [
+  "The gate scores the opening 79 (threshold 80): hook 64, title validation 77, momentum 100. At the real narration pace (144 wpm, measured) it reads 75: the first 5 seconds have no concrete name or number.",
+  "The title promises billions and asks who keeps the money, but the question arrives only after about 45 s of narration; 15-30 s are spent on survey method.",
+  "The obvious fix (lead with $27 billion, attribute later) breaks the non-waivable attribution rule (\"uses Bankrate's facts before naming it\"), so the source must come first."
+ ],
+ "change": [
+  "Hook names the source, the figure and the unresolved tension in one sentence (same facts, claim c8).",
+  "The title question (\"who keeps it?\") moves from about 45 s to about 15 s.",
+  "Survey method and the estimate caveat are kept in full, after the question.",
+  "Opening shortened from 113 to 85 words before s1-5; no new numbers; every number is in claim c8."
+ ],
+ "measured": {
+  "current": {
+   "gate": 79,
+   "at144wpm": 75,
+   "retentionScore": 90,
+   "globalIssues": [
+    "weak-opening (high)"
+   ]
+  },
+  "draft": {
+   "gate": 85,
+   "at144wpm": 85,
+   "retentionScore": 100,
+   "globalIssues": [],
+   "attributionIssues": [],
+   "unsupportedNumbers": [],
+   "aiPatternScore": 4,
+   "hookEvaluation": 83
+  }
+ },
+ "visualNote": "The prototype keeps the current opening. If adopted, the drawer/wallet/pocket montage moves under \"Some of it may be yours\" and the $27 billion shot moves to the hook; scenes re-time from the new narration timeline.",
+ "beats": [
+  {
+   "id": "s1-1",
+   "section": "s1",
+   "type": "hook",
+   "claimId": "c8",
+   "text": "By Bankrate's estimate, Americans are still sitting on about $27 billion in gift cards, vouchers and store credit they haven't used."
+  },
+  {
+   "id": "s1-2",
+   "section": "s1",
+   "type": "setup",
+   "claimId": "c8",
+   "text": "Some of it may be yours. And if that money never gets spent, who keeps it?"
+  },
+  {
+   "id": "s1-3",
+   "section": "s1",
+   "type": "setup",
+   "claimId": "c8",
+   "text": "That figure comes from a survey run online by YouGov in August 2024 with 2,373 adults. 43 percent said they're holding at least one."
+  },
+  {
+   "id": "s1-4",
+   "section": "s1",
+   "type": "setup",
+   "claimId": "c8",
+   "text": "It's an estimate, not a count, and Bankrate doesn't publish how it calculated it, which means it tells you the scale, not the exact amount."
+  }
+ ]
+}

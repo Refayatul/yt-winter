@@ -1,5 +1,11 @@
 # ProfitDecoded production preparation: first-minute prototype
 
+> **Update (same day):** `FIRST-FILM-READINESS.md` supersedes the font, dependency, licensing and blocker sections below.
+> - The macOS system fonts were replaced with pinned OFL fonts.
+> - `playwright-core` and the Chromium headless shell are pinned, and CI renders the prototype on a clean runner.
+> - A licence register covers every asset.
+> - The prototype was re-rendered with readability and variety fixes.
+
 Date: 2026-10-09.
 Episode: "Billions Sit on Unused Gift Cards. Who Keeps the Money?" (`hbm-073`).
 Branch: `feat/profitdecoded-production-prototype`.
