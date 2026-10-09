@@ -66,8 +66,28 @@ function totals(doc, policy, now, filter = {}) {
 }
 
 // Pure decision: may this reservation be added to this ledger document?
+// Single-use paid approval. paidEnabled alone is not enough: the policy must name an approval (id, script, pool,
+// expiry). The approval stops working the moment (a) it expires or (b) the ledger holds a "close" record for it,
+// which the workflow writes as soon as the paid production step ends, whatever its outcome. A new run needs a new,
+// reviewed approval id.
+function approvalState(doc, policy, now, req = {}) {
+  const a = policy.paidApproval;
+  if (!a || !a.id) return { ok: false, reason: "no paidApproval in the budget policy (id, scriptId, pool, expiresAt)" };
+  if (!a.expiresAt || Number.isNaN(Date.parse(a.expiresAt))) return { ok: false, reason: `paid approval ${a.id} has no valid expiresAt` };
+  if (now > Date.parse(a.expiresAt)) return { ok: false, reason: `paid approval ${a.id} expired at ${a.expiresAt}` };
+  const closed = (doc.entries || []).find((e) => e.type === "close" && e.approvalId === a.id);
+  if (closed) return { ok: false, reason: `paid approval ${a.id} was used and closed at ${closed.at} (${closed.reason || "run finished"}); a new run needs a new approval` };
+  if (req.scriptId && a.scriptId && req.scriptId !== a.scriptId) return { ok: false, reason: `paid approval ${a.id} covers ${a.scriptId} only, not ${req.scriptId}` };
+  if (req.pool && a.pool && req.pool !== a.pool) return { ok: false, reason: `paid approval ${a.id} covers the ${a.pool} pool only, not ${req.pool}` };
+  // Optional, for one-model experiments: the approval names the exact model id and its own spend cap.
+  if (req.model && a.model && req.model !== a.model) return { ok: false, reason: `paid approval ${a.id} covers model ${a.model} only, not ${req.model}` };
+  return { ok: true, approval: a };
+}
+
 function decide(doc, req, policy, now, opts = {}) {
   if (!policy.paidEnabled) return { ok: false, code: "PAID_DISABLED", reason: "paid calls are disabled in the budget policy (paidEnabled=false)" };
+  const ap = approvalState(doc, policy, now, req);
+  if (!ap.ok) return { ok: false, code: "PAID_DISABLED", reason: ap.reason };
   if (!POOLS.includes(req.pool)) return { ok: false, code: "BAD_REQUEST", reason: `unknown budget pool "${req.pool}"` };
   if (!CATEGORIES.includes(req.category)) return { ok: false, code: "BAD_REQUEST", reason: `unknown cost category "${req.category}"` };
   if (!req.scriptId || !req.id) return { ok: false, code: "BAD_REQUEST", reason: "a reservation needs an idempotency id and a scriptId" };
@@ -78,7 +98,7 @@ function decide(doc, req, policy, now, opts = {}) {
     if (st === "reserved") return { ok: false, code: "IN_FLIGHT", reason: `an identical request is already in flight (entry ${req.id}, run ${prior.runId || "?"})` };
     if ((st === "settled" || st === "uncertain") && opts.allowRepeat !== req.id) return { ok: false, code: "DUPLICATE", reason: `this exact request was already ${st === "settled" ? "paid for" : "sent (outcome uncertain)"} (entry ${req.id}); its output belongs in the stage cache. Paying again needs PD_BUDGET_ALLOW_REPEAT=${req.id}` };
   }
-  const cap = Math.min(policy.maxPerScriptUsd, req.scriptCapUsd != null ? req.scriptCapUsd : Infinity);
+  const cap = Math.min(policy.maxPerScriptUsd, req.scriptCapUsd != null ? req.scriptCapUsd : Infinity, ap.approval.maxUsd > 0 ? ap.approval.maxUsd : Infinity);
   const perScript = totals(doc, policy, now, { scriptId: req.scriptId });
   if (perScript.committedUsd + req.estimateUsd > cap + 1e-9) return { ok: false, code: "BUDGET", reason: `script ${req.scriptId}: $${perScript.committedUsd.toFixed(4)} committed + $${req.estimateUsd.toFixed(4)} maximum for this call exceeds the per-script limit $${cap.toFixed(2)}` };
   const month = totals(doc, policy, now, { month: req.month, pool: req.pool });
@@ -201,7 +221,12 @@ class Budget {
     const c = this.context; const now = this.now();
     return this.mutate((doc) => { doc.entries.push({ type: "outcome", id: this.idFor(["outcome", c.scriptId, outcome.status, now]), month: monthKey(now), topicId: c.topicId || null, scriptId: c.scriptId || null, videoId: c.videoId || null, runId: c.runId || null, ...outcome, at: new Date(now).toISOString() }); return true; });
   }
-  async status(month) { const { doc } = await this.store.read(); const now = this.now(); const m = month || monthKey(now); return { month: m, script: totals(doc, this.policy, now, { month: m, pool: "script" }), experiment: totals(doc, this.policy, now, { month: m, pool: "experiment" }), limits: this.policy.monthlyUsd, perScriptLimitUsd: this.policy.maxPerScriptUsd, targetPerScriptUsd: this.policy.targetPerScriptUsd, paidEnabled: this.policy.paidEnabled }; }
+  // Close the current paid approval in the ledger (idempotent). Called by the workflow after every paid run.
+  async closeApproval(reason) {
+    const a = this.policy.paidApproval; if (!a || !a.id) return null; const now = this.now();
+    return this.mutate((doc) => { const prior = doc.entries.find((e) => e.type === "close" && e.approvalId === a.id); if (prior) return prior; const e = { type: "close", id: this.idFor(["close", a.id]), approvalId: a.id, month: monthKey(now), at: new Date(now).toISOString(), runId: this.context.runId || null, reason: reason || "run finished" }; doc.entries.push(e); return e; });
+  }
+  async status(month) { const { doc } = await this.store.read(); const now = this.now(); const m = month || monthKey(now); return { month: m, script: totals(doc, this.policy, now, { month: m, pool: "script" }), experiment: totals(doc, this.policy, now, { month: m, pool: "experiment" }), limits: this.policy.monthlyUsd, perScriptLimitUsd: this.policy.maxPerScriptUsd, targetPerScriptUsd: this.policy.targetPerScriptUsd, paidEnabled: this.policy.paidEnabled, approval: (() => { const ap = approvalState(doc, this.policy, now); return { id: (this.policy.paidApproval || {}).id || null, usable: ap.ok, detail: ap.ok ? `usable until ${ap.approval.expiresAt} for ${ap.approval.scriptId || "any script"} (${ap.approval.pool || "any pool"}${ap.approval.model ? ", model " + ap.approval.model : ""}${ap.approval.maxUsd ? ", max $" + ap.approval.maxUsd : ""})` : ap.reason }; })() }; }
 }
 
 // Human reconciliation of an uncertain (or settled) entry against the provider console.
@@ -232,4 +257,4 @@ function costReport(doc, policy, now = Date.now(), filter = {}) {
   return { month: filter.month || "all", total, byCategory, byScript, counts: { attempts, accepted, completed, published }, perAttemptUsd: per(attempts), perAcceptedScriptUsd: per(accepted), perCompletedVideoUsd: per(completed), perPublishedVideoUsd: per(published), note: "actualUsd = settled provider usage at list price; estimatedUsd = reservations still open or uncertain, charged at their maximum. Free providers and local rendering are not in this ledger (their usage is in each run's usage.json)." };
 }
 
-module.exports = { Budget, BudgetError, FileStore, GitHubStore, storeFromEnv, loadPolicy, decide, totals, reconcile, costReport, monthKey, emptyLedger, effectiveStatus, POLICY_FILE, POOLS, CATEGORIES };
+module.exports = { approvalState, Budget, BudgetError, FileStore, GitHubStore, storeFromEnv, loadPolicy, decide, totals, reconcile, costReport, monthKey, emptyLedger, effectiveStatus, POLICY_FILE, POOLS, CATEGORIES };

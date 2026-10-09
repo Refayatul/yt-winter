@@ -385,7 +385,7 @@ async function develop(topic, dossier, format, deps = {}) {
   const chunked = deps.chunked != null ? deps.chunked : prov("draft") === "groq";
   const system = prompt("system.md");
   const ctx = { competitors: deps.competitors || [] };
-  const base = { dossier: hash(dossier), topic: topic.id, format, words, prompts: promptVersion(), providers: ["plan", "draft", "package", "critique", "rewrite"].map(prov).join(","), chunked }; // fixed list: cache keys must not move when stages are added
+  const base = { dossier: hash(dossier), topic: topic.id, format, words, prompts: promptVersion(), providers: ["plan", "draft", "package", "critique", "rewrite"].map(prov).join(","), chunked, ...(process.env.PD_AUTO_MODEL ? { model: process.env.PD_AUTO_MODEL } : {}) }; // fixed list: cache keys must not move when stages are added; a non-default Claude model never reuses another model's stages
   let plan = null, pe = null, out = null, draft = null, critique = null, a = null, evaluation = null; const changes = []; let rounds = 0;
   try {
     // 2-5. Story plan: thesis, conflict, hooks, structure (one call; one repair round if the plan fails its checks).
