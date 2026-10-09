@@ -1,16 +1,16 @@
 {
   "channel": "impossible-brief",
-  "updatedAt": "2026-10-09T18:51:52.969Z",
+  "updatedAt": "2026-10-09T19:34:22.892Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
-    "sampleSize": 7,
-    "status": "observing",
+    "sampleSize": 8,
+    "status": "adaptive",
     "baselines": {
       "views": 1044,
       "averagePercentageViewed": 59.92000000000001,
       "subscribersPer1000Views": 0,
       "watchHoursPer1000Views": 2.6,
-      "engagementPer1000Views": 18.03
+      "engagementPer1000Views": 21.05
     },
     "observations": [
       {
@@ -18,39 +18,47 @@
         "dimension": "hookType",
         "value": "visual_first_reveal",
         "sample": 5,
-        "lift": -0.076,
-        "z": -0.33
+        "lift": -0.149,
+        "z": -0.71
       },
       {
         "stage": "OBSERVATION",
         "dimension": "hookType",
         "value": "impossible_question",
         "sample": 2,
-        "lift": 0.189,
-        "z": 1.22
+        "lift": 0.006,
+        "z": 0.05
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "hookType",
+        "value": "countdown",
+        "sample": 1,
+        "lift": 0.731,
+        "z": 0
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "SPACE",
         "sample": 3,
-        "lift": 0.03,
-        "z": 0.11
+        "lift": -0.021,
+        "z": -0.08
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "EARTH",
         "sample": 2,
-        "lift": -0.235,
-        "z": -0.49
+        "lift": -0.34,
+        "z": -0.87
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "OTHER",
         "sample": 1,
-        "lift": 0.345,
+        "lift": 0.138,
         "z": 0
       },
       {
@@ -58,62 +66,70 @@
         "dimension": "topicCluster",
         "value": "PHYSICS",
         "sample": 1,
-        "lift": 0.034,
+        "lift": -0.125,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "HUMAN",
+        "sample": 1,
+        "lift": 0.731,
         "z": 0
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "18-25s",
-        "sample": 3,
-        "lift": 0.142,
-        "z": 1.4
+        "sample": 4,
+        "lift": 0.188,
+        "z": 0.99
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 4,
-        "lift": -0.107,
-        "z": -0.37
+        "lift": -0.188,
+        "z": -0.71
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "why",
         "sample": 1,
-        "lift": 0.049,
+        "lift": 0.007,
         "z": 0
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "question",
-        "sample": 2,
-        "lift": 0.382,
-        "z": 2.77
+        "sample": 3,
+        "lift": 0.406,
+        "z": 2.07
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "what-if-question",
         "sample": 2,
-        "lift": -0.185,
-        "z": -0.35
+        "lift": -0.297,
+        "z": -0.68
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "statement",
         "sample": 2,
-        "lift": -0.222,
-        "z": -0.87
+        "lift": -0.317,
+        "z": -1.65
       },
       {
         "stage": "OBSERVATION",
         "dimension": "storyStructure",
         "value": "IMPOSSIBLE_QUESTION>ASSUMPTION>FIRST_EFFECT>SECOND_ORDER_EFFECT>SCIENTIFIC_PAYOFF",
-        "sample": 7,
+        "sample": 8,
         "lift": 0,
         "z": 0
       },
@@ -122,62 +138,62 @@
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 3,
-        "lift": 0.271,
-        "z": 1.98
+        "lift": 0.165,
+        "z": 1.21
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "NONE",
-        "sample": 4,
-        "lift": -0.203,
-        "z": -0.85
+        "sample": 5,
+        "lift": -0.099,
+        "z": -0.39
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "22",
         "sample": 2,
-        "lift": 0.285,
-        "z": 1.21
+        "lift": 0.222,
+        "z": 1.03
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "18",
-        "sample": 5,
-        "lift": -0.114,
-        "z": -0.55
+        "sample": 6,
+        "lift": -0.074,
+        "z": -0.35
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "18:00 New York",
         "sample": 2,
-        "lift": 0.285,
-        "z": 1.21
+        "lift": 0.222,
+        "z": 1.03
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "21:00 TR",
-        "sample": 4,
-        "lift": -0.023,
-        "z": -0.1
+        "sample": 5,
+        "lift": 0.013,
+        "z": 0.05
       },
       {
         "stage": "OBSERVATION",
         "dimension": "popularityBand",
         "value": "unknown",
-        "sample": 6,
-        "lift": 0.08,
-        "z": 0.45
+        "sample": 7,
+        "lift": 0.073,
+        "z": 0.42
       },
       {
         "stage": "OBSERVATION",
         "dimension": "openingVisual",
         "value": "ILLUSTRATION",
-        "sample": 7,
+        "sample": 8,
         "lift": 0,
         "z": 0
       },
@@ -185,7 +201,7 @@
         "stage": "OBSERVATION",
         "dimension": "bucket",
         "value": "A",
-        "sample": 7,
+        "sample": 8,
         "lift": 0,
         "z": 0
       }
@@ -193,48 +209,61 @@
     "hypotheses": [
       {
         "stage": "HYPOTHESIS",
+        "dimension": "hookType",
+        "value": "visual_first_reveal",
+        "sample": 5,
+        "lift": -0.149,
+        "z": -0.71
+      },
+      {
+        "stage": "HYPOTHESIS",
         "dimension": "durationBucket",
         "value": "18-25s",
-        "sample": 3,
-        "lift": 0.142,
-        "z": 1.4
+        "sample": 4,
+        "lift": 0.188,
+        "z": 0.99
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 4,
-        "lift": -0.107,
-        "z": -0.37
+        "lift": -0.188,
+        "z": -0.71
+      },
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "titlePattern",
+        "value": "question",
+        "sample": 3,
+        "lift": 0.406,
+        "z": 2.07
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 3,
-        "lift": 0.271,
-        "z": 1.98
-      },
-      {
-        "stage": "HYPOTHESIS",
-        "dimension": "ctaStyle",
-        "value": "NONE",
-        "sample": 4,
-        "lift": -0.203,
-        "z": -0.85
-      },
-      {
-        "stage": "HYPOTHESIS",
-        "dimension": "publishHourUTC",
-        "value": "18",
-        "sample": 5,
-        "lift": -0.114,
-        "z": -0.55
+        "lift": 0.165,
+        "z": 1.21
       }
     ],
     "adopted": [],
     "suppressed": [],
-    "adoptedWeights": {},
+    "adoptedWeights": {
+      "TopicDemandScore": 1.2,
+      "CuriosityScore": 0.816,
+      "HookPotentialScore": 0.877,
+      "EmotionalImpactScore": 0.8,
+      "StoryCompressionScore": 0.8,
+      "RewatchPotentialScore": 0.8,
+      "SharePotentialScore": 0.849,
+      "CommentPotentialScore": 0.8,
+      "SubscriberConversionPotential": 0.8,
+      "NoveltyScore": 0.8,
+      "SourceQualityScore": 0.8,
+      "ChannelFitScore": 0.882
+    },
     "adoptedHookFamilyBonus": {},
     "adoptedTitlePatternBonus": {},
     "adoptedClusterBonus": {},
