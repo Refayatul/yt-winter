@@ -7,6 +7,10 @@
 //   openai       needs OPENAI_API_KEY (gpt-4o-mini-tts)  -- premium
 //   kokoro       free, open-source (Apache-2.0), CPU, no key: PD_KOKORO_MODEL + PD_KOKORO_VOICES (+ PD_KOKORO_PYTHON). NOT auto-certified: a human listen is still required
 //   google       needs GOOGLE_TTS_API_KEY (Cloud Text-to-Speech; Chirp 3 HD / Neural2) -- premium, 1M free chars/month
+//   cartesia     needs PD_CARTESIA_API_KEY + a voice id (PD_CARTESIA_VOICE_ID or config voice.cartesiaVoiceId) -- premium.
+//                Sonic, pinned snapshot (docs.cartesia.ai, API version 2026-08-14). Billed 1 credit per character:
+//                every request is counted in usage.cartesia and refused once PD_CARTESIA_MAX_CHARS would be exceeded.
+//                No automatic retries. Without a key it falls back to Kokoro (free), never to another paid provider.
 //
 // Keys are read from the environment only and are never logged or written.
 // Selection: PD_TTS_PROVIDER env, else channels/profitdecoded/config.json voice.provider.
@@ -19,7 +23,10 @@ const W = require("./wav");
 const { channelConfig } = require("./config");
 
 const RATE = 24000;
-const PREMIUM = new Set(["elevenlabs", "openai", "google"]);
+const PREMIUM = new Set(["elevenlabs", "openai", "google", "cartesia"]);
+const CARTESIA = { url: "https://api.cartesia.ai/tts/bytes", version: "2026-08-14", model: "sonic-3.6-2026-08-27" };
+// Characters sent to Cartesia in this process (1 credit each). Read by the audition and narration reports.
+const usage = { cartesia: { requests: 0, characters: 0 } };
 
 function pcmFromWavBuffer(buf, rate = RATE) {
   const w = W.readWav(buf);
@@ -55,6 +62,11 @@ function resolve(env = process.env) {
     if (!k.model || !k.voices || !fs.existsSync(k.model) || !fs.existsSync(k.voices)) return { name: "edge-tts", premium: false, fallbackFrom: "kokoro", reason: "PD_KOKORO_MODEL / PD_KOKORO_VOICES not set or files missing" };
     return { name: "kokoro", premium: false, fallbackFrom: null };
   }
+  if (name === "cartesia" && !env.PD_CARTESIA_API_KEY) {
+    const k = kokoroConfig(env);
+    if (k.model && k.voices && fs.existsSync(k.model) && fs.existsSync(k.voices)) return { name: "kokoro", premium: false, fallbackFrom: "cartesia", reason: "PD_CARTESIA_API_KEY not set" };
+    return { name: "edge-tts", premium: false, fallbackFrom: "cartesia", reason: "PD_CARTESIA_API_KEY not set and Kokoro files missing" };
+  }
   if (name === "google" && !env.GOOGLE_TTS_API_KEY) return { name: "edge-tts", premium: false, fallbackFrom: "google", reason: "GOOGLE_TTS_API_KEY not set" };
   if (name === "openai" && !env.OPENAI_API_KEY) return { name: "edge-tts", premium: false, fallbackFrom: "openai", reason: "OPENAI_API_KEY not set" };
   return { name, premium: PREMIUM.has(name), fallbackFrom: null };
@@ -89,15 +101,36 @@ function googleRequest(text, opts = {}, env = process.env) {
     json: true,
   };
 }
+// Cartesia Sonic (REST /tts/bytes): raw 16-bit PCM at 24 kHz, so no decoding step. Speed follows the channel rate.
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+function cartesiaRequest(text, opts = {}, env = process.env) {
+  const voiceId = opts.voice && UUID.test(opts.voice) ? opts.voice : env.PD_CARTESIA_VOICE_ID || (channelConfig().voice || {}).cartesiaVoiceId;
+  if (!voiceId) throw new Error("Cartesia needs a voice id (PD_CARTESIA_VOICE_ID or config voice.cartesiaVoiceId)");
+  const speed = opts.rate ? Math.max(0.6, Math.min(1.5, 1 + parseFloat(opts.rate) / 100)) : 1;
+  return {
+    url: CARTESIA.url,
+    init: { method: "POST", headers: { authorization: "Bearer " + env.PD_CARTESIA_API_KEY, "cartesia-version": CARTESIA.version, "content-type": "application/json" },
+      body: JSON.stringify({ model_id: env.PD_CARTESIA_MODEL || CARTESIA.model, transcript: text, voice: { id: voiceId }, output_format: { container: "raw", encoding: "pcm_s16le", sample_rate: RATE }, language: "en", generation_config: { speed: +speed.toFixed(3) } }) },
+    pcm: true,
+  };
+}
+function chargeCartesia(text, env = process.env) {
+  const cap = Number(env.PD_CARTESIA_MAX_CHARS || 0);
+  if (!(cap > 0)) throw new Error("Cartesia refused: PD_CARTESIA_MAX_CHARS (credit cap for this run) is not set");
+  if (usage.cartesia.characters + text.length > cap) throw new Error(`Cartesia refused: ${usage.cartesia.characters} + ${text.length} characters would exceed PD_CARTESIA_MAX_CHARS ${cap}`);
+  usage.cartesia.requests += 1; usage.cartesia.characters += text.length;
+}
 function pcm16ToFloat(buf) { const n = Math.floor(buf.length / 2); const out = new Float32Array(n); for (let i = 0; i < n; i += 1) out[i] = buf.readInt16LE(i * 2) / 32768; return out; }
 
 async function synthesize(text, opts = {}, deps = {}) {
   const env = deps.env || process.env; const p = opts.provider ? { name: opts.provider, premium: PREMIUM.has(opts.provider) } : resolve(env);
   const doFetch = deps.fetch || fetch;
-  if (p.name === "elevenlabs" || p.name === "openai" || p.name === "google") {
-    const req = p.name === "elevenlabs" ? elevenLabsRequest(text, opts, env) : p.name === "google" ? googleRequest(text, opts, env) : openAiRequest(text, opts, env);
+  if (p.name === "elevenlabs" || p.name === "openai" || p.name === "google" || p.name === "cartesia") {
+    const req = p.name === "elevenlabs" ? elevenLabsRequest(text, opts, env) : p.name === "google" ? googleRequest(text, opts, env) : p.name === "cartesia" ? cartesiaRequest(text, opts, env) : openAiRequest(text, opts, env);
+    // Counted before sending (a failed request may still be billed); one attempt only.
+    if (p.name === "cartesia") chargeCartesia(text, env);
     const res = await doFetch(req.url, req.init);
-    if (!res.ok) throw new Error(`${p.name} TTS failed: HTTP ${res.status}`);
+    if (!res.ok) { let why = ""; try { why = String(await res.text()).replace(/\s+/g, " ").slice(0, 200); } catch (e) { /* no body */ } throw new Error(`${p.name} TTS failed: HTTP ${res.status}${why ? ": " + why : ""}`); }
     if (req.json) return pcmFromWavBuffer(Buffer.from((await res.json()).audioContent, "base64"));
     const buf = Buffer.from(await res.arrayBuffer());
     return req.pcm ? pcm16ToFloat(buf) : pcmFromWavBuffer(buf);
@@ -125,4 +158,4 @@ async function synthesize(text, opts = {}, deps = {}) {
   return mp3ToSamples(mp3);
 }
 
-module.exports = { RATE, PREMIUM, resolve, synthesize, kokoroCommand, elevenLabsRequest, openAiRequest, googleRequest, pcm16ToFloat, mp3ToSamples };
+module.exports = { RATE, PREMIUM, CARTESIA, usage, resolve, synthesize, kokoroCommand, elevenLabsRequest, openAiRequest, googleRequest, cartesiaRequest, pcm16ToFloat, mp3ToSamples };

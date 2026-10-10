@@ -27,6 +27,12 @@
     return s.start + (s.end - s.start) * (i / src.length);
   };
 
+  // Beat-addressed timing (long films): the beat's span, its n-th sentence, and a phrase anywhere inside the beat.
+  PD.bss = (id) => { const ss = PD.tl.filter((x) => x.beatId === id); if (!ss.length) throw new Error(`beat ${id} not in the timeline`); return ss; };
+  PD.b = (id) => { const ss = PD.bss(id); return { start: ss[0].start, end: ss[ss.length - 1].end }; };
+  PD.bs = (id, n = 0) => PD.bss(id)[n];
+  PD.bw = (id, phrase) => { const ss = PD.bss(id); for (const s of ss) { const k = PD.tl.indexOf(s); if ((s.spoken || s.text).toLowerCase().includes(String(phrase).toLowerCase()) || s.text.toLowerCase().includes(String(phrase).toLowerCase())) return PD.w(k, phrase); } throw new Error(`phrase "${phrase}" not in beat ${id}`); };
+
   // ---------- components (SVG strings) ----------
   PD.svg = (inner, bg) => `<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">${bg ? `<rect width="1920" height="1080" fill="${bg}"/>` : ""}${inner}</svg>`;
   PD.defs = () => `<defs>

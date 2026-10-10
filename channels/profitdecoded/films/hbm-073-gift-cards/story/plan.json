@@ -1,0 +1,211 @@
+{
+ "thesis": "An unused balance on a non-expiring gift card stays spendable, but the issuer estimates from its own redemption history how much will not be redeemed and books that share as revenue little by little as other cards are redeemed; unclaimed-property laws may send part of it to government agencies, and federal rules block the quickest ways of taking it.",
+ "centralQuestion": "If a gift card balance is never spent, who ends up with the money: the company, the government, or the holder?",
+ "conflict": {
+  "wants": "The holder assumes an unspent balance is simply lost; the issuer wants to recognize the share it expects never to be redeemed",
+  "obstacle": "The cards never expire, so the company cannot wait for a balance to die; it can only predict, and the prediction can be wrong",
+  "stakes": "Hundreds of millions of dollars a year in reported revenue at one company, and an estimated $27 billion sitting with US adults"
+ },
+ "misconception": "That the store simply keeps an unused balance when the card runs out.",
+ "originalAngle": "Read the issuers' own filings to show that breakage is a forecast booked gradually, not a forfeited balance; separate what the survey estimates from what companies record; state plainly what the filings do not reveal (how much goes to government).",
+ "hookCandidates": [
+  {
+   "text": "Somewhere in a drawer, a wallet or a coat pocket, there's a gift card with money still on it. Maybe it's yours.",
+   "mechanism": "visual mystery"
+  },
+  {
+   "text": "43 percent of American adults say they're holding at least one unused gift card, voucher or store credit.",
+   "mechanism": "number"
+  },
+  {
+   "text": "Starbucks cards have no expiration date. Starbucks still turns part of the money on them into revenue every year.",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "Every time someone spends a Starbucks card, a sliver of money the company doesn't expect anyone to spend becomes revenue.",
+   "mechanism": "hidden incentive"
+  },
+  {
+   "text": "If you never spend a gift card, who ends up with the money?",
+   "mechanism": "question"
+  },
+  {
+   "text": "Darden's gift card forecast stretches over 12 years, and moving it by half a percentage point shifts its income by about $3.6 million.",
+   "mechanism": "unexpected consequence"
+  },
+  {
+   "text": "By Bankrate's estimate, Americans are still sitting on about $27 billion in gift cards, vouchers and store credit they haven't used.",
+   "mechanism": "number"
+  }
+ ],
+ "selectedHook": "By Bankrate's estimate, Americans are still sitting on about $27 billion in gift cards, vouchers and store credit they haven't used.",
+ "selectionReason": "Draft opening (PR #213): names the source first, gives the scale in the first sentence and asks the title question by about second 15; it is also the heuristic winner (82).",
+ "questions": [
+  {
+   "id": "q1",
+   "text": "How can a company book money on cards that never expire?"
+  },
+  {
+   "id": "q2",
+   "text": "How much is it actually worth to a company?"
+  },
+  {
+   "id": "q3",
+   "text": "How reliable is the forecast?"
+  },
+  {
+   "id": "q4",
+   "text": "Does anyone besides the company and the holder get a share?"
+  }
+ ],
+ "sections": [
+  {
+   "id": "s1",
+   "title": "The card in the drawer",
+   "purpose": "hook",
+   "claimIds": [
+    "c8",
+    "c2"
+   ],
+   "raises": [
+    "q1"
+   ],
+   "resolves": [],
+   "visualIdea": "Macro shots of a kitchen drawer, a gift card half under takeout menus; survey number types on."
+  },
+  {
+   "id": "s2",
+   "title": "A card with no end date",
+   "purpose": "setup",
+   "claimIds": [
+    "c2"
+   ],
+   "raises": [
+    "q1"
+   ],
+   "resolves": [],
+   "visualIdea": "Card terms panel: no expiration, no fees; a balance counter that does not move."
+  },
+  {
+   "id": "s3",
+   "title": "Forecasting what won't be spent",
+   "purpose": "mechanism",
+   "claimIds": [
+    "c2"
+   ],
+   "raises": [
+    "q2",
+    "q4"
+   ],
+   "resolves": [
+    "q1"
+   ],
+   "visualIdea": "Animated money flow: each redemption tips a matching sliver from a 'not expected to be redeemed' bucket into revenue."
+  },
+  {
+   "id": "s4",
+   "title": "How big the slice is",
+   "purpose": "evidence",
+   "claimIds": [
+    "c1",
+    "i1",
+    "i4",
+    "i3"
+   ],
+   "raises": [
+    "q3"
+   ],
+   "resolves": [
+    "q2"
+   ],
+   "visualIdea": "Two stacked bars for the breakage lines, then a river graphic dwarfing them."
+  },
+  {
+   "id": "s5",
+   "title": "Twelve years",
+   "purpose": "evidence",
+   "claimIds": [
+    "c4",
+    "c5",
+    "i2"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "Timeline from a birthday card to a graduation; a pool that fills slightly faster than it drains."
+  },
+  {
+   "id": "s6",
+   "title": "Half a point",
+   "purpose": "turn",
+   "claimIds": [
+    "c6"
+   ],
+   "raises": [],
+   "resolves": [
+    "q3"
+   ],
+   "visualIdea": "Filing excerpt highlighted; a dial nudged by 50 basis points moves an income figure."
+  },
+  {
+   "id": "s7",
+   "title": "The third player",
+   "purpose": "complication",
+   "claimIds": [
+    "c2",
+    "c10"
+   ],
+   "raises": [],
+   "resolves": [
+    "q4"
+   ],
+   "visualIdea": "Third chair appears at the table labelled 'government agencies'; the share is a question mark."
+  },
+  {
+   "id": "s8",
+   "title": "What the law protects, and what it can't",
+   "purpose": "caveat",
+   "claimIds": [
+    "c7",
+    "c9",
+    "c8"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "Rule card from the federal regulation; survey bars for the ways people lost money."
+  },
+  {
+   "id": "s9",
+   "title": "Who keeps the money",
+   "purpose": "payoff",
+   "claimIds": [
+    "c2",
+    "c4",
+    "c10",
+    "c8"
+   ],
+   "raises": [],
+   "resolves": [
+    "centralQuestion"
+   ],
+   "visualIdea": "Three claimants side by side, then back to the drawer."
+  }
+ ],
+ "payoff": "On paper, the holder keeps a non-expiring balance: it stays spendable, with no fees. In practice, the issuer books the share it does not expect to be redeemed, gradually and from its own history. Where unclaimed-property laws apply, part may go to government agencies, and the filings do not say how much. Only the holder decides whether a given balance gets spent.",
+ "caveats": [
+  "Breakage is an estimate; Darden says actual breakage may differ and it updates estimates periodically.",
+  "The $27 billion is a survey estimate that includes vouchers and store credit.",
+  "Not every gift card is non-expiring: federal rules allow expiry after at least five years.",
+  "The filings do not disclose how much unspent money goes to government."
+ ],
+ "thesisClaimIds": [
+  "c2",
+  "c4",
+  "c1",
+  "c7"
+ ],
+ "payoffClaimIds": [
+  "c2",
+  "c4",
+  "c10"
+ ]
+}

@@ -116,7 +116,7 @@ if (cmd === "inventory") {
   const ctx = { plan, winningHook, hookCandidates: plan.hookCandidates, words, title: meta.title };
   const draftFull = { ...draftOut, hookCandidates: plan.hookCandidates.map((h) => h.text) };
   const keepG = (draftFull.graphics || []).filter((g) => fin.beats.some((b) => b.id === g.beatId) && !(fin.graphics || []).some((n) => n.beatId === g.beatId));
-  const finalOut = { ...draftFull, beats: fin.beats, graphics: [...keepG, ...(fin.graphics || [])], ...(fin.titleCandidates ? { titleCandidates: fin.titleCandidates } : {}) };
+  const finalOut = { ...draftFull, beats: fin.beats, graphics: [...keepG, ...(fin.graphics || [])], ...(fin.titleCandidates ? { titleCandidates: fin.titleCandidates } : {}), ...(fin.thumbnailCandidates ? { thumbnailCandidates: fin.thumbnailCandidates } : {}), ...(fin.learningValue ? { learningValue: fin.learningValue } : {}) };
   const draftA = W.assess(draftFull, dossier, format, ctx); const finalA = W.assess(finalOut, dossier, format, ctx);
   // committed, human-approved editorial exceptions (one retention heuristic, this exact script version) are applied and listed
   const Ex = require(path.join(P, "exceptions")); const exr = Ex.apply(finalA.blocking, { topicId: meta.topicId, format, beats: finalOut.beats }); finalA.blocking = exr.blocking; finalA.waived = exr.waived;
