@@ -10,6 +10,7 @@ on:
       - 'scripts/profitdecoded/kokoro_tts.py'
       - 'core/profitdecoded/tts-provider.js'
       - '.github/workflows/profitdecoded-voice-audition.yml'
+      - 'channels/profitdecoded/prototypes/**'
   workflow_dispatch:
 
 permissions:
@@ -53,10 +54,22 @@ jobs:
           PD_KOKORO_MODEL: ${{ github.workspace }}/kokoro-model/kokoro-v1.0.onnx
           PD_KOKORO_VOICES: ${{ github.workspace }}/kokoro-model/voices-v1.0.bin
           PD_KOKORO_PYTHON: python
-        run: node scripts/profitdecoded/voice-audition.js audition-out --provider kokoro
-      - name: edge-tts voices (for comparison)
+        # The same fixed 45-second excerpt (the gift-card opening) for every voice, at the channel rate.
+        run: node scripts/profitdecoded/voice-audition.js audition-out --provider kokoro --rate -3% --text-file channels/profitdecoded/prototypes/gift-cards-first-minute/audition-excerpt.txt --voices am_michael,am_fenrir,am_puck,af_heart,af_bella,bm_george
+      - name: edge-tts voices (comparison only; not licensed for monetised use)
         continue-on-error: true
-        run: node scripts/profitdecoded/voice-audition.js audition-out --provider edge-tts
+        run: node scripts/profitdecoded/voice-audition.js audition-out --provider edge-tts --rate -3% --text-file channels/profitdecoded/prototypes/gift-cards-first-minute/audition-excerpt.txt --voices en-US-AndrewMultilingualNeural,en-US-BrianMultilingualNeural,en-US-ChristopherNeural
+      - name: First-minute prototype narration (Kokoro, channel voice; internal test, no upload)
+        env:
+          PD_TTS_PROVIDER: kokoro
+          PD_KOKORO_MODEL: ${{ github.workspace }}/kokoro-model/kokoro-v1.0.onnx
+          PD_KOKORO_VOICES: ${{ github.workspace }}/kokoro-model/voices-v1.0.bin
+          PD_KOKORO_PYTHON: python
+        run: |
+          node scripts/profitdecoded/produce-audio.js channels/profitdecoded/prototypes/gift-cards-first-minute/bundle.json
+          mkdir -p audition-out/prototype
+          cp channels/profitdecoded/prototypes/gift-cards-first-minute/out/* audition-out/prototype/
+          cp channels/profitdecoded/prototypes/gift-cards-first-minute/bundle.json audition-out/prototype/bundle.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

@@ -94,3 +94,8 @@ channels/*/state/production/
 
 # ProfitDecoded story-engine stage cache (runtime artefact)
 channels/profitdecoded/state/story-cache/
+
+# ProfitDecoded prototype review evidence: small stills, captions and measurements (the MP4 and WAVs stay out).
+channels/profitdecoded/prototypes/*/out/
+!channels/profitdecoded/prototypes/*/evidence/*.jpg
+!channels/profitdecoded/prototypes/*/evidence/*.srt
