@@ -41,4 +41,6 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
       - if: always() && steps.check.outputs.exit_code != '0'
-        run: exit "${{ steps.check.outputs.exit_code }}"
+        run: |
+          CHECK_EXIT_CODE="${{ steps.check.outputs.exit_code }}"
+          exit "${CHECK_EXIT_CODE:-1}"
