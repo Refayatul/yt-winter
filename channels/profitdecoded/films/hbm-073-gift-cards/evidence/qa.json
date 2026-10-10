@@ -1,0 +1,211 @@
+{
+ "file": "channels/profitdecoded/films/hbm-073-gift-cards/out/prototype.mp4",
+ "observedAt": "2026-10-10T06:52:08.676Z",
+ "pass": true,
+ "checks": [
+  {
+   "name": "resolution",
+   "ok": true,
+   "measured": "1920x1080",
+   "target": "1920x1080",
+   "hard": true
+  },
+  {
+   "name": "frame rate",
+   "ok": true,
+   "measured": "30/1",
+   "target": "30/1",
+   "hard": true
+  },
+  {
+   "name": "codec",
+   "ok": true,
+   "measured": "h264 High yuv420p",
+   "target": "h264 yuv420p",
+   "hard": true
+  },
+  {
+   "name": "colour tags",
+   "ok": true,
+   "measured": "bt709/bt709/bt709",
+   "target": "bt709",
+   "hard": true
+  },
+  {
+   "name": "audio",
+   "ok": true,
+   "measured": "aac 2ch 48000 Hz",
+   "target": "stereo 48 kHz",
+   "hard": true
+  },
+  {
+   "name": "decode errors",
+   "ok": true,
+   "measured": 0,
+   "target": 0,
+   "hard": true
+  },
+  {
+   "name": "black frames >= 0.2 s",
+   "ok": true,
+   "measured": 0,
+   "target": 0,
+   "hard": true
+  },
+  {
+   "name": "integrated loudness",
+   "ok": true,
+   "measured": "-14.3 LUFS",
+   "target": "-14 +/- 1 LUFS",
+   "hard": true
+  },
+  {
+   "name": "true peak",
+   "ok": true,
+   "measured": "-2.4 dBTP",
+   "target": "<= -1 dBTP",
+   "hard": true
+  },
+  {
+   "name": "loudness range",
+   "ok": true,
+   "measured": "3.8 LU",
+   "target": "<= 8 LU",
+   "hard": true
+  },
+  {
+   "name": "unintended silence >= 0.8 s",
+   "ok": true,
+   "measured": 0,
+   "target": 0,
+   "hard": true
+  },
+  {
+   "name": "static holds > 3 s",
+   "ok": true,
+   "measured": "8.3s+2.3, 12.7s+2.1, 47.8s+1.9, 54.8s+1.7, 73.4s+1.5, 83.4s+2.8, 91.8s+1.9, 93.8s+1.7, 107.2s+2.1, 184.7s+1.6, 201.6s+2.3, 236.5s+1.5, 238.3s+1.6, 265.6s+1.7, 267.4s+1.8, 289.5s+1.8, 291.3s+1.6, 292.9s+1.5, 294.4s+1.5, 332.0s+2.2, 352.1s+1.5, 395.4s+2.2, 464.7s+1.7, 467.7s+2.0",
+   "target": "none over 3 s",
+   "hard": true
+  },
+  {
+   "name": "a/v duration match",
+   "ok": true,
+   "measured": "0.008 s",
+   "target": "<= 0.1 s",
+   "hard": true
+  },
+  {
+   "name": "duration",
+   "ok": true,
+   "measured": "537.77 s",
+   "target": "480-720 s",
+   "hard": false
+  },
+  {
+   "name": "captions",
+   "ok": true,
+   "measured": "136 cues, 0 out of limits",
+   "target": "<= 2x42 chars, >= 1 s, <= 20 chars/s",
+   "hard": true
+  }
+ ],
+ "freezes": [
+  {
+   "start": 8.333333,
+   "duration": 2.266667
+  },
+  {
+   "start": 12.733333,
+   "duration": 2.066667
+  },
+  {
+   "start": 47.8,
+   "duration": 1.866667
+  },
+  {
+   "start": 54.8,
+   "duration": 1.7
+  },
+  {
+   "start": 73.4,
+   "duration": 1.533333
+  },
+  {
+   "start": 83.433333,
+   "duration": 2.8
+  },
+  {
+   "start": 91.833333,
+   "duration": 1.933333
+  },
+  {
+   "start": 93.766667,
+   "duration": 1.666667
+  },
+  {
+   "start": 107.233333,
+   "duration": 2.1
+  },
+  {
+   "start": 184.7,
+   "duration": 1.6
+  },
+  {
+   "start": 201.6,
+   "duration": 2.266667
+  },
+  {
+   "start": 236.5,
+   "duration": 1.533333
+  },
+  {
+   "start": 238.266667,
+   "duration": 1.566667
+  },
+  {
+   "start": 265.633333,
+   "duration": 1.733333
+  },
+  {
+   "start": 267.366667,
+   "duration": 1.766667
+  },
+  {
+   "start": 289.5,
+   "duration": 1.766667
+  },
+  {
+   "start": 291.266667,
+   "duration": 1.6
+  },
+  {
+   "start": 292.866667,
+   "duration": 1.5
+  },
+  {
+   "start": 294.366667,
+   "duration": 1.5
+  },
+  {
+   "start": 332.033333,
+   "duration": 2.166667
+  },
+  {
+   "start": 352.133333,
+   "duration": 1.5
+  },
+  {
+   "start": 395.433333,
+   "duration": 2.2
+  },
+  {
+   "start": 464.666667,
+   "duration": 1.666667
+  },
+  {
+   "start": 467.666667,
+   "duration": 2
+  }
+ ],
+ "bitrateKbps": 2152
+}
