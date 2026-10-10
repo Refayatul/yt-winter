@@ -402,10 +402,10 @@ window.SCENES = function (PD) {
   shot("choice", B("s9-6").start - lead, { visual: "Split: a meal and a coffee (line art) vs a highlighted line in someone else's annual report", asset: "original vector illustration" }, (lt, t) => {
     const a = ent(t, BS("s9-6", 2).start); const m = ent(t, BW("s9-6", "a meal") - 0.3); const r2 = ent(t, BW("s9-6", "annual report") - 0.6); const hk = E.inOut(p(t, BW("s9-6", "annual report") - 0.2, BW("s9-6", "annual report") + 0.8));
     const pre = 1 - a; const s0 = ent(t, B("s9-6").start), s1 = ent(t, BS("s9-6", 1).start);
-    return dark(cam(pp(lt), 1.0, 1.02, `<g opacity="${pre}">${PD.serif(960, 430, "The company can estimate.", { size: 76, op: s0 })}${PD.serif(960, 560, "The government may take a slice.", { size: 76, op: s1 })}</g>
-      <g opacity="${a}"><line x1="960" y1="200" x2="960" y2="900" stroke="${C.mist}" stroke-opacity="0.3" stroke-width="3"/>${card(960, 160, 220)}
-        <g opacity="${m}">${at(500, 560, plate(1.1))}${at(720, 500, cup(0.9))}${PD.label(560, 800, "A MEAL AND A COFFEE", { size: 32, anchor: "middle", fill: C.text, ls: 4 })}</g>
-        <g opacity="${r2}">${at(1420, 560, reportDoc(1, hk), 3, 0.95)}${PD.label(1420, 880, "A LINE IN SOMEONE ELSE'S REPORT", { size: 28, anchor: "middle", fill: C.text, ls: 3 })}</g></g>`)); });
+    return dark(cam(pp(lt), 1.0, 1.07, `<g opacity="${pre}">${PD.serif(960, 430, "The company can estimate.", { size: 76, op: s0 })}${PD.serif(960, 560, "The government may take a slice.", { size: 76, op: s1 })}</g>
+      <g opacity="${a}"><line x1="960" y1="200" x2="960" y2="900" stroke="${C.mist}" stroke-opacity="0.3" stroke-width="3"/>${card(960 + 240 * Math.sin(lt * 0.55), 160, 220, {}, 6 * Math.sin(lt * 0.55))}
+        <g opacity="${m}">${at(500, 560 + 10 * Math.sin(lt * 0.7 + 1), plate(1.1))}${at(720, 500 + 12 * Math.sin(lt * 0.9), cup(0.9))}${PD.label(560, 800, "A MEAL AND A COFFEE", { size: 32, anchor: "middle", fill: C.text, ls: 4 })}</g>
+        <g opacity="${r2}">${at(1420, 560 + 14 * Math.sin(lt * 0.8), reportDoc(1, hk), 3 + 2.5 * Math.sin(lt * 0.6), 0.95)}${PD.label(1420, 880, "A LINE IN SOMEONE ELSE'S REPORT", { size: 28, anchor: "middle", fill: C.text, ls: 3 })}</g></g>`)); });
 
   shot("check-it", B("s9-7").start - lead, { in: "fade", inDur: 0.4, visual: "Callback: the drawer opens; the card's balance glows; 'Go check it.'", asset: "original vector illustration" }, (lt, t) => {
     const g = ent(t, BS("s9-7", 1).start - 0.1);
