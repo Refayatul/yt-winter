@@ -47,6 +47,9 @@ function captions(timeline) {
     const total = chunks.reduce((n, c) => n + c.join(" ").length, 0); let t = s.start;
     for (const c of chunks) { const d = (s.end - s.start) * (c.join(" ").length / total); cues.push({ start: t, end: t + d, lines: fits(c) }); t += d; }
   }
+  // A very short spoken line ("It won't.") stays on screen for at least 1 s by extending into the pause after it,
+  // never past the next cue's start.
+  cues.forEach((c, i) => { if (c.end - c.start < 1) c.end = Math.min(c.start + 1, i + 1 < cues.length ? cues[i + 1].start : c.start + 1); });
   return cues;
 }
 const stamp = (t) => { const ms = Math.round(t * 1000); const h = Math.floor(ms / 3600000), m = Math.floor(ms / 60000) % 60, s = Math.floor(ms / 1000) % 60; return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")},${String(ms % 1000).padStart(3, "0")}`; };

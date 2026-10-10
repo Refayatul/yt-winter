@@ -22,6 +22,12 @@ test("captions: at most two lines of 42 characters, no orphaned short cue, every
   assert.equal(cues.map((c) => c.lines.join(" ")).join(" "), timeline.map((s) => s.text).join(" "));
 });
 
+test("captions: a line spoken in under 1 s stays up 1 s, extending into the pause, never over the next cue", () => {
+  const cues = captions([{ text: "It won't.", start: 10, end: 10.78 }, { text: "So Starbucks looks backward.", start: 11.2, end: 13 }, { text: "Go.", start: 13.1, end: 13.5 }, { text: "Next.", start: 13.8, end: 15 }]);
+  assert.equal(cues[0].end, 11); assert.ok(cues[1].start >= cues[0].end);
+  assert.ok(Math.abs(cues[2].end - 13.8) < 1e-9, "capped at the next cue's start");
+});
+
 test("captions: cues stay inside their measured sentence and are contiguous within it", () => {
   const cues = captions(timeline); let i = 0;
   for (const s of timeline) {
