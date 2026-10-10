@@ -121,7 +121,7 @@ window.SCENES = function (PD) {
       ${PD.logRuler({ x0: 460, x1: 1460, y: 820, min: 1, max: 100, value: 27, k: ruler })}</g>${PD.source(SRC.survey, p(lt, 0.3, 0.8))}`); });
 
   shot("filings", B("s1-5").start - lead, { in: "fade", inDur: 0.35, visual: "Typeset 10-K cover information (Starbucks FY2025, Darden FY2026); then the naive answer, 'just' circled", asset: "original typography from public filing metadata", license: "owned (facts from public SEC filings; no logos, no facsimile)" }, (lt, t) => {
-    const a = E.out(p(t, BW("s1-5", "starbucks") - 0.2, BW("s1-5", "starbucks") + 0.6)); const b = E.out(p(t, BW("s1-5", "darden") - 0.2, BW("s1-5", "darden") + 0.6));
+    const a = E.out(p(t, B("s1-5").start, Math.min(B("s1-5").start + 0.8, BW("s1-5", "starbucks") + 0.4))); const b = E.out(p(t, B("s1-5").start + 0.3, Math.max(B("s1-5").start + 1.1, BW("s1-5", "darden") + 0.4)));
     const og = ent(t, BW("s1-5", "olive garden") - 0.1); const q = E.out(p(t, BW("s1-5", "the store") - 0.25, BW("s1-5", "the store") + 0.35));
     const circ = E.inOut(p(t, BW("s1-5", "just") - 0.05, BW("s1-5", "just") + 0.55)); const hi = (d) => E.inOut(p(t, BW("s1-5", "annual filings") - 0.1 + d, BW("s1-5", "annual filings") + 0.5 + d));
     const o = { size: 100, family: F.serif, italic: true }; const full = "“The store just keeps it.”"; const x0 = 960 - PD.measure(full, o) / 2 + PD.measure("“The store ", o); const jw = PD.measure("just", o); const cx = x0 + jw / 2, cy = 546, rx = jw / 2 + 26, ry = 64;
@@ -159,10 +159,10 @@ window.SCENES = function (PD) {
       ${box(1400, 540, 340, 150, "REVENUE", { k: rk, accent: true })}${PD.label(960, 880, "STARBUCKS · FISCAL 2025 FILING", { size: 26, anchor: "middle", fill: C.mist, ls: 4, op: ent(lt, 0.3) })}`)); });
 
   shot("breakage-def", B("s2-4").start - lead, { in: "fade", inDur: 0.4, visual: "Dictionary-style entry on paper: breakage (accounting)", asset: "original typography (definition as narrated)" }, (lt, t) => {
-    const k = ent(t, BW("s2-4", "breakage") - 0.2); const d = ent(t, BW("s2-4", "the share") - 0.2);
-    return svg(defs() + paperBg() + cam(pp(lt), 1.0, 1.03, `${PD.label(380, 330, "ACCOUNTING TERM", { size: 28, fill: C.ledger, ls: 6, op: k })}
+    const k0 = ent(lt, 0.05); const k = ent(t, BW("s2-4", "breakage") - 0.2); const d = ent(t, BW("s2-4", "the share") - 0.2);
+    return svg(defs() + paperBg() + cam(pp(lt), 1.0, 1.03, `${PD.label(380, 330, "THE ACCOUNTING NAME", { size: 28, fill: C.ledger, ls: 6, op: k0 })}
       <text x="380" y="${lerp(470, 450, k)}" font-family="${F.serif}" font-weight="700" font-size="150" fill="#141414" opacity="${k}">breakage</text>${PD.label(1080, 450, "noun", { size: 34, fill: "#6b665c", ls: 1, weight: 500, op: k })}
-      <rect x="380" y="500" width="${1160 * k}" height="4" fill="${C.signal}"/>
+      <rect x="380" y="500" width="${1160 * Math.max(0.15 * k0, k)}" height="4" fill="${C.signal}"/>
       ${PD.lines(380, 600, ["The share of card value a company", "doesn't expect anyone to ever redeem."], { size: 56, fill: "#1b1b1b", op: d, weight: 500 })}`, 960, 520)); });
 
   // ===================== s3 HOW IT IS BOOKED =====================
@@ -191,9 +191,9 @@ window.SCENES = function (PD) {
       ${PD.label(960, 960, "ILLUSTRATION: THE SHARE IS NOT TO SCALE", { size: 24, anchor: "middle", fill: C.mist, ls: 3, op: 0.8 * sp })}`)); });
 
   shot("over-time", B("s3-4").start - lead, { visual: "'Not in one go' (single block crossed out) -> two synchronised bars: redemptions and breakage recognised in proportion", asset: "original schematic (illustrative, no figures)" }, (lt, t) => {
-    const x1 = ent(t, BW("s3-4", "in one go") - 0.1); const cross = E.inOut(p(t, BW("s3-4", "in one go") + 0.2, BW("s3-4", "in one go") + 0.6)); const ot = p(t, BW("s3-4", "over time") - 0.2, B("s3-4").end + 0.8);
+    const x1 = ent(lt, 0.05); const cross = E.inOut(p(t, BW("s3-4", "in one go") + 0.2, BW("s3-4", "in one go") + 0.6)); const ot = p(t, BW("s3-4", "over time") - 0.2, B("s3-4").end + 0.8);
     const steps = (k) => Math.floor(k * 6) / 6 + E.inOut((k * 6) % 1) / 6; const sk = steps(clamp(ot)); const swap = E.inOut(p(t, BW("s3-4", "over time") - 0.5, BW("s3-4", "over time")));
-    return dark(cam(pp(lt), 1.0, 1.02, `<g opacity="${x1 * (1 - swap)}">${box(960, 520, 520, 160, "BOOK IT ALL AT ONCE")}${ln("M720 420 L1200 620 M1200 420 L720 620", cross, 8, C.signal)}</g>
+    return dark(cam(pp(lt), 1.0, 1.02, `<g opacity="${x1 * (1 - swap)}">${PD.label(960, 360, "HERE'S THE CLEVER PART", { size: 30, anchor: "middle", fill: C.gold, ls: 6 })}${box(960, 520, 520, 160, "BOOK IT ALL AT ONCE")}${ln("M720 420 L1200 620 M1200 420 L720 620", cross, 8, C.signal)}</g>
       <g opacity="${swap}">${PD.label(330, 380, "CARD REDEMPTIONS", { size: 30, fill: C.text, ls: 4 })}<rect x="330" y="410" width="1260" height="70" rx="10" fill="${C.ink2}"/><rect x="330" y="410" width="${1260 * sk}" height="70" rx="10" fill="${C.ledger}"/>
         ${PD.label(330, 600, "BREAKAGE RECOGNIZED, IN PROPORTION", { size: 30, fill: C.text, ls: 4 })}<rect x="330" y="630" width="1260" height="70" rx="10" fill="${C.ink2}"/><rect x="330" y="630" width="${1260 * sk}" height="70" rx="10" fill="${C.gold}"/>
         ${Array.from({ length: 6 }, (_, i) => `<line x1="${330 + 1260 * (i + 1) / 6}" y1="490" x2="${330 + 1260 * (i + 1) / 6}" y2="620" stroke="${C.mist}" stroke-width="2" stroke-dasharray="6 8" opacity="${0.6 * (sk >= (i + 1) / 6 - 0.001 ? 1 : 0)}"/>`).join("")}
@@ -208,7 +208,7 @@ window.SCENES = function (PD) {
       ${box(1500, 540, 300, 140, "REVENUE", { k: rk, accent: true })}${PD.label(960, 900, "AS BALANCES ARE SPENT, A MATCHING SLIVER IS RECOGNIZED", { size: 28, anchor: "middle", fill: C.mist, ls: 3, op: ent(t, BW("s3-5", "matching sliver")) })}`)); });
 
   shot("phrase", B("s3-6").start - lead, { in: "fade", inDur: 0.4, visual: "Paper: the exact filing phrase, highlighted; a REMEMBER THIS tab slides in", asset: "exact quotation from the Starbucks FY2025 10-K (c2)", license: "owned layout; quotation from a public SEC filing" }, (lt, t) => {
-    const k = ent(t, BW("s3-6", "remittance") - 0.6); const hk = E.inOut(p(t, BW("s3-6", "remittance"), B("s3-6").end)); const tab = E.out(p(t, BW("s3-6", "will matter later") - 0.2, BW("s3-6", "will matter later") + 0.5));
+    const k = ent(lt, 0.05); const hk = E.inOut(p(t, BW("s3-6", "remittance"), B("s3-6").end)); const tab = E.out(p(t, BW("s3-6", "will matter later") - 0.2, BW("s3-6", "will matter later") + 0.5));
     return svg(defs() + paperBg() + cam(pp(lt), 1.0, 1.03, PD.filingQuote({ x: 260, y: 300, w: 1400, quote: "The estimate accounts for remittance to government agencies under unclaimed property laws, if applicable.", highlight: "remittance to government agencies under unclaimed property laws, if applicable", cite: "STARBUCKS FORM 10-K · FISCAL 2025 · STORED VALUE CARDS (WORDING AS FILED)", k, hk, size: 58 }), 960, 540)
       + `<g transform="translate(${lerp(1920, 1500, tab)} 200)"><rect width="420" height="84" fill="${C.signal}"/>${PD.label(30, 54, "REMEMBER THIS", { size: 32, fill: C.ink, ls: 5 })}</g>`); });
 
@@ -238,8 +238,8 @@ window.SCENES = function (PD) {
   const poolG = (t, { k = 1, v = "$1.75 billion" } = {}) => `<g opacity="${k}"><circle cx="960" cy="540" r="${lerp(120, 250, k)}" fill="${C.ledger}" opacity="0.85"/><circle cx="960" cy="540" r="${lerp(120, 250, k) + 18}" fill="none" stroke="${C.mist}" stroke-opacity="0.4" stroke-width="3"/>
     ${PD.number(960, 560, v, { size: 86, anchor: "middle" })}${PD.label(960, 616, "CARD BALANCES + STARS", { size: 24, anchor: "middle", fill: C.text, ls: 3 })}</g>`;
   shot("pool", B("s4-4a").start - lead, { visual: "The pool: about $1.75 billion in card balances and loyalty Stars, up from about $1.72 billion; 'not all gift card money'", asset: "original data graphic (c3, i4)" }, (lt, t) => {
-    const k = E.out(p(t, BW("s4-4a", "1.75 billion") - 0.4, BW("s4-4a", "1.75 billion") + 0.6)); const up = ent(t, BW("s4-4a", "up from") - 0.1); const na = E.back(p(t, BW("s4-4a", "not all") - 0.1, BW("s4-4a", "not all") + 0.3));
-    return dark(cam(pp(lt), 1.0, 1.04, `${PD.label(960, 150, "STARBUCKS · END OF FISCAL 2025", { size: 30, anchor: "middle", fill: C.mist, ls: 6, op: ent(lt, 0.1) })}${poolG(t, { k })}
+    const k = E.out(p(lt, 0.05, 1.0)); const nk = E.out(p(t, BW("s4-4a", "1.75 billion") - 0.4, BW("s4-4a", "1.75 billion") + 0.4)); const up = ent(t, BW("s4-4a", "up from") - 0.1); const na = E.back(p(t, BW("s4-4a", "not all") - 0.1, BW("s4-4a", "not all") + 0.3));
+    return dark(cam(pp(lt), 1.0, 1.04, `${PD.label(960, 150, "STARBUCKS · END OF FISCAL 2025", { size: 30, anchor: "middle", fill: C.mist, ls: 6, op: ent(lt, 0.1) })}${poolG(t, { k, v: nk > 0.02 ? "$1.75 billion" : "" })}<g opacity="${nk}"></g>
       ${PD.label(960, 880, "UP FROM ABOUT $1.72 BILLION A YEAR EARLIER", { size: 30, anchor: "middle", fill: C.text, ls: 3, op: up })}`) + PD.stamp(1480, 330, "NOT ALL GIFT CARD MONEY", na, { size: 30, rot: -6, color: C.gold }) + PD.source(SRC.sbux + "; rounding ours", ent(lt, 0.4))); });
 
   shot("flows", B("s4-4").start - lead, { visual: "Money flow: ~$15.2B loaded in -> the pool -> ~$15.2B out (card purchases, Star redemptions, breakage; strands not to scale)", asset: "original data graphic (c3, i3)" }, (lt, t) => {
@@ -291,7 +291,8 @@ window.SCENES = function (PD) {
     const a = E.out(p(t, BW("s5-4", "760.2") - 0.3, BW("s5-4", "760.2") + 0.8)); const b = E.out(p(t, BW("s5-5", "751.9") - 0.3, BW("s5-5", "751.9") + 0.8)); const c = ent(t, BW("s5-6", "ended the year") - 0.2); const d = E.back(p(t, BW("s5-6", "by our math") - 0.1, BW("s5-6", "by our math") + 0.4));
     const bar = (x, v, k, col, lab) => { const h = 460 * v / 800 * k; return `<rect x="${x}" y="${820 - h}" width="220" height="${h}" fill="${col}"/>${PD.number(x + 110, 800 - h, k > 0.05 ? `$${(v * k).toFixed(1)}M` : "", { size: 54, anchor: "middle" })}${PD.label(x + 110, 870, lab, { size: 26, anchor: "middle", fill: C.text, ls: 2, op: k > 0.05 ? 1 : 0.4 })}`; };
     const keys = [{ t: B("s5-4").start, x: 960, y: 540, z: 1.0 }, { t: BW("s5-4", "760.2") - 0.2, x: 560, y: 600, z: 1.15 }, { t: BW("s5-5", "751.9") - 0.2, x: 700, y: 600, z: 1.12 }, { t: BW("s5-6", "ended the year") - 0.2, x: 1240, y: 560, z: 1.12 }, { t: BW("s5-6", "by our math") + 0.2, x: 1300, y: 640, z: 1.22 }, { t: B("s5-6").end + 0.3, x: 960, y: 540, z: 1.0 }];
-    return dark(camKeys(t, keys, `${PD.label(960, 150, "DARDEN GIFT CARDS · FISCAL 2026", { size: 30, anchor: "middle", fill: C.mist, ls: 6 })}<line x1="260" y1="820" x2="1000" y2="820" stroke="${C.mist}" stroke-width="3"/>
+    const o0 = ent(lt, 0.05) * (1 - a);
+    return dark(camKeys(t, keys, `<g opacity="${o0}">${[300, 640].map((x) => `<rect x="${x}" y="420" width="220" height="400" fill="none" stroke="${C.mist}" stroke-opacity="0.5" stroke-width="3" stroke-dasharray="12 10"/>`).join("")}${PD.label(640, 360, "IS THE POOL SHRINKING?", { size: 32, anchor: "middle", fill: C.text, ls: 4 })}</g>${PD.label(960, 150, "DARDEN GIFT CARDS · FISCAL 2026", { size: 30, anchor: "middle", fill: C.mist, ls: 6 })}<line x1="260" y1="820" x2="1000" y2="820" stroke="${C.mist}" stroke-width="3"/>
       ${bar(300, 760.2, a, C.gold, "LOADED")}${bar(640, 751.9, b, C.ledger, "REDEEMED + BREAKAGE")}
       <g opacity="${c}">${PD.label(1400, 380, "BALANCE", { size: 28, anchor: "middle", fill: C.mist, ls: 5 })}${PD.number(1400, 480, "$628.8M", { size: 70, anchor: "middle", op: 0.6 })}${ln("M1400 510 V 570 M1380 550 L1400 572 L1420 550", 0.8, 4)}${PD.number(1400, 650, "$636.7M", { size: 92, anchor: "middle" })}</g>
       ${PD.stamp(1400, 780, "+$7.9M · OUR MATH", d, { size: 32, rot: -4, color: C.gold })}`) + PD.source(SRC.drdMath, ent(lt, 0.3))); });
@@ -368,7 +369,7 @@ window.SCENES = function (PD) {
   shot("lost-34", B("s8-5").start - lead, { in: "fade", inDur: 0.35, visual: "34% of adults said they lost money through a gift card mistake: unit chart", asset: "original data graphic (c9)" }, (lt, t) => {
     const t0 = BW("s8-5", "34 percent"); const n = Math.round(34 * E.out(p(t, t0, t0 + 1.0))); const G = { x: 1090, y: 250, gap: 66 };
     return dark(cam(pp(lt), 1.0, 1.02, `<g opacity="${ent(t, t0 - 0.2)}">${PD.number(140, 470, `${n}%`, { size: 260, fill: C.signal })}${PD.lines(152, 560, ["of US adults said they lost money", "through a gift card mistake"], { size: 42 })}</g>
-      ${PD.unitChart({ x: G.x, y: G.y, gap: G.gap, r: 23, filled: 34, t, at: t0 - 0.4 })}`) + PD.label(G.x + 4.5 * G.gap, G.y + 10 * G.gap + 14, "EACH DOT = 1 IN 100 ADULTS", { size: 26, anchor: "middle", fill: C.text, op: 0.8 * ent(t, t0 + 0.6) }) + PD.source(SRC.survey, ent(lt, 0.3))); });
+      ${PD.unitChart({ x: G.x, y: G.y, gap: G.gap, r: 23, filled: 34, t, at: Math.min(t0 - 0.4, B("s8-5").start), fillAt: Math.max(0.25, t0 - B("s8-5").start) })}`) + PD.label(G.x + 4.5 * G.gap, G.y + 10 * G.gap + 14, "EACH DOT = 1 IN 100 ADULTS", { size: 26, anchor: "middle", fill: C.text, op: 0.8 * ent(t, t0 + 0.6) }) + PD.source(SRC.survey, ent(lt, 0.3))); });
 
   shot("mistakes", B("s8-6").start - lead, { visual: "Survey answers as bars: let a card expire 20%, lost a card 17%, store went out of business 12%; caveat: not every card works like Starbucks' or Darden's", asset: "original data graphic (c9, c7; contradiction x1 resolved on screen)" }, (lt, t) => {
     const rows = [["LET A CARD EXPIRE", 20, B("s8-6").start], ["LOST A CARD", 17, B("s8-7").start], ["STORE WENT OUT OF BUSINESS", 12, BS("s8-7", 1).start]]; const cav = ent(t, BS("s8-6", 1).start - 0.1) * (1 - p(t, B("s8-7").start - 0.3, B("s8-7").start + 0.2));
@@ -378,9 +379,9 @@ window.SCENES = function (PD) {
 
   shot("avg-244", B("s8-8").start - lead, { visual: "$244: average unused value among people holding some", asset: "original data graphic (c8)" }, (lt, t) => {
     const tn = BW("s8-8", "244"); const v = 244 * E.out(p(t, tn - 0.4, tn + 0.8));
-    return dark(cam(pp(lt), 1.0, 1.04, `${PD.label(960, 300, "AVERAGE UNUSED VALUE", { size: 34, anchor: "middle", fill: C.mist, ls: 6, op: ent(t, BS("s8-8", 1).start - 0.2) })}
+    return dark(cam(pp(lt), 1.0, 1.04, `${PD.serif(960, 300, "The amounts aren't trivial.", { size: 64, op: ent(lt, 0.05) * (1 - ent(t, BS("s8-8", 1).start - 0.2)) })}${PD.label(960, 300, "AVERAGE UNUSED VALUE", { size: 34, anchor: "middle", fill: C.mist, ls: 6, op: ent(t, BS("s8-8", 1).start - 0.2) })}
       ${PD.number(960, 580, `$${Math.round(v)}`, { size: 280, anchor: "middle", fill: C.gold, op: ent(t, tn - 0.5) })}${PD.label(960, 680, "PER PERSON HOLDING SOME", { size: 34, anchor: "middle", fill: C.text, ls: 5, op: ent(t, tn) })}
-      ${[0, 1, 2].map((i) => `<g opacity="${0.5 * ent(t, tn + 0.3 + i * 0.12)}">${card(640 + i * 320, 880, 200, { meter: false, dim: 0.3 })}</g>`).join("")}`, 960, 560) + PD.source(SRC.survey, ent(lt, 0.3))); });
+      ${[0, 1, 2].map((i) => `<g opacity="${0.5 * ent(lt, 0.2 + i * 0.12)}">${card(640 + i * 320, 880, 200, { meter: false, dim: 0.3 })}</g>`).join("")}`, 960, 560) + PD.source(SRC.survey, ent(lt, 0.3))); });
 
   // ===================== s9 PAYOFF =====================
   shot("ask", B("s9-1").start - lead, { in: "fade", inDur: 0.55, visual: "Callback: one card, three claimants, now named; 'So, who keeps the money?'", asset: "original motion graphic" }, (lt, t) =>
