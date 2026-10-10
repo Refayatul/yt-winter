@@ -1,0 +1,44 @@
+name: ProfitDecoded YouTube auth check (read-only)
+
+# Manual only. Confirms the ProfitDecoded OAuth bundle refreshes and that the authenticated channel is the
+# configured ProfitDecoded channel. The script allows only the OAuth refresh/token-info calls and one
+# channels.list(mine=true) read; it cannot upload, edit or publish. Only PD_* values are passed in: no other
+# channel's secrets are available to this job. Exit 3 = not configured yet (the summary lists what is missing).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  auth-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      PD_YT_CLIENT_ID: ${{ secrets.PD_YT_CLIENT_ID }}
+      PD_YT_CLIENT_SECRET: ${{ secrets.PD_YT_CLIENT_SECRET }}
+      PD_YT_REFRESH_TOKEN: ${{ secrets.PD_YT_REFRESH_TOKEN }}
+      PD_YT_CHANNEL_ID: ${{ vars.PD_YT_CHANNEL_ID }}
+      QUOTA_LEDGER: '0'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - id: check
+        run: |
+          set +e
+          node scripts/profitdecoded/youtube-auth-check.js --out "$RUNNER_TEMP/profitdecoded-auth-check.json" > /dev/null
+          code=$?
+          set -e
+          node -e 'const r=require(process.argv[1]); const lines=["## ProfitDecoded YouTube auth check", "", "Status: **"+r.status+"**", "", "- Authenticated channel: "+(r.authenticatedChannelId||"n/a")+" · expected: "+(r.expectedChannelId||"n/a")+" · match: "+r.channelMatch, "- Requests: "+r.requests.map((q)=>q.method+" "+q.host+q.path).join(", "), "- Videos uploaded: "+r.videosUploaded+" · modified: "+r.videosModified+" · YouTube write requests: "+r.youtubeWriteRequests, "- Publishing: PD_PUBLISH "+r.publishing.PD_PUBLISH+", channel enabled "+r.publishing.channelEnabled+", publish guard allowed "+r.publishing.publishGuardAllowed, ...(r.setup.length?["", "Missing:", ...r.setup.map((s)=>"- "+s)]:[])]; require("fs").appendFileSync(process.env.GITHUB_STEP_SUMMARY, lines.join("\n")+"\n");' "$RUNNER_TEMP/profitdecoded-auth-check.json"
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: profitdecoded-auth-check
+          path: ${{ runner.temp }}/profitdecoded-auth-check.json
+          if-no-files-found: warn
+          retention-days: 30
+      - if: always() && steps.check.outputs.exit_code != '0'
+        run: exit "${{ steps.check.outputs.exit_code }}"
