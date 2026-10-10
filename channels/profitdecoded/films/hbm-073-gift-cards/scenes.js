@@ -219,7 +219,7 @@ window.SCENES = function (PD) {
   shot("sbux-200", B("s4-1").start - lead, { in: "fade", inDur: 0.5, visual: "FY2025 breakage, company-operated stores: $200.4 million (count-up, stacked bar begins)", asset: "original data graphic (c1)" }, (lt, t) => {
     const t2 = BS("s4-1", 1).start; const tn = BW("s4-1", "200.4"); const v = 200.4 * E.out(p(t, tn - 0.3, tn + 0.9));
     return dark(cam(pp(lt), 1.0, 1.03, `${head("What is it worth to Starbucks?", ent(lt, 0.1), 180, 64)}${sbuxBar(t, tn, 1e9)}
-      <g opacity="${ent(t, t2)}">${PD.number(1180, 520, `$${v.toFixed(1)}M`, { size: 150 })}${PD.lines(1186, 590, ["breakage recognized,", "company-operated stores"], { size: 36 })}</g>`) + PD.source(SRC.sbux, ent(t, t2 + 0.2))); });
+      <g opacity="${ent(t, tn - 0.3)}">${PD.number(1180, 520, `$${v.toFixed(1)}M`, { size: 150 })}</g><g opacity="${ent(t, t2)}">${PD.lines(1186, 590, ["breakage recognized,", "company-operated stores"], { size: 36 })}</g>`) + PD.source(SRC.sbux, ent(t, t2 + 0.2))); });
   shot("sbux-22", B("s4-2").start - lead, { visual: "Licensed stores add $22.0 million (second block stacks on the bar)", asset: "original data graphic (c1)" }, (lt, t) => {
     const tB = B("s4-2").start + 0.2;
     return dark(cam(pp(lt), 1.03, 1.05, `${head("What is it worth to Starbucks?", 1, 180, 64)}${sbuxBar(t, -9, tB)}
@@ -292,7 +292,7 @@ window.SCENES = function (PD) {
     const bar = (x, v, k, col, lab) => { const h = 460 * v / 800 * k; return `<rect x="${x}" y="${820 - h}" width="220" height="${h}" fill="${col}"/>${PD.number(x + 110, 800 - h, k > 0.05 ? `$${(v * k).toFixed(1)}M` : "", { size: 54, anchor: "middle" })}${PD.label(x + 110, 870, lab, { size: 26, anchor: "middle", fill: C.text, ls: 2, op: k > 0.05 ? 1 : 0.4 })}`; };
     const keys = [{ t: B("s5-4").start, x: 960, y: 540, z: 1.0 }, { t: BW("s5-4", "760.2") - 0.2, x: 560, y: 600, z: 1.15 }, { t: BW("s5-5", "751.9") - 0.2, x: 700, y: 600, z: 1.12 }, { t: BW("s5-6", "ended the year") - 0.2, x: 1240, y: 560, z: 1.12 }, { t: BW("s5-6", "by our math") + 0.2, x: 1300, y: 640, z: 1.22 }, { t: B("s5-6").end + 0.3, x: 960, y: 540, z: 1.0 }];
     const o0 = ent(lt, 0.05) * (1 - a);
-    return dark(camKeys(t, keys, `<g opacity="${o0}">${[300, 640].map((x) => `<rect x="${x}" y="420" width="220" height="400" fill="none" stroke="${C.mist}" stroke-opacity="0.5" stroke-width="3" stroke-dasharray="12 10"/>`).join("")}${PD.label(640, 360, "IS THE POOL SHRINKING?", { size: 32, anchor: "middle", fill: C.text, ls: 4 })}</g>${PD.label(960, 150, "DARDEN GIFT CARDS · FISCAL 2026", { size: 30, anchor: "middle", fill: C.mist, ls: 6 })}<line x1="260" y1="820" x2="1000" y2="820" stroke="${C.mist}" stroke-width="3"/>
+    return dark(camKeys(t, keys, `<g opacity="${o0}">${[300, 640].map((x) => `<rect x="${x}" y="420" width="220" height="400" fill="none" stroke="${C.mist}" stroke-opacity="0.5" stroke-width="3" stroke-dasharray="12 10"/>`).join("")}${PD.label(640, 360, "IS THE POOL SHRINKING?", { size: 32, anchor: "middle", fill: C.text, ls: 4 })}</g>${PD.label(960, 150, "DARDEN GIFT CARDS · FISCAL 2026", { size: 30, anchor: "middle", fill: C.mist, ls: 6, op: 1 - p(t, keys[1].t - 1, keys[1].t) + p(t, keys[5].t - 1, keys[5].t) })}<line x1="260" y1="820" x2="1000" y2="820" stroke="${C.mist}" stroke-width="3"/>
       ${bar(300, 760.2, a, C.gold, "LOADED")}${bar(640, 751.9, b, C.ledger, "REDEEMED + BREAKAGE")}
       <g opacity="${c}">${PD.label(1400, 380, "BALANCE", { size: 28, anchor: "middle", fill: C.mist, ls: 5 })}${PD.number(1400, 480, "$628.8M", { size: 70, anchor: "middle", op: 0.6 })}${ln("M1400 510 V 570 M1380 550 L1400 572 L1420 550", 0.8, 4)}${PD.number(1400, 650, "$636.7M", { size: 92, anchor: "middle" })}</g>
       ${PD.stamp(1400, 780, "+$7.9M · OUR MATH", d, { size: 32, rot: -4, color: C.gold })}`) + PD.source(SRC.drdMath, ent(lt, 0.3))); });
@@ -354,7 +354,7 @@ window.SCENES = function (PD) {
 
   // ===================== s8 THE FLOOR, AND THE OWNER =====================
   shot("rules", B("s8-1").start - lead, { in: "fade", inDur: 0.5, visual: "Timeline of the federal floor (Regulation E): fee only after 1 inactive year (max one a month); expiry no earlier than 5 years", asset: "original data graphic (c7)" }, (lt, t) => {
-    const k = E.inOut(p(t, BW("s8-2", "five years") - 1.2, BW("s8-2", "five years") + 0.4)); const f = ent(t, BW("s8-3", "full year") - 0.3); const m = ent(t, BW("s8-3", "one a month") - 0.2);
+    const k = E.inOut(p(t, B("s8-1").start + 0.6, BW("s8-2", "five years") + 0.4)); const f = ent(t, BW("s8-3", "full year") - 0.3); const m = ent(t, BW("s8-3", "one a month") - 0.2);
     return dark(cam(pp(lt), 1.0, 1.02, `${PD.serif(960, 170, "The federal floor", { size: 72, op: ent(lt, 0) })}${PD.label(960, 230, "REGULATION E", { size: 30, anchor: "middle", fill: C.mist, ls: 8, op: ent(t, BW("s8-1", "regulation e") - 0.2) })}
       ${PD.timeline({ x0: 300, x1: 1620, y: 560, k: Math.max(k, 0.001), marks: [{ at: 0, label: "ISSUED OR LAST LOADED" }, { at: 1, label: "5 YEARS", sub: "EARLIEST THE FUNDS MAY EXPIRE", accent: true }] })}
       <g opacity="${f}"><line x1="${300 + 1320 * 0.2}" y1="${560 + 30}" x2="${300 + 1320 * 0.2}" y2="${560 + 120}" stroke="${C.gold}" stroke-width="4"/><circle cx="${300 + 1320 * 0.2}" cy="560" r="14" fill="${C.gold}"/>
