@@ -1,15 +1,15 @@
 {
   "channel": "behind-the-ordinary",
   "channelName": "The Hidden Logic of Things",
-  "tarih": "2026-10-10T19:22:24.444Z",
+  "tarih": "2026-10-10T20:09:59.974Z",
   "aggregateManaged": true,
   "yuklemeUygun": true,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "kritik",
-      "mesaj": "YOUTUBE_AUTH_FAILURE channel=behind-the-ordinary reason=INVALID_CLIENT",
-      "cozum": "Yerelde `node youtube-yetki.js --channel behind-the-ordinary --github` çalıştır. Kalıcı çözüm: Google Auth Platform → Audience → In production."
+      "durum": "uyari",
+      "mesaj": "YouTube kimlik bilgileri yok (BTO_YT_CLIENT_ID, BTO_YT_CLIENT_SECRET, BTO_YT_REFRESH_TOKEN)",
+      "cozum": "GitHub → Settings → Secrets and variables → Actions: BTO_YT_CLIENT_ID, BTO_YT_CLIENT_SECRET, BTO_YT_REFRESH_TOKEN değerlerini ekle."
     },
     {
       "ad": "oauth-reauth-deadline",

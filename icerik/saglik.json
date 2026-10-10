@@ -1,24 +1,15 @@
 {
   "channel": "failure-reconstructed",
   "channelName": "Failure Reconstructed",
-  "tarih": "2026-10-10T19:22:22.406Z",
+  "tarih": "2026-10-10T20:09:59.213Z",
   "aggregateManaged": true,
-  "yuklemeUygun": true,
+  "yuklemeUygun": false,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "ok",
-      "mesaj": "refresh token çalışıyor"
-    },
-    {
-      "ad": "youtube-kapsam",
-      "durum": "ok",
-      "mesaj": "gerekli kapsamlar tamam"
-    },
-    {
-      "ad": "youtube-kanal",
-      "durum": "ok",
-      "mesaj": "doğru kanal doğrulandı (UC2ruKNeR_C9JEpjWJGWbFYg)"
+      "durum": "kritik",
+      "mesaj": "YouTube kimlik bilgileri yok (FR_YT_CLIENT_ID, FR_YT_CLIENT_SECRET, FR_YT_REFRESH_TOKEN)",
+      "cozum": "GitHub → Settings → Secrets and variables → Actions: FR_YT_CLIENT_ID, FR_YT_CLIENT_SECRET, FR_YT_REFRESH_TOKEN değerlerini ekle."
     },
     {
       "ad": "oauth-reauth-deadline",
@@ -27,8 +18,9 @@
     },
     {
       "ad": "pexels",
-      "durum": "ok",
-      "mesaj": "Pexels anahtarı çalışıyor"
+      "durum": "uyari",
+      "mesaj": "PEXELS_KEY yok — stok konular üretilemez",
+      "cozum": "GitHub secret PEXELS_KEY ekle."
     },
     {
       "ad": "kutuphane",

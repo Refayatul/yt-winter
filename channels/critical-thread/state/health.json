@@ -1,24 +1,15 @@
 {
   "channel": "critical-thread",
   "channelName": "CriticalThread",
-  "tarih": "2026-10-10T19:22:24.154Z",
+  "tarih": "2026-10-10T20:09:59.844Z",
   "aggregateManaged": true,
-  "yuklemeUygun": true,
+  "yuklemeUygun": false,
   "bulgular": [
     {
       "ad": "youtube-yetki",
-      "durum": "ok",
-      "mesaj": "refresh token çalışıyor"
-    },
-    {
-      "ad": "youtube-kapsam",
-      "durum": "ok",
-      "mesaj": "gerekli kapsamlar tamam"
-    },
-    {
-      "ad": "youtube-kanal",
-      "durum": "ok",
-      "mesaj": "doğru kanal doğrulandı (UCBTEWcPZvo4B71hFw9Do_NA)"
+      "durum": "kritik",
+      "mesaj": "YouTube kimlik bilgileri yok (CT_CLIENT_ID, CT_CLIENT_SECRET, CT_YT_REFRESH_TOKEN)",
+      "cozum": "GitHub → Settings → Secrets and variables → Actions: CT_CLIENT_ID, CT_CLIENT_SECRET, CT_YT_REFRESH_TOKEN değerlerini ekle."
     },
     {
       "ad": "oauth-reauth-deadline",
