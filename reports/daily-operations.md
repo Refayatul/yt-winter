@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-10T12:24:44.107Z
+Generated: 2026-10-10T12:48:05.030Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -24,7 +24,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-08 (lag 2 d) |
 | Ops (24 h) | publish.success 2, growth.decision 2, analytics.load 2, publish.public 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-10 (0 d) |
-| API quota today | 1613 / 9800 units (project 1012165386949) |
+| API quota today | 1620 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 24/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
@@ -45,7 +45,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-08 (lag 2 d) |
 | Ops (24 h) | publish.success 2, growth.decision 2, analytics.load 2, publish.public 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-10 (0 d) |
-| API quota today | 1613 / 9800 units (project 684098966511) |
+| API quota today | 1621 / 9800 units (project 684098966511) |
 | YPP readiness (estimate) | subs 8/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
@@ -66,7 +66,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-08 (lag 2 d) |
 | Ops (24 h) | analytics.load 2 |
 | Scheduler queue | 2 queued, oldest 2026-10-10 (0 d) |
-| API quota today | 8 / 9800 units (project 208987599838) |
+| API quota today | 15 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
@@ -85,7 +85,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Ready topic backlog | 1 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-02 (lag 8 d) · 4 table error(s) |
-| Ops (24 h) | analytics.failure 15 |
+| Ops (24 h) | analytics.failure 16 |
 | Scheduler queue | 2 queued, oldest 2026-10-10 (0 d) |
 | API quota today | 0 / 9800 units (project 739767423116) |
 | YPP readiness (estimate) | subs 1/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
