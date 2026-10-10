@@ -102,8 +102,14 @@ window.SCENES = function (PD) {
 
   shot("method", B("s1-3").start - lead, { in: "fade", inDur: 0.35, visual: "Survey method chips, then 43% with a 100-dot unit chart (1 dot = 1 in 100 adults)", asset: "original data graphic (c8)" }, (lt, t) => {
     const t2 = BS("s1-3", 1).start; const n = Math.round(43 * E.out(p(t, t2, t2 + 1.0))); const G = { x: 1090, y: 250, gap: 66 };
-    const chips = PD.chips([["BANKRATE SURVEY", B("s1-3").start + 0.2], ["ONLINE, BY YOUGOV", BW("s1-3", "yougov")], ["AUG 19-21, 2024", BW("s1-3", "august")], ["2,373 US ADULTS", BW("s1-3", "2,373")]], { x: 150, y: lerp(400, 760, E.inOut(p(t, t2 - 0.4, t2 + 0.4))), maxW: 820, size: 28, t });
-    return dark(cam(pp(lt), 1.0, 1.025, `<g opacity="${ent(t, t2 - 0.1)}">${PD.number(140, 470, `${n}%`, { size: 260, fill: C.signal })}${PD.lines(152, 560, ["of US adults said they hold at least", "one unused gift card, voucher", "or store credit"], { size: 42 })}</g>
+    const chips = PD.chips([["BANKRATE SURVEY", B("s1-3").start + 0.2], ["ONLINE, BY YOUGOV", BW("s1-3", "yougov")], ["AUG 19-21, 2024", BW("s1-3", "august")], ["2,373 US ADULTS", BW("s1-3", "2,373")]], { x: 150, y: lerp(470, 760, E.inOut(p(t, t2 - 0.4, t2 + 0.4))), maxW: 820, size: 30, t });
+    // Sentence 1 (the method): where the figure comes from, and the sample counted up as it is named.
+    const s1 = ent(lt, 0.05) * (1 - E.inOut(p(t, t2 - 0.5, t2 + 0.1))); const tc = BW("s1-3", "2,373"); const cnt = Math.round(2373 * E.out(p(t, tc - 0.6, tc + 0.8)));
+    const people = Array.from({ length: 60 }, (_, i) => { const x = 1060 + (i % 12) * 58, y = 470 + Math.floor(i / 12) * 74; const a2 = E.out(p(t, B("s1-3").start + 0.3 + i * 0.03, B("s1-3").start + 0.7 + i * 0.03));
+      return `<g opacity="${a2 * 0.75}" transform="translate(${x} ${y})"><circle cx="0" cy="-16" r="10" fill="none" stroke="${C.mist}" stroke-width="3"/><path d="M-17 22 C -17 2, 17 2, 17 22" fill="none" stroke="${C.mist}" stroke-width="3"/></g>`; }).join("");
+    const method = `<g opacity="${s1}">${PD.label(150, 300, "WHERE THE FIGURE COMES FROM", { size: 30, fill: C.mist, ls: 6 })}${PD.serif(150, 390, "One online survey", { size: 72, anchor: "start" })}
+      ${PD.number(1400, 330, cnt.toLocaleString("en-US"), { size: 150, anchor: "middle", op: ent(t, tc - 0.7) })}${PD.label(1400, 390, "US ADULTS ASKED", { size: 30, anchor: "middle", fill: C.text, ls: 5, op: ent(t, tc - 0.7) })}${people}</g>`;
+    return dark(cam(pp(lt), 1.0, 1.025, `${method}<g opacity="${ent(t, t2 - 0.1)}">${PD.number(140, 470, `${n}%`, { size: 260, fill: C.signal })}${PD.lines(152, 560, ["of US adults said they hold at least", "one unused gift card, voucher", "or store credit"], { size: 42 })}</g>
       <g opacity="${ent(t, t2 - 0.2)}">${PD.unitChart({ x: G.x, y: G.y, gap: G.gap, r: 23, filled: 43, t, at: t2 - 0.2 })}</g>${chips}`, 960, 560)
       + PD.label(G.x + 4.5 * G.gap, G.y + 10 * G.gap + 14, "EACH DOT = 1 IN 100 ADULTS", { size: 26, anchor: "middle", fill: C.text, op: 0.8 * ent(t, t2 + 0.6) }) + PD.source(SRC.survey, ent(t, B("s1-3").start + 0.3))); });
 
