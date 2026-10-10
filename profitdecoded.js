@@ -256,11 +256,15 @@ if (cmd === "inventory") {
   const result = Pipeline.run(bundle, { baseDir });
   const topic = universe().topics.find((t) => t.id === bundle.topic.id);
   const extra = topic ? { portfolioType: Port.classifyPortfolioType(topic), ebv: Rev.expectedBusinessValue(topic), longPotential: topic.formats.longformExpansionPotential, learningValue: bundle.learningValue } : { learningValue: bundle.learningValue };
-  const md = Report.render(result, bundle, extra);
   const outDir = path.join(baseDir, "out"); fs.mkdirSync(outDir, { recursive: true });
+  // Advisory visual diagnostics written by the renderer: shown to the reviewer, never part of the decision.
+  const vdFile = path.join(outDir, "visual-diversity.md");
+  const visualNotes = fs.existsSync(vdFile) ? `\n\n## Visual diagnostics (advisory)\n\n${fs.readFileSync(vdFile, "utf8").replace(/^# .*\n+/, "")}` : "";
+  const md = Report.render(result, bundle, extra) + visualNotes;
   fs.writeFileSync(path.join(outDir, "review-report.md"), md); fs.writeFileSync(path.join(outDir, "assessment.json"), JSON.stringify(result, null, 1) + "\n");
   console.log(`${result.assessment.decision}  quality ${result.assessment.quality.total}  humanness ${result.assessment.humanness.score}  premium-test ${result.assessment.premiumMediaTest.verdict}`);
   for (const r of result.assessment.reasons) console.log(" - " + r);
+  if (visualNotes) console.log(`visual diagnostics (advisory): ${(bundle.render && bundle.render.visualDiversity && bundle.render.visualDiversity.findings) ?? "see report"} review flags`);
   console.log("report: " + path.relative(process.cwd(), path.join(outDir, "review-report.md")));
   process.exitCode = 0;
 } else {

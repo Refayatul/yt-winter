@@ -13,6 +13,7 @@ const brand = JSON.parse(fs.readFileSync(path.join(root, "channels/profitdecoded
 const PV = require("./plan-visuals");
 const T = require(path.join(root, "core/profitdecoded/text"));
 const Cap = require(path.join(root, "core/profitdecoded/captions"));
+const Diversity = require(path.join(root, "core/profitdecoded/visual-diversity"));
 
 const FONT_SERIF = ["/System/Library/Fonts/Supplemental/Georgia Bold.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSerif-Bold.ttf", "/usr/share/fonts/truetype/liberation/LiberationSerif-Bold.ttf"].find((f) => fs.existsSync(f));
 const FONT_SANS = ["/System/Library/Fonts/Supplemental/Arial.ttf", "/System/Library/Fonts/Supplemental/Arial Bold.ttf", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"].find((f) => fs.existsSync(f));
@@ -108,6 +109,38 @@ function fadeFilter(transition, dur) {
   return "," + f(Math.min(0.16, dur / 4)); // dissolve / wipe / push approximated as short fades
 }
 
+// Text sizes on a phone, read from the ImageMagick arguments of one frame. Frames are drawn on a
+// 2x canvas and scaled to the video size; a phone shows the 1920-wide long form at 640 px and the
+// 1080-wide Short at 360 px, one third in both cases. Height uses a 1.2 line box, the same basis as
+// the browser text bounds in render-motion.js. The footer citation is the source line; the
+// PROFITDECODED tag is branding.
+function textObservation(args, shotId, second, source) {
+  const essential = [], sources = [];
+  for (let i = 0; i < args.length; i += 1) {
+    if (args[i] !== "-pointsize") continue;
+    const j = args.indexOf("-annotate", i); if (j < 0) continue;
+    const text = String(args[j + 2] || ""); const next = args.indexOf("-pointsize", i + 1); if (next >= 0 && next < j) continue;
+    const px = +((Number(args[i + 1]) / 2) * 1.2 / 3).toFixed(1);
+    if (text === "PROFITDECODED" || !text.trim()) continue;
+    (text === source ? sources : essential).push(px);
+  }
+  return { shotId, second: +second.toFixed(2), essentialTextPxOn640: essential.length ? Math.min(...essential) : 0, essentialTextCount: essential.length,
+    sourcePresent: sources.length > 0, sourceClipped: false, sourceTextPxOn640: sources.length ? Math.min(...sources) : 0 };
+}
+
+// Advisory editorial diagnostics on the rendered plan (see docs/profitdecoded/VISUAL-DIVERSITY.md).
+// They never change the render result or the assessment decision.
+function diagnose(shots, observations, out, video) {
+  let timeline = [];
+  try { timeline = JSON.parse(fs.readFileSync(path.join(out, "timeline.json"), "utf8")); } catch { /* narration timing is optional here */ }
+  const freezes = video ? [...(spawnSync("ffmpeg", ["-hide_banner", "-i", video, "-vf", "freezedetect=n=0.001:d=1.5", "-an", "-f", "null", "-"], { encoding: "utf8" }).stderr || "")
+    .matchAll(/freeze_start: ([\d.]+)[\s\S]*?freeze_duration: ([\d.]+)/g)].map((m) => ({ start: +m[1], duration: +m[2] })) : [];
+  const report = Diversity.analyze(shots, { timeline, frameObservations: observations, freezes });
+  fs.writeFileSync(path.join(out, "visual-diversity.json"), JSON.stringify(report, null, 2) + "\n");
+  fs.writeFileSync(path.join(out, "visual-diversity.md"), Diversity.markdown(report));
+  return report;
+}
+
 function run(bin, args) { const r = spawnSync(bin, args, { encoding: "utf8", maxBuffer: 1 << 27 }); if (r.status !== 0) throw new Error(`${bin} failed: ${(r.stderr || "").split("\n").slice(-6).join(" | ")}`); return r.stderr; }
 
 function main() {
@@ -120,7 +153,7 @@ function main() {
   const scale = short ? W / 540 : W / 960;
   const plan = (bundle.visualPlan && bundle.visualPlan.length ? bundle.visualPlan : PV.build(bundle));
   const work = path.join(out, "render"); fs.rmSync(work, { recursive: true, force: true }); fs.mkdirSync(work, { recursive: true });
-  const segs = []; const FPS = 30;
+  const segs = []; const FPS = 30; const diagShots = []; const observations = []; let at = 0;
   // Fill gaps so the video covers the whole audio (lead-in before beat 1, tail after the last beat).
   const audioDur = parseFloat(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", audio], { encoding: "utf8" })) || 0;
   plan.forEach((shot, i) => {
@@ -130,7 +163,10 @@ function main() {
     else { const gap = (next.start != null ? next.start : 0) - ((shot.start || 0) + shot.durationSec); if (gap > 0) dur += gap; } // narration gaps stay on the current graphic
     const frames = Math.max(2, Math.round(dur * FPS));
     const png = path.join(work, String(i + 1).padStart(3, "0") + ".png");
-    magick([...frameArgs(shot, { W: W * 2, H: H * 2, S: scale * 2, short, source: sourceTag(shot, bundle) }), png]);
+    const source = sourceTag(shot, bundle); const fa = frameArgs(shot, { W: W * 2, H: H * 2, S: scale * 2, short, source });
+    const sourceText = wrap(source, short ? 56 : 120); const id = `${String(i + 1).padStart(3, "0")}-${shot.beatId || shot.type}`;
+    diagShots.push(Diversity.fromPlanShot(shot, { id, start: +at.toFixed(3), end: +(at + dur).toFixed(3) })); observations.push(textObservation(fa, id, at + dur * 0.82, sourceText)); at += dur;
+    magick([...fa, png]);
     const mp4 = path.join(work, String(i + 1).padStart(3, "0") + ".mp4");
     run("ffmpeg", ["-v", "error", "-y", "-loop", "1", "-framerate", String(FPS), "-i", png, "-t", dur.toFixed(3), "-vf", `${zoomFilter(shot.motion, frames, W, H)}${fadeFilter(shot.transition, dur)},format=yuv420p`, "-r", String(FPS), "-c:v", "libx264", "-crf", "17", "-preset", "medium", mp4]);
     segs.push(mp4); fs.rmSync(png);
@@ -162,6 +198,10 @@ function main() {
     captions: { file: "out/captions.srt", cues: cues.length, burnedIn: captionsBurned, timing: "estimated within each beat" },
     limits: "static brand-system graphics with push/pan motion; not a substitute for human review",
   };
+  try {
+    const d = diagnose(diagShots, observations, out, video);
+    render.visualDiversity = { file: "out/visual-diversity.md", advisory: true, findings: d.issues.length, bySeverity: d.summary.issuesBySeverity };
+  } catch (e) { console.error("visual diagnostics skipped:", e.message); }
   bundle.render = render; fs.writeFileSync(bundlePath, JSON.stringify(bundle, null, 2) + "\n");
   // contact sheet from the real video
   try { run("ffmpeg", ["-v", "error", "-y", "-i", video, "-vf", `fps=1/${Math.max(1, Math.ceil(vd / 12))},scale=${short ? 216 : 384}:-2,tile=${short ? 12 : 4}x${short ? 1 : 3}:padding=4:color=0x0b0c0e`, "-frames:v", "1", path.join(out, "video-contact-sheet.png")]); } catch (e) { /* optional */ }
@@ -169,4 +209,4 @@ function main() {
   console.log(`render: ${render.width}x${render.height} ${render.durationSec}s (audio ${render.audioDurationSec}s) decodeErrors=${render.decodeErrors} black=${render.blackFrameSegments} -> ${path.relative(process.cwd(), video)}`);
 }
 if (require.main === module) { try { main(); } catch (e) { console.error("RENDER FAILED:", e.message); process.exit(1); } }
-module.exports = { frameArgs, zoomFilter, fadeFilter, sourceTag };
+module.exports = { frameArgs, zoomFilter, fadeFilter, sourceTag, textObservation, diagnose };
