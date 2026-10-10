@@ -1,0 +1,802 @@
+{
+ "topicId": "hbm-034-how-airlines-make-money-from-credit-cards",
+ "format": "long",
+ "researchedAt": "2026-10-10",
+ "researcher": "Claude Opus 5.5 in a Claude Code session: SEC EDGAR filings (FY2025 10-Ks of Delta, United and American; United's June 2020 8-K; United's and Delta's FY2020 10-Ks) and two US government pages read directly. Every evidence passage is checked verbatim against the downloaded source text by the build script. No ANTHROPIC or other paid API call.",
+ "thesis": "The big US airlines sell their frequent flyer miles to banks that hand them to credit card holders. They book part of that money right away and defer the part owed as future flights until miles are redeemed, estimate how many miles will never be used, and have borrowed billions against these programs; because the airline sets the terms, it also controls what a mile is worth.",
+ "angle": "Use the airlines' own 2025 filings to follow a mile from a grocery-store card swipe to the airline's books: who pays for it, how it is booked, how much is still owed, what lenders accepted as collateral in 2020, and why the government asked whether members get the value they were promised. A sequel to the gift-card film: the same idea of a balance the customer holds and the company forecasts.",
+ "contradictionsChecked": true,
+ "contradictions": [
+  {
+   "id": "x1",
+   "status": "resolved",
+   "note": "Card payments are not profit. Delta's $8.2 billion and American's $6.2 billion are cash for miles and other benefits; part is deferred as future flights. The script must not compare them with net income as if they were earnings, and must say 'paid' or 'cash', not 'profit'."
+  },
+  {
+   "id": "x2",
+   "status": "resolved",
+   "note": "United's $21.9 billion is United's own figure (12 times MileagePlus 2019 EBITDA), stated in its 8-K, not an independent appraisal or a market value. The script must attribute it to United and describe the method."
+  },
+  {
+   "id": "x3",
+   "status": "resolved",
+   "note": "American's 2024 cash payments included a one-time payment for a new card agreement, so the 2024-to-2025 change is not a clean growth rate. Do not compute or imply growth for American."
+  },
+  {
+   "id": "x4",
+   "status": "resolved",
+   "note": "The DOT inquiry (September 2024) is an inquiry, not a finding. No outcome has been verified; the script must not claim any penalty, ruling or confirmed devaluation."
+  },
+  {
+   "id": "x5",
+   "status": "resolved",
+   "note": "Miles do not simply 'never expire': American's miles stay valid only with qualifying activity every 24 months or for a primary co-branded cardholder. Only state what each filing says."
+  }
+ ],
+ "sources": [
+  {
+   "id": "s1",
+   "type": "10-k",
+   "publisher": "Delta Air Lines, Inc. (SEC EDGAR)",
+   "title": "Form 10-K for the fiscal year ended December 31, 2025",
+   "url": "https://www.sec.gov/Archives/edgar/data/27904/000002790426000013/dal-20251231.htm",
+   "date": "2026-02-11",
+   "accessed": "2026-10-10"
+  },
+  {
+   "id": "s2",
+   "type": "10-k",
+   "publisher": "United Airlines Holdings, Inc. (SEC EDGAR)",
+   "title": "Form 10-K for the fiscal year ended December 31, 2025",
+   "url": "https://www.sec.gov/Archives/edgar/data/100517/000010051726000023/ual-20251231.htm",
+   "date": "2026-02-12",
+   "accessed": "2026-10-10"
+  },
+  {
+   "id": "s3",
+   "type": "10-k",
+   "publisher": "American Airlines Group Inc. (SEC EDGAR)",
+   "title": "Form 10-K for the fiscal year ended December 31, 2025",
+   "url": "https://www.sec.gov/Archives/edgar/data/6201/000000620126000014/aal-20251231.htm",
+   "date": "2026-02-18",
+   "accessed": "2026-10-10"
+  },
+  {
+   "id": "s4",
+   "type": "8-k",
+   "publisher": "United Airlines Holdings, Inc. (SEC EDGAR)",
+   "title": "Form 8-K, June 15, 2020 (MileagePlus Financing)",
+   "url": "https://www.sec.gov/Archives/edgar/data/100517/000110465920073190/tm2022354d3_8k.htm",
+   "date": "2020-06-15",
+   "accessed": "2026-10-10"
+  },
+  {
+   "id": "s5",
+   "type": "10-k",
+   "publisher": "United Airlines Holdings, Inc. (SEC EDGAR)",
+   "title": "Form 10-K for the fiscal year ended December 31, 2020",
+   "url": "https://www.sec.gov/Archives/edgar/data/100517/000010051721000016/ual-20201231.htm",
+   "date": "2021-03-01",
+   "accessed": "2026-10-10"
+  },
+  {
+   "id": "s6",
+   "type": "10-k",
+   "publisher": "Delta Air Lines, Inc. (SEC EDGAR)",
+   "title": "Form 10-K for the fiscal year ended December 31, 2020",
+   "url": "https://www.sec.gov/Archives/edgar/data/27904/000002790421000003/dal-20201231.htm",
+   "date": "2021-02-12",
+   "accessed": "2026-10-10"
+  },
+  {
+   "id": "s7",
+   "type": "government",
+   "publisher": "U.S. Department of Transportation",
+   "title": "USDOT Seeks to Protect Consumers' Airline Rewards in Probe of Four Largest U.S. Airlines' Rewards Practices (press release, September 5, 2024)",
+   "url": "https://www.transportation.gov/briefing-room/usdot-seeks-protect-consumers-airline-rewards-probe-four-largest-us-airlines-rewards",
+   "date": "2024-09-05",
+   "accessed": "2026-10-10"
+  },
+  {
+   "id": "s8",
+   "type": "government",
+   "publisher": "Consumer Financial Protection Bureau",
+   "title": "Statement of CFPB Director Rohit Chopra Regarding the Transportation Department's Probe Into Airline Rewards Programs (archived)",
+   "url": "https://www.consumerfinance.gov/archive/newsroom/statement-of-cfpb-director-rohit-chopra-regarding-the-transportation-departments-probe-into-airline-rewards-programs/",
+   "date": "2024-09-05",
+   "accessed": "2026-10-10"
+  }
+ ],
+ "claims": [
+  {
+   "id": "c1",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s1"
+   ],
+   "numbers": [
+    "8.2",
+    "10",
+    "11",
+    "2025",
+    "2024"
+   ],
+   "text": "Delta reported that remuneration from American Express related to the SkyMiles program was $8.2 billion in 2025, about 11% more than in 2024, and said it expects that remuneration to grow to $10 billion over the next few years.",
+   "evidence": [
+    {
+     "sourceId": "s1",
+     "passage": "Remuneration from American Express related to the SkyMiles program were $8.2 billion during 2025, an increase of approximately 11% compared to 2024."
+    },
+    {
+     "sourceId": "s1",
+     "passage": "In 2025, remuneration from American Express totaled $8.2 billion, which we expect to grow to $10 billion over the next few years."
+    }
+   ],
+   "scope": {
+    "note": "Remuneration is cash paid for miles and other benefits, not profit; the $10 billion is Delta's own expectation, not a fact.",
+    "avoid": [
+     "profit of $8.2",
+     "earned $8.2 billion in profit"
+    ]
+   }
+  },
+  {
+   "id": "c2",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s1"
+   ],
+   "numbers": [],
+   "text": "Delta sells SkyMiles to American Express, which gives them to its cardholders; customers also earn miles by spending with credit card, retail, ridesharing, car rental and hotel partners, which pay Delta monthly based on the miles sold.",
+   "evidence": [
+    {
+     "sourceId": "s1",
+     "passage": "We sell miles to American Express which are then provided to their customers under the co-brand credit card program and the Membership Rewards program."
+    },
+    {
+     "sourceId": "s1",
+     "passage": "Customers earn miles based on their spending with participating companies such as credit card, retail, ridesharing, car rental and hotel companies with which we have marketing agreements to sell miles. Payments are typically due to us monthly based on the volume of miles sold during the period."
+    }
+   ]
+  },
+  {
+   "id": "c3",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s1"
+   ],
+   "numbers": [],
+   "text": "Delta splits what American Express pays across what it delivers (award travel, baggage fee waivers, lounge access, priority boarding and the use of its brand); the part allocated to award travel is deferred and only becomes passenger revenue when miles are redeemed and the flight is provided.",
+   "evidence": [
+    {
+     "sourceId": "s1",
+     "passage": "We allocate the value based on the relative selling prices of those products and services, which generally consist of award travel, baggage fee waivers, lounge access, priority boarding and the use of our brand."
+    },
+    {
+     "sourceId": "s1",
+     "passage": "We defer the amount allocated to award travel as part of loyalty program deferred revenue and recognize loyalty travel awards in passenger revenue as the miles are redeemed and transportation is provided."
+    }
+   ]
+  },
+  {
+   "id": "c4",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s1"
+   ],
+   "numbers": [
+    "9.3",
+    "8,826",
+    "9,262",
+    "4,892",
+    "4,237",
+    "219",
+    "2025",
+    "two"
+   ],
+   "text": "At December 31, 2025 Delta's deferred revenue for SkyMiles was $9.3 billion ($9,262 million, up from $8,826 million a year earlier, with $4,892 million of miles earned, $4,237 million redeemed for travel and $219 million for other awards in 2025); most new miles have historically been redeemed within two years.",
+   "evidence": [
+    {
+     "sourceId": "s1",
+     "passage": "At December 31, 2025, the aggregate deferred revenue balance associated with the SkyMiles program was $9.3 billion."
+    },
+    {
+     "sourceId": "s1",
+     "passage": "Balance at January 1 | $ | 8,826 | $ | 8,420 | $ | 7,882 | Miles earned | 4,892 | 4,463 | 4,173 | Travel miles redeemed | ( 4,237 ) | ( 3,841 ) | ( 3,462 ) | Non-travel miles redeemed | ( 219 ) | ( 216 ) | ( 173 ) | Balance at December 31 | $ | 9,262 | $ | 8,826 | $ | 8,420 |"
+    },
+    {
+     "sourceId": "s1",
+     "passage": "the majority of new miles have historically been redeemed within two years of being earned."
+    }
+   ]
+  },
+  {
+   "id": "c5",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s1"
+   ],
+   "numbers": [
+    "12",
+    "35",
+    "2025"
+   ],
+   "text": "In 2025, 12% of revenue miles flown on Delta were award travel, and members redeemed miles for about 35 million award tickets.",
+   "evidence": [
+    {
+     "sourceId": "s1",
+     "passage": "In 2025, 12% of revenue miles flown on Delta were from award travel, as program members redeemed miles in the loyalty program for approximately 35 million award tickets."
+    }
+   ]
+  },
+  {
+   "id": "c6",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s1",
+    "s3"
+   ],
+   "numbers": [
+    "63,364",
+    "5,005",
+    "54,633",
+    "111",
+    "2025"
+   ],
+   "text": "In 2025 Delta reported total operating revenue of $63,364 million and net income of $5,005 million; American Airlines Group reported total operating revenues of $54,633 million and net income of $111 million.",
+   "evidence": [
+    {
+     "sourceId": "s1",
+     "passage": "Total operating revenue | 63,364 | 61,643 | 58,048 |"
+    },
+    {
+     "sourceId": "s1",
+     "passage": "Net income | $ | 5,005 | $ | 3,457 | $ | 4,609 |"
+    },
+    {
+     "sourceId": "s3",
+     "passage": "Total operating revenues | $ | 54,633 | $ | 54,211 | $ | 52,788 |"
+    },
+    {
+     "sourceId": "s3",
+     "passage": "Net income | 111 | 846 | 822 |"
+    }
+   ],
+   "scope": {
+    "note": "Context for scale only. Never present card payments as a share of profit or compare them to net income as if they were profit."
+   }
+  },
+  {
+   "id": "c7",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s3"
+   ],
+   "numbers": [
+    "6.2",
+    "6.1",
+    "2025",
+    "2024"
+   ],
+   "text": "American Airlines received cash payments of $6.2 billion in 2025 and $6.1 billion in 2024 from co-branded credit card and other partners; the 2024 figure included a one-time payment tied to a new co-branded card agreement announced in December 2024.",
+   "evidence": [
+    {
+     "sourceId": "s3",
+     "passage": "During 2025 and 2024, cash payments from co-branded credit card and other partners were $6.2 billion and $6.1 billion, respectively. Cash remuneration in 2024 included a one-time cash payment related to the new co-branded credit card agreement announced in December 2024."
+    }
+   ]
+  },
+  {
+   "id": "c8",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s3"
+   ],
+   "numbers": [
+    "10,564",
+    "7,158",
+    "3.7",
+    "2025"
+   ],
+   "text": "At December 31, 2025 American's loyalty program liability was $10,564 million, against an air traffic liability (tickets sold for future travel) of $7,158 million; $3.7 billion of the loyalty liability was expected to be recognized within 12 months.",
+   "evidence": [
+    {
+     "sourceId": "s3",
+     "passage": "Loyalty program liability | $ | 10,564 | $ | 10,054 | Air traffic liability | 7,158 | 6,759 |"
+    },
+    {
+     "sourceId": "s3",
+     "passage": "As of December 31, 2025, our current loyalty program liability was $ 3.7 billion and represents our current estimate of revenue expected to be recognized in the next 12 months based on historical trends"
+    }
+   ]
+  },
+  {
+   "id": "c9",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s3"
+   ],
+   "numbers": [
+    "10",
+    "140",
+    "24",
+    "2025"
+   ],
+   "text": "American estimates with a statistical model how many AAdvantage miles will never be redeemed and recognizes that value as other miles are redeemed; a 10% higher estimate of unredeemed miles would have raised 2025 revenue by about $140 million. Its miles generally do not expire with qualifying activity at least every 24 months or for a primary co-branded cardholder.",
+   "evidence": [
+    {
+     "sourceId": "s3",
+     "passage": "For the portion of our outstanding mileage credits that we estimate will not be redeemed, we recognize the associated value proportionally as the remaining mileage credits are redeemed. Our estimates use a statistical model based on historical redemption patterns to develop an estimate of the likelihood of future redemption. For the year ended December 31, 2025, a hypothetical 10% increase in our estimate of mileage credits not expected to be redeemed would have increased revenues by approximately $140 million."
+    },
+    {
+     "sourceId": "s3",
+     "passage": "Mileage credits can be redeemed at any time and generally do not expire as long as the AAdvantage member has any type of qualifying activity at least every 24 months or if the AAdvantage member is the primary holder of a co-branded credit card."
+    }
+   ]
+  },
+  {
+   "id": "c10",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s2"
+   ],
+   "numbers": [
+    "362",
+    "10.4",
+    "2025",
+    "2024"
+   ],
+   "text": "United sells MileagePlus miles to its co-branded card partner Chase, which awards them to members for card spending; United's other operating revenue rose $362 million (10.4%) in 2025, mainly from higher mileage revenue from non-airline partners including Chase card spending, and more United Club purchases.",
+   "evidence": [
+    {
+     "sourceId": "s2",
+     "passage": "United has a contract (the \"Co-Brand Agreement\") to sell MileagePlus miles to its co-branded credit card partner Chase. Chase awards miles to MileagePlus members based on their credit card activity."
+    },
+    {
+     "sourceId": "s2",
+     "passage": "Other operating revenue increased $362 million, or 10.4%, in 2025 as compared to 2024, primarily due to an increase in mileage revenue from non-airline partners, including credit card spending with our co-branded credit card partner, JPMorgan Chase Bank, N.A., as well as increases in the purchases of United Club memberships."
+    }
+   ]
+  },
+  {
+   "id": "c11",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s2"
+   ],
+   "numbers": [
+    "3,721",
+    "4,056",
+    "2025"
+   ],
+   "text": "United uses a statistical model of each account's history to estimate miles that will not be redeemed ('mileage breakage'), recognizes that breakage as remaining miles are redeemed, and warns that changes to program rules can materially change deferred revenue and recognized revenue. At December 31, 2025 its frequent flyer deferred revenue was $3,721 million current and $4,056 million noncurrent.",
+   "evidence": [
+    {
+     "sourceId": "s2",
+     "passage": "The Company uses a statistical model to estimate the probability that an account will redeem its current miles balance and reviews its mileage breakage estimates annually."
+    },
+    {
+     "sourceId": "s2",
+     "passage": "Changes to mileage breakage assumptions, or to program rules and program redemption opportunities, may result in material changes to the deferred revenue balance as well as recognized revenues from the program. We recognize mileage breakage proportionally as the remaining miles are redeemed."
+    },
+    {
+     "sourceId": "s2",
+     "passage": "Frequent flyer deferred revenue | 3,721 | 3,403 |"
+    },
+    {
+     "sourceId": "s2",
+     "passage": "Frequent flyer deferred revenue | 4,056 | 4,038 |"
+    }
+   ]
+  },
+  {
+   "id": "c12",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s2"
+   ],
+   "numbers": [
+    "10.9",
+    "10.3",
+    "4.3",
+    "2025"
+   ],
+   "text": "In 2025 about 10.9 million MileagePlus flight awards were used on United and United Express (about 10.3% of United's revenue passenger miles), plus about 4.3 million other awards.",
+   "evidence": [
+    {
+     "sourceId": "s2",
+     "passage": "In 2025, approximately 10.9 million MileagePlus flight awards were used on United and United Express. These awards represented approximately 10.3% of United's total revenue passenger miles."
+    },
+    {
+     "sourceId": "s2",
+     "passage": "MileagePlus members redeemed miles for approximately 4.3 million other awards."
+    }
+   ]
+  },
+  {
+   "id": "c13",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s4",
+    "s5"
+   ],
+   "numbers": [
+    "21.9",
+    "12",
+    "2019",
+    "5.0",
+    "6.8",
+    "2020"
+   ],
+   "text": "In June 2020 United arranged financing secured by MileagePlus, including its brands, member data and the accounts into which its marketing partners pay MileagePlus revenues; United itself stated that 12 times MileagePlus's 2019 EBITDA equals a valuation of about $21.9 billion. United later recorded $6.8 billion of senior secured notes and a term loan secured by the MileagePlus business.",
+   "evidence": [
+    {
+     "sourceId": "s4",
+     "passage": "Multiplying MPH 2019 EBITDA by a factor of 12 equates to a MileagePlus valuation of approximately $21.9 billion."
+    },
+    {
+     "sourceId": "s4",
+     "passage": "United and MPH will contribute to MIPA their respective rights to certain MileagePlus intellectual property, including brands and member data."
+    },
+    {
+     "sourceId": "s4",
+     "passage": "specified cash accounts that include the accounts into which MileagePlus revenues are or will be paid by its marketing partners and by United"
+    },
+    {
+     "sourceId": "s5",
+     "passage": "the $ 6.8 billion of senior secured notes and a secured term loan facility (the \"MileagePlus Financing\") secured by substantially all of the assets of Mileage Plus Holdings, LLC (\"MPH\"), a direct wholly-owned subsidiary of United."
+    }
+   ],
+   "scope": {
+    "note": "$21.9 billion is United's own multiple-of-earnings figure, not an independent appraisal or a market value."
+   }
+  },
+  {
+   "id": "c14",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s6"
+   ],
+   "numbers": [
+    "9.0",
+    "2020"
+   ],
+   "text": "In 2020 Delta raised $9.0 billion through notes and a term loan secured by assets related to the SkyMiles program.",
+   "evidence": [
+    {
+     "sourceId": "s6",
+     "passage": "Raising $9.0 billion through the issuance of notes and entry into a term loan facility, each secured by certain assets related to our SkyMiles program."
+    }
+   ]
+  },
+  {
+   "id": "c15",
+   "central": true,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s7"
+   ],
+   "numbers": [
+    "2024",
+    "four"
+   ],
+   "text": "On September 5, 2024 the US Department of Transportation opened an inquiry into the rewards programs of American, Delta, Southwest and United, focused on devaluation of earned rewards, hidden or dynamic pricing, extra fees and reduced competition; Secretary Buttigieg said the rewards are controlled by a company that can unilaterally change their value.",
+   "evidence": [
+    {
+     "sourceId": "s7",
+     "passage": "U.S. Secretary of Transportation Pete Buttigieg sent letters to American Airlines, Delta Air Lines, Southwest Airlines, and United Airlines ordering them to provide records and submit reports with detailed information about their rewards programs, practices, and policies."
+    },
+    {
+     "sourceId": "s7",
+     "passage": "many Americans view their rewards points balances as part of their savings,” said U.S. Transportation Secretary Pete Buttigieg. “These programs bring real value to consumers"
+    },
+    {
+     "sourceId": "s7",
+     "passage": "DOT's probe is focused on the ways consumers participating in airline rewards programs are impacted by the devaluation of earned rewards, hidden or dynamic pricing, extra fees, and reduced competition and choice."
+    },
+    {
+     "sourceId": "s7",
+     "passage": "But unlike a traditional savings account, these rewards are controlled by a company that can unilaterally change their value."
+    },
+    {
+     "sourceId": "s7",
+     "passage": "Many airlines reserve the right to change the terms, and therefore the value, of rewards at their discretion."
+    }
+   ],
+   "scope": {
+    "note": "An inquiry, not a finding: no outcome, penalty or conclusion has been verified. Present the quote as the Secretary's statement."
+   }
+  },
+  {
+   "id": "c16",
+   "central": false,
+   "primaryOnlyOk": true,
+   "sourceIds": [
+    "s8"
+   ],
+   "numbers": [],
+   "text": "The CFPB director said airline valuations are increasingly driven by points programs and credit card partnerships, and that these programs are often depreciated or changed with little notice.",
+   "evidence": [
+    {
+     "sourceId": "s8",
+     "passage": "Airline valuations are increasingly driven by their points programs and lucrative partnerships with credit card companies, and Americans are paying high interest rates and fees to participate in these programs—yet these tempting points and rewards programs are often depreciated or changed with little notice."
+    }
+   ],
+   "scope": {
+    "note": "A regulator's statement of view (archived page), attributed by name; not a measured finding."
+   }
+  }
+ ],
+ "inferences": [
+  {
+   "id": "i1",
+   "disclosed": true,
+   "kind": "arithmetic",
+   "basisClaimIds": [
+    "c4"
+   ],
+   "numbers": [
+    "436",
+    "9,262",
+    "8,826"
+   ],
+   "text": "Our arithmetic: Delta's SkyMiles deferred revenue grew by $436 million in 2025 ($9,262 million less $8,826 million): more miles were issued than redeemed.",
+   "calc": [
+    {
+     "expr": "9262 - 8826",
+     "equals": 436
+    },
+    {
+     "expr": "4892 - 4237 - 219",
+     "equals": 436
+    }
+   ]
+  },
+  {
+   "id": "i2",
+   "disclosed": true,
+   "kind": "arithmetic",
+   "basisClaimIds": [
+    "c8"
+   ],
+   "numbers": [
+    "3,406",
+    "10,564",
+    "7,158"
+   ],
+   "text": "Our arithmetic: at the end of 2025, American's liability for unredeemed miles ($10,564 million) was $3,406 million larger than its liability for tickets already sold for future flights ($7,158 million).",
+   "calc": [
+    {
+     "expr": "10564 - 7158",
+     "equals": 3406
+    }
+   ]
+  },
+  {
+   "id": "i3",
+   "disclosed": true,
+   "kind": "arithmetic",
+   "basisClaimIds": [
+    "c11"
+   ],
+   "numbers": [
+    "7,777",
+    "3,721",
+    "4,056"
+   ],
+   "text": "Our arithmetic: United's frequent flyer deferred revenue at December 31, 2025 totals $7,777 million ($3,721 million current plus $4,056 million noncurrent).",
+   "calc": [
+    {
+     "expr": "3721 + 4056",
+     "equals": 7777
+    }
+   ]
+  },
+  {
+   "id": "i4",
+   "disclosed": true,
+   "kind": "arithmetic",
+   "basisClaimIds": [
+    "c4",
+    "c8",
+    "c11"
+   ],
+   "numbers": [
+    "27.6",
+    "9,262",
+    "10,564",
+    "7,777"
+   ],
+   "text": "Our arithmetic: the three airlines' balances for miles not yet redeemed at December 31, 2025 add up to about $27.6 billion ($9,262 million Delta, $10,564 million American, $7,777 million United).",
+   "calc": [
+    {
+     "expr": "9262 + 10564 + 7777",
+     "equals": 27603
+    },
+    {
+     "expr": "(9262 + 10564 + 7777) / 1000",
+     "equals": 27.6
+    }
+   ]
+  },
+  {
+   "id": "i5",
+   "disclosed": true,
+   "kind": "arithmetic",
+   "basisClaimIds": [
+    "c13"
+   ],
+   "numbers": [
+    "1.8",
+    "21.9",
+    "12"
+   ],
+   "text": "Our arithmetic: United's $21.9 billion figure implies MileagePlus 2019 EBITDA of about $1.8 billion ($21.9 billion divided by 12).",
+   "calc": [
+    {
+     "expr": "21.9 / 12",
+     "equals": 1.825
+    },
+    {
+     "expr": "21.9 / 12",
+     "equals": 1.8
+    }
+   ]
+  },
+  {
+   "id": "i6",
+   "disclosed": true,
+   "kind": "rounding",
+   "basisClaimIds": [
+    "c8",
+    "c11"
+   ],
+   "numbers": [
+    "10.6",
+    "7.2",
+    "3.4",
+    "7.8"
+   ],
+   "text": "Rounded to one decimal place in billions: American's loyalty program liability is about $10.6 billion and its air traffic liability about $7.2 billion, a gap of about $3.4 billion; United's frequent flyer deferred revenue is about $7.8 billion.",
+   "calc": [
+    {
+     "expr": "10564 / 1000",
+     "equals": 10.6
+    },
+    {
+     "expr": "7158 / 1000",
+     "equals": 7.2
+    },
+    {
+     "expr": "(10564 - 7158) / 1000",
+     "equals": 3.4
+    },
+    {
+     "expr": "(3721 + 4056) / 1000",
+     "equals": 7.8
+    }
+   ]
+  }
+ ],
+ "entities": [
+  {
+   "id": "delta",
+   "name": "Delta",
+   "kind": "company",
+   "aliases": [
+    "Delta Air Lines",
+    "SkyMiles"
+   ],
+   "sourceIds": [
+    "s1",
+    "s6"
+   ]
+  },
+  {
+   "id": "american",
+   "name": "American Airlines",
+   "kind": "company",
+   "aliases": [
+    "American",
+    "AAdvantage",
+    "American Airlines Group"
+   ],
+   "sourceIds": [
+    "s3"
+   ]
+  },
+  {
+   "id": "united",
+   "name": "United",
+   "kind": "company",
+   "aliases": [
+    "United Airlines",
+    "MileagePlus"
+   ],
+   "sourceIds": [
+    "s2",
+    "s4",
+    "s5"
+   ]
+  },
+  {
+   "id": "amex",
+   "name": "American Express",
+   "kind": "company",
+   "aliases": [
+    "Amex"
+   ],
+   "sourceIds": [
+    "s1"
+   ]
+  },
+  {
+   "id": "chase",
+   "name": "Chase",
+   "kind": "company",
+   "aliases": [
+    "JPMorgan Chase"
+   ],
+   "sourceIds": [
+    "s2"
+   ]
+  },
+  {
+   "id": "dot",
+   "name": "Department of Transportation",
+   "kind": "regulator",
+   "aliases": [
+    "DOT",
+    "Transportation Department",
+    "Buttigieg"
+   ],
+   "sourceIds": [
+    "s7"
+   ]
+  },
+  {
+   "id": "cfpb",
+   "name": "CFPB",
+   "kind": "regulator",
+   "aliases": [
+    "Consumer Financial Protection Bureau",
+    "Chopra"
+   ],
+   "sourceIds": [
+    "s8"
+   ]
+  }
+ ],
+ "scriptRules": [
+  {
+   "pattern": "\\b(profit|profits|earned)\\b[^.]{0,40}\\$(8\\.2|6\\.2) billion",
+   "reason": "x1: card payments are cash, not profit"
+  },
+  {
+   "pattern": "appraised|appraisal",
+   "reason": "x2: $21.9 billion is United's own EBITDA multiple, not an appraisal"
+  },
+  {
+   "pattern": "\\bmiles (never|don't|do not) expire\\b",
+   "reason": "x5: expiry rules differ; state only what each filing says"
+  },
+  {
+   "pattern": "\\b(fined|penalized|found that|ruled)\\b",
+   "reason": "x4: the DOT inquiry has no verified outcome"
+  }
+ ]
+}
