@@ -4,6 +4,8 @@
 // Chromium and encoded with ffmpeg. DRY-RUN ONLY: writes files under <dir>/out, never uploads.
 //
 //   node scripts/profitdecoded/motion/render-motion.js <dir> [--fps 30] [--stills 1.5,12,30] [--from s] [--to s]
+//   --video-only --out path.mp4 renders a revision range without remastering the existing soundtrack.
+//   --analyze-only [--qa qa.json] writes out/visual-diversity.{json,md} without capturing video.
 //
 // <dir> holds scenes.js (the shot list, using the PD library in brand-lib.js), out/timeline.json
 // (sentence timings from produce-audio.js) and out/mix.wav. Every frame is a pure function of time,
@@ -12,6 +14,7 @@
 const fs = require("fs");
 const path = require("path");
 const { spawn, execFileSync } = require("child_process");
+const Diversity = require("../../../core/profitdecoded/visual-diversity");
 
 const args = process.argv.slice(2);
 const opt = (k, d) => (args.includes(k) ? args[args.indexOf(k) + 1] : d);
@@ -65,6 +68,39 @@ function master(src, dst, target = -14) {
   return { before, gainDb: +gain, after: loud(dst) };
 }
 
+// Sample the actual composed SVG once late in each shot. Bounds include camera transforms.
+// At a 640 px playback width, the 1920 px canvas is scaled by exactly one third.
+async function inspectShotFrames(page, shots) {
+  const observations = [];
+  for (const shot of shots) {
+    const second = shot.start + (shot.end - shot.start) * 0.82;
+    observations.push(await page.evaluate(({ shotId, second }) => {
+      PD.frame(second);
+      const visible = (el) => {
+        let opacity = 1;
+        for (let node = el; node && node.id !== "stage"; node = node.parentElement) {
+          const style = getComputedStyle(node);
+          if (style.display === "none" || style.visibility === "hidden") return false;
+          opacity *= Number(style.opacity);
+        }
+        const r = el.getBoundingClientRect();
+        return opacity >= 0.5 && r.width > 2 && r.height > 2 && r.right > 0 && r.left < 1920 && r.bottom > 0 && r.top < 1080;
+      };
+      const texts = [...document.querySelectorAll("#stage svg text")].filter(visible);
+      const essential = texts.filter((el) => !el.closest('[data-role="source"], [data-role="decorative"]'));
+      const sources = texts.filter((el) => !!el.closest('[data-role="source"]'));
+      const sizes = essential.map((el) => +(el.getBoundingClientRect().height / 3).toFixed(1)).filter((n) => n > 0);
+      const clipped = sources.some((el) => { const r = el.getBoundingClientRect(); return r.left < 60 || r.right > 1860 || r.bottom > 1070; });
+      const sourceSizes = sources.map((el) => +(el.getBoundingClientRect().height / 3).toFixed(1)).filter((n) => n > 0);
+      return { shotId, second: +second.toFixed(2), essentialTextPxOn640: sizes.length ? Math.min(...sizes) : 0,
+        sourceTextPxOn640: sourceSizes.length ? Math.min(...sourceSizes) : 0,
+        essentialTextCount: essential.length, sourcePresent: sources.length > 0, sourceClipped: clipped,
+        sourceText: sources.map((el) => el.textContent.trim()).slice(0, 2) };
+    }, { shotId: shot.id, second }));
+  }
+  return observations;
+}
+
 async function main() {
   const out = path.join(dir, "out"); const timeline = JSON.parse(fs.readFileSync(path.join(out, "timeline.json"), "utf8"));
   const audio = path.join(out, "mix.wav"); if (!fs.existsSync(audio)) throw new Error("out/mix.wav missing: run produce-audio.js first");
@@ -79,6 +115,16 @@ async function main() {
   await page.evaluate(Fonts.PAGE_CHECK);
   const meta = await page.evaluate((a) => PD.init(a.timeline, a.audioDur), { timeline, audioDur });
   if (errors.length) throw new Error("scene errors: " + errors.join(" | "));
+  const frameObservations = await inspectShotFrames(page, meta.shots);
+  // --qa <qa-media.json> adds measured near-static intervals from an already rendered master.
+  const freezes = opt("--qa", null) ? JSON.parse(fs.readFileSync(opt("--qa"), "utf8")).freezes || [] : [];
+  const diversity = Diversity.analyze(meta.shots, { timeline, frameObservations, freezes });
+  fs.writeFileSync(path.join(out, "visual-diversity.json"), JSON.stringify(diversity, null, 2) + "\n");
+  fs.writeFileSync(path.join(out, "visual-diversity.md"), Diversity.markdown(diversity));
+  fs.writeFileSync(path.join(out, "visual-frame-samples.json"), JSON.stringify(frameObservations, null, 2) + "\n");
+  if (args.includes("--analyze-only")) {
+    await browser.close(); console.log(`visual-diversity -> ${path.relative(process.cwd(), out)} (${diversity.issues.length} review flags)`); return;
+  }
   const total = Math.max(audioDur, meta.duration);
   const stills = opt("--stills", null);
   if (stills) {
@@ -87,15 +133,21 @@ async function main() {
     await browser.close(); console.log(`stills -> ${path.relative(process.cwd(), sdir)}`); return;
   }
   const from = +opt("--from", 0), to = Math.min(total, +opt("--to", total));
-  const mastered = path.join(out, "master.wav"); const audioMaster = master(audio, mastered);
-  fs.writeFileSync(path.join(out, "audio-master.json"), JSON.stringify(audioMaster, null, 1) + "\n");
-  const video = path.join(out, "prototype.mp4");
-  const ff = spawn("ffmpeg", ["-v", "error", "-y", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "png", "-i", "-", "-ss", String(from), "-i", mastered,
+  const videoOnly = args.includes("--video-only");
+  let mastered = null;
+  if (!videoOnly) {
+    mastered = path.join(out, "master.wav"); const audioMaster = master(audio, mastered);
+    fs.writeFileSync(path.join(out, "audio-master.json"), JSON.stringify(audioMaster, null, 1) + "\n");
+  }
+  const video = path.resolve(opt("--out", path.join(out, "prototype.mp4")));
+  fs.mkdirSync(path.dirname(video), { recursive: true });
+  const ff = spawn("ffmpeg", ["-v", "error", "-y", "-f", "image2pipe", "-framerate", String(FPS), "-c:v", "png", "-i", "-",
+    ...(videoOnly ? [] : ["-ss", String(from), "-i", mastered]),
     // Fixed-pattern dither (noise, not temporal grain) stops dark gradients banding in 8-bit H.264; explicit
     // BT.709 conversion and tags keep brand colours from shifting in players.
-    "-map", "0:v", "-map", "1:a", "-af", `apad,atrim=0:${(to - from).toFixed(3)}`, "-vf", "noise=alls=6:allf=u,scale=out_color_matrix=bt709:out_range=tv,format=yuv420p",
-    "-c:v", "libx264", "-preset", "slow", "-crf", "17", "-x264-params", "aq-mode=3:deblock=-1,-1:colorprim=bt709:transfer=bt709:colormatrix=bt709", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-r", String(FPS),
-    "-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-ac", "2", "-t", (to - from).toFixed(3), "-movflags", "+faststart", video], { stdio: ["pipe", "inherit", "inherit"] });
+    "-map", "0:v", ...(videoOnly ? ["-an"] : ["-map", "1:a", "-af", `apad,atrim=0:${(to - from).toFixed(3)}`]), "-vf", "noise=alls=6:allf=u,scale=out_color_matrix=bt709:out_range=tv,format=yuv420p",
+    "-c:v", "libx264", "-preset", opt("--preset", "slow"), "-crf", opt("--crf", "17"), "-x264-params", "aq-mode=3:deblock=-1,-1:colorprim=bt709:transfer=bt709:colormatrix=bt709", "-colorspace", "bt709", "-color_primaries", "bt709", "-color_trc", "bt709", "-color_range", "tv", "-r", String(FPS),
+    ...(videoOnly ? [] : ["-c:a", "aac", "-b:a", "256k", "-ar", "48000", "-ac", "2"]), "-t", (to - from).toFixed(3), "-movflags", "+faststart", video], { stdio: ["pipe", "inherit", "inherit"] });
   const ffDone = new Promise((res, rej) => ff.on("close", (c) => (c === 0 ? res() : rej(new Error("ffmpeg exited " + c)))));
   const n = Math.round((to - from) * FPS); const t0 = Date.now();
   for (let i = 0; i < n; i += 1) {

@@ -43,13 +43,32 @@
   </defs>`;
   PD.vignette = () => `<rect width="1920" height="1080" fill="url(#vig)"/>`;
 
+  // Original, unbranded places for everyday examples. These are editorial illustrations,
+  // never footage or a representation of a named company's actual premises.
+  PD.environment = (kind, t = 0) => {
+    const drift = Math.sin(t * 0.32) * 18;
+    const sets = {
+      desk: { wall: "#51483f", floor: "#8b755e", trim: "#c5a27c" },
+      cafe: { wall: "#32484b", floor: "#6a5345", trim: "#d5a670" },
+      checkout: { wall: "#38444a", floor: "#594f46", trim: "#bfa380" },
+      restaurant: { wall: "#51423e", floor: "#6b5144", trim: "#d3ae81" },
+    };
+    const s = sets[kind]; if (!s) throw new Error(`unknown environment: ${kind}`);
+    const shelf = kind === "checkout" ? `<g opacity="0.55">${[0, 1, 2].map((i) => `<rect x="${80 + i * 230}" y="230" width="180" height="190" rx="6" fill="#9a8268"/><rect x="${95 + i * 230}" y="280" width="150" height="8" fill="#e8d4b5"/><rect x="${95 + i * 230}" y="360" width="150" height="8" fill="#e8d4b5"/>`).join("")}</g>` : "";
+    const window = kind === "cafe" || kind === "restaurant" ? `<g transform="translate(${drift} 0)"><rect x="130" y="80" width="650" height="590" rx="14" fill="#789193" opacity="0.42"/><rect x="160" y="110" width="590" height="530" fill="#c7c2a1" opacity="0.24"/><path d="M455 95 V650 M160 385 H750" stroke="#c8b69a" stroke-width="24" opacity="0.68"/></g>` : "";
+    const desk = kind === "desk" ? `<g opacity="0.7"><rect x="100" y="145" width="430" height="575" rx="24" fill="#2e302e" transform="rotate(-10 315 430)"/><rect x="1470" y="130" width="190" height="350" rx="14" fill="#d6c7aa" transform="rotate(8 1565 305)"/><circle cx="1660" cy="720" r="95" fill="#d6c7aa"/><circle cx="1660" cy="720" r="61" fill="#51483f"/></g>` : "";
+    const lamp = kind === "restaurant" ? `<path d="M1320 0 V220 M1190 220 H1450 L1390 345 H1250 Z" fill="#d0aa72" opacity="0.65"/><ellipse cx="1320" cy="355" rx="285" ry="55" fill="#e8bd79" opacity="0.13"/>` : "";
+    return `<rect width="1920" height="1080" fill="${s.wall}"/><rect y="690" width="1920" height="390" fill="${s.floor}"/><path d="M0 700 H1920" stroke="${s.trim}" stroke-width="18" opacity="0.62"/>${window}${shelf}${desk}${lamp}
+      <rect width="1920" height="1080" fill="#10171a" opacity="0.26"/><rect width="1920" height="1080" fill="url(#vig)"/>`;
+  };
+
   // The episode's gift card: original, unbranded design (no real retailer marks).
   // w = width in px; balance = 0..1 fill of the "unspent balance" meter (no amount is ever printed);
   // sheen = 0..1 position of a light sweep (<0 or >1 = off).
   PD.giftCard = ({ w = 560, balance = 1, sheen = -1, glow = 0, dim = 0, base = C.ledger, band = C.signal, meter = true } = {}) => {
     const h = w / 1.586, r = w * 0.045, s = w / 560;
     const sheenX = lerp(-w * 0.6, w * 1.1, clamp(sheen, -0.2, 1.2));
-    return `<g filter="url(#soft)">
+    return `<g filter="url(#soft)" data-role="decorative">
       <clipPath id="cardClip${Math.round(w)}"><rect width="${w}" height="${h}" rx="${r}"/></clipPath>
       <g clip-path="url(#cardClip${Math.round(w)})">
         <rect width="${w}" height="${h}" fill="${base}"/>
@@ -71,8 +90,22 @@ ${meter ? "" : "-->"}
   PD.cardOutline = (w, stroke = C.mist, op = 0.35, dash = "") => `<rect width="${w}" height="${w / 1.586}" rx="${w * 0.045}" fill="none" stroke="${stroke}" stroke-opacity="${op}" stroke-width="2" ${dash ? `stroke-dasharray="${dash}"` : ""}/>`;
 
   // Small-caps label + source line (bottom left). Every on-screen figure carries one.
-  PD.source = (text, k = 1, y = 1016, { dark = true } = {}) => `<g opacity="${k}"><rect x="96" y="${y - 34}" width="5" height="44" fill="${C.signal}"/>
+  PD.source = (text, k = 1, y = 1016, { dark = true } = {}) => `<g opacity="${k}" data-role="source"><rect x="96" y="${y - 34}" width="5" height="44" fill="${C.signal}"/>
     <text x="120" y="${y - 2}" font-family="${F.sans}" font-weight="500" font-size="30" fill="${dark ? C.text : "#3a372f"}" fill-opacity="${dark ? 0.88 : 1}"><tspan font-weight="700" letter-spacing="3">SOURCE</tspan>  ${esc(text)}</text></g>`;
+  // A short, accurate on-screen citation for phone viewing. Keep the full reference in the
+  // episode dossier/description; this component does not remove the source qualification.
+  PD.sourceCompact = (text, k = 1, { dark = true, y = 1010 } = {}) => `<g opacity="${clamp(k)}" data-role="source"><rect x="94" y="${y - 48}" width="7" height="55" fill="${C.signal}"/>
+    <text x="125" y="${y}" font-family="${F.sans}" font-weight="650" font-size="40" fill="${dark ? C.text : "#332f2b"}">${esc(text)}</text></g>`;
+  // Reusable documentary evidence card: a figure and its meaning share one visual object.
+  // Its large type survives a 640 px wide phone preview; callers supply sourced values.
+  PD.evidenceCard = ({ x, y, w = 610, h = 450, kicker, value, detail, k = 1, accent = C.signal, paper = true }) => {
+    const fg = paper ? C.ink : C.text, bg = paper ? "#f6f0e5" : C.ink2;
+    return `<g opacity="${clamp(k)}" transform="translate(${x} ${lerp(y + 28, y, clamp(k))})" filter="url(#soft)"><rect width="${w}" height="${h}" rx="18" fill="${bg}"/>
+      <rect width="${w}" height="16" rx="8" fill="${accent}"/>${PD.label(44, 78, kicker, { size: 34, fill: fg, ls: 2 })}
+      ${PD.number(44, 245, value, { size: Math.min(116, (w - 90) / (value.length * 0.59)), fill: fg })}
+      <path d="M44 290 H${w - 44}" stroke="${accent}" stroke-width="4" opacity="0.65"/>
+      ${PD.label(44, 365, detail, { size: 34, fill: fg, ls: 0.5, weight: 600 })}</g>`;
+  };
   PD.label = (x, y, text, { size = 24, fill = C.mist, anchor = "start", op = 1, ls = 4, weight = 700 } = {}) => `<text x="${x}" y="${y}" font-family="${F.sans}" font-weight="${weight}" font-size="${size}" letter-spacing="${ls}" fill="${fill}" text-anchor="${anchor}" opacity="${op}">${esc(text)}</text>`;
   PD.serif = (x, y, text, { size = 84, fill = C.text, anchor = "middle", op = 1, italic = false } = {}) => `<text x="${x}" y="${y}" font-family="${F.serif}" font-weight="700" ${italic ? 'font-style="italic"' : ""} font-size="${size}" fill="${fill}" text-anchor="${anchor}" opacity="${op}">${esc(text)}</text>`;
   PD.number = (x, y, text, { size = 220, fill = C.text, anchor = "start", op = 1 } = {}) => `<text x="${x}" y="${y}" font-family="${F.num}" font-weight="600" font-size="${size}" fill="${fill}" text-anchor="${anchor}" opacity="${op}" style="font-variant-numeric: tabular-nums">${esc(text)}</text>`;
@@ -123,15 +156,15 @@ ${meter ? "" : "-->"}
   // hi = 0..1 highlighter sweep over the form name.
   PD.docCover = ({ co, fy, form = "FORM 10-K", x, y, rot = 0, k = 1, hi = 0 }) => `<g transform="translate(${x} ${lerp(y + 140, y, k)}) rotate(${rot})" opacity="${clamp(k * 1.4)}" filter="url(#soft)">
       <rect width="520" height="680" fill="#fbf8f1"/>
-      ${PD.label(260, 70, "UNITED STATES", { size: 16, fill: "#3a3a3a", anchor: "middle", ls: 3 })}
+      <g data-role="decorative">${PD.label(260, 70, "UNITED STATES", { size: 16, fill: "#3a3a3a", anchor: "middle", ls: 3 })}
       ${PD.label(260, 98, "SECURITIES AND EXCHANGE COMMISSION", { size: 16, fill: "#3a3a3a", anchor: "middle", ls: 1.5 })}
-      ${PD.label(260, 124, "Washington, D.C. 20549", { size: 15, fill: "#555", anchor: "middle", ls: 0.5, weight: 500 })}
+      ${PD.label(260, 124, "Washington, D.C. 20549", { size: 15, fill: "#555", anchor: "middle", ls: 0.5, weight: 500 })}</g>
       <line x1="60" y1="160" x2="460" y2="160" stroke="#222" stroke-width="2"/>
       <rect x="70" y="196" width="${380 * clamp(hi)}" height="74" fill="${C.gold}" opacity="0.45"/>
       ${PD.serif(260, 252, form, { size: 64, fill: "#141414" })}
       <line x1="60" y1="295" x2="460" y2="295" stroke="#222" stroke-width="2"/>
-      ${PD.label(260, 350, "ANNUAL REPORT", { size: 18, fill: "#3a3a3a", anchor: "middle", ls: 3 })}
-      ${PD.label(260, 392, "For the fiscal year ended", { size: 22, fill: "#333", anchor: "middle", ls: 0.3, weight: 500 })}
+      <g data-role="decorative">${PD.label(260, 350, "ANNUAL REPORT", { size: 18, fill: "#3a3a3a", anchor: "middle", ls: 3 })}
+      ${PD.label(260, 392, "For the fiscal year ended", { size: 22, fill: "#333", anchor: "middle", ls: 0.3, weight: 500 })}</g>
       ${PD.label(260, 430, fy, { size: 28, fill: "#141414", anchor: "middle", ls: 0.3, weight: 700 })}
       ${PD.serif(260, 548, co, { size: co.length > 22 ? 36 : 42, fill: "#141414" })}
       ${[604, 624, 644].map((yy) => `<line x1="90" y1="${yy}" x2="${yy === 644 ? 330 : 430}" y2="${yy}" stroke="#bbb" stroke-width="3"/>`).join("")}</g>`;
@@ -149,7 +182,7 @@ ${meter ? "" : "-->"}
         mark = `<rect x="${84 + x0 - 6}" y="${yy - size * 0.95}" width="${(x1 - x0 + 12) * clamp(hk)}" height="${size * 1.2}" fill="${C.gold}" opacity="0.42"/>`; }
       return `${mark}<text x="84" y="${yy}" font-family="${F.serif}" font-weight="600" font-size="${size}" fill="#141414">${esc(ln2)}</text>`; }).join("");
     return `<g transform="translate(${x} ${lerp(y + 40, y, k)})" opacity="${k}" filter="url(#soft)"><rect width="${w}" height="${h}" fill="#fbf8f1"/><rect width="10" height="${h}" fill="${C.signal}"/>
-      ${rows}${PD.label(84, h - 46, cite, { size: 26, fill: "#4a463e", ls: 1.5, weight: 600 })}</g>`;
+      ${rows}<g data-role="source">${PD.label(84, h - 46, cite, { size: 26, fill: "#4a463e", ls: 1.5, weight: 600 })}</g></g>`;
   };
 
   // Bar chart for a short series (years, survey answers). Values animate up on k; labels never overlap bars.
@@ -193,7 +226,9 @@ ${meter ? "" : "-->"}
     const spec = window.SCENES(PD); PD.shots = spec.shots; PD.duration = spec.duration;
     const stage = document.getElementById("stage");
     stage.innerHTML = PD.shots.map((s, i) => `<div class="layer" id="L${i}" style="display:none"></div>`).join("") + `<div class="layer" id="Lover"></div>`;
-    return { duration: PD.duration, shots: PD.shots.map((s) => ({ id: s.id, start: +s.start.toFixed(2), end: +s.end.toFixed(2), in: s.in || "cut", visual: s.visual, asset: s.asset, license: s.license })) };
+    return { duration: PD.duration, shots: PD.shots.map((s) => ({ id: s.id, start: +s.start.toFixed(2), end: +s.end.toFixed(2), in: s.in || "cut", visual: s.visual, asset: s.asset, license: s.license,
+      category: s.category, background: s.background, layout: s.layout, textWeight: s.textWeight, motion: s.motion,
+      sourceQualified: s.sourceQualified, semanticAnchor: s.semanticAnchor })) };
   };
   PD.frame = (t) => {
     PD.shots.forEach((s, i) => {
