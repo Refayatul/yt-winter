@@ -393,3 +393,23 @@ test("spec renderer: linear camera, statements visible from the first frame, fil
   assert.match(src, /const k = ent\(lt, 0\.05, 0\.6\); const lit = t >= X\.cue\(s\.cue, 0\.1\);/, "statement text from the first frame");
   assert.match(src, /if \(shots\.length\) shots\[0\]\.start = 0;/);
 });
+
+test("writer: alternative openings are gated apart from the script (length, traceable numbers, production lint)", () => {
+  const p = Writer.buildPrompt(moon, IB, { config: ctxIB.config });
+  assert.deepEqual(Writer.OPENING_STYLES, ["question", "surprising-fact", "visual-statement"]);
+  assert.ok(p.schema.properties.openingAlternatives, "the schema asks for alternatives");
+  const output = goodOutput();
+  output.openingAlternatives = [
+    { text: "What if the Moon vanished tonight?", style: "question", evidence: ["F3"] },
+    { text: "Earth would notice 1.3 seconds later.", style: "surprising-fact", evidence: ["F1"] },
+    { text: "Tides would fall to about 61% overnight.", style: "visual-statement", evidence: ["F3"] },
+    { text: "Imagine a night sky with no Moon anywhere at all and darker nights everywhere.", style: "visual-statement", evidence: [] },
+  ];
+  const v = Writer.validate(output, moon, IB, p);
+  assert.equal(v.passes, true, "alternatives never block the script itself");
+  const byText = Object.fromEntries(v.openingAlternatives.map((alt) => [alt.text, alt]));
+  assert.equal(byText["Earth would notice 1.3 seconds later."].ok, true);
+  assert.match(byText["Tides would fall to about 61% overnight."].problems.join(" "), /61/);
+  assert.match(byText["Imagine a night sky with no Moon anywhere at all and darker nights everywhere."].problems.join(" "), /words/);
+  assert.ok(Writer.validate(goodOutput(), moon, IB, p).warnings.includes("no opening alternatives returned"));
+});

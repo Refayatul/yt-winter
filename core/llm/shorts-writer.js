@@ -46,6 +46,8 @@ const PROFILES = {
   },
 };
 
+// Hook styles compared in the creative experiment (docs/llm/CREATIVE-EXPERIMENTS.md).
+const OPENING_STYLES = ["question", "surprising-fact", "visual-statement"];
 const LIMITS = { beats: [5, 10], openingWords: 10, titleChars: 70, tags: [3, 15], tagChars: 30, tagsTotalChars: 450, descriptionChars: 900, hashtags: 3 };
 // Phrases that mark generated filler; a hit is a warning for the editor, not a blocker.
 const GENERIC = /\b(delve|buckle up|game[- ]changer|mind[- ]blowing|in a world where|let'?s dive|here'?s the thing|it'?s important to note|interestingly|furthermore|in conclusion|the answer may surprise you)\b/gi;
@@ -90,6 +92,9 @@ function schemaFor(profile) {
         evidence: { type: "array", items: { type: "string" } }, visual: { type: "string" },
       } } },
       title: { type: "string" }, description: { type: "string" }, tags: { type: "array", items: { type: "string" } }, thumbnailText: { type: "string" },
+      openingAlternatives: { type: "array", items: { type: "object", additionalProperties: false, required: ["text", "style", "evidence"], properties: {
+        text: { type: "string" }, style: { type: "string", enum: OPENING_STYLES }, evidence: { type: "array", items: { type: "string" } },
+      } } },
     },
   };
 }
@@ -105,6 +110,7 @@ function systemPrompt(channel, profile, config) {
     `- Layers: ${profile.layers.join(", ")}. A ${profile.verified.join(" or ")} beat must cite at least one fact id in "evidence" and may only say what those facts say.`,
     "- Write only from the numbered facts. Never add a number, date, name, ranking or superlative that is not in a cited fact. If a fact is not needed, leave it out.",
     "- \"visual\": one concrete on-screen objective for the beat (subject, framing, any label). No generic stock, no text-only frames.",
+    `- openingAlternatives: exactly ${OPENING_STYLES.length} other first beats for a controlled hook test, one per style (${OPENING_STYLES.join(", ")}); the same limits and fact rules as the first beat, each citing the facts it uses.`,
     `- title: at most ${LIMITS.titleChars} characters, specific, no claim beyond the facts. description: two plain sentences, no links, no hashtags. tags: ${LIMITS.tags[0] + 2}-${LIMITS.tags[1] - 3} lowercase search phrases. thumbnailText: at most 3 words.`,
   ].join("\n");
 }
@@ -164,8 +170,27 @@ function validate(output, topic, channel, prompt) {
   if (description.length > LIMITS.descriptionChars) blockers.push(`metadata: description ${description.length} chars (max ${LIMITS.descriptionChars})`);
   if (/https?:\/\//i.test(description)) blockers.push("metadata: description contains a link (links come from the source list, not the model)");
   if ((description.match(/#\w+/g) || []).length > LIMITS.hashtags) blockers.push("metadata: too many hashtags");
+  // Alternative openings are experiment candidates, never part of the script: each is checked with the
+  // production lint (in place of the first beat) and the same number traceability, and reported apart.
+  const alternatives = (Array.isArray(output && output.openingAlternatives) ? output.openingAlternatives : []).map((alt) => {
+    const text = String(alt && alt.text || "").trim();
+    const problems = [];
+    const cited = (alt && alt.evidence || []).filter((id) => factIds.has(id));
+    if (!text) problems.push("empty");
+    if (words(text) > LIMITS.openingWords) problems.push(`${words(text)} words (max ${LIMITS.openingWords})`);
+    if (!OPENING_STYLES.includes(alt && alt.style)) problems.push(`style ${alt && alt.style}`);
+    const citedNumbers = new Set(numbers(cited.map((id) => factIds.get(id).claim).join(" ").replace(/,/g, "")));
+    const loose = numbers(text).filter((value) => !citedNumbers.has(value));
+    if (loose.length) problems.push(`number(s) ${loose.join(", ")} not in its cited facts`);
+    if (text && lines.length) {
+      const altLint = Script.lint([text, ...lines.slice(1)], lintTopic(topic, record), config, {});
+      for (const finding of altLint.blockers) problems.push(`lint: ${finding.replace(/^BLOCKER: /, "")}`);
+    }
+    return { text, style: alt && alt.style, evidence: cited, ok: problems.length === 0, problems };
+  });
+  if (!alternatives.length) warnings.push("no opening alternatives returned");
   return {
-    passes: blockers.length === 0, blockers, warnings,
+    passes: blockers.length === 0, blockers, warnings, openingAlternatives: alternatives,
     editorialReview: "required: whether each beat faithfully paraphrases its cited facts is not checked by code",
     lint: { score: lint.score, words: lint.words, estimatedSeconds: lint.estimatedSeconds, passes: lint.passes, findings: lint.findings },
     citedFacts: [...new Set(beats.flatMap((beat) => beat.evidence || []))].filter((id) => factIds.has(id)).length, facts: record.facts.length,
@@ -210,4 +235,4 @@ function toScript(output, topic) {
   return { format: "short", generator: "llm shorts-writer (shadow)", targetSeconds: claims.length ? claims[claims.length - 1].end : 0, spoken: claims.map((c) => c.text).join(" "), claims, lines: claims.map((c) => c.text), structure: claims.map((c) => c.role), sourceIds: (topic.sources || []).map((source) => source.name) };
 }
 
-module.exports = { PROFILES, LIMITS, profileFor, researchRecord, lintTopic, schemaFor, buildPrompt, validate, describe, compare, toScript };
+module.exports = { PROFILES, LIMITS, OPENING_STYLES, profileFor, researchRecord, lintTopic, schemaFor, buildPrompt, validate, describe, compare, toScript };

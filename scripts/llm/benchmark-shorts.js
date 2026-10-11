@@ -49,6 +49,18 @@ function blindReview(rows, outDir) {
     key[row.topicId] = { A: swap ? "haiku" : "baseline", B: swap ? "baseline" : "haiku" };
     lines.push(`## ${row.channel} / ${row.topicId}`, "", "**A**", "", ...a.map((x) => `- ${x}`), "", "**B**", "", ...b.map((x) => `- ${x}`), "", "| | Hook | Factual accuracy | Narrative flow | Visual compatibility | Audience accessibility | Production ready (Y/N) | Notes |", "|---|---|---|---|---|---|---|---|", "| A | | | | | | | |", "| B | | | | | | | |", "");
   }
+  // Openings, blind: the production first line, the Haiku first line and the gated alternatives, shuffled.
+  lines.push("# Opening lines (blind)", "", "Rate how strongly each first line would stop a scroll (1-5) and whether it is accurate to the facts (Y/N). Same topic, same facts.", "");
+  for (const row of rows.filter((r) => r.candidateLines)) {
+    const options = [{ source: "baseline", text: row.baselineLines[0] }, { source: "haiku", text: row.candidateLines[0] },
+      ...(row.openingAlternatives || []).map((alt) => ({ source: `haiku-${alt.style}`, text: alt.text }))].filter((option) => option.text);
+    for (let i = options.length - 1; i > 0; i -= 1) { const j = crypto.randomInt(i + 1); [options[i], options[j]] = [options[j], options[i]]; }
+    key[row.topicId].openings = Object.fromEntries(options.map((option, index) => [`O${index + 1}`, option.source]));
+    lines.push(`## ${row.channel} / ${row.topicId}`, "", "| | Opening | Stop-scroll 1-5 | Accurate Y/N |", "|---|---|---|---|", ...options.map((option, index) => `| O${index + 1} | ${option.text} | | |`), "");
+  }
+  // Scene plan: the Haiku shot note per beat, for the visual-compatibility rating (not blind: there is no baseline plan).
+  lines.push("# Haiku scene plan (one shot note per beat)", "");
+  for (const row of rows.filter((r) => r.candidateLines)) lines.push(`## ${row.channel} / ${row.topicId}`, "", ...row.candidateLines.map((text, index) => `- ${text} → _${(row.candidateVisuals || [])[index] || "no shot note"}_`), "");
   fs.writeFileSync(path.join(outDir, "blind-review.md"), lines.join("\n"));
   fs.writeFileSync(path.join(outDir, "blind-key.json"), JSON.stringify(key, null, 1) + "\n");
 }
@@ -71,7 +83,9 @@ async function benchmark({ out, run = false, topics = DEFAULT_TOPICS, env = proc
       if (summary.mode === "run") {
         const candidate = JSON.parse(fs.readFileSync(path.join(dir, "candidate.json"), "utf8"));
         const comparison = JSON.parse(fs.readFileSync(path.join(dir, "comparison.json"), "utf8"));
-        Object.assign(row, { actualUsd: summary.actualUsd, usage: summary.usage, gatePasses: summary.gatePasses, blockers: summary.blockers, comparison, candidateLines: candidate.beats.map((beat) => beat.text) });
+        const validation = JSON.parse(fs.readFileSync(path.join(dir, "validation.json"), "utf8"));
+        Object.assign(row, { actualUsd: summary.actualUsd, usage: summary.usage, gatePasses: summary.gatePasses, blockers: summary.blockers, comparison, candidateLines: candidate.beats.map((beat) => beat.text),
+          candidateVisuals: candidate.beats.map((beat) => beat.visual || ""), openingAlternatives: (validation.openingAlternatives || []).filter((alt) => alt.ok) });
       }
     } catch (error) {
       row.error = `${error.code || "ERROR"}: ${error.message}`;
