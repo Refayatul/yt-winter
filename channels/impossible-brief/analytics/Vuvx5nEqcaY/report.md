@@ -8,14 +8,15 @@ https://youtu.be/Vuvx5nEqcaY
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-05 | 994 | 20 | 3 | — | — |  |
 | 3d | 2026-10-07 | 1047 | 22 | 3 | 69.5 | 4 | Shorts feed 96%, Search 3% |
+| 7d | 2026-10-11 | 1045 | 22 | 3 | 69.31 | 4 | Shorts feed 96%, Search 3% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
-- **OUTPERFORMER** (low) — 1047 views vs channel median 522.5 (n=6 videos).
+- **HEALTHY** (low) — No problem pattern detected with available data.
 
 ## Suggested interventions
 
-- OUTPERFORMER → keep as is; reuse its subject/hook shape in the next episode.
+- HEALTHY → no action.
 
 ## First major observed retention drop
 
@@ -24,4 +25,4 @@ https://youtu.be/Vuvx5nEqcaY
 - Visual type: AI-GENERATED VISUAL
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 53.
+Views gained between 3d and 7d: -2.

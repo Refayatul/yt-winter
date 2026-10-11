@@ -8,10 +8,11 @@ https://youtu.be/rAZ4cE4A0DE
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-05 | 42 | 0 | 1 | — | — |  |
 | 3d | 2026-10-07 | 51 | 0 | 1 | 79.23 | 0 | Shorts feed 80%, Search 18% |
+| 7d | 2026-10-11 | 50 | 0 | 1 | 79.23 | 0 | Shorts feed 78%, Search 20% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
-- **INSUFFICIENT_DATA** (high) — 51 views after 3 days — too early/small for rate-based conclusions.
+- **INSUFFICIENT_DATA** (high) — 50 views after 7 days — too early/small for rate-based conclusions.
 
 ## Suggested interventions
 
@@ -24,4 +25,4 @@ https://youtu.be/rAZ4cE4A0DE
 - Visual type: unavailable
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 9.
+Views gained between 3d and 7d: -1.
