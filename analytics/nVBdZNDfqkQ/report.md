@@ -8,8 +8,9 @@ https://youtu.be/nVBdZNDfqkQ
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-05 | 84 | 0 | 0 | — | — |  |
 | 3d | 2026-10-07 | 103 | 0 | 0 | 44.21 | 0 | Shorts feed 73%, Search 26% |
+| 7d | 2026-10-11 | 121 | 0 | 0 | 42.59 | 0 | Shorts feed 63%, Search 35% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **HEALTHY** (low) — No problem pattern detected with available data.
 
@@ -17,4 +18,4 @@ https://youtu.be/nVBdZNDfqkQ
 
 - HEALTHY → no action.
 
-Views gained between 1d and 3d: 19.
+Views gained between 3d and 7d: 18.

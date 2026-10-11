@@ -9,10 +9,11 @@ https://youtu.be/aScjSrwqeRk
 | 1d | 2026-09-28 | 255 | 4 | 1 | — | — |  |
 | 3d | 2026-09-30 | 423 | 5 | 1 | 67.77 | 1 | Search 66%, Shorts feed 31% |
 | 7d | 2026-10-04 | 470 | 5 | 6 | 70.38 | 1 | Search 76%, Shorts feed 20% |
+| 14d | 2026-10-11 | 496 | 5 | 6 | 70.55 | 1 | Search 78%, Shorts feed 19% |
 
-## Diagnosis at 7d
+## Diagnosis at 14d
 
-- **SEARCH_DEPENDENT** (medium) — 76% of views from Search.
+- **SEARCH_DEPENDENT** (medium) — 78% of views from Search.
 - **SHORTS_FEED_NOT_PICKED_UP** (low) — Most views are not from the Shorts feed.
 
 ## Suggested interventions
@@ -22,9 +23,9 @@ https://youtu.be/aScjSrwqeRk
 
 ## First major observed retention drop
 
-- Timestamp: 2s; magnitude: 13 percentage points.
+- Timestamp: 3s; magnitude: 13 percentage points.
 - Active sentence: Eleven workers died when this oil rig exploded.
 - Visual type: REAL ARCHIVAL/LICENCED FOOTAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 3d and 7d: 47.
+Views gained between 7d and 14d: 26.

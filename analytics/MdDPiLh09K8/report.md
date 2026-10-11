@@ -7,11 +7,21 @@ https://youtu.be/MdDPiLh09K8
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-09 | 343 | 8 | 3 | — | — |  |
+| 3d | 2026-10-11 | 443 | 10 | 3 | 64.91 | 0 | Shorts feed 95%, Search 3% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 343 views after 1 days — too early/small for rate-based conclusions.
+- **HEALTHY** (low) — No problem pattern detected with available data.
 
 ## Suggested interventions
 
-- INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
+- HEALTHY → no action.
+
+## First major observed retention drop
+
+- Timestamp: 5s; magnitude: 22 percentage points.
+- Active sentence: The blast devastated the city, and more than two hundred people were killed.
+- Visual type: REAL ARCHIVAL IMAGE
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 100.
