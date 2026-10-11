@@ -287,6 +287,33 @@ Nobody has listened to these for this report. Naturalness is not claimed; the `-
 - **FR documentary layout is less kinetic in its first seconds than the old full-bleed crop.** It keeps the evidence (the old crop cut off the engine core on Qantas 32). Whether viewers prefer it is an experiment (§7), not a claim.
 - **Edge throttling.** Local renders hit HTTP 403 windows after repeated requests. The three-request read is less exposed than eight requests, but neither is immune. CI runners use fresh addresses.
 
+### Script proposal: CT tunnel (editorial review; NOT applied)
+
+The current script:
+- speaks 7 figures in 8 lines (1.11 per 10 words);
+- says "until 2002" twice;
+- ends on ventilation, which none of the record's facts mention.
+
+The rewrite uses only the record's facts (`CT-201` `facts`):
+
+| # | Proposed line | Fact it rests on |
+|---|---|---|
+| 1 | In 1999, one burning truck shut the Mont Blanc tunnel. | a truck's engine caught fire in the tunnel (24 March 1999); closure |
+| 2 | It was carrying volatile freight. | "carrying volatile freight" |
+| 3 | Thirty-nine people died. | "killed 39 people" |
+| 4 | The tunnel stayed closed for almost three years. | closed until 9 March 2002 |
+| 5 | It is a single tube, nearly twelve kilometres long. | 11.611 km |
+| 6 | Today, every vehicle must stay 150 metres behind the next. | "prescribed distance between vehicles is 150 m" |
+| 7 | And speed is held between 50 and 70. | 50 km/h minimum, 70 km/h maximum |
+| 8 | In a single tube, that gap is the safety margin. | interpretation of fact 6; editor to confirm |
+
+The rewrite:
+- has 5 spoken figures (1999, 39, almost three years, twelve, 150) plus the speed range in line 7;
+- has no repeated date;
+- gives the payoff a reason the script itself sets up.
+
+It needs the normal script gates and an editor's fact check before use.
+
 ## Appendix: per-video data (latest checkpoint)
 
 ### Failure Reconstructed (18 Shorts with data; latest checkpoint per video)
