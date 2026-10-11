@@ -100,7 +100,8 @@ function simulate30Days(options = {}) {
     schedulerRecovery: events.some((event) => event.failure === "primary scheduler missed deadline") && events.some((event) => event.recoveredFrom === "primary scheduler missed deadline" && event.status === "published"),
     tiktokTodayUsesExactYouTubeMp4: tiktok.todaySent.length === 30 && tiktok.todaySent.every((item) => item.source === "exact-youtube-mp4"),
     tiktokBacklogReducedToZero: tiktok.backlogSent.length === tiktok.initialBacklog,
-    analyticsCheckpointsScheduled: Object.values(states).every((state) => state.analyticsCheckpoints > 0),
+    // Checkpoints follow published videos; an inactive channel publishes nothing and has none.
+    analyticsCheckpointsScheduled: Object.values(states).every((state) => state.shorts.length === 0 || state.analyticsCheckpoints > 0),
     qualityBlocksReplacedNotPublished: states["impossible-brief"].blockedTopics === 1 && states["critical-thread"].blockedTopics === 1 && states["behind-the-ordinary"].blockedTopics === (states["behind-the-ordinary"].initialInventory > 2 ? 1 : 0) &&
       !events.some((event) => ["impossible-brief-topic-014", "critical-thread-topic-009", "behind-the-ordinary-topic-003"].includes(event.topic) && event.status === "published"),
     behindOrdinaryEvidenceGate: states["behind-the-ordinary"].shorts.length + states["behind-the-ordinary"].blockedTopics <= states["behind-the-ordinary"].initialInventory &&
@@ -137,6 +138,7 @@ function simulate30Days(options = {}) {
     resourcePeaks: { renders: maxActiveRender, uploads: maxActiveUpload },
     checks,
     pass: Object.values(checks).every(Boolean),
+    inactive: options.inactive || [],
     productionReadiness: readiness,
     productionReady: Object.values(readiness).every(Boolean),
     events,
@@ -147,7 +149,8 @@ function markdown(result) {
   const lines = ["# Four-channel autonomy — 30-day simulation", "", `Result: **${result.pass ? "PASS" : "FAIL"}**`, "", `Window: ${result.start} for ${result.days} days. Uploads and renders were simulated; no external publish occurred.`, "", "## Output", "", "| Channel | Shorts | Long-form | Unique topics | Recovered failures |", "|---|---:|---:|---:|---:|"];
   for (const [channel, state] of Object.entries(result.channels)) lines.push(`| ${channel} | ${state.shorts} | ${state.longForm} | ${state.uniqueTopics} | ${state.failuresRecovered} |`);
   const gap = result.channels["behind-the-ordinary"] && result.channels["behind-the-ordinary"].researchGapDays;
-  if (gap) lines.push("", `The Hidden Logic of Things publishes only evidence-verified records: its ${result.channels["behind-the-ordinary"].inventoryStart} verified topic(s) cover ${30 - gap} day(s); the other ${gap} day(s) are research gaps where nothing is published. Research more records with \`scripts/ib-ct-library/build.js\` to close the gap.`);
+  if ((result.inactive || []).includes("behind-the-ordinary")) lines.push("", "The Hidden Logic of Things is inactive (config/channels.json enabled:false): it is modelled with no inventory and publishes nothing; the other channels pass on their own.");
+  else if (gap) lines.push("", `The Hidden Logic of Things publishes only evidence-verified records: its ${result.channels["behind-the-ordinary"].inventoryStart} verified topic(s) cover ${30 - gap} day(s); the other ${gap} day(s) are research gaps where nothing is published. Research more records with \`scripts/ib-ct-library/build.js\` to close the gap.`);
   lines.push("", "## TikTok model", "", `Today's exact YouTube MP4 deliveries: ${result.tiktok.todaySent.length}.`, `Historical backlog: ${result.tiktok.initialBacklog} → ${result.tiktok.endingBacklog}.`, "");
   lines.push("", "## Injected failures", "");
   for (const failure of result.injectedFailures) lines.push(`- Day ${failure.day}, ${failure.channel}: **${failure.type}** → ${failure.recovery}.`);
