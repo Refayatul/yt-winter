@@ -54,6 +54,8 @@ test("captions start on their first spoken word when word timings exist; proport
   assert.match(timed, /00:00:00,100 --> 00:00:02,000\n/);
   assert.match(timed, /00:00:02,000 --> 00:00:03,000\nas they freeze\./);
   assert.doesNotMatch(Pacing.srt(claims, config), /00:00:02,000/, "without words the old proportional timing is unchanged");
+  const long = Pacing.srt([{ text: "Dinosaur-Killing Asteroid Hit Today?", start: 0, end: 3 }], config);
+  assert.match(long, /\nDinosaur-Killing\nAsteroid Hit Today\?\n/, "a chunk that cannot fit two 18-character lines is still split, never left as one long line");
   const style = Craft.captionStyle(config);
   assert.ok(style.fontSize >= 76 && style.marginV >= 600);
 });

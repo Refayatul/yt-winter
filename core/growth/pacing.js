@@ -131,13 +131,18 @@ function captionRows(claims, captionConfig, options = {}) {
 function wrap(text, maxChars) {
   if (text.length <= maxChars) return [text];
   const words = text.split(" ");
-  let best = [text];
+  // The first split that keeps both lines within the limit; when none does ("Dinosaur-Killing" +
+  // "Asteroid Hit Today?"), the most balanced split. One unwrapped 36-character line ran past
+  // both edges of the frame once captions were set larger.
+  let balanced = null;
   for (let i = 1; i < words.length; i += 1) {
     const a = words.slice(0, i).join(" ");
     const b = words.slice(i).join(" ");
-    if (a.length <= maxChars && b.length <= maxChars) { best = [a, b]; break; }
+    if (a.length <= maxChars && b.length <= maxChars) return [a, b];
+    const longest = Math.max(a.length, b.length);
+    if (!balanced || longest < balanced.longest) balanced = { lines: [a, b], longest };
   }
-  return best;
+  return balanced ? balanced.lines : [text];
 }
 
 function srt(claims, captionConfig, options = {}) {

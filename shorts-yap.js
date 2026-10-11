@@ -88,7 +88,12 @@ const boyut = (f) => {
 };
 const Kadraj = require("./lib/dikey-kadraj");
 // Craft v2 (SHORTS_CRAFT_V2 incl. failure-reconstructed): subject-aware 9:16 framing (lib/odak.js).
-const CRAFT = require("./core/rendering/craft").features(CURRENT_CHANNEL.slug);
+// The growth plan shorts-sira.js wrote for this video can carry the opening_visual experiment arm
+// "craft-v2-opening", which turns on the framing and hook for this one video only.
+const GROWTH_PLAN = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(CURRENT_CHANNEL.paths.packages, IS, "growth-plan.json"), "utf8")); } catch (e) { return null; }
+})();
+const CRAFT = require("./core/rendering/craft").features(CURRENT_CHANNEL.slug, GROWTH_PLAN);
 const Odak = require("./lib/odak");
 
 // --- 1) Seslendirme (tek parca) -----------------------------------------
