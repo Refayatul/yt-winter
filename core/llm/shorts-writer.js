@@ -92,6 +92,7 @@ function schemaFor(profile) {
         evidence: { type: "array", items: { type: "string" } }, visual: { type: "string" },
       } } },
       title: { type: "string" }, description: { type: "string" }, tags: { type: "array", items: { type: "string" } }, thumbnailText: { type: "string" },
+      titleAlternatives: { type: "array", items: { type: "string" } },
       openingAlternatives: { type: "array", items: { type: "object", additionalProperties: false, required: ["text", "style", "evidence"], properties: {
         text: { type: "string" }, style: { type: "string", enum: OPENING_STYLES }, evidence: { type: "array", items: { type: "string" } },
       } } },
@@ -111,6 +112,7 @@ function systemPrompt(channel, profile, config) {
     "- Write only from the numbered facts. Never add a number, date, name, ranking or superlative that is not in a cited fact. If a fact is not needed, leave it out.",
     "- \"visual\": one concrete on-screen objective for the beat (subject, framing, any label). No generic stock, no text-only frames.",
     `- openingAlternatives: exactly ${OPENING_STYLES.length} other first beats for a controlled hook test, one per style (${OPENING_STYLES.join(", ")}); the same limits and fact rules as the first beat, each citing the facts it uses.`,
+    `- titleAlternatives: 3 other titles in natural American English a person would say out loud (no keyword stacking, no clause where a noun belongs), same limits and fact rules as the title.`,
     `- title: at most ${LIMITS.titleChars} characters, specific, no claim beyond the facts. description: two plain sentences, no links, no hashtags. tags: ${LIMITS.tags[0] + 2}-${LIMITS.tags[1] - 3} lowercase search phrases. thumbnailText: at most 3 words.`,
   ].join("\n");
 }
@@ -189,8 +191,18 @@ function validate(output, topic, channel, prompt) {
     return { text, style: alt && alt.style, evidence: cited, ok: problems.length === 0, problems };
   });
   if (!alternatives.length) warnings.push("no opening alternatives returned");
+  // Title alternatives: experiment candidates with the title's own limits and number rule.
+  const factNumbers = new Set(numbers(record.facts.map((fact) => fact.claim).join(" ").replace(/,/g, "")));
+  const titleAlternatives = (Array.isArray(output && output.titleAlternatives) ? output.titleAlternatives : []).map((value) => {
+    const text = String(value || "").trim();
+    const problems = [];
+    if (!text || text.length > LIMITS.titleChars) problems.push(`length ${text.length} (1-${LIMITS.titleChars})`);
+    const loose = numbers(text).filter((n) => !factNumbers.has(n));
+    if (loose.length) problems.push(`number(s) ${loose.join(", ")} not in the facts`);
+    return { text, ok: problems.length === 0, problems };
+  });
   return {
-    passes: blockers.length === 0, blockers, warnings, openingAlternatives: alternatives,
+    passes: blockers.length === 0, blockers, warnings, openingAlternatives: alternatives, titleAlternatives,
     editorialReview: "required: whether each beat faithfully paraphrases its cited facts is not checked by code",
     lint: { score: lint.score, words: lint.words, estimatedSeconds: lint.estimatedSeconds, passes: lint.passes, findings: lint.findings },
     citedFacts: [...new Set(beats.flatMap((beat) => beat.evidence || []))].filter((id) => factIds.has(id)).length, facts: record.facts.length,

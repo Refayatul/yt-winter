@@ -26,7 +26,8 @@ function arg(argv, name) { const i = argv.indexOf(name); return i >= 0 ? argv[i 
 // Production baseline for the same topic: the growth plan script, computed without writing state.
 function baselineLines(channel, topic) {
   const plan = Growth.planShort(channel, topic.id, { write: false, skipDuplicate: true });
-  return { generator: plan.script.generator, lines: plan.script.lines || (plan.script.claims || []).map((claim) => claim.text) };
+  return { generator: plan.script.generator, lines: plan.script.lines || (plan.script.claims || []).map((claim) => claim.text),
+    title: plan.titles && plan.titles.selected ? plan.titles.selected.title : null };
 }
 
 async function shadow({ channel, topicId, out, run = false, env = process.env, sdk, store, policy }) {

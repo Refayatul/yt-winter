@@ -413,3 +413,14 @@ test("writer: alternative openings are gated apart from the script (length, trac
   assert.match(byText["Imagine a night sky with no Moon anywhere at all and darker nights everywhere."].problems.join(" "), /words/);
   assert.ok(Writer.validate(goodOutput(), moon, IB, p).warnings.includes("no opening alternatives returned"));
 });
+
+test("writer: title alternatives are experiment candidates with the title's limits and fact numbers", () => {
+  const p = Writer.buildPrompt(moon, IB, { config: ctxIB.config });
+  assert.ok(p.schema.properties.titleAlternatives);
+  const output = goodOutput();
+  output.titleAlternatives = ["Why Tides Would Survive a Moonless Night", "What 61 Seconds Without the Moon Would Change"];
+  const v = Writer.validate(output, moon, IB, p);
+  assert.equal(v.passes, true);
+  assert.equal(v.titleAlternatives[0].ok, true);
+  assert.match(v.titleAlternatives[1].problems.join(" "), /61/);
+});

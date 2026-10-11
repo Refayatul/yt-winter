@@ -58,6 +58,14 @@ function blindReview(rows, outDir) {
     key[row.topicId].openings = Object.fromEntries(options.map((option, index) => [`O${index + 1}`, option.source]));
     lines.push(`## ${row.channel} / ${row.topicId}`, "", "| | Opening | Stop-scroll 1-5 | Accurate Y/N |", "|---|---|---|---|", ...options.map((option, index) => `| O${index + 1} | ${option.text} | | |`), "");
   }
+  // Titles, blind: production title (when the baseline has one), the Haiku title and its alternatives, shuffled.
+  lines.push("# Titles (blind)", "", "Rate each title: natural American English (Y/N), accurate (Y/N), would you tap it (1-5). The title grammar gate (core/growth/title-grammar.js, PR #229) applies before any title is used.", "");
+  for (const row of rows.filter((r) => r.candidateLines)) {
+    const options = [{ source: "production", text: row.productionTitle }, { source: "haiku", text: row.candidateTitle }, ...(row.titleAlternatives || []).map((text, i) => ({ source: `haiku-alt-${i + 1}`, text }))].filter((option) => option.text);
+    for (let i = options.length - 1; i > 0; i -= 1) { const j = crypto.randomInt(i + 1); [options[i], options[j]] = [options[j], options[i]]; }
+    key[row.topicId].titles = Object.fromEntries(options.map((option, index) => [`T${index + 1}`, option.source]));
+    lines.push(`## ${row.channel} / ${row.topicId}`, "", "| | Title | Natural Y/N | Accurate Y/N | Tap 1-5 |", "|---|---|---|---|---|", ...options.map((option, index) => `| T${index + 1} | ${option.text} | | | |`), "");
+  }
   // Scene plan: the Haiku shot note per beat, for the visual-compatibility rating (not blind: there is no baseline plan).
   lines.push("# Haiku scene plan (one shot note per beat)", "");
   for (const row of rows.filter((r) => r.candidateLines)) lines.push(`## ${row.channel} / ${row.topicId}`, "", ...row.candidateLines.map((text, index) => `- ${text} → _${(row.candidateVisuals || [])[index] || "no shot note"}_`), "");
@@ -85,7 +93,8 @@ async function benchmark({ out, run = false, topics = DEFAULT_TOPICS, env = proc
         const comparison = JSON.parse(fs.readFileSync(path.join(dir, "comparison.json"), "utf8"));
         const validation = JSON.parse(fs.readFileSync(path.join(dir, "validation.json"), "utf8"));
         Object.assign(row, { actualUsd: summary.actualUsd, usage: summary.usage, gatePasses: summary.gatePasses, blockers: summary.blockers, comparison, candidateLines: candidate.beats.map((beat) => beat.text),
-          candidateVisuals: candidate.beats.map((beat) => beat.visual || ""), openingAlternatives: (validation.openingAlternatives || []).filter((alt) => alt.ok) });
+          candidateVisuals: candidate.beats.map((beat) => beat.visual || ""), openingAlternatives: (validation.openingAlternatives || []).filter((alt) => alt.ok),
+          candidateTitle: candidate.title, titleAlternatives: (validation.titleAlternatives || []).filter((alt) => alt.ok).map((alt) => alt.text), productionTitle: baseline.title || null });
       }
     } catch (error) {
       row.error = `${error.code || "ERROR"}: ${error.message}`;
