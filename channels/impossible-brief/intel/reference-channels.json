@@ -1,0 +1,39 @@
+{
+ "_comment": "Handles verified on public youtube.com/@handle pages on 2026-10-11 (page title matched). Chosen from web search evidence for this niche; roles say how each is used. Collected only with THIS channel's own credentials (scripts/intel/collect-competitors.js); no data is recorded until a collection runs. Large channels are category benchmarks only: their baselines describe their audience, not ours.",
+ "updatedOn": "2026-10-11",
+ "channel": "impossible-brief",
+ "referenceChannels": [
+  {
+   "handle": "@WhatIfScienceShow",
+   "name": "What If",
+   "role": "direct-competitor",
+   "why": "hypothetical-question science series (Underknown); closest format match"
+  },
+  {
+   "handle": "@xkcd_whatif",
+   "name": "xkcd's What If?",
+   "role": "direct-competitor",
+   "why": "physics-backed answers to absurd hypotheticals; long-form benchmark for rigour"
+  },
+  {
+   "handle": "@minutephysics",
+   "name": "minutephysics",
+   "role": "category-benchmark",
+   "why": "short physics explainers; shared audience per analytics aggregators"
+  }
+ ],
+ "queries": [
+  "what if the moon disappeared",
+  "what would happen if earth",
+  "what if science shorts",
+  "hypothetical physics explained"
+ ],
+ "windowsDays": [
+  30,
+  90
+ ],
+ "maxResultsPerSearch": 15,
+ "baselineVideos": 50,
+ "regionCode": "US",
+ "quotaBudget": 400
+}
