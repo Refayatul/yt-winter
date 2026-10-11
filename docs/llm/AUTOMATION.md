@@ -186,13 +186,21 @@ Prepared benchmark: 5 researched ImpossibleBrief topics (IB-EAR-001, -004, -006,
 - `--run` refuses without `--max-usd`, and refuses when the summed worst case exceeds it.
 - The blind sheet rates hook, factual accuracy, narrative flow, visual compatibility, audience accessibility and production readiness.
 
-Steps (none done):
-1. Create the repository secret `IB_ANTHROPIC_API_KEY`, ideally a separate Anthropic workspace key with a $1 spend limit.
-2. Set up the ledger: for a local run, `LLM_BUDGET_STORE=file`; in CI, initialise the branch `llm-budget-ledger`.
-3. Make a reviewed commit to `channels/impossible-brief/llm-budget.json`:
-   `"paidEnabled": true, "dailyUsd": 0.05, "paidApproval": {"id": "ib-haiku-benchmark-1", "pool": "experiment", "model": "claude-haiku-5-5", "maxUsd": 0.02, "expiresAt": "<ISO, 48 h>", "approvedBy": "<owner>"}`.
-4. Run `node scripts/llm/benchmark-shorts.js --out <dir> --channel impossible-brief --count 5 --run --max-usd 0.05`.
-5. Review `blind-review.md` before opening `blind-key.json`. Then revert `paidEnabled`, or let the approval expire.
+Steps (none done). The approval is single-use; this setup enables **ImpossibleBrief only**.
+1. **Workspace key.** In the Anthropic Console, create a separate workspace, e.g. "youtube-ib-benchmark", with a **$1 monthly spend limit**, and a key in it. Store it as the repository secret `IB_ANTHROPIC_API_KEY` (`gh secret set IB_ANTHROPIC_API_KEY`, then paste at the prompt). For a local run, read it into the shell without echo or history: `read -rs IB_ANTHROPIC_API_KEY && export IB_ANTHROPIC_API_KEY`. Never use another channel's key.
+2. **Ledger.**
+   - Local run: `export LLM_BUDGET_STORE=file`. The ledger becomes `channels/impossible-brief/state/llm-ledger.local.json` and is refused in Actions.
+   - CI: `GITHUB_TOKEN=$(gh auth token) node scripts/llm/ledger.js init --channel impossible-brief` creates the `llm-budget-ledger` branch and the channel file.
+   - Either way, check with `node scripts/llm/ledger.js status --channel impossible-brief`.
+3. **Single-use approval (reviewed commit)** in `channels/impossible-brief/llm-budget.json`:
+   `"paidEnabled": true, "dailyUsd": 0.05, "paidApproval": {"id": "ib-haiku-benchmark-1", "pool": "experiment", "model": "claude-haiku-5-5", "maxUsd": 0.02, "expiresAt": "<now + 48 h, ISO>", "approvedBy": "<owner>"}`.
+   - `maxUsd` caps each Short at $0.02, and `dailyUsd` caps the day at $0.05.
+   - The run itself refuses a summed worst case above `--max-usd 0.05`.
+   - Worst case for the 5 topics: $0.0085; expected about $0.003.
+4. **Dry run first, no spend:** `node scripts/llm/benchmark-shorts.js --out bench-ib --channel impossible-brief --count 5`.
+5. **Paid run:** `node scripts/llm/benchmark-shorts.js --out bench-ib --channel impossible-brief --count 5 --run --max-usd 0.05`.
+6. **Review** `bench-ib/blind-review.md` before opening `blind-key.json`. Check `ledger.js status` for the settled actual cost.
+7. **Close:** set `paidEnabled` back to false and `paidApproval` to null in a commit, or let the approval expire. Haiku stays off for every other channel until the review supports it.
 
 ## 11. Previous enabling notes
 

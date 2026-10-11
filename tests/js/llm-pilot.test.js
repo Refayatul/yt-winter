@@ -364,3 +364,18 @@ test("spec renderer: figures are never shown as intermediate count-up values", (
   assert.match(src, /const counted = \(s, t, c0\) => \(t >= c0 \? s\.value : "—"\);/);
   assert.ok(!/countTo \* run/.test(src), "no interpolated figure");
 });
+
+test("ledger CLI: status reads without writing; a GitHub ledger without a token is refused", () => {
+  const { spawnSync } = require("node:child_process");
+  const script = path.join(__dirname, "..", "..", "scripts", "llm", "ledger.js");
+  const env = { ...process.env, LLM_BUDGET_STORE: "file", GITHUB_ACTIONS: "", GITHUB_TOKEN: "", LLM_BUDGET_TOKEN: "" };
+  const ledgerFile = path.join(IB.paths.state, "llm-ledger.local.json");
+  const existed = fs.existsSync(ledgerFile);
+  const r = spawnSync(process.execPath, [script, "status", "--channel", "impossible-brief"], { encoding: "utf8", env });
+  assert.equal(r.status, 0, r.stderr);
+  const out = JSON.parse(r.stdout);
+  assert.equal(out.paidEnabled, false); assert.equal(out.approval.usable, false);
+  assert.equal(fs.existsSync(ledgerFile), existed, "status does not create a ledger");
+  const gh = spawnSync(process.execPath, [script, "status", "--channel", "impossible-brief"], { encoding: "utf8", env: { ...env, LLM_BUDGET_STORE: "" } });
+  assert.equal(gh.status, 2); assert.match(gh.stderr, /NO_STORE/);
+});
