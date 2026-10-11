@@ -47,3 +47,13 @@ Status 2026-10-11. Everything here is read-only against YouTube and makes no pai
 - Documentary #1 (`yENBwtfuPyU`, uploaded by hand on 2026-10-10 19:16 UTC) is registered in `manual-uploads.json`, which `analytics-sync.js` now reads. The publishing ledger `published.json` is unchanged.
 - At the 6h checkpoint: 1 view, 0 likes, 0 comments, analytics not yet available, diagnosis `INSUFFICIENT_DATA` (no intervention).
 - Impressions and CTR are not exposed by the YouTube Analytics API and are recorded as unavailable, never as zero.
+
+## Where the findings are used (2026-10-11)
+
+| Consumer | Status |
+| --- | --- |
+| ProfitDecoded topic ranking | **Used**: `profitdecoded.js` reads the newest `snapshot-*.json` through `core/profitdecoded/competitive.js` (outlier evidence and saturation). |
+| Research prioritisation (all channels) | **Used**: the research queue ranks by competitor demand and saturation. |
+| Shorts topic ranking | **Attached and logged.** `core/growth/context.js` attaches `competitor {demand, saturation}` to every ranked topic, and the topic decision records it per candidate. It changes `SelectionScore` only when the channel's growth config sets `competitorSignal.weight` above 0 (bounded to ±10 points). The weight defaults to 0, so production order is unchanged until a reviewed config change. Shorts channels have no snapshot yet, so demand is `null`. |
+| Hook selection, title generation | **Not used.** Competitor title structures are reported (with lift) for people; feeding them into `core/growth/titles.js` needs a measured A/B test first. |
+| Storyboard decisions | **Not automated.** Craft lessons (hook, structure, visuals) require watching the videos; records carry a human-review checklist. |

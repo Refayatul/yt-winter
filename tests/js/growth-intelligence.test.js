@@ -112,3 +112,24 @@ test("committed competitor configs: every channel has its own list, verified han
   }
   assert.equal(new Set(Object.values(lists)).size, 5, "no two channels share the same competitor set");
 });
+
+test("competitor signal: shared by queue and ranking; weight 0 (default) logs only, a weight is bounded", () => {
+  const Signal = require("../../core/intel/competitor-signal");
+  const rec = (id, title, cls) => ({ video: { title, url: "u" }, channel: { id, name: id }, classification: cls, observed: { views: 1 } });
+  const insights = { snapshot: "s.json", records: [rec("A", "Why cargo ports clog", "breakout"), rec("B", "Why cargo ports clog badly", "outperformer"), rec("C", "Why cargo ports clog again", "typical")] };
+  const sig = Signal.forTopic({ title: "Why cargo ports clog" }, insights);
+  assert.equal(sig.demand, 100); assert.equal(sig.saturation, 3);
+  assert.equal(Signal.adjustment(sig, 0), 0, "default weight changes nothing");
+  assert.equal(Signal.adjustment(sig, 1), 10, "bounded to +10");
+  assert.equal(Signal.adjustment({ demand: 0, saturation: 9 }, 1), -10, "bounded to -10");
+  assert.equal(Signal.adjustment({ demand: null, saturation: null }, 1), 0, "no snapshot = no adjustment");
+  assert.deepEqual(Signal.forTopic({ title: "x" }, null), { demand: null, saturation: null, matches: [], snapshot: null });
+});
+
+test("ranking attaches the competitor signal to every row without changing order at the default weight", () => {
+  const Channel = require("../../core/channel-context");
+  const Growth = require("../../core/growth");
+  const ranked = Growth.Context.rank(Channel.getChannel("impossible-brief"), {});
+  assert.ok(ranked.rows.length > 0 && ranked.rows.every((r) => r.competitor && "demand" in r.competitor));
+  assert.ok(ranked.rows.every((r) => !r.score.competitorAdjustment), "weight 0: no score changes");
+});

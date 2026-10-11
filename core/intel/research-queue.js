@@ -16,7 +16,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const Insights = require("./competitor-insights");
+const Signal = require("./competitor-signal");
 
 const WEIGHTS = { potential: 0.6, demand: 0.25, sources: 0.15 };
 const SATURATION_PENALTY = 6; // points per competitor video beyond two on the same subject, capped below
@@ -26,8 +26,6 @@ function loadInsights(channel) {
   const file = path.join(channel.paths.base, "intel", "competitor-insights.json");
   try { return JSON.parse(fs.readFileSync(file, "utf8")); } catch (e) { return null; }
 }
-
-const overlap = (a, b) => a.filter((w) => b.includes(w)).length;
 
 function sourceTargets(topic) {
   const raw = topic.raw || topic;
@@ -42,17 +40,11 @@ function build(channel, rows, options = {}) {
   const out = [];
   for (const row of rows) {
     if (options.researched && options.researched(row)) continue;
-    const topic = row.topic; const words = Insights.subjectWords(topic.title || topic.question || "");
+    const topic = row.topic;
     const targets = sourceTargets(topic);
     if (!targets) { out.push({ topicId: topic.id, title: topic.title, queued: false, reason: "no source targets on the record: research cannot start" }); continue; }
-    let demand = null; let saturation = null; const matches = [];
-    if (records) {
-      const same = records.filter((r) => overlap(words, Insights.subjectWords(r.video.title)) >= 2);
-      const outliers = same.filter((r) => r.classification === "breakout" || r.classification === "outperformer");
-      demand = Math.min(100, new Set(outliers.map((r) => r.channel.id)).size * 40 + outliers.length * 10);
-      saturation = same.length;
-      matches.push(...same.slice(0, 5).map((r) => ({ channel: r.channel.name, title: r.video.title, url: r.video.url, classification: r.classification, views: r.observed.views })));
-    }
+    const sig = Signal.forTopic(topic, records ? { records, snapshot: insights.snapshot } : null);
+    const demand = sig.demand; const saturation = sig.saturation; const matches = sig.matches;
     const potential = Number(row.score.VideoPotentialScore) || 0;
     const sourcesScore = Math.min(100, targets * 25);
     const penalty = saturation == null ? 0 : Math.min(SATURATION_CAP, Math.max(0, saturation - 2) * SATURATION_PENALTY);
