@@ -52,8 +52,13 @@ jobs:
       - name: Collect and analyse (read-only)
         env:
           CHANNEL: ${{ inputs.channel }}
-          SEARCHES: ${{ inputs.searches && '--searches' || '' }}
-        run: node scripts/intel/collect-competitors.js --channel "$CHANNEL" --auth oauth --budget 1500 $SEARCHES
+          SEARCHES: ${{ inputs.searches }}
+        run: |
+          if [ "$SEARCHES" = "true" ]; then
+            node scripts/intel/collect-competitors.js --channel "$CHANNEL" --auth oauth --budget 1500 --searches
+          else
+            node scripts/intel/collect-competitors.js --channel "$CHANNEL" --auth oauth --budget 1500
+          fi
       - name: Commit insight records
         env:
           CHANNEL: ${{ inputs.channel }}
