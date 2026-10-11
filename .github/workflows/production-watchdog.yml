@@ -156,12 +156,7 @@ jobs:
           git add icerik/bildirim-durum.json reports
           if git diff --cached --quiet; then echo "Notification state unchanged."; exit 0; fi
           git commit -m "chore: record production SLA notification"
-          BRANCH="$GITHUB_REF_NAME"
-          for i in 1 2 3 4 5; do
-            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
-            sleep $((i * 5))
-          done
-          exit 1
+          bash scripts/ops/push-state.sh "$GITHUB_REF_NAME" 5
       - name: SLA/recovery evidence
         if: ${{ always() }}
         uses: actions/upload-artifact@v4
@@ -244,12 +239,7 @@ jobs:
           git add channels/impossible-brief reports
           if git diff --cached --quiet; then echo "ImpossibleBrief state unchanged."; exit 0; fi
           git commit -m "chore: recover ImpossibleBrief production SLA"
-          BRANCH="$GITHUB_REF_NAME"
-          for i in 1 2 3 4 5; do
-            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
-            sleep $((i * 5))
-          done
-          exit 1
+          bash scripts/ops/push-state.sh "$GITHUB_REF_NAME" 5
 
   ib-verify:
     needs: [ib-sla, ib-recovery]
@@ -374,12 +364,7 @@ jobs:
           git add channels/critical-thread reports
           if git diff --cached --quiet; then echo "CriticalThread state unchanged."; exit 0; fi
           git commit -m "chore: recover CriticalThread production SLA"
-          BRANCH="$GITHUB_REF_NAME"
-          for i in 1 2 3 4 5; do
-            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
-            sleep $((i * 5))
-          done
-          exit 1
+          bash scripts/ops/push-state.sh "$GITHUB_REF_NAME" 5
 
   ct-verify:
     needs: [ct-sla, ct-recovery]
@@ -504,12 +489,7 @@ jobs:
           git add channels/behind-the-ordinary reports
           if git diff --cached --quiet; then echo "The Hidden Logic of Things state unchanged."; exit 0; fi
           git commit -m "chore: recover The Hidden Logic of Things production SLA"
-          BRANCH="$GITHUB_REF_NAME"
-          for i in 1 2 3 4 5; do
-            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
-            sleep $((i * 5))
-          done
-          exit 1
+          bash scripts/ops/push-state.sh "$GITHUB_REF_NAME" 5
 
   bto-verify:
     needs: [bto-sla, bto-recovery]

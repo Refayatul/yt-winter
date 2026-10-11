@@ -71,9 +71,30 @@ test("push-state: a conflict outside generated files aborts cleanly instead of r
   assert.ok(!fs.existsSync(path.join(b, ".git", "rebase-merge")));
 });
 
-test("watchdog save-state steps use the push helper", () => {
+test("every watchdog state commit uses the push helper (no retry loop left that pulls mid-rebase)", () => {
   const yml = fs.readFileSync(path.join(ROOT, ".github", "workflows", "production-watchdog.yml"), "utf8");
-  const steps = yml.split("- name: Save notification/report state").slice(1);
-  assert.ok(steps.length >= 3);
-  for (const step of steps) assert.match(step.slice(0, 1500), /scripts\/ops\/push-state\.sh "\$GITHUB_REF_NAME"/);
+  assert.ok(!/git pull --rebase/.test(yml), "no raw pull --rebase loop remains");
+  const commits = (yml.match(/git commit -m/g) || []).length;
+  const helpers = (yml.match(/bash scripts\/ops\/push-state\.sh "\$GITHUB_REF_NAME" 5/g) || []).length;
+  assert.ok(commits >= 6);
+  assert.equal(helpers, commits, "each committing step pushes through the helper");
+});
+
+test("CriticalThread viral exception: off by default, preview refused in Actions, enabled needs an approver, cannot open B", () => {
+  const Config = require(path.join(ROOT, "core", "growth", "config"));
+  const Channel = require(path.join(ROOT, "core", "channel-context"));
+  const ct = Channel.getChannel("critical-thread");
+  Config.clearCache();
+  assert.equal(Config.forChannel(ct).viralScoring.minimumToProduce, 75, "committed config keeps the portfolio minimum");
+  const merged = () => ({ viralScoring: { minimumToProduce: 75 }, selection: { exploitBuckets: ["A"], exploreBuckets: ["A"] } });
+  const ex = { minimumToProduce: 70, buckets: ["A"], enabled: false, approvedBy: null };
+  assert.equal(Config.applyViralMinimumException(merged(), ex, ct, {}), null);
+  assert.throws(() => Config.applyViralMinimumException(merged(), ex, ct, { GROWTH_VIRAL_EXCEPTION_PREVIEW: "critical-thread", GITHUB_ACTIONS: "true" }), /refused in GitHub Actions/);
+  const m = merged(); Config.applyViralMinimumException(m, ex, ct, { GROWTH_VIRAL_EXCEPTION_PREVIEW: "critical-thread" });
+  assert.equal(m.viralScoring.minimumToProduce, 70);
+  assert.throws(() => Config.applyViralMinimumException(merged(), { ...ex, enabled: true }, ct, {}), /without approvedBy/);
+  const withB = { viralScoring: { minimumToProduce: 75 }, selection: { exploitBuckets: ["A"], exploreBuckets: ["A", "B"] } };
+  assert.throws(() => Config.applyViralMinimumException(withB, { ...ex, enabled: true, approvedBy: "owner" }, ct, {}), /must all be listed/);
+  assert.throws(() => Config.applyViralMinimumException(merged(), { ...ex, minimumToProduce: 50, enabled: true, approvedBy: "owner" }, ct, {}), />= 65/);
+  Config.clearCache();
 });

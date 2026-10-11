@@ -91,12 +91,39 @@ function forChannel(channel = Channel.getChannel()) {
   if (Number.isFinite(thresholds.sourceQualityMinimum)) {
     merged.topic.bucketRequirements.A.sourceMinimum = Math.max(merged.topic.bucketRequirements.A.sourceMinimum, thresholds.sourceQualityMinimum);
   }
+  applyViralMinimumException(merged, override.viralMinimumException, channel);
   validate(merged);
   const frozen = Object.freeze(merged);
   cache.set(key, frozen);
   return frozen;
 }
 
+// Channel-scoped, reviewed exception to the portfolio viral minimum (config/viral-quality-v2.json), e.g.
+// channels/critical-thread/growth-engine.json:
+//   "viralMinimumException": { "minimumToProduce": 70, "buckets": ["A"], "enabled": false, "approvedBy": null, ... }
+// It only applies when enabled AND approved by a named person, never below 65, and only when every
+// selectable bucket is listed (so it cannot open B or C topics). Research, source and readiness gates are
+// unchanged. GROWTH_VIRAL_EXCEPTION_PREVIEW=<slug> previews a disabled exception in a local simulation;
+// it is refused inside GitHub Actions so it can never switch production behaviour.
+function applyViralMinimumException(merged, exception, channel, env = process.env) {
+  if (!exception) return null;
+  const preview = env.GROWTH_VIRAL_EXCEPTION_PREVIEW === channel.slug;
+  if (preview && env.GITHUB_ACTIONS === "true") throw new Error("INVALID_GROWTH_CONFIG: GROWTH_VIRAL_EXCEPTION_PREVIEW is a local simulation switch and is refused in GitHub Actions");
+  const active = exception.enabled === true || preview;
+  if (!active) return null;
+  const fail = (message) => { throw new Error(`INVALID_GROWTH_CONFIG: viralMinimumException for ${channel.slug}: ${message}`); };
+  const value = Number(exception.minimumToProduce);
+  if (!Number.isFinite(value) || value < 65) fail("minimumToProduce must be a number >= 65");
+  if (exception.enabled === true && !exception.approvedBy) fail("enabled without approvedBy");
+  const buckets = new Set(exception.buckets || []);
+  const selectable = [...(merged.selection.exploitBuckets || []), ...(merged.selection.exploreBuckets || [])];
+  if (!selectable.length || selectable.some((b) => !buckets.has(b))) fail(`selectable buckets ${[...new Set(selectable)].join("/")} must all be listed in buckets`);
+  merged.viralScoring.portfolioMinimumToProduce = merged.viralScoring.minimumToProduce;
+  merged.viralScoring.minimumToProduce = value;
+  merged.viralScoring.exception = { minimumToProduce: value, buckets: [...buckets], mode: exception.enabled === true ? "enabled" : "preview", approvedBy: exception.approvedBy || null };
+  return merged.viralScoring.exception;
+}
+
 function clearCache() { cache.clear(); }
 
-module.exports = { DEFAULTS_PATH, VIRAL_V2_PATH, deepMerge, validate, forChannel, channelOverridePath, clearCache, readJson };
+module.exports = { DEFAULTS_PATH, VIRAL_V2_PATH, deepMerge, validate, forChannel, channelOverridePath, clearCache, readJson, applyViralMinimumException };
