@@ -1,0 +1,2020 @@
+{
+ "schema": "profitdecoded.scene-spec.v1",
+ "film": "hbm-034-airline-miles",
+ "title": "What American Express Bought From Delta for $8.2 Billion in One Year",
+ "note": "Scene specification for documentary #2, rendered by scripts/profitdecoded/motion/spec-scenes.js. Every figure and quotation comes from research/hbm-034 (claims c1-c16, our arithmetic i1-i6). Shot plan follows STORYBOARD.md; cues are phrases of story/latest.json. Timings come from the measured narration once it exists; until then only the estimated timeline is available.",
+ "motifs": {
+  "mile-card": {
+   "kind": "card",
+   "label": "MILES",
+   "base": "ledger",
+   "band": "signal"
+  },
+  "owed-drawer": {
+   "kind": "drawer",
+   "label": "STILL OWED"
+  },
+  "loan-folder": {
+   "kind": "folder",
+   "label": "COLLATERAL"
+  },
+  "member-phone": {
+   "kind": "phone",
+   "lines": [
+    "YOUR ACCOUNT",
+    "MILES"
+   ]
+  },
+  "miles-stack": {
+   "kind": "stack",
+   "label": "UNUSED MILES",
+   "sheets": 14
+  },
+  "issued-stack": {
+   "kind": "stack",
+   "label": "ISSUED",
+   "sheets": 16
+  },
+  "used-stack": {
+   "kind": "stack",
+   "label": "USED",
+   "sheets": 16
+  }
+ },
+ "scenes": [
+  {
+   "id": "cold-swipe",
+   "type": "composition",
+   "beat": "s1-1",
+   "background": "context",
+   "environment": "checkout",
+   "anchor": "8.2 billion",
+   "visual": "Checkout: the miles card taps a terminal; the $8.2 billion lands as an evidence card while the camera moves to it",
+   "elements": [
+    {
+     "id": "terminal",
+     "x": 520,
+     "y": 600,
+     "prop": "terminal"
+    },
+    {
+     "id": "card",
+     "x": 1000,
+     "y": 640,
+     "motif": "mile-card",
+     "scale": 0.8,
+     "state": {
+      "balance": 0.7,
+      "tap": 0,
+      "sheen": -1
+     },
+     "keys": [
+      {
+       "cue": "American Express",
+       "x": 720,
+       "y": 560,
+       "rotate": -10,
+       "state": {
+        "tap": 1,
+        "sheen": 1.1
+       },
+       "dur": 0.9
+      }
+     ]
+    },
+    {
+     "id": "amount",
+     "x": 1180,
+     "y": 250,
+     "evidence": {
+      "kicker": "AMEX PAID DELTA",
+      "value": "$8.2B",
+      "detail": "in 2025, for SkyMiles",
+      "w": 620,
+      "h": 430,
+      "cue": "8.2 billion"
+     },
+     "enter": {
+      "cue": "8.2 billion"
+     }
+    }
+   ],
+   "cameraKeys": [
+    {
+     "at": 0,
+     "x": 960,
+     "y": 560,
+     "z": 1.0
+    },
+    {
+     "cue": "8.2 billion",
+     "x": 1180,
+     "y": 520,
+     "z": 1.1,
+     "dur": 1.0
+    }
+   ],
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "category": "real-world illustration",
+   "layout": "environment"
+  },
+  {
+   "id": "not-tickets",
+   "type": "composition",
+   "beat": "s1-2",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "miles",
+   "visual": "A boarding pass slides away under a NOT TICKETS stamp; the miles card and a PERKS tag take its place",
+   "elements": [
+    {
+     "id": "ticket",
+     "x": 960,
+     "y": 480,
+     "prop": "ticket",
+     "keys": [
+      {
+       "cue": "It was buying miles",
+       "x": 1500,
+       "opacity": 0,
+       "dur": 0.7
+      }
+     ]
+    },
+    {
+     "id": "stamp",
+     "x": 960,
+     "y": 300,
+     "stamp": "Not tickets",
+     "enter": {
+      "cue": "wasn't buying",
+      "style": "pop"
+     },
+     "exit": {
+      "cue": "It was buying miles"
+     }
+    },
+    {
+     "id": "card",
+     "x": 820,
+     "y": 520,
+     "motif": "mile-card",
+     "scale": 0.8,
+     "state": {
+      "balance": 0.7
+     },
+     "enter": {
+      "cue": "buying miles",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "perks",
+     "x": 1330,
+     "y": 520,
+     "box": {
+      "label": "+ PERKS",
+      "sub": "for cardholders"
+     },
+     "enter": {
+      "cue": "perks",
+      "style": "rise"
+     }
+    }
+   ],
+   "category": "visual metaphor",
+   "layout": "objects"
+  },
+  {
+   "id": "skymiles-line",
+   "type": "filing-quote",
+   "beat": "s1-2",
+   "startCue": "Delta's annual filing",
+   "anchor": "skymiles",
+   "visual": "Delta 10-K sentence typeset, 'related to the SkyMiles program' highlighted",
+   "quote": "Remuneration from American Express related to the SkyMiles program were $8.2 billion during 2025, an increase of approximately 11% compared to 2024.",
+   "highlight": "related to the SkyMiles program",
+   "cue": "related to SkyMiles",
+   "cite": "Delta Air Lines, Form 10-K, fiscal 2025 (SEC EDGAR)",
+   "camera": "drift"
+  },
+  {
+   "id": "forecast-10",
+   "type": "evidence-card",
+   "beat": "s1-3",
+   "background": "context",
+   "environment": "checkout",
+   "anchor": "10 billion",
+   "visual": "Evidence card on the checkout counter: $10 billion, Delta's own forecast",
+   "kicker": "DELTA'S OWN FORECAST",
+   "value": "$10B",
+   "countTo": 10,
+   "prefix": "$",
+   "suffix": "B",
+   "detail": "over the next few years",
+   "cue": "10 billion",
+   "stamp": "Forecast",
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "camera": "drift"
+  },
+  {
+   "id": "wallet",
+   "type": "composition",
+   "beat": "s1-4",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "bank",
+   "visual": "Desk: the card and a phone; two customer groups appear; 'earn without flying'",
+   "elements": [
+    {
+     "id": "card",
+     "x": 560,
+     "y": 560,
+     "motif": "mile-card",
+     "scale": 0.8,
+     "state": {
+      "balance": 0.7
+     }
+    },
+    {
+     "id": "phone",
+     "x": 1400,
+     "y": 560,
+     "motif": "member-phone",
+     "scale": 0.9
+    },
+    {
+     "id": "g1",
+     "x": 960,
+     "y": 340,
+     "box": {
+      "label": "DELTA CARDHOLDERS"
+     },
+     "enter": {
+      "cue": "Delta card",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "g2",
+     "x": 960,
+     "y": 500,
+     "box": {
+      "label": "REWARDS MEMBERS",
+      "sub": "Amex Membership Rewards"
+     },
+     "enter": {
+      "cue": "rewards program",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "cap",
+     "x": 960,
+     "y": 850,
+     "text": "Miles without boarding a plane",
+     "style": "caption",
+     "enter": {
+      "cue": "without ever boarding"
+     }
+    }
+   ],
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "category": "visual metaphor",
+   "layout": "objects"
+  },
+  {
+   "id": "question",
+   "type": "statement",
+   "beat": "s1-5",
+   "anchor": "buying",
+   "visual": "Title question on the dark stage",
+   "text": "What is the bank buying?",
+   "accent": "buying?",
+   "cue": "what exactly"
+  },
+  {
+   "id": "earning",
+   "type": "money-flow",
+   "beat": "s2-2",
+   "camera": "drift",
+   "anchor": "ridesharing",
+   "visual": "Five kinds of partner each feed miles into Delta",
+   "kicker": "Partners buy miles from Delta",
+   "nodes": [
+    {
+     "id": "card",
+     "label": "CARD COMPANIES",
+     "x": 420,
+     "y": 260
+    },
+    {
+     "id": "shop",
+     "label": "RETAILERS",
+     "x": 420,
+     "y": 420
+    },
+    {
+     "id": "ride",
+     "label": "RIDESHARING",
+     "x": 420,
+     "y": 580
+    },
+    {
+     "id": "car",
+     "label": "CAR RENTAL",
+     "x": 420,
+     "y": 740
+    },
+    {
+     "id": "hotel",
+     "label": "HOTELS",
+     "x": 420,
+     "y": 900
+    },
+    {
+     "id": "delta",
+     "label": "DELTA",
+     "x": 1480,
+     "y": 580,
+     "accent": true
+    }
+   ],
+   "links": [
+    {
+     "from": "card",
+     "to": "delta"
+    },
+    {
+     "from": "shop",
+     "to": "delta"
+    },
+    {
+     "from": "ride",
+     "to": "delta"
+    },
+    {
+     "from": "car",
+     "to": "delta"
+    },
+    {
+     "from": "hotel",
+     "to": "delta"
+    }
+   ],
+   "source": "Delta Air Lines Form 10-K, fiscal 2025"
+  },
+  {
+   "id": "monthly",
+   "type": "composition",
+   "beat": "s2-3",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "every month",
+   "visual": "Partner pays Delta on a monthly calendar, per mile sold",
+   "elements": [
+    {
+     "id": "partner",
+     "x": 480,
+     "y": 560,
+     "box": {
+      "label": "PARTNER",
+      "sub": "buys miles"
+     }
+    },
+    {
+     "id": "delta",
+     "x": 1440,
+     "y": 560,
+     "box": {
+      "label": "DELTA",
+      "accent": true
+     }
+    },
+    {
+     "id": "pay",
+     "x": 0,
+     "y": 0,
+     "path": "M680 560 C 900 470, 1020 470, 1240 560",
+     "length": 640,
+     "enter": {
+      "cue": "buy them from Delta"
+     },
+     "arrow": [
+      1240,
+      560
+     ]
+    },
+    {
+     "id": "cal",
+     "x": 960,
+     "y": 300,
+     "prop": "calendar",
+     "scale": 0.7,
+     "label": "DUE MONTHLY",
+     "enter": {
+      "cue": "every month",
+      "style": "pop"
+     }
+    },
+    {
+     "id": "cap",
+     "x": 960,
+     "y": 850,
+     "text": "Priced by the miles Delta sold",
+     "style": "caption",
+     "enter": {
+      "cue": "how many miles"
+     }
+    }
+   ],
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "category": "visual metaphor",
+   "layout": "calendar"
+  },
+  {
+   "id": "lanes",
+   "type": "money-flow",
+   "beat": "s2-4",
+   "camera": "push",
+   "anchor": "chase",
+   "visual": "Two lanes: Delta to Amex to cardholders; United to Chase to cardholders",
+   "kicker": "Two airlines, two banks",
+   "nodes": [
+    {
+     "id": "dl",
+     "label": "DELTA",
+     "x": 360,
+     "y": 360
+    },
+    {
+     "id": "ax",
+     "label": "AMEX",
+     "x": 960,
+     "y": 360,
+     "accent": true
+    },
+    {
+     "id": "c1",
+     "label": "CARDHOLDERS",
+     "x": 1560,
+     "y": 360
+    },
+    {
+     "id": "ua",
+     "label": "UNITED",
+     "x": 360,
+     "y": 720
+    },
+    {
+     "id": "ch",
+     "label": "CHASE",
+     "x": 960,
+     "y": 720,
+     "accent": true
+    },
+    {
+     "id": "c2",
+     "label": "CARDHOLDERS",
+     "x": 1560,
+     "y": 720
+    }
+   ],
+   "links": [
+    {
+     "from": "dl",
+     "to": "ax"
+    },
+    {
+     "from": "ax",
+     "to": "c1"
+    },
+    {
+     "from": "ua",
+     "to": "ch"
+    },
+    {
+     "from": "ch",
+     "to": "c2"
+    }
+   ],
+   "source": "Delta and United Form 10-Ks, fiscal 2025"
+  },
+  {
+   "id": "united-filing",
+   "type": "filing-quote",
+   "beat": "s2-5",
+   "anchor": "chase",
+   "visual": "United 10-K excerpt typeset, non-airline partner mileage revenue highlighted",
+   "quote": "...primarily due to an increase in mileage revenue from non-airline partners, including credit card spending with our co-branded credit card partner, JPMorgan Chase Bank, N.A.",
+   "highlight": "mileage revenue from non-airline partners",
+   "cue": "went up",
+   "cite": "United Airlines Holdings, Form 10-K, fiscal 2025 (SEC EDGAR)",
+   "camera": "pull"
+  },
+  {
+   "id": "groceries",
+   "type": "composition",
+   "beat": "s2-6",
+   "background": "context",
+   "environment": "checkout",
+   "anchor": "groceries",
+   "visual": "Grocery checkout: the card taps; miles land in the phone account; a coin travels out of frame toward the airline",
+   "elements": [
+    {
+     "id": "terminal",
+     "x": 480,
+     "y": 600,
+     "prop": "terminal"
+    },
+    {
+     "id": "card",
+     "x": 860,
+     "y": 640,
+     "motif": "mile-card",
+     "scale": 0.75,
+     "state": {
+      "balance": 0.7,
+      "tap": 0
+     },
+     "keys": [
+      {
+       "cue": "paying for groceries",
+       "x": 640,
+       "y": 580,
+       "rotate": -10,
+       "state": {
+        "tap": 1
+       },
+       "dur": 0.8
+      }
+     ]
+    },
+    {
+     "id": "phone",
+     "x": 1460,
+     "y": 520,
+     "motif": "member-phone",
+     "scale": 0.85,
+     "enter": {
+      "cue": "land in your account",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "coin",
+     "x": 960,
+     "y": 800,
+     "prop": "coin",
+     "enter": {
+      "cue": "bank bought"
+     },
+     "keys": [
+      {
+       "cue": "what the airline does",
+       "x": 2000,
+       "y": 700,
+       "dur": 1.2
+      }
+     ]
+    },
+    {
+     "id": "cap",
+     "x": 960,
+     "y": 880,
+     "text": "The bank bought these miles",
+     "style": "caption",
+     "enter": {
+      "cue": "bank bought"
+     }
+    }
+   ],
+   "category": "real-world illustration",
+   "layout": "environment"
+  },
+  {
+   "id": "not-at-once",
+   "type": "statement",
+   "beat": "s3-1",
+   "anchor": "revenue",
+   "visual": "Statement: paid now, not counted now",
+   "text": "Paid now. Not counted now.",
+   "accent": "Not counted now.",
+   "cue": "doesn't count"
+  },
+  {
+   "id": "envelopes",
+   "type": "composition",
+   "beat": "s3-2",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "award travel",
+   "visual": "On the desk the miles card splits; five labelled envelopes rise, one per spoken item",
+   "elements": [
+    {
+     "id": "kicker",
+     "x": 960,
+     "y": 140,
+     "text": "What the payment buys",
+     "style": "kicker"
+    },
+    {
+     "id": "card",
+     "x": 960,
+     "y": 420,
+     "motif": "mile-card",
+     "scale": 0.9,
+     "state": {
+      "balance": 0.7,
+      "split": 0
+     },
+     "keys": [
+      {
+       "cue": "splits",
+       "state": {
+        "split": 1
+       },
+       "dur": 0.8
+      },
+      {
+       "cue": "Award travel",
+       "opacity": 0,
+       "y": 360,
+       "scale": 0.7,
+       "dur": 0.6
+      }
+     ]
+    },
+    {
+     "id": "e1",
+     "x": 330,
+     "y": 640,
+     "prop": "envelope",
+     "label": "AWARD TRAVEL",
+     "scale": 0.7,
+     "enter": {
+      "cue": "Award travel",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "e2",
+     "x": 650,
+     "y": 760,
+     "prop": "envelope",
+     "label": "BAG FEES",
+     "scale": 0.7,
+     "enter": {
+      "cue": "bag fees",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "e3",
+     "x": 970,
+     "y": 640,
+     "prop": "envelope",
+     "label": "LOUNGES",
+     "scale": 0.7,
+     "enter": {
+      "cue": "Lounge access",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "e4",
+     "x": 1290,
+     "y": 760,
+     "prop": "envelope",
+     "label": "BOARDING",
+     "scale": 0.7,
+     "enter": {
+      "cue": "Priority boarding",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "e5",
+     "x": 1610,
+     "y": 640,
+     "prop": "envelope",
+     "label": "THE BRAND",
+     "scale": 0.7,
+     "enter": {
+      "cue": "Delta brand",
+      "style": "rise"
+     }
+    }
+   ],
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "category": "visual metaphor",
+   "layout": "objects"
+  },
+  {
+   "id": "one-different",
+   "type": "composition",
+   "beat": "s3-3",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "award travel",
+   "visual": "Four envelopes dim; the award-travel envelope lifts to the centre",
+   "elements": [
+    {
+     "id": "e2",
+     "x": 650,
+     "y": 760,
+     "prop": "envelope",
+     "label": "BAG FEES",
+     "scale": 0.7,
+     "keys": [
+      {
+       "cue": "treated differently",
+       "opacity": 0.25
+      }
+     ]
+    },
+    {
+     "id": "e3",
+     "x": 970,
+     "y": 640,
+     "prop": "envelope",
+     "label": "LOUNGES",
+     "scale": 0.7,
+     "keys": [
+      {
+       "cue": "treated differently",
+       "opacity": 0.25
+      }
+     ]
+    },
+    {
+     "id": "e4",
+     "x": 1290,
+     "y": 760,
+     "prop": "envelope",
+     "label": "BOARDING",
+     "scale": 0.7,
+     "keys": [
+      {
+       "cue": "treated differently",
+       "opacity": 0.25
+      }
+     ]
+    },
+    {
+     "id": "e5",
+     "x": 1610,
+     "y": 640,
+     "prop": "envelope",
+     "label": "THE BRAND",
+     "scale": 0.7,
+     "keys": [
+      {
+       "cue": "treated differently",
+       "opacity": 0.25
+      }
+     ]
+    },
+    {
+     "id": "e1",
+     "x": 330,
+     "y": 640,
+     "prop": "envelope",
+     "label": "AWARD TRAVEL",
+     "scale": 0.7,
+     "keys": [
+      {
+       "cue": "Award travel",
+       "x": 960,
+       "y": 380,
+       "scale": 1.0,
+       "dur": 0.9
+      }
+     ]
+    }
+   ],
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "category": "visual metaphor",
+   "layout": "focus"
+  },
+  {
+   "id": "drawer-owed",
+   "type": "composition",
+   "beat": "s3-4",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "owes",
+   "visual": "The award-travel envelope goes into a drawer labelled STILL OWED; it becomes revenue only when the flight is taken",
+   "elements": [
+    {
+     "id": "drawer",
+     "x": 960,
+     "y": 660,
+     "motif": "owed-drawer",
+     "state": {
+      "open": 0,
+      "items": 0
+     },
+     "keys": [
+      {
+       "cue": "defers",
+       "state": {
+        "open": 1
+       }
+      },
+      {
+       "cue": "still owes",
+       "state": {
+        "items": 1
+       },
+       "dur": 0.5
+      },
+      {
+       "cue": "becomes passenger revenue",
+       "state": {
+        "open": 0.15
+       }
+      }
+     ]
+    },
+    {
+     "id": "env",
+     "x": 960,
+     "y": 300,
+     "prop": "envelope",
+     "label": "AWARD TRAVEL",
+     "scale": 0.7,
+     "keys": [
+      {
+       "cue": "still owes",
+       "y": 600,
+       "opacity": 0,
+       "dur": 0.6
+      }
+     ]
+    },
+    {
+     "id": "cap",
+     "x": 960,
+     "y": 150,
+     "text": "Revenue only when the flight is taken",
+     "style": "caption",
+     "enter": {
+      "cue": "takes the flight"
+     }
+    }
+   ],
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "category": "visual metaphor",
+   "layout": "drawer"
+  },
+  {
+   "id": "promise",
+   "type": "statement",
+   "beat": "s3-5",
+   "anchor": "promise",
+   "visual": "PAID FOR. STILL OWED.",
+   "text": "Paid for. Still owed.",
+   "accent": "Still owed.",
+   "cue": "promise"
+  },
+  {
+   "id": "delta-93",
+   "type": "evidence-card",
+   "beat": "s4-1",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "9.3 billion",
+   "visual": "Ledger card: SkyMiles deferred revenue $9.3 billion",
+   "kicker": "SKYMILES BALANCE",
+   "value": "$9.3B",
+   "countTo": 9.3,
+   "decimals": 1,
+   "prefix": "$",
+   "suffix": "B",
+   "cue": "9.3 billion",
+   "detail": "deferred revenue, Dec 31, 2025",
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "camera": "pull"
+  },
+  {
+   "id": "issued-used",
+   "type": "composition",
+   "beat": "s4-2",
+   "background": "dark",
+   "anchor": "issued",
+   "visual": "Two stacks: miles issued in 2025 grows taller than miles used; stamped OUR ARITHMETIC (no figure shown)",
+   "elements": [
+    {
+     "id": "issued",
+     "x": 700,
+     "y": 640,
+     "motif": "issued-stack",
+     "state": {
+      "height": 0
+     },
+     "keys": [
+      {
+       "cue": "balance grew",
+       "state": {
+        "height": 1
+       },
+       "dur": 1.2
+      }
+     ]
+    },
+    {
+     "id": "used",
+     "x": 1220,
+     "y": 640,
+     "motif": "used-stack",
+     "state": {
+      "height": 0
+     },
+     "keys": [
+      {
+       "cue": "balance grew",
+       "state": {
+        "height": 0.8
+       },
+       "dur": 1.2
+      }
+     ]
+    },
+    {
+     "id": "stamp",
+     "x": 960,
+     "y": 250,
+     "stamp": "Our arithmetic",
+     "enter": {
+      "cue": "By our arithmetic",
+      "style": "pop"
+     }
+    }
+   ],
+   "source": "Delta Form 10-K, fiscal 2025; comparison is ours",
+   "category": "data visualization",
+   "layout": "stacks"
+  },
+  {
+   "id": "aa-compare",
+   "type": "comparison",
+   "beat": "s4-3",
+   "camera": "drift",
+   "anchor": "10.6 billion",
+   "estimate": true,
+   "visual": "Two physical stacks: miles owed vs tickets already sold, American Airlines",
+   "kicker": "American Airlines, end of 2025",
+   "items": [
+    {
+     "label": "MILES OWED",
+     "value": 10.6,
+     "display": "$10.6B",
+     "accent": true,
+     "cue": "10.6 billion"
+    },
+    {
+     "label": "TICKETS SOLD",
+     "value": 7.2,
+     "display": "$7.2B",
+     "cue": "7.2 billion@s4-4"
+    }
+   ],
+   "caption": "GAP ABOUT $3.4B, OUR ARITHMETIC",
+   "source": "American Airlines Group Form 10-K, fiscal 2025"
+  },
+  {
+   "id": "not-cash",
+   "type": "composition",
+   "beat": "s4-6",
+   "background": "context",
+   "environment": "checkout",
+   "anchor": "cash",
+   "visual": "An empty drawer opens: neither balance is cash; both are travel already paid for",
+   "elements": [
+    {
+     "id": "drawer",
+     "x": 960,
+     "y": 640,
+     "motif": "owed-drawer",
+     "state": {
+      "open": 0,
+      "items": 0
+     },
+     "keys": [
+      {
+       "cue": "cash in a drawer",
+       "state": {
+        "open": 1
+       }
+      }
+     ]
+    },
+    {
+     "id": "stamp",
+     "x": 960,
+     "y": 300,
+     "stamp": "Not cash",
+     "enter": {
+      "cue": "Neither number",
+      "style": "pop"
+     }
+    },
+    {
+     "id": "cap",
+     "x": 960,
+     "y": 880,
+     "text": "Paid for, still to provide",
+     "style": "caption",
+     "enter": {
+      "cue": "already been paid"
+     }
+    }
+   ],
+   "category": "visual metaphor",
+   "layout": "drawer"
+  },
+  {
+   "id": "three-sum",
+   "type": "sum",
+   "beat": "s4-7",
+   "camera": "pull",
+   "anchor": "27.6 billion",
+   "estimate": true,
+   "visual": "Three airline balances stack into about $27.6 billion, stamped OUR SUM",
+   "kicker": "Miles unused, end of 2025",
+   "items": [
+    {
+     "label": "DELTA",
+     "value": 9.3,
+     "display": "$9.3B"
+    },
+    {
+     "label": "AMERICAN",
+     "value": 10.6,
+     "display": "$10.6B"
+    },
+    {
+     "label": "UNITED",
+     "value": 7.8,
+     "display": "$7.8B",
+     "cue": "United"
+    }
+   ],
+   "total": {
+    "label": "Three airlines",
+    "value": 27.6,
+    "display": "$27.6B"
+   },
+   "stamp": "Our sum",
+   "cue": "27.6 billion",
+   "source": "Delta, American, United 10-Ks, fiscal 2025; our sum"
+  },
+  {
+   "id": "award-tickets",
+   "type": "counter",
+   "beat": "s5-1",
+   "background": "context",
+   "environment": "restaurant",
+   "anchor": "35 million",
+   "visual": "Counter: about 35 million award tickets redeemed on Delta in 2025",
+   "label": "Delta award tickets, 2025",
+   "countTo": 35,
+   "suffix": " million",
+   "value": "35 million",
+   "cue": "35 million",
+   "detail": "redeemed with miles",
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "camera": "drift",
+   "layout": "counter"
+  },
+  {
+   "id": "award-share",
+   "type": "evidence-card",
+   "beat": "s5-2",
+   "anchor": "twelve percent",
+   "visual": "Evidence card: 12% of revenue miles flown were award travel",
+   "kicker": "AWARD TRAVEL SHARE",
+   "value": "12%",
+   "detail": "of revenue miles flown, Delta 2025",
+   "source": "Delta Air Lines Form 10-K, fiscal 2025",
+   "camera": "pull"
+  },
+  {
+   "id": "fading",
+   "type": "composition",
+   "beat": "s5-3",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "estimate",
+   "visual": "A stack of miles partly fades; ESTIMATE stamp: some will never be spent",
+   "elements": [
+    {
+     "id": "stack",
+     "x": 960,
+     "y": 600,
+     "motif": "miles-stack",
+     "state": {
+      "height": 1
+     },
+     "keys": [
+      {
+       "cue": "never be spent",
+       "opacity": 0.35,
+       "state": {
+        "height": 0.6
+       },
+       "dur": 1.0
+      }
+     ]
+    },
+    {
+     "id": "stamp",
+     "x": 1080,
+     "y": 330,
+     "stamp": "Estimate",
+     "enter": {
+      "cue": "estimate",
+      "style": "pop"
+     }
+    }
+   ],
+   "category": "visual metaphor",
+   "layout": "stacks"
+  },
+  {
+   "id": "model-quote",
+   "type": "filing-quote",
+   "beat": "s5-4",
+   "anchor": "statistical model",
+   "visual": "American Airlines 10-K: statistical model sentence highlighted",
+   "quote": "Our estimates use a statistical model based on historical redemption patterns to develop an estimate of the likelihood of future redemption.",
+   "highlight": "statistical model",
+   "cue": "statistical model",
+   "cite": "American Airlines Group, Form 10-K, fiscal 2025 (SEC EDGAR)",
+   "camera": "pull"
+  },
+  {
+   "id": "sensitivity",
+   "type": "evidence-card",
+   "beat": "s5-5",
+   "anchor": "140 million",
+   "visual": "Sensitivity: +10% unredeemed estimate, about +$140 million revenue",
+   "kicker": "IF THE ESTIMATE ROSE 10%",
+   "value": "+$140M",
+   "detail": "2025 revenue, American Airlines",
+   "cue": "140 million",
+   "stamp": "Company estimate",
+   "source": "American Airlines Group Form 10-K, fiscal 2025",
+   "camera": "drift"
+  },
+  {
+   "id": "breakage-word",
+   "type": "filing-quote",
+   "beat": "s5-6",
+   "anchor": "breakage",
+   "visual": "United filing: mileage breakage sentence highlighted",
+   "quote": "The Company uses a statistical model to estimate the probability that an account will redeem its current miles balance and reviews its mileage breakage estimates annually.",
+   "highlight": "mileage breakage",
+   "cue": "mileage breakage",
+   "cite": "United Airlines Holdings, Form 10-K, fiscal 2025 (SEC EDGAR)",
+   "camera": "drift"
+  },
+  {
+   "id": "expiry-rule",
+   "type": "rule-card",
+   "beat": "s5-7",
+   "background": "context",
+   "environment": "cafe",
+   "camera": "push",
+   "anchor": "24 months",
+   "visual": "Rule card: when American Airlines miles stay valid",
+   "title": "American miles stay valid if",
+   "lines": [
+    "Qualifying activity every 24 months",
+    "Or: primary co-branded cardholder",
+    "Other programs: not in these filings"
+   ],
+   "cues": [
+    "24 months",
+    "primary holder",
+    "don't give"
+   ],
+   "source": "American Airlines Group Form 10-K, fiscal 2025"
+  },
+  {
+   "id": "collateral",
+   "type": "composition",
+   "beat": "s6-1",
+   "background": "dark",
+   "anchor": "collateral",
+   "visual": "A loan folder; COLLATERAL stamped on it",
+   "elements": [
+    {
+     "id": "folder",
+     "x": 960,
+     "y": 560,
+     "motif": "loan-folder",
+     "enter": {
+      "style": "rise"
+     }
+    },
+    {
+     "id": "stamp",
+     "x": 1250,
+     "y": 360,
+     "stamp": "Collateral",
+     "enter": {
+      "cue": "collateral",
+      "style": "pop"
+     }
+    }
+   ],
+   "category": "visual metaphor",
+   "layout": "folder"
+  },
+  {
+   "id": "delta-9",
+   "type": "evidence-card",
+   "beat": "s6-2",
+   "background": "paper",
+   "anchor": "9 billion",
+   "visual": "Evidence card: Delta raised $9 billion in 2020 secured by SkyMiles assets",
+   "kicker": "DELTA BORROWED, 2020",
+   "value": "$9.0B",
+   "detail": "secured by SkyMiles assets",
+   "cue": "9 billion",
+   "source": "Delta Air Lines Form 10-K, fiscal 2020",
+   "camera": "pull"
+  },
+  {
+   "id": "united-pledge",
+   "type": "composition",
+   "beat": "s6-3",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "member data",
+   "visual": "Brand, member data and partner payment accounts drop into the loan folder",
+   "elements": [
+    {
+     "id": "folder",
+     "x": 960,
+     "y": 640,
+     "motif": "loan-folder",
+     "state": {
+      "open": 0
+     },
+     "keys": [
+      {
+       "cue": "put the program",
+       "state": {
+        "open": 1
+       }
+      }
+     ]
+    },
+    {
+     "id": "b1",
+     "x": 420,
+     "y": 250,
+     "box": {
+      "label": "THE BRAND"
+     },
+     "enter": {
+      "cue": "the brand",
+      "style": "rise"
+     },
+     "keys": [
+      {
+       "cue": "member data",
+       "x": 860,
+       "y": 600,
+       "opacity": 0,
+       "dur": 0.8
+      }
+     ]
+    },
+    {
+     "id": "b2",
+     "x": 960,
+     "y": 250,
+     "box": {
+      "label": "MEMBER DATA"
+     },
+     "enter": {
+      "cue": "member data",
+      "style": "rise"
+     },
+     "keys": [
+      {
+       "cue": "accounts its marketing partners",
+       "x": 960,
+       "y": 600,
+       "opacity": 0,
+       "dur": 0.8
+      }
+     ]
+    },
+    {
+     "id": "b3",
+     "x": 1320,
+     "y": 280,
+     "box": {
+      "label": "PARTNER ACCOUNTS",
+      "sub": "where partners pay"
+     },
+     "enter": {
+      "cue": "accounts its marketing partners",
+      "style": "rise"
+     }
+    }
+   ],
+   "source": "United Airlines Form 8-K, June 15, 2020",
+   "category": "explanatory diagram",
+   "layout": "folder"
+  },
+  {
+   "id": "ebitda-tape",
+   "type": "composition",
+   "beat": "s6-4",
+   "background": "dark",
+   "anchor": "21.9 billion",
+   "visual": "2019 earnings x 12 = about $21.9B, stamped UNITED'S OWN FIGURE",
+   "elements": [
+    {
+     "id": "e",
+     "x": 560,
+     "y": 460,
+     "box": {
+      "label": "2019 EARNINGS",
+      "sub": "before interest, taxes, D&A"
+     },
+     "enter": {
+      "cue": "earnings for 2019",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "x",
+     "x": 960,
+     "y": 480,
+     "text": "× 12",
+     "style": "headline",
+     "enter": {
+      "cue": "multiplied them by 12",
+      "style": "pop"
+     }
+    },
+    {
+     "id": "n",
+     "x": 1400,
+     "y": 500,
+     "number": {
+      "value": "$21.9B",
+      "cue": "21.9 billion",
+      "size": 110
+     },
+     "enter": {
+      "cue": "21.9 billion"
+     }
+    },
+    {
+     "id": "stamp",
+     "x": 1400,
+     "y": 700,
+     "stamp": "United's own figure",
+     "enter": {
+      "cue": "21.9 billion@s6-4",
+      "style": "pop"
+     }
+    }
+   ],
+   "source": "United Airlines Form 8-K, June 15, 2020",
+   "category": "financial evidence",
+   "layout": "calculation"
+  },
+  {
+   "id": "not-appraisal",
+   "type": "evidence-card",
+   "beat": "s6-5",
+   "background": "paper",
+   "anchor": "1.8 billion",
+   "visual": "Our division: $21.9B / 12, about $1.8B; not an independent valuation",
+   "kicker": "$21.9B ÷ 12, OUR DIVISION",
+   "value": "≈$1.8B",
+   "detail": "2019 earnings measure",
+   "cue": "1.8 billion",
+   "stamp": "Not an appraisal",
+   "source": "United 8-K, June 2020; the division is ours"
+  },
+  {
+   "id": "loan-68",
+   "type": "evidence-card",
+   "beat": "s6-6",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "6.8 billion",
+   "visual": "Evidence card: $6.8 billion secured by the MileagePlus business",
+   "kicker": "UNITED BORROWED",
+   "value": "$6.8B",
+   "detail": "secured by MileagePlus",
+   "cue": "6.8 billion",
+   "source": "United Airlines Form 10-K, fiscal 2020",
+   "camera": "drift"
+  },
+  {
+   "id": "asset",
+   "type": "statement",
+   "beat": "s6-7",
+   "anchor": "asset",
+   "visual": "Statement: the program became an asset of its own",
+   "text": "An asset, separate from the planes.",
+   "accent": "separate from the planes.",
+   "cue": "asset"
+  },
+  {
+   "id": "exchange-rate",
+   "type": "composition",
+   "beat": "s7-1",
+   "background": "context",
+   "environment": "cafe",
+   "anchor": "worth",
+   "category": "real-world illustration",
+   "layout": "environment",
+   "visual": "Cafe table: the member's phone shows an award price that changes while the balance stays; ISSUER DECIDES stamp",
+   "elements": [
+    {
+     "id": "card",
+     "motif": "mile-card",
+     "x": 620,
+     "y": 600,
+     "scale": 0.8,
+     "state": {
+      "balance": 0.7
+     }
+    },
+    {
+     "id": "phone",
+     "motif": "member-phone",
+     "x": 1320,
+     "y": 540,
+     "scale": 0.9,
+     "state": {
+      "lines": [
+       "AWARD PRICE",
+       "MILES"
+      ]
+     },
+     "keys": [
+      {
+       "cue": "decides what",
+       "state": {
+        "lines": [
+         "AWARD PRICE",
+         "CHANGED"
+        ]
+       },
+       "dur": 0.4
+      }
+     ]
+    },
+    {
+     "id": "stamp",
+     "stamp": "Issuer decides",
+     "x": 1200,
+     "y": 200,
+     "enter": {
+      "cue": "The issuer decides",
+      "style": "pop"
+     }
+    }
+   ],
+   "cameraKeys": [
+    {
+     "at": 0,
+     "x": 960,
+     "y": 560,
+     "z": 1.0
+    },
+    {
+     "cue": "decides what",
+     "x": 1260,
+     "y": 540,
+     "z": 1.1,
+     "dur": 1.2
+    }
+   ]
+  },
+  {
+   "id": "dot-inquiry",
+   "type": "map",
+   "beat": "s7-2",
+   "camera": "pull",
+   "anchor": "inquiry",
+   "visual": "Schematic: the Transportation Department's inquiry reaches the four largest airlines",
+   "kicker": "One inquiry, four airlines",
+   "points": [
+    {
+     "id": "dot",
+     "label": "US DOT",
+     "x": 960,
+     "y": 280
+    },
+    {
+     "id": "aa",
+     "label": "AMERICAN",
+     "x": 360,
+     "y": 680
+    },
+    {
+     "id": "dl",
+     "label": "DELTA",
+     "x": 760,
+     "y": 720
+    },
+    {
+     "id": "wn",
+     "label": "SOUTHWEST",
+     "x": 1160,
+     "y": 720
+    },
+    {
+     "id": "ua",
+     "label": "UNITED",
+     "x": 1560,
+     "y": 680
+    }
+   ],
+   "routes": [
+    {
+     "from": "dot",
+     "to": "aa",
+     "cue": "American"
+    },
+    {
+     "from": "dot",
+     "to": "dl",
+     "cue": "Delta"
+    },
+    {
+     "from": "dot",
+     "to": "wn",
+     "cue": "Southwest"
+    },
+    {
+     "from": "dot",
+     "to": "ua",
+     "cue": "United"
+    }
+   ],
+   "caption": "INQUIRY, NOT VERDICT",
+   "source": "US Department of Transportation, Sept 5, 2024"
+  },
+  {
+   "id": "four-tabs",
+   "type": "rule-card",
+   "beat": "s7-3",
+   "background": "context",
+   "anchor": "devaluing",
+   "visual": "The four questions DOT asked",
+   "title": "What DOT asked about",
+   "lines": [
+    "Devaluing rewards already earned",
+    "Hidden or shifting prices",
+    "Extra fees",
+    "Less competition"
+   ],
+   "cues": [
+    "Devaluing",
+    "Hidden",
+    "Extra fees",
+    "less competition"
+   ],
+   "source": "US Department of Transportation, Sept 5, 2024",
+   "camera": "drift",
+   "environment": "cafe",
+   "category": "real-world illustration"
+  },
+  {
+   "id": "quote-dot",
+   "type": "filing-quote",
+   "beat": "s7-4",
+   "anchor": "unilaterally",
+   "visual": "Attributed quotation (Buttigieg, 2024)",
+   "quote": "But unlike a traditional savings account, these rewards are controlled by a company that can unilaterally change their value.",
+   "highlight": "unilaterally change their value",
+   "cue": "unilaterally",
+   "cite": "Pete Buttigieg, US DOT press release, Sept 5, 2024",
+   "camera": "pull"
+  },
+  {
+   "id": "quote-cfpb",
+   "type": "filing-quote",
+   "beat": "s7-5",
+   "anchor": "little notice",
+   "visual": "Attributed quotation (Chopra, then CFPB director)",
+   "quote": "...these tempting points and rewards programs are often depreciated or changed with little notice.",
+   "highlight": "changed with little notice",
+   "cue": "little notice",
+   "cite": "Rohit Chopra, then CFPB director, statement, Sept 5, 2024",
+   "camera": "drift"
+  },
+  {
+   "id": "verdict-caveat",
+   "type": "statement",
+   "beat": "s7-6",
+   "anchor": "inquiry",
+   "visual": "INQUIRY, NOT VERDICT",
+   "text": "An inquiry, not a verdict.",
+   "accent": "not a verdict.",
+   "cue": "An inquiry"
+  },
+  {
+   "id": "rule-change",
+   "type": "filing-quote",
+   "beat": "s7-7",
+   "anchor": "program rules",
+   "visual": "United's rule-change sentence highlighted",
+   "quote": "Changes to mileage breakage assumptions, or to program rules and program redemption opportunities, may result in material changes to the deferred revenue balance as well as recognized revenues from the program.",
+   "highlight": "program rules and program redemption opportunities",
+   "cue": "program rules",
+   "cite": "United Airlines Holdings, Form 10-K, fiscal 2025 (SEC EDGAR)",
+   "camera": "pull"
+  },
+  {
+   "id": "thin-year",
+   "type": "composition",
+   "beat": "s8-1",
+   "background": "dark",
+   "anchor": "111 million",
+   "visual": "Two separate cards, never on one axis: $111M net income and $6.2B partner cash (not profit)",
+   "elements": [
+    {
+     "id": "ni",
+     "x": 200,
+     "y": 240,
+     "evidence": {
+      "kicker": "AAG NET INCOME, 2025",
+      "value": "$111M",
+      "detail": "the whole company",
+      "w": 680,
+      "h": 440,
+      "cue": "111 million"
+     },
+     "enter": {
+      "cue": "net income"
+     }
+    },
+    {
+     "id": "cash",
+     "x": 1040,
+     "y": 240,
+     "evidence": {
+      "kicker": "CARD PARTNER CASH, 2025",
+      "value": "$6.2B",
+      "detail": "cash, not profit",
+      "w": 680,
+      "h": 440,
+      "cue": "6.2 billion@s8-2"
+     },
+     "enter": {
+      "cue": "6.2 billion@s8-2"
+     }
+    }
+   ],
+   "source": "American Airlines Group Form 10-K, fiscal 2025",
+   "category": "financial evidence",
+   "layout": "two cards"
+  },
+  {
+   "id": "kinds-of-money",
+   "type": "composition",
+   "beat": "s8-3",
+   "background": "context",
+   "environment": "checkout",
+   "anchor": "profit",
+   "visual": "A ticket and a stack of miles kept apart: different kinds of money",
+   "elements": [
+    {
+     "id": "ticket",
+     "x": 600,
+     "y": 560,
+     "prop": "ticket"
+    },
+    {
+     "id": "stack",
+     "x": 1340,
+     "y": 620,
+     "motif": "miles-stack",
+     "state": {
+      "height": 0.8
+     }
+    },
+    {
+     "id": "stamp",
+     "x": 960,
+     "y": 300,
+     "stamp": "Not profit",
+     "enter": {
+      "cue": "isn't profit",
+      "style": "pop"
+     }
+    },
+    {
+     "id": "cap",
+     "x": 960,
+     "y": 880,
+     "text": "Can't subtract one from the other",
+     "style": "caption",
+     "enter": {
+      "cue": "can't subtract"
+     }
+    }
+   ],
+   "category": "visual metaphor",
+   "layout": "objects"
+  },
+  {
+   "id": "blanks",
+   "type": "composition",
+   "beat": "s9-1",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "limits",
+   "visual": "A filing page and the member's phone, each with an empty field: profit per mile, value of these miles",
+   "elements": [
+    {
+     "id": "doc",
+     "x": 620,
+     "y": 560,
+     "prop": "document",
+     "scale": 0.9
+    },
+    {
+     "id": "f1",
+     "x": 620,
+     "y": 560,
+     "box": {
+      "label": "PROFIT PER MILE",
+      "sub": "not disclosed",
+      "dashed": true
+     },
+     "enter": {
+      "cue": "profit an airline makes",
+      "style": "pop"
+     }
+    },
+    {
+     "id": "phone",
+     "x": 1340,
+     "y": 560,
+     "motif": "member-phone",
+     "scale": 0.9
+    },
+    {
+     "id": "f2",
+     "x": 1340,
+     "y": 760,
+     "box": {
+      "label": "WHAT THESE BUY",
+      "sub": "not in the filings",
+      "dashed": true
+     },
+     "enter": {
+      "cue": "particular account",
+      "style": "pop"
+     }
+    }
+   ],
+   "category": "financial evidence",
+   "layout": "document"
+  },
+  {
+   "id": "answer-flow",
+   "type": "money-flow",
+   "beat": "s10-2",
+   "camera": "push",
+   "anchor": "currency",
+   "visual": "Answer: airline issues, bank buys currency + perks + name, you receive",
+   "kicker": "What the bank buys",
+   "nodes": [
+    {
+     "id": "air",
+     "label": "AIRLINE",
+     "sub": "issues miles",
+     "x": 380,
+     "y": 540
+    },
+    {
+     "id": "bank",
+     "label": "BANK",
+     "sub": "miles + perks + name",
+     "x": 960,
+     "y": 540,
+     "accent": true
+    },
+    {
+     "id": "you",
+     "label": "YOU",
+     "sub": "for using the card",
+     "x": 1540,
+     "y": 540
+    }
+   ],
+   "links": [
+    {
+     "from": "air",
+     "to": "bank",
+     "label": "SELLS"
+    },
+    {
+     "from": "bank",
+     "to": "you",
+     "label": "HANDS OUT"
+    }
+   ]
+  },
+  {
+   "id": "still-owed",
+   "type": "composition",
+   "beat": "s10-3",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "award travel",
+   "visual": "Callback: the STILL OWED drawer opens, now full of envelopes",
+   "elements": [
+    {
+     "id": "drawer",
+     "x": 960,
+     "y": 640,
+     "motif": "owed-drawer",
+     "state": {
+      "open": 0,
+      "items": 1
+     },
+     "keys": [
+      {
+       "cue": "owes the rest",
+       "state": {
+        "open": 1
+       }
+      },
+      {
+       "cue": "three airlines",
+       "state": {
+        "items": 8
+       },
+       "dur": 1.0
+      }
+     ]
+    },
+    {
+     "id": "cap",
+     "x": 960,
+     "y": 170,
+     "text": "Tens of billions still owed",
+     "style": "caption",
+     "enter": {
+      "cue": "tens of billions"
+     }
+    }
+   ],
+   "category": "visual metaphor",
+   "layout": "drawer"
+  },
+  {
+   "id": "borrowed",
+   "type": "composition",
+   "beat": "s10-4",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "borrowed",
+   "visual": "The fading miles stack (forecast) and the loan folder side by side",
+   "elements": [
+    {
+     "id": "stack",
+     "x": 600,
+     "y": 620,
+     "motif": "miles-stack",
+     "state": {
+      "height": 0.6
+     },
+     "opacity": 0.6
+    },
+    {
+     "id": "s1",
+     "x": 600,
+     "y": 300,
+     "stamp": "Forecast",
+     "enter": {
+      "cue": "forecasts",
+      "style": "pop"
+     }
+    },
+    {
+     "id": "folder",
+     "x": 1340,
+     "y": 600,
+     "motif": "loan-folder",
+     "enter": {
+      "cue": "in 2020",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "s2",
+     "x": 1340,
+     "y": 300,
+     "stamp": "Borrowed against",
+     "enter": {
+      "cue": "borrowed billions",
+      "style": "pop"
+     }
+    }
+   ],
+   "category": "visual metaphor",
+   "layout": "objects"
+  },
+  {
+   "id": "last-line",
+   "type": "composition",
+   "beat": "s10-5",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "decides",
+   "visual": "The card and the phone; the airline decides what the miles buy",
+   "elements": [
+    {
+     "id": "card",
+     "x": 620,
+     "y": 560,
+     "motif": "mile-card",
+     "scale": 0.85,
+     "state": {
+      "balance": 0.7,
+      "glow": 0
+     },
+     "keys": [
+      {
+       "cue": "a bank paid",
+       "state": {
+        "glow": 1
+       }
+      }
+     ]
+    },
+    {
+     "id": "phone",
+     "x": 1360,
+     "y": 540,
+     "motif": "member-phone",
+     "scale": 0.9
+    },
+    {
+     "id": "cap",
+     "x": 960,
+     "y": 880,
+     "text": "The airline decides what they buy",
+     "style": "caption",
+     "enter": {
+      "cue": "still decides"
+     }
+    }
+   ],
+   "cameraKeys": [
+    {
+     "at": 0,
+     "x": 960,
+     "y": 560,
+     "z": 1.0
+    },
+    {
+     "cue": "still decides",
+     "x": 1200,
+     "y": 540,
+     "z": 1.08,
+     "dur": 1.4
+    }
+   ],
+   "category": "real-world illustration",
+   "layout": "environment"
+  },
+  {
+   "id": "end",
+   "type": "rule-card",
+   "afterBeat": "s10-5",
+   "in": "fade",
+   "inDur": 0.8,
+   "visual": "End card: ProfitDecoded and the sources",
+   "title": "Sources",
+   "lines": [
+    "Delta, United, American 10-Ks, FY2025",
+    "United 8-K 2020; Delta, United 10-Ks FY2020",
+    "US DOT press release, Sept 5, 2024",
+    "CFPB director statement, Sept 5, 2024",
+    "Totals marked our sum are our arithmetic"
+   ],
+   "source": "Full references are in the description"
+  }
+ ]
+}

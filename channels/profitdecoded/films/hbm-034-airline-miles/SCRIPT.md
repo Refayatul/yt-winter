@@ -1,4 +1,4 @@
-# Script: What American Express Bought From Delta for $8.2 Billion
+# Script: What American Express Bought From Delta for $8.2 Billion in One Year
 
 Documentary #2 · draft revision 1 (after independent critique) · **not approved for narration**
 

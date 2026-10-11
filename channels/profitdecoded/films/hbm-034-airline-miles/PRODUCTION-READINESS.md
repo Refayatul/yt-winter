@@ -1,6 +1,6 @@
 # Documentary #2: production readiness (2026-10-10)
 
-**Film:** "What American Express Bought From Delta for $8.2 Billion" (topic `hbm-034`)
+**Film:** "What American Express Bought From Delta for $8.2 Billion in One Year" (topic `hbm-034`)
 
 **Stage reached:** research, script and storyboard are complete. **No narration, scenes or MP4 exist.** Production stopped at the last stage that needs no approval: the next stage needs paid narration, and the topic and script need owner sign-off first.
 
@@ -21,7 +21,7 @@
 
 ## Title and thumbnail
 
-- **Recommended title:** *What American Express Bought From Delta for $8.2 Billion*. It is accurate: the film answers *what* was bought (miles, perks and the use of the brand), not Amex's motives. The working title was changed after the independent critique pointed this out.
+- **Recommended title:** *What American Express Bought From Delta for $8.2 Billion in One Year*. It is accurate: the film answers *what* was bought (miles, perks and the use of the brand), not Amex's motives. The working title was changed after the independent critique pointed this out.
 - **Alternatives:**
   - "What Banks Really Buy When They Pay Airlines Billions"
   - "Your Airline Miles Are Someone Else's Currency"
@@ -55,7 +55,7 @@ No logos appear in any concept. Thumbnails are not rendered yet; they come with 
 
 ### B. Editorial warnings (advisory)
 
-- **Topic eligibility:** DEFER. The engine estimates angle originality at 20 and infers HOT saturation; the main competitors are Wendover at 7.35M views and WSJ at 1.35M. The only differentiation I can verify is newer evidence. The owner has to decide.
+- **Topic eligibility:** DEFER (reviewed 2026-10-11 in `PRODUCTION-PREP.md` §1: the generic angle is crowded; the film's differentiated angle is the promise/IOU accounting, the $27.6B balance and the DOT inquiry; title now states "in One Year"). Original note: The engine estimates angle originality at 20 and infers HOT saturation; the main competitors are Wendover at 7.35M views and WSJ at 1.35M. The only differentiation I can verify is newer evidence. The owner has to decide.
 - **Hook score:** the engine rated an alternative hook ("In 2020, United borrowed against its frequent flyer program…") 74, against 72 for the chosen one. The chosen hook keeps the filed number and the title in the first sentence.
 - **Payoff section:** a heuristic note says "thin-section: tighten" (AI-pattern 20 in that section). The independent reviewer judged the rewritten ending acceptable.
 - **Storyboard diagnostics:** 5 low-severity long shots (22–24 s, estimated), each with planned internal reveals tied to separate beats. Everyday settings cover 56% of the film and the dark stage 12%. There are no dark runs, chart runs, repeated layouts or low-variety windows.
