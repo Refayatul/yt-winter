@@ -1,36 +1,80 @@
 {
  "schema": "profitdecoded.scene-spec.v1",
- "note": "Hand-written sample for 13 beats of documentary #2 (hbm-034), covering every scene type. Figures and the quotation come from dossier hbm-034 (claims c1, c2, c4, c8, c10, c14, c15; our arithmetic i2, i4, i6). Timings come from tests/fixtures/profitdecoded/scene-spec-timeline.json, which is ESTIMATED from word counts, not measured narration.",
+ "note": "Hand-written sample for 13 beats of documentary #2 (hbm-034), covering every scene type, a recurring motif (the miles card) and multi-phase compositions. Figures and the quotation come from dossier hbm-034 (claims c1, c2, c3, c4, c8, c10, c14, c15; our arithmetic i2, i4, i6). Timings come from tests/fixtures/profitdecoded/scene-spec-timeline.json, which is ESTIMATED from word counts, not measured narration.",
  "scenes": [
   {
    "id": "cold-swipe",
-   "type": "environment",
+   "type": "composition",
    "beat": "s1-1",
+   "background": "context",
    "environment": "checkout",
-   "camera": "push",
    "anchor": "8.2 billion",
-   "visual": "Checkout: an unbranded card taps a terminal; the $8.2 billion lands as an evidence card over the scene",
-   "props": [
+   "visual": "Checkout: the miles card taps a terminal; the $8.2 billion lands as an evidence card while the camera moves to it",
+   "elements": [
     {
-     "kind": "terminal",
+     "id": "terminal",
+     "prop": "terminal",
      "x": 520,
-     "y": 560
+     "y": 600
     },
     {
-     "kind": "payment-card",
-     "x": 860,
-     "y": 600,
+     "id": "card",
+     "motif": "mile-card",
+     "x": 1000,
+     "y": 640,
      "scale": 0.8,
-     "cue": "American Express"
+     "state": {
+      "balance": 0.7,
+      "tap": 0,
+      "sheen": -1
+     },
+     "keys": [
+      {
+       "cue": "American Express",
+       "x": 720,
+       "y": 560,
+       "rotate": -10,
+       "state": {
+        "tap": 1,
+        "sheen": 1.1
+       },
+       "dur": 0.9
+      }
+     ]
+    },
+    {
+     "id": "amount",
+     "evidence": {
+      "kicker": "AMEX PAID DELTA",
+      "value": "$8.2B",
+      "detail": "in 2025, for SkyMiles",
+      "w": 620,
+      "h": 430,
+      "cue": "8.2 billion"
+     },
+     "x": 1180,
+     "y": 250,
+     "enter": {
+      "cue": "8.2 billion"
+     }
     }
    ],
-   "overlay": {
-    "kicker": "AMEX PAID DELTA",
-    "value": "$8.2B",
-    "detail": "in 2025, for SkyMiles",
-    "source": "Delta Air Lines Form 10-K, fiscal 2025",
-    "cue": "8.2 billion"
-   }
+   "cameraKeys": [
+    {
+     "at": 0,
+     "x": 960,
+     "y": 560,
+     "z": 1.0
+    },
+    {
+     "cue": "8.2 billion",
+     "x": 1180,
+     "y": 520,
+     "z": 1.1,
+     "dur": 1.0
+    }
+   ],
+   "source": "Delta Air Lines Form 10-K, fiscal 2025"
   },
   {
    "id": "forecast-10",
@@ -135,52 +179,106 @@
   },
   {
    "id": "envelopes",
-   "type": "environment",
+   "type": "composition",
    "beat": "s3-2",
+   "background": "context",
    "environment": "desk",
-   "camera": "drift",
    "anchor": "award travel",
-   "visual": "On a desk, the payment splits into five labelled envelopes",
-   "props": [
+   "visual": "On the desk the miles card splits; five labelled envelopes rise out of the payment, one per spoken item",
+   "elements": [
     {
-     "kind": "envelope",
-     "x": 330,
-     "y": 480,
-     "scale": 0.7,
+     "id": "kicker",
+     "text": "What the payment buys",
+     "style": "kicker",
+     "x": 960,
+     "y": 140
+    },
+    {
+     "id": "card",
+     "motif": "mile-card",
+     "x": 960,
+     "y": 420,
+     "scale": 0.9,
+     "state": {
+      "balance": 0.7,
+      "split": 0
+     },
+     "keys": [
+      {
+       "cue": "splits",
+       "state": {
+        "split": 1
+       },
+       "dur": 0.8
+      },
+      {
+       "cue": "Award travel",
+       "opacity": 0,
+       "y": 360,
+       "scale": 0.7,
+       "dur": 0.6
+      }
+     ]
+    },
+    {
+     "id": "e1",
+     "prop": "envelope",
      "label": "AWARD TRAVEL",
-     "cue": "Award travel"
-    },
-    {
-     "kind": "envelope",
-     "x": 650,
+     "x": 330,
      "y": 640,
      "scale": 0.7,
+     "enter": {
+      "cue": "Award travel",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "e2",
+     "prop": "envelope",
      "label": "BAG FEES",
-     "cue": "bag fees"
-    },
-    {
-     "kind": "envelope",
-     "x": 970,
-     "y": 480,
+     "x": 650,
+     "y": 760,
      "scale": 0.7,
-     "label": "LOUNGES",
-     "cue": "Lounge access"
+     "enter": {
+      "cue": "bag fees",
+      "style": "rise"
+     }
     },
     {
-     "kind": "envelope",
-     "x": 1290,
+     "id": "e3",
+     "prop": "envelope",
+     "label": "LOUNGES",
+     "x": 970,
      "y": 640,
      "scale": 0.7,
-     "label": "BOARDING",
-     "cue": "Priority boarding"
+     "enter": {
+      "cue": "Lounge access",
+      "style": "rise"
+     }
     },
     {
-     "kind": "envelope",
-     "x": 1610,
-     "y": 480,
+     "id": "e4",
+     "prop": "envelope",
+     "label": "BOARDING",
+     "x": 1290,
+     "y": 760,
      "scale": 0.7,
+     "enter": {
+      "cue": "Priority boarding",
+      "style": "rise"
+     }
+    },
+    {
+     "id": "e5",
+     "prop": "envelope",
      "label": "THE BRAND",
-     "cue": "Delta brand"
+     "x": 1610,
+     "y": 640,
+     "scale": 0.7,
+     "enter": {
+      "cue": "Delta brand",
+      "style": "rise"
+     }
     }
    ],
    "source": "Delta Air Lines Form 10-K, fiscal 2025"
@@ -194,7 +292,76 @@
    "visual": "Title card: PAID FOR. STILL OWED.",
    "text": "Paid for. Still owed.",
    "accent": "Still owed.",
-   "cue": "has been paid"
+   "cue": "promise"
+  },
+  {
+   "id": "still-owed",
+   "type": "composition",
+   "beat": "s3-5",
+   "startCue": "The airline has been paid",
+   "background": "context",
+   "environment": "desk",
+   "anchor": "still owes",
+   "visual": "The award-travel envelope drops into a drawer labelled STILL OWED; PAID FOR is stamped while the drawer stays shut",
+   "elements": [
+    {
+     "id": "drawer",
+     "motif": "owed-drawer",
+     "x": 960,
+     "y": 660,
+     "state": {
+      "open": 0,
+      "items": 0
+     },
+     "keys": [
+      {
+       "cue": "has been paid",
+       "state": {
+        "open": 1
+       }
+      },
+      {
+       "cue": "still owes",
+       "state": {
+        "items": 1
+       },
+       "dur": 0.5
+      },
+      {
+       "cue": "will buy",
+       "state": {
+        "open": 0.15
+       }
+      }
+     ]
+    },
+    {
+     "id": "env",
+     "prop": "envelope",
+     "label": "AWARD TRAVEL",
+     "x": 960,
+     "y": 260,
+     "scale": 0.7,
+     "keys": [
+      {
+       "cue": "still owes",
+       "y": 600,
+       "opacity": 0,
+       "dur": 0.6
+      }
+     ]
+    },
+    {
+     "id": "paid",
+     "stamp": "Paid for",
+     "x": 480,
+     "y": 300,
+     "enter": {
+      "cue": "has been paid",
+      "style": "pop"
+     }
+    }
+   ]
   },
   {
    "id": "delta-93",
@@ -402,50 +569,46 @@
   },
   {
    "id": "answer-flow",
-   "type": "money-flow",
+   "type": "environment",
    "beat": "s10-2",
+   "environment": "checkout",
    "camera": "push",
    "anchor": "currency",
-   "visual": "Answer: the airline issues miles, the bank buys them with perks and the name, you receive them",
-   "kicker": "What the bank buys",
-   "nodes": [
+   "visual": "Callback to the checkout: the card, the terminal and a phone showing the miles balance; what the bank buys, in one caption",
+   "props": [
     {
-     "id": "air",
-     "label": "AIRLINE",
-     "sub": "issues miles",
-     "x": 380,
-     "y": 540
+     "kind": "terminal",
+     "x": 480,
+     "y": 560
     },
     {
-     "id": "bank",
-     "label": "BANK",
-     "sub": "miles + perks + name",
-     "x": 960,
-     "y": 540,
-     "accent": true
+     "kind": "payment-card",
+     "x": 860,
+     "y": 600,
+     "scale": 0.8,
+     "cue": "using its card"
     },
     {
-     "id": "you",
-     "label": "YOU",
-     "sub": "for using the card",
-     "x": 1540,
-     "y": 540
+     "kind": "phone",
+     "x": 1400,
+     "y": 520,
+     "label": "MILES BALANCE",
+     "cue": "hands that currency"
     }
    ],
-   "links": [
-    {
-     "from": "air",
-     "to": "bank",
-     "label": "SELLS"
-    },
-    {
-     "from": "bank",
-     "to": "you",
-     "label": "HANDS OUT"
-    }
-   ],
-   "background": "context",
-   "environment": "checkout"
+   "caption": "BANK BUYS: CURRENCY + PERKS + NAME"
   }
- ]
+ ],
+ "motifs": {
+  "mile-card": {
+   "kind": "card",
+   "label": "MILES",
+   "base": "ledger",
+   "band": "signal"
+  },
+  "owed-drawer": {
+   "kind": "drawer",
+   "label": "STILL OWED"
+  }
+ }
 }

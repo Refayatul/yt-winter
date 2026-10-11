@@ -12,6 +12,7 @@ window.SCENES = function (PD) {
     "counter": ["data visualization", "chart", "dark"], "money-flow": ["explanatory diagram", "diagram", "dark"], "comparison": ["data visualization", "comparison", "dark"],
     "timeline": ["explanatory diagram", "timeline", "dark"], "filing-quote": ["financial evidence", "document", "paper"], "statement": ["branded title card", "statement", "dark"],
     "rule-card": ["explanatory diagram", "rule card", "dark"], "sum": ["data visualization", "chart", "dark"], "map": ["explanatory diagram", "map", "dark"],
+    "composition": ["visual metaphor", "composition", "context"],
   };
   const ent = (t, at, d = PD.T.enter) => E.out(p(t, at, at + d));
   const at = (x, y, inner, rot = 0, sc = 1) => `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${sc})">${inner}</g>`;
@@ -59,8 +60,93 @@ window.SCENES = function (PD) {
   };
   function wrap(text, max) { const out = []; let line = ""; for (const w of String(text).split(/\s+/)) { if ((line + " " + w).trim().length > max && line) { out.push(line); line = w; } else line = (line + " " + w).trim(); } if (line) out.push(line); return out; }
 
+  // ---- recurring motifs (spec.motifs): one object, defined once, whose STATE changes across the film ----
+  // Design rule from Gift Cards V3: the story's object is a character. It splits, glows, goes into a drawer
+  // and comes back in the ending callback; data colours stay reserved for figures.
+  const MOTIFS = spec.motifs || {};
+  const col = (name, fallback) => (name && C[name]) || name || fallback;
+  const MOTIF = {
+    // A generic, unbranded card (no real issuer's marks). state: balance 0..1 meter, sheen -0.2..1.2,
+    // glow 0..1, dim 0..1, split 0..1 (the right part separates), tap 0..1 (contactless arcs).
+    card: (m, st) => { const w = 520, h = w / 1.586, r = 24; const sx = lerp(-w * 0.6, w * 1.1, clamp(st.sheen == null ? -1 : st.sheen, -0.2, 1.2));
+      const cut = m.splitAt || 0.78; const sp = clamp(st.split || 0); const id = `mc${Math.round((st._uid || 0) * 1000)}`;
+      const face = (dim) => `<rect width="${w}" height="${h}" rx="${r}" fill="${col(m.base, C.ledger)}"/><rect x="${w * 0.62}" width="${w * 0.07}" height="${h}" fill="${col(m.band, C.signal)}"/><rect y="${h * 0.38}" width="${w}" height="${h * 0.07}" fill="${col(m.band, C.signal)}"/>
+        <rect x="${w * 0.07}" y="${h * 0.5}" width="66" height="50" rx="8" fill="${C.gold}"/>${PD.label(w * 0.07, h * 0.22, String(m.label || "CARD").toUpperCase(), { size: 34, fill: C.paper, ls: 4 })}
+        ${m.meter === false ? "" : `<rect x="${w * 0.07}" y="${h * 0.8}" width="${w * 0.5}" height="14" rx="7" fill="#000" opacity="0.25"/><rect x="${w * 0.07}" y="${h * 0.8}" width="${w * 0.5 * clamp(st.balance == null ? 0.7 : st.balance)}" height="14" rx="7" fill="${C.gold}"/>`}
+        ${(st.glow || 0) > 0 ? `<rect x="${w * 0.07 - 8}" y="${h * 0.8 - 8}" width="${w * 0.5 * clamp(st.balance == null ? 0.7 : st.balance) + 16}" height="30" rx="15" fill="${C.gold}" opacity="${0.3 * st.glow}"/>` : ""}
+        <rect x="${sx}" y="${-h * 0.2}" width="${w * 0.45}" height="${h * 1.4}" fill="url(#sheen)" transform="rotate(14 ${w / 2} ${h / 2})"/>${dim ? `<rect width="${w}" height="${h}" rx="${r}" fill="${C.ink}" opacity="${dim}"/>` : ""}`;
+      const arcs = (st.tap || 0) > 0 ? [0, 1, 2].map((i) => `<path d="M ${w + 30 + i * 22} ${h / 2 - 40 - i * 10} A ${40 + i * 22} ${40 + i * 22} 0 0 1 ${w + 30 + i * 22} ${h / 2 + 40 + i * 10}" fill="none" stroke="${C.gold}" stroke-width="6" stroke-linecap="round" opacity="${clamp(st.tap * 3 - i)}"/>`).join("") : "";
+      // The card face is an illustration (like V3's gift card): its label is decorative, not essential text.
+      return `<g transform="translate(${-w / 2} ${-h / 2})" filter="url(#soft)" data-role="decorative"><clipPath id="${id}a"><rect width="${w * cut}" height="${h}"/></clipPath><clipPath id="${id}b"><rect x="${w * cut}" width="${w * (1 - cut)}" height="${h}"/></clipPath>
+        <g clip-path="url(#${id}a)">${face(st.dim || 0)}</g><g clip-path="url(#${id}b)" transform="translate(${90 * sp} ${30 * sp}) rotate(${7 * sp} ${w * cut} ${h / 2})">${face(Math.max(st.dim || 0, 0.35 * sp))}</g>${arcs}</g>`; },
+    // state: open 0..1, items = number of envelopes visible inside.
+    drawer: (m, st) => { const o = clamp(st.open || 0); const n = Math.round(st.items || 0);
+      return `<g><rect x="-260" y="-150" width="520" height="300" rx="14" fill="#4a3829" stroke="#2c2018" stroke-width="5"/><g transform="translate(0 ${70 * o})"><rect x="-240" y="-120" width="480" height="${120 + 140 * o}" rx="10" fill="#6b5240" stroke="#3b2c22" stroke-width="4"/>
+        ${Array.from({ length: n }, (_, i) => `<g transform="translate(${-150 + (i % 4) * 100} ${-70 - Math.floor(i / 4) * 26 + 40 * o})"><rect x="-44" y="-30" width="88" height="56" rx="5" fill="#efe6d4" stroke="#b9a888" stroke-width="2"/>${ln("M-44 -30 L0 2 L44 -30", 0.8, 2.5, "#b9a888")}</g>`).join("")}
+        <rect x="-70" y="${120 * 0 + 6}" width="140" height="26" rx="13" fill="${C.gold}"/></g>${m.label ? `<g transform="translate(0 ${-150 - 52})">${tag(0, 0, String(m.label).toUpperCase(), 1)}</g>` : ""}</g>`; },
+    envelope: (m, st) => `<g filter="url(#soft)"><rect x="-170" y="-110" width="340" height="220" rx="8" fill="#efe6d4"/>${ln(`M-170 -110 L0 ${lerp(20, -200, clamp(st.open || 0))} L170 -110`, 0.9, 4, "#b9a888")}</g>${(st.label || m.label) ? tag(0, 130, String(st.label || m.label).toUpperCase(), 1) : ""}`,
+    folder: (m, st) => `<g filter="url(#soft)"><path d="M-220 -150 H-70 L-40 -120 H220 V160 H-220 Z" fill="#c9a66b"/><rect x="-220" y="-110" width="440" height="270" rx="6" fill="#d8b77c" transform="rotate(${-8 * clamp(st.open || 0)} -220 160)"/>${m.label ? PD.label(0, 40, String(m.label).toUpperCase(), { size: 40, anchor: "middle", fill: "#3b2c22", ls: 6 }) : ""}</g>`,
+    phone: (m, st) => `<g filter="url(#soft)"><rect x="-150" y="-290" width="300" height="580" rx="40" fill="${C.ink2}" stroke="${C.mist}" stroke-opacity="0.7" stroke-width="4"/><rect x="-126" y="-250" width="252" height="490" rx="16" fill="#f6f0e5"/>
+      ${(st.lines || m.lines || []).map((l, i) => PD.label(0, -150 + i * 70, String(l), { size: i === 0 ? 34 : 44, anchor: "middle", fill: i === 0 ? "#3a372f" : C.ink, ls: i === 0 ? 3 : 0.5 })).join("")}</g>`,
+    stack: (m, st) => { const n = Math.max(1, Math.round((m.sheets || 14) * clamp(st.height == null ? 1 : st.height))); return `<g>${Array.from({ length: n }, (_, i) => `<rect x="-150" y="${100 - i * 22}" width="300" height="20" rx="3" fill="${i % 2 ? "#efe6d4" : "#f8f2e6"}" stroke="#b9a888" stroke-width="2"/>`).join("")}</g>${m.label ? tag(0, 140, String(m.label).toUpperCase(), 1) : ""}`; },
+  };
+
+  // ---- composition: elements with phrase-cued keyframes (multi-phase choreography) ----
+  const MOVE = 0.7;
+  const NUMERIC = (v) => typeof v === "number" && Number.isFinite(v);
+  const keyTimes = (keys, X) => (keys || []).map((k, i) => ({ ...k, T: X.cue(k.cue, k.at != null ? k.at : 0.6 + i * 0.8) })).sort((a, b) => a.T - b.T);
+  // Values after every keyframe reached so far; numbers ease over each key's duration, other values switch halfway.
+  function track(base, keys, t) {
+    let cur = { ...base };
+    for (const k of keys) {
+      const e = E.inOut(p(t, k.T, k.T + (k.dur != null ? k.dur : MOVE))); if (e <= 0) break;
+      const target = { ...cur }; for (const f of ["x", "y", "scale", "rotate", "opacity", "z"]) if (k[f] != null) target[f] = k[f];
+      Object.assign(target, k.state || {});
+      const next = {}; for (const key of new Set([...Object.keys(cur), ...Object.keys(target)])) next[key] = NUMERIC(cur[key]) && NUMERIC(target[key]) ? lerp(cur[key], target[key], e) : (e >= 0.5 ? target[key] : cur[key]);
+      cur = next;
+    }
+    return cur;
+  }
+  const TEXT_STYLE = {
+    kicker: (x, y, v, op) => PD.label(x, y, String(v).toUpperCase(), { size: 34, anchor: "middle", fill: C.mist, ls: 6, op }),
+    headline: (x, y, v, op) => PD.serif(x, y, v, { size: 76, op }),
+    label: (x, y, v, op) => tag(x, y, String(v).toUpperCase(), op),
+    caption: (x, y, v, op) => tag(x, y, v, op),
+  };
+  function element(el, s, t, X, i) {
+    const keys = keyTimes(el.keys, X);
+    const enterT = el.enter ? X.cue(el.enter.cue, el.enter.at != null ? el.enter.at : 0.1) : X.start + 0.05 + i * 0.12;
+    const ek = el.enter && el.enter.style === "pop" ? E.back(p(t, enterT, enterT + 0.45)) : ent(t, enterT);
+    const xk = el.exit ? ent(t, X.cue(el.exit.cue, el.exit.at != null ? el.exit.at : X.dur)) : 0;
+    const st = track({ x: el.x != null ? el.x : 960, y: el.y != null ? el.y : 540, scale: el.scale != null ? el.scale : 1, rotate: el.rotate || 0, opacity: el.opacity != null ? el.opacity : 1, ...(el.state || {}), _uid: i + 1 }, keys, t);
+    const op = clamp(st.opacity * clamp(ek) * (1 - xk)); if (op <= 0.001) return "";
+    const rise = el.enter && el.enter.style === "rise" ? (1 - clamp(ek)) * 36 : 0;
+    const sc = st.scale * (el.enter && el.enter.style === "pop" ? lerp(0.7, 1, ek) : 1);
+    const g = (inner) => `<g opacity="${op}" transform="translate(${st.x} ${st.y + rise}) rotate(${st.rotate}) scale(${sc})">${inner}</g>`;
+    if (el.motif) { const m = MOTIFS[el.motif]; return g(MOTIF[m.kind](m, st)); }
+    if (el.prop) return g(PROP[el.prop](1, el.label, el)) + (el.label && el.prop !== "phone" ? `<g opacity="${op}">${tag(st.x, st.y + 130 * sc, String(el.label).toUpperCase(), 1)}</g>` : "");
+    if (el.text != null) return `<g opacity="${op}" transform="translate(0 ${rise})">${(TEXT_STYLE[el.style || "caption"])(st.x, st.y, el.text, 1)}</g>`;
+    if (el.number) { const c0 = X.cue(el.number.cue, 0.3); const v = counted(el.number, t, c0, X); return `<g opacity="${op}">${PD.number(st.x, st.y + rise, v, { size: el.number.size || 120, anchor: "middle", fill: X.bg === "paper" ? C.ink : C.text })}</g>`; }
+    if (el.evidence) { const ev = el.evidence; const c0 = X.cue(ev.cue, 0.4); return PD.evidenceCard({ x: st.x, y: st.y, w: ev.w || 640, h: ev.h || 440, kicker: ev.kicker, value: counted(ev, t, c0, X), detail: ev.detail, k: op }); }
+    if (el.stamp) return PD.stamp(st.x, st.y, String(el.stamp).toUpperCase(), E.back(clamp(ek)) * (1 - xk), { size: 36, rot: el.rotate != null ? el.rotate : -7 });
+    if (el.path) { const len = el.length || 1400; return PD.path(el.path, len, clamp(ek), { stroke: col(el.color, C.gold), width: el.width || 6 }) + (el.arrow && ek > 0.95 ? `<circle cx="${el.arrow[0]}" cy="${el.arrow[1]}" r="10" fill="${col(el.color, C.gold)}" opacity="${op}"/>` : ""); }
+    if (el.box) { const b = el.box; const w = b.w || 360, h = b.h || 120; return g(`<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="16" fill="${b.accent ? C.signal : C.ink2}" stroke="${b.accent ? C.signal : C.mist}" stroke-opacity="0.8" stroke-width="3" ${b.dashed ? 'stroke-dasharray="12 10"' : ""}/>${PD.label(0, b.sub ? -2 : 12, String(b.label).toUpperCase(), { size: 34, anchor: "middle", fill: b.accent ? C.ink : C.text, ls: 2 })}${b.sub ? PD.label(0, 44, b.sub, { size: 30, anchor: "middle", fill: b.accent ? C.ink : C.mist, ls: 1, weight: 600 }) : ""}`); }
+    throw new Error(`composition ${s.id}: element ${el.id || i} has no content`);
+  }
+  // Camera keyframes [{cue|at, x, y, z}] move the eye between phases; never fully still (>= 0.22%/s).
+  function cameraKeys(s, t, X, inner) {
+    const st = track({ x: 960, y: 540, z: 1 }, keyTimes(s.cameraKeys, X), t);
+    const z = st.z * (1 + 0.0022 * Math.max(0, t - X.start));
+    return `<g transform="translate(960 540) scale(${z}) translate(${-st.x} ${-st.y})">${inner}</g>`;
+  }
+
   // ---- scene types ----
   const DRAW = {
+    "composition": (s, lt, t, X) => {
+      const inner = (s.elements || []).map((el, i) => element(el, s, t, X, i)).join("");
+      const body = s.cameraKeys ? cameraKeys(s, t, X, inner) : cam(s.camera || "push", lt, X.dur, inner);
+      return frame(X.bg, body + tag(960, 880, s.caption, ent(t, X.cue(s.captionCue, 0.8))) + sourceLine(s, ent(lt, 0.4), X.bg), t, s.environment);
+    },
     "environment": (s, lt, t, X) => {
       const props = (s.props || []).map((pr, i) => { const k = ent(t, X.cue(pr.cue, 0.2 + i * 0.35)); const x = pr.x != null ? pr.x : 520 + i * 440, y = pr.y != null ? pr.y : 600;
         // Labels stay at full size whatever the prop's scale, so they keep the mobile font floor.
@@ -141,7 +227,8 @@ window.SCENES = function (PD) {
   // ---- shots ----
   const shots = spec.scenes.map((s) => {
     const role = ROLE[s.type]; if (!role) throw new Error(`unknown scene type ${s.type}`);
-    const start = s.beat ? Math.max(0, PD.b(s.beat).start - LEAD) : s.start;
+    // startCue: a second shot inside the same beat starts on a spoken phrase (V3 cuts mid-beat often).
+    const start = s.beat ? Math.max(0, (s.startCue ? PD.bw(s.beat, s.startCue) : PD.b(s.beat).start) - LEAD) : s.start;
     const bg = s.background || role[2];
     const shot = { id: s.id, start, in: s.in || "cut", inDur: s.inDur, visual: s.visual || s.type, asset: "original SVG motion graphic (scene spec)", license: "owned",
       category: s.category || role[0], background: bg, layout: s.layout || role[1], textWeight: s.type === "statement" || s.type === "rule-card" ? "high" : "low",

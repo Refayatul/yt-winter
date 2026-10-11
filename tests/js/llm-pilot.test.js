@@ -317,3 +317,27 @@ test("scene spec: the output schema is a closed object the model can fill", () =
   assert.equal(planned.route.model, "claude-haiku-5-5");
   assert.deepEqual(planned.params.thinking, { type: "adaptive" });
 });
+
+test("scene spec: motifs and compositions are gated (undefined motif, ambiguous element, cue after the cut, unspoken startCue)", () => {
+  const cases = [
+    [(s) => { s.motifs["mile-card"].kind = "hologram"; }, /motif mile-card: kind/],
+    [(s) => { s.scenes[0].elements[1].motif = "ghost"; }, /undefined motif "ghost"/],
+    [(s) => { s.scenes[0].elements[0].text = "Two kinds"; }, /exactly one of/],
+    [(s) => { const p = s.scenes.find((x) => x.id === "promise"); p.cue = "has been paid"; }, /after the shot ends/],
+    [(s) => { s.scenes.find((x) => x.id === "still-owed").startCue = "never said"; }, /startCue "never said" is not spoken/],
+    [(s) => { s.scenes.find((x) => x.id === "forecast-10").cameraKeys = [{ at: 0, x: 960, y: 540, z: 1 }]; }, /cameraKeys are supported on composition/],
+    [(s) => { s.scenes[0].elements = Array.from({ length: 15 }, (_, i) => ({ id: `t${i}`, text: "x" })); }, /max 14/],
+  ];
+  for (const [mutate, pattern] of cases) {
+    const s = clone(); mutate(s);
+    const v = SceneSpec.validate(s, { timeline });
+    assert.ok(v.blockers.some((b) => pattern.test(b)), `${pattern} in ${v.blockers.join(" | ")}`);
+  }
+});
+
+test("scene spec: a second shot inside a beat starts on its spoken phrase and the shots stay ordered", () => {
+  const shots = SceneSpec.planShots(sample, timeline);
+  const promise = shots.find((s) => s.id === "promise"); const still = shots.find((s) => s.id === "still-owed");
+  assert.ok(still.start > promise.start && promise.end === still.start);
+  assert.equal(still.start, SceneSpec.phraseTime(timeline, "s3-5", "The airline has been paid"));
+});

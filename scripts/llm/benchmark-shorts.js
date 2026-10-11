@@ -41,13 +41,13 @@ function expectedUsd(summary, price, options = {}) {
 }
 
 function blindReview(rows, outDir) {
-  const lines = ["# Blind Shorts review", "", "For each topic, read A and B without knowing which is the production baseline. Rate hook, clarity, accuracy against the cited facts, progression and visual potential from 1 to 5 and note any factual problem. The key is in blind-key.json; open it only after rating.", ""];
+  const lines = ["# Blind Shorts review", "", "For each topic, read A and B without knowing which is the production baseline. Rate each criterion from 1 to 5 and note any factual problem; check every number against the topic's facts (candidate.json lists the facts each beat cites). The key is in blind-key.json; open it only after rating.", ""];
   const key = {};
   for (const row of rows.filter((r) => r.candidateLines)) {
     const swap = crypto.randomInt(2) === 1;
     const [a, b] = swap ? [row.candidateLines, row.baselineLines] : [row.baselineLines, row.candidateLines];
     key[row.topicId] = { A: swap ? "haiku" : "baseline", B: swap ? "baseline" : "haiku" };
-    lines.push(`## ${row.channel} / ${row.topicId}`, "", "**A**", "", ...a.map((x) => `- ${x}`), "", "**B**", "", ...b.map((x) => `- ${x}`), "", "| | Hook | Clarity | Accuracy | Progression | Visual potential | Notes |", "|---|---|---|---|---|---|---|", "| A | | | | | | |", "| B | | | | | | |", "");
+    lines.push(`## ${row.channel} / ${row.topicId}`, "", "**A**", "", ...a.map((x) => `- ${x}`), "", "**B**", "", ...b.map((x) => `- ${x}`), "", "| | Hook | Factual accuracy | Narrative flow | Visual compatibility | Audience accessibility | Production ready (Y/N) | Notes |", "|---|---|---|---|---|---|---|---|", "| A | | | | | | | |", "| B | | | | | | | |", "");
   }
   fs.writeFileSync(path.join(outDir, "blind-review.md"), lines.join("\n"));
   fs.writeFileSync(path.join(outDir, "blind-key.json"), JSON.stringify(key, null, 1) + "\n");
@@ -97,10 +97,36 @@ function markdown(report) {
   return lines.join("\n");
 }
 
+// N researched topics of one channel, deterministic (highest growth selection score first). Topics already
+// published are included on purpose: the curated script is then the script viewers actually heard.
+function channelTopics(slug, count) {
+  const Context = require("../../core/growth/context");
+  const ctx = Context.build(Channel.getChannel(slug), {});
+  return ctx.inventory.filter((t) => t.narrationBeats && t.narrationBeats.length && (t.evidence || []).filter((e) => !/^editorial /.test(e.source || "")).length >= 3)
+    .sort((a, b) => String(a.id).localeCompare(String(b.id))).slice(0, count).map((t) => [slug, t.id]);
+}
+
+// Refuses a paid run whose summed worst-case cost exceeds the cap, before any request is sent.
+async function plannedMaxUsd(topics) {
+  const { shadow } = require("./shorts-shadow");
+  const os = require("os");
+  let total = 0;
+  for (const [slug, id] of topics) { const s = await shadow({ channel: Channel.getChannel(slug), topicId: id, out: fs.mkdtempSync(path.join(os.tmpdir(), "bench-plan-")), env: {} }); total += s.maxUsd; }
+  return Math.round(total * 1e6) / 1e6;
+}
+
 async function main(argv = process.argv.slice(2)) {
   const out = arg(argv, "--out");
-  if (!out) { console.error("usage: benchmark-shorts.js --out DIR [--run] [--topics slug:id,...]"); return 1; }
-  const topics = arg(argv, "--topics") ? arg(argv, "--topics").split(",").map((pair) => pair.split(":")) : DEFAULT_TOPICS;
+  if (!out) { console.error("usage: benchmark-shorts.js --out DIR [--run] [--topics slug:id,...|--channel slug --count N] [--max-usd X]"); return 1; }
+  const topics = arg(argv, "--topics") ? arg(argv, "--topics").split(",").map((pair) => pair.split(":"))
+    : arg(argv, "--channel") ? channelTopics(arg(argv, "--channel"), Number(arg(argv, "--count") || 5)) : DEFAULT_TOPICS;
+  const cap = arg(argv, "--max-usd") != null ? Number(arg(argv, "--max-usd")) : null;
+  if (argv.includes("--run")) {
+    if (!(cap > 0)) { console.error("a paid run needs --max-usd (the approved total ceiling)"); return 1; }
+    const planned = await plannedMaxUsd(topics);
+    if (planned > cap) { console.error(`refused: worst-case $${planned} for ${topics.length} topics exceeds --max-usd $${cap}`); return 2; }
+    console.log(`worst-case $${planned} for ${topics.length} topics (cap $${cap})`);
+  }
   const report = await benchmark({ out, run: argv.includes("--run"), topics });
   console.log(markdown(report));
   return report.rows.some((row) => row.error) ? 2 : 0;
@@ -108,4 +134,4 @@ async function main(argv = process.argv.slice(2)) {
 
 if (require.main === module) main().then((code) => { process.exitCode = code; });
 
-module.exports = { DEFAULT_TOPICS, benchmark, expectedUsd, markdown, main };
+module.exports = { DEFAULT_TOPICS, benchmark, expectedUsd, markdown, main, channelTopics, plannedMaxUsd };

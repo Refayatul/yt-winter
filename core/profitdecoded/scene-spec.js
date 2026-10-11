@@ -32,7 +32,13 @@ const TYPES = {
   "rule-card": { category: "explanatory diagram", layout: "rule card", required: ["title", "lines", "source"] },
   "sum": { category: "data visualization", layout: "chart", required: ["items", "total", "source"] },
   "map": { category: "explanatory diagram", layout: "map", required: ["points", "routes"] },
+  // Free composition with keyframed elements: multi-phase choreography and recurring motifs.
+  "composition": { category: "visual metaphor", layout: "composition", background: "context", required: ["elements"] },
 };
+const MOTIF_KINDS = ["card", "drawer", "envelope", "folder", "phone", "stack"];
+const ELEMENT_CONTENT = ["motif", "prop", "text", "number", "evidence", "stamp", "path", "box"];
+const TEXT_STYLES = { kicker: 30, headline: 34, label: 30, caption: 44 };
+const MAX_ELEMENTS = 14;
 const TEXT = { kicker: 30, value: 12, detail: 40, label: 34, statement: 42, title: 34, line: 44, lines: 5, quoteChars: 260, cite: 80, source: 70, node: 22, mark: 18, item: 24, prop: 22, point: 18 };
 
 const words = (s) => String(s || "").split(/\s+/).filter(Boolean);
@@ -56,7 +62,27 @@ function textsOf(scene) {
   (scene.props || []).forEach((prop, i) => add(`props[${i}].label`, prop.label, TEXT.prop));
   (scene.points || []).forEach((point, i) => add(`points[${i}].label`, point.label, TEXT.point));
   if (scene.overlay) for (const t of textsOf({ ...scene.overlay, type: "evidence-card" })) out.push({ ...t, field: `overlay.${t.field}` });
+  (scene.elements || []).forEach((el, i) => {
+    const at = `elements[${i}]`;
+    if (el.text != null) add(`${at}.text`, el.text, TEXT_STYLES[el.style || "caption"] || TEXT.label);
+    if (el.label) add(`${at}.label`, el.label, TEXT.prop);
+    if (el.stamp) add(`${at}.stamp`, el.stamp, TEXT.kicker);
+    if (el.number) add(`${at}.number`, el.number.value, TEXT.value);
+    if (el.box) { add(`${at}.box.label`, el.box.label, TEXT.node); add(`${at}.box.sub`, el.box.sub, TEXT.detail); }
+    if (el.evidence) for (const t of textsOf({ ...el.evidence, type: "evidence-card" })) out.push({ ...t, field: `${at}.evidence.${t.field}` });
+  });
   return out;
+}
+
+// Start time of a phrase inside a beat, proportional to spoken characters (as PD.bw does at render time).
+function phraseTime(timeline, id, phrase) {
+  const needle = String(phrase).toLowerCase();
+  for (const s of timeline.filter((x) => x.beatId === id)) {
+    const text = (s.spoken || s.text).toLowerCase(); let i = text.indexOf(needle);
+    if (i < 0) { const alt = s.text.toLowerCase(); const j = alt.indexOf(needle); if (j < 0) continue; i = Math.round(j / alt.length * text.length); }
+    return s.start + (s.end - s.start) * (i / text.length);
+  }
+  return null;
 }
 
 function beatSpan(timeline, id) {
@@ -72,6 +98,10 @@ function validate(spec, options = {}) {
   if (!spec || spec.schema !== "profitdecoded.scene-spec.v1") blockers.push('spec.schema must be "profitdecoded.scene-spec.v1"');
   const scenes = Array.isArray(spec && spec.scenes) ? spec.scenes : [];
   if (!scenes.length) blockers.push("spec has no scenes");
+  for (const [name, m] of Object.entries((spec && spec.motifs) || {})) {
+    if (!m || !MOTIF_KINDS.includes(m.kind)) blockers.push(`motif ${name}: kind ${m && m.kind} (${MOTIF_KINDS.join(", ")})`);
+    if (m && m.label && String(m.label).length > TEXT.prop) blockers.push(`motif ${name}: label longer than ${TEXT.prop} characters`);
+  }
   const ids = new Set();
   scenes.forEach((scene, index) => {
     const at = `scene ${index + 1} (${scene && scene.id || "no id"})`;
@@ -94,13 +124,28 @@ function validate(spec, options = {}) {
       for (const route of scene.routes || []) if (!pointIds.has(route.from) || !pointIds.has(route.to)) blockers.push(`${at}: route ${route.from}->${route.to} names a missing point`);
     }
     if (scene.type === "comparison" && (scene.items || []).length !== 2) warnings.push(`${at}: comparison reads best with exactly 2 items`);
+    if (scene.type === "composition") {
+      const els = scene.elements || [];
+      if (els.length > MAX_ELEMENTS) blockers.push(`${at}: ${els.length} elements (max ${MAX_ELEMENTS}: a busy frame does not read on a phone)`);
+      els.forEach((el, i) => {
+        const kinds = ELEMENT_CONTENT.filter((k) => el[k] != null);
+        if (kinds.length !== 1) blockers.push(`${at}: element ${el.id || i} needs exactly one of ${ELEMENT_CONTENT.join("/")} (has ${kinds.join("/") || "none"})`);
+        if (el.motif != null && !(spec.motifs && spec.motifs[el.motif])) blockers.push(`${at}: element ${el.id || i} uses undefined motif "${el.motif}"`);
+        if (el.prop != null && !PROPS.includes(el.prop)) blockers.push(`${at}: element ${el.id || i} prop ${el.prop} (${PROPS.join(", ")})`);
+        if (el.text != null && el.style && !TEXT_STYLES[el.style]) blockers.push(`${at}: element ${el.id || i} style ${el.style} (${Object.keys(TEXT_STYLES).join(", ")})`);
+        if ((el.scale != null && el.scale < 0.6) || (el.keys || []).some((k) => k.scale != null && k.scale < 0.6)) warnings.push(`${at}: element ${el.id || i} scaled below 0.6: check its text on a phone`);
+      });
+    }
+    if (scene.cameraKeys && scene.type !== "composition") blockers.push(`${at}: cameraKeys are supported on composition scenes`);
     if ((scene.lines || []).length > TEXT.lines) blockers.push(`${at}: ${(scene.lines || []).length} text lines (max ${TEXT.lines})`);
     // timing
     if (!scene.beat && !(typeof scene.start === "number")) blockers.push(`${at}: needs a beat id (or an absolute start)`);
     if (timeline && scene.beat) {
       const span = beatSpan(timeline, scene.beat);
       if (!span) blockers.push(`${at}: beat ${scene.beat} is not in the timeline`);
-      for (const cue of [scene.cue, ...(scene.cues || []), ...((scene.items || []).map((i) => i.cue)), ...((scene.marks || []).map((m) => m.cue)), ...((scene.props || []).map((p) => p.cue))].filter(Boolean)) {
+      if (scene.startCue && span && !span.text.includes(String(scene.startCue).toLowerCase())) blockers.push(`${at}: startCue "${scene.startCue}" is not spoken in beat ${scene.beat}`);
+      const elementCues = (scene.elements || []).flatMap((el) => [el.enter && el.enter.cue, el.exit && el.exit.cue, el.number && el.number.cue, el.evidence && el.evidence.cue, ...(el.keys || []).map((k) => k.cue)]);
+      for (const cue of [scene.cue, scene.captionCue, ...(scene.cues || []), ...((scene.items || []).map((i) => i.cue)), ...((scene.marks || []).map((m) => m.cue)), ...((scene.props || []).map((p) => p.cue)), ...elementCues, ...(scene.cameraKeys || []).map((k) => k.cue)].filter(Boolean)) {
         if (span && !span.text.includes(String(cue).toLowerCase())) blockers.push(`${at}: cue "${cue}" is not spoken in beat ${scene.beat}`);
       }
     }
@@ -115,17 +160,32 @@ function validate(spec, options = {}) {
     if (scene.estimate === true && !/estimate|our (arithmetic|math|sum)/i.test(texts.map((t) => t.value).join(" ") + " " + (scene.stamp || ""))) warnings.push(`${at}: marked estimate but no on-screen qualifier (stamp "ESTIMATE" or "OUR ARITHMETIC")`);
     if (!scene.visual) warnings.push(`${at}: no "visual" description (needed for the diversity review)`);
   });
+  // A cue spoken after the shot has already cut away leaves an empty or unfinished frame.
+  if (timeline && !blockers.length) {
+    const shots = planShots(spec, timeline);
+    for (const shot of shots) {
+      const scene = scenes.find((x) => x.id === shot.id);
+      const cues = [scene.cue, scene.captionCue, ...(scene.cues || []), ...((scene.items || []).map((i) => i.cue)), ...((scene.marks || []).map((m) => m.cue)), ...((scene.props || []).map((p) => p.cue)), scene.overlay && scene.overlay.cue,
+        ...(scene.elements || []).flatMap((el) => [el.enter && el.enter.cue, el.number && el.number.cue, el.evidence && el.evidence.cue, ...(el.keys || []).map((k) => k.cue)]), ...(scene.cameraKeys || []).map((k) => k.cue)].filter(Boolean);
+      for (const cue of cues) {
+        const at = phraseTime(timeline, scene.beat, cue);
+        if (at != null && at > shot.end - 0.3) blockers.push(`scene ${scene.id}: cue "${cue}" is spoken at ${at.toFixed(1)} s, after the shot ends at ${shot.end.toFixed(1)} s`);
+      }
+    }
+  }
   return { passes: blockers.length === 0, blockers, warnings };
 }
 
 // Shots for the pre-render visual-diversity review (timings from the timeline, else the spec's own).
 function planShots(spec, timeline) {
   const scenes = spec.scenes || [];
-  const starts = scenes.map((scene) => (timeline && scene.beat ? (beatSpan(timeline, scene.beat) || {}).start : scene.start) || 0);
-  return scenes.map((scene, i) => {
+  const startOf = (scene) => (timeline && scene.beat ? (scene.startCue ? phraseTime(timeline, scene.beat, scene.startCue) : (beatSpan(timeline, scene.beat) || {}).start) : scene.start) || 0;
+  const ordered = [...scenes].sort((a, b) => startOf(a) - startOf(b));
+  const starts = ordered.map(startOf);
+  return ordered.map((scene, i) => {
     const type = TYPES[scene.type] || {};
     return {
-      id: scene.id, start: starts[i], end: i + 1 < scenes.length ? starts[i + 1] : (timeline && timeline.length ? timeline[timeline.length - 1].end + 4 : starts[i] + 6),
+      id: scene.id, start: starts[i], end: i + 1 < ordered.length ? starts[i + 1] : (timeline && timeline.length ? timeline[timeline.length - 1].end + 4 : starts[i] + 6),
       category: scene.category || type.category, background: scene.background || type.background || "dark", layout: scene.layout || type.layout,
       motion: scene.camera || "push", visual: scene.visual || scene.type, semanticAnchor: scene.anchor || "", sourceQualified: !!(scene.source || scene.cite),
       textWeight: scene.type === "statement" || scene.type === "rule-card" ? "high" : "low", asset: "original SVG motion graphic (scene spec)", license: "owned",
@@ -141,6 +201,7 @@ function outputSchema() {
   const str = { type: "string" };
   const num = { type: "number" };
   const obj = (properties, required = []) => ({ type: "object", additionalProperties: false, properties, required });
+  const STATE = obj({ balance: num, sheen: num, glow: num, dim: num, split: num, tap: num, open: num, items: num, height: num });
   return obj({
     schema: { type: "string", enum: ["profitdecoded.scene-spec.v1"] },
     scenes: { type: "array", items: obj({
@@ -158,8 +219,20 @@ function outputSchema() {
       marks: { type: "array", items: obj({ at: num, label: str, sub: str, cue: str, accent: { type: "boolean" } }, ["at", "label"]) },
       points: { type: "array", items: obj({ id: str, label: str, x: num, y: num }, ["id", "label", "x", "y"]) },
       routes: { type: "array", items: obj({ from: str, to: str, label: str }, ["from", "to"]) },
+      startCue: str, captionCue: str,
+      // Compositions: motifs are authored once per film (spec.motifs); the model places and animates them.
+      elements: { type: "array", items: obj({
+        id: str, motif: str, prop: { type: "string", enum: PROPS }, text: str, style: { type: "string", enum: Object.keys(TEXT_STYLES) }, label: str, stamp: str, path: str,
+        number: obj({ value: str, countTo: num, prefix: str, suffix: str, decimals: num, cue: str }, ["value"]),
+        evidence: obj({ kicker: str, value: str, detail: str, cue: str }, ["kicker", "value", "detail"]),
+        box: obj({ label: str, sub: str, accent: { type: "boolean" }, dashed: { type: "boolean" } }, ["label"]),
+        x: num, y: num, scale: num, rotate: num, opacity: num, state: STATE,
+        enter: obj({ cue: str, at: num, style: { type: "string", enum: ["fade", "rise", "pop"] } }), exit: obj({ cue: str, at: num }),
+        keys: { type: "array", items: obj({ cue: str, at: num, dur: num, x: num, y: num, scale: num, rotate: num, opacity: num, state: STATE }) },
+      }, ["id"]) },
+      cameraKeys: { type: "array", items: obj({ cue: str, at: num, dur: num, x: num, y: num, z: num }) },
     }, ["id", "type", "beat", "visual"]) },
   }, ["schema", "scenes"]);
 }
 
-module.exports = { TYPES, TEXT, ENVIRONMENTS, PROPS, BACKGROUNDS, CAMERAS, validate, planShots, diversity, outputSchema, textsOf, numbersIn };
+module.exports = { phraseTime, TYPES, MOTIF_KINDS, ELEMENT_CONTENT, TEXT_STYLES, TEXT, ENVIRONMENTS, PROPS, BACKGROUNDS, CAMERAS, validate, planShots, diversity, outputSchema, textsOf, numbersIn };

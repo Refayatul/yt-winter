@@ -12,7 +12,7 @@ estimate computed from token counts and list prices, not a measurement.
 | ImpossibleBrief (IB) | isolated: `core/pipeline/impossible-brief.js` via `shorts-sira.js` | automatic, daily (7 in 7 days) | none published | curated narration on researched records (154 of 500 topics) | none |
 | CriticalThread (CT) | isolated (same) | automatic, intermittent (3 in 7 days, last Oct 6) | none published | curated narration (162 of 522) | none |
 | Behind the Ordinary (BTO) | isolated (same) | paused (`BTO_PUBLISH=0`; OAuth `INVALID_CLIENT`) | none published | curated narration (7 of 525) | none |
-| ProfitDecoded (PD) | motion films (`scripts/profitdecoded/motion/`), auto path in shadow | n/a | V3 film ready, unpublished by design | human-reviewed story + handwritten `scenes.js` | Claude in authoring sessions only; production budget path disabled |
+| ProfitDecoded (PD) | motion films (`scripts/profitdecoded/motion/`), auto path in shadow | n/a | Documentary #1 published **manually** by the owner in YouTube Studio (video `yENBwtfuPyU`, 2026-10-10 19:16 UTC; verified read-only 2026-10-11). Automatic publishing remains disabled | human-reviewed story + handwritten `scenes.js` | Claude in authoring sessions only; production budget path disabled |
 
 Common stack: Edge TTS (Shorts), licensed stills and ffmpeg, `quality-gate.js` + growth readiness, `youtube-yukle.js`,
 scheduled by `portfolio-production.yml`. The long-form lane uses Groq (free tier). Current Shorts API spend is $0.
@@ -141,13 +141,32 @@ still caught at "$9.1B" (a plausible wrong figure; intermediate values now only 
 otherwise the sourced value appears directly); a caption colliding with labels; map arcs looping above the origin;
 label sizes under 11 px; free-floating figures over busy environments (now on a dark panel).
 
-**What it does not reach (honest gap):** V3's craft comes from bespoke choreography that the generic types do not
-express. It has a recurring physical motif (the gift card that splits, glows and returns in callbacks),
-multi-phase transformations inside one shot with camera keyframes, and props drawn for the story. The spec render
-is clean, sourced and legible, but flatter. **It is not V3-equivalent.** A full-length render with measured
-narration and a side-by-side human review is still required before it replaces handwritten scenes for a film.
-Next steps that close the gap without bespoke code: a `motif` element reused across scenes, two-phase scenes
-(`then:`), and camera keyframes in the spec.
+**Update 2026-10-11: motifs, compositions and camera keyframes.** The V3 craft gaps above were addressed in
+the same interpreter (no second engine):
+- `spec.motifs`: one story object defined once, whose state changes across the film. Kinds:
+  - `card`: balance, sheen, glow, dim, split, tap;
+  - `drawer`: open, items;
+  - `envelope`, `folder`, `phone`, `stack`.
+- `composition` scenes: up to 14 elements (motif, prop, text, number, evidence, stamp, path, box). Each element has entrances (fade, rise, pop) and phrase-cued keyframes that ease position, scale, rotation, opacity and motif state. This is the multi-phase choreography V3 hand-codes.
+- `cameraKeys`: the camera moves between phases, and never holds still (at least 0.22%/s).
+- `startCue`: a second shot can start mid-beat on a spoken phrase.
+- New gates:
+  - undefined motifs;
+  - elements with ambiguous content;
+  - more than 14 elements;
+  - a cue spoken after the shot has already cut, which caught a real empty "promise" frame;
+  - an unspoken `startCue`.
+
+Re-rendered sample: 14 scenes, 12 types, 3 compositions. The miles card taps a terminal, then splits into five envelopes cued to the narration, then the award-travel envelope drops into a STILL OWED drawer under a PAID FOR stamp. Smallest essential text is 12.3 px at 640 px; context share is 59%.
+
+**Qualitative editorial comparison with V3 frames (side by side, stills):**
+- **Comparable now:** the same visual family (everyday environment under the data, a story object that changes state, evidence cards, stamps, a source line), phrase-cued phases within a shot, and camera moves between them.
+- **Still weaker:**
+  - V3's bespoke data diagrams (the circular $1.75B card-balance flow with strands) have no generic equivalent; the spec's money-flow is plainer.
+  - V3 uses branded section headers ("DARDEN GIFT CARDS · FISCAL 2026") and explicit "not to scale" qualifiers more consistently.
+  - Prop spacing is less polished: the card crowds the terminal in the cold open.
+  - The motif library is small next to V3's custom drawings (cups, plates, storefronts, the 3D card wall).
+- **Not tested:** a full-length render with measured narration and motion review. **Equivalence is not claimed.**
 
 ## 9. Cost
 
@@ -160,7 +179,23 @@ Next steps that close the gap without bespoke code: a `motif` element reused acr
 | PD, 4 films per month | ~$1–1.8 / month | |
 | **All channels** | **~$1.1–1.9 / month expected** | policy ceilings: $6/month Shorts (4 × $1.50), PD $10 |
 
-## 10. Enabling the first paid test (requires approval)
+## 10. Enabling the first paid test (requires approval; proposed ceiling $0.05 total)
+
+Prepared benchmark: 5 researched ImpossibleBrief topics (IB-EAR-001, -004, -006, -007, -009) against their curated production scripts.
+- Worst-case reserved total: $0.0085. Expected about $0.003, or about $0.0014 as a batch.
+- `--run` refuses without `--max-usd`, and refuses when the summed worst case exceeds it.
+- The blind sheet rates hook, factual accuracy, narrative flow, visual compatibility, audience accessibility and production readiness.
+
+Steps (none done):
+1. Create the repository secret `IB_ANTHROPIC_API_KEY`, ideally a separate Anthropic workspace key with a $1 spend limit.
+2. Set up the ledger: for a local run, `LLM_BUDGET_STORE=file`; in CI, initialise the branch `llm-budget-ledger`.
+3. Make a reviewed commit to `channels/impossible-brief/llm-budget.json`:
+   `"paidEnabled": true, "dailyUsd": 0.05, "paidApproval": {"id": "ib-haiku-benchmark-1", "pool": "experiment", "model": "claude-haiku-5-5", "maxUsd": 0.02, "expiresAt": "<ISO, 48 h>", "approvedBy": "<owner>"}`.
+4. Run `node scripts/llm/benchmark-shorts.js --out <dir> --channel impossible-brief --count 5 --run --max-usd 0.05`.
+5. Review `blind-review.md` before opening `blind-key.json`. Then revert `paidEnabled`, or let the approval expire.
+
+## 11. Previous enabling notes
+
 
 1. Create the repository secret `IB_ANTHROPIC_API_KEY` (a separate Anthropic workspace key with a low spend limit).
 2. Initialise the ledger branch `llm-budget-ledger` (one JSON file per channel, `{"version":1,"entries":[]}`).
