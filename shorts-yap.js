@@ -87,6 +87,9 @@ const boyut = (f) => {
   } catch (e) { return { w: 0, h: 0 }; }
 };
 const Kadraj = require("./lib/dikey-kadraj");
+// Craft v2 (SHORTS_CRAFT_V2 incl. failure-reconstructed): subject-aware 9:16 framing (lib/odak.js).
+const CRAFT = require("./core/rendering/craft").features(CURRENT_CHANNEL.slug);
+const Odak = require("./lib/odak");
 
 // --- 1) Seslendirme (tek parca) -----------------------------------------
 function seslendir(metin, dosya) {
@@ -130,16 +133,27 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
   console.log(`Shorts: ${IS}  (${W}x${H}, ${sahneler.length} sahne, ses ${SES}, hiz ${HIZ}, kanal ${CURRENT_CHANNEL.slug})`);
   const vo = path.join(TMP, "vo.mp3");
   const anlati = sahneler.map(s => s.metin.trim()).join(" ");
+  // Craft v2: one continuous read with measured line timing (lib/edge-narration.js); scenes start
+  // where their sentence is actually spoken. Otherwise (or if the service refuses) the v1 read.
+  let olculen = null;
+  if (CRAFT.pacing) {
+    try {
+      olculen = await require("./lib/edge-narration").narrate({ lines: sahneler.map(s => telaffuz.ttsMetni(s.metin.trim())), voice: SES, rate: HIZ,
+        pausesMs: require("./core/rendering/craft").linePauses(sahneler.length).map(x => Math.round(x * 1000)), out: vo, probe: sure });
+      fs.writeFileSync(path.join(VID, "anlatim-zamanlama.json"), JSON.stringify({ mode: olculen.mode, lineTimes: olculen.lineTimes }, null, 2));
+    } catch (e) { console.log("  (surekli anlatim olmadi: " + String(e.message).slice(0, 100) + "; satir payi zamanlamasi)"); olculen = null; }
+  }
   // Ses sozluk karsiliklariyla okunur (O-ring -> "O ring"); altyazi orijinal yazimi korur.
-  await seslendirGuvenli(telaffuz.ttsMetni(anlati), vo);
+  if (!olculen) await seslendirGuvenli(telaffuz.ttsMetni(anlati), vo);
   if (!fs.existsSync(vo) || fs.statSync(vo).size < 1000) throw new Error("Seslendirme uretilemedi.");
   const VODUR = sure(vo);
 
-  // sahne sureleri: kelime payina gore
+  // sahne sureleri: olculen satir zamanlari (v2) ya da kelime payina gore (v1)
   const kelime = (t) => t.trim().split(/\s+/).length;
   const toplamK = sahneler.reduce((a, s) => a + kelime(s.metin), 0);
   let acc = 0;
-  for (const s of sahneler) { s.dur = VODUR * kelime(s.metin) / toplamK; s.start = acc; acc += s.dur; }
+  if (olculen) sahneler.forEach((s, i) => { s.start = olculen.lineTimes[i].start; s.dur = (i + 1 < sahneler.length ? olculen.lineTimes[i + 1].start : VODUR) - s.start; });
+  else for (const s of sahneler) { s.dur = VODUR * kelime(s.metin) / toplamK; s.start = acc; acc += s.dur; }
 
   // baslangic: elle verilmemisse kaynak boyunca otomatik dagit; her zaman
   // kaynak suresine gore kirp (trim kaynak sonunu asmasin).
@@ -180,6 +194,9 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
   // yavas yakinlasma uygulanir, yon cekim sirasina gore degisir (lib/dikey-kadraj.fotoFiltre).
   const FOTO = /\.(jpe?g|png|webp)$/i;
   const kaynakSure = {};
+  const odaklar = {};
+  const kullanim = {};
+  const kompozisyonlar = [];
   const klipler = [];
   const zamanlar = [];
   const ATLA = 0.6;          // alt cekimler arasi kaynakta ileri atlama (jump cut)
@@ -207,9 +224,24 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
       const out = path.join(TMP, "s" + String(n++).padStart(3, "0") + ".mp4");
       // Fotograf: hareket zorunlu (durgun kare Shorts'ta olu durur); video: plandaki hareket.
       const d = boyutlar[s.kaynak] || (boyutlar[s.kaynak] = boyut(kaynak));
-      const hf = foto ? "" : hareketFiltre(p.hareket, j, bol[j]);
-      const vf = foto ? Kadraj.fotoFiltre({ ...d, j: n, n: bol[j], ton: TON })
-        : Kadraj.videoTaban({ ...d, ton: TON }) + (hf ? "[v0];[v0]" + hf + ",format=yuv420p[v]" : "[v]");
+      let vf;
+      if (CRAFT.opening) {
+        // Subject window measured once per source; a returning picture shows its second window.
+        if (!(s.kaynak in odaklar)) odaklar[s.kaynak] = Odak.focus(kaynak, { ...d, video: !foto, duration: kaynakSure[s.kaynak] === Infinity ? 0 : kaynakSure[s.kaynak] });
+        const odak = odaklar[s.kaynak];
+        const use = kullanim[s.kaynak] || 0;
+        kullanim[s.kaynak] = use + 1;
+        const tip = Kadraj.kompozisyon({ ...d, odak });
+        kompozisyonlar.push({ sahne: i, kaynak: s.kaynak, tip, kullanim: use, coverage: odak && odak.coverage, uniform: odak && odak.uniform });
+        // A documentary layout keeps its own composition: no punch/push on top of it.
+        const hf = foto || tip === "belge" ? "" : hareketFiltre(p.hareket, j, bol[j]);
+        vf = foto ? Kadraj.fotoFiltreV2({ ...d, j: n, n: bol[j], ton: TON, odak, kullanim: use })
+          : Kadraj.videoTabanV2({ ...d, ton: TON, odak, kullanim: use }) + (hf ? "[v0];[v0]" + hf + ",format=yuv420p[v]" : "[v]");
+      } else {
+        const hf = foto ? "" : hareketFiltre(p.hareket, j, bol[j]);
+        vf = foto ? Kadraj.fotoFiltre({ ...d, j: n, n: bol[j], ton: TON })
+          : Kadraj.videoTaban({ ...d, ton: TON }) + (hf ? "[v0];[v0]" + hf + ",format=yuv420p[v]" : "[v]");
+      }
       const girdi = foto ? ["-loop", "1", "-framerate", String(FPS), "-i", kaynak]
         : ["-ss", Math.max(0, Math.min(t, kaynakSure[s.kaynak] - bol[j] / FPS - 0.05)).toFixed(3), "-i", kaynak];
       run(["-hide_banner", "-loglevel", "error", ...girdi, "-filter_complex", vf, "-map", "[v]",
@@ -222,6 +254,7 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
   }
   console.log("");
   fs.writeFileSync(path.join(VID, "sahne-zamanlari.json"), JSON.stringify(zamanlar, null, 2));
+  if (CRAFT.opening) fs.writeFileSync(path.join(VID, "kompozisyon.json"), JSON.stringify(kompozisyonlar, null, 2));
 
   // --- 3) sahneleri birlestir ---
   // Loop icin AYRI kapanis karti YOK — video canli goruntude biter, boylece
@@ -288,6 +321,7 @@ WrapStyle: 2
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, OutlineColour, BackColour, Bold, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: Pop,${FONT},90,&H00FFFFFF,&H00000000,&H64000000,1,1,7,3,2,60,60,470,1
+Style: Kanca,${FONT},90,&H00FFFFFF,&H70000000,&H70000000,1,3,22,0,5,60,60,0,1
 
 [Events]
 Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
@@ -313,11 +347,17 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
         }
         satirlar = [en.a, en.b];
       }
-      const fs = Math.round(DEN.sigdir(satirlar.join("\\N"), W * 0.078, W) * k), bord = Math.max(5, Math.round(W * 0.006));
-      const y = Math.round(H * 0.40);
+      // Craft v2: the hook is larger (about 11% of the width) on a semi-transparent box (style Kanca),
+      // so it reads on any picture at first glance.
+      const fs = Math.round(DEN.sigdir(satirlar.join("\\N"), W * (CRAFT.opening ? 0.11 : 0.078), W) * k), bord = Math.max(5, Math.round(W * 0.006));
+      // Craft v2: over a documentary layout the hook sits in the dark band above the whole frame.
+      const ilkBelge = CRAFT.opening && kompozisyonlar.length && kompozisyonlar[0].tip === "belge";
+      const y = ilkBelge ? Kadraj.BELGE.kancaY : Math.round(H * 0.40);
       const hookSon = Math.min(2.7, VODUR * 0.4);
       // Kanca ILK KAREDE ekranda (fade-in yok): Shorts akisinda kaydirma karari ilk karede verilir.
-      ekstra.push(`Dialogue: 0,${assTime(0)},${assTime(hookSon)},Pop,,0,0,0,,` +
+      if (CRAFT.opening) ekstra.push(`Dialogue: 0,${assTime(0)},${assTime(hookSon)},Kanca,,0,0,0,,` +
+        `{\\an5\\pos(${cx},${y})\\fs${fs}\\fad(0,220)}${satirlar.map(assKacis).join("\\N")}`);
+      else ekstra.push(`Dialogue: 0,${assTime(0)},${assTime(hookSon)},Pop,,0,0,0,,` +
         `{\\an5\\pos(${cx},${y})\\fs${fs}\\bord${bord}\\shad3\\fad(0,220)}${satirlar.map(assKacis).join("\\N")}`);
       // Seri etiketi kancanin hemen ustunde; numarali tekrar eden format kanal kimligini korur.
       if (SERI) {

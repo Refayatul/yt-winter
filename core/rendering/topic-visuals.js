@@ -153,6 +153,10 @@ function visualAssetText(shot) {
   return [asset.file, asset.description, asset.alt, asset.title, asset.origin, shot && shot.scene].filter(Boolean).join(" ");
 }
 
+// Craft v2: subjects that make a picture off-topic unless the topic names them (people at work,
+// events, artworks, branding).
+const OFF_SUBJECT = /\b(?:sculptors?|sculptures?|statues?|festivals?|portraits?|selfies?|tourists?|weddings?|mascots?|logos?|carnivals?|parades?)\b/g;
+
 function semanticVisualEvidence(topic, shot) {
   const assetText = visualAssetText(shot);
   const normalized = assetText.toLowerCase().replace(/[^a-z0-9]+/g, " ");
@@ -240,6 +244,28 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
   const craftFeatures = options.craft === true ? { opening: true, repeats: true } : options.craft || {};
   const craftOpening = !!craftFeatures.opening && !behindOrdinary;
   const craft = !!craftFeatures.repeats && !behindOrdinary;
+  // Craft v2 relevance gate: a picture or clip that names nothing distinctive about the topic is not
+  // used, and the rejection is reported (render.json craft.rejectedVisuals) instead of hidden.
+  const rejectedVisuals = [];
+  if (craft) {
+    // A picture can share the topic's word and still be about something else ("Ice sculptor at
+    // work" for a Short on lake ice): a person, event or artwork as the subject is off-topic unless
+    // the topic itself names it.
+    const topicText = [topic.canonicalTopic, topic.subject, topic.topic, topic.title, topic.scenario, topic.mechanism].join(" ").toLowerCase();
+    const offSubject = (asset) => {
+      const text = visualAssetText({ still: asset, clip: asset }).toLowerCase();
+      return (text.match(OFF_SUBJECT) || []).find((term) => !topicText.includes(term.replace(/s$/, ""))) || null;
+    };
+    const relevant = (asset, type) => {
+      const evidence = semanticVisualEvidence(topic, type === "stock-video" ? { type, clip: asset } : { type, still: asset });
+      const off = evidence.relevant ? offSubject(asset) : null;
+      const reason = !evidence.relevant ? evidence.reason : off ? `the picture's subject is a ${off}, not the topic` : null;
+      if (reason) rejectedVisuals.push({ type, asset: asset.file || asset.title || asset.id || null, reason });
+      return !reason;
+    };
+    ordered = ordered.filter((still) => still.lead === true || relevant(still, "licensed-still"));
+    clips = clips.filter((clip) => relevant(clip, "stock-video"));
+  }
   const craftLead = craftOpening && !curatedLead ? Craft.chooseOpening(ordered, topic, claims[0] && claims[0].text) : null;
   if (craftLead) ordered = [craftLead, ...ordered.filter((still) => still !== craftLead)];
   const kindOf = (still) => (craftOpening && !still.fit && Craft.figureType(still) === "illustration" ? "photo" : stillKind(still));
@@ -280,6 +306,19 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     // Unused stills first; once all are used, the least used one returns with
     // a different camera move.
     return candidates.reduce((best, still) => ((stillUses.get(still.file) || 0) < (stillUses.get(best.file) || 0) ? still : best), candidates[0]);
+  };
+
+  // Craft v2 overflow: the photo or illustration (never a data figure) that best matches the line,
+  // least used first, never the picture already on screen.
+  const overflowStill = () => {
+    const last = plan.length ? plan[plan.length - 1].still : null;
+    const candidates = ordered.filter((still) => still !== last && Craft.figureType(still) !== "data");
+    if (!candidates.length) return null;
+    return candidates.reduce((best, still) => {
+      const match = lineMatch(still) - lineMatch(best);
+      if (match !== 0) return match > 0 ? still : best;
+      return (stillUses.get(still.file) || 0) < (stillUses.get(best.file) || 0) ? still : best;
+    }, candidates[0]);
   };
 
   for (let shotIndex = 0; shotIndex < boundaries.length - 1; shotIndex += 1) {
@@ -353,15 +392,40 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
       }
     }
 
+    // Craft v2: an illustration is drawn for the scene that matches the spoken line; with no matching
+    // scene a relevant picture returns as a detail crop instead of unrelated filler.
+    const sceneFor = () => {
+      if (!craft || !scenes.length) return scenes[claimIndex % Math.max(1, scenes.length)] || claim.text;
+      const lineWords = words(claim.text);
+      const scored = scenes.map((scene) => ({ scene, hits: [...words(scene)].filter((word) => lineWords.has(word)).length }));
+      const best = scored.reduce((a, b) => (b.hits > a.hits ? b : a), scored[0]);
+      return best.hits > 0 ? best.scene : null;
+    };
+    let scene = sceneFor();
+    if (type === "procedural" && craft && !scene && nextStill()) type = "licensed-still";
+    // Past the repeat cap with no illustrated scene for this line: hold the previous real shot a
+    // little longer, or bring back the picture that best matches the line as a detail crop. Abstract
+    // filler (which the visual audit counts as irrelevant) is the last resort.
+    let overflow = null;
+    if (type === "procedural" && craft && !scene) {
+      if (previous && ["licensed-still", "stock-video"].includes(previous.type) && previous.duration + (end - start) <= maximumHoldSeconds) {
+        previous.end = end;
+        previous.duration = previous.end - previous.start;
+        continue;
+      }
+      overflow = overflowStill();
+      if (overflow) type = "licensed-still";
+    }
+    if (!scene) scene = claim.text;
     const entry = { shot: plan.length + 1, start, end, duration: end - start, claimIndex, claimText: claim.text,
-      scene: scenes[claimIndex % Math.max(1, scenes.length)] || claim.text, type, numbers, comparison: [], still: null,
+      scene, type, numbers, comparison: [], still: null,
       proceduralFrame: claimIndex * 97 + shotIndex };
     if (type === "stock-video") {
       const clip = clips[clipIndex++];
       lastClipShot = plan.length;
       Object.assign(entry, { clip, sourceId: `video:${clip.id}`, visualKey: `video:${clip.id}` });
     } else if (type === "licensed-still") {
-      const still = nextStill();
+      const still = overflow || nextStill();
       const use = stillUses.get(still.file) || 0;
       stillUses.set(still.file, use + 1);
       Object.assign(entry, { still, kind: kindOf(still), motion: use, detail: craft && use > 0, sourceId: use ? `still:${still.file}#${use + 1}` : `still:${still.file}`, visualKey: `still:${still.file}` });
@@ -381,7 +445,9 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     }
     plan.push(entry);
   }
-  return loopBack(plan, { closeOnPicture: craft });
+  const finished = loopBack(plan, { closeOnPicture: craft });
+  finished.rejectedVisuals = rejectedVisuals;
+  return finished;
 }
 
 // Loop ending: the last shot returns to the opening picture (with another

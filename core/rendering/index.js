@@ -139,6 +139,14 @@ function synthesizeNarration(script, outputDirectory, channel, craftFeatures = n
   // brevity comes from the script, never from speeding the voice up.
   // Craft v2: a beat after the hook and before the payoff, short joins between, a slower payoff.
   const craft = craftFeatures ? !!craftFeatures.pacing : Craft.enabled(channel.slug);
+  // Craft v2 with the Edge voice: the whole script in ONE request (continuous intonation), the
+  // pauses as SSML breaks and each line's timing measured from Edge word boundaries. Any failure
+  // falls back to the line-by-line takes below, and the result records which path ran.
+  const edgeVoice = !(process.platform === "darwin" && process.env.TTS_PROVIDER !== "edge");
+  if (craft && edgeVoice && script.claims.length > 1) {
+    const continuous = continuousNarration(script, outputDirectory, voiceConfig);
+    if (continuous) return continuous;
+  }
   const craftPauses = craft ? Craft.linePauses(script.claims.length) : null;
   const takes = script.claims.map((claim, index) => {
     const baseRate = voiceConfig.rate || DEFAULT_VOICE_RATE;
@@ -170,6 +178,38 @@ function synthesizeNarration(script, outputDirectory, channel, craftFeatures = n
     syntheticVoice: takes.every((take) => take.syntheticVoice),
     rate: voiceConfig.rate || DEFAULT_VOICE_RATE,
     claimDurations,
+  };
+}
+
+function continuousNarration(script, outputDirectory, voiceConfig) {
+  const ffmpeg = require("../../ff-yol").ffmpeg;
+  const mp3 = path.join(outputDirectory, "narration-continuous.mp3");
+  const spec = path.join(outputDirectory, "narration-continuous.json");
+  const pausesMs = Craft.linePauses(script.claims.length).map((seconds) => Math.round(seconds * 1000));
+  write(spec, { lines: script.claims.map((claim) => claim.text), voice: voiceConfig.voice || "en-US-AndrewMultilingualNeural", rate: voiceConfig.rate || DEFAULT_VOICE_RATE, pausesMs, out: mp3 });
+  try {
+    cp.execFileSync(process.execPath, [path.join(__dirname, "..", "..", "scripts", "narrate-continuous.js"), spec], { stdio: ["ignore", "ignore", "pipe"], timeout: 120000 });
+  } catch (error) {
+    console.log(`  continuous narration unavailable (${String(error.stderr || error.message).trim().slice(0, 120)}); line-by-line takes instead`);
+    return null;
+  }
+  const timing = JSON.parse(fs.readFileSync(mp3 + ".timing.json", "utf8"));
+  const output = path.join(outputDirectory, "narration.m4a");
+  cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", mp3, "-filter_complex", "[0:a]aresample=44100,aformat=channel_layouts=mono,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
+    "-map", "[a]", "-ar", "44100", "-c:a", "aac", "-b:a", "160k", output], { stdio: "ignore", timeout: 120000 });
+  const durationSeconds = probe(output).durationSeconds;
+  const scale = durationSeconds / (timing.durationSec || durationSeconds);
+  const claimDurations = timing.lineTimes.map((line) => (line.end - line.start) * scale);
+  const words = (timing.words || []).map((word) => ({ ...word, start: word.start * scale, end: word.end * scale }));
+  write(path.join(outputDirectory, "narration-timing.json"), { mode: timing.mode, lineTimes: timing.lineTimes, words });
+  return {
+    file: output,
+    provider: `Edge TTS continuous read (${timing.mode}, word-boundary timed)`,
+    syntheticVoice: false,
+    rate: voiceConfig.rate || DEFAULT_VOICE_RATE,
+    claimDurations,
+    words,
+    continuous: { mode: timing.mode, pausesMs },
   };
 }
 
@@ -661,7 +701,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
     try { fs.unlinkSync(filterFile); } catch (error) {}
   }
   const metrics = TopicVisuals.visualMetrics(plan, topic);
-  return { ...metrics, opening, craft: craft ? { version: 2, features: craftFeatures, openingStill: plan[0] && plan[0].still ? plan[0].still.file : null, detailCrops: plan.filter((shot) => shot.detail).length } : null, visualQuality: TopicVisuals.evaluateVisualQuality(metrics), segmentSeconds: plan.flatMap((shot) => shot.type === "explainer"
+  return { ...metrics, opening, craft: craft ? { version: 2, features: craftFeatures, openingStill: plan[0] && plan[0].still ? plan[0].still.file : null, detailCrops: plan.filter((shot) => shot.detail).length, rejectedVisuals: plan.rejectedVisuals || [] } : null, visualQuality: TopicVisuals.evaluateVisualQuality(metrics), segmentSeconds: plan.flatMap((shot) => shot.type === "explainer"
     // An explainer animates in beats (draw, label, move, settle) of at most ~3s.
     ? Array(Math.max(1, Math.ceil(shot.duration / 3))).fill(shot.duration / Math.max(1, Math.ceil(shot.duration / 3)))
     : [shot.duration]), sources: plan.map(({ shot, claimIndex, type, sourceId, numbers }) => ({ shot, claimIndex, type, sourceId, numbers })) };
@@ -715,8 +755,11 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     spoken: growth.script.spoken || (growth.script.lines || []).join(" "), claims: growthLines.map(({ role, ...claim }) => ({ ...claim, role })),
     forbiddenOpening: growth.script.forbiddenOpening || false, sourceIds: growth.script.sourceIds || (topic.sources || []).map((source) => source.name) })) : Scripting.shortScript(topic);
   const titles = growth ? growth.titles.candidates.filter((item) => !item.misleading).map((item) => item.title) : Scripting.titleCandidates(topic);
-  const captionSrt = (value) => growth ? Pacing.srt(value.claims, growthConfig.captions) : captions(value);
-  const captionAss = (value) => growth ? Pacing.ass(value.claims, growthConfig.captions) : assCaptions(value);
+  // Craft v2: captions timed on the spoken words when the narration was measured, in a larger style.
+  const captionTiming = {};
+  const captionConfig = () => (growth && Craft.features(channel.slug, growth).captions ? Craft.captionStyle(growthConfig.captions) : growth && growthConfig.captions);
+  const captionSrt = (value) => growth ? Pacing.srt(value.claims, captionConfig(), captionTiming) : captions(value);
+  const captionAss = (value) => growth ? Pacing.ass(value.claims, captionConfig(), captionTiming) : assCaptions(value);
   let visuals = Visuals.plan(topic, script);
   const thumbnail = Visuals.thumbnail(topic);
   const isCriticalThread = channel.slug === "critical-thread";
@@ -793,10 +836,14 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     }
     write(path.join(outputDirectory, "visual-attribution.json"), { count: assets.stills.length, stills: assets.stills.map(({ path: localPath, ...still }) => still), clips: (assets.clips || []).map(({ path: localPath, ...clip }) => clip), error: assets.error || null });
     const craftFeatures = Craft.features(channel.slug, growth);
+    // Craft v2: precise decimals are read (and captioned) as "about 11.6"; the story shape is recorded.
+    if (craftFeatures.pacing) for (const claim of script.claims) claim.text = Craft.simplifyNumbers(claim.text);
+    const storyShape = Craft.storyShape(script.claims.map((claim) => claim.text));
     const voice = synthesizeNarration(script, outputDirectory, channel, craftFeatures);
     const audioProbe = probe(voice.file);
     const duration = audioProbe.durationSeconds;
     applyMeasuredTiming(script, voice.claimDurations, duration);
+    if (voice.words) captionTiming.words = voice.words;
     visuals = Visuals.plan(topic, script);
     pkg.visuals = visuals;
     pkg.render = render;
@@ -816,8 +863,9 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
       { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [], seriesLabel: Series.label(channel, topic.slug), seriesEnd: Series.endLine(channel), craft: craftFeatures });
     const thumbnailRender = renderThumbnail(image, renderTopic, assets, script);
     render.completed = true;
-    render.audio = { ...voice, ...audioProbe, music: music ? { mood: music.mood, profile: music.profile } : null };
+    render.audio = { ...Object.fromEntries(Object.entries(voice).filter(([key]) => key !== "words")), ...audioProbe, music: music ? { mood: music.mood, profile: music.profile } : null };
     render.video = { file: video, captionsBurned: true, ...visualRender, ...probe(video) };
+    render.story = storyShape;
     render.thumbnail = { file: image, bytes: fs.statSync(image).size, ...thumbnailRender };
     // Provenance manifest (every external + generated asset, licence, duty to
     // attribute) and the thumbnail variant ledger.

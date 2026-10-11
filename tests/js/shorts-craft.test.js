@@ -81,10 +81,10 @@ test("read pacing: a beat after the hook and before the payoff, short joins, abo
 
 test("an opening_visual experiment arm turns on the opening change alone for that video (one variable)", () => {
   const arm = (value) => ({ experiment: { experiment_id: "ib-short-opening_visual", arm: "variant", variable: "opening_visual", value } });
-  assert.deepEqual(Craft.features("impossible-brief", null, {}), { opening: false, repeats: false, pacing: false });
-  assert.deepEqual(Craft.features("impossible-brief", arm("craft-v2-opening"), {}), { opening: true, repeats: false, pacing: false });
-  assert.deepEqual(Craft.features("impossible-brief", arm("current"), {}), { opening: false, repeats: false, pacing: false });
-  assert.deepEqual(Craft.features("impossible-brief", null, { SHORTS_CRAFT_V2: "1" }), { opening: true, repeats: true, pacing: true });
+  assert.deepEqual(Craft.features("impossible-brief", null, {}), { opening: false, repeats: false, pacing: false, captions: false });
+  assert.deepEqual(Craft.features("impossible-brief", arm("craft-v2-opening"), {}), { opening: true, repeats: false, pacing: false, captions: false });
+  assert.deepEqual(Craft.features("impossible-brief", arm("current"), {}), { opening: false, repeats: false, pacing: false, captions: false });
+  assert.deepEqual(Craft.features("impossible-brief", null, { SHORTS_CRAFT_V2: "1" }), { opening: true, repeats: true, pacing: true, captions: true });
   const openingOnly = V.buildVisualPlan(topic, { claims, targetSeconds: 23.8 }, STILLS.map((s) => ({ ...s })), Array(12).fill(1.98), 23.8, [], { opening: "number", craft: { opening: true } });
   assert.equal(openingOnly[0].still.file, "Chicxulub impact - artist impression.jpg");
   assert.ok(!openingOnly.some((shot) => shot.detail), "repeats are unchanged in the opening-only arm");

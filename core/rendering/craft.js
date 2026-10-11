@@ -73,6 +73,29 @@ function hookFontSize(lines, maximum = 132) {
   return Math.max(56, Math.min(maximum, Math.floor(980 / (longest * 0.66))));
 }
 
+// A spoken figure with three or more decimals ("11.611 kilometres") is read as "about 11.6"; the value
+// stays true to the source and the listener can hold it. Already-hedged figures are left alone.
+function simplifyNumbers(text) {
+  return String(text).replace(/(\b(?:about|around|nearly|roughly|almost|some|over|under)\s+)?\b(\d+)\.(\d{3,})\b/gi, (match, hedge, whole, decimals) => {
+    const rounded = Number(`${whole}.${decimals}`).toFixed(1).replace(/\.0$/, "");
+    return `${hedge || "about "}${rounded}`;
+  });
+}
+
+// Story measurements for the render report (not a score): spoken figures and cause-and-effect links.
+const CAUSAL = /\b(?:because|so|which means|that means|that's why|as a result|so that|therefore|which is why|leaving|causing)\b/i;
+function storyShape(lines) {
+  const text = lines.join(" ");
+  const figures = (text.match(/\b\d[\d,.]*\b/g) || []).length;
+  const words = text.split(/\s+/).filter(Boolean).length;
+  return { figures, figuresPer10Words: +(figures * 10 / Math.max(1, words)).toFixed(2), causalLinks: lines.filter((line) => CAUSAL.test(line)).length, lines: lines.length };
+}
+
+// Captions under craft v2: larger, heavier and a touch higher, still inside the Shorts safe zone.
+function captionStyle(base = {}) {
+  return { ...base, fontSize: Math.max(Number(base.fontSize) || 0, 76), outline: Math.max(Number.isFinite(base.outline) ? base.outline : 5, 6), marginV: Math.max(Number(base.marginV) || 0, 600) };
+}
+
 // Pause after each line: a beat after the hook and before the payoff, short joins elsewhere.
 // The total stays close to the uniform 0.18 s per join it replaces.
 function linePauses(count) {
@@ -97,7 +120,7 @@ function features(channelSlug, growthPlan = null, env = process.env) {
   const all = enabled(channelSlug, env);
   const experiment = growthPlan && growthPlan.experiment;
   const openingArm = !!(experiment && experiment.variable === "opening_visual" && experiment.value === "craft-v2-opening");
-  return { opening: all || openingArm, repeats: all, pacing: all };
+  return { opening: all || openingArm, repeats: all, pacing: all, captions: all };
 }
 
-module.exports = { enabled, features, figureType, openingImpact, chooseOpening, hookLines, hookFontSize, linePauses, payoffRate, DATA_FIGURE_RE };
+module.exports = { enabled, features, captionStyle, simplifyNumbers, storyShape, figureType, openingImpact, chooseOpening, hookLines, hookFontSize, linePauses, payoffRate, DATA_FIGURE_RE };
