@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-11T16:41:10.596Z
+Generated: 2026-10-11T17:43:33.981Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -24,7 +24,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-09 (lag 2 d) |
 | Ops (24 h) | publish.public 1, publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-11 (0 d) |
-| API quota today | 1669 / 9800 units (project 1012165386949) |
+| API quota today | 1676 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 25/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
@@ -45,7 +45,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-09 (lag 2 d) |
 | Ops (24 h) | publish.public 1, publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-11 (0 d) |
-| API quota today | 1677 / 9800 units (project 684098966511) |
+| API quota today | 1685 / 9800 units (project 684098966511) |
 | YPP readiness (estimate) | subs 9/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
@@ -53,7 +53,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Signal | Status |
 |---|---|
 | Today topic | unavailable |
-| Short | due-not-produced |
+| Short | not-due |
 | Long | due-not-produced |
 | Quality | unavailable / unavailable |
 | YouTube | not-uploaded |
@@ -66,7 +66,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-09 (lag 2 d) |
 | Ops (24 h) | analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-11 (0 d) |
-| API quota today | 66 / 9800 units (project 208987599838) |
+| API quota today | 73 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
@@ -74,7 +74,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Signal | Status |
 |---|---|
 | Today topic | unavailable |
-| Short | due-not-produced |
+| Short | not-due |
 | Long | due-not-produced |
 | Quality | unavailable / unavailable |
 | YouTube | not-uploaded |
