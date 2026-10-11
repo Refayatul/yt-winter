@@ -287,6 +287,50 @@ Nobody has listened to these for this report. Naturalness is not claimed; the `-
 - **FR documentary layout is less kinetic in its first seconds than the old full-bleed crop.** It keeps the evidence (the old crop cut off the engine core on Qantas 32). Whether viewers prefer it is an experiment (§7), not a claim.
 - **Edge throttling.** Local renders hit HTTP 403 windows after repeated requests. The three-request read is less exposed than eight requests, but neither is immune. CI runners use fresh addresses.
 
+### v3 (same day): motion, opening legibility, CT imagery, sound cues
+
+The v2 frames, measured, showed two regressions:
+- the FR documentary layout was static;
+- IB holds slowed the camera.
+
+The CT pool also lacked the event. v3 fixes:
+- **FR camera moves.** The whole frame pushes toward the subject; the detail panel travels across it. The moves are eased into the first second.
+- **IB/CT camera moves** scale with shot length.
+- **Opening legibility.** Brightness and contrast are measured; a dark opening gets a gentle lift.
+- **CT-201 pictures.** Licensed Commons pictures of the Mont Blanc portal, the 1999 memorial, the interior, the 150 m sign and an emergency exit.
+- **Pictures follow the spoken line,** including when a picture returns.
+- **Two synthesized sound cues.**
+
+Real renders with the Edge voice are in `reports/creative-audit/2026-10-11-v3/`, in the same file layout as v2. The "before" files are the same `main` renders.
+
+How motion was measured:
+- the mean luma change per frame on a 270×480 proxy;
+- "static" = the share of frames below 0.5.
+
+The metric reads low on smooth or dark pictures, so compare each Short only with itself.
+
+| Short | Before (`main`) first 3 s / static | v2 first 3 s / static | **v3** first 3 s / static |
+|---|---|---|---|
+| FR Qantas 32 | 11.8 / 8% (v1 fast pan) | 1.2 / 50% | **2.9 / 17%** |
+| IB dinosaur | 3.8 / 19% | 3.7 / 10% | **2.0 / 6%** |
+| IB ice | 6.1 / 27% | 2.6 / 42% | **2.6 / 36%** |
+| CT tunnel fire | 6.3 / 14% | 6.2 / 10% | **6.3 / 27%** |
+
+What the frames show (inspected, not listened to):
+- **FR:** the camera now moves; it is still calmer than v1's fast pan, by design, to keep the evidence in frame.
+- **Ice:** the opening stays the anchor-ice picture. Its subject match outweighs the legibility term. It is lifted from 67 to 84 mean brightness, but it is still a dark picture.
+- **CT:**
+  - opens on the daylit portal and returns to it at the end;
+  - the 1999 memorial appears at 3–5 s;
+  - "39 people died" falls on the valley view of the tunnel site, not on the memorial.
+
+Sound cues (craft only):
+- the low impact adds about 6 dB below 120 Hz in the first 0.6 s;
+- the riser adds about 4.5 dB above 2.5 kHz in the second before the payoff;
+- loudness (−14.5 LUFS) and peaks are unchanged.
+
+Nobody has listened to them; enable them only after a listen.
+
 ### Script proposal: CT tunnel (editorial review; NOT applied)
 
 The current script:
