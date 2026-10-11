@@ -18,12 +18,10 @@ window.SCENES = function (PD) {
   const at = (x, y, inner, rot = 0, sc = 1) => `<g transform="translate(${x} ${y}) rotate(${rot}) scale(${sc})">${inner}</g>`;
   const ln = (d, op = 0.7, w = 4, col = C.mist) => `<path d="${d}" fill="none" stroke="${col}" stroke-opacity="${op}" stroke-width="${w}" stroke-linecap="round" stroke-linejoin="round"/>`;
   const fmt = (v, s) => `${s.prefix || ""}${Number(v).toFixed(s.decimals || 0)}${s.suffix || ""}`;
-  // Count-up from 0 to the sourced value, starting at the cue. Intermediate values are shown only while the
-  // count is visibly running (0.9 s) and only when it can finish at least 1 s before the shot ends; otherwise
-  // the sourced value appears directly, so a still frame never holds a plausible but wrong figure.
-  const COUNT = 0.9;
-  const counted = (s, t, c0, X) => { if (s.countTo == null) return s.value; if (c0 + COUNT > X.start + X.dur - 1) return t >= c0 ? s.value : "—";
-    if (t < c0) return "—"; const run = E.out(p(t, c0, c0 + COUNT)); return run < 0.999 ? fmt(s.countTo * run, s) : s.value; };
+  // Figures are never animated through intermediate values: a paused or captured frame must not hold a
+  // plausible but wrong number (Gift Cards V3 review rule). Before its cue a figure shows a neutral dash; from
+  // the cue the sourced value is revealed whole. `countTo` in older specs is accepted and ignored.
+  const counted = (s, t, c0) => (t >= c0 ? s.value : "—");
 
   // ---- backgrounds and camera ----
   const paperBg = () => `<rect width="1920" height="1080" fill="${C.paper}"/><rect width="1920" height="1080" fill="#000" opacity="0.5" filter="url(#paperTex)"/>`;
@@ -86,8 +84,8 @@ window.SCENES = function (PD) {
         <rect x="-70" y="${120 * 0 + 6}" width="140" height="26" rx="13" fill="${C.gold}"/></g>${m.label ? `<g transform="translate(0 ${-150 - 52})">${tag(0, 0, String(m.label).toUpperCase(), 1)}</g>` : ""}</g>`; },
     envelope: (m, st) => `<g filter="url(#soft)"><rect x="-170" y="-110" width="340" height="220" rx="8" fill="#efe6d4"/>${ln(`M-170 -110 L0 ${lerp(20, -200, clamp(st.open || 0))} L170 -110`, 0.9, 4, "#b9a888")}</g>${(st.label || m.label) ? tag(0, 130, String(st.label || m.label).toUpperCase(), 1) : ""}`,
     folder: (m, st) => `<g filter="url(#soft)"><path d="M-220 -150 H-70 L-40 -120 H220 V160 H-220 Z" fill="#c9a66b"/><rect x="-220" y="-110" width="440" height="270" rx="6" fill="#d8b77c" transform="rotate(${-8 * clamp(st.open || 0)} -220 160)"/>${m.label ? PD.label(0, 40, String(m.label).toUpperCase(), { size: 40, anchor: "middle", fill: "#3b2c22", ls: 6 }) : ""}</g>`,
-    phone: (m, st) => `<g filter="url(#soft)"><rect x="-150" y="-290" width="300" height="580" rx="40" fill="${C.ink2}" stroke="${C.mist}" stroke-opacity="0.7" stroke-width="4"/><rect x="-126" y="-250" width="252" height="490" rx="16" fill="#f6f0e5"/>
-      ${(st.lines || m.lines || []).map((l, i) => PD.label(0, -150 + i * 70, String(l), { size: i === 0 ? 34 : 44, anchor: "middle", fill: i === 0 ? "#3a372f" : C.ink, ls: i === 0 ? 3 : 0.5 })).join("")}</g>`,
+    phone: (m, st) => `<g filter="url(#soft)"><rect x="-190" y="-300" width="380" height="600" rx="44" fill="${C.ink2}" stroke="${C.mist}" stroke-opacity="0.7" stroke-width="4"/><rect x="-164" y="-260" width="328" height="510" rx="18" fill="#f6f0e5"/>
+      ${(st.lines || m.lines || []).map((l, i) => PD.label(0, -150 + i * 70, String(l), { size: i === 0 ? 34 : 44, anchor: "middle", fill: i === 0 ? "#3a372f" : C.ink, ls: i === 0 ? 2 : 0.5 })).join("")}</g>`,
     stack: (m, st) => { const n = Math.max(1, Math.round((m.sheets || 14) * clamp(st.height == null ? 1 : st.height))); return `<g>${Array.from({ length: n }, (_, i) => `<rect x="-150" y="${100 - i * 22}" width="300" height="20" rx="3" fill="${i % 2 ? "#efe6d4" : "#f8f2e6"}" stroke="#b9a888" stroke-width="2"/>`).join("")}</g>${m.label ? tag(0, 140, String(m.label).toUpperCase(), 1) : ""}`; },
   };
 
@@ -126,8 +124,8 @@ window.SCENES = function (PD) {
     if (el.motif) { const m = MOTIFS[el.motif]; return g(MOTIF[m.kind](m, st)); }
     if (el.prop) return g(PROP[el.prop](1, el.label, el)) + (el.label && el.prop !== "phone" ? `<g opacity="${op}">${tag(st.x, st.y + 130 * sc, String(el.label).toUpperCase(), 1)}</g>` : "");
     if (el.text != null) return `<g opacity="${op}" transform="translate(0 ${rise})">${(TEXT_STYLE[el.style || "caption"])(st.x, st.y, el.text, 1)}</g>`;
-    if (el.number) { const c0 = X.cue(el.number.cue, 0.3); const v = counted(el.number, t, c0, X); return `<g opacity="${op}">${PD.number(st.x, st.y + rise, v, { size: el.number.size || 120, anchor: "middle", fill: X.bg === "paper" ? C.ink : C.text })}</g>`; }
-    if (el.evidence) { const ev = el.evidence; const c0 = X.cue(ev.cue, 0.4); return PD.evidenceCard({ x: st.x, y: st.y, w: ev.w || 640, h: ev.h || 440, kicker: ev.kicker, value: counted(ev, t, c0, X), detail: ev.detail, k: op }); }
+    if (el.number) { const c0 = X.cue(el.number.cue, 0.3); const v = counted(el.number, t, c0); return `<g opacity="${op}">${PD.number(st.x, st.y + rise, v, { size: el.number.size || 120, anchor: "middle", fill: X.bg === "paper" ? C.ink : C.text })}</g>`; }
+    if (el.evidence) { const ev = el.evidence; const c0 = X.cue(ev.cue, 0.4); return PD.evidenceCard({ x: st.x, y: st.y, w: ev.w || 640, h: ev.h || 440, kicker: ev.kicker, value: counted(ev, t, c0), detail: ev.detail, k: op }); }
     if (el.stamp) return PD.stamp(st.x, st.y, String(el.stamp).toUpperCase(), E.back(clamp(ek)) * (1 - xk), { size: 36, rot: el.rotate != null ? el.rotate : -7 });
     if (el.path) { const len = el.length || 1400; return PD.path(el.path, len, clamp(ek), { stroke: col(el.color, C.gold), width: el.width || 6 }) + (el.arrow && ek > 0.95 ? `<circle cx="${el.arrow[0]}" cy="${el.arrow[1]}" r="10" fill="${col(el.color, C.gold)}" opacity="${op}"/>` : ""); }
     if (el.box) { const b = el.box; const w = b.w || 360, h = b.h || 120; return g(`<rect x="${-w / 2}" y="${-h / 2}" width="${w}" height="${h}" rx="16" fill="${b.accent ? C.signal : C.ink2}" stroke="${b.accent ? C.signal : C.mist}" stroke-opacity="0.8" stroke-width="3" ${b.dashed ? 'stroke-dasharray="12 10"' : ""}/>${PD.label(0, b.sub ? -2 : 12, String(b.label).toUpperCase(), { size: 34, anchor: "middle", fill: b.accent ? C.ink : C.text, ls: 2 })}${b.sub ? PD.label(0, 44, b.sub, { size: 30, anchor: "middle", fill: b.accent ? C.ink : C.mist, ls: 1, weight: 600 }) : ""}`); }
@@ -157,12 +155,12 @@ window.SCENES = function (PD) {
     },
     "evidence-card": (s, lt, t, X) => {
       // The card is on screen from the start of the shot; the spoken cue drives the count-up only.
-      const c0 = X.cue(s.cue, 0.15); const k = ent(lt, 0.1); const value = counted(s, t, c0, X);
+      const c0 = X.cue(s.cue, 0.15); const k = ent(lt, 0.1); const value = counted(s, t, c0);
       const card = PD.evidenceCard({ x: 560, y: 250, w: 800, h: 460, kicker: s.kicker, value, detail: s.detail, k, paper: X.bg !== "paper" });
       return frame(X.bg, cam(s.camera || "push", lt, X.dur, card + (s.stamp ? PD.stamp(1330, 760, s.stamp.toUpperCase(), E.back(p(t, c0 + 1.2, c0 + 1.6)), { size: 34 }) : "")) + sourceLine(s, ent(lt, 0.4), X.bg), t, s.environment, s.type);
     },
     "counter": (s, lt, t, X) => {
-      const c0 = X.cue(s.cue, 0.2); const run = E.out(p(t, c0, c0 + COUNT)); const val = counted({ ...s, value: s.value || fmt(s.countTo, s) }, t, c0, X);
+      const c0 = X.cue(s.cue, 0.2); const run = E.out(p(t, c0, c0 + 0.6)); const val = counted({ ...s, value: s.value || fmt(s.countTo, s) }, t, c0);
       return frame(X.bg, cam(s.camera || "push", lt, X.dur, `${kicker(s.label, ent(lt, 0.05), 330, X.bg)}${PD.number(960, 640, val, { size: 230, anchor: "middle", fill: X.bg === "paper" ? C.ink : C.text, op: ent(t, c0 - 0.1) })}
         <rect x="${960 - 360 * run}" y="700" width="${720 * run}" height="6" fill="${C.signal}"/>${tag(960, 760, s.detail, ent(t, c0 + 1.2))}${s.stamp ? PD.stamp(1460, 470, s.stamp.toUpperCase(), E.back(p(t, c0 + 1.5, c0 + 1.9)), { size: 32 }) : ""}`) + sourceLine(s, ent(lt, 0.4), X.bg), t, s.environment, s.type);
     },
@@ -228,14 +226,16 @@ window.SCENES = function (PD) {
   const shots = spec.scenes.map((s) => {
     const role = ROLE[s.type]; if (!role) throw new Error(`unknown scene type ${s.type}`);
     // startCue: a second shot inside the same beat starts on a spoken phrase (V3 cuts mid-beat often).
-    const start = s.beat ? Math.max(0, (s.startCue ? PD.bw(s.beat, s.startCue) : PD.b(s.beat).start) - LEAD) : s.start;
+    // afterBeat: an end card starts a second after the named beat's narration ends.
+    const start = s.afterBeat ? PD.b(s.afterBeat).end + 1.0 : s.beat ? Math.max(0, (s.startCue ? PD.bw(s.beat, s.startCue) : PD.b(s.beat).start) - LEAD) : s.start;
     const bg = s.background || role[2];
     const shot = { id: s.id, start, in: s.in || "cut", inDur: s.inDur, visual: s.visual || s.type, asset: "original SVG motion graphic (scene spec)", license: "owned",
       category: s.category || role[0], background: bg, layout: s.layout || role[1], textWeight: s.type === "statement" || s.type === "rule-card" ? "high" : "low",
-      motion: s.camera || "animated", sourceQualified: !!(s.source || s.cite || (s.overlay && s.overlay.source)), semanticAnchor: s.anchor || "" };
+      motion: s.cameraKeys ? "camera keyframes" : s.type === "composition" ? `choreographed ${s.camera || "push"}` : s.camera || "push", sourceQualified: !!(s.source || s.cite || (s.overlay && s.overlay.source)), semanticAnchor: s.anchor || "" };
     shot.draw = (lt, t) => {
       const X = { start: shot.start, dur: Math.max(0.5, shot.end - shot.start), bg,
-        cue: (phrase, fallback) => (phrase && s.beat ? PD.bw(s.beat, phrase) - 0.15 : shot.start + fallback) };
+        // "phrase" is spoken in this scene's beat; "phrase@s4-4" in another beat the scene spans.
+        cue: (phrase, fallback) => { if (!phrase) return shot.start + fallback; const m = String(phrase).match(/^(.*)@(s\d+-\d+)$/); return m ? PD.bw(m[2], m[1]) - 0.15 : s.beat ? PD.bw(s.beat, phrase) - 0.15 : shot.start + fallback; } };
       return DRAW[s.type](s, lt, t, X);
     };
     return shot;

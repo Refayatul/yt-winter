@@ -341,3 +341,26 @@ test("scene spec: a second shot inside a beat starts on its spoken phrase and th
   assert.ok(still.start > promise.start && promise.end === still.start);
   assert.equal(still.start, SceneSpec.phraseTime(timeline, "s3-5", "The airline has been paid"));
 });
+
+test("scene spec: cues may name another beat the scene spans; end cards start after a beat", () => {
+  const s = clone();
+  const cmp = s.scenes.find((x) => x.id === "aa-compare");
+  cmp.items[1].cue = "7.2 billion@s4-4";
+  let v = SceneSpec.validate(s, { timeline });
+  assert.ok(v.blockers.some((b) => /names beat s4-4, which is not in the timeline/.test(b)), "the fixture timeline has no s4-4");
+  cmp.items[1].cue = "about $10.6 billion@s4-3";
+  assert.deepEqual(SceneSpec.validate(s, { timeline }).blockers, []);
+  cmp.items[1].cue = "never said@s4-3";
+  assert.ok(SceneSpec.validate(s, { timeline }).blockers.some((b) => /"never said@s4-3" is not spoken in beat s4-3/.test(b)));
+  const end = clone(); end.scenes.push({ id: "end", type: "statement", afterBeat: "s10-2", text: "End.", visual: "end card" });
+  const shots = SceneSpec.planShots(end, timeline);
+  const last = shots[shots.length - 1];
+  assert.equal(last.id, "end");
+  assert.ok(Math.abs(last.start - (timeline[timeline.length - 1].end + 1)) < 1e-9);
+});
+
+test("spec renderer: figures are never shown as intermediate count-up values", () => {
+  const src = require("node:fs").readFileSync(require("node:path").join(__dirname, "..", "..", "scripts", "profitdecoded", "motion", "spec-scenes.js"), "utf8");
+  assert.match(src, /const counted = \(s, t, c0\) => \(t >= c0 \? s\.value : "—"\);/);
+  assert.ok(!/countTo \* run/.test(src), "no interpolated figure");
+});

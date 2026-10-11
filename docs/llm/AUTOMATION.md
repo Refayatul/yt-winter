@@ -137,8 +137,8 @@ was rendered and compared with the V3 film's frames:
 | Category switches per minute | 3.9 | 2.9 |
 
 Defects found and fixed during the comparison: an evidence card that stayed blank until its cue; a count-up that a
-still caught at "$9.1B" (a plausible wrong figure; intermediate values now only while the 0.9 s count visibly runs,
-otherwise the sourced value appears directly); a caption colliding with labels; map arcs looping above the origin;
+still caught at "$9.1B" (a plausible wrong figure). Since 2026-10-11 figures are never animated through intermediate values:
+before its spoken cue a figure shows a neutral dash, then the sourced value appears whole; a caption colliding with labels; map arcs looping above the origin;
 label sizes under 11 px; free-floating figures over busy environments (now on a dark panel).
 
 **Update 2026-10-11: motifs, compositions and camera keyframes.** The V3 craft gaps above were addressed in
@@ -149,7 +149,7 @@ the same interpreter (no second engine):
   - `envelope`, `folder`, `phone`, `stack`.
 - `composition` scenes: up to 14 elements (motif, prop, text, number, evidence, stamp, path, box). Each element has entrances (fade, rise, pop) and phrase-cued keyframes that ease position, scale, rotation, opacity and motif state. This is the multi-phase choreography V3 hand-codes.
 - `cameraKeys`: the camera moves between phases, and never holds still (at least 0.22%/s).
-- `startCue`: a second shot can start mid-beat on a spoken phrase.
+- `startCue`: a second shot can start mid-beat on a spoken phrase. `phrase@s4-4` cues reveal an element when a later beat the scene spans says it; `afterBeat` places an end card.
 - New gates:
   - undefined motifs;
   - elements with ambiguous content;

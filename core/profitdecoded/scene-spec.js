@@ -75,8 +75,10 @@ function textsOf(scene) {
 }
 
 // Start time of a phrase inside a beat, proportional to spoken characters (as PD.bw does at render time).
+const splitCue = (cue, beat) => { const m = String(cue).match(/^(.*)@(s\d+-\d+)$/); return m ? { phrase: m[1], beat: m[2] } : { phrase: String(cue), beat }; };
 function phraseTime(timeline, id, phrase) {
-  const needle = String(phrase).toLowerCase();
+  const c = splitCue(phrase, id); id = c.beat;
+  const needle = c.phrase.toLowerCase();
   for (const s of timeline.filter((x) => x.beatId === id)) {
     const text = (s.spoken || s.text).toLowerCase(); let i = text.indexOf(needle);
     if (i < 0) { const alt = s.text.toLowerCase(); const j = alt.indexOf(needle); if (j < 0) continue; i = Math.round(j / alt.length * text.length); }
@@ -139,14 +141,17 @@ function validate(spec, options = {}) {
     if (scene.cameraKeys && scene.type !== "composition") blockers.push(`${at}: cameraKeys are supported on composition scenes`);
     if ((scene.lines || []).length > TEXT.lines) blockers.push(`${at}: ${(scene.lines || []).length} text lines (max ${TEXT.lines})`);
     // timing
-    if (!scene.beat && !(typeof scene.start === "number")) blockers.push(`${at}: needs a beat id (or an absolute start)`);
+    if (!scene.beat && !scene.afterBeat && !(typeof scene.start === "number")) blockers.push(`${at}: needs a beat id (or afterBeat, or an absolute start)`);
+    if (timeline && scene.afterBeat && !beatSpan(timeline, scene.afterBeat)) blockers.push(`${at}: afterBeat ${scene.afterBeat} is not in the timeline`);
     if (timeline && scene.beat) {
       const span = beatSpan(timeline, scene.beat);
       if (!span) blockers.push(`${at}: beat ${scene.beat} is not in the timeline`);
       if (scene.startCue && span && !span.text.includes(String(scene.startCue).toLowerCase())) blockers.push(`${at}: startCue "${scene.startCue}" is not spoken in beat ${scene.beat}`);
       const elementCues = (scene.elements || []).flatMap((el) => [el.enter && el.enter.cue, el.exit && el.exit.cue, el.number && el.number.cue, el.evidence && el.evidence.cue, ...(el.keys || []).map((k) => k.cue)]);
       for (const cue of [scene.cue, scene.captionCue, ...(scene.cues || []), ...((scene.items || []).map((i) => i.cue)), ...((scene.marks || []).map((m) => m.cue)), ...((scene.props || []).map((p) => p.cue)), ...elementCues, ...(scene.cameraKeys || []).map((k) => k.cue)].filter(Boolean)) {
-        if (span && !span.text.includes(String(cue).toLowerCase())) blockers.push(`${at}: cue "${cue}" is not spoken in beat ${scene.beat}`);
+        const c = splitCue(cue, scene.beat); const cs = c.beat === scene.beat ? span : beatSpan(timeline, c.beat);
+        if (!cs) blockers.push(`${at}: cue "${cue}" names beat ${c.beat}, which is not in the timeline`);
+        else if (!cs.text.includes(c.phrase.toLowerCase())) blockers.push(`${at}: cue "${cue}" is not spoken in beat ${c.beat}`);
       }
     }
     // text: mobile floor via length limits, and sourcing
@@ -179,7 +184,8 @@ function validate(spec, options = {}) {
 // Shots for the pre-render visual-diversity review (timings from the timeline, else the spec's own).
 function planShots(spec, timeline) {
   const scenes = spec.scenes || [];
-  const startOf = (scene) => (timeline && scene.beat ? (scene.startCue ? phraseTime(timeline, scene.beat, scene.startCue) : (beatSpan(timeline, scene.beat) || {}).start) : scene.start) || 0;
+  const startOf = (scene) => (timeline && scene.afterBeat ? ((beatSpan(timeline, scene.afterBeat) || {}).end || 0) + 1.0
+    : timeline && scene.beat ? (scene.startCue ? phraseTime(timeline, scene.beat, scene.startCue) : (beatSpan(timeline, scene.beat) || {}).start) : scene.start) || 0;
   const ordered = [...scenes].sort((a, b) => startOf(a) - startOf(b));
   const starts = ordered.map(startOf);
   return ordered.map((scene, i) => {
@@ -187,7 +193,7 @@ function planShots(spec, timeline) {
     return {
       id: scene.id, start: starts[i], end: i + 1 < ordered.length ? starts[i + 1] : (timeline && timeline.length ? timeline[timeline.length - 1].end + 4 : starts[i] + 6),
       category: scene.category || type.category, background: scene.background || type.background || "dark", layout: scene.layout || type.layout,
-      motion: scene.camera || "push", visual: scene.visual || scene.type, semanticAnchor: scene.anchor || "", sourceQualified: !!(scene.source || scene.cite),
+      motion: scene.cameraKeys ? "camera keyframes" : scene.type === "composition" ? `choreographed ${scene.camera || "push"}` : scene.camera || "push", visual: scene.visual || scene.type, semanticAnchor: scene.anchor || "", sourceQualified: !!(scene.source || scene.cite),
       textWeight: scene.type === "statement" || scene.type === "rule-card" ? "high" : "low", asset: "original SVG motion graphic (scene spec)", license: "owned",
     };
   });
