@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-11T16:21:04.026Z
+Generated: 2026-10-11T16:37:24.560Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -24,7 +24,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-09 (lag 2 d) |
 | Ops (24 h) | publish.public 1, publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-11 (0 d) |
-| API quota today | 1662 / 9800 units (project 1012165386949) |
+| API quota today | 1667 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 25/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
@@ -45,7 +45,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Analytics warehouse | through 2026-10-09 (lag 2 d) |
 | Ops (24 h) | publish.public 1, publish.success 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-11 (0 d) |
-| API quota today | 1669 / 9800 units (project 684098966511) |
+| API quota today | 0 / 9800 units (project channel:impossible-brief) |
 | YPP readiness (estimate) | subs 9/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
@@ -60,13 +60,13 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | unavailable |
 | Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | pending-before-deadline |
+| Scheduler | sla-missed-or-channel-disabled |
 | Ready topic backlog | 513 |
 | Errors/review/blocks | 2 |
 | Analytics warehouse | through 2026-10-09 (lag 2 d) |
 | Ops (24 h) | analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-11 (0 d) |
-| API quota today | 57 / 9800 units (project 208987599838) |
+| API quota today | 0 / 9800 units (project channel:critical-thread) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## The Hidden Logic of Things
@@ -81,12 +81,12 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Publish time | unavailable |
 | Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | pending-before-deadline |
+| Scheduler | sla-missed-or-channel-disabled |
 | Ready topic backlog | 1 |
 | Errors/review/blocks | 1 |
 | Analytics warehouse | through 2026-10-02 (lag 9 d) · 4 table error(s) |
 | Ops (24 h) | analytics.failure 13 |
 | Scheduler queue | 2 queued, oldest 2026-10-11 (0 d) |
-| API quota today | 0 / 9800 units (project 739767423116) |
+| API quota today | 0 / 9800 units (project channel:behind-the-ordinary) |
 | YPP readiness (estimate) | subs 1/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
