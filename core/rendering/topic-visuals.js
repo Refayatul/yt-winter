@@ -375,7 +375,8 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
       const reused = candidate && (stillUses.get(candidate.file) || 0) > 0;
       // The Hidden Logic of Things never uses generic procedural filler; a
       // relevant still may return once (the visual audit caps reuse at 2).
-      if (reused && distinctKeys().size < 5 && scenes.length && !behindOrdinary) type = "procedural";
+      // Craft v2 returns a reused picture as a detail crop instead (procedural frames are abstract).
+      if (reused && distinctKeys().size < 5 && scenes.length && !behindOrdinary && !craft) type = "procedural";
     }
 
     // A picture the viewer has already seen reads as a slideshow. Before a
@@ -403,11 +404,11 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     };
     let scene = sceneFor();
     if (type === "procedural" && craft && !scene && nextStill()) type = "licensed-still";
-    // Past the repeat cap with no illustrated scene for this line: hold the previous real shot a
-    // little longer, or bring back the picture that best matches the line as a detail crop. Abstract
-    // filler (which the visual audit counts as irrelevant) is the last resort.
+    // Past the repeat cap: hold the previous real shot a little longer, or bring back the picture
+    // that best matches the line as a detail crop. Procedural frames are abstract shapes whatever the
+    // scene, and the visual audit counts them as irrelevant, so they are the last resort.
     let overflow = null;
-    if (type === "procedural" && craft && !scene) {
+    if (type === "procedural" && craft) {
       if (previous && ["licensed-still", "stock-video"].includes(previous.type) && previous.duration + (end - start) <= maximumHoldSeconds) {
         previous.end = end;
         previous.duration = previous.end - previous.start;
