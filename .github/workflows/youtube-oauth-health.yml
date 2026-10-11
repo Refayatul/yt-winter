@@ -112,6 +112,8 @@ jobs:
           exit "${HEALTH_EXIT_CODE:-1}"
 
   behind-the-ordinary:
+    # Inactive channel: checked only on a manual run, so its token state no longer fails the daily check.
+    if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     env:
       BTO_YT_CLIENT_ID: ${{ secrets.BTO_YT_CLIENT_ID }}
