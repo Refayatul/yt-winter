@@ -7,7 +7,8 @@
 //   --video-only --out path.mp4 renders a revision range without remastering the existing soundtrack.
 //   --analyze-only [--qa qa.json] writes out/visual-diversity.{json,md} without capturing video.
 //
-// <dir> holds scenes.js (the shot list, using the PD library in brand-lib.js), out/timeline.json
+// <dir> holds scenes.js (the shot list, using the PD library in brand-lib.js) or scene-spec.json (rendered by
+// spec-scenes.js), out/timeline.json
 // (sentence timings from produce-audio.js) and out/mix.wav. Every frame is a pure function of time,
 // so a render is reproducible. Requires playwright-core with a Chromium headless shell
 // (PD_PLAYWRIGHT_CORE / PD_CHROMIUM override the lookups) and ffmpeg.
@@ -101,11 +102,24 @@ async function inspectShotFrames(page, shots) {
   return observations;
 }
 
+// A film's handwritten scenes.js wins; otherwise its scene-spec.json (profitdecoded.scene-spec.v1) is validated
+// against the measured timeline and rendered by the generic interpreter in spec-scenes.js.
+function sceneScript(dir, timeline) {
+  const handwritten = path.join(dir, "scenes.js");
+  if (fs.existsSync(handwritten)) return fs.readFileSync(handwritten, "utf8");
+  const specFile = path.join(dir, "scene-spec.json");
+  if (!fs.existsSync(specFile)) throw new Error(`${dir} has neither scenes.js nor scene-spec.json`);
+  const spec = JSON.parse(fs.readFileSync(specFile, "utf8"));
+  const verdict = require("../../../core/profitdecoded/scene-spec").validate(spec, { timeline });
+  if (!verdict.passes) throw new Error("scene-spec.json failed validation:\n- " + verdict.blockers.join("\n- "));
+  return `window.SCENE_SPEC = ${JSON.stringify(spec).replace(/</g, "\\u003c")};\n` + fs.readFileSync(path.join(__dirname, "spec-scenes.js"), "utf8");
+}
+
 async function main() {
   const out = path.join(dir, "out"); const timeline = JSON.parse(fs.readFileSync(path.join(out, "timeline.json"), "utf8"));
   const audio = path.join(out, "mix.wav"); if (!fs.existsSync(audio)) throw new Error("out/mix.wav missing: run produce-audio.js first");
   const audioDur = parseFloat(execFileSync("ffprobe", ["-v", "error", "-show_entries", "format=duration", "-of", "csv=p=0", audio], { encoding: "utf8" }));
-  const lib = fs.readFileSync(path.join(__dirname, "brand-lib.js"), "utf8"); const scenes = fs.readFileSync(path.join(dir, "scenes.js"), "utf8");
+  const lib = fs.readFileSync(path.join(__dirname, "brand-lib.js"), "utf8"); const scenes = sceneScript(dir, timeline);
   const html = `<!doctype html><html><head><meta charset="utf-8"><style>${Fonts.css()}\nhtml,body{margin:0;width:${W}px;height:${H}px;overflow:hidden;background:#000}#stage{position:relative;width:${W}px;height:${H}px;overflow:hidden}.layer{position:absolute;inset:0}</style></head><body><div id="stage"></div><script>${lib}</script><script>${scenes}</script></body></html>`;
   const { chromium } = loadPlaywright();
   const browser = await chromium.launch(launchOptions());
@@ -166,4 +180,4 @@ async function main() {
   console.log(`\n[motion] ${n} frames in ${((Date.now() - t0) / 1000).toFixed(0)} s -> ${path.relative(process.cwd(), video)} (${(to - from).toFixed(2)} s)`);
 }
 if (require.main === module) main().catch((e) => { console.error("MOTION RENDER FAILED:", e.message); process.exit(1); });
-module.exports = { captions, toSrt, loadPlaywright, launchOptions };
+module.exports = { captions, toSrt, loadPlaywright, launchOptions, sceneScript };

@@ -56,6 +56,7 @@ function totals(doc, policy, now, filter = {}) {
     if (filter.month && e.month !== filter.month) continue;
     if (filter.pool && e.pool !== filter.pool) continue;
     if (filter.scriptId && e.scriptId !== filter.scriptId) continue;
+    if (filter.day && String(e.createdAt || "").slice(0, 10) !== filter.day) continue;
     const st = effectiveStatus(e, policy, now); const c = chargeOf(e, st);
     if (st === "settled") out.settledUsd += c; else if (st === "reserved") out.reservedUsd += c; else if (st === "uncertain") out.uncertainUsd += c;
     if (COUNTED.has(st)) out.calls += 1;
@@ -104,6 +105,11 @@ function decide(doc, req, policy, now, opts = {}) {
   const month = totals(doc, policy, now, { month: req.month, pool: req.pool });
   const monthly = policy.monthlyUsd[req.pool];
   if (month.committedUsd + req.estimateUsd > monthly + 1e-9) return { ok: false, code: "BUDGET", reason: `${req.pool} budget ${req.month}: $${month.committedUsd.toFixed(4)} committed + $${req.estimateUsd.toFixed(4)} maximum exceeds the monthly limit $${monthly.toFixed(2)}` };
+  // Optional daily limit (UTC day, all pools), used by the per-channel Shorts policies (core/llm/client.js).
+  if (typeof policy.dailyUsd === "number") {
+    const day = totals(doc, policy, now, { day: new Date(now).toISOString().slice(0, 10) });
+    if (day.committedUsd + req.estimateUsd > policy.dailyUsd + 1e-9) return { ok: false, code: "BUDGET", reason: `daily budget ${new Date(now).toISOString().slice(0, 10)}: $${day.committedUsd.toFixed(4)} committed + $${req.estimateUsd.toFixed(4)} maximum exceeds the daily limit $${policy.dailyUsd.toFixed(2)}` };
+  }
   return { ok: true };
 }
 

@@ -115,6 +115,24 @@ function visualShortfall(topic, output, prepare = (topicFile, directory) => requ
 
 // Growth-engine topic choice: A/B first, C deliberately, D never; a topic
 // whose pre-render readiness is BLOCK is recorded and the next one is tried.
+// LLM Shorts shadow (feature flag, default off). LLM_SHORTS_SHADOW=1 writes the Haiku prompt, routed
+// model and worst-case cost next to the package; LLM_SHORTS_SHADOW=run also sends one request, which
+// core/llm/client.js still refuses without the channel's paid approval. It runs in a child process with
+// a timeout and its outcome is ignored: production rendering and upload never depend on it.
+function llmShadow(channel, topic, output, env = process.env, spawn = cp.spawnSync) {
+  const mode = env.LLM_SHORTS_SHADOW;
+  if (mode !== "1" && mode !== "run") return null;
+  const args = [path.join(Channel.ROOT, "scripts", "llm", "shorts-shadow.js"), "--channel", channel.slug, "--topic", topic.id, "--out", path.join(output, "llm-shadow"), ...(mode === "run" ? ["--run"] : [])];
+  try {
+    const child = spawn(process.execPath, args, { cwd: Channel.ROOT, env, encoding: "utf8", timeout: 120000 });
+    console.log(`[${channel.name}] LLM shadow (${mode}) exit ${child.status}${child.status ? `: ${String(child.stderr || "").trim().slice(0, 200)}` : ""}; production unaffected`);
+    return child.status;
+  } catch (error) {
+    console.log(`[${channel.name}] LLM shadow could not start: ${error.message}; production unaffected`);
+    return null;
+  }
+}
+
 function chooseTopic(channel, explicit, universe) {
   if (explicit) {
     const topic = universe.find((item) => item.slug === explicit || item.id === explicit);
@@ -209,6 +227,7 @@ function runChannel(slug, argv = []) {
     }
   }
   writeCompatibilityFiles(result, topic, channel);
+  llmShadow(channel, topic, output);
   let uploadStatus = process.env.PUBLISH === "1" ? "pending" : "skipped (PUBLISH!=1)";
   if (process.env.PUBLISH === "1") {
     if (!result.render.completed || !result.render.audio.syntheticVoice) throw new Error("Publishing blocked: a real synthetic narration render is required");
@@ -234,4 +253,4 @@ function runChannel(slug, argv = []) {
 
 function main(argv = []) { return runChannel("impossible-brief", argv); }
 
-module.exports = { MIN_PRECHECK_VISUALS, MAX_VISUAL_PRECHECKS, visualShortfall, writeCompatibilityFiles, writeValidationEvidence, visualRejection, runChannel, main };
+module.exports = { llmShadow, MIN_PRECHECK_VISUALS, MAX_VISUAL_PRECHECKS, visualShortfall, writeCompatibilityFiles, writeValidationEvidence, visualRejection, runChannel, main };
