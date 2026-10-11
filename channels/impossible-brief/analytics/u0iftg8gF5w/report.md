@@ -8,8 +8,9 @@ https://youtu.be/u0iftg8gF5w
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-05 | 284 | 6 | 1 | — | — |  |
 | 3d | 2026-10-07 | 310 | 7 | 1 | 64.32 | 0 | Shorts feed 85%, Search 13% |
+| 7d | 2026-10-11 | 311 | 7 | 1 | 60.150000000000006 | 0 | Shorts feed 83%, Search 13% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **HEALTHY** (low) — No problem pattern detected with available data.
 
@@ -19,9 +20,9 @@ https://youtu.be/u0iftg8gF5w
 
 ## First major observed retention drop
 
-- Timestamp: 6s; magnitude: 13 percentage points.
+- Timestamp: 5s; magnitude: 12 percentage points.
 - Active sentence: Chicxulub crater map on the Yucatán coast
 - Visual type: AI-GENERATED VISUAL
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 26.
+Views gained between 3d and 7d: 1.

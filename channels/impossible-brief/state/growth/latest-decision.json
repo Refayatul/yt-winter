@@ -2,16 +2,154 @@
   "schema": "growth-topic-decision/1",
   "channel": "impossible-brief",
   "contentType": "short",
-  "date": "2026-10-10",
-  "createdAt": "2026-10-10T12:19:40.191Z",
+  "date": "2026-10-11",
+  "createdAt": "2026-10-11T12:34:36.072Z",
   "mode": "EXPLORE",
-  "modeRoll": 0.236,
+  "modeRoll": 0.101,
   "pool": {
     "minimum": 20,
     "target": 50,
-    "count": 31,
+    "count": 26,
     "meetsMinimum": true,
     "candidates": [
+      {
+        "topicId": "IB-OTH-020",
+        "slug": "what-if-synthetic-fertilizer-disappeared",
+        "topic": "What If Synthetic Fertilizer Disappeared?",
+        "cluster": "OTHER",
+        "bucket": "A",
+        "viralScore": 80,
+        "videoPotentialScore": 85,
+        "selectionScore": 81,
+        "viralComponents": {
+          "curiosity_gap": {
+            "value": 96,
+            "basis": "derived"
+          },
+          "immediate_stakes": {
+            "value": 94,
+            "basis": "derived"
+          },
+          "human_consequence": {
+            "value": 85,
+            "basis": "derived"
+          },
+          "recognizability": {
+            "value": 68,
+            "basis": "measured"
+          },
+          "surprise": {
+            "value": 90,
+            "basis": "derived"
+          },
+          "visual_potential": {
+            "value": 97,
+            "basis": "inventory-signal"
+          },
+          "archival_footage_potential": {
+            "value": 35,
+            "basis": "inventory-signal"
+          },
+          "first_frame_potential": {
+            "value": 68,
+            "basis": "derived"
+          },
+          "title_potential": {
+            "value": 84,
+            "basis": "derived",
+            "note": "3 source-backed title seeds"
+          },
+          "emotional_tension": {
+            "value": 97,
+            "basis": "derived"
+          },
+          "contradiction": {
+            "value": 85,
+            "basis": "derived"
+          },
+          "unexpected_cause": {
+            "value": 82,
+            "basis": "derived"
+          },
+          "numerical_anomaly": {
+            "value": 95,
+            "basis": "derived"
+          },
+          "didnt_know_factor": {
+            "value": 89,
+            "basis": "derived"
+          },
+          "shareability": {
+            "value": 97,
+            "basis": "derived"
+          },
+          "channel_fit": {
+            "value": 76,
+            "basis": "derived"
+          },
+          "historical_similarity": {
+            "value": 69,
+            "basis": "learned",
+            "note": "1 same-cluster upload(s), breakout rate 0"
+          },
+          "subscriber_conversion_potential": {
+            "value": 70,
+            "basis": "derived",
+            "note": "series-depth proxy; no measured conversion yet"
+          },
+          "audience_breadth": {
+            "value": 100,
+            "basis": "inventory-signal"
+          },
+          "hook_potential": {
+            "value": 70,
+            "basis": "derived"
+          },
+          "visual_availability": {
+            "value": 67,
+            "basis": "inventory-signal"
+          },
+          "research_confidence": {
+            "value": 98,
+            "basis": "derived"
+          },
+          "duplicate_risk": {
+            "value": 0,
+            "basis": "penalty",
+            "note": "no published-title collision"
+          },
+          "saturation_risk": {
+            "value": -12,
+            "basis": "penalty",
+            "note": "1 published / 25 inventory in cluster"
+          },
+          "recent_fatigue_risk": {
+            "value": -22,
+            "basis": "penalty",
+            "note": "1 same-family upload(s) in the last 30 days"
+          },
+          "source_confidence_risk": {
+            "value": -2,
+            "basis": "penalty",
+            "note": "98/100 source quality"
+          },
+          "weak_footage_risk": {
+            "value": -33,
+            "basis": "penalty",
+            "note": "no archival footage confirmed"
+          }
+        },
+        "selectedHook": {
+          "family": "contradiction",
+          "spoken": "Air is about 78% nitrogen, but it barely reacts.",
+          "score": 78
+        },
+        "rejectionReasons": [
+          "VideoPotential 85 ≥ 80",
+          "hook 78",
+          "sources 98"
+        ]
+      },
       {
         "topicId": "IB-PHY-065",
         "slug": "what-if-you-could-touch-earths-core",
@@ -88,7 +226,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 48,
+            "value": 56,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -151,289 +289,13 @@
         ]
       },
       {
-        "topicId": "IB-OTH-020",
-        "slug": "what-if-synthetic-fertilizer-disappeared",
-        "topic": "What If Synthetic Fertilizer Disappeared?",
-        "cluster": "OTHER",
-        "bucket": "A",
-        "viralScore": 79,
-        "videoPotentialScore": 84,
-        "selectionScore": 80,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 96,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 94,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 68,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 90,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 97,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 97,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 89,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 97,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 76,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 62,
-            "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
-          },
-          "subscriber_conversion_potential": {
-            "value": 70,
-            "basis": "derived",
-            "note": "series-depth proxy; no measured conversion yet"
-          },
-          "audience_breadth": {
-            "value": 100,
-            "basis": "inventory-signal"
-          },
-          "hook_potential": {
-            "value": 70,
-            "basis": "derived"
-          },
-          "visual_availability": {
-            "value": 67,
-            "basis": "inventory-signal"
-          },
-          "research_confidence": {
-            "value": 98,
-            "basis": "derived"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": -12,
-            "basis": "penalty",
-            "note": "1 published / 25 inventory in cluster"
-          },
-          "recent_fatigue_risk": {
-            "value": -22,
-            "basis": "penalty",
-            "note": "1 same-family upload(s) in the last 30 days"
-          },
-          "source_confidence_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "98/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "contradiction",
-          "spoken": "Air is about 78% nitrogen, but it barely reacts.",
-          "score": 78
-        },
-        "rejectionReasons": [
-          "VideoPotential 84 ≥ 80",
-          "hook 78",
-          "sources 98"
-        ]
-      },
-      {
-        "topicId": "IB-EXT-047",
-        "slug": "what-if-earth-spun-like-the-fastest-pulsar",
-        "topic": "What If Earth Spun Like the Fastest Pulsar?",
-        "cluster": "EXTREME SCIENCE",
-        "bucket": "A",
-        "viralScore": 79,
-        "videoPotentialScore": 83,
-        "selectionScore": 80,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 99,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 94,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 75,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 53,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 90,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 79,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 89,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 87,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 97,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 100,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 50,
-            "basis": "neutral",
-            "note": "no same-cluster channel evidence yet"
-          },
-          "subscriber_conversion_potential": {
-            "value": 88,
-            "basis": "derived",
-            "note": "series-depth proxy; no measured conversion yet"
-          },
-          "audience_breadth": {
-            "value": 100,
-            "basis": "inventory-signal"
-          },
-          "hook_potential": {
-            "value": 73,
-            "basis": "derived"
-          },
-          "visual_availability": {
-            "value": 67,
-            "basis": "inventory-signal"
-          },
-          "research_confidence": {
-            "value": 98,
-            "basis": "derived"
-          },
-          "duplicate_risk": {
-            "value": -13,
-            "basis": "penalty",
-            "note": "published-title similarity 0.13"
-          },
-          "saturation_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "0 published / 50 inventory in cluster"
-          },
-          "recent_fatigue_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "0 same-family upload(s) in the last 30 days"
-          },
-          "source_confidence_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "98/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "visual_first_reveal",
-          "spoken": "One dead star spins 716 times a second.",
-          "score": 81
-        },
-        "rejectionReasons": [
-          "VideoPotential 83 ≥ 80",
-          "hook 81",
-          "sources 98"
-        ]
-      },
-      {
         "topicId": "IB-FUT-004",
         "slug": "what-if-fusion-power-actually-worked",
         "topic": "What If Fusion Power Actually Worked?",
         "cluster": "FUTURE TECHNOLOGY",
         "bucket": "A",
         "viralScore": 79,
-        "videoPotentialScore": 82,
+        "videoPotentialScore": 83,
         "selectionScore": 80,
         "viralComponents": {
           "curiosity_gap": {
@@ -559,7 +421,7 @@
           "score": 80
         },
         "rejectionReasons": [
-          "VideoPotential 82 ≥ 80",
+          "VideoPotential 83 ≥ 80",
           "hook 80",
           "sources 100"
         ]
@@ -700,6 +562,144 @@
           "VideoPotential 85 ≥ 80",
           "hook 78",
           "sources 100"
+        ]
+      },
+      {
+        "topicId": "IB-EXT-047",
+        "slug": "what-if-earth-spun-like-the-fastest-pulsar",
+        "topic": "What If Earth Spun Like the Fastest Pulsar?",
+        "cluster": "EXTREME SCIENCE",
+        "bucket": "A",
+        "viralScore": 78,
+        "videoPotentialScore": 84,
+        "selectionScore": 79,
+        "viralComponents": {
+          "curiosity_gap": {
+            "value": 99,
+            "basis": "derived"
+          },
+          "immediate_stakes": {
+            "value": 94,
+            "basis": "derived"
+          },
+          "human_consequence": {
+            "value": 75,
+            "basis": "derived"
+          },
+          "recognizability": {
+            "value": 53,
+            "basis": "measured"
+          },
+          "surprise": {
+            "value": 90,
+            "basis": "derived"
+          },
+          "visual_potential": {
+            "value": 79,
+            "basis": "inventory-signal"
+          },
+          "archival_footage_potential": {
+            "value": 35,
+            "basis": "inventory-signal"
+          },
+          "first_frame_potential": {
+            "value": 68,
+            "basis": "derived"
+          },
+          "title_potential": {
+            "value": 84,
+            "basis": "derived",
+            "note": "3 source-backed title seeds"
+          },
+          "emotional_tension": {
+            "value": 89,
+            "basis": "derived"
+          },
+          "contradiction": {
+            "value": 85,
+            "basis": "derived"
+          },
+          "unexpected_cause": {
+            "value": 82,
+            "basis": "derived"
+          },
+          "numerical_anomaly": {
+            "value": 95,
+            "basis": "derived"
+          },
+          "didnt_know_factor": {
+            "value": 87,
+            "basis": "derived"
+          },
+          "shareability": {
+            "value": 97,
+            "basis": "derived"
+          },
+          "channel_fit": {
+            "value": 100,
+            "basis": "derived"
+          },
+          "historical_similarity": {
+            "value": 45,
+            "basis": "learned",
+            "note": "1 same-cluster upload(s), breakout rate 0"
+          },
+          "subscriber_conversion_potential": {
+            "value": 88,
+            "basis": "derived",
+            "note": "series-depth proxy; no measured conversion yet"
+          },
+          "audience_breadth": {
+            "value": 100,
+            "basis": "inventory-signal"
+          },
+          "hook_potential": {
+            "value": 73,
+            "basis": "derived"
+          },
+          "visual_availability": {
+            "value": 67,
+            "basis": "inventory-signal"
+          },
+          "research_confidence": {
+            "value": 98,
+            "basis": "derived"
+          },
+          "duplicate_risk": {
+            "value": -13,
+            "basis": "penalty",
+            "note": "published-title similarity 0.13"
+          },
+          "saturation_risk": {
+            "value": -6,
+            "basis": "penalty",
+            "note": "1 published / 50 inventory in cluster"
+          },
+          "recent_fatigue_risk": {
+            "value": -22,
+            "basis": "penalty",
+            "note": "1 same-family upload(s) in the last 30 days"
+          },
+          "source_confidence_risk": {
+            "value": -2,
+            "basis": "penalty",
+            "note": "98/100 source quality"
+          },
+          "weak_footage_risk": {
+            "value": -33,
+            "basis": "penalty",
+            "note": "no archival footage confirmed"
+          }
+        },
+        "selectedHook": {
+          "family": "visual_first_reveal",
+          "spoken": "One dead star spins 716 times a second.",
+          "score": 81
+        },
+        "rejectionReasons": [
+          "VideoPotential 84 ≥ 80",
+          "hook 81",
+          "sources 98"
         ]
       },
       {
@@ -1054,7 +1054,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 62,
+            "value": 69,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -1113,6 +1113,144 @@
         "rejectionReasons": [
           "VideoPotential 83 ≥ 80",
           "hook 78",
+          "sources 98"
+        ]
+      },
+      {
+        "topicId": "IB-OTH-006",
+        "slug": "what-if-a-whale-fed-the-deep-sea-for-decades",
+        "topic": "What If a Whale Fed the Deep Sea for Decades?",
+        "cluster": "OTHER",
+        "bucket": "A",
+        "viralScore": 78,
+        "videoPotentialScore": 83,
+        "selectionScore": 79,
+        "viralComponents": {
+          "curiosity_gap": {
+            "value": 94,
+            "basis": "derived"
+          },
+          "immediate_stakes": {
+            "value": 94,
+            "basis": "derived"
+          },
+          "human_consequence": {
+            "value": 95,
+            "basis": "derived"
+          },
+          "recognizability": {
+            "value": 60,
+            "basis": "measured"
+          },
+          "surprise": {
+            "value": 70,
+            "basis": "derived"
+          },
+          "visual_potential": {
+            "value": 80,
+            "basis": "inventory-signal"
+          },
+          "archival_footage_potential": {
+            "value": 35,
+            "basis": "inventory-signal"
+          },
+          "first_frame_potential": {
+            "value": 68,
+            "basis": "derived"
+          },
+          "title_potential": {
+            "value": 84,
+            "basis": "derived",
+            "note": "3 source-backed title seeds"
+          },
+          "emotional_tension": {
+            "value": 97,
+            "basis": "derived"
+          },
+          "contradiction": {
+            "value": 85,
+            "basis": "derived"
+          },
+          "unexpected_cause": {
+            "value": 82,
+            "basis": "derived"
+          },
+          "numerical_anomaly": {
+            "value": 95,
+            "basis": "derived"
+          },
+          "didnt_know_factor": {
+            "value": 88,
+            "basis": "derived"
+          },
+          "shareability": {
+            "value": 92,
+            "basis": "derived"
+          },
+          "channel_fit": {
+            "value": 76,
+            "basis": "derived"
+          },
+          "historical_similarity": {
+            "value": 69,
+            "basis": "learned",
+            "note": "1 same-cluster upload(s), breakout rate 0"
+          },
+          "subscriber_conversion_potential": {
+            "value": 70,
+            "basis": "derived",
+            "note": "series-depth proxy; no measured conversion yet"
+          },
+          "audience_breadth": {
+            "value": 100,
+            "basis": "inventory-signal"
+          },
+          "hook_potential": {
+            "value": 76,
+            "basis": "derived"
+          },
+          "visual_availability": {
+            "value": 67,
+            "basis": "inventory-signal"
+          },
+          "research_confidence": {
+            "value": 98,
+            "basis": "derived"
+          },
+          "duplicate_risk": {
+            "value": 0,
+            "basis": "penalty",
+            "note": "no published-title collision"
+          },
+          "saturation_risk": {
+            "value": -12,
+            "basis": "penalty",
+            "note": "1 published / 25 inventory in cluster"
+          },
+          "recent_fatigue_risk": {
+            "value": -22,
+            "basis": "penalty",
+            "note": "1 same-family upload(s) in the last 30 days"
+          },
+          "source_confidence_risk": {
+            "value": -2,
+            "basis": "penalty",
+            "note": "98/100 source quality"
+          },
+          "weak_footage_risk": {
+            "value": -33,
+            "basis": "penalty",
+            "note": "no archival footage confirmed"
+          }
+        },
+        "selectedHook": {
+          "family": "visual_first_reveal",
+          "spoken": "Why 690,000 dead whales feed the deep sea.",
+          "score": 84
+        },
+        "rejectionReasons": [
+          "VideoPotential 83 ≥ 80",
+          "hook 84",
           "sources 98"
         ]
       },
@@ -1192,7 +1330,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 62,
+            "value": 69,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -1251,144 +1389,6 @@
         "rejectionReasons": [
           "VideoPotential 82 ≥ 80",
           "hook 81",
-          "sources 98"
-        ]
-      },
-      {
-        "topicId": "IB-OTH-006",
-        "slug": "what-if-a-whale-fed-the-deep-sea-for-decades",
-        "topic": "What If a Whale Fed the Deep Sea for Decades?",
-        "cluster": "OTHER",
-        "bucket": "A",
-        "viralScore": 78,
-        "videoPotentialScore": 82,
-        "selectionScore": 79,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 94,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 94,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 60,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 70,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 80,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 97,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 88,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 92,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 76,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 62,
-            "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
-          },
-          "subscriber_conversion_potential": {
-            "value": 70,
-            "basis": "derived",
-            "note": "series-depth proxy; no measured conversion yet"
-          },
-          "audience_breadth": {
-            "value": 100,
-            "basis": "inventory-signal"
-          },
-          "hook_potential": {
-            "value": 76,
-            "basis": "derived"
-          },
-          "visual_availability": {
-            "value": 67,
-            "basis": "inventory-signal"
-          },
-          "research_confidence": {
-            "value": 98,
-            "basis": "derived"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": -12,
-            "basis": "penalty",
-            "note": "1 published / 25 inventory in cluster"
-          },
-          "recent_fatigue_risk": {
-            "value": -22,
-            "basis": "penalty",
-            "note": "1 same-family upload(s) in the last 30 days"
-          },
-          "source_confidence_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "98/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "visual_first_reveal",
-          "spoken": "Why 690,000 dead whales feed the deep sea.",
-          "score": 84
-        },
-        "rejectionReasons": [
-          "VideoPotential 82 ≥ 80",
-          "hook 84",
           "sources 98"
         ]
       },
@@ -1468,7 +1468,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 48,
+            "value": 56,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -1537,7 +1537,7 @@
         "cluster": "OTHER",
         "bucket": "A",
         "viralScore": 77,
-        "videoPotentialScore": 81,
+        "videoPotentialScore": 80,
         "selectionScore": 78,
         "viralComponents": {
           "curiosity_gap": {
@@ -1606,7 +1606,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 62,
+            "value": 69,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -1663,147 +1663,9 @@
           "score": 79
         },
         "rejectionReasons": [
-          "VideoPotential 81 ≥ 80",
+          "VideoPotential 80 ≥ 80",
           "hook 79",
           "sources 98"
-        ]
-      },
-      {
-        "topicId": "IB-HUM-050",
-        "slug": "what-if-your-microbes-disappeared",
-        "topic": "What If Your Microbes Disappeared?",
-        "cluster": "HUMAN",
-        "bucket": "A",
-        "viralScore": 77,
-        "videoPotentialScore": 80,
-        "selectionScore": 78,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 94,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 94,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 75,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 52,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 80,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 78,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 89,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 88,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 97,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 70,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 94,
-            "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
-          },
-          "subscriber_conversion_potential": {
-            "value": 70,
-            "basis": "derived",
-            "note": "series-depth proxy; no measured conversion yet"
-          },
-          "audience_breadth": {
-            "value": 100,
-            "basis": "inventory-signal"
-          },
-          "hook_potential": {
-            "value": 70,
-            "basis": "derived"
-          },
-          "visual_availability": {
-            "value": 67,
-            "basis": "inventory-signal"
-          },
-          "research_confidence": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": -6,
-            "basis": "penalty",
-            "note": "1 published / 50 inventory in cluster"
-          },
-          "recent_fatigue_risk": {
-            "value": -22,
-            "basis": "penalty",
-            "note": "1 same-family upload(s) in the last 30 days"
-          },
-          "source_confidence_risk": {
-            "value": -5,
-            "basis": "penalty",
-            "note": "95/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "impossible_question",
-          "spoken": "What If Your Microbes Disappeared?",
-          "score": 78
-        },
-        "rejectionReasons": [
-          "VideoPotential 80 ≥ 80",
-          "hook 78",
-          "sources 95"
         ]
       },
       {
@@ -1882,7 +1744,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 53,
+            "value": 54,
             "basis": "learned",
             "note": "3 same-cluster upload(s), breakout rate 0"
           },
@@ -2020,7 +1882,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 36,
+            "value": 43,
             "basis": "learned",
             "note": "2 same-cluster upload(s), breakout rate 0"
           },
@@ -2158,7 +2020,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 48,
+            "value": 56,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -2296,7 +2158,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 48,
+            "value": 56,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -2359,29 +2221,29 @@
         ]
       },
       {
-        "topicId": "IB-EXT-007",
-        "slug": "what-if-you-held-a-teaspoon-of-neutron-star",
-        "topic": "What If You Held a Teaspoon of Neutron Star?",
-        "cluster": "EXTREME SCIENCE",
+        "topicId": "IB-HUM-050",
+        "slug": "what-if-your-microbes-disappeared",
+        "topic": "What If Your Microbes Disappeared?",
+        "cluster": "HUMAN",
         "bucket": "A",
-        "viralScore": 75,
-        "videoPotentialScore": 83,
+        "viralScore": 76,
+        "videoPotentialScore": 80,
         "selectionScore": 77,
         "viralComponents": {
           "curiosity_gap": {
-            "value": 90,
+            "value": 94,
             "basis": "derived"
           },
           "immediate_stakes": {
-            "value": 70,
+            "value": 94,
             "basis": "derived"
           },
           "human_consequence": {
-            "value": 35,
+            "value": 75,
             "basis": "derived"
           },
           "recognizability": {
-            "value": 72,
+            "value": 52,
             "basis": "measured"
           },
           "surprise": {
@@ -2389,7 +2251,7 @@
             "basis": "derived"
           },
           "visual_potential": {
-            "value": 94,
+            "value": 78,
             "basis": "inventory-signal"
           },
           "archival_footage_potential": {
@@ -2406,7 +2268,7 @@
             "note": "3 source-backed title seeds"
           },
           "emotional_tension": {
-            "value": 57,
+            "value": 89,
             "basis": "derived"
           },
           "contradiction": {
@@ -2422,24 +2284,24 @@
             "basis": "derived"
           },
           "didnt_know_factor": {
-            "value": 86,
+            "value": 88,
             "basis": "derived"
           },
           "shareability": {
-            "value": 91,
+            "value": 97,
             "basis": "derived"
           },
           "channel_fit": {
-            "value": 100,
+            "value": 70,
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 50,
-            "basis": "neutral",
-            "note": "no same-cluster channel evidence yet"
+            "value": 64,
+            "basis": "learned",
+            "note": "1 same-cluster upload(s), breakout rate 0"
           },
           "subscriber_conversion_potential": {
-            "value": 88,
+            "value": 70,
             "basis": "derived",
             "note": "series-depth proxy; no measured conversion yet"
           },
@@ -2448,7 +2310,7 @@
             "basis": "inventory-signal"
           },
           "hook_potential": {
-            "value": 72,
+            "value": 70,
             "basis": "derived"
           },
           "visual_availability": {
@@ -2456,7 +2318,7 @@
             "basis": "inventory-signal"
           },
           "research_confidence": {
-            "value": 98,
+            "value": 95,
             "basis": "derived"
           },
           "duplicate_risk": {
@@ -2465,19 +2327,19 @@
             "note": "no published-title collision"
           },
           "saturation_risk": {
-            "value": 0,
+            "value": -6,
             "basis": "penalty",
-            "note": "0 published / 50 inventory in cluster"
+            "note": "1 published / 50 inventory in cluster"
           },
           "recent_fatigue_risk": {
-            "value": 0,
+            "value": -22,
             "basis": "penalty",
-            "note": "0 same-family upload(s) in the last 30 days"
+            "note": "1 same-family upload(s) in the last 30 days"
           },
           "source_confidence_risk": {
-            "value": -2,
+            "value": -5,
             "basis": "penalty",
-            "note": "98/100 source quality"
+            "note": "95/100 source quality"
           },
           "weak_footage_risk": {
             "value": -33,
@@ -2486,14 +2348,14 @@
           }
         },
         "selectedHook": {
-          "family": "visual_first_reveal",
-          "spoken": "Why one teaspoon of neutron star would explode.",
-          "score": 80
+          "family": "impossible_question",
+          "spoken": "What If Your Microbes Disappeared?",
+          "score": 78
         },
         "rejectionReasons": [
-          "VideoPotential 83 ≥ 80",
-          "hook 80",
-          "sources 98"
+          "VideoPotential 80 ≥ 80",
+          "hook 78",
+          "sources 95"
         ]
       },
       {
@@ -2572,7 +2434,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 48,
+            "value": 56,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -2641,7 +2503,7 @@
         "cluster": "PHYSICS",
         "bucket": "A",
         "viralScore": 75,
-        "videoPotentialScore": 81,
+        "videoPotentialScore": 82,
         "selectionScore": 76,
         "viralComponents": {
           "curiosity_gap": {
@@ -2710,7 +2572,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 48,
+            "value": 56,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -2767,285 +2629,9 @@
           "score": 84
         },
         "rejectionReasons": [
-          "VideoPotential 81 ≥ 80",
+          "VideoPotential 82 ≥ 80",
           "hook 84",
           "sources 98"
-        ]
-      },
-      {
-        "topicId": "IB-HUM-020",
-        "slug": "what-if-you-jumped-from-the-edge-of-space",
-        "topic": "What If You Jumped From the Edge of Space?",
-        "cluster": "HUMAN",
-        "bucket": "A",
-        "viralScore": 75,
-        "videoPotentialScore": 81,
-        "selectionScore": 76,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 78,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 45,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 59,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 90,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 78,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 65,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 89,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 97,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 88,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 94,
-            "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
-          },
-          "subscriber_conversion_potential": {
-            "value": 78,
-            "basis": "derived",
-            "note": "series-depth proxy; no measured conversion yet"
-          },
-          "audience_breadth": {
-            "value": 100,
-            "basis": "inventory-signal"
-          },
-          "hook_potential": {
-            "value": 72,
-            "basis": "derived"
-          },
-          "visual_availability": {
-            "value": 67,
-            "basis": "inventory-signal"
-          },
-          "research_confidence": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": -6,
-            "basis": "penalty",
-            "note": "1 published / 50 inventory in cluster"
-          },
-          "recent_fatigue_risk": {
-            "value": -22,
-            "basis": "penalty",
-            "note": "1 same-family upload(s) in the last 30 days"
-          },
-          "source_confidence_risk": {
-            "value": -5,
-            "basis": "penalty",
-            "note": "95/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "visual_first_reveal",
-          "spoken": "Why one skydiver broke the sound barrier.",
-          "score": 80
-        },
-        "rejectionReasons": [
-          "VideoPotential 81 ≥ 80",
-          "hook 80",
-          "sources 95"
-        ]
-      },
-      {
-        "topicId": "IB-HUM-024",
-        "slug": "what-if-you-never-stopped-growing",
-        "topic": "What If You Never Stopped Growing?",
-        "cluster": "HUMAN",
-        "bucket": "A",
-        "viralScore": 75,
-        "videoPotentialScore": 81,
-        "selectionScore": 76,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 84,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 78,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 45,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 80,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 90,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 84,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 65,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 83,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 97,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 70,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 94,
-            "basis": "learned",
-            "note": "1 same-cluster upload(s), breakout rate 0"
-          },
-          "subscriber_conversion_potential": {
-            "value": 70,
-            "basis": "derived",
-            "note": "series-depth proxy; no measured conversion yet"
-          },
-          "audience_breadth": {
-            "value": 100,
-            "basis": "inventory-signal"
-          },
-          "hook_potential": {
-            "value": 71,
-            "basis": "derived"
-          },
-          "visual_availability": {
-            "value": 67,
-            "basis": "inventory-signal"
-          },
-          "research_confidence": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": -6,
-            "basis": "penalty",
-            "note": "1 published / 50 inventory in cluster"
-          },
-          "recent_fatigue_risk": {
-            "value": -22,
-            "basis": "penalty",
-            "note": "1 same-family upload(s) in the last 30 days"
-          },
-          "source_confidence_risk": {
-            "value": -5,
-            "basis": "penalty",
-            "note": "95/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "unexpected_chain_reaction",
-          "spoken": "Robert Wadlow never stopped growing.",
-          "score": 79
-        },
-        "rejectionReasons": [
-          "VideoPotential 81 ≥ 80",
-          "hook 79",
-          "sources 95"
         ]
       },
       {
@@ -3325,144 +2911,6 @@
         ]
       },
       {
-        "topicId": "IB-EXT-039",
-        "slug": "what-if-something-was-pulling-our-galaxy",
-        "topic": "What If Something Was Pulling Our Galaxy?",
-        "cluster": "EXTREME SCIENCE",
-        "bucket": "A",
-        "viralScore": 75,
-        "videoPotentialScore": 81,
-        "selectionScore": 76,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 99,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 70,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 35,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 69,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 90,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 82,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 45,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 91,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 91,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 88,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 50,
-            "basis": "neutral",
-            "note": "no same-cluster channel evidence yet"
-          },
-          "subscriber_conversion_potential": {
-            "value": 88,
-            "basis": "derived",
-            "note": "series-depth proxy; no measured conversion yet"
-          },
-          "audience_breadth": {
-            "value": 100,
-            "basis": "inventory-signal"
-          },
-          "hook_potential": {
-            "value": 70,
-            "basis": "derived"
-          },
-          "visual_availability": {
-            "value": 67,
-            "basis": "inventory-signal"
-          },
-          "research_confidence": {
-            "value": 98,
-            "basis": "derived"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "0 published / 50 inventory in cluster"
-          },
-          "recent_fatigue_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "0 same-family upload(s) in the last 30 days"
-          },
-          "source_confidence_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "98/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "visual_first_reveal",
-          "spoken": "Why galaxies drift toward one hidden region of space.",
-          "score": 78
-        },
-        "rejectionReasons": [
-          "VideoPotential 81 ≥ 80",
-          "hook 78",
-          "sources 98"
-        ]
-      },
-      {
         "topicId": "IB-FUT-045",
         "slug": "what-if-room-temperature-superconductors-were-real",
         "topic": "What If Room-Temperature Superconductors Were Real?",
@@ -3601,144 +3049,6 @@
         ]
       },
       {
-        "topicId": "IB-EXT-046",
-        "slug": "what-if-a-year-lasted-18-hours",
-        "topic": "What If a Year Lasted 18 Hours?",
-        "cluster": "EXTREME SCIENCE",
-        "bucket": "A",
-        "viralScore": 75,
-        "videoPotentialScore": 80,
-        "selectionScore": 76,
-        "viralComponents": {
-          "curiosity_gap": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "immediate_stakes": {
-            "value": 94,
-            "basis": "derived"
-          },
-          "human_consequence": {
-            "value": 65,
-            "basis": "derived"
-          },
-          "recognizability": {
-            "value": 50,
-            "basis": "measured"
-          },
-          "surprise": {
-            "value": 50,
-            "basis": "derived"
-          },
-          "visual_potential": {
-            "value": 79,
-            "basis": "inventory-signal"
-          },
-          "archival_footage_potential": {
-            "value": 35,
-            "basis": "inventory-signal"
-          },
-          "first_frame_potential": {
-            "value": 68,
-            "basis": "derived"
-          },
-          "title_potential": {
-            "value": 84,
-            "basis": "derived",
-            "note": "3 source-backed title seeds"
-          },
-          "emotional_tension": {
-            "value": 73,
-            "basis": "derived"
-          },
-          "contradiction": {
-            "value": 85,
-            "basis": "derived"
-          },
-          "unexpected_cause": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "numerical_anomaly": {
-            "value": 95,
-            "basis": "derived"
-          },
-          "didnt_know_factor": {
-            "value": 84,
-            "basis": "derived"
-          },
-          "shareability": {
-            "value": 82,
-            "basis": "derived"
-          },
-          "channel_fit": {
-            "value": 100,
-            "basis": "derived"
-          },
-          "historical_similarity": {
-            "value": 50,
-            "basis": "neutral",
-            "note": "no same-cluster channel evidence yet"
-          },
-          "subscriber_conversion_potential": {
-            "value": 88,
-            "basis": "derived",
-            "note": "series-depth proxy; no measured conversion yet"
-          },
-          "audience_breadth": {
-            "value": 100,
-            "basis": "inventory-signal"
-          },
-          "hook_potential": {
-            "value": 72,
-            "basis": "derived"
-          },
-          "visual_availability": {
-            "value": 67,
-            "basis": "inventory-signal"
-          },
-          "research_confidence": {
-            "value": 98,
-            "basis": "derived"
-          },
-          "duplicate_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "no published-title collision"
-          },
-          "saturation_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "0 published / 50 inventory in cluster"
-          },
-          "recent_fatigue_risk": {
-            "value": 0,
-            "basis": "penalty",
-            "note": "0 same-family upload(s) in the last 30 days"
-          },
-          "source_confidence_risk": {
-            "value": -2,
-            "basis": "penalty",
-            "note": "98/100 source quality"
-          },
-          "weak_footage_risk": {
-            "value": -33,
-            "basis": "penalty",
-            "note": "no archival footage confirmed"
-          }
-        },
-        "selectedHook": {
-          "family": "unexpected_chain_reaction",
-          "spoken": "It's 55 Cancri e, a super-Earth hugging its star.",
-          "score": 80
-        },
-        "rejectionReasons": [
-          "VideoPotential 80 ≥ 80",
-          "hook 80",
-          "sources 98"
-        ]
-      },
-      {
         "topicId": "IB-PHY-020",
         "slug": "what-if-you-traveled-near-the-speed-of-light",
         "topic": "What If You Traveled Near the Speed of Light?",
@@ -3814,7 +3124,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 48,
+            "value": 56,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -3881,9 +3191,9 @@
         "topic": "What If You Couldn't Feel Pain?",
         "cluster": "HUMAN",
         "bucket": "B",
-        "viralScore": 78,
-        "videoPotentialScore": 81,
-        "selectionScore": 79,
+        "viralScore": 77,
+        "videoPotentialScore": 82,
+        "selectionScore": 78,
         "viralComponents": {
           "curiosity_gap": {
             "value": 89,
@@ -3951,7 +3261,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 94,
+            "value": 64,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -4008,7 +3318,7 @@
           "score": 77
         },
         "rejectionReasons": [
-          "VideoPotential 81 ≥ 72",
+          "VideoPotential 82 ≥ 72",
           "not A: hook 77 < 78"
         ]
       },
@@ -4019,8 +3329,8 @@
         "cluster": "PHYSICS",
         "bucket": "B",
         "viralScore": 76,
-        "videoPotentialScore": 84,
-        "selectionScore": 78,
+        "videoPotentialScore": 83,
+        "selectionScore": 77,
         "viralComponents": {
           "curiosity_gap": {
             "value": 95,
@@ -4088,7 +3398,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 48,
+            "value": 56,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -4145,7 +3455,7 @@
           "score": 77
         },
         "rejectionReasons": [
-          "VideoPotential 84 ≥ 72",
+          "VideoPotential 83 ≥ 72",
           "not A: hook 77 < 78"
         ]
       },
@@ -4155,9 +3465,9 @@
         "topic": "What If You Stood at the Bottom of the Mariana Trench?",
         "cluster": "HUMAN",
         "bucket": "B",
-        "viralScore": 77,
+        "viralScore": 76,
         "videoPotentialScore": 82,
-        "selectionScore": 78,
+        "selectionScore": 77,
         "viralComponents": {
           "curiosity_gap": {
             "value": 86,
@@ -4225,7 +3535,7 @@
             "basis": "derived"
           },
           "historical_similarity": {
-            "value": 94,
+            "value": 64,
             "basis": "learned",
             "note": "1 same-cluster upload(s), breakout rate 0"
           },
@@ -4289,37 +3599,37 @@
     ]
   },
   "selected": {
-    "topicId": "IB-EXT-007",
-    "slug": "what-if-you-held-a-teaspoon-of-neutron-star",
-    "topic": "What If You Held a Teaspoon of Neutron Star?",
-    "cluster": "EXTREME SCIENCE",
+    "topicId": "IB-FUT-004",
+    "slug": "what-if-fusion-power-actually-worked",
+    "topic": "What If Fusion Power Actually Worked?",
+    "cluster": "FUTURE TECHNOLOGY",
     "bucket": "A",
-    "viralScore": 75,
+    "viralScore": 79,
     "videoPotentialScore": 83,
-    "selectionScore": 77,
+    "selectionScore": 80,
     "viralComponents": {
       "curiosity_gap": {
-        "value": 90,
+        "value": 87,
         "basis": "derived"
       },
       "immediate_stakes": {
-        "value": 70,
+        "value": 94,
         "basis": "derived"
       },
       "human_consequence": {
-        "value": 35,
+        "value": 95,
         "basis": "derived"
       },
       "recognizability": {
-        "value": 72,
+        "value": 54,
         "basis": "measured"
       },
       "surprise": {
-        "value": 80,
+        "value": 90,
         "basis": "derived"
       },
       "visual_potential": {
-        "value": 94,
+        "value": 81,
         "basis": "inventory-signal"
       },
       "archival_footage_potential": {
@@ -4336,7 +3646,7 @@
         "note": "3 source-backed title seeds"
       },
       "emotional_tension": {
-        "value": 57,
+        "value": 97,
         "basis": "derived"
       },
       "contradiction": {
@@ -4352,24 +3662,24 @@
         "basis": "derived"
       },
       "didnt_know_factor": {
-        "value": 86,
+        "value": 85,
         "basis": "derived"
       },
       "shareability": {
-        "value": 91,
+        "value": 97,
         "basis": "derived"
       },
       "channel_fit": {
-        "value": 100,
+        "value": 82,
         "basis": "derived"
       },
       "historical_similarity": {
         "value": 50,
-        "basis": "neutral",
-        "note": "no same-cluster channel evidence yet"
+        "basis": "learned",
+        "note": "1 same-cluster upload(s), breakout rate 0"
       },
       "subscriber_conversion_potential": {
-        "value": 88,
+        "value": 80,
         "basis": "derived",
         "note": "series-depth proxy; no measured conversion yet"
       },
@@ -4386,7 +3696,7 @@
         "basis": "inventory-signal"
       },
       "research_confidence": {
-        "value": 98,
+        "value": 100,
         "basis": "derived"
       },
       "duplicate_risk": {
@@ -4395,19 +3705,19 @@
         "note": "no published-title collision"
       },
       "saturation_risk": {
-        "value": 0,
+        "value": -6,
         "basis": "penalty",
-        "note": "0 published / 50 inventory in cluster"
+        "note": "1 published / 50 inventory in cluster"
       },
       "recent_fatigue_risk": {
-        "value": 0,
+        "value": -22,
         "basis": "penalty",
-        "note": "0 same-family upload(s) in the last 30 days"
+        "note": "1 same-family upload(s) in the last 30 days"
       },
       "source_confidence_risk": {
-        "value": -2,
+        "value": 0,
         "basis": "penalty",
-        "note": "98/100 source quality"
+        "note": "100/100 source quality"
       },
       "weak_footage_risk": {
         "value": -33,
@@ -4416,15 +3726,15 @@
       }
     },
     "selectedHook": {
-      "family": "visual_first_reveal",
-      "spoken": "Why one teaspoon of neutron star would explode.",
+      "family": "contradiction",
+      "spoken": "Why fusion's 54% surplus isn't electricity yet.",
       "score": 80
     },
     "rejectionReasons": [
       "VideoPotential 83 ≥ 80",
       "hook 80",
-      "sources 98"
+      "sources 100"
     ]
   },
-  "reason": "EXPLORE (0.25): under-sampled cluster EXTREME SCIENCE"
+  "reason": "EXPLORE (0.25): under-sampled cluster FUTURE TECHNOLOGY"
 }
