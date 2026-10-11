@@ -47,3 +47,13 @@ test("documentary #2: the title states the timeframe of the $8.2B figure", () =>
   assert.match(story.title || require(path.join(FILM, "story", "meta.json")).title, /\$8\.2 Billion in One Year/);
   assert.match(spec.title, /in One Year$/);
 });
+
+test("documentary #2: narration bundle matches the approved story and fits the credit cap", () => {
+  const N = require("../../core/profitdecoded/narration");
+  const T = require("../../core/profitdecoded/text");
+  const bundle = require(path.join(FILM, "bundle.json"));
+  assert.deepEqual(bundle.beats.map((b) => b.text), story.beats.map((b) => b.text));
+  let chars = 0; for (const b of bundle.beats) for (const s of T.sentences(b.text)) chars += N.spokenText(s).length;
+  assert.ok(chars > 7000 && chars <= 9000, `spoken characters ${chars} within PD_CARTESIA_MAX_CHARS 9000`);
+  assert.deepEqual(N.textChecks(bundle.beats.map((b) => b.text).join(" ")).problems, []);
+});

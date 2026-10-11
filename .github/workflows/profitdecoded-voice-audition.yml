@@ -135,7 +135,9 @@ jobs:
           PD_CARTESIA_MAX_CHARS: ${{ inputs.cartesia_max_chars }}
           BUNDLE: ${{ inputs.cartesia_bundle }}
           # Credits this repository has spent this month, from channels/profitdecoded/reports/voice-audition/cartesia/*-index.json
-          RECORDED: '2082'
+          # Repository-recorded Cartesia usage this month when the usage API needs an admin key: 2,082 before film #1
+          # + 9,285 for film #1's narration (docs/profitdecoded/FIRST-FILM-QA.md). Audition runs are not included: check the dashboard.
+          RECORDED: '11367'
         run: |
           node scripts/profitdecoded/cartesia-credits.js --need "$PD_CARTESIA_MAX_CHARS" --recorded-used "$RECORDED"
           node scripts/profitdecoded/produce-audio.js "$BUNDLE"
