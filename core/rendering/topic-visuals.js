@@ -393,7 +393,10 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     if (type === "licensed-still") {
       const candidate = nextStill();
       const reused = candidate && (stillUses.get(candidate.file) || 0) > 0;
-      if (reused && previous && ["licensed-still", "stock-video"].includes(previous.type) &&
+      // Craft v2: a returning picture that names what this line says (the memorial on "39 people died")
+      // comes back as a detail crop instead of the previous shot holding over the line.
+      const named = craft && candidate && lineMatch(candidate) > 0 && (!previous || previous.still !== candidate);
+      if (reused && !named && previous && ["licensed-still", "stock-video"].includes(previous.type) &&
         previous.duration + (end - start) <= maximumHoldSeconds) {
         previous.end = end;
         previous.duration = previous.end - previous.start;
