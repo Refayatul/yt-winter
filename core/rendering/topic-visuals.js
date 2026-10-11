@@ -266,7 +266,7 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     ordered = ordered.filter((still) => still.lead === true || relevant(still, "licensed-still"));
     clips = clips.filter((clip) => relevant(clip, "stock-video"));
   }
-  const craftLead = craftOpening && !curatedLead ? Craft.chooseOpening(ordered, topic, claims[0] && claims[0].text) : null;
+  const craftLead = craftOpening && !curatedLead ? Craft.chooseOpening(ordered, topic, claims[0] && claims[0].text, options.measure === undefined ? Craft.frameStats : options.measure) : null;
   if (craftLead) ordered = [craftLead, ...ordered.filter((still) => still !== craftLead)];
   const kindOf = (still) => (craftOpening && !still.fit && Craft.figureType(still) === "illustration" ? "photo" : stillKind(still));
   const maxCards = ordered.length >= 2 ? MAX_CARDS_WITH_STILLS : MAX_CARDS_WITHOUT_STILLS;
@@ -301,7 +301,15 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     if (craft) {
       const fresh = candidates.filter((still) => (stillUses.get(still.file) || 0) < (Craft.figureType(still) === "data" ? 2 : 3));
       if (!fresh.length) return null;
-      return fresh.reduce((best, still) => ((stillUses.get(still.file) || 0) < (stillUses.get(best.file) || 0) ? still : best), fresh[0]);
+      // The first shot is the chosen opening (a curator's lead or the craft opening pick).
+      if (!plan.length && fresh.includes(ordered[0])) return ordered[0];
+      // The picture that names what the line says ("150 metres apart" over the 150 m sign), then the
+      // least used one.
+      return fresh.reduce((best, still) => {
+        const match = lineMatch(still) - lineMatch(best);
+        if (match !== 0) return match > 0 ? still : best;
+        return (stillUses.get(still.file) || 0) < (stillUses.get(best.file) || 0) ? still : best;
+      }, fresh[0]);
     }
     // Unused stills first; once all are used, the least used one returns with
     // a different camera move.
@@ -778,6 +786,10 @@ async function prepareAssets(topic, outputDirectory) {
       sourceUrl: item.sourceUrl,
       description: item.description,
       trademarkNotice: item.trademarkNotice || null,
+      // A curator's choices survive the download (they were dropped here, so curatedVisuals[].lead
+      // never reached the planner for IB and CT).
+      ...(item.lead === true ? { lead: true } : {}),
+      ...(item.fit === true ? { fit: true } : {}),
       origin: item.origin,
       score: item.score,
       articleRank: Number.isFinite(item.articleRank) ? item.articleRank : articles.length,

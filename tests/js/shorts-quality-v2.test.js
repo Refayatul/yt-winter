@@ -28,7 +28,10 @@ test("FR v2 composition: subject crop when the subject is clear, documentary lay
   assert.equal(Kadraj.kompozisyon({ w: 1038, h: 594, odak: null }), "belge", "unknown subject: never crop blindly");
   assert.equal(Kadraj.kompozisyon({ w: 900, h: 1600, odak: null }), "dikey");
   const belge = Kadraj.fotoFiltreV2({ w: 1038, h: 594, n: 60, odak: { ...odak, coverage: 0.3, uniform: 0.32 } });
-  assert.match(belge, /scale=1080:618/, "the whole frame is shown at full width");
+  assert.match(belge, /s=1080x618/, "the whole frame is shown at full width");
+  assert.match(belge, /\[ana\][^;]*zoompan=z='1\+0\.12/, "the whole frame pushes in (no static layout)");
+  assert.match(belge, /\[det\][^;]*zoompan=[^;]*x='\(iw-iw\/zoom\)\*\(0\.15\+0\.7/, "the detail travels across the subject");
+  assert.match(Kadraj.fotoFiltreV2({ w: 1038, h: 594, n: 60, odak: { ...odak, coverage: 0.3, uniform: 0.32 }, kullanim: 1 }), /x='\(iw-iw\/zoom\)\*\(0\.85-0\.7/, "a return travels back");
   assert.doesNotMatch(belge, /boxblur|gblur/, "no blurred fill");
   const crop = Kadraj.fotoFiltreV2({ w: 1200, h: 800, n: 60, odak });
   assert.match(crop, /crop=2160:3840:\d+:0/);
@@ -127,4 +130,25 @@ test("relevance: an off-subject picture is rejected and reported; the ending nev
   assert.ok(closing.every((shot) => shot.type !== "procedural"), `closing lines: ${closing.map((s) => s.type).join(",")}`);
   const before = build(false);
   assert.ok(before.some((shot) => shot.still && /sculptor/.test(shot.still.file)), "flag off: the plan is unchanged (the sculptor is still used)");
+});
+
+test("opening legibility: a dark, flat picture loses to a readable one with the same subject match; no measure, no change", () => {
+  const topic = { canonicalTopic: "ice", topic: "What If Ice Sank Instead of Floating?" };
+  const dark = { file: "Anchor ice under sea ice.jpg", description: "ice" };
+  const bright = { file: "Melange of ice.jpg", description: "ice" };
+  const stats = new Map([[dark, { yavg: 64, spread: 91 }], [bright, { yavg: 109, spread: 120 }]]);
+  assert.ok(Craft.legibility({ yavg: 64, spread: 91 }) < -2 && Craft.legibility({ yavg: 121, spread: 207 }) === 0);
+  assert.equal(Craft.chooseOpening([dark, bright], topic, "What if ice sank?", (s) => stats.get(s)), bright);
+  assert.equal(Craft.chooseOpening([dark, bright], topic, "What if ice sank?"), dark, "without a measure the first best match wins, as before");
+  assert.match(Craft.openingLift({ yavg: 64, spread: 91 }), /eq=brightness/);
+  assert.equal(Craft.openingLift({ yavg: 121, spread: 207 }), "");
+});
+
+test("sound cues: the riser ends where the payoff starts; camera moves keep v1 at scale 1 and widen for long holds", () => {
+  const Rendering = require("../../core/rendering");
+  const cues = Rendering.soundCues(25, 22.5);
+  assert.match(cues.filter(2, 3), /adelay=21100\|21100/, "1.4 s riser ending at 22.5 s");
+  assert.match(cues.filter(2, 3), /\[2:a\][^;]*lowpass=f=140[^;]*\[hit\]/);
+  assert.equal(Rendering.cameraMove(0, 90), "z='1+0.1*on/90':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'", "v1 move unchanged");
+  assert.match(Rendering.cameraMove(0, 120, 1.67), /z='1\+0\.167\*on\/120'/);
 });

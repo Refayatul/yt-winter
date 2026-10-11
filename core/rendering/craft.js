@@ -46,16 +46,47 @@ function openingImpact(still, topic, hookText) {
   return hookHits * 2 + subjectHits + (type === "illustration" ? 3 : type === "photo" ? 2 : -6);
 }
 
-// The opening still: the best-scoring picture, only if it is not a data figure.
-function chooseOpening(stills, topic, hookText) {
+// Measured brightness and contrast of a picture in its 9:16 crop (0-255): mean luma, and the
+// spread between the 10th and 90th percentiles. Null when the file cannot be read.
+function frameStats(still) {
+  const file = still && still.path;
+  if (!file || !require("fs").existsSync(file)) return null;
+  try {
+    const out = require("child_process").spawnSync(require("../../ff-yol").ffmpeg, ["-hide_banner", "-nostats", "-i", file, "-frames:v", "1",
+      "-vf", "scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,scale=180:320,signalstats,metadata=print", "-f", "null", "-"], { encoding: "utf8", timeout: 20000 }).stderr;
+    const get = (key) => Number((out.match(new RegExp(`${key}=([0-9.]+)`)) || [])[1]);
+    const stats = { yavg: get("YAVG"), spread: get("YHIGH") - get("YLOW") };
+    return Number.isFinite(stats.yavg) && Number.isFinite(stats.spread) ? stats : null;
+  } catch (error) { return null; }
+}
+
+// A dark or flat picture loses the first glance on a phone screen (measured on 2026-10-11: the ice
+// Short's anchor-ice opening averaged 64/255 with a 91-level spread; the dinosaur illustration 121
+// and 207). Up to -3 points, comparable to one subject-word match.
+function legibility(stats) {
+  if (!stats) return 0;
+  const dark = stats.yavg < 80 ? (80 - stats.yavg) / 8 : 0;
+  const flat = stats.spread < 110 ? (110 - stats.spread) / 20 : 0;
+  return -Math.min(3, dark + flat);
+}
+
+// The opening still: the best-scoring picture, only if it is not a data figure. `measure` (frameStats
+// in rendering) adds the legibility term; without it the choice is by subject match alone.
+function chooseOpening(stills, topic, hookText, measure = null) {
   let best = null;
   let bestScore = -Infinity;
   for (const still of stills) {
     if (figureType(still) === "data") continue;
-    const score = openingImpact(still, topic, hookText);
+    const score = openingImpact(still, topic, hookText) + (measure ? legibility(measure(still)) : 0);
     if (score > bestScore) { best = still; bestScore = score; }
   }
   return best;
+}
+
+// Grade for a dark opening picture that still won (gentle: brighter mid-tones, a little contrast).
+function openingLift(stats) {
+  if (!stats || stats.yavg >= 85) return "";
+  return ",eq=brightness=0.04:contrast=1.10:gamma=1.18";
 }
 
 // Hook words on one or two balanced lines, sized to the longest line.
@@ -123,4 +154,4 @@ function features(channelSlug, growthPlan = null, env = process.env) {
   return { opening: all || openingArm, repeats: all, pacing: all, captions: all };
 }
 
-module.exports = { enabled, features, captionStyle, simplifyNumbers, storyShape, figureType, openingImpact, chooseOpening, hookLines, hookFontSize, linePauses, payoffRate, DATA_FIGURE_RE };
+module.exports = { enabled, features, frameStats, legibility, openingLift, captionStyle, simplifyNumbers, storyShape, figureType, openingImpact, chooseOpening, hookLines, hookFontSize, linePauses, payoffRate, DATA_FIGURE_RE };

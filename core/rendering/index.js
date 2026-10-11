@@ -232,7 +232,23 @@ function musicMood(topic) {
   return moods[String(topic.category || "").toUpperCase()] || moods.default || "structural-failures";
 }
 
-function mixMusicBed(voiceFile, duration, topic, outputDirectory) {
+// Craft v2 sound cues, synthesized (nothing to license): a low impact under the first frame and a
+// soft noise riser that ends where the payoff line starts. Mixed after the ducking; measured on the CT
+// tunnel Short: the impact adds about 6 dB below 120 Hz in the first 0.6 s, the riser peaks about
+// 12 dB under the voice. Levels only: nobody has listened yet, so the owner judges the sound.
+function soundCues(duration, payoffStart) {
+  const total = duration.toFixed(2);
+  const riseLength = Math.min(1.4, Math.max(0.6, payoffStart - 0.2));
+  const riseStart = Math.max(0, payoffStart - riseLength);
+  return {
+    inputs: ["-f", "lavfi", "-i", `sine=frequency=52:duration=0.9`, "-f", "lavfi", "-i", `anoisesrc=d=${riseLength.toFixed(2)}:c=pink:a=0.5`],
+    filter: (hitIndex, riseIndex) => `[${hitIndex}:a]aresample=48000,volume=1.8,afade=t=out:st=0.05:d=0.85:curve=exp,lowpass=f=140,apad=whole_dur=${total}[hit];`
+      + `[${riseIndex}:a]aresample=48000,highpass=f=900,lowpass=f=6000,afade=t=in:st=0:d=${riseLength.toFixed(2)}:curve=qsin,afade=t=out:st=${(riseLength - 0.08).toFixed(2)}:d=0.08,volume=1.2,`
+      + `adelay=${Math.round(riseStart * 1000)}|${Math.round(riseStart * 1000)},apad=whole_dur=${total}[rise];`,
+  };
+}
+
+function mixMusicBed(voiceFile, duration, topic, outputDirectory, cues = null) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const mood = musicMood(topic);
   const profile = require("../../lib/muzik").profil(topic.slug || topic.id, mood);
@@ -250,10 +266,14 @@ function mixMusicBed(voiceFile, duration, topic, outputDirectory) {
       + `afade=t=in:st=0:d=1.6,afade=t=out:st=${Math.max(0, duration - 1.6).toFixed(2)}:d=1.6[m]`,
       "-map", "[m]", "-t", total, bed], { stdio: "ignore", timeout: 120000 });
     // Narration ducks the bed (sidechain); the final mix is brought to -14 LUFS.
-    cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", voiceFile, "-i", bed, "-filter_complex",
+    const sfx = cues && Number.isFinite(cues.payoffStart) ? soundCues(duration, cues.payoffStart) : null;
+    // v1 keeps its exact mix (amix's default normalisation); with cues each input keeps its own level.
+    const mixInputs = sfx ? "[duck][vo2][hit][rise]amix=inputs=4:normalize=0" : "[duck][vo2]amix=inputs=2";
+    cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", voiceFile, "-i", bed, ...(sfx ? sfx.inputs : []), "-filter_complex",
       "[0:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,apad,asplit=2[vo1][vo2];[1:a]aresample=48000,volume=1.0[mus];"
       + "[mus][vo1]sidechaincompress=threshold=0.035:ratio=6:attack=6:release=340[duck];"
-      + "[duck][vo2]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[a]",
+      + (sfx ? sfx.filter(2, 3) : "")
+      + `${mixInputs}:duration=first:dropout_transition=0,alimiter=limit=0.95,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[a]`,
       "-map", "[a]", "-t", duration.toFixed(3), "-ar", "48000", "-c:a", "aac", "-b:a", "160k", output], { stdio: "ignore", timeout: 120000 });
   } finally { try { fs.unlinkSync(bed); } catch (error) {} }
   const mixed = probe(output).durationSeconds;
@@ -581,18 +601,24 @@ function diagramCrop(shot) {
 }
 
 // Distinct slow camera moves, so a photograph shown twice is a different shot.
-function cameraMove(variant, frames) {
+// `scale` widens every move (craft v2: a shot held longer keeps its speed instead of slowing down;
+// a 4 s hold with a fixed move measured 42% near-static frames on the ice Short). Scale 1 is v1.
+function cameraMove(variant, frames, scale = 1) {
   const t = `on/${Math.max(1, frames)}`;
   const center = "x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'";
+  const k = (value) => +(value * scale).toFixed(3);
   const moves = [
-    `z='1+0.10*${t}':${center}`,
-    `z='1.16':x='(iw-iw/zoom)*${t}':y='ih/2-(ih/zoom/2)'`,
-    `z='1.12-0.10*${t}':${center}`,
-    `z='1.16':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*${t}'`,
-    `z='1.16':x='(iw-iw/zoom)*(1-${t})':y='ih/2-(ih/zoom/2)'`,
+    `z='1+${k(0.10)}*${t}':${center}`,
+    `z='${1 + k(0.16)}':x='(iw-iw/zoom)*${t}':y='ih/2-(ih/zoom/2)'`,
+    `z='${+(1 + k(0.12)).toFixed(3)}-${k(0.10)}*${t}':${center}`,
+    `z='${1 + k(0.16)}':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*${t}'`,
+    `z='${1 + k(0.16)}':x='(iw-iw/zoom)*(1-${t})':y='ih/2-(ih/zoom/2)'`,
   ];
   return moves[variant % moves.length];
 }
+
+// Craft v2: the move grows with the shot past 2.4 s (at most 1.8x), so the camera never crawls.
+const moveScale = (frames, craft) => (craft ? Math.min(1.8, Math.max(1, frames / FPS / 2.4)) : 1);
 
 // The climbing number (t is the shot's own clock after zoompan), then the
 // exact sourced headline. floor(V*t/T) never exceeds V while t < T.
@@ -668,9 +694,11 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
     } else if (shot.type === "licensed-still" && shot.detail) {
       // Craft v2: a returning picture is a tighter detail crop on another region (1.5x punch-in).
       const fx = (shot.motion || 1) % 2 ? 0.2 : 0.8;
-      chain = `[${index}:v]scale=2430:4320:force_original_aspect_ratio=increase,crop=1620:2880:x='(iw-1620)*${fx}':y='(ih-2880)*0.4',zoompan=${cameraMove(shot.motion || 0, frames)}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
+      chain = `[${index}:v]scale=2430:4320:force_original_aspect_ratio=increase,crop=1620:2880:x='(iw-1620)*${fx}':y='(ih-2880)*0.4',zoompan=${cameraMove(shot.motion || 0, frames, moveScale(frames, craft))}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
     } else if (shot.type === "licensed-still") {
-      chain = `[${index}:v]scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,zoompan=${cameraMove(shot.motion || 0, frames)}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
+      chain = `[${index}:v]scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,zoompan=${cameraMove(shot.motion || 0, frames, moveScale(frames, craft))}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
+      // Craft v2: a dark opening picture is lifted a little so it reads at first glance.
+      if (shot === plan[0] && craftFeatures.opening) chain += Craft.openingLift(Craft.frameStats(shot.still));
     } else if (shot.type === "number-card") {
       chain = `[${index}:v]scale=1080:1920,zoompan=z='1+0.0006*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
       if (shot.countUp) chain += countUpFilter(shot);
@@ -858,7 +886,8 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     // ImpossibleBrief records do not carry their channel; the look, the music
     // mood and the card accent are chosen per channel.
     const renderTopic = topic.channel ? topic : { ...topic, channel: channel.slug };
-    const music = channel.config.music && channel.config.music.enabled === false || process.env.MUSIC === "0" ? null : mixMusicBed(voice.file, duration, renderTopic, outputDirectory);
+    const music = channel.config.music && channel.config.music.enabled === false || process.env.MUSIC === "0" ? null : mixMusicBed(voice.file, duration, renderTopic, outputDirectory,
+      craftFeatures.pacing && script.claims.length > 2 ? { payoffStart: script.claims[script.claims.length - 1].start } : null);
     const visualRender = renderVideo(music ? music.file : voice.file, duration, video, path.join(outputDirectory, "captions.ass"), renderTopic,
       { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [], seriesLabel: Series.label(channel, topic.slug), seriesEnd: Series.endLine(channel), craft: craftFeatures });
     const thumbnailRender = renderThumbnail(image, renderTopic, assets, script);
@@ -924,4 +953,4 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations, validationReasons };
 }
 
-module.exports = { countUp, countUpFilter, overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
+module.exports = { soundCues, cameraMove, countUp, countUpFilter, overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
