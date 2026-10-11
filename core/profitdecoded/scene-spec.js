@@ -138,6 +138,8 @@ function validate(spec, options = {}) {
         if ((el.scale != null && el.scale < 0.6) || (el.keys || []).some((k) => k.scale != null && k.scale < 0.6)) warnings.push(`${at}: element ${el.id || i} scaled below 0.6: check its text on a phone`);
       });
     }
+    if (scene.type === "composition" && (scene.elements || []).length && !(scene.elements || []).some((el) => !el.enter || (!el.enter.cue && (el.enter.at == null || el.enter.at <= 0.5))))
+      blockers.push(`${at}: every element waits for a cue, so the shot opens on an empty frame (give at least one element no cue, e.g. a kicker or the scene's object)`);
     if (scene.cameraKeys && scene.type !== "composition") blockers.push(`${at}: cameraKeys are supported on composition scenes`);
     if ((scene.lines || []).length > TEXT.lines) blockers.push(`${at}: ${(scene.lines || []).length} text lines (max ${TEXT.lines})`);
     // timing

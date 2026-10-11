@@ -32,7 +32,9 @@ window.SCENES = function (PD) {
     : bg === "paper" ? svg(defs() + paperBg() + inner) : svg(defs() + inner + vignette(), C.ink);
   // No picture holds still while the narration runs: at least 0.22% zoom per second, as in the films.
   const cam = (kind, lt, dur, inner, cx = 960, cy = 540) => {
-    const k = E.inOut(p(lt, 0, dur)); const min = 0.0022 * dur;
+    // Linear progress, as in the handwritten films: an eased curve is nearly still at both ends of a shot,
+    // which the documentary-#2 rehearsal measured as 3-6 s static holds.
+    const k = p(lt, 0, dur); const min = 0.0022 * dur;
     const z = kind === "pull" ? lerp(1.05 + min, 1.0, k) : kind === "push" ? lerp(1.0, Math.max(1.05, 1 + min), k) : 1 + min * k;
     const dx = kind === "drift" ? lerp(-24, 24, k) : 0;
     return `<g transform="translate(${cx + dx} ${cy}) scale(${z}) translate(${-cx} ${-cy})">${inner}</g>`;
@@ -195,8 +197,9 @@ window.SCENES = function (PD) {
       return frame("paper", cam(s.camera || "push", lt, X.dur, PD.filingQuote({ x: 260, y: 240, w: 1400, quote: s.quote, highlight: s.highlight || "", cite: s.cite, k, hk, size: 54 })), t);
     },
     "statement": (s, lt, t, X) => {
-      const k = ent(t, X.cue(s.cue, 0.1), 0.6);
-      return frame(X.bg, cam(s.camera || "push", lt, X.dur, `${PD.statement(s.text, { y: 570, size: s.text.length > 28 ? 84 : 104, k, accent: s.accent || "" })}${s.stamp ? PD.stamp(960, 760, s.stamp.toUpperCase(), E.back(p(t, X.cue(s.cue, 0.1) + 0.7, X.cue(s.cue, 0.1) + 1.1)), { size: 34 }) : ""}`) + sourceLine(s, ent(lt, 0.4), X.bg), t, s.environment, s.type);
+      // The line is on screen from the first frame (no empty dark stage); the spoken cue lights the accent.
+      const k = ent(lt, 0.05, 0.6); const lit = t >= X.cue(s.cue, 0.1);
+      return frame(X.bg, cam(s.camera || "push", lt, X.dur, `${PD.statement(s.text, { y: 570, size: s.text.length > 28 ? 84 : 104, k, accent: lit ? s.accent || "" : "" })}${s.stamp ? PD.stamp(960, 760, s.stamp.toUpperCase(), E.back(p(t, X.cue(s.cue, 0.1) + 0.7, X.cue(s.cue, 0.1) + 1.1)), { size: 34 }) : ""}`) + sourceLine(s, ent(lt, 0.4), X.bg), t, s.environment, s.type);
     },
     "rule-card": (s, lt, t, X) => {
       const k = ent(lt, 0.05); const lines = s.lines || []; const cues = s.cues || [];
@@ -241,6 +244,7 @@ window.SCENES = function (PD) {
     return shot;
   });
   shots.sort((a, b) => a.start - b.start);
+  if (shots.length) shots[0].start = 0; // the film opens on its first picture, never on black
   shots.forEach((s, i) => { s.end = i + 1 < shots.length ? shots[i + 1].start : PD.audioDur; });
   return { shots, duration: PD.audioDur };
 };

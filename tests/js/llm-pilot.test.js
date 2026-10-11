@@ -379,3 +379,17 @@ test("ledger CLI: status reads without writing; a GitHub ledger without a token 
   const gh = spawnSync(process.execPath, [script, "status", "--channel", "impossible-brief"], { encoding: "utf8", env: { ...env, LLM_BUDGET_STORE: "" } });
   assert.equal(gh.status, 2); assert.match(gh.stderr, /NO_STORE/);
 });
+
+test("scene spec: a composition whose every element waits for a cue is blocked (empty opening frame)", () => {
+  const s = clone();
+  const c = s.scenes.find((x) => x.id === "still-owed");
+  c.elements = c.elements.map((el) => ({ ...el, enter: { cue: "has been paid" } }));
+  assert.ok(SceneSpec.validate(s, { timeline }).blockers.some((b) => /opens on an empty frame/.test(b)));
+});
+
+test("spec renderer: linear camera, statements visible from the first frame, film starts at 0 s", () => {
+  const src = require("node:fs").readFileSync(require("node:path").join(__dirname, "..", "..", "scripts", "profitdecoded", "motion", "spec-scenes.js"), "utf8");
+  assert.match(src, /const k = p\(lt, 0, dur\);/, "camera progress is linear");
+  assert.match(src, /const k = ent\(lt, 0\.05, 0\.6\); const lit = t >= X\.cue\(s\.cue, 0\.1\);/, "statement text from the first frame");
+  assert.match(src, /if \(shots\.length\) shots\[0\]\.start = 0;/);
+});
