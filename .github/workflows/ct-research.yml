@@ -1,0 +1,73 @@
+name: CriticalThread research replenishment
+
+# Keeps at least 14 days of qualified CriticalThread Shorts inventory by upgrading existing topic
+# records with verified evidence (scripts/ct-research.js). It runs only while the runway
+# (scripts/growth/topic-inventory.js, production's own gates) is below target, and keeps an
+# upgrade only when the record becomes production-qualified. Nothing is rendered or uploaded.
+#
+# Free provider only: Groq, no fallback, no paid key in this job. The schedule does nothing until
+# the repository variable CT_RESEARCH_AUTO is 'true' (owner approval); a manual run without
+# write=true is a dry run that changes nothing.
+on:
+  schedule:
+    - cron: '23 5 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Records to research in this run
+        default: '3'
+      write:
+        description: Write qualified upgrades (true) or dry run (false)
+        default: 'false'
+
+concurrency:
+  group: ct-research
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  research:
+    if: github.event_name == 'workflow_dispatch' || vars.CT_RESEARCH_AUTO == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      LONGFORM_LLM_PROVIDER: groq
+      LONGFORM_LLM_FALLBACK_PROVIDER: ''
+      LONGFORM_LLM_MAX_ATTEMPTS: '4'
+      LONGFORM_LLM_MAX_RETRY_MS: '120000'
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      GROQ_MODEL: ${{ vars.GROQ_MODEL }}
+      CT_RESEARCH_PAUSE_MS: '75000'
+      LIMIT: ${{ inputs.limit || '3' }}
+      WRITE: ${{ github.event_name == 'schedule' || inputs.write == 'true' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --no-audit --no-fund
+      - name: Inventory runway
+        run: node scripts/growth/topic-inventory.js --channel critical-thread --target-days 14 | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Research and verify
+        run: |
+          if [ "$WRITE" = "true" ]; then
+            node scripts/ct-research.js --limit "$LIMIT" --target-days 14 --write
+          else
+            node scripts/ct-research.js --limit "$LIMIT" --target-days 14
+          fi
+      - name: Commit qualified upgrades
+        if: env.WRITE == 'true'
+        run: |
+          git config user.name "research-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
+          git add channels/critical-thread/topics
+          if [ -f channels/critical-thread/state/research-attempts.json ]; then git add channels/critical-thread/state/research-attempts.json; fi
+          if git diff --cached --quiet; then echo "unchanged"; exit 0; fi
+          git commit -m "chore(ct): researched topic upgrades"
+          bash scripts/ops/push-state.sh "$GITHUB_REF_NAME" 5

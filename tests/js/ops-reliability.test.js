@@ -98,3 +98,24 @@ test("CriticalThread viral exception: off by default, preview refused in Actions
   assert.throws(() => Config.applyViralMinimumException(merged(), { ...ex, minimumToProduce: 50, enabled: true, approvedBy: "owner" }, ct, {}), />= 65/);
   Config.clearCache();
 });
+
+test("CriticalThread viral exception changes only the viral minimum: research, source, duplicate and readiness gates are untouched", () => {
+  const Config = require(path.join(ROOT, "core", "growth", "config"));
+  const Channel = require(path.join(ROOT, "core", "channel-context"));
+  const ct = Channel.getChannel("critical-thread");
+  Config.clearCache();
+  const base = Config.forChannel(ct);
+  const override = JSON.parse(fs.readFileSync(Config.channelOverridePath(ct), "utf8"));
+  const enabled = { ...override.viralMinimumException, enabled: true, approvedBy: "owner" };
+  const after = JSON.parse(JSON.stringify(base));
+  Config.applyViralMinimumException(after, enabled, ct, {});
+  assert.equal(after.viralScoring.minimumToProduce, 70);
+  assert.equal(after.viralScoring.portfolioMinimumToProduce, 75);
+  const strip = (config) => { const copy = JSON.parse(JSON.stringify(config)); delete copy.viralScoring.minimumToProduce; delete copy.viralScoring.portfolioMinimumToProduce; delete copy.viralScoring.exception; return copy; };
+  assert.deepEqual(strip(after), strip(base), "every other setting (topic buckets, sources, duplicates, hooks, readiness) is identical");
+  for (const slug of ["failure-reconstructed", "impossible-brief", "behind-the-ordinary"]) {
+    const other = Channel.getChannel(slug);
+    assert.equal(Config.forChannel(other).viralScoring.exception, undefined, `${slug} has no exception`);
+  }
+  Config.clearCache();
+});

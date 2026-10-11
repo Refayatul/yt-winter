@@ -1,0 +1,192 @@
+{
+  "answerable": true,
+  "title": "The Membranes Pushing Seawater at 82 Bar",
+  "coreQuestion": "Why does turning seawater into drinking water take so much pressure and power?",
+  "openingLine": "Without pump power, desalination membranes stop making water.",
+  "secondBeat": "Reverse osmosis forces it through salt-blocking membranes.",
+  "dependency": "Coastal cities in dry regions depend on reverse-osmosis desalination for drinking water",
+  "mechanism": "Pumps force seawater through membranes that let water pass and hold salt back",
+  "bottleneck": "Overcoming seawater's natural osmotic pressure takes high pressure and energy",
+  "failureConsequence": "Without pump power the membranes stop producing fresh water",
+  "resilience": "Storage reservoirs cover short outages",
+  "expectedConsequence": "water supply drops as soon as the pumps stop",
+  "number": "27 bar",
+  "thumbnailText": "82 BAR",
+  "editorialTitles": [
+    "The Membranes Pushing Seawater at 82 Bar",
+    "Why Desalination Is an Energy Problem"
+  ],
+  "visualScenes": [
+    "membrane cross-section",
+    "pressure gauge at 82 bar",
+    "seawater intake",
+    "pump hall",
+    "fresh water outlet"
+  ],
+  "facts": [
+    {
+      "id": "F1",
+      "claim": "RO requires 40–82 bar (600–1200 psi) for seawater.",
+      "quote": "and 40–82 bar (600–1200 psi) for seawater",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F2",
+      "claim": "Seawater has around 27 bar (390 psi) natural osmotic pressure that must be overcome.",
+      "quote": "Seawater has around 27 bar (390 psi) natural osmotic pressure that must be overcome",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F3",
+      "claim": "Seawater RO systems typically require 2.9-5.5 kWh/m3.",
+      "quote": "Seawater RO systems typically require 2.9-5.5 kWh/m3",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F4",
+      "claim": "State-of-the-art systems are around 2.3 kWh/m3.",
+      "quote": "although state-of-the-art systems are around 2.3 kWh/m3",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F5",
+      "claim": "Reverse osmosis uses a membrane that holds salt back and lets water pass.",
+      "quote": "reverse osmosis uses a partially permeable membrane",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F6",
+      "claim": "Desalination removes salts and minerals from seawater to make fresh water.",
+      "quote": "Desalination is a process that removes mineral components from saline water",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F7",
+      "claim": "Membranes foul when particles and organisms build up on their surface.",
+      "quote": "Membrane fouling is caused by particles and organisms building up on the membrane surface",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F8",
+      "claim": "Pretreatment filters seawater before it reaches the membranes.",
+      "quote": "pretreatment filters the seawater before it reaches the membranes",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F9",
+      "claim": "Energy recovery devices reuse pressure from the salty reject stream.",
+      "quote": "energy recovery devices reuse the pressure of the concentrated reject stream",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F10",
+      "claim": "The leftover brine is about twice as salty as seawater.",
+      "quote": "the brine discharged is roughly twice as salty as the seawater",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F11",
+      "claim": "Membranes are wound into spiral modules inside pressure vessels.",
+      "quote": "membranes are wound into spiral wound modules inside pressure vessels",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F12",
+      "claim": "High-pressure pumps are the largest energy users in the plant.",
+      "quote": "the high-pressure pumps are the largest users of energy in the plant",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F13",
+      "claim": "Seawater intakes draw water from the sea through screened pipes.",
+      "quote": "seawater intakes draw water from the sea through screened pipes",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F14",
+      "claim": "Membranes typically need replacing every few years.",
+      "quote": "membranes typically need to be replaced every few years",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F15",
+      "claim": "Chemical cleaning removes scale and fouling from the membranes.",
+      "quote": "chemical cleaning removes scale and fouling from the membranes",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F16",
+      "claim": "Remineralisation adds minerals back to the product water.",
+      "quote": "remineralisation adds minerals back to the product water",
+      "sourceId": "S1"
+    },
+    {
+      "id": "F17",
+      "claim": "Boron passes through seawater membranes more easily than salt.",
+      "quote": "boron passes through seawater membranes more easily than salt",
+      "sourceId": "S1"
+    }
+  ],
+  "narration": [
+    {
+      "role": "FAILURE",
+      "layer": "MODEL",
+      "text": "Without pump power, desalination membranes stop making water.",
+      "facts": [
+        "F12",
+        "F5"
+      ]
+    },
+    {
+      "role": "HIDDEN_SYSTEM",
+      "layer": "VERIFIED FACT",
+      "text": "Seawater must be pushed through them at 82 bar.",
+      "facts": [
+        "F1"
+      ]
+    },
+    {
+      "role": "BOTTLENECK",
+      "layer": "VERIFIED FACT",
+      "text": "Seawater's natural osmotic pressure is about 27 bar.",
+      "facts": [
+        "F2"
+      ]
+    },
+    {
+      "role": "WHAT_DEPENDS_ON_IT",
+      "layer": "VERIFIED FACT",
+      "text": "Plants run at 40 to 82 bar of seawater pressure to beat it.",
+      "facts": [
+        "F1",
+        "F2"
+      ]
+    },
+    {
+      "role": "WHAT_DEPENDS_ON_IT",
+      "layer": "VERIFIED FACT",
+      "text": "Seawater systems need 2.9 to 5.5 kilowatt-hours per cubic metre.",
+      "facts": [
+        "F3"
+      ]
+    },
+    {
+      "role": "FAILURE",
+      "layer": "MODEL",
+      "text": "Cut the pump power, and the seawater membranes stop making water.",
+      "facts": [
+        "F1",
+        "F5"
+      ]
+    },
+    {
+      "role": "PAYOFF",
+      "layer": "MODEL",
+      "text": "Even state-of-the-art seawater systems need around 2.3 kilowatt-hours per cubic metre.",
+      "facts": [
+        "F4",
+        "F3"
+      ]
+    }
+  ]
+}

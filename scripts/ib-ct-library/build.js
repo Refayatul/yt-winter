@@ -15,7 +15,7 @@
 //
 // Checks (all must pass before --write):
 //   • every number in a fact appears in THAT fact's own source text
-//   • The Hidden Logic of Things (myth risk): every fact also carries a verbatim
+//   • The Hidden Logic of Things (myth risk) and any automated record: every fact also carries a verbatim
 //     "quote" that must appear in that source's text, and the record becomes
 //     productionReady only when all checks pass
 //     (Wikipedia extract via API, or the primary page's visible text)
@@ -126,7 +126,9 @@ async function verify(channelSlug, record, options) {
   const factNumbers = new Set();
   for (const [index, fact] of (record.facts || []).entries()) {
     if (!fact.url || !fact.source) { errors.push(`fact ${index + 1} has no source/url`); continue; }
-    if (channelSlug === "behind-the-ordinary") {
+    // Automated records (written by a model from source excerpts) need the same verbatim-quote
+    // check as The Hidden Logic of Things on every channel; hand-researched seeds are unchanged.
+    if (channelSlug === "behind-the-ordinary" || record.automated === true) {
       const words = wordCount(fact.quote);
       if (words < 5) errors.push(`fact ${index + 1}: a verbatim source quote of at least 5 words is required`);
       else if (!options.offline) {
