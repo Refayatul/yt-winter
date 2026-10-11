@@ -292,12 +292,7 @@ jobs:
           git add channels/impossible-brief/state/notification-state.json reports || true
           if git diff --cached --quiet; then echo "ImpossibleBrief verification state unchanged."; exit 0; fi
           git commit -m "chore: record ImpossibleBrief SLA verification"
-          BRANCH="$GITHUB_REF_NAME"
-          for i in 1 2 3 4 5; do
-            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
-            sleep $((i * 5))
-          done
-          exit 1
+          bash scripts/ops/push-state.sh "$GITHUB_REF_NAME" 5
       - name: ImpossibleBrief SLA evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -427,12 +422,7 @@ jobs:
           git add channels/critical-thread/state/notification-state.json reports || true
           if git diff --cached --quiet; then echo "CriticalThread verification state unchanged."; exit 0; fi
           git commit -m "chore: record CriticalThread SLA verification"
-          BRANCH="$GITHUB_REF_NAME"
-          for i in 1 2 3 4 5; do
-            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
-            sleep $((i * 5))
-          done
-          exit 1
+          bash scripts/ops/push-state.sh "$GITHUB_REF_NAME" 5
       - name: CriticalThread SLA evidence
         if: always()
         uses: actions/upload-artifact@v4
@@ -562,12 +552,7 @@ jobs:
           git add channels/behind-the-ordinary/state/notification-state.json reports || true
           if git diff --cached --quiet; then echo "The Hidden Logic of Things verification state unchanged."; exit 0; fi
           git commit -m "chore: record The Hidden Logic of Things SLA verification"
-          BRANCH="$GITHUB_REF_NAME"
-          for i in 1 2 3 4 5; do
-            git pull --rebase --autostash origin "$BRANCH" && git push origin "HEAD:$BRANCH" && exit 0
-            sleep $((i * 5))
-          done
-          exit 1
+          bash scripts/ops/push-state.sh "$GITHUB_REF_NAME" 5
       - name: The Hidden Logic of Things SLA evidence
         if: always()
         uses: actions/upload-artifact@v4
