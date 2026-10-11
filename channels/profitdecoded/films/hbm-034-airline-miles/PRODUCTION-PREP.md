@@ -50,10 +50,29 @@ Recommendation:
 | Intermediate count-up figures | **PASS**: none; values appear whole at their spoken cue |
 | Visual diversity (estimated timings) | context share 46%, dark 37%, longest abstract run 71 s, 3.5 category switches/min. One medium flag: the s7 quotations run (458–529 s) has few everyday frames. Accepted, because quotations belong on paper. |
 | Full-length video with measured narration | **NOT TESTED**: needs narration (Cartesia, approval required) |
-| Motion and pacing in playback | **NOT TESTED**: only stills were rendered |
+| Motion rehearsal: full 640 s, 1920×1080, 12 fps, video only, estimated timeline (2026-10-11) | **PASS** after fixes; details below |
+| Audio, loudness, 30 fps, A/V sync | **NOT TESTED**: needs the narration |
 | Side-by-side with V3 | **REQUIRES HUMAN REVIEW**. Stills are in the same visual family; V3's bespoke diagrams are still richer. Not claimed equivalent. |
 
 Timing note: cues were checked against an **estimated** timeline (words ÷ 2.19 words/s, film #1's measured pace). After narration, rerun the checks with `render-motion.js <dir> --analyze-only` against `out/timeline.json`. A cue that lands after its shot's cut is then a blocker.
+
+### Motion rehearsal (`qa-media.js` on a silent 12 fps render)
+
+| Check | First rehearsal | After fixes |
+| --- | --- | --- |
+| Scene errors | 0 | 0 |
+| Black frames ≥ 0.2 s (qa-media) | 0.25 s at 0:00 | **0** |
+| Empty dark openings (a kicker or nothing for several seconds) | `ebitda-tape` 5.8 s, `thin-year` 7 s | **none**: kickers from frame 0; the first element enters on the first sentence |
+| Static holds > 3 s | 11, longest 6.5 s | **0** in the re-rendered ranges; full render: 6 left, all in the 4 scenes fixed afterwards |
+| Captions | 145 cues, 0 out of limits | unchanged |
+
+What was fixed:
+- **Renderer** (in PR #223): linear camera progress, so there is no eased dead stop; statements are visible from frame 0, with the accent arriving on the cue; the first shot starts at 0 s; a new validator gate refuses a composition with nothing on screen in its first 0.5 s.
+- **Spec:** kickers on `ebitda-tape` and `thin-year`, whose first elements now enter on the opening sentence. Cue-driven camera keys on the two STILL OWED drawer scenes (`drawer-owed`, `still-owed`), which ran 14–17 s with long gaps between drawer keys.
+
+`ffmpeg blackdetect` at 95% coverage still marks the dark statement and quotation scenes. That is the dark palette, not black: every flagged frame shows text. These scenes count toward the 37% dark share above.
+
+Timings are estimates. Re-run the same QA on the narrated 30 fps render, because cue positions will move.
 
 ## 4. What is needed before production
 
@@ -62,6 +81,6 @@ Timing note: cues were checked against an **estimated** timeline (words ÷ 2.19 
 | Approve the subject and differentiated angle (section 1) | decision |
 | Approve the title "…in One Year" (68 characters) | decision |
 | Read the script aloud once (the s3–s4 accounting section) | human review |
-| Approve Cartesia narration: about 7,000 characters, within the existing plan; the pronunciation list is in `PRODUCTION-READINESS.md` | approval, no spend without it |
+| Approve Cartesia narration: 7,526 characters (cap 9,000), within the existing plan. Request: `NARRATION-REQUEST.md`; pronunciation: `pronunciation-proposal.json` | approval, no spend without it |
 | After narration: measured timeline → spec gates → full render → QA (qa-media, visual diversity, captions) | engineering, free and local |
 | Final A/B/C quality review and publication decision | human; publishing stays manual |
