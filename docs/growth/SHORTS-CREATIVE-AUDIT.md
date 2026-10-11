@@ -86,11 +86,11 @@ Ranked by likely viewer impact. "Defect" means measurable; "Editorial" means a j
 
 | # | Problem | Evidence | Kind | Impact | Effort | Status |
 |---|---|---|---|---|---|---|
-| 1 | **Weak first frame.** IB opens on data maps and charts; CT on distant establishing shots; FR on letterboxed 16:9 footage filling about a third of the screen. The hook text is about 60 px on a 1080 px frame. | contact sheets in `reports/creative-audit/2026-10-11/`; the frame strips above | defect plus editorial | high | low (IB and CT); medium (FR legacy renderer) | **fixed behind a flag for IB and CT** (craft v2); FR not yet |
+| 1 | **Weak first frame.** IB opens on data maps and charts; CT on distant establishing shots; FR on letterboxed 16:9 footage filling about a third of the screen. The hook text is about 60 px on a 1080 px frame. | contact sheets in `reports/creative-audit/2026-10-11/`; the frame strips above | defect plus editorial | high | low (IB and CT); medium (FR legacy renderer) | **fixed behind a flag**: IB and CT (craft v2); FR subject-aware 9:16 (§10) |
 | 2 | **Pictures don't match the line, and repeat.** IB and CT draw on 4–6 licensed images per Short and repeat each 3–5 times. "39 people died" plays over a calm valley. Stock clips are loosely matched. | render plans: the Yucatán map 5 times in the dinosaur Short, the valley 4 times in the tunnel Short | defect | high | medium–high | repeats now return as detail crops (flag); **the thin image pool remains a blocker** |
 | 3 | **Scripts are fact lists.** The CT tunnel Short has 7 numbers in 25 s, reads "11.611 kilometres" aloud, and ends on a payoff ("ventilation matters") the facts never set up. IB openings read the title aloud. | `script.txt` of each render | editorial | medium–high | medium | Haiku experiment arms prepared (PR #223); editorial rules proposed |
-| 4 | **Flat synthetic delivery.** Each line is synthesised separately and joined with a uniform 0.18 s gap at one rate. The final mix is very compressed (loudness range about 2 LU) over a generic bed, with no sound effects. | measured: 143–154 words/min, speech from 0.1 s, −14 LUFS, range 1.9 LU | defect plus editorial | medium | low (pacing); high (better voice) | **pacing fixed behind a flag**; voice unchanged |
-| 5 | **Broken titles.** Examples: "How Fusion Reached Practical Power-plant Gain Would Unfold"; "Inside High-lift Water Pump: The Hidden Dependency". | `published.json` | defect | medium (feed Shorts rely less on titles) | low | not fixed in this pass; a grammar check on titles is the next small task |
+| 4 | **Flat synthetic delivery.** Each line is synthesised separately and joined with a uniform 0.18 s gap at one rate. The final mix is very compressed (loudness range about 2 LU) over a generic bed, with no sound effects. | measured: 143–154 words/min, speech from 0.1 s, −14 LUFS, range 1.9 LU | defect plus editorial | medium | low (pacing); high (better voice) | **behind a flag**: continuous three-beat read, measured timing (§10); the voice itself unchanged |
+| 5 | **Broken titles.** Examples: "How Fusion Reached Practical Power-plant Gain Would Unfold"; "Inside High-lift Water Pump: The Hidden Dependency". | `published.json` | defect | medium (feed Shorts rely less on titles) | low | **fixed** (always on): title grammar gate (§10) |
 
 ## 5. Implemented: Shorts craft v2 (`core/rendering/craft.js`, OFF by default)
 
@@ -168,8 +168,8 @@ An experiment starts only when the owner creates it (the commands are in the rep
 | Channel | Variable | Control | Variant | Hypothesis | Primary metric |
 |---|---|---|---|---|---|
 | IB | `opening_visual` | current | `craft-v2-opening` | a vivid subject picture with large hook text keeps more viewers past the first seconds | engaged ÷ views at 72 h (stayed-to-watch if imported); then % viewed |
-| CT | `opening_visual` | current | `craft-v2-opening` | same as IB; CT needs topics first (the 70 exception) | same |
-| FR | `opening_visual` (full-frame vertical crop vs letterbox) | letterbox | full-frame | the clip filling the screen keeps more viewers | same; **blocked** until the FR legacy renderer can crop full-frame (not implemented) |
+| CT | `opening_visual` | current | `craft-v2-opening` | same as IB; CT keeps its 75 viral minimum (owner decision), so its arms fill slowly | same |
+| FR | `opening_visual` | current | `craft-v2-opening` (subject-aware 9:16 framing and the boxed hook) | the evidence filling the screen keeps more viewers | same |
 | all (second round) | `hook_style` | production line | the blind-review winner among the Haiku alternatives | a question or surprising-fact opening beats the current one | same |
 
 For each video, record:
@@ -196,12 +196,96 @@ For each video, record:
 
 1. **Thin licensed image pool for IB and CT.** It is the root of problem 2.
    - Next step: event-specific Commons categories and public-domain agency imagery (NTSB, NASA, USGS, NOAA, national archives), plus animated explainers for mechanism lines.
-2. **FR legacy renderer** letterboxes every clip, and craft v2 does not reach it.
+2. **FR framing** is fixed behind the flag (§10); the v1 path still crops landscape sources blindly.
 3. **Studio-only metrics** (stayed to watch, impressions) need a manual export.
-4. **CT has no qualifying topics** until the 70 exception is approved.
+4. **CT qualifies few topics** at its 75 viral minimum. The owner keeps 75; the 70 exception stays disabled.
 5. **The Haiku creative benchmark** needs the paid-run approvals (`docs/llm/CREATIVE-EXPERIMENTS.md`, PR #223).
 6. **No presenter or face**, the strongest common factor among top Shorts. This is a strategic decision for the owner.
 7. **No PD analytics pipeline.**
+
+## 10. Quality recovery (v2, later on 2026-10-11)
+
+Owner decisions applied: Behind the Ordinary inactive (PR #230); active Shorts channels FR, IB and CT; CriticalThread keeps its 75 viral minimum. Everything below is behind `SHORTS_CRAFT_V2` except the title grammar gate, the caption wrap fix and the Edge retry, which only remove failures. Nothing was published.
+
+### Root causes and fixes
+
+| Defect | Root cause | Fix |
+|---|---|---|
+| FR: horizontal footage squeezed or blindly cropped | `lib/dikey-kadraj.js` v1 crops the centre of every landscape source, so the evidence can fall outside the 9:16 window | `lib/odak.js` measures where the detail is. A clear subject gets a full-screen crop on it ("odak"); otherwise a documentary layout keeps the whole frame at full width with a magnified detail panel that alternates between the two subject regions ("belge"). Never a blurred fill. The hook sits in a boxed band above the evidence. |
+| Mismatched pictures | The relevance check accepts any picture that shares a topic word ("Ice sculptor at work" for lake ice) | Pictures whose subject is a person, event or artwork the topic does not name are rejected and listed in `render.json` `craft.rejectedVisuals` |
+| Repeats and abstract filler | Past the repeat cap, the planner fell back to procedural frames, which are abstract shapes | Under craft v2: hold the previous real shot, else return the best-matching picture as a detail crop; procedural only when no picture is left |
+| Fact-list delivery | One Edge request per line; every line has its own start and end intonation and the joins are uniform | Three requests (hook, body, payoff). The body is one passage, so Edge's own sentence pauses apply; beats are added after the hook and before the payoff |
+| Captions drifting from speech | Caption chunks are timed by character share of the line | With Edge word boundaries, each chunk starts on its first spoken word |
+| Captions running off the frame | `pacing.wrap` returned a 36-character chunk as one line when no split fit 18+18 | The most balanced two-line split |
+| Hard-to-hear figures | "11.611 kilometres" is read digit by digit | Three or more decimals are read as "about 11.6"; hedged figures are untouched |
+| Broken titles | Templates put a clause in a noun slot or drop the article | `core/growth/title-grammar.js`; every one of the 1,022 IB/CT topics keeps at least one grammatical title |
+| Silent tone in place of a line | A single refused Edge request became a non-speech tone, and readiness then blocked the Short | `scripts/synthesize-voice.js` retries three times with backoff |
+
+### Before and after (real renders, 2026-10-11)
+
+- **Before** is `origin/main` (8c74f23d) for IB and CT, and the same branch with the flag off for FR (the FR v1 path is unchanged). The one difference from `main` is the Edge retry, which changes whether a request succeeds, never the audio. Every narration line is real Edge speech.
+- **After** is `feat/shorts-craft-v2` with `SHORTS_CRAFT_V2=1`.
+- Files: `reports/creative-audit/2026-10-11-v2/` (ignored by git). Per Short:
+  - `<name>-before.mp4` and `<name>-after.mp4`;
+  - `-first-frame.png` (before left, after right);
+  - `-first-3-seconds.png` (one frame every 0.5 s; before on top);
+  - `-side-by-side-after-audio.mp4`;
+  - `-before-first-8s.m4a` and `-after-first-8s.m4a` for listening.
+
+| Short | Version | First frame | Title selected | Shots | Distinct | Max uses | Relevant share | Irrelevant shots | Rejected pictures | Gate |
+|---|---|---|---|---|---|---|---|---|---|---|
+| IB dinosaur | before | Yucatan chix crater | What If a Chicxulub-size Asteroid Strikes Earth Today? | 14 | 7 | 4 | 0.952 | 1 | — | FAIL growthReadiness |
+| IB dinosaur | after | Chicxulub impact - artist impression | What If a Chicxulub-Size Asteroid Strikes Earth Today? | 12 | 6 | 3 | 1 | 0 | — | FAIL growthReadiness |
+| IB ice | before | A Mélange of Ice - NASA Earth Observatory | Why Floating Ice Keeps Lakes Alive | 15 | 8 | 4 | 0.858 | 2 | — | PASS |
+| IB ice | after | Anchor ice under sea ice | Why Floating Ice Keeps Lakes Alive | 12 | 6 | 4 | 1 | 0 | Ice sculptor at work (12714055883); Frozen Lake Huron- icebreakers and commercial vessels | PASS |
+| CT tunnel fire | before | Entrance of Mont-Blanc tunnel from le Brevent | What Depends on Road Tunnel Ventilation System? | 16 | 9 | 3 | 1 | 0 | — | FAIL growthReadiness |
+| CT tunnel fire | after | Entrance of Mont-Blanc tunnel from le Brevent | What Depends on the Road Tunnel Ventilation System? | 14 | 9 | 3 | 1 | 0 | — | FAIL growthReadiness |
+
+FR Qantas 32: before = v1, a 9:16 window panning across the picture enlarged to twice the frame height, wherever the subject is; after = 12 documentary-layout shots and 3 full-screen subject crops (`kompozisyon.json`); the hook moves to the band above the evidence. Gate (`denetim.json`): no black frames, no frozen frames, no caption overflow, in both.
+
+The IB dinosaur and CT tunnel renders fail growthReadiness in both versions, on the topic's viral potential (71 < 75 and 66 < 68). That is a topic-level score, unrelated to rendering, and those topics would not be produced.
+
+### Narration A (one request per line) vs B (three beats)
+
+Measured on the narration track before the music mix:
+- pauses with ffmpeg `silencedetect` at −35 dB, at least 0.12 s;
+- loudness with `ebur128`;
+- sync: each caption or scene start minus the nearest detected speech onset.
+
+Nobody has listened to these for this report. Naturalness is not claimed; the `-first-8s.m4a` samples are for a person to judge.
+
+| Short | Version | Length | Words/min (speaking) | Pauses: count, total | Pause after line 1 | Pause before last line | Longest | Loudness | True peak | Cut/caption vs speech onset, mean (max) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| IB dinosaur | A: one request per line | 25.8 s | 185.6 | 8, 4.94 s | 0.64 s | 0.69 s | 0.71 s | -15.2 LUFS | -1.4 dBFS | captions: 89 ms (128 ms) |
+| IB dinosaur | B: three beats | 24.3 s | 185.5 | 8, 3.79 s | 0.51 s | 0.64 s | 0.64 s | -15.2 LUFS | -1.4 dBFS | captions: 55 ms (108 ms) |
+| IB ice | A: one request per line | 30.2 s | 180.4 | 11, 6.42 s | 0.71 s | 0.79 s | 0.79 s | -15.2 LUFS | -1.4 dBFS | captions: 99 ms (143 ms) |
+| IB ice | B: three beats | 28.5 s | 180.1 | 11, 5.06 s | 0.52 s | 0.79 s | 0.79 s | -15.2 LUFS | -1.4 dBFS | captions: 55 ms (104 ms) |
+| CT tunnel fire | A: one request per line | 30 s | 156.3 | 9, 5.2 s | 0.62 s | 0.68 s | 0.76 s | -15.1 LUFS | -1.4 dBFS | captions: 99 ms (158 ms) |
+| CT tunnel fire | B: three beats | 27.9 s | 162.6 | 11, 4.02 s | 0.48 s | 0.62 s | 0.62 s | -15.4 LUFS | -1.5 dBFS | captions: 24 ms (74 ms) |
+| FR Qantas 32 | A: one plain read | 27.02 s | 205.3 | 17, 5.12 s | 0 s | 0.42 s | 0.47 s | -20.1 LUFS | -3 dBFS | scene cuts: 150 ms (396 ms) |
+| FR Qantas 32 | B: three beats | 26.99 s | 204.8 | 17, 5.43 s | 0.48 s | 0.61 s | 0.61 s | -20.6 LUFS | -3.5 dBFS | scene cuts: 55 ms (87 ms) |
+
+- **Between the other lines (IB/CT):**
+  - A: 0.62–0.76 s at every join, the same gap whether or not the thought continues;
+  - B: 0.38–0.48 s, Edge's own sentence pauses inside one passage.
+- **FR A, "0 s" after line 1:** v1 places the scene cut by word share, and there it lands mid-speech, so no pause is found near it.
+- No clipping in any track: true peak at or below −1.4 dBFS.
+- IB/CT loudness is the narration after `loudnorm` (−14 LUFS target, measured −15.1 to −15.4). FR voice tracks are measured raw; the final FR mix is normalised later.
+- FR v1 was already one continuous read, so B changes its pauses little; its gain is that scene cuts land on the spoken line.
+
+### What this does not fix
+
+- **Thin picture pools.**
+  - CT tunnel still opens on a distant valley, because no licensed picture of the fire exists in the pool.
+  - The ice Short now reuses its best pictures as detail crops (up to 4 uses) instead of showing off-topic ones.
+  - Sourcing more event-specific imagery is the real fix.
+- **Script content.**
+  - The CT tunnel script still speaks 7 figures in 28 s with one causal link (`render.json` `story`).
+  - IB openings read the title aloud.
+  - Rewriting verified scripts is not automated. The Haiku arms (PR #223, `openingAlternatives`, `titleAlternatives`) are the prepared path, with blind review.
+- **The voice itself.** It is the same free Edge voice, and no paid TTS was used.
+- **FR documentary layout is less kinetic in its first seconds than the old full-bleed crop.** It keeps the evidence (the old crop cut off the engine core on Qantas 32). Whether viewers prefer it is an experiment (§7), not a claim.
+- **Edge throttling.** Local renders hit HTTP 403 windows after repeated requests. The three-request read is less exposed than eight requests, but neither is immune. CI runners use fresh addresses.
 
 ## Appendix: per-video data (latest checkpoint)
 
