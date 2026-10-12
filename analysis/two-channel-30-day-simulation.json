@@ -176,8 +176,8 @@
       "qualityBlocks": 0,
       "analyticsCheckpoints": 95,
       "learningSamples": 26,
-      "inventoryStart": 363,
-      "inventoryEnd": 333,
+      "inventoryStart": 355,
+      "inventoryEnd": 325,
       "researchGapDays": 0
     },
     "impossible-brief": {
@@ -188,8 +188,8 @@
       "qualityBlocks": 1,
       "analyticsCheckpoints": 95,
       "learningSamples": 26,
-      "inventoryStart": 494,
-      "inventoryEnd": 463,
+      "inventoryStart": 484,
+      "inventoryEnd": 453,
       "researchGapDays": 0
     },
     "critical-thread": {
@@ -200,21 +200,21 @@
       "qualityBlocks": 1,
       "analyticsCheckpoints": 95,
       "learningSamples": 26,
-      "inventoryStart": 518,
-      "inventoryEnd": 487,
+      "inventoryStart": 513,
+      "inventoryEnd": 482,
       "researchGapDays": 0
     },
     "behind-the-ordinary": {
-      "shorts": 6,
-      "longForm": 1,
-      "uniqueTopics": 6,
-      "failuresRecovered": 2,
-      "qualityBlocks": 1,
-      "analyticsCheckpoints": 24,
-      "learningSamples": 2,
-      "inventoryStart": 7,
+      "shorts": 0,
+      "longForm": 0,
+      "uniqueTopics": 0,
+      "failuresRecovered": 0,
+      "qualityBlocks": 0,
+      "analyticsCheckpoints": 0,
+      "learningSamples": 0,
+      "inventoryStart": 0,
       "inventoryEnd": 0,
-      "researchGapDays": 24
+      "researchGapDays": 30
     }
   },
   "tiktok": {
@@ -448,6 +448,9 @@
     "cadenceModeled": true
   },
   "pass": true,
+  "inactive": [
+    "behind-the-ordinary"
+  ],
   "productionReadiness": {
     "shortSafetyModel": true,
     "longFormProductionWired": false,
@@ -510,17 +513,8 @@
       "day": 1,
       "date": "2026-10-01",
       "channel": "behind-the-ordinary",
-      "topic": "behind-the-ordinary-topic-001",
       "task": "behind-the-ordinary:short:day-01:1",
-      "status": "published",
-      "recoveredFrom": null
-    },
-    {
-      "day": 1,
-      "date": "2026-10-01",
-      "channel": "behind-the-ordinary",
-      "task": "behind-the-ordinary:long:day-01:1",
-      "status": "published"
+      "status": "skipped-research-required"
     },
     {
       "day": 2,
@@ -563,10 +557,8 @@
       "day": 2,
       "date": "2026-10-02",
       "channel": "behind-the-ordinary",
-      "topic": "behind-the-ordinary-topic-002",
       "task": "behind-the-ordinary:short:day-02:1",
-      "status": "published",
-      "recoveredFrom": null
+      "status": "skipped-research-required"
     },
     {
       "day": 3,
@@ -609,20 +601,8 @@
       "day": 3,
       "date": "2026-10-03",
       "channel": "behind-the-ordinary",
-      "topic": "behind-the-ordinary-topic-003",
       "task": "behind-the-ordinary:short:day-03:1",
-      "status": "failed-attempt",
-      "failure": "quality block",
-      "otherChannelContinued": true
-    },
-    {
-      "day": 3,
-      "date": "2026-10-03",
-      "channel": "behind-the-ordinary",
-      "topic": "behind-the-ordinary-topic-003-replacement",
-      "task": "behind-the-ordinary:short:day-03:2",
-      "status": "published",
-      "recoveredFrom": "quality block"
+      "status": "skipped-research-required"
     },
     {
       "day": 4,
@@ -655,20 +635,8 @@
       "day": 4,
       "date": "2026-10-04",
       "channel": "behind-the-ordinary",
-      "topic": "behind-the-ordinary-topic-004",
       "task": "behind-the-ordinary:short:day-04:1",
-      "status": "failed-attempt",
-      "failure": "Groq rate limit",
-      "otherChannelContinued": true
-    },
-    {
-      "day": 4,
-      "date": "2026-10-04",
-      "channel": "behind-the-ordinary",
-      "topic": "behind-the-ordinary-topic-004",
-      "task": "behind-the-ordinary:short:day-04:1",
-      "status": "published",
-      "recoveredFrom": "Groq rate limit"
+      "status": "skipped-research-required"
     },
     {
       "day": 5,
@@ -711,10 +679,8 @@
       "day": 5,
       "date": "2026-10-05",
       "channel": "behind-the-ordinary",
-      "topic": "behind-the-ordinary-topic-005",
       "task": "behind-the-ordinary:short:day-05:1",
-      "status": "published",
-      "recoveredFrom": null
+      "status": "skipped-research-required"
     },
     {
       "day": 6,
@@ -754,10 +720,8 @@
       "day": 6,
       "date": "2026-10-06",
       "channel": "behind-the-ordinary",
-      "topic": "behind-the-ordinary-topic-006",
       "task": "behind-the-ordinary:short:day-06:1",
-      "status": "published",
-      "recoveredFrom": null
+      "status": "skipped-research-required"
     },
     {
       "day": 7,

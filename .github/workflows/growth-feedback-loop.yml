@@ -60,7 +60,8 @@ jobs:
       - name: Collect due checkpoints and update channel-isolated learning
         run: |
           FAILED=0
-          for CHANNEL in failure-reconstructed impossible-brief critical-thread behind-the-ordinary; do
+          # The Hidden Logic of Things is inactive (config/channels.json); its analytics are not collected.
+          for CHANNEL in failure-reconstructed impossible-brief critical-thread; do
             echo "=== $CHANNEL ==="
             if ! node post-publish-analyzer.js --channel "$CHANNEL" --due; then
               echo "::warning::$CHANNEL growth checkpoint pass failed"

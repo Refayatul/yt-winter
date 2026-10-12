@@ -221,21 +221,18 @@ test("watchdog workflows enforce safe recovery, deployment evidence and no-produ
   assert.match(reusable, /inputs\.force \}\}" != "true".*github\.event_name.*!= "schedule"/s);
 });
 
-test("daily operations report covers all channels and TikTok only for Failure Reconstructed", () => {
+test("daily operations report covers all live channels and TikTok only for Failure Reconstructed", () => {
   const report = DailyReport.build(new Date("2026-09-27T17:10:00.000Z"));
-  assert.deepEqual(report.channels.map((row) => row.channel).sort(), ["behind-the-ordinary", "critical-thread", "failure-reconstructed", "impossible-brief"]);
+  assert.deepEqual(report.channels.map((row) => row.channel).sort(), ["critical-thread", "failure-reconstructed", "impossible-brief"]);
   const fr = report.channels.find((row) => row.channel === "failure-reconstructed");
   const ib = report.channels.find((row) => row.channel === "impossible-brief");
   const ct = report.channels.find((row) => row.channel === "critical-thread");
-  const bto = report.channels.find((row) => row.channel === "behind-the-ordinary");
   assert.ok(fr.tiktok);
   assert.equal(ib.tiktok, null);
   assert.equal(ct.tiktok, null);
-  assert.equal(bto.tiktok, null);
   assert.equal(typeof fr.inventory.duplicateRate, "number");
   assert.equal(fr.inventory.acceptance.minimumQualifiedTopics, 500);
   assert.equal(ib.inventory.acceptance.minimumQualifiedTopics, 1000);
   assert.equal(ct.inventory.acceptance.minimumQualifiedTopics, 500);
-  assert.equal(bto.inventory.acceptance.minimumQualifiedTopics, 500);
   assert.match(DailyReport.markdown(report), /TikTok backlog/);
 });

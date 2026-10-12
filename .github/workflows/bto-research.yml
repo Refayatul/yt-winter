@@ -2,9 +2,8 @@ name: The Hidden Logic of Things research
 
 # Daily, evidence-first research replenishes the production-ready inventory.
 # Failed/unverified questions remain in the backlog; nothing is rendered/uploaded here.
+# Inactive channel (config/channels.json enabled:false): no schedule; a manual dispatch still works.
 on:
-  schedule:
-    - cron: '41 4 * * *'
   workflow_dispatch:
     inputs:
       limit:

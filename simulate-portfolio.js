@@ -7,10 +7,13 @@ const { ROOT } = require("./core/channel-context");
 const Channel = require("./core/channel-context");
 const Library = require("./core/analytics/library-health");
 const Simulation = require("./core/simulation/two-channel");
-const inventories = Object.fromEntries(Channel.activeSlugs().map((slug) => {
-  const health = Library.calculate(Channel.getChannel(slug));
-  return [slug, health];
-}));
+// The model covers all four channels. A channel switched off in config/channels.json
+// (enabled:false; The Hidden Logic of Things since 2026-10-11) publishes nothing: inventory 0,
+// so every day is a gap for it and the other channels must still pass on their own.
+const MODELED = ["failure-reconstructed", "impossible-brief", "critical-thread", "behind-the-ordinary"];
+const active = new Set(Channel.activeSlugs());
+const inventories = Object.fromEntries(MODELED.map((slug) => [slug,
+  active.has(slug) ? Library.calculate(Channel.getChannel(slug)) : { readyShorts: 0, qualifiedTopics: 0 }]));
 const result = Simulation.simulate30Days({
   // The Hidden Logic of Things starts from its evidence-verified records only; its
   // question-only research backlog is never counted as publishable inventory.
@@ -22,6 +25,7 @@ const result = Simulation.simulate30Days({
   longFormProductionWired: false,
   externalWatchdogDeployed: true,
   allFourOAuthIdentitiesConfigured: false,
+  inactive: MODELED.filter((slug) => !active.has(slug)),
 });
 const markdown = Simulation.markdown(result);
 const markdownFile = markdown.replace(/\s+$/, "") + "\n";

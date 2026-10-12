@@ -38,8 +38,9 @@ test("credentials are PD_-scoped only and never fall back to another channel's o
   finally { for (const k of ["YT_CLIENT_ID", "FR_YT_CLIENT_ID", "CT_CLIENT_ID"]) { if (before[k] === undefined) delete process.env[k]; else process.env[k] = before[k]; } }
 });
 
-test("a disabled channel stays out of every live portfolio loop and the four live channels are unchanged", () => {
-  assert.deepEqual(Channel.activeSlugs().sort(), ["behind-the-ordinary", "critical-thread", "failure-reconstructed", "impossible-brief"]);
+test("a disabled channel stays out of every live portfolio loop and the three live Shorts channels are unchanged", () => {
+  assert.deepEqual(Channel.activeSlugs().sort(), ["critical-thread", "failure-reconstructed", "impossible-brief"]);
+  assert.equal(Channel.getChannel("behind-the-ordinary").slug, "behind-the-ordinary", "an inactive channel stays addressable for a manual run");
   assert.ok(!Channel.allChannels().some((c) => c.slug === "profitdecoded"));
   const plan = Scheduling.portfolioPlan(new Date("2026-10-06T12:00:00Z"));
   assert.ok(!plan.channels.some((c) => c.channel === "profitdecoded"));

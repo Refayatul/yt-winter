@@ -11,9 +11,9 @@ Window: 2026-10-01 for 30 days. Uploads and renders were simulated; no external 
 | failure-reconstructed | 30 | 6 | 30 | 4 |
 | impossible-brief | 30 | 5 | 30 | 4 |
 | critical-thread | 30 | 5 | 30 | 3 |
-| behind-the-ordinary | 6 | 1 | 6 | 2 |
+| behind-the-ordinary | 0 | 0 | 0 | 0 |
 
-The Hidden Logic of Things publishes only evidence-verified records: its 7 verified topic(s) cover 6 day(s); the other 24 day(s) are research gaps where nothing is published. Research more records with `scripts/ib-ct-library/build.js` to close the gap.
+The Hidden Logic of Things is inactive (config/channels.json enabled:false): it is modelled with no inventory and publishes nothing; the other channels pass on their own.
 
 ## TikTok model
 

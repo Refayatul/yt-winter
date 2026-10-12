@@ -123,8 +123,9 @@ jobs:
           node saglik.js --channel critical-thread || true
           node shorts-sira.js --channel critical-thread
 
+      # Inactive channel (config/channels.json enabled:false): only an explicit manual run produces it.
       - name: The Hidden Logic of Things Short
-        if: ${{ always() && (github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'behind-the-ordinary') }}
+        if: ${{ always() && github.event_name == 'workflow_dispatch' && inputs.channel == 'behind-the-ordinary' }}
         continue-on-error: true
         env:
           # The Hidden Logic of Things publishes only when BTO_PUBLISH=1, scheduled or not.
