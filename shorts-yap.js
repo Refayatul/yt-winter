@@ -115,6 +115,8 @@ function seslendir(metin, dosya) {
 
 // Edge TTS ara sira baglantiyi dusurur ("Stream closed..."). Tekrar dene.
 async function seslendirGuvenli(metin, dosya, deneme = 4) {
+  // Kesinti sirasinda operator anahtari: her istegi reddeden servise hic gidilmez.
+  if (process.env.SHORTS_EDGE_TTS === "off") throw new Error("Edge TTS disabled (SHORTS_EDGE_TTS=off)");
   for (let i = 1; ; i++) {
     try {
       await seslendir(metin, dosya);
@@ -141,7 +143,7 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
   // Craft v2: one continuous read with measured line timing (lib/edge-narration.js); scenes start
   // where their sentence is actually spoken. Otherwise (or if the service refuses) the v1 read.
   let olculen = null;
-  if (CRAFT.pacing) {
+  if (CRAFT.pacing && process.env.SHORTS_EDGE_TTS !== "off") {
     try {
       olculen = await require("./lib/edge-narration").narrate({ lines: sahneler.map(s => telaffuz.ttsMetni(s.metin.trim())), voice: SES, rate: HIZ,
         pausesMs: require("./core/rendering/craft").linePauses(sahneler.length).map(x => Math.round(x * 1000)), out: vo, probe: sure });
@@ -511,8 +513,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     captionBurned: true, captionEvents: events.length,
     captionMaxWords: events.reduce((max, event) => Math.max(max, event.txt.split(/\s+/).length), 0),
     captionMaxLines: 1, captionSafeZoneMeasured: tasma !== null,
-    voice: sesKaydi.fallback ? { provider: "kokoro", voice: sesKaydi.fallback.voice, fallback: sesKaydi.fallback, primary: SES, channel: CURRENT_CHANNEL.slug }
-      : { provider: VOICE_PROFILE.provider || "edge-tts", voice: SES, rate: HIZ, channel: CURRENT_CHANNEL.slug } };
+    voice: { provider: VOICE_PROFILE.provider || "edge-tts", voice: SES, rate: HIZ, channel: CURRENT_CHANNEL.slug,
+      // Yedek ses kullanildiysa kayit onu soyler; youtube-yukle.js onaysiz yedek sesi yuklemez.
+      ...(sesKaydi.fallback ? { provider: "kokoro", voice: sesKaydi.fallback.voice, fallback: sesKaydi.fallback, primary: SES } : {}) } };
   try { Object.assign(denetim, DEN.videoDenetim(cikti)); } catch (e) { denetim.videoDenetimHata = String(e.message).slice(0, 160); }
   try { DEN.onizleme(cikti, path.join(VID, "onizleme.jpg"), sure(cikti)); denetim.onizleme = "Videos/onizleme.jpg"; }
   catch (e) { denetim.onizlemeHata = String(e.message).slice(0, 160); }

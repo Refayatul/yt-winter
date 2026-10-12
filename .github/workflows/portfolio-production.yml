@@ -78,6 +78,9 @@ jobs:
       SHORTS_FONT: DejaVu Sans
       SHORTS_KOKORO_DIR: ${{ github.workspace }}/kokoro-model
       SHORTS_KOKORO_PYTHON: python
+      # Manual dry runs may preview a channel's unapproved fallback voice (never uploaded: PUBLISH=0
+      # and youtube-yukle.js refuses unapproved fallback narration). Scheduled runs never set it.
+      SHORTS_TTS_FALLBACK: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && 'preview' || '' }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4

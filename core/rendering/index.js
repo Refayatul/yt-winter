@@ -88,6 +88,8 @@ const MAX_TEMPO = 1.08;
 function synthesizeVoice(text, outputDirectory, basename = "narration", options = {}) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const output = path.join(outputDirectory, basename + ".m4a");
+  // Operator lever during an Edge outage: do not call a service that refuses every request.
+  if (process.env.SHORTS_EDGE_TTS === "off") return placeholderTone(text, outputDirectory, basename);
   if (process.platform === "darwin" && process.env.TTS_PROVIDER !== "edge" && commandExists("say")) {
     const aiff = path.join(outputDirectory, basename + ".aiff");
     cp.execFileSync("say", ["-r", "170", "-o", aiff, text], { stdio: "ignore" });
@@ -157,7 +159,7 @@ function synthesizeNarration(script, outputDirectory, channel, craftFeatures = n
   // Craft v2 with the Edge voice: the whole script in ONE request (continuous intonation), the
   // pauses as SSML breaks and each line's timing measured from Edge word boundaries. Any failure
   // falls back to the line-by-line takes below, and the result records which path ran.
-  const edgeVoice = !(process.platform === "darwin" && process.env.TTS_PROVIDER !== "edge");
+  const edgeVoice = !(process.platform === "darwin" && process.env.TTS_PROVIDER !== "edge") && process.env.SHORTS_EDGE_TTS !== "off";
   if (craft && edgeVoice && script.claims.length > 1) {
     const continuous = continuousNarration(script, outputDirectory, voiceConfig);
     if (continuous) return continuous;
@@ -1010,4 +1012,4 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations, validationReasons };
 }
 
-module.exports = { soundCues, cameraMove, countUp, countUpFilter, overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
+module.exports = { synthesizeNarration, soundCues, cameraMove, countUp, countUpFilter, overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
