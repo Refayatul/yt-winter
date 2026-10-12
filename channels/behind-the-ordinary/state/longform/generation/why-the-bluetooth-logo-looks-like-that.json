@@ -3,9 +3,9 @@
   "channel": "behind-the-ordinary",
   "slug": "why-the-bluetooth-logo-looks-like-that",
   "topicHash": "f8857aa76a53:98",
-  "status": "DEFERRED",
+  "status": "COMPLETE",
   "createdAt": "2026-10-12T15:15:24.880Z",
-  "updatedAt": "2026-10-12T16:33:09.034Z",
+  "updatedAt": "2026-10-12T16:54:06.721Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -936,11 +936,46 @@
           "role": "evidence"
         }
       ]
+    },
+    {
+      "section": "REAL_WORLD_CONSEQUENCE",
+      "paragraphs": [
+        {
+          "text": "A temporary code name became the permanent name and logo of a global wireless standard.",
+          "claims": [
+            "C1"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "A symbol functions as a visual marker that conveys an idea, object, relationship, or formula.",
+          "claims": [
+            "C23"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FINAL_PAYOFF",
+      "paragraphs": [
+        {
+          "text": "The Bluetooth logo is a bind rune merging the Younger Futhark runes Hagall and Bjarkan, Harald's initials.",
+          "claims": [
+            "C21"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "NEXT_CURIOSITY_BRIDGE",
+      "paragraphs": []
     }
   ],
   "usage": {
-    "input_tokens": 11103,
-    "output_tokens": 7905
+    "input_tokens": 12077,
+    "output_tokens": 8998
   },
   "error": {
     "code": "RATE_LIMIT",
@@ -951,5 +986,16 @@
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "Section answers the question using only provided claims. All statements are directly supported by the supplied claim IDs; no additional facts were introduced. Only two supporting claims were provided for this section. Section crafted within 150 words using only provided claim IDs. Paragraph constructed solely from claims C3, C17, and C18 as required."
+  "depthNote": "Section answers the question using only provided claims. All statements are directly supported by the supplied claim IDs; no additional facts were introduced. Only two supporting claims were provided for this section. Section crafted within 150 words using only provided claim IDs. Paragraph constructed solely from claims C3, C17, and C18 as required. Section built solely from claims C1 and C23. Used only claim C21 as instructed.",
+  "quality": {
+    "duplicateSections": [],
+    "repeatedPhrases": [],
+    "weakHook": false,
+    "payoff": true,
+    "filler": [],
+    "introShare": 0.19,
+    "missingPlanSections": [],
+    "hardFails": [],
+    "notes": []
+  }
 }
