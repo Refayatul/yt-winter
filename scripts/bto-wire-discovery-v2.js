@@ -1,14 +1,26 @@
 #!/usr/bin/env node
 "use strict";
 const fs=require("fs"),path=require("path");
-const file=path.join(__dirname,"bto-research.js");
+const file=process.argv[2]?path.resolve(process.argv[2]):path.join(__dirname,"bto-research.js");
 let src=fs.readFileSync(file,"utf8");
+// Since e808ca7a, bto-research.js imports AuthorityDiscovery itself and merges authority pages inside
+// researchOne. The v2 authority-first plumbing below would then duplicate that wiring (a second
+// `const AuthorityDiscovery` is a SyntaxError) and its needles no longer exist, which failed every run
+// from 2026-10-08. With native wiring only the independent improvements are applied: Wikipedia
+// fallback, causal search query, causal excerpt keys, detail gate for fallback pages, method label.
+const NATIVE=src.includes('const AuthorityDiscovery = require(path.join(ROOT, "scripts", "bto-authority-discovery"));')&&src.includes('AuthorityDiscovery.discover');
+const V2_ONLY=new Set(["authority require","authority first","direct primary handling","direct cited links","fact source label","source type"]);
 function patch(needle,replacement,label){
+  if(NATIVE&&V2_ONLY.has(label)) return;
   if(src.includes(replacement)) return;
   if(!src.includes(needle)) throw new Error(`BTO discovery wiring failed: ${label}`);
   src=src.replace(needle,replacement);
 }
-if(!src.includes('bto-research-fallback')) patch(
+if(NATIVE){ if(!src.includes('bto-research-fallback')) patch(
+  'const FR = require(path.join(ROOT, "scripts", "fr-library", "build"));',
+  'const FR = require(path.join(ROOT, "scripts", "fr-library", "build"));\nconst ResearchFallback = require(path.join(ROOT, "scripts", "bto-research-fallback"));',
+  'fallback require'); }
+else if(!src.includes('bto-research-fallback')) patch(
   'const FR = require(path.join(ROOT, "scripts", "fr-library", "build"));',
   'const FR = require(path.join(ROOT, "scripts", "fr-library", "build"));\nconst ResearchFallback = require(path.join(ROOT, "scripts", "bto-research-fallback"));\nconst AuthorityDiscovery = require(path.join(ROOT, "scripts", "bto-authority-discovery"));',
   'requires');
@@ -59,4 +71,4 @@ patch(
 if(!src.includes('AuthorityDiscovery.discover')) throw new Error('BTO authority discovery v5 was not wired into researchOne');
 if(!src.includes('const AuthorityDiscovery')) throw new Error('BTO authority discovery v5 module was not imported');
 fs.writeFileSync(file,src);
-console.log("BTO discovery v5 wired and asserted: direct authority evidence first, Wikipedia fallback, quality gates unchanged");
+console.log(NATIVE?"BTO discovery: native authority wiring kept; Wikipedia fallback, causal query and excerpt improvements applied":"BTO discovery v5 wired and asserted: direct authority evidence first, Wikipedia fallback, quality gates unchanged");

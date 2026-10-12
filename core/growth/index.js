@@ -85,6 +85,18 @@ function writeDecision(channel, decision) {
   Store.writeState(channel, "growth", "latest-decision.json", decision);
 }
 
+// Which rule left the pool without a selectable topic: makes a skip actionable in the run log
+// (e.g. CriticalThread 2026-10-10: unused A topics scored 68-73 against the viral minimum 75, and the
+// only topics at 75+ were B, which the selection buckets exclude). Diagnostic text only.
+function bindingConstraint(eligible, selectionPolicy, viralMinimum, candidatePool) {
+  const allowed = new Set([...(selectionPolicy.exploitBuckets || []), ...(selectionPolicy.exploreBuckets || [])]);
+  const inBuckets = eligible.filter((row) => allowed.has(row.score.bucket));
+  const scores = inBuckets.map((row) => row.score.ViralPotentialScore).filter(Number.isFinite);
+  const outside = candidatePool.filter((row) => !allowed.has(row.score.bucket)).map((row) => row.score.bucket);
+  if (!inBuckets.length) return ` [no unused topic in selectable bucket(s) ${[...allowed].join("/")}]`;
+  return ` [${inBuckets.length} unused ${[...allowed].join("/")} topic(s), best viral score ${Math.max(...scores)} < minimum ${viralMinimum}${outside.length ? `; ${outside.length} topic(s) at the minimum are bucket ${[...new Set(outside)].join("/")}, not selectable` : ""}]`;
+}
+
 // Deterministic 75/25 exploit/explore selection over a real, inspectable
 // 20–50 topic decision pool. Exploit follows measured scoring. Explore favours
 // under-sampled clusters while retaining quality buckets. D is never selected.
@@ -159,7 +171,7 @@ function selectShortTopic(channel, options = {}) {
     date: day,
     mode,
     selected: choice,
-    reason: choice ? reason : reason || `NO_QUALIFIED_TOPIC: ${primary.length} A/B, ${experimental.length} C${policy.fallbackToC ? "" : " (C fallback disabled)"}; skipping is better than publishing weak content`,
+    reason: choice ? reason : reason || `NO_QUALIFIED_TOPIC: ${primary.length} A/B, ${experimental.length} C${policy.fallbackToC ? "" : " (C fallback disabled)"}; skipping is better than publishing weak content${bindingConstraint(eligible, selectionPolicy, viralMinimum, candidatePool)}`,
     inventory,
     candidatePool: decision.pool,
     decision,
