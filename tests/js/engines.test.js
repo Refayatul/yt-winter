@@ -269,11 +269,14 @@ test("saglik: gecersiz yetki kritik; production modunda sabit OAuth bitisi varsa
   process.env.YT_CHANNEL_ID = "UC_FAILURE_RECONSTRUCTED";
   try {
     const kotu = await S.denetle({ publish: "1", token: async () => { throw new Error("invalid_grant"); }, pexels: async () => 200, kalan: 20,
+      seslendirme: async () => ({ ok: true, tries: ["ok"] }), nitelikli: { count: 20, first: "x", reason: "ok" }, araclar: { ok: true }, diskGB: 50,
       authorizationState: { oauthMode: "production" } });
     assert.equal(kotu.yuklemeUygun, false);
     assert.equal(kotu.bulgular.find((b) => b.ad === "youtube-yetki").durum, "kritik");
     const iyi = await S.denetle({ publish: "1", token: async () => ({ kapsam: S.GEREKLI_KAPSAM.join(" ") }),
       identity: async () => ({ actual: "UC_FAILURE_RECONSTRUCTED" }), pexels: async () => 200, kalan: 3,
+      // Hermetic: the voice, topic, tool and disk checks are injected (no network in tests).
+      seslendirme: async () => ({ ok: true, tries: ["ok"] }), nitelikli: { count: 20, first: "x", reason: "ok" }, araclar: { ok: true }, diskGB: 50,
       authorizationState: { oauthMode: "production" } });
     assert.equal(iyi.yuklemeUygun, true);
     assert.equal(iyi.bulgular.find((b) => b.ad === "youtube-kanal").durum, "ok");
