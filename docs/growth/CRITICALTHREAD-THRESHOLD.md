@@ -8,6 +8,42 @@ The portfolio overlay `config/viral-quality-v2.json` (2026-10-07) allows only bu
 - all 7 unused A topics score 68–73;
 - the only 2 topics at 75 or above are bucket B, which is not selectable.
 
+## Root cause of the skipped days (traced 2026-10-12)
+
+**Selection path:** `core/pipeline/impossible-brief.js` `chooseTopic` → `Growth.selectShortTopic` → `Context.rank`. The selector applies two gates:
+1. the topic is in a selectable bucket — **A only**: the portfolio overlay `config/viral-quality-v2.json` replaces the channel's own `selection`;
+2. `ViralPotentialScore` ≥ **75**.
+
+**On 2026-10-12, no CriticalThread record passes both gates:**
+- **The 7 unused A topics** score viral 68–73.
+- **The 2 topics at 75+ are B:**
+  - CT-437 has video potential 79 (A starts at 80);
+  - CT-265 has hook 77 (A needs 78).
+
+The selector returned exactly this reason. Recording it was broken in two places.
+
+**Defects fixed (no threshold changed):**
+1. **The daily decision log recorded `reason: null` when nothing was selected.** The reason existed, but only in the return value. It is now written to `state/growth/decisions.json`.
+2. **CT and IB `growth-engine.json` claimed `exploreBuckets: ["A","B"]`.** The overlay silently replaces that with A only. The dead settings are removed, and a test fails if one reappears.
+3. **The footage component of the viral score never saw a record's licensed pictures.** For IB, CT and BTO, `archival` was hard-coded `false`. The footage risk was therefore a guess from the number of `visualScenes` (about 33 points for every CT record), labelled "no archival footage confirmed".
+   - A record now counts as having archival stills when its `curatedVisuals` hold **3 or more** licensed Wikimedia Commons files, under the renderer's own validity rule. FR has always been scored this way, from its Wikimedia sources.
+
+**Effect today:** none. No unused record lists curated pictures, so no selection changes.
+
+**Measured effect of confirmed stills** (in memory, nothing written):
+
+| Topic | Bucket | Viral now | Viral with ≥3 confirmed licensed pictures |
+|---|---|---|---|
+| CT-160 | A | 73 | 77 |
+| CT-219 | A | 73 | 77 |
+| CT-234 | A | 72 | 76 |
+| CT-397 | A | 72 | 76 |
+| CT-166 | A | 71 | 75 |
+| CT-437 | B | 76 | 80 |
+| CT-265 | B | 75 | 79 |
+
+**The lasting route at 75** is to curate at least 3 licensed, event-specific pictures per topic, as done for CT-201. This is reviewed content work, and it also fixes CT's visual weakness. The 70 exception stays disabled.
+
 ## Change (reviewable, default off)
 
 `channels/critical-thread/growth-engine.json` → `viralMinimumException`: `minimumToProduce` 70, `buckets` `["A"]`, `enabled: false`, `approvedBy: null`.
