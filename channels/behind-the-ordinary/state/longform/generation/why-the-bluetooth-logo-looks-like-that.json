@@ -5,7 +5,7 @@
   "topicHash": "f8857aa76a53:98",
   "status": "DEFERRED",
   "createdAt": "2026-10-12T15:15:24.880Z",
-  "updatedAt": "2026-10-12T15:54:06.607Z",
+  "updatedAt": "2026-10-12T16:33:09.034Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -871,20 +871,85 @@
           "role": "evidence"
         }
       ]
+    },
+    {
+      "section": "THE_EXPLANATION",
+      "paragraphs": [
+        {
+          "text": "The Bluetooth emblem is a bind rune merging the Younger Futhark characters for Harald’s initials, and its designer likened Harald’s historic unification of Scandinavia to the goal of linking computer and cellular ecosystems.",
+          "claims": [
+            "C2",
+            "C16"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "A symbol acts as an outward sign that conveys a sender’s message, enables layered communication, and its meaning is learned culturally rather than inherent.",
+          "claims": [
+            "C30",
+            "C32",
+            "C38"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Semiotics studies signs as communication, exploring signifier‑signified relations with visual and contextual cues; symbols can cause translation confusion when meanings differ across languages.",
+          "claims": [
+            "C45",
+            "C46",
+            "C49"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Symbols hold ideological, comparative, or isomorphic value; Tillich noted they are born and die, and a living symbol can reveal hidden meanings and point beyond itself to mysterious depths.",
+          "claims": [
+            "C68",
+            "C74",
+            "C76",
+            "C77"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Symbol meanings evolve with culture or personal change, and context shifts interpretation; a symbolic action signals intent, and groups may use such actions to address criticism without direct change.",
+          "claims": [
+            "C78",
+            "C85",
+            "C95",
+            "C98"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "SURPRISING_DETAIL",
+      "paragraphs": [
+        {
+          "text": "Bluetooth sounds like a technical acronym, but it is a king's nickname that was meant to be a placeholder. It was intended only as a placeholder name. The planned replacement names were RadioWire or PAN (Personal Area Networking).",
+          "claims": [
+            "C3",
+            "C17",
+            "C18"
+          ],
+          "role": "evidence"
+        }
+      ]
     }
   ],
   "usage": {
-    "input_tokens": 7053,
-    "output_tokens": 3408
+    "input_tokens": 11103,
+    "output_tokens": 7905
   },
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
-    "stage": "section:THE_EXPLANATION",
+    "stage": "section:REAL_WORLD_CONSEQUENCE",
     "retryable": true,
-    "retryAfterMs": 2000
+    "retryAfterMs": 22000
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "Section answers the question using only provided claims. All statements are directly supported by the supplied claim IDs; no additional facts were introduced. Only two supporting claims were provided for this section."
+  "depthNote": "Section answers the question using only provided claims. All statements are directly supported by the supplied claim IDs; no additional facts were introduced. Only two supporting claims were provided for this section. Section crafted within 150 words using only provided claim IDs. Paragraph constructed solely from claims C3, C17, and C18 as required."
 }

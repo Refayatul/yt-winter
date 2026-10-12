@@ -5,7 +5,7 @@
   "topicHash": "d68ea10db859:100",
   "status": "DEFERRED",
   "createdAt": "2026-10-12T15:53:17.617Z",
-  "updatedAt": "2026-10-12T15:53:17.617Z",
+  "updatedAt": "2026-10-12T16:32:45.260Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -932,19 +932,103 @@
           "role": "cold-open"
         }
       ]
+    },
+    {
+      "section": "INVISIBLE_SYSTEM",
+      "paragraphs": [
+        {
+          "text": "Cable ships are limited to eight knots while laying cable, and they map the cable’s path to place it correctly on the seabed. Every new or repaired submarine cable depends on such vessels.",
+          "claims": [
+            "C11",
+            "C12",
+            "C18"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "There are two main types: smaller, maneuverable repair ships that can also lay cable, and larger, less agile laying ships with parallel drums that lay cable faster. Both use linear cable engines.",
+          "claims": [
+            "C29",
+            "C30",
+            "C31",
+            "C32",
+            "C33"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "The linear cable engine feeds up to 240 m per minute, includes a brake, and can reverse to retrieve cable. Grapple systems on synthetic ropes pull damaged sections, while plows use water jets to bury cable three feet deep.",
+          "claims": [
+            "C49",
+            "C51",
+            "C52",
+            "C48",
+            "C44",
+            "C46",
+            "C47",
+            "C54",
+            "C55"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Modern hybrid ships like USNS Zeus can both lay and repair cable, travel 15 knots and lay 1,600 km to 2,700 m depth. Its design mirrors the Great Eastern and it runs MakaiLay software used by most cable ships.",
+          "claims": [
+            "C35",
+            "C36",
+            "C37",
+            "C38",
+            "C40",
+            "C57",
+            "C58",
+            "C59"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHERE_IT_EXISTS",
+      "paragraphs": [
+        {
+          "text": "Cable ships are built around oversized sheaves that guide the cable across the hull, positioned at the bow, the stern, or both, depending on the vessel’s generation.",
+          "claims": [
+            "C22",
+            "C23"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Their official designations commonly begin with the prefix “C.S.”—for example, CS Long Lines—signalling their role as cable layers.",
+          "claims": [
+            "C24"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "The earliest transatlantic telegraph link was laid by cable‑laying vessels between 1857 and 1858, achieving a brief operational window before technical misuse caused failure; a later successful deployment occurred in 1866 when the SS Great Eastern laid two durable cables, establishing a lasting conduit between Europe and North America.",
+          "claims": [
+            "C25",
+            "C26",
+            "C27"
+          ],
+          "role": "evidence"
+        }
+      ]
     }
   ],
   "usage": {
-    "input_tokens": 6138,
-    "output_tokens": 1510
+    "input_tokens": 12040,
+    "output_tokens": 5995
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
-    "stage": "section:INVISIBLE_SYSTEM",
+    "stage": "section:HOW_IT_WORKS",
     "retryable": true,
-    "retryAfterMs": 9000
-  }
+    "retryAfterMs": 1000
+  },
+  "depthNote": "Section stays under 171 words, each paragraph cites only its supporting claim IDs and rewrites all flagged claims. All paragraphs rely exclusively on the six supplied confirmed‑fact claims; no additional inference was added."
 }
