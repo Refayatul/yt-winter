@@ -25,6 +25,8 @@ const Experiments = require("../../core/growth/experiments");
 const Engagement = require("../../core/growth/engagement");
 const Scripting = require("../../core/scripting");
 const Craft = require("../../core/rendering/craft");
+const Pipeline = require("../../core/pipeline/impossible-brief");
+const os = require("os");
 
 const argv = process.argv.slice(2);
 const command = argv[0] && !argv[0].startsWith("--") ? argv[0] : "plan";
@@ -46,6 +48,12 @@ function plan(count) {
     const raw = universe.find((item) => item.id === topic.id);
     const pre = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(raw), write: false, selection: selection.decision });
     if (pre.readiness.decision === "BLOCK") { blocked.push(`${topic.slug} (${pre.readiness.hardFails.join("; ") || pre.readiness.ProductionReadinessScore})`); continue; }
+    // ...and its visual pre-check (at least 4 licensed pictures/clips), which skipped two planned
+    // topics in the 2026-10-12 production run. Downloads into a temporary folder; free sources only.
+    if (!argv.includes("--no-visual-check")) {
+      const shortfall = Pipeline.visualShortfall(raw, fs.mkdtempSync(path.join(os.tmpdir(), "opening-experiment-")));
+      if (shortfall) { blocked.push(`${topic.slug} (visual pre-check: ${shortfall})`); continue; }
+    }
     const score = selection.selected.score || {};
     picked.push({ slug: topic.slug, id: topic.id, category: topic.category || "OTHER", bucket: score.bucket || "?",
       score: Number(score.SelectionScore) || 0, viral: Number(score.ViralPotentialScore) || 0 });
