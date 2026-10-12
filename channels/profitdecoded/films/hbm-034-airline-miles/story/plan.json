@@ -1,0 +1,230 @@
+{
+ "thesis": "When a bank pays an airline billions for miles, it is buying a currency the airline issues: the airline books part of the money, owes the rest as future seats, forecasts how much will never be claimed, can borrow against the program, and sets what each mile is worth.",
+ "centralQuestion": "What does a bank actually buy when it pays an airline billions for miles, and what does that mean for the miles in your account?",
+ "conflict": {
+  "wants": "Members want miles to keep the value they earned; airlines want card partners to keep buying miles and want the freedom to price awards",
+  "obstacle": "The airline writes the rules of its own currency and can change what a mile buys; the government has asked whether members get the value they were promised",
+  "stakes": "About $27.6 billion of unredeemed-mile balances on three airlines' books (our sum), and the value of the miles viewers already hold"
+ },
+ "misconception": "That miles are a free thank-you for flying, paid for out of the airline's pocket.",
+ "originalAngle": "Follow one mile from a grocery-store card swipe to the airline's balance sheet with the 2025 filings of Delta, United and American: who pays for it, how it is booked, how much is still owed, what lenders accepted as collateral in 2020, and why the Transportation Department asked whether members get the value they were promised. It uses evidence filed after the large competitor videos were published (FY2025 10-Ks, the September 2024 inquiry).",
+ "hookCandidates": [
+  {
+   "text": "In 2025, American Express paid Delta Air Lines $8.2 billion.",
+   "mechanism": "number"
+  },
+  {
+   "text": "American Airlines owed more for unredeemed miles than for tickets people had already bought.",
+   "mechanism": "financial paradox"
+  },
+  {
+   "text": "You can earn airline miles without ever getting on a plane, and the airline gets paid when you do.",
+   "mechanism": "hidden incentive"
+  },
+  {
+   "text": "In 2020, United borrowed against its frequent flyer program, its brand and its members' data.",
+   "mechanism": "contradiction"
+  },
+  {
+   "text": "The miles in your account are a currency, and the company that issues them can change what they're worth.",
+   "mechanism": "consumer pain"
+  },
+  {
+   "text": "What does a bank buy when it pays an airline billions of dollars for miles?",
+   "mechanism": "question"
+  },
+  {
+   "text": "A frequent flyer account that nobody uses still shows up in the airline's books.",
+   "mechanism": "visual mystery"
+  }
+ ],
+ "selectedHook": "In 2025, American Express paid Delta Air Lines $8.2 billion.",
+ "selectionReason": "Names the company, the payer and a filed number in the first sentence; the next sentence turns it into a mystery (not for flights) and the third asks the title question by about second 15.",
+ "questions": [
+  {
+   "id": "q1",
+   "text": "What is the bank actually buying?"
+  },
+  {
+   "id": "q2",
+   "text": "How does an airline book money for something it hasn't delivered yet?"
+  },
+  {
+   "id": "q3",
+   "text": "What happens to miles nobody uses?"
+  },
+  {
+   "id": "q4",
+   "text": "Who decides what a mile is worth?"
+  }
+ ],
+ "sections": [
+  {
+   "id": "s1",
+   "title": "Paid, but not for tickets",
+   "purpose": "hook",
+   "claimIds": [
+    "c1",
+    "c3",
+    "c2"
+   ],
+   "raises": [
+    "q1"
+   ],
+   "resolves": [],
+   "visualIdea": "A tap-to-pay at a grocery checkout; the $8.2 billion lands as an evidence card from Delta's 10-K."
+  },
+  {
+   "id": "s2",
+   "title": "Miles without flying",
+   "purpose": "setup",
+   "claimIds": [
+    "c2",
+    "c10"
+   ],
+   "raises": [
+    "q2"
+   ],
+   "resolves": [],
+   "visualIdea": "Everyday earning scenes; monthly partner invoices; two parallel lanes (Delta/Amex, United/Chase); back to the grocery swipe."
+  },
+  {
+   "id": "s3",
+   "title": "What a mile is on the books",
+   "purpose": "mechanism",
+   "claimIds": [
+    "c3"
+   ],
+   "raises": [
+    "q3"
+   ],
+   "resolves": [
+    "q1",
+    "q2"
+   ],
+   "visualIdea": "The Amex payment splits into labeled envelopes; the award-travel envelope goes into a drawer marked 'still owed'."
+  },
+  {
+   "id": "s4",
+   "title": "How big the promise is",
+   "purpose": "evidence",
+   "claimIds": [
+    "c4",
+    "i1",
+    "c8",
+    "i2",
+    "i6",
+    "i4"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "Delta's ledger card; American's miles stack next to its ticket stack; three cards sum to about $27.6 billion (our sum)."
+  },
+  {
+   "id": "s5",
+   "title": "Not every mile comes back",
+   "purpose": "mechanism",
+   "claimIds": [
+    "c5",
+    "c9",
+    "c11"
+   ],
+   "raises": [
+    "q4"
+   ],
+   "resolves": [
+    "q3"
+   ],
+   "visualIdea": "Award tickets print; some miles fade on a statement; a forecast dial labeled 'estimate'."
+  },
+  {
+   "id": "s6",
+   "title": "Collateral",
+   "purpose": "turn",
+   "claimIds": [
+    "c14",
+    "c13",
+    "i5"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "Loan folder with the collateral list; United's own 12x calculation on a calculator tape."
+  },
+  {
+   "id": "s7",
+   "title": "Who sets the exchange rate",
+   "purpose": "complication",
+   "claimIds": [
+    "c15",
+    "c16"
+   ],
+   "raises": [],
+   "resolves": [
+    "q4"
+   ],
+   "visualIdea": "An award price changes while the balance stays put; the inquiry's four topics as index tabs."
+  },
+  {
+   "id": "s8",
+   "title": "A thin year",
+   "purpose": "consequence",
+   "claimIds": [
+    "c6",
+    "c7"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "Two separate cards, never on one axis: net income and partner cash (not profit)."
+  },
+  {
+   "id": "s9",
+   "title": "What the filings don't say",
+   "purpose": "caveat",
+   "claimIds": [
+    "c3"
+   ],
+   "raises": [],
+   "resolves": [],
+   "visualIdea": "The member's statement beside a filing page with an empty field: profit per mile, not disclosed."
+  },
+  {
+   "id": "s10",
+   "title": "Someone else's currency",
+   "purpose": "payoff",
+   "claimIds": [
+    "c2",
+    "c3",
+    "c9",
+    "c15",
+    "i4"
+   ],
+   "raises": [],
+   "resolves": [
+    "centralQuestion"
+   ],
+   "visualIdea": "Back to the checkout and the phone's miles balance."
+  }
+ ],
+ "payoff": "A bank paying for miles is buying a currency the airline issues, plus card perks and use of the airline's name, and hands the miles to cardholders. The airline books part of the money, owes the award-travel part as future seats (tens of billions of dollars across Delta, American and United at the end of 2025), estimates how much will never be redeemed, has borrowed against the program, and sets the terms that decide what a mile buys. The miles in your account are a balance in a currency someone else controls.",
+ "caveats": [
+  "Card payments are cash for miles and other benefits, not profit; the filings do not disclose profit per mile.",
+  "United's $21.9 billion is United's own multiple of 2019 earnings, not an appraisal or a market value.",
+  "The Transportation Department's inquiry is an inquiry; no outcome is claimed.",
+  "Expiry rules differ by program; only American's rule is stated."
+ ],
+ "thesisClaimIds": [
+  "c1",
+  "c2",
+  "c3",
+  "c4",
+  "c9",
+  "c13",
+  "c15"
+ ],
+ "payoffClaimIds": [
+  "c2",
+  "c3",
+  "c9",
+  "c15"
+ ]
+}

@@ -1,0 +1,220 @@
+{
+ "provenance": "Independent reviewer: a separate Claude reviewer with fresh context (no API call), given only the dossier, the plan, the draft, the channel rules and film 1's script. Full report summarized here; every item was checked against the dossier before it was applied.",
+ "verdict": "revise",
+ "automatedReadingsDisputed": [
+  "The retention heuristic scored the first draft 100 while the reviewer found the s4 number density (seven figures in ~120 words) the likeliest drop-off point; heuristics count novelty, not listener load."
+ ],
+ "keep": [
+  "s6-4/s6-5 handle the $21.9 billion correctly (attributed, method stated, 'not an independent valuation', our division labelled)",
+  "s3 explains deferral in plain language ('paid for, still owed')",
+  "the American Airlines miles-vs-tickets comparison is a fair same-balance-sheet paradox",
+  "s7-6 states the inquiry has no verified outcome"
+ ],
+ "problems": [
+  {
+   "severity": "blocking",
+   "section": "s2",
+   "beatIds": [
+    "s2-4"
+   ],
+   "type": "unsupported",
+   "quote": "The biggest buyer is American Express",
+   "fix": "No claim ranks Delta's partners: removed; Amex introduced in s1 instead."
+  },
+  {
+   "severity": "blocking",
+   "section": "s6",
+   "beatIds": [
+    "s6-3"
+   ],
+   "type": "unsupported",
+   "quote": "the accounts its marketing partners pay into / United went further",
+   "fix": "Verified in the 8-K and added to c13's evidence; 'went further' replaced by 'United's filings spell out more'."
+  },
+  {
+   "severity": "blocking",
+   "section": "s4",
+   "beatIds": [
+    "s4-6"
+   ],
+   "type": "attribution",
+   "quote": "United's balance for MileagePlus was about $7.8 billion",
+   "fix": "Our sum of two reported lines: folded into the three-airline sum, voiced as ours."
+  },
+  {
+   "severity": "blocking",
+   "section": "s9",
+   "beatIds": [
+    "s9-1",
+    "s9-2",
+    "s9-3"
+   ],
+   "type": "misleading comparison",
+   "quote": "$111 million net income vs $6.2 billion partner cash",
+   "fix": "Kept as two separate numbers, explicitly 'you can't subtract one from the other'; motive line removed; graphics as two separate cards."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s1",
+   "beatIds": [
+    "s1-2"
+   ],
+   "type": "understatement",
+   "quote": "It was buying miles",
+   "fix": "'buying miles, plus perks for its cardholders' (c3)."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s1",
+   "beatIds": [
+    "s1-4"
+   ],
+   "type": "teaser / missing scope",
+   "quote": "The reason runs through your wallet",
+   "fix": "Replaced with the bank's two customer groups (c2: co-brand and Membership Rewards)."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s2",
+   "beatIds": [
+    "s2-3"
+   ],
+   "type": "paraphrase drift",
+   "quote": "pay every month, based on how many miles they handed out",
+   "fix": "'typically due every month, based on how many miles Delta sold them'."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s2",
+   "beatIds": [
+    "s2-8"
+   ],
+   "type": "absolute / wrong claim tag",
+   "quote": "every swipe of one of these cards sends money to an airline",
+   "fix": "Concrete grocery picture instead of an absolute; tagged c2."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s4",
+   "beatIds": [
+    "s4-2",
+    "s4-7"
+   ],
+   "type": "number density",
+   "quote": "seven dollar figures in ~120 words",
+   "fix": "Cut $436 million and $7.8 billion; sum reworded as balances on the books, not a quantity of miles."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s5",
+   "beatIds": [
+    "s5-6"
+   ],
+   "type": "inaccurate",
+   "quote": "The estimate moves real money",
+   "fix": "'that forecast moves reported revenue'."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s5",
+   "beatIds": [
+    "s5-7"
+   ],
+   "type": "outside dossier",
+   "quote": "the same word stores use for gift cards nobody spends",
+   "fix": "Clause cut; the callback stays visual only."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s5",
+   "beatIds": [
+    "s5-8"
+   ],
+   "type": "missing qualifier",
+   "quote": "holds its co-branded card",
+   "fix": "'primary holder of its co-branded credit card', and other programs' rules are not given."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s5",
+   "beatIds": [
+    "s5-3"
+   ],
+   "type": "unlike units",
+   "quote": "United's members used about 10.9 million flight awards",
+   "fix": "Cut (different unit from Delta's award tickets)."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s6",
+   "beatIds": [
+    "s6-1",
+    "s10-4"
+   ],
+   "type": "overgeneralization",
+   "quote": "these programs became collateral / it borrowed against the program",
+   "fix": "'two of these programs'; 'Delta and United borrowed billions'."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s6",
+   "beatIds": [
+    "s6-4",
+    "s6-5",
+    "s6-6"
+   ],
+   "type": "ear / implication",
+   "quote": "MileagePlus's 2019 operating earnings ... lenders did lend against it",
+   "fix": "'the program's 2019 earnings, measured before...'; 'that earnings measure'; 'The borrowing was real'."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s7",
+   "beatIds": [
+    "s7-4",
+    "s7-5"
+   ],
+   "type": "attribution",
+   "quote": "Transportation Secretary Pete Buttigieg said",
+   "fix": "Quote verified as his in the release; added to c15 evidence; 'who led the department when the inquiry opened'; 'then director'."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s7",
+   "beatIds": [
+    "s7-7"
+   ],
+   "type": "overstatement",
+   "quote": "the airlines' own filings make a related point",
+   "fix": "Only United's filing; 'touches the same lever from the accounting side'; adds 'redemption options'."
+  },
+  {
+   "severity": "should-fix",
+   "section": "s10",
+   "beatIds": [
+    "s10-2",
+    "s10-3",
+    "s10-6"
+   ],
+   "type": "payoff accuracy",
+   "quote": "It buys a currency ... owes the rest as future seats ... aren't a gift",
+   "fix": "Currency plus perks and brand; 'future award travel'; balances include miles earned by flying; ending on the viewer consequence."
+  },
+  {
+   "severity": "should-fix",
+   "section": "all",
+   "beatIds": [],
+   "type": "ear",
+   "quote": "American (ambiguous with American Express)",
+   "fix": "'American Airlines' at first mention per section; 'Amex' after the hook."
+  },
+  {
+   "severity": "should-fix",
+   "section": "meta",
+   "beatIds": [],
+   "type": "title",
+   "quote": "Why American Express Paid Delta $8.2 Billion",
+   "fix": "Promises a motive the dossier lacks: 'What American Express Bought From Delta for $8.2 Billion'; thumbnail '$8.2B FOR WHAT?'."
+  }
+ ]
+}
