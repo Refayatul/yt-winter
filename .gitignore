@@ -106,3 +106,5 @@ channels/profitdecoded/films/*/tts-cache/
 
 # Offline fallback voice model files (downloaded by CI; 354 MB)
 kokoro-model/
+# Small speech fixture for lib/speech-check.js tests (3 s, Kokoro-82M, Apache-2.0)
+!tests/js/fixtures/speech-sample.mp3
