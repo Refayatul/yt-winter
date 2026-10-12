@@ -1,0 +1,21 @@
+{
+ "schema": "Per-channel paid-LLM budget policy, read by core/llm/client.js before every Claude call of this channel (config/llm-routing.json). Enabling paid calls is a reviewed change to this file, never a runtime flag.",
+ "paidEnabled": false,
+ "paidApproval": null,
+ "targetPerScriptUsd": 0.005,
+ "maxPerScriptUsd": 0.02,
+ "dailyUsd": 0.1,
+ "monthlyUsd": { "script": 1.0, "experiment": 0.5 },
+ "maxRetries": 1,
+ "maxCallsPerRun": 6,
+ "maxAutoRewrites": 0,
+ "reservationTtlMinutes": 30,
+ "ledger": { "store": "github", "repo": "eyazan/youtube-otomasyon", "branch": "llm-budget-ledger" },
+ "notes": [
+  "A 'script' here is one Short (<topicId>:short:<version>); maxPerScriptUsd caps every call made for it, retries included, at the reserved maximum cost.",
+  "A Haiku 5.5 Short script is reserved at about $0.002 and expected to settle near $0.0005; the limits leave room for script + metadata + storyboard with one retry each.",
+  "paidApproval (required as well as paidEnabled): {\"id\": \"<unique>\", \"scriptId\": \"<topicId>:short:v1\" or omitted for any, \"pool\": \"experiment\", \"model\": \"claude-haiku-5-5\", \"maxUsd\": 0.05, \"expiresAt\": \"<ISO>\", \"approvedBy\": \"<person>\"}. It is single-use once closed in the ledger.",
+  "The key is the repository secret <PREFIX>_ANTHROPIC_API_KEY of this channel only. The ledger branch llm-budget-ledger must be initialised before the first paid run (one file per channel).",
+  "Application limits do not cap provider billing: set a spend limit on the Anthropic workspace as the backstop."
+ ]
+}

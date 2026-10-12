@@ -1,0 +1,114 @@
+{
+ "schema": "llm-routing.v1",
+ "note": "Task -> model routing for paid Anthropic calls. Cheap model by default; a stronger model only through an explicit escalation the caller requests, never as a silent fallback. Override per task with LLM_MODEL_<TASK> (e.g. LLM_MODEL_SHORT_SCRIPT) or per channel with <PREFIX>_LLM_MODEL_<TASK> (e.g. IB_LLM_MODEL_SHORT_SCRIPT). Paid execution is still governed by each channel's llm-budget.json (paidEnabled + a single-use approval). thinking: disabled for short structured tasks (allowed at effort high or below), adaptive where reasoning matters.",
+ "prices": {
+  "_unit": "USD per 1M tokens, Anthropic first-party list prices (claude-api skill table cached 2026-10-06). Cache writes cost 1.25x input; batch requests cost 50%.",
+  "claude-haiku-5-5": {
+   "input": 0.1,
+   "output": 0.5,
+   "cacheRead": 0.01
+  },
+  "claude-sonnet-5-5": {
+   "input": 2,
+   "output": 10,
+   "cacheRead": 0.2
+  },
+  "claude-opus-5-5": {
+   "input": 4,
+   "output": 20,
+   "cacheRead": 0.2
+  }
+ },
+ "tasks": {
+  "short-script": {
+   "model": "claude-haiku-5-5",
+   "maxInputTokens": 4000,
+   "maxOutputTokens": 3000,
+   "effort": "low",
+   "category": "script",
+   "escalateTo": null,
+   "thinking": "disabled"
+  },
+  "short-storyboard": {
+   "model": "claude-haiku-5-5",
+   "maxInputTokens": 4000,
+   "maxOutputTokens": 3000,
+   "effort": "low",
+   "category": "visuals",
+   "escalateTo": null,
+   "thinking": "disabled"
+  },
+  "short-metadata": {
+   "model": "claude-haiku-5-5",
+   "maxInputTokens": 3000,
+   "maxOutputTokens": 1500,
+   "effort": "low",
+   "category": "script",
+   "escalateTo": null,
+   "thinking": "disabled"
+  },
+  "topic-classify": {
+   "model": "claude-haiku-5-5",
+   "maxInputTokens": 3000,
+   "maxOutputTokens": 800,
+   "effort": "low",
+   "category": "research",
+   "escalateTo": null,
+   "thinking": "disabled"
+  },
+  "topic-rank": {
+   "model": "claude-haiku-5-5",
+   "maxInputTokens": 6000,
+   "maxOutputTokens": 1500,
+   "effort": "low",
+   "category": "research",
+   "escalateTo": null,
+   "thinking": "disabled"
+  },
+  "scene-spec": {
+   "model": "claude-haiku-5-5",
+   "maxInputTokens": 12000,
+   "maxOutputTokens": 16000,
+   "effort": "medium",
+   "category": "visuals",
+   "escalateTo": "claude-sonnet-5-5",
+   "thinking": "adaptive"
+  },
+  "visual-prompts": {
+   "model": "claude-haiku-5-5",
+   "maxInputTokens": 3000,
+   "maxOutputTokens": 1500,
+   "effort": "low",
+   "category": "visuals",
+   "escalateTo": null,
+   "thinking": "disabled"
+  },
+  "qa-review": {
+   "model": "claude-haiku-5-5",
+   "maxInputTokens": 8000,
+   "maxOutputTokens": 2000,
+   "effort": "low",
+   "category": "review",
+   "escalateTo": "claude-sonnet-5-5",
+   "thinking": "adaptive"
+  },
+  "longform-research-review": {
+   "model": "claude-sonnet-5-5",
+   "maxInputTokens": 30000,
+   "maxOutputTokens": 8000,
+   "effort": "medium",
+   "category": "review",
+   "escalateTo": "claude-opus-5-5",
+   "thinking": "adaptive"
+  },
+  "longform-script": {
+   "model": "claude-sonnet-5-5",
+   "maxInputTokens": 30000,
+   "maxOutputTokens": 16000,
+   "effort": "medium",
+   "category": "script",
+   "escalateTo": "claude-opus-5-5",
+   "thinking": "adaptive"
+  }
+ }
+}
