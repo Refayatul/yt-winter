@@ -89,3 +89,11 @@ test("an opening_visual experiment arm turns on the opening change alone for tha
   assert.equal(openingOnly[0].still.file, "Chicxulub impact - artist impression.jpg");
   assert.ok(!openingOnly.some((shot) => shot.detail), "repeats are unchanged in the opening-only arm");
 });
+
+test("craft v2 opening: a numeric hook still opens on the subject picture; without the flag it opens on its number card", () => {
+  const numeric = [{ text: "One 10-kilometre asteroid ended the age of dinosaurs.", start: 0, end: 3.4 }, ...claims.slice(1)];
+  const build = (craft) => V.buildVisualPlan(topic, { claims: numeric, targetSeconds: 23.8 }, STILLS.map((s) => ({ ...s })), Array(12).fill(1.98), 23.8, [], { opening: "number", craft });
+  assert.equal(build({ opening: true }).at(0).type, "licensed-still");
+  assert.equal(build({ opening: true }).at(0).still.file, "Chicxulub impact - artist impression.jpg");
+  assert.equal(build(false).at(0).type, "number-card", "flag off: unchanged");
+});

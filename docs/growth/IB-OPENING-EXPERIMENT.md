@@ -31,19 +31,28 @@ How the pairs are built:
 
 Hash-random assignment could give 7/3 at this size. Matched pairs keep the arms at 5/5 and balanced.
 
-### Plan computed on 2026-10-11 (latest `main` with all six PRs; it is recomputed at activation)
+### Plan computed on 2026-10-12 (actual `main`; it is recomputed at activation)
+
+Before planning, the CLI applies two checks:
+- **Production's pre-render gate** (`chooseTopic` → `planShort`), so a topic production would block never holds a slot.
+- **The arm check:**
+  - control: `{opening:false, repeats:false, pacing:false, captions:false}`;
+  - variant: `{opening:true, repeats:false, pacing:false, captions:false}`;
+  - result: **only the opening differs**.
 
 | Pair | A: current opening | B: craft v2 opening | Category | Selection score | Viral potential | Bucket |
 |---|---|---|---|---|---|---|
-| 1 | what-if-water-refused-to-freeze | what-if-you-melted-a-diamond | PHYSICS | 78 / 77 | 77 / 75 | A |
-| 2 | what-if-synthetic-fertilizer-disappeared | what-if-mosquitoes-went-extinct | OTHER | 80 / 79 | 79 / 78 | A |
-| 3 | what-if-ocean-plankton-disappeared | what-if-a-whale-fed-the-deep-sea-for-decades | OTHER | 79 / 78 | 78 / 77 | A |
-| 4 | what-if-earth-spun-like-the-fastest-pulsar | what-if-all-the-ants-disappeared | EXTREME SCIENCE / OTHER | 79 / 78 | 78 / 77 | A |
-| 5 | what-if-your-microbes-disappeared | what-happens-if-the-speed-of-light-doubles-everywhere | HUMAN / PHYSICS | 77 | 76 / 75 | A |
+| 1 | what-if-water-refused-to-freeze | what-if-you-could-touch-earths-core | PHYSICS | 78 / 80 | 76 / 79 | A |
+| 2 | what-if-ocean-plankton-disappeared | what-if-synthetic-fertilizer-disappeared | OTHER | 79 / 80 | 78 / 79 | A |
+| 3 | what-if-a-whale-fed-the-deep-sea-for-decades | what-if-mosquitoes-went-extinct | OTHER | 78 / 79 | 77 / 78 | A |
+| 4 | what-if-we-gave-mars-a-thicker-atmosphere | what-if-we-built-a-star-on-earth | FUTURE TECHNOLOGY | 78 / 79 | 77 | A |
+| 5 | what-if-earth-spun-like-the-fastest-pulsar | what-if-we-beamed-solar-power-from-space | EXTREME SCIENCE / FUTURE TECHNOLOGY | 79 / 78 | 78 / 77 | A |
 
 Arm means:
-- selection score: 78.6 (A) vs 77.8 (B);
-- viral potential: 77.6 (A) vs 76.4 (B).
+- selection score: 78.4 (A) vs 79.2 (B);
+- viral potential: 77.2 (A) vs 78.0 (B).
+
+**Fixed before activation.** For a hook containing a number, both arms used to open on the figure card, because the existing "numeric hook opens on its card" rule ran before the craft opening. Under the craft opening, the first frame is now the chosen subject picture (`tests/js/shorts-craft.test.js`).
 
 ## Metrics
 

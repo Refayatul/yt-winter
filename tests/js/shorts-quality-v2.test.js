@@ -152,3 +152,22 @@ test("sound cues: the riser ends where the payoff starts; camera moves keep v1 a
   assert.equal(Rendering.cameraMove(0, 90), "z='1+0.1*on/90':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'", "v1 move unchanged");
   assert.match(Rendering.cameraMove(0, 120, 1.67), /z='1\+0\.167\*on\/120'/);
 });
+
+test("thin pool: a relevant clip returns once (another part of its footage) before a still comes back again", () => {
+  const V = require("../../core/rendering/topic-visuals");
+  const topic = { channel: "impossible-brief", slug: "ice", topic: "What If Ice Sank Instead of Floating?", canonicalTopic: "ice density anomaly", subject: "floating ice", visualScenes: ["lake ice", "sea ice"] };
+  const stills = [{ file: "Anchor ice under sea ice.JPG", description: "anchor ice under sea ice", width: 1600, height: 1200 },
+    { file: "A Melange of Ice.jpg", description: "sea ice melange", width: 1600, height: 1200 }];
+  const clips = [{ id: "arctic-sea-ice", file: "arctic-sea-ice.mp4", title: "Arctic sea ice", description: "arctic sea ice minimum", duration: 20 },
+    { id: "icebridge", file: "icebridge.mp4", title: "IceBridge sea ice", description: "flying over sea ice", duration: 20 }];
+  const lines = ["What if ice sank?", "Most substances shrink as they freeze.", "Water doesn't.", "Ice is less dense than water.",
+    "So ice floats and lakes freeze from the top.", "Floating ice insulates the water beneath it.", "So lakes stay alive in winter."];
+  const claims = lines.map((text, i) => ({ text, start: i * 4, end: (i + 1) * 4 }));
+  const build = (craft) => V.buildVisualPlan(topic, { claims, targetSeconds: 28 }, stills.map((s) => ({ ...s })), Array(14).fill(2), 28, clips.map((c) => ({ ...c })), { opening: "number", craft });
+  const after = build({ opening: true, repeats: true });
+  const clipShots = after.filter((shot) => shot.type === "stock-video");
+  assert.ok(clipShots.some((shot) => shot.clipPass === 1), `a clip returns: ${after.map((s) => s.type[0]).join("")}`);
+  assert.ok(clipShots.every((shot) => (shot.clipPass || 0) <= 1), "at most one return per clip");
+  const legacy = build(false);
+  assert.ok(!legacy.some((shot) => shot.clipPass), "flag off: clips play once, as before");
+});

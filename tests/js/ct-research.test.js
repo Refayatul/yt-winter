@@ -133,3 +133,14 @@ test("inventory runway uses production's gates: unused, selectable bucket, viral
   const firstBelow = result.queue.findIndex((item) => !(item.viral >= result.viralMinimum));
   if (firstBelow > 0) assert.ok(result.queue.slice(firstBelow).every((item) => !(item.viral >= result.viralMinimum)), "records at the viral minimum come first");
 });
+
+test("a narration that lists figures, or repeats one, goes to the repair round instead of being kept", () => {
+  const d = draft();
+  d.narration[3].text = "Plants run at 40 to 82 bar of seawater pressure to beat it.";
+  d.narration[4].text = "Seawater systems need 2.9 to 5.5 kilowatt-hours per cubic metre.";
+  const { supportErrors } = Research.toRecord(ct230(), d, SOURCES);
+  assert.ok(supportErrors.some((error) => /narration speaks 7 figures; at most 3/.test(error)), supportErrors.join("; "));
+  assert.ok(supportErrors.some((error) => /repeats a figure \(82\)/.test(error)));
+  assert.match(Research.SYSTEM, /at most 3 figures/, "the drafting instruction asks for it up front");
+  assert.deepEqual(Research.toRecord(ct230(), draft(), SOURCES).supportErrors, [], "the three-figure draft passes");
+});
