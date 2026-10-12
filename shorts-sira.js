@@ -115,6 +115,10 @@ function renderBilgisi(slug) {
 class Engellendi extends Error {}
 class IncelemeGerekli extends Error {}
 class YuklemeHatasi extends Error {}
+// Altyapi (seslendirme servisi) hatasi: her konu ayni sekilde patlar. 2026-10-12'de Edge TTS 403
+// yuzunden 28 nitelikli konu tek tek "basarisiz" isaretlenip harcandi; artik dongu durur.
+class AltyapiHatasi extends Error {}
+const { NARRATION_UNAVAILABLE_EXIT } = require("./lib/shorts-tts");
 function kapi(slug, final) {
   const r = require("./quality-gate").degerlendir(slug, { final });
   console.log(`  kalite kapisi (${final ? "final" : "pre"}): ${r.karar} ${r.toplam}/100` + (r.engelleyen.length ? " — " + r.engelleyen.join("; ") : ""));
@@ -129,6 +133,8 @@ function konuListesi() {
 
 function calistir(script, slug) {
   const r = cp.spawnSync("node", [script, slug], { cwd: KOK, stdio: "inherit" });
+  // Seslendirme servisi (ve onaylı yedek ses) yoksa hata konuya ait degildir: konu harcanmaz.
+  if (r.status === NARRATION_UNAVAILABLE_EXIT) throw new AltyapiHatasi(script + ": seslendirme yok (slug: " + slug + ")");
   if (r.status !== 0) throw new Error(script + " basarisiz (slug: " + slug + ")");
 }
 
@@ -288,6 +294,12 @@ function main() {
       if (e instanceof IncelemeGerekli) { console.error(`  ⚠ ${slug} insan incelemesine ayrildi; YouTube'a yuklenmedi — rapor: icerik/paket/${slug}/quality-gate.md`); continue; }
       // Yukleme hatasi konuya ait degildir (yetki/ag): baska konuyu da harcamamak icin dur.
       if (e instanceof YuklemeHatasi) { console.error(`  ✗ ${slug}: ${e.message}`); return 1; }
+      if (e instanceof AltyapiHatasi) {
+        GrowthRuntime.alert(CHANNEL, "NARRATION_UNAVAILABLE", slug, { message: e.message });
+        console.error(`  ✗ ${slug}: ${e.message} — konu harcanmadi; seslendirme gelene kadar baska konu denenmez`);
+        console.log("::error::[" + CHANNEL.name + "] NARRATION_UNAVAILABLE: Edge TTS refused and no approved fallback voice; nothing rendered or uploaded");
+        return 1;
+      }
       console.error(`  ✗ ${slug} basarisiz: ${e.message} — atlaniyor`);
       basarisizIsaretle(slug);
     }

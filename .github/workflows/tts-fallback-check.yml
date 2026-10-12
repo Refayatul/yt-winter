@@ -1,0 +1,134 @@
+name: TTS availability and fallback check
+
+# Free diagnostics on the real GitHub-hosted runner; no secrets, no YouTube, nothing published.
+#   edge:   why the Edge read-aloud service refuses this runner (handshake status and headers,
+#           clock offset, the production client and the reference Python client), on three runners.
+#   kokoro: the offline fallback (Kokoro-82M, kokoro-onnx on CPU) installed from scratch and timed:
+#           pip install, model download, model load, synthesis speed, memory, and a speech check of
+#           every sample. The samples are artifacts for a human listener; nothing is approved here.
+on:
+  push:
+    branches: [fix/tts-fallback-health]
+    paths:
+      - 'lib/shorts-tts.js'
+      - 'lib/speech-check.js'
+      - 'scripts/kokoro_lines.py'
+      - 'scripts/tts-benchmark.js'
+      - 'scripts/tts-diagnostics.js'
+      - '.github/workflows/tts-fallback-check.yml'
+  pull_request:
+    paths:
+      - 'lib/shorts-tts.js'
+      - 'lib/speech-check.js'
+      - 'scripts/kokoro_lines.py'
+      - 'scripts/tts-benchmark.js'
+      - 'scripts/tts-diagnostics.js'
+      - '.github/workflows/tts-fallback-check.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  edge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        probe: [1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --no-audit --no-fund
+      - name: Runner
+        run: |
+          echo "date: $(date -u +%FT%TZ)"
+          curl -s -o /dev/null -w "github time check: %{http_code}\n" https://api.github.com/zen || true
+      - name: Edge diagnostics (production client)
+        env:
+          RUNNER_REGION: ${{ runner.environment }}
+        run: node scripts/tts-diagnostics.js --attempts 6 --gap-ms 5000 --out edge-diagnostics-${{ matrix.probe }}.json
+      - name: Edge reference client (Python edge-tts, latest)
+        continue-on-error: true
+        run: |
+          pip install --quiet edge-tts
+          pip show edge-tts | head -2
+          ok=0
+          for i in 1 2 3 4 5 6; do
+            if edge-tts --voice en-US-AndrewMultilingualNeural --text "This is a short diagnostic sentence." --write-media py-$i.mp3 2> py-$i.err; then ok=$((ok+1)); echo "attempt $i ok"; else echo "attempt $i FAILED: $(tail -1 py-$i.err | cut -c1-160)"; fi
+            sleep 5
+          done
+          echo "python edge-tts: $ok/6 succeeded" | tee -a edge-python-${{ matrix.probe }}.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: edge-diagnostics-${{ matrix.probe }}
+          path: |
+            edge-diagnostics-*.json
+            edge-python-*.txt
+          retention-days: 14
+
+  kokoro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Runner resources
+        run: |
+          nproc; free -m; df -h . | tail -1; python --version
+          echo "CPU: $(grep -m1 'model name' /proc/cpuinfo)"
+      - name: ffmpeg and node packages
+        run: |
+          bash scripts/ci-apt.sh --no-install-recommends ffmpeg
+          npm install --no-audit --no-fund
+      - name: Install kokoro-onnx (timed, cold)
+        run: |
+          start=$(date +%s.%N)
+          pip install --quiet kokoro-onnx soundfile
+          end=$(date +%s.%N)
+          echo "pip install seconds: $(echo "$end - $start" | bc)" | tee kokoro-install.txt
+          pip show kokoro-onnx onnxruntime | grep -E "^(Name|Version|License)" | tee -a kokoro-install.txt
+      - name: Download model files (timed, cold; production would cache them)
+        run: |
+          mkdir -p kokoro-model
+          start=$(date +%s.%N)
+          curl -fL --retry 3 -sS -o kokoro-model/kokoro-v1.0.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
+          curl -fL --retry 3 -sS -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+          end=$(date +%s.%N)
+          echo "model download seconds: $(echo "$end - $start" | bc)" | tee -a kokoro-install.txt
+          ls -la kokoro-model | tee -a kokoro-install.txt
+          sha256sum kokoro-model/* | tee -a kokoro-install.txt
+      - name: Benchmark (identical scripts, every sample speech-checked; peak memory measured)
+        env:
+          SHORTS_KOKORO_DIR: ${{ github.workspace }}/kokoro-model
+          SHORTS_KOKORO_PYTHON: python
+        run: |
+          /usr/bin/time -v node scripts/tts-benchmark.js --kokoro --out tts-bench 2> time.txt
+          grep -E "Maximum resident|Elapsed|Percent of CPU" time.txt | tee -a kokoro-install.txt
+          cp kokoro-install.txt tts-bench/
+          cat tts-bench/report.md >> "$GITHUB_STEP_SUMMARY"
+      - name: Repeat runs (failure rate)
+        env:
+          SHORTS_KOKORO_DIR: ${{ github.workspace }}/kokoro-model
+          SHORTS_KOKORO_PYTHON: python
+        run: |
+          ok=0
+          for i in 1 2 3 4 5; do
+            if node scripts/tts-benchmark.js --kokoro --out repeat-$i --voices "failure-reconstructed=am_michael;impossible-brief=am_fenrir;critical-thread=af_heart" > repeat-$i.log 2>&1 && ! grep -q "FAIL\|ERROR" repeat-$i/report.md; then ok=$((ok+1)); fi
+          done
+          echo "repeat runs passing every speech check: $ok/5 (15 narrations each)" | tee -a tts-bench/kokoro-install.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: kokoro-benchmark
+          path: tts-bench
+          retention-days: 14
