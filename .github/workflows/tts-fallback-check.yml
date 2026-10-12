@@ -105,7 +105,7 @@ jobs:
           curl -fL --retry 3 -sS -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
           end=$(date +%s.%N)
           echo "model download seconds: $(echo "$end - $start" | bc)" | tee -a kokoro-install.txt
-          ls -la kokoro-model | tee -a kokoro-install.txt
+          stat -c "%n %s bytes" kokoro-model/* | tee -a kokoro-install.txt
           sha256sum kokoro-model/* | tee -a kokoro-install.txt
       - name: Benchmark (identical scripts, every sample speech-checked; peak memory measured)
         env:
