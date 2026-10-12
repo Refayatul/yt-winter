@@ -67,6 +67,21 @@ async function videoDetails(yt, ids) {
   return out;
 }
 
+// Same interface as client(), authenticated with a channel's OWN OAuth access token instead of an API key
+// (public read endpoints only; `request` is lib/yt's HTTP function, wrapped by the caller's read-only allowlist).
+function oauthClient({ accessToken, request, quotaBudget = 3000 }) {
+  if (!accessToken) throw new Error("oauthClient needs an access token");
+  let used = 0; const log = [];
+  async function call(endpoint, params) {
+    const cost = COST[endpoint]; if (used + cost > quotaBudget) { const e = new Error(`quota budget ${quotaBudget} reached (used ${used})`); e.code = "BUDGET"; throw e; }
+    const r = await request({ hostname: "www.googleapis.com", path: `/youtube/v3/${endpoint}?${new URLSearchParams(params).toString()}`, headers: { Authorization: `Bearer ${accessToken}` } });
+    used += cost;
+    if (r.durum < 200 || r.durum >= 300) { const e = new Error(`YouTube API ${endpoint} -> HTTP ${r.durum}`); e.status = r.durum; if (r.durum === 403) e.code = "QUOTA_OR_FORBIDDEN"; throw e; }
+    log.push({ endpoint, cost }); return JSON.parse(r.govde);
+  }
+  return { call, get used() { return used; }, budget: quotaBudget, log };
+}
+
 // Handles from the structured list (referenceChannels: [{ handle, role, ... }]) and/or the older flat list.
 function referenceHandles(config) {
   const list = (config.referenceChannels || []).map((c) => c.handle).concat(config.referenceHandles || []);
@@ -102,4 +117,4 @@ async function collect(config, options = {}) {
   return { snapshot: { fetchedAt: new Date(now).toISOString(), source: "youtube-data-api-v3", channels }, report: { ...report, channelsCollected: channels.length, quotaUsed: yt.used, quotaBudget: yt.budget } };
 }
 
-module.exports = { client, isoSeconds, resolveHandles, referenceHandles, channelStats, recentVideos, collect, COST };
+module.exports = { client, oauthClient, isoSeconds, resolveHandles, referenceHandles, channelStats, recentVideos, collect, COST };

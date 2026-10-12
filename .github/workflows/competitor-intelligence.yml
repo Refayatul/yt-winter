@@ -1,0 +1,72 @@
+name: Competitor intelligence (read-only)
+
+# Manual only (no schedule). Each job runs one channel with ONLY that channel's own YouTube credentials:
+# public reads of reference channels (channels / playlistItems / videos; keyword searches only when asked),
+# then outlier insight records in channels/<slug>/intel/. Nothing is uploaded, edited or published.
+
+on:
+  workflow_dispatch:
+    inputs:
+      channel:
+        description: "Channel to collect"
+        required: true
+        type: choice
+        options: [impossible-brief, critical-thread, behind-the-ordinary, failure-reconstructed]
+      searches:
+        description: "Also run keyword discovery searches (100 quota units each)"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: competitor-intelligence-${{ inputs.channel }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      QUOTA_LEDGER: "0"
+      FR_YT_CLIENT_ID: ${{ inputs.channel == 'failure-reconstructed' && secrets.FR_YT_CLIENT_ID || '' }}
+      FR_YT_CLIENT_SECRET: ${{ inputs.channel == 'failure-reconstructed' && secrets.FR_YT_CLIENT_SECRET || '' }}
+      FR_YT_REFRESH_TOKEN: ${{ inputs.channel == 'failure-reconstructed' && secrets.FR_YT_REFRESH_TOKEN || '' }}
+      IB_CLIENT_ID: ${{ inputs.channel == 'impossible-brief' && secrets.IB_CLIENT_ID || '' }}
+      IB_CLIENT_SECRET: ${{ inputs.channel == 'impossible-brief' && secrets.IB_CLIENT_SECRET || '' }}
+      IB_YT_REFRESH_TOKEN: ${{ inputs.channel == 'impossible-brief' && secrets.IB_YT_REFRESH_TOKEN || '' }}
+      CT_CLIENT_ID: ${{ inputs.channel == 'critical-thread' && secrets.CT_CLIENT_ID || '' }}
+      CT_CLIENT_SECRET: ${{ inputs.channel == 'critical-thread' && secrets.CT_CLIENT_SECRET || '' }}
+      CT_YT_REFRESH_TOKEN: ${{ inputs.channel == 'critical-thread' && secrets.CT_YT_REFRESH_TOKEN || '' }}
+      BTO_YT_CLIENT_ID: ${{ inputs.channel == 'behind-the-ordinary' && secrets.BTO_YT_CLIENT_ID || '' }}
+      BTO_YT_CLIENT_SECRET: ${{ inputs.channel == 'behind-the-ordinary' && secrets.BTO_YT_CLIENT_SECRET || '' }}
+      BTO_YT_REFRESH_TOKEN: ${{ inputs.channel == 'behind-the-ordinary' && secrets.BTO_YT_REFRESH_TOKEN || '' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install --no-audit --no-fund
+      - name: Collect and analyse (read-only)
+        env:
+          CHANNEL: ${{ inputs.channel }}
+          SEARCHES: ${{ inputs.searches }}
+        run: |
+          if [ "$SEARCHES" = "true" ]; then
+            node scripts/intel/collect-competitors.js --channel "$CHANNEL" --auth oauth --budget 1500 --searches
+          else
+            node scripts/intel/collect-competitors.js --channel "$CHANNEL" --auth oauth --budget 1500
+          fi
+      - name: Commit insight records
+        env:
+          CHANNEL: ${{ inputs.channel }}
+        run: |
+          git config user.name "competitor-intelligence"
+          git config user.email "actions@users.noreply.github.com"
+          git add "channels/$CHANNEL/intel"
+          if git diff --cached --quiet; then echo "unchanged"; exit 0; fi
+          git commit -m "chore($CHANNEL): competitor intelligence snapshot"
+          for i in 1 2 3; do git pull --rebase origin "$GITHUB_REF_NAME" && git push origin "HEAD:$GITHUB_REF_NAME" && exit 0; git rebase --abort 2>/dev/null || true; sleep $((i * 5)); done
+          exit 1

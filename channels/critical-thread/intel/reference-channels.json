@@ -1,0 +1,39 @@
+{
+ "_comment": "Handles verified on public youtube.com/@handle pages on 2026-10-11 (page title matched). Chosen from web search evidence for this niche; roles say how each is used. Collected only with THIS channel's own credentials (scripts/intel/collect-competitors.js); no data is recorded until a collection runs. Large channels are category benchmarks only: their baselines describe their audience, not ours.",
+ "updatedOn": "2026-10-11",
+ "channel": "critical-thread",
+ "referenceChannels": [
+  {
+   "handle": "@Asianometry",
+   "name": "Asianometry",
+   "role": "direct-competitor",
+   "why": "semiconductor supply chain, equipment and industrial history essays"
+  },
+  {
+   "handle": "@PracticalEngineeringChannel",
+   "name": "Practical Engineering",
+   "role": "direct-competitor",
+   "why": "civil infrastructure: dams, power, water"
+  },
+  {
+   "handle": "@RealEngineering",
+   "name": "Real Engineering",
+   "role": "category-benchmark",
+   "why": "how large engineered systems work"
+  }
+ ],
+ "queries": [
+  "supply chain chokepoint explained",
+  "power grid transformer shortage",
+  "undersea cable explained",
+  "why only one company makes"
+ ],
+ "windowsDays": [
+  30,
+  90
+ ],
+ "maxResultsPerSearch": 15,
+ "baselineVideos": 50,
+ "regionCode": "US",
+ "quotaBudget": 400
+}

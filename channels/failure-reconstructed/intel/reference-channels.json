@@ -1,0 +1,51 @@
+{
+ "_comment": "Handles verified on public youtube.com/@handle pages on 2026-10-11 (page title matched). Chosen from web search evidence for this niche; roles say how each is used. Collected only with THIS channel's own credentials (scripts/intel/collect-competitors.js); no data is recorded until a collection runs. Large channels are category benchmarks only: their baselines describe their audience, not ours.",
+ "updatedOn": "2026-10-11",
+ "channel": "failure-reconstructed",
+ "referenceChannels": [
+  {
+   "handle": "@PlainlyDifficult",
+   "name": "Plainly Difficult",
+   "role": "direct-competitor",
+   "why": "engineering and industrial failure explainers; recommended alongside Fascinating Horror in disaster-content threads"
+  },
+  {
+   "handle": "@FascinatingHorror",
+   "name": "Fascinating Horror",
+   "role": "direct-competitor",
+   "why": "short documentaries on historical accidents and the regulations that followed"
+  },
+  {
+   "handle": "@BrickImmortar",
+   "name": "Brick Immortar",
+   "role": "direct-competitor",
+   "why": "listed with Plainly Difficult and Fascinating Horror in disaster-content recommendations"
+  },
+  {
+   "handle": "@PracticalEngineeringChannel",
+   "name": "Practical Engineering",
+   "role": "category-benchmark",
+   "why": "forensic breakdowns of infrastructure failures (dams, bridges)"
+  },
+  {
+   "handle": "@MentourPilot",
+   "name": "Mentour Pilot",
+   "role": "sub-niche-benchmark",
+   "why": "aviation accident analysis; our aviation cases compete here"
+  }
+ ],
+ "queries": [
+  "engineering disaster explained",
+  "why the dam failed",
+  "bridge collapse explained",
+  "industrial accident documentary short"
+ ],
+ "windowsDays": [
+  30,
+  90
+ ],
+ "maxResultsPerSearch": 15,
+ "baselineVideos": 50,
+ "regionCode": "US",
+ "quotaBudget": 400
+}

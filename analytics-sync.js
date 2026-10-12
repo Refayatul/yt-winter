@@ -22,7 +22,13 @@ function publishedVideos(channel) {
   const file = path.join(channel.paths.state, legacy ? "yayinlananlar.json" : "published.json");
   let rows = [];
   try { rows = JSON.parse(fs.readFileSync(file, "utf8")); } catch (error) {}
-  return (Array.isArray(rows) ? rows : []).filter((row) => row && row.videoId && (!row.channel || row.channel === channel.slug))
+  // Videos the owner uploaded by hand in YouTube Studio (discovered read-only, e.g. by
+  // scripts/profitdecoded/channel-activity.js) are analysed too, without entering the publishing ledger.
+  let manual = [];
+  try { manual = JSON.parse(fs.readFileSync(path.join(channel.paths.state, "manual-uploads.json"), "utf8")); } catch (error) {}
+  const seen = new Set((Array.isArray(rows) ? rows : []).map((row) => row && row.videoId));
+  rows = (Array.isArray(rows) ? rows : []).concat((Array.isArray(manual) ? manual : []).filter((row) => row && !seen.has(row.videoId)));
+  return rows.filter((row) => row && row.videoId && (!row.channel || row.channel === channel.slug))
     .map((row) => ({ videoId: row.videoId, contentType: row.format === "long" ? "long" : "short", publishedDay: String(row.publishAt || row.tarih || "").slice(0, 10) || null }));
 }
 

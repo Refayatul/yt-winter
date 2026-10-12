@@ -75,6 +75,7 @@ function decisionCandidate(row) {
     viralComponents: row.score.viralComponents,
     selectedHook: row.score.selectedHook,
     rejectionReasons: row.score.reasons,
+    competitor: row.competitor ? { demand: row.competitor.demand, saturation: row.competitor.saturation, adjustment: row.score.competitorAdjustment || 0, snapshot: row.competitor.snapshot } : null,
   };
 }
 

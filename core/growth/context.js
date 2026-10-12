@@ -159,6 +159,16 @@ function rank(channel, options = {}) {
     if (topic.format === "long") continue;
     rows.push(evaluate(topic, ctx));
   }
+  // Competitor intelligence (core/intel/competitor-signal.js): observed demand/saturation is attached to
+  // every row and logged in the topic decision; it changes SelectionScore only when the channel's growth
+  // config sets competitorSignal.weight > 0 (reviewed change; default 0 = log only, ranking unchanged).
+  const intel = require("../intel/competitor-signal").load(channel);
+  const weight = Number((ctx.config.competitorSignal || {}).weight || 0);
+  for (const row of rows) {
+    row.competitor = require("../intel/competitor-signal").forTopic(row.topic, intel);
+    const delta = require("../intel/competitor-signal").adjustment(row.competitor, weight);
+    if (delta) { row.score.SelectionScore = Math.round((row.score.SelectionScore + delta) * 10) / 10; row.score.competitorAdjustment = delta; }
+  }
   const order = { A: 0, B: 1, C: 2, D: 3 };
   rows.sort((a, b) => order[a.score.bucket] - order[b.score.bucket] || b.score.SelectionScore - a.score.SelectionScore || b.score.VideoPotentialScore - a.score.VideoPotentialScore);
   const distribution = { A: 0, B: 0, C: 0, D: 0 };
