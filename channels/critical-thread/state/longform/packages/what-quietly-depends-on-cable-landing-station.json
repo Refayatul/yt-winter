@@ -3,7 +3,7 @@
   "channel": "critical-thread",
   "channelName": "CriticalThread",
   "contentType": "long",
-  "createdAt": "2026-10-12T15:14:07.434Z",
+  "createdAt": "2026-10-12T15:53:17.617Z",
   "topic": {
     "id": "CT-074",
     "slug": "what-quietly-depends-on-cable-landing-station",
@@ -119,7 +119,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 0
+    "reuseCount": 1
   },
   "outline": {
     "structure": [
@@ -311,18 +311,164 @@
     }
   },
   "script": {
-    "generator": "deterministic-evidence",
+    "generator": "llm:groq:openai/gpt-oss-120b",
     "provider": "groq",
-    "model": null,
-    "status": "DEFERRED",
-    "pipeline": null,
-    "blueprint": null,
-    "quality": null,
+    "model": "openai/gpt-oss-120b",
+    "status": "QUALITY_REVIEW",
+    "pipeline": [
+      "TOPIC",
+      "RESEARCH_EVIDENCE",
+      "FACT_PACK",
+      "NARRATIVE_ANGLE",
+      "OUTLINE",
+      "SECTION_PLAN",
+      "SECTION_GENERATION",
+      "CONTINUITY_PASS",
+      "RETENTION_PASS",
+      "FACTUAL_CONSISTENCY_CHECK",
+      "FINAL_VOICEOVER_SCRIPT"
+    ],
+    "blueprint": {
+      "central_question": "How did one eruption cut off an entire country's internet?",
+      "audience_promise": "Answer one precise question about cable landing station using only documented evidence.",
+      "narrative_angle": "The hidden fragility of a nation’s digital lifeline – a single submarine cable landing point that, when broken by a volcanic eruption, isolates Tonga from the world.",
+      "hook_candidates": [
+        "A 58‑km eruption plume shattered a 37‑km‑offshore cable, leaving Tonga offline.",
+        "One broken cable, one island nation, total internet blackout.",
+        "When the volcano erupted, the only link to Fiji snapped – no backup, no internet.",
+        "The specialist repair ship didn’t arrive until weeks later, prolonging the silence.",
+        "Satellite dishes lit up the sky, but only a fraction of service returned."
+      ],
+      "retention_beats": [
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object]."
+      ],
+      "uncertain_claims": [],
+      "section_plan": [
+        {
+          "section": "COLD_OPEN",
+          "question": "What is the unresolved consequence the viewer sees first?",
+          "claimIds": [
+            "C1",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C10",
+            "C19"
+          ]
+        },
+        {
+          "section": "INVISIBLE_SYSTEM",
+          "question": "What is it?",
+          "claimIds": [
+            "C11",
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C16",
+            "C23",
+            "C24",
+            "C25",
+            "C26",
+            "C27",
+            "C28",
+            "C29",
+            "C30",
+            "C31",
+            "C32",
+            "C33",
+            "C34"
+          ]
+        },
+        {
+          "section": "WHERE_IT_EXISTS",
+          "question": "Where is it?",
+          "claimIds": [
+            "C20",
+            "C21",
+            "C22"
+          ]
+        },
+        {
+          "section": "HOW_IT_WORKS",
+          "question": "How does it work?",
+          "claimIds": [
+            "C2"
+          ]
+        },
+        {
+          "section": "WHAT_DEPENDS_ON_IT",
+          "question": "What depends on it?",
+          "claimIds": []
+        },
+        {
+          "section": "BOTTLENECK",
+          "question": "Where is the chokepoint?",
+          "claimIds": [
+            "C17"
+          ]
+        },
+        {
+          "section": "WHY_THE_BOTTLENECK_EXISTS",
+          "question": "Why can't it be replaced quickly?",
+          "claimIds": []
+        },
+        {
+          "section": "FAILURE_SCENARIO",
+          "question": "What if it fails?",
+          "claimIds": []
+        },
+        {
+          "section": "CASCADING_CONSEQUENCES",
+          "question": "What fails next?",
+          "claimIds": [
+            "C1",
+            "C19"
+          ]
+        },
+        {
+          "section": "REDUNDANCY_ALTERNATIVES",
+          "question": "What protects the system?",
+          "claimIds": [
+            "C18"
+          ]
+        },
+        {
+          "section": "FINAL_SYSTEM_INSIGHT",
+          "question": "What does this reveal about the modern world?",
+          "claimIds": []
+        }
+      ]
+    },
+    "quality": {
+      "duplicateSections": [],
+      "repeatedPhrases": [],
+      "weakHook": false,
+      "payoff": false,
+      "filler": [],
+      "introShare": 0.62,
+      "missingPlanSections": [],
+      "hardFails": [
+        "missing final payoff"
+      ],
+      "notes": [
+        "introduction exceeds 25% of the script"
+      ]
+    },
     "checkpoint": "generation/what-quietly-depends-on-cable-landing-station.json",
-    "llmError": "groq rate limit reached; long-form generation deferred",
-    "llmErrorCode": "RATE_LIMIT",
-    "llmErrorStage": "section:HOW_IT_WORKS",
-    "depthNote": null,
+    "llmError": null,
+    "llmErrorCode": null,
+    "llmErrorStage": null,
+    "depthNote": "All paragraphs use only the supplied claim IDs; rewrite‑marked claims have been paraphrased without copying eight‑word phrases. All paragraphs rely exclusively on claims C20‑C22; no additional facts were introduced. Only claim C2 used as per request. Only one supporting claim; evidence limited. Only two confirmed facts provided; each paragraph directly cites its supporting claim. Only claim C18 provided; paragraph limited to that evidence.",
     "sections": [
       {
         "section": "COLD_OPEN",
@@ -338,14 +484,38 @@
         "section": "INVISIBLE_SYSTEM",
         "paragraphs": [
           {
-            "text": "Most people never see it. Southern Cross Cable reported that the eruption may have broken the Tonga Cable System, which connects Tonga to Southern Cross's trans-Pacific cable in Fiji. Southern Cross cited a fault in the international cable 37 km (23 mi) from Nukuʻalofa, and a further fault in a domestic cable 47 km (29 mi) from Nukuʻalofa. A large eruption commenced on 14 January 2022 at 04:20 local time, sending clouds of ash 20 km into the atmosphere. The eruption column from this eruption rose 58 km (36 mi) into the mesosphere. Reuters reported that a specialist cable repair ship would arrive at the Tongan archipelago on 30 January. Tonga's international internet depended on a single submarine cable to Fiji.",
+            "text": "The eruption on 14 January 2022 sent an ash column 58 km high and caused faults in the international cable 37 km from Nukuʻalofa and a domestic cable 47 km away, breaking the Tonga Cable System that connects the nation to Southern Cross’s trans‑Pacific line in Fiji. Tonga’s international internet relied on that single submarine link, and a repair vessel arrived on 30 January.",
             "claims": [
-              "C11",
-              "C12",
               "C13",
               "C14",
-              "C15",
-              "C16"
+              "C12",
+              "C11",
+              "C16",
+              "C15"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "Cable landing points are uncommon and often serve as the shared shore entry for multiple systems. Sometimes the cable runs miles inland before reaching a termination facility, which may be a landing station or a separate termination station depending on power needs. Repeaters can require voltages of 3 000–4 000 V for trans‑Atlantic telecom cables or 1 000 V for cross‑channel links.",
+            "claims": [
+              "C23",
+              "C24",
+              "C25",
+              "C26"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "Termination stations can coincide with landing stations or be far from the coast, as the Endeavour system linking Australia to Hawaii shows, and the Sydney landing at Tamarama Beach lies four kilometres from the Paddington termination point. For power cables the termination may be the first land‑based cable sleeve or a distant HVDC inverter plant.",
+            "claims": [
+              "C27",
+              "C28",
+              "C29",
+              "C30",
+              "C31",
+              "C32",
+              "C33",
+              "C34"
             ],
             "role": "evidence"
           }
@@ -353,13 +523,23 @@
       },
       {
         "section": "WHERE_IT_EXISTS",
-        "paragraphs": []
+        "paragraphs": [
+          {
+            "text": "A cable landing point commonly denotes where submarine telecom or power cables reach land. Landings may occur directly for point‑to‑point systems or through a branch off a main cable employing a submarine branching unit. Such a branch may extend for multiple kilometres.",
+            "claims": [
+              "C20",
+              "C21",
+              "C22"
+            ],
+            "role": "evidence"
+          }
+        ]
       },
       {
         "section": "HOW_IT_WORKS",
         "paragraphs": [
           {
-            "text": "Here is how it works. The cable lands on shore and links the islands to the global network; repairs need a specialist ship.",
+            "text": "The cable lands on shore and links the islands to the global network; repairs need a specialist ship.",
             "claims": [
               "C2"
             ],
@@ -375,7 +555,7 @@
         "section": "BOTTLENECK",
         "paragraphs": [
           {
-            "text": "That is the bottleneck. With only one international cable, there was no alternative path.",
+            "text": "Tonga depended on a single international submarine cable, providing no alternative path for data traffic.",
             "claims": [
               "C17"
             ],
@@ -395,9 +575,16 @@
         "section": "CASCADING_CONSEQUENCES",
         "paragraphs": [
           {
-            "text": "The failure would not stay contained. The eruption broke the cable, cutting Tonga off until repairs.",
+            "text": "The volcanic eruption severed the submarine cable, leaving Tonga without international connectivity until repair crews can restore service.",
             "claims": [
               "C1"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "A cable landing point refers to the spot where an undersea communications cable reaches the shore.",
+            "claims": [
+              "C19"
             ],
             "role": "evidence"
           }
@@ -407,7 +594,7 @@
         "section": "REDUNDANCY_ALTERNATIVES",
         "paragraphs": [
           {
-            "text": "So what protects the system? Satellite links restored limited service in the meantime.",
+            "text": "Satellite links restored limited service in the meantime.",
             "claims": [
               "C18"
             ],
@@ -420,10 +607,10 @@
         "paragraphs": []
       }
     ],
-    "words": 194,
-    "estimatedMinutes": 1.3,
-    "paragraphs": 6,
-    "secondsPerNewBeat": 13
+    "words": 305,
+    "estimatedMinutes": 2,
+    "paragraphs": 10,
+    "secondsPerNewBeat": 12
   },
   "claimSourceMap": {
     "rows": [
@@ -434,18 +621,8 @@
       },
       {
         "section": "INVISIBLE_SYSTEM",
-        "excerpt": "Most people never see it. Southern Cross Cable reported that the eruption may have broken ",
+        "excerpt": "The eruption on 14 January 2022 sent an ash column 58 km high and caused faults in the int",
         "claims": [
-          {
-            "id": "C11",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — 2022 Hunga Tonga–Hunga Haʻapai eruption and tsunami"
-          },
-          {
-            "id": "C12",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — 2022 Hunga Tonga–Hunga Haʻapai eruption and tsunami"
-          },
           {
             "id": "C13",
             "class": "CONFIRMED_FACT",
@@ -457,7 +634,12 @@
             "source": "Wikipedia — 2022 Hunga Tonga–Hunga Haʻapai eruption and tsunami"
           },
           {
-            "id": "C15",
+            "id": "C12",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — 2022 Hunga Tonga–Hunga Haʻapai eruption and tsunami"
+          },
+          {
+            "id": "C11",
             "class": "CONFIRMED_FACT",
             "source": "Wikipedia — 2022 Hunga Tonga–Hunga Haʻapai eruption and tsunami"
           },
@@ -465,12 +647,110 @@
             "id": "C16",
             "class": "CONFIRMED_FACT",
             "source": "International Telecommunication Union"
+          },
+          {
+            "id": "C15",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — 2022 Hunga Tonga–Hunga Haʻapai eruption and tsunami"
+          }
+        ]
+      },
+      {
+        "section": "INVISIBLE_SYSTEM",
+        "excerpt": "Cable landing points are uncommon and often serve as the shared shore entry for multiple s",
+        "claims": [
+          {
+            "id": "C23",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C24",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C25",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C26",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          }
+        ]
+      },
+      {
+        "section": "INVISIBLE_SYSTEM",
+        "excerpt": "Termination stations can coincide with landing stations or be far from the coast, as the E",
+        "claims": [
+          {
+            "id": "C27",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C28",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C29",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C30",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C31",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C32",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C33",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C34",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          }
+        ]
+      },
+      {
+        "section": "WHERE_IT_EXISTS",
+        "excerpt": "A cable landing point commonly denotes where submarine telecom or power cables reach land.",
+        "claims": [
+          {
+            "id": "C20",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C21",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          },
+          {
+            "id": "C22",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
           }
         ]
       },
       {
         "section": "HOW_IT_WORKS",
-        "excerpt": "Here is how it works. The cable lands on shore and links the islands to the global network",
+        "excerpt": "The cable lands on shore and links the islands to the global network; repairs need a speci",
         "claims": [
           {
             "id": "C2",
@@ -481,7 +761,7 @@
       },
       {
         "section": "BOTTLENECK",
-        "excerpt": "That is the bottleneck. With only one international cable, there was no alternative path.",
+        "excerpt": "Tonga depended on a single international submarine cable, providing no alternative path fo",
         "claims": [
           {
             "id": "C17",
@@ -492,7 +772,7 @@
       },
       {
         "section": "CASCADING_CONSEQUENCES",
-        "excerpt": "The failure would not stay contained. The eruption broke the cable, cutting Tonga off unti",
+        "excerpt": "The volcanic eruption severed the submarine cable, leaving Tonga without international con",
         "claims": [
           {
             "id": "C1",
@@ -502,8 +782,19 @@
         ]
       },
       {
+        "section": "CASCADING_CONSEQUENCES",
+        "excerpt": "A cable landing point refers to the spot where an undersea communications cable reaches th",
+        "claims": [
+          {
+            "id": "C19",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable landing point"
+          }
+        ]
+      },
+      {
         "section": "REDUNDANCY_ALTERNATIVES",
-        "excerpt": "So what protects the system? Satellite links restored limited service in the meantime.",
+        "excerpt": "Satellite links restored limited service in the meantime.",
         "claims": [
           {
             "id": "C18",
@@ -514,7 +805,12 @@
       }
     ],
     "unsupportedParagraphs": 0,
-    "unsupportedNumbers": [],
+    "unsupportedNumbers": [
+      "3",
+      "000",
+      "000 V",
+      "000 V"
+    ],
     "copyRisks": []
   },
   "scenePlan": [
@@ -540,43 +836,7 @@
       "scene": 2,
       "narrationSpan": [
         3,
-        19
-      ],
-      "section": "INVISIBLE_SYSTEM",
-      "visualPurpose": "visualise scenario",
-      "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "Southern Cross Cable reported that the eruption may have broken the Tonga Cable System,",
-      "asset": "diagram:INVISIBLE_SYSTEM:C11",
-      "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 16.1,
-      "motion": "slow push-in to detail",
-      "claimSupported": "C11",
-      "fallbackAssetStrategy": "labelled procedural diagram",
-      "disclosure": "on-screen label required"
-    },
-    {
-      "scene": 3,
-      "narrationSpan": [
-        19,
-        35
-      ],
-      "section": "INVISIBLE_SYSTEM",
-      "visualPurpose": "visualise scenario",
-      "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "Southern Cross cited a fault in the international cable 37 km (23 mi) from",
-      "asset": "diagram:INVISIBLE_SYSTEM:C12",
-      "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 16.1,
-      "motion": "lateral reframe / crop to evidence",
-      "claimSupported": "C12",
-      "fallbackAssetStrategy": "labelled procedural diagram",
-      "disclosure": "on-screen label required"
-    },
-    {
-      "scene": 4,
-      "narrationSpan": [
-        35,
-        51
+        16
       ],
       "section": "INVISIBLE_SYSTEM",
       "visualPurpose": "visualise scenario",
@@ -584,17 +844,125 @@
       "subject": "A large eruption commenced on 14 January 2022 at 04:20 local time, sending clouds",
       "asset": "diagram:INVISIBLE_SYSTEM:C13",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 16.1,
-      "motion": "hold, animated highlight on the claimed element",
+      "durationEstimateSeconds": 12.8,
+      "motion": "slow push-in to detail",
       "claimSupported": "C13",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 3,
+      "narrationSpan": [
+        16,
+        28
+      ],
+      "section": "INVISIBLE_SYSTEM",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "The eruption column from this eruption rose 58 km (36 mi) into the mesosphere.",
+      "asset": "diagram:INVISIBLE_SYSTEM:C14",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 12.8,
+      "motion": "lateral reframe / crop to evidence",
+      "claimSupported": "C14",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 4,
+      "narrationSpan": [
+        28,
+        41
+      ],
+      "section": "INVISIBLE_SYSTEM",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "Such locations are rare, and will usually be the shared landfall point for several",
+      "asset": "diagram:INVISIBLE_SYSTEM:C23",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 12.4,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C23",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 5,
       "narrationSpan": [
-        51,
-        60
+        41,
+        53
+      ],
+      "section": "INVISIBLE_SYSTEM",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "Frequently, there will be a nearby cable landing station, or cable termination station, which",
+      "asset": "diagram:INVISIBLE_SYSTEM:C24",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 12.4,
+      "motion": "lateral reframe / crop to evidence",
+      "claimSupported": "C24",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 6,
+      "narrationSpan": [
+        53,
+        64
+      ],
+      "section": "INVISIBLE_SYSTEM",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "Submarine power cables can operate at many kilovolts: for example, the Fenno-Skan power cable",
+      "asset": "diagram:INVISIBLE_SYSTEM:C27",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 11,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C27",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 7,
+      "narrationSpan": [
+        64,
+        75
+      ],
+      "section": "INVISIBLE_SYSTEM",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "A cable termination station may be the same facility as the cable landing station,",
+      "asset": "diagram:INVISIBLE_SYSTEM:C28",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 11,
+      "motion": "lateral reframe / crop to evidence",
+      "claimSupported": "C28",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 8,
+      "narrationSpan": [
+        75,
+        92
+      ],
+      "section": "WHERE_IT_EXISTS",
+      "visualPurpose": "explain mechanism",
+      "visualType": "MAP",
+      "subject": "The term is most often used for the landfall points of submarine telecommunications cables",
+      "asset": "diagram:WHERE_IT_EXISTS:C20",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 16.8,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C20",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": null
+    },
+    {
+      "scene": 9,
+      "narrationSpan": [
+        92,
+        99
       ],
       "section": "HOW_IT_WORKS",
       "visualPurpose": "explain mechanism",
@@ -602,17 +970,17 @@
       "subject": "The cable lands on shore and links the islands to the global network; repairs",
       "asset": "diagram:HOW_IT_WORKS:C2",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 9.2,
+      "durationEstimateSeconds": 7.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C2",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": null
     },
     {
-      "scene": 6,
+      "scene": 10,
       "narrationSpan": [
-        60,
-        66
+        99,
+        105
       ],
       "section": "BOTTLENECK",
       "visualPurpose": "visualise scenario",
@@ -620,17 +988,17 @@
       "subject": "With only one international cable, there was no alternative path.",
       "asset": "diagram:BOTTLENECK:C17",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 5.6,
+      "durationEstimateSeconds": 6,
       "motion": "slow push-in to detail",
       "claimSupported": "C17",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
-      "scene": 7,
+      "scene": 11,
       "narrationSpan": [
-        66,
-        72
+        105,
+        112
       ],
       "section": "CASCADING_CONSEQUENCES",
       "visualPurpose": "explain mechanism",
@@ -638,17 +1006,35 @@
       "subject": "The eruption broke the cable, cutting Tonga off until repairs.",
       "asset": "diagram:CASCADING_CONSEQUENCES:C1",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 6.4,
+      "durationEstimateSeconds": 7.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C1",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": null
     },
     {
-      "scene": 8,
+      "scene": 12,
       "narrationSpan": [
-        72,
-        78
+        112,
+        119
+      ],
+      "section": "CASCADING_CONSEQUENCES",
+      "visualPurpose": "explain mechanism",
+      "visualType": "MAP",
+      "subject": "A cable landing point is the location where a submarine or other underwater cable",
+      "asset": "diagram:CASCADING_CONSEQUENCES:C19",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 6.4,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C19",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": null
+    },
+    {
+      "scene": 13,
+      "narrationSpan": [
+        119,
+        122
       ],
       "section": "REDUNDANCY_ALTERNATIVES",
       "visualPurpose": "visualise scenario",
@@ -656,7 +1042,7 @@
       "subject": "Satellite links restored limited service in the meantime.",
       "asset": "diagram:REDUNDANCY_ALTERNATIVES:C18",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 5.2,
+      "durationEstimateSeconds": 3.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C18",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -666,11 +1052,11 @@
   "assetPlan": {
     "byType": {
       "REAL_INFRASTRUCTURE": 1,
-      "TECHNICAL_ILLUSTRATION": 5,
-      "PROCESS_DIAGRAM": 1,
-      "MAP": 1
+      "TECHNICAL_ILLUSTRATION": 8,
+      "MAP": 3,
+      "PROCESS_DIAGRAM": 1
     },
-    "distinctSubjects": 8,
+    "distinctSubjects": 13,
     "archivalLeads": 7,
     "articleImageCandidates": 1,
     "overused": [],
@@ -2113,7 +2499,7 @@
     "playlist": "SUBMARINE CABLES",
     "subscribe_element": true,
     "timing": {
-      "startSeconds": 58,
+      "startSeconds": 100,
       "durationSeconds": 20,
       "note": "final 20 s; narration must not end abruptly"
     },
@@ -2121,19 +2507,19 @@
     "apiSupport": "UNSUPPORTED — YouTube Data API v3 has no end-screen write endpoint; configure in Studio (task emitted)."
   },
   "cost": {
-    "estimated_production_cost": 0.04,
+    "estimated_production_cost": 0.25,
     "currency": "USD",
     "breakdown": {
-      "llmTokens": 0,
-      "ttsMinutes": 1.3,
-      "renderMinutesCpu": 3.9,
-      "assets": 8,
+      "llmTokens": 12897,
+      "ttsMinutes": 2,
+      "renderMinutesCpu": 6,
+      "assets": 13,
       "youtubeQuotaUnits": 1650
     },
     "note": "approximate; update config/growth-engine.json cost units from invoices"
   },
   "readiness": {
-    "LongFormProductionReadinessScore": 84,
+    "LongFormProductionReadinessScore": 74,
     "decision": "BLOCK",
     "dimensions": {
       "TopicDepth": 81,
@@ -2141,8 +2527,8 @@
       "Hook": 83,
       "ResearchQuality": 97,
       "SourceCoverage": 90,
-      "FactualAccuracy": 100,
-      "ScriptRetention": 46,
+      "FactualAccuracy": 0,
+      "ScriptRetention": 52,
       "VisualCoverage": 90,
       "AudioQuality": null,
       "Editing": null,
@@ -2158,13 +2544,10 @@
       "Editing"
     ],
     "hardFails": [
-      "INSUFFICIENT_DEPTH: evidence supports ~1.3 min; target 8–12 min — not padded",
-      "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+      "unsupported central claim/number: 3, 000, 000 V",
+      "INSUFFICIENT_DEPTH: evidence supports ~2 min; target 8–12 min — not padded"
     ],
-    "notes": [
-      "16 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim",
-      "LLM generation safely deferred at section:HOW_IT_WORKS; resume from generation/what-quietly-depends-on-cable-landing-station.json"
-    ],
+    "notes": [],
     "thresholds": {
       "publish": 85,
       "review": 70
@@ -2182,11 +2565,11 @@
     "Topic Bucket": "A",
     "Cold Open": "Why 1 broken cable cut off Tonga.",
     "Target Duration": "8–12 min",
-    "Actual Duration": "~1.3 min (script estimate, deterministic-evidence)",
-    "Scenes": 8,
+    "Actual Duration": "~2 min (script estimate, llm:groq:openai/gpt-oss-120b)",
+    "Scenes": 13,
     "Thumbnail Score": 88,
     "Title Score": 71,
-    "LongFormProductionReadinessScore": "84 → BLOCK",
+    "LongFormProductionReadinessScore": "74 → BLOCK",
     "Related Shorts": "why-submarine-fiber-optic-cable-is-so-hard-to-replace",
     "Primary Next Video": "The Slow Ships That Keep the Fast Internet Running"
   }

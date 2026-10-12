@@ -96,7 +96,7 @@
     {
       "cycleId": "2026-W42",
       "channel": "critical-thread",
-      "startedAt": "2026-10-12T15:14:07.434Z",
+      "startedAt": "2026-10-12T15:53:17.617Z",
       "status": "DEFERRED_PROVIDER",
       "evaluated": [
         {
@@ -118,18 +118,32 @@
           "LongFormPotentialScore": 79,
           "bucket": "A",
           "decision": "BLOCK",
-          "score": 84,
+          "score": 74,
           "hardFails": [
-            "INSUFFICIENT_DEPTH: evidence supports ~1.3 min; target 8–12 min — not padded",
+            "unsupported central claim/number: 3, 000, 000 V",
+            "INSUFFICIENT_DEPTH: evidence supports ~2 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        },
+        {
+          "slug": "the-critical-role-of-cable-laying-ship",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 79,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 83,
+          "hardFails": [
+            "COPY_RISK: 1 paragraph(s) reproduce encyclopedia wording (e.g. \"in 1866 the ss great eastern successfully laid two\")",
+            "INSUFFICIENT_DEPTH: evidence supports ~1.6 min; target 8–12 min — not padded",
             "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
           ],
           "generationStatus": "DEFERRED"
         }
       ],
       "selected": null,
-      "reason": "provider deferred what-quietly-depends-on-cable-landing-station; retry this cycle and resume its checkpoint",
-      "checkpoint": "generation/what-quietly-depends-on-cable-landing-station.json",
-      "finishedAt": "2026-10-12T15:15:24.832Z"
+      "reason": "provider deferred the-critical-role-of-cable-laying-ship; retry this cycle and resume its checkpoint",
+      "checkpoint": "generation/the-critical-role-of-cable-laying-ship.json",
+      "finishedAt": "2026-10-12T15:54:06.555Z"
     }
   ]
 }

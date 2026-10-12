@@ -141,7 +141,7 @@
     "popularityBand": "unknown",
     "readiness": 95,
     "normalized": {
-      "ageHours": 185.27,
+      "ageHours": 185.92,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -24269,10 +24269,10 @@
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 69.2,
+      "growthScore": 67.1,
       "classification": "NORMAL",
       "percentiles": {
-        "viewVelocity": 100,
+        "viewVelocity": 95,
         "retention": null,
         "engagement": 40,
         "subscriberConversion": null,
@@ -45046,6 +45046,111 @@
         "traffic": [],
         "retention": [],
         "analyticsStatus": "ok"
+      },
+      "6h": {
+        "collectedAt": "2026-10-12T15:55:19.075Z",
+        "metrics": {
+          "views": {
+            "value": 178,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "likes": {
+            "value": 2,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "comments": {
+            "value": 1,
+            "status": "DIRECTLY_MEASURED",
+            "source": "Data API"
+          },
+          "shares": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_gained": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_lost": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "net_subscribers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_view_duration": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "average_percentage_viewed": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "watch_time_minutes": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "impressions": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "ctr": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+          },
+          "returning_viewers": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "not exposed per video by the public API"
+          },
+          "stayed_to_watch": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "Shorts 'Viewed vs swiped away' is Studio only — import with scripts/studio-import.js"
+          },
+          "first_30s_retention": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "engaged_views": {
+            "value": null,
+            "status": "UNAVAILABLE",
+            "reason": "analytics unavailable"
+          },
+          "subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "net_subscribers_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          },
+          "engagement_per_1000_views": {
+            "value": 16.85,
+            "status": "DERIVED",
+            "from": "likes+comments+shares / views"
+          },
+          "watch_hours_per_1000_views": {
+            "value": null,
+            "status": "UNAVAILABLE"
+          }
+        },
+        "traffic": [],
+        "retention": [],
+        "analyticsStatus": "ok"
       }
     },
     "hookType": "shocking_consequence",
@@ -45214,22 +45319,22 @@
     "popularityBand": "unknown",
     "readiness": 92,
     "normalized": {
-      "ageHours": 21.26,
-      "viewsPerHour": 8,
-      "recentViewVelocity": 5.87,
-      "likeRate": 0.01176,
-      "commentRate": 0.00588,
+      "ageHours": 21.91,
+      "viewsPerHour": 8.12,
+      "recentViewVelocity": 12.19,
+      "likeRate": 0.01124,
+      "commentRate": 0.00562,
       "shareRate": null,
-      "engagementRate": 0.01765,
+      "engagementRate": 0.01685,
       "engagedViewRate": null,
       "subscriberConversion": null,
       "subscribersPer1000Views": null
     },
     "performance": {
-      "growthScore": 63.3,
+      "growthScore": 65.3,
       "classification": "NORMAL",
       "percentiles": {
-        "viewVelocity": 95,
+        "viewVelocity": 100,
         "retention": null,
         "engagement": 25,
         "subscriberConversion": null,
@@ -45254,7 +45359,7 @@
     "durationSeconds": 28,
     "registeredBy": "analytics-pass",
     "metrics": {
-      "views": 170,
+      "views": 178,
       "averagePercentageViewed": null,
       "averageViewDuration": null,
       "likes": 2,
@@ -45266,7 +45371,7 @@
       "netSubscribers": null,
       "subscribersPer1000Views": null,
       "netSubscribersPer1000Views": null,
-      "engagementPer1000Views": 17.65,
+      "engagementPer1000Views": 16.85,
       "watchHoursPer1000Views": null,
       "ctr": null,
       "stayedToWatch": null,
@@ -45274,6 +45379,6 @@
       "shortsFeedShare": null,
       "searchShare": null
     },
-    "latestCheckpoint": "12h"
+    "latestCheckpoint": "6h"
   }
 ]
