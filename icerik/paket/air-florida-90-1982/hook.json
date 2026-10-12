@@ -1,0 +1,49 @@
+{
+  "slug": "air-florida-90-1982",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:08:35.735Z",
+  "ekranHook": "The gauges lied",
+  "mevcut": {
+    "puan": 50,
+    "pencereler": {
+      "0-5": "In a snowstorm, a jet struck a bridge and plunged into the frozen Potomac.",
+      "5-12": "Cars on the bridge were crushed, and most people aboard were killed. The crew thought they had full take-off",
+      "12-20": "power. They didn't. Engine anti-ice was off, and ice had blocked the pressure probes. The gauges read high while the engines made",
+      "20-30": "less thrust. With snow on the wings too, the jet couldn't climb. Winter de-icing and take-off procedures were overhauled."
+    },
+    "bulgular": [
+      "0-5s: no event or result in the first sentence",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 3 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "Air Florida Flight 90 crashed into a bridge and the frozen Potomac River."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only iced engine sensors showing more thrust than the engines made."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could iced engine sensors showing more thrust than the engines made do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is engine anti-ice left off, so iced pressure probes gave false thrust readings, plus ice on the wings — and it is why de-icing and winter take-off procedures were overhauled."
+      }
+    ],
+    "metin": "Air Florida Flight 90 crashed into a bridge and the frozen Potomac River. It took only iced engine sensors showing more thrust than the engines made. So how could iced engine sensors showing more thrust than the engines made do this? The answer is engine anti-ice left off, so iced pressure probes gave false thrust readings, plus ice on the wings — and it is why de-icing and winter take-off procedures were overhauled.",
+    "puan": 100
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

@@ -94,6 +94,56 @@
       "selected": null,
       "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
       "finishedAt": "2026-10-05T14:29:45.016Z"
+    },
+    {
+      "cycleId": "2026-W42",
+      "channel": "failure-reconstructed",
+      "startedAt": "2026-10-12T15:13:52.347Z",
+      "status": "QUALITY_BLOCKED",
+      "evaluated": [
+        {
+          "slug": "challenger-1986",
+          "mode": "B_SHORT_PROVES_DEMAND",
+          "LongFormPotentialScore": 84,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 83,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~2.2 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
+        },
+        {
+          "slug": "columbia-2003",
+          "mode": "B_SHORT_PROVES_DEMAND",
+          "LongFormPotentialScore": 84,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 85,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
+        },
+        {
+          "slug": "lahaina-fire-2023",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 84,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 85,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.7 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
+        }
+      ],
+      "selected": null,
+      "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
+      "finishedAt": "2026-10-12T15:13:53.877Z"
     }
   ]
 }

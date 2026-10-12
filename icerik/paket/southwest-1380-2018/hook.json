@@ -1,0 +1,49 @@
+{
+  "slug": "southwest-1380-2018",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:08:10.894Z",
+  "ekranHook": "One blade snapped",
+  "mevcut": {
+    "puan": 100,
+    "pencereler": {
+      "0-5": "At cruising altitude, a jet's engine suddenly blew apart. Debris shattered a window, and",
+      "5-12": "one passenger was killed. The cause was a single fan blade. A fatigue crack had grown inside it. When",
+      "12-20": "it snapped, the engine's inlet broke up. Fragments struck the fuselage and the window gave way. The captain still landed the jet",
+      "20-30": "safely in Philadelphia. Fan blades were then checked more often with ultrasound."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: unexpected detail/contrast present",
+      "12-20s: a central question/problem is raised",
+      "on-screen hook is 3 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "Southwest Airlines Flight 1380 had an engine fail and a window break in flight."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a fatigue crack in one fan blade."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a fatigue crack in one fan blade do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is fan blade fatigue fracture causing an uncontained engine failure and inlet debris strike — and it is why fan blade inspections were accelerated with ultrasound checks."
+      }
+    ],
+    "metin": "Southwest Airlines Flight 1380 had an engine fail and a window break in flight. It took only a fatigue crack in one fan blade. So how could a fatigue crack in one fan blade do this? The answer is fan blade fatigue fracture causing an uncontained engine failure and inlet debris strike — and it is why fan blade inspections were accelerated with ultrasound checks.",
+    "puan": 100
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

@@ -1,0 +1,49 @@
+{
+  "slug": "japan-airlines-123-1985",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:07:47.020Z",
+  "ekranHook": "One row, not two",
+  "mevcut": {
+    "puan": 50,
+    "pencereler": {
+      "0-5": "A jumbo jet's tail fin blew off in flight. Thirty two minutes later, it",
+      "5-12": "crashed into a mountain, and five hundred twenty people died. The failure started seven years earlier. After a tail",
+      "12-20": "strike, a pressure bulkhead was repaired. The repair used one row of rivets where two were needed. Fatigue cracks grew until the",
+      "20-30": "bulkhead burst. Escaping air tore off the fin and cut the hydraulics. Repairs are now checked against their approved design."
+    },
+    "bulgular": [
+      "0-5s: no event or result in the first sentence",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 4 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "Japan Air Lines Flight 123 crashed into a mountain after losing its tail fin."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a faulty repair with one row of rivets where two were needed."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a faulty repair with one row of rivets where two were needed do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is fatigue failure of an improperly repaired aft pressure bulkhead — and it is why structural repairs are now inspected against the approved repair design."
+      }
+    ],
+    "metin": "Japan Air Lines Flight 123 crashed into a mountain after losing its tail fin. It took only a faulty repair with one row of rivets where two were needed. So how could a faulty repair with one row of rivets where two were needed do this? The answer is fatigue failure of an improperly repaired aft pressure bulkhead — and it is why structural repairs are now inspected against the approved repair design.",
+    "puan": 100
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}
