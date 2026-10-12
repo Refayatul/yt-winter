@@ -76,6 +76,8 @@ jobs:
       BTO_YT_CHANNEL_ID: ${{ vars.BTO_YT_CHANNEL_ID }}
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
       SHORTS_FONT: DejaVu Sans
+      SHORTS_KOKORO_DIR: ${{ github.workspace }}/kokoro-model
+      SHORTS_KOKORO_PYTHON: python
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v4
@@ -89,6 +91,25 @@ jobs:
         run: |
           bash scripts/ci-apt.sh --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation python3-pil
           npm install --no-audit --no-fund
+      # Offline narration fallback (lib/shorts-tts.js). Installing it does not enable it: a channel
+      # uses it only when config.voice.fallback.approved is true (owner-approved voice).
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Kokoro model cache
+        uses: actions/cache@v4
+        with:
+          path: kokoro-model
+          key: kokoro-onnx-model-files-v1.0
+      - name: Offline fallback voice (Kokoro-82M, pinned)
+        continue-on-error: true
+        run: |
+          pip install --quiet kokoro-onnx==0.6.1 soundfile
+          mkdir -p kokoro-model
+          [ -s kokoro-model/kokoro-v1.0.onnx ] || curl -fL --retry 3 -sS -o kokoro-model/kokoro-v1.0.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
+          [ -s kokoro-model/voices-v1.0.bin ] || curl -fL --retry 3 -sS -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+          echo "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5  kokoro-model/kokoro-v1.0.onnx" | sha256sum -c -
+          echo "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d  kokoro-model/voices-v1.0.bin" | sha256sum -c -
       - name: Portfolio plan
         run: node portfolio-scheduler.js --enqueue
 
@@ -184,6 +205,12 @@ jobs:
           node growth.js report || true
           node daily-operations-report.js
 
+      # What each active channel actually completed (lib/run-stages.js), written to the run summary
+      # and reports/production-outcome.json before the state commit.
+      - name: Production outcome (stages)
+        if: always()
+        run: node scripts/production-outcome.js || true
+
       - name: Preview artifacts
         if: always()
         uses: actions/upload-artifact@v4
@@ -214,3 +241,9 @@ jobs:
             sleep $((i * 5))
           done
           exit 1
+
+      # A green run means real output: it fails when an active channel was due and nothing was
+      # uploaded (narration outage, no qualified topic, a blocked video, or a crashed step).
+      - name: Production verdict
+        if: always() && github.event_name == 'schedule'
+        run: node scripts/production-outcome.js --verdict

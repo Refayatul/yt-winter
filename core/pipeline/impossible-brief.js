@@ -157,19 +157,23 @@ function runChannel(slug, argv = []) {
   const channel = Channel.getChannel(slug);
   if (channel.config.pathMode === "legacy-adapter") throw new Error(`Isolated documentary pipeline cannot run legacy channel: ${slug}`);
   const explicit = argv.find((arg) => !arg.startsWith("--"));
+  const run = require("../../lib/run-stages").start(channel);
   if (process.env.PUBLISH === "1" && !process.env.SAGLIK_ATLA) {
     const health = cp.spawnSync(process.execPath, [path.join(Channel.ROOT, "saglik.js"), "--channel", channel.slug, "--sessiz"], {
       cwd: Channel.ROOT, stdio: "inherit", env: process.env,
     });
     if (health.status === 5) {
-      console.error(`[${channel.name}] OAuth pre-flight failed; this channel was skipped before render/upload and other channels may continue.`);
+      const reason = require("../../saglik").kritikOzet(channel);
+      run.outcome("FAILED", `health pre-flight: ${reason}`);
+      console.error(`[${channel.name}] health pre-flight failed (${reason}); this channel was skipped before render/upload, no topic was spent, and other channels may continue.`);
+      console.log(`::error::[${channel.name}] health pre-flight: ${reason}`);
       return 0;
     }
     if (health.status !== 0) throw new Error(`${channel.name} health pre-flight could not complete safely`);
   }
   if (!explicit && process.env.PUBLISH === "1") {
     const due = require("../scheduling").channelPlan(channel).short;
-    if (!due.due) { console.log(`[${channel.name}] Takvim: henuz degil — ${due.reason}`); return 0; }
+    if (!due.due) { run.outcome("NOT_DUE", due.reason); console.log(`[${channel.name}] Takvim: henuz degil — ${due.reason}`); return 0; }
   }
   const universe = Discovery.universe(channel).topics;
   const noRender = argv.includes("--no-render");
@@ -180,14 +184,17 @@ function runChannel(slug, argv = []) {
     if (!choice.topic) {
       // Quality over cadence: no weak topic is produced to fill the slot. The
       // skip is an actionable alert, not a pipeline failure.
+      run.reset().fail("RESEARCH", choice.reason).outcome("NO_TOPIC", choice.reason);
       GrowthRuntime.alert(channel, "NO_QUALIFIED_TOPIC", choice.reason, { inventory: choice.inventory || null });
       console.log(`::warning::[${channel.name}] ${choice.reason}`);
       return 0;
     }
     topic = choice.topic;
+    run.reset().topic(topic.slug).done("RESEARCH", choice.reason).done("SCRIPT", `pre-render readiness ${choice.plan.readiness.decision} ${choice.plan.readiness.ProductionReadinessScore}`);
     output = path.join(channel.paths.production, topic.slug);
     const shortfall = !noRender && !explicit ? visualShortfall(topic, output) : null;
     if (shortfall) {
+      run.fail("ASSETS", `visual pre-check: ${shortfall}`).outcome("BLOCKED", `${topic.slug}: visual pre-check ${shortfall}`);
       recordBlocked(channel, topic, `visual pre-check: ${shortfall}`);
       GrowthRuntime.alert(channel, "VISUAL_PRECHECK_BLOCK", topic.slug, { reason: shortfall });
       console.log(`::notice::[${channel.name}] visual pre-check skipped ${topic.slug}: ${shortfall}`);
@@ -200,7 +207,24 @@ function runChannel(slug, argv = []) {
       attempt -= 1;
       continue;
     }
-    result = Rendering.buildPackage(topic, channel, output, { render: !noRender, growthPlan: choice.plan });
+    try { result = Rendering.buildPackage(topic, channel, output, { render: !noRender, growthPlan: choice.plan }); }
+    catch (error) {
+      if (error.code === "NARRATION_UNAVAILABLE") {
+        run.done("ASSETS").fail("NARRATION", error.message).outcome("FAILED", `${topic.slug}: ${error.message}`);
+        GrowthRuntime.alert(channel, "NARRATION_UNAVAILABLE", topic.slug, { message: error.message });
+        console.log(`::error::[${channel.name}] ${error.message} (topic ${topic.slug} not spent)`);
+        return 1;
+      }
+      run.fail("RENDER", error.message).outcome("FAILED", `${topic.slug}: ${error.message}`);
+      throw error;
+    }
+    if (!noRender) {
+      run.done("ASSETS");
+      const audio = result.render.audio || {};
+      if (audio.syntheticVoice) run.done("NARRATION", audio.provider + (audio.fallback ? ` (fallback ${audio.fallback.voice})` : ""));
+      else run.fail("NARRATION", audio.provider || "no narration");
+      if (result.render.completed) run.done("RENDER"); else run.fail("RENDER", "render incomplete");
+    }
     finalPlan = !noRender && result.render.completed
       ? Growth.planShort(channel, topic.id, {
         legacyTitles: Scripting.titleCandidates(topic), skipDuplicate: true, stage: "final",
@@ -212,7 +236,8 @@ function runChannel(slug, argv = []) {
       : choice.plan;
     fs.writeFileSync(path.join(output, "readiness.json"), JSON.stringify(finalPlan.readiness, null, 2) + "\n");
     const validationEvidence = writeValidationEvidence(result, topic, channel, output);
-    if (validationEvidence.passed) break;
+    if (validationEvidence.passed) { run.done("QA", "validations passed"); break; }
+    run.fail("QA", validationEvidence.failed.join(", ")).outcome("BLOCKED", `${topic.slug}: validations ${validationEvidence.failed.join(", ")}`);
     // Without this the same top-ranked topic would be re-selected and fail on
     // every scheduled run, stalling the channel.
     const visualReason = !noRender && !explicit ? visualRejection(result, output) : null;
@@ -230,16 +255,31 @@ function runChannel(slug, argv = []) {
   llmShadow(channel, topic, output);
   let uploadStatus = process.env.PUBLISH === "1" ? "pending" : "skipped (PUBLISH!=1)";
   if (process.env.PUBLISH === "1") {
-    if (!result.render.completed || !result.render.audio.syntheticVoice) throw new Error("Publishing blocked: a real synthetic narration render is required");
+    if (!result.render.completed || !result.render.audio.syntheticVoice) {
+      run.fail("NARRATION", "no real narration").outcome("FAILED", `${topic.slug}: a real synthetic narration render is required`);
+      throw new Error("Publishing blocked: a real synthetic narration render is required");
+    }
     if (finalPlan.readiness.decision !== "PUBLISH") {
+      run.fail("QA", `final readiness ${finalPlan.readiness.decision}`).outcome("BLOCKED", `${topic.slug}: readiness ${finalPlan.readiness.decision} ${finalPlan.readiness.ProductionReadinessScore}`);
       recordBlocked(channel, topic, `growth final readiness ${finalPlan.readiness.decision} ${finalPlan.readiness.ProductionReadinessScore}: ${finalPlan.readiness.hardFails.join("; ")}`);
       GrowthRuntime.alert(channel, "PRODUCTION_READINESS_" + finalPlan.readiness.decision, topic.slug, { score: finalPlan.readiness.ProductionReadinessScore, hardFails: finalPlan.readiness.hardFails });
       console.log(GrowthRuntime.shortSummary(finalPlan, { "Upload Status": "not uploaded — readiness " + finalPlan.readiness.decision, "Video ID": "—" }));
       return 0;
     }
     const upload = cp.spawnSync(process.execPath, [path.join(Channel.ROOT, "youtube-yukle.js"), "--channel", channel.slug, topic.slug], { cwd: Channel.ROOT, stdio: "inherit", env: process.env });
-    if (upload.status !== 0) throw new Error(`${channel.name} upload failed; generated state was not advanced`);
+    if (upload.status !== 0) {
+      run.fail("UPLOAD", `youtube-yukle exit ${upload.status}`).outcome("FAILED", `${topic.slug}: upload failed (exit ${upload.status})`);
+      throw new Error(`${channel.name} upload failed; generated state was not advanced`);
+    }
     uploadStatus = "uploaded";
+    const published = (() => { try { return JSON.parse(fs.readFileSync(path.join(channel.paths.state, "published.json"), "utf8")); } catch (error) { return []; } })();
+    const entry = [].concat(published).reverse().find((item) => item && item.slug === topic.slug) || {};
+    run.done("UPLOAD", entry.videoId || null);
+    if (entry.publishAt) run.done("SCHEDULE", entry.publishAt).scheduled("PUBLISH", `YouTube makes it public at ${entry.publishAt}`);
+    else run.skip("SCHEDULE", "uploaded private without publishAt (manual review)");
+    run.outcome("UPLOADED", null, { videoId: entry.videoId || null });
+  } else {
+    run.skip("UPLOAD", "PUBLISH!=1").outcome("DRY_RUN", "rendered without upload");
   }
   const generatedFile = path.join(channel.paths.state, "generated.json");
   const generated = (() => { try { return JSON.parse(fs.readFileSync(generatedFile, "utf8")); } catch (error) { return []; } })();
