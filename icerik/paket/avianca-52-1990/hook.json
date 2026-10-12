@@ -1,0 +1,50 @@
+{
+  "slug": "avianca-52-1990",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:06:11.658Z",
+  "ekranHook": "They never said emergency",
+  "mevcut": {
+    "puan": 95,
+    "pencereler": {
+      "0-5": "A Boeing 707 ran out of fuel and crashed on a Long Island hillside.",
+      "5-12": "It broke apart, and seventy three people were killed. The flight was held in three holding patterns. Fuel ran",
+      "12-20": "low. The crew asked for priority, but never said emergency. After a missed approach, the engines flamed out. Controllers didn't grasp how",
+      "20-30": "little fuel was left. Fuel emergency terms were standardized."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: a central question/problem is raised",
+      "payoff line present (why/how/reason)",
+      "on-screen hook is 4 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "Avianca Flight 052 ran out of fuel and crashed on Long Island."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a crew that never declared a fuel emergency."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a crew that never declared a fuel emergency do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is holding delays and a missed approach while controllers didn't understand the fuel state — and it is why fuel emergency terminology was standardized."
+      }
+    ],
+    "metin": "Avianca Flight 052 ran out of fuel and crashed on Long Island. It took only a crew that never declared a fuel emergency. So how could a crew that never declared a fuel emergency do this? The answer is holding delays and a missed approach while controllers didn't understand the fuel state — and it is why fuel emergency terminology was standardized.",
+    "puan": 100
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

@@ -1,0 +1,49 @@
+{
+  "slug": "el-faro-2015",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:08:49.799Z",
+  "ekranHook": "Straight into the storm",
+  "mevcut": {
+    "puan": 70,
+    "pencereler": {
+      "0-5": "A US cargo ship sailed into a Category 3 hurricane. The ship sank, and",
+      "5-12": "all thirty three crew were killed. Its route kept it close to the hurricane's path. Some weather updates it",
+      "12-20": "relied on were hours old. Water came in through an open hatch, and the ship listed. Then the engine lost oil pressure",
+      "20-30": "and stopped. Without power, the waves took over. Rules on weather routing and old ships were tightened."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 4 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "El Faro sank in Hurricane Joaquin."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a route that took the ship into the storm's path."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a route that took the ship into the storm's path do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is flooding through an open scuttle, loss of propulsion, and progressive flooding in heavy seas — and it is why weather routing and older-ship safety rules were tightened."
+      }
+    ],
+    "metin": "El Faro sank in Hurricane Joaquin. It took only a route that took the ship into the storm's path. So how could a route that took the ship into the storm's path do this? The answer is flooding through an open scuttle, loss of propulsion, and progressive flooding in heavy seas — and it is why weather routing and older-ship safety rules were tightened.",
+    "puan": 95
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

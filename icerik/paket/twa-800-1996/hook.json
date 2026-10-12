@@ -1,0 +1,49 @@
+{
+  "slug": "twa-800-1996",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:07:22.442Z",
+  "ekranHook": "The tank was empty",
+  "mevcut": {
+    "puan": 70,
+    "pencereler": {
+      "0-5": "Minutes after take-off, a jumbo jet exploded off Long Island. It broke apart and",
+      "5-12": "fell into the ocean, killing everyone aboard. Investigators traced the blast to the centre fuel tank. That tank was",
+      "12-20": "nearly empty. Heat from the air-conditioning units warmed the vapour inside. Warm fuel vapour is far easier to ignite than liquid fuel.",
+      "20-30": "A spark, most likely from wiring, set it off. New rules now require airliners to make those tanks far less flammable."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 4 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "TWA Flight 800 exploded shortly after take-off from New York."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only fuel vapour in a nearly empty centre tank."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could fuel vapour in a nearly empty centre tank do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is ignition of flammable fuel-air vapour in the centre wing tank, most likely from a wiring fault — and it is why the FAA required systems that reduce fuel tank flammability, such as nitrogen inerting."
+      }
+    ],
+    "metin": "TWA Flight 800 exploded shortly after take-off from New York. It took only fuel vapour in a nearly empty centre tank. So how could fuel vapour in a nearly empty centre tank do this? The answer is ignition of flammable fuel-air vapour in the centre wing tank, most likely from a wiring fault — and it is why the FAA required systems that reduce fuel tank flammability, such as nitrogen inerting.",
+    "puan": 95
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

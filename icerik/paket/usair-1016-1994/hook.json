@@ -1,0 +1,49 @@
+{
+  "slug": "usair-1016-1994",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:06:00.753Z",
+  "ekranHook": "The warning never reached them",
+  "mevcut": {
+    "puan": 70,
+    "pencereler": {
+      "0-5": "A DC-9 crashed into trees and a house near Charlotte airport. It burst into",
+      "5-12": "flames, and thirty seven people were killed. A thunderstorm sat over the airport. The tower issued a wind shear",
+      "12-20": "warning, but on a different frequency. On final approach, a microburst hit the jet. The crew tried to go around, but the",
+      "20-30": "plane kept sinking. An alert system error also delayed its warning. Wind shear detection and crew training were improved."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 5 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "USAir Flight 1016 crashed into trees and a house near Charlotte."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a microburst during a go-around in a thunderstorm."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a microburst during a go-around in a thunderstorm do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is microburst wind shear on approach, with alerts that came late or on another frequency — and it is why wind shear detection and crew recognition training were improved."
+      }
+    ],
+    "metin": "USAir Flight 1016 crashed into trees and a house near Charlotte. It took only a microburst during a go-around in a thunderstorm. So how could a microburst during a go-around in a thunderstorm do this? The answer is microburst wind shear on approach, with alerts that came late or on another frequency — and it is why wind shear detection and crew recognition training were improved.",
+    "puan": 95
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

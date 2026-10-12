@@ -3,7 +3,7 @@
   "channel": "failure-reconstructed",
   "channelName": "Failure Reconstructed",
   "contentType": "long",
-  "createdAt": "2026-10-05T14:29:42.895Z",
+  "createdAt": "2026-10-12T15:13:52.347Z",
   "topic": {
     "id": "challenger-1986",
     "slug": "challenger-1986",
@@ -58,9 +58,9 @@
         "basis": "derived"
       },
       "ShortsEvidence": {
-        "value": 67,
+        "value": 72,
         "basis": "measured",
-        "note": "best cluster Short 1731 views vs channel median 1033; best subscriber conversion 0.00231; best growth score 80.7"
+        "note": "best cluster Short 1734 views vs channel median 695; best subscriber conversion 0.00231; best growth score 67.6 — MODE B: Short proved demand"
       },
       "SeriesPotential": {
         "value": 90,
@@ -113,7 +113,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 1
+    "reuseCount": 2
   },
   "outline": {
     "structure": [
@@ -435,20 +435,8 @@
       {
         "type": "visual_first_reveal",
         "text": "Seventy-three seconds after launch, Challenger broke apart.",
-        "score": 78,
+        "score": 77,
         "estimatedSeconds": 2.2
-      },
-      {
-        "type": "contradiction",
-        "text": "The engineers had the data but not the authority.",
-        "score": 76,
-        "estimatedSeconds": 2.8
-      },
-      {
-        "type": "countdown",
-        "text": "73 seconds.",
-        "score": 76,
-        "estimatedSeconds": 0.6
       },
       {
         "type": "mechanism_reveal",
@@ -457,21 +445,33 @@
         "estimatedSeconds": 4.1
       },
       {
+        "type": "contradiction",
+        "text": "The engineers had the data but not the authority.",
+        "score": 75,
+        "estimatedSeconds": 2.8
+      },
+      {
+        "type": "countdown",
+        "text": "73 seconds.",
+        "score": 75,
+        "estimatedSeconds": 0.6
+      },
+      {
         "type": "tiny_cause_massive_consequence",
         "text": "It took only an O-ring seal stiffened by cold.",
-        "score": 73,
+        "score": 72,
         "estimatedSeconds": 2.8
       },
       {
         "type": "before_after_consequence",
         "text": "Today, that warning is taught to every engineer.",
-        "score": 73,
+        "score": 72,
         "estimatedSeconds": 2.5
       },
       {
         "type": "warning_ignored",
         "text": "Engineers had warned against launching in the cold the night before.",
-        "score": 70,
+        "score": 69,
         "estimatedSeconds": 3.4
       },
       {
@@ -1203,9 +1203,12 @@
       "total": 82,
       "patternPenalty": 0,
       "templateNaturalnessPenalty": 0,
+      "genericTemplatePenalty": 0,
       "adjustedTotal": 82,
       "unsupportedWords": [],
-      "misleading": false
+      "misleading": false,
+      "grammar": [],
+      "ungrammatical": false
     },
     "selectedScore": 82,
     "count": 25,
@@ -1235,38 +1238,12 @@
         "total": 82,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 82,
         "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Why Challenger Broke Apart 73 Seconds After Launch",
-        "source": "editorial",
-        "pattern": "why",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 92,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 60,
-          "ctrPotential": 77,
-          "novelty": 20,
-          "evergreenPotential": 85,
-          "consequence": 57,
-          "compactness": 100,
-          "recognizability": 98,
-          "nonRedundancy": 20,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 85,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 81,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Inside the Engineering Failure of Challenger",
@@ -1280,12 +1257,12 @@
           "searchIntent": 75,
           "channelIdentity": 74,
           "ctrPotential": 75,
-          "novelty": 80,
+          "novelty": 77,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 98,
-          "nonRedundancy": 80,
+          "nonRedundancy": 77,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1293,9 +1270,12 @@
         "total": 81,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 81,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "The Hidden Weakness Inside Challenger",
@@ -1309,12 +1289,12 @@
           "searchIntent": 75,
           "channelIdentity": 50,
           "ctrPotential": 79,
-          "novelty": 91,
+          "novelty": 90,
           "evergreenPotential": 85,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 98,
-          "nonRedundancy": 91,
+          "nonRedundancy": 90,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1322,67 +1302,12 @@
         "total": 81,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 81,
         "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "How Engineers Solved the Challenger Failure",
-        "source": "engineers-solved",
-        "pattern": "how",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 87,
-          "channelIdentity": 74,
-          "ctrPotential": 75,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 98,
-          "nonRedundancy": 91,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 83,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 79,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Failure Chain That Destroyed Challenger",
-        "source": "failure-chain",
-        "pattern": "the-x-that",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 74,
-          "ctrPotential": 63,
-          "novelty": 80,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 98,
-          "nonRedundancy": 80,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 78,
-        "patternPenalty": 0,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 78,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Challenger: What Failed, Why, and What Changed",
@@ -1407,11 +1332,142 @@
           "patternFreshness": 70
         },
         "total": 85,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 81,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Challenger: From First Warning to Final Failure",
+        "source": "warning-to-failure",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 75,
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 83,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 79,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "How Engineers Solved the Challenger Failure",
+        "source": "engineers-solved",
+        "pattern": "how",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 87,
+          "channelIdentity": 74,
+          "ctrPotential": 75,
+          "novelty": 87,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 87,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 83,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 79,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Why Challenger Broke Apart 73 Seconds After Launch",
+        "source": "editorial",
+        "pattern": "why",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 92,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 60,
+          "ctrPotential": 77,
+          "novelty": 20,
+          "evergreenPotential": 85,
+          "consequence": 57,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 20,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 85,
         "patternPenalty": 7,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 78,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "The Failure Chain That Destroyed Challenger",
+        "source": "failure-chain",
+        "pattern": "the-x-that",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 74,
+          "ctrPotential": 63,
+          "novelty": 77,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 77,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 78,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 78,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "The Rubber Ring That Destroyed Challenger",
@@ -1438,9 +1494,12 @@
         "total": 77,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Engineers Said Don't Launch. Challenger Launched",
@@ -1467,9 +1526,12 @@
         "total": 77,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "How Cold Weather Brought Down Challenger",
@@ -1496,9 +1558,12 @@
         "total": 81,
         "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "The Engineering Mistakes Behind Challenger",
@@ -1525,11 +1590,14 @@
         "total": 77,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [
           "mistakes"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "How One Weakness Brought Down Challenger",
@@ -1556,38 +1624,12 @@
         "total": 80,
         "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Challenger: From First Warning to Final Failure",
-        "source": "warning-to-failure",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 75,
-          "novelty": 90,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 98,
-          "nonRedundancy": 90,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 83,
-        "patternPenalty": 7,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 76,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "How Challenger Changed Engineering Forever",
@@ -1601,12 +1643,12 @@
           "searchIntent": 95,
           "channelIdentity": 62,
           "ctrPotential": 67,
-          "novelty": 90,
+          "novelty": 87,
           "evergreenPotential": 85,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 98,
-          "nonRedundancy": 90,
+          "nonRedundancy": 87,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1614,43 +1656,14 @@
         "total": 80,
         "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [
           "forever"
         ],
-        "misleading": false
-      },
-      {
-        "title": "Why Challenger Should Never Have Happened",
-        "source": "never-happened",
-        "pattern": "why",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 76,
-          "specificity": 77,
-          "truthfulness": 70,
-          "searchIntent": 95,
-          "channelIdentity": 50,
-          "ctrPotential": 87,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 98,
-          "nonRedundancy": 91,
-          "factualIntegrity": 70,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 80,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 76,
-        "unsupportedWords": [
-          "never",
-          "have"
-        ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "The Physics Behind the Challenger Disaster",
@@ -1677,40 +1690,14 @@
         "total": 76,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [
           "disaster"
         ],
-        "misleading": false
-      },
-      {
-        "title": "Why Challenger Failed",
-        "source": "why-failed",
-        "pattern": "why",
-        "scores": {
-          "clarity": 72,
-          "curiosity": 58,
-          "specificity": 71,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 62,
-          "ctrPotential": 75,
-          "novelty": 80,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 98,
-          "nonRedundancy": 80,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 79,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 75,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Could Challenger Have Been Prevented?",
@@ -1737,12 +1724,15 @@
         "total": 75,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 75,
         "unsupportedWords": [
           "have",
           "prevented"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Challenger — A Forensic Engineering Documentary",
@@ -1769,11 +1759,14 @@
         "total": 74,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 74,
         "unsupportedWords": [
           "forensic"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Challenger: The Full Failure Reconstructed",
@@ -1787,22 +1780,92 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 63,
-          "novelty": 91,
+          "novelty": 90,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 98,
-          "nonRedundancy": 91,
+          "nonRedundancy": 90,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
         "total": 77,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 73,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Why Challenger Should Never Have Happened",
+        "source": "never-happened",
+        "pattern": "why",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 76,
+          "specificity": 77,
+          "truthfulness": 70,
+          "searchIntent": 95,
+          "channelIdentity": 50,
+          "ctrPotential": 87,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 91,
+          "factualIntegrity": 70,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 80,
         "patternPenalty": 7,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 70,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 73,
+        "unsupportedWords": [
+          "never",
+          "have"
+        ],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Why Challenger Failed",
+        "source": "why-failed",
+        "pattern": "why",
+        "scores": {
+          "clarity": 72,
+          "curiosity": 58,
+          "specificity": 71,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 62,
+          "ctrPotential": 75,
+          "novelty": 80,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 98,
+          "nonRedundancy": 80,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 79,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 72,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Challenger: Every Link in the Failure Chain",
@@ -1816,24 +1879,27 @@
           "searchIntent": 83,
           "channelIdentity": 74,
           "ctrPotential": 63,
-          "novelty": 82,
+          "novelty": 80,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 98,
-          "nonRedundancy": 82,
+          "nonRedundancy": 80,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
         "total": 76,
-        "patternPenalty": 7,
+        "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 69,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 72,
         "unsupportedWords": [
           "link"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Reconstructing Challenger: Cause, Chain, Consequence",
@@ -1847,22 +1913,25 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 55,
-          "novelty": 92,
+          "novelty": 91,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 98,
-          "nonRedundancy": 92,
+          "nonRedundancy": 91,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
         "total": 76,
-        "patternPenalty": 7,
+        "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 69,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 72,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Challenger: The Investigation, Explained",
@@ -1887,14 +1956,17 @@
           "patternFreshness": 70
         },
         "total": 76,
-        "patternPenalty": 7,
+        "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 69,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 72,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
-        "title": "O-ring Seal Failure in a Solid Rocket Booster Field Joint: How It Destroyed Challenger",
+        "title": "O-Ring Seal Failure in a Solid Rocket Booster Field Joint: How It Destroyed Challenger",
         "source": "mechanism-long",
         "pattern": "label-colon",
         "scores": {
@@ -1905,22 +1977,25 @@
           "searchIntent": 75,
           "channelIdentity": 62,
           "ctrPotential": 65,
-          "novelty": 95,
+          "novelty": 94,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 20,
           "recognizability": 98,
-          "nonRedundancy": 95,
+          "nonRedundancy": 94,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
         "total": 75,
-        "patternPenalty": 7,
+        "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 68,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 71,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "The 1986 Disaster Engineers Still Study: Challenger",
@@ -1934,26 +2009,29 @@
           "searchIntent": 75,
           "channelIdentity": 62,
           "ctrPotential": 65,
-          "novelty": 91,
+          "novelty": 90,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 98,
-          "nonRedundancy": 91,
+          "nonRedundancy": 90,
           "factualIntegrity": 55,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
         "total": 71,
-        "patternPenalty": 7,
+        "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 64,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 67,
         "unsupportedWords": [
           "disaster",
           "still",
           "study"
         ],
-        "misleading": true
+        "misleading": true,
+        "grammar": [],
+        "ungrammatical": false
       }
     ]
   },
@@ -1979,8 +2057,8 @@
           "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
           "cutTiming": [
             0,
-            1,
-            2
+            0.8,
+            1.6
           ],
           "soundCue": "single low hit on the first cut",
           "communicates": "tension"
@@ -2021,8 +2099,8 @@
           "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
           "cutTiming": [
             0,
-            1,
-            2
+            0.8,
+            1.6
           ],
           "soundCue": "single low hit on the first cut",
           "communicates": "tension"
@@ -2127,8 +2205,8 @@
           "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
           "cutTiming": [
             0,
-            1,
-            2
+            0.8,
+            1.6
           ],
           "soundCue": "single low hit on the first cut",
           "communicates": "tension"
@@ -2169,8 +2247,8 @@
           "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
           "cutTiming": [
             0,
-            1,
-            2
+            0.8,
+            1.6
           ],
           "soundCue": "single low hit on the first cut",
           "communicates": "tension"
@@ -2214,8 +2292,8 @@
           "motion": "no zoom on moving film; punch-in crop 100→108% at the first cut",
           "cutTiming": [
             0,
-            1,
-            2
+            0.8,
+            1.6
           ],
           "soundCue": "single low hit on the first cut",
           "communicates": "tension"

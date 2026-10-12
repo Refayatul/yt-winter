@@ -1,0 +1,49 @@
+{
+  "slug": "sl-1-reactor-1961",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:07:10.236Z",
+  "ekranHook": "One rod too far",
+  "mevcut": {
+    "puan": 70,
+    "pencereler": {
+      "0-5": "A small military reactor in Idaho exploded during maintenance. In an instant, all three",
+      "5-12": "men working on it were killed. They were reconnecting its central control rod. That rod had to be lifted",
+      "12-20": "by hand. It was pulled far too high. The reactor went critical and flashed water to steam. The blast lifted the reactor",
+      "20-30": "vessel off its mounts. Reactors were then designed so no single rod can do this."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 4 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "The SL-1 reactor exploded during maintenance."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a single control rod pulled out too far by hand."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a single control rod pulled out too far by hand do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is prompt criticality from manual withdrawal of the central control rod, causing a steam explosion — and it is why reactors were designed so no single rod can make them critical."
+      }
+    ],
+    "metin": "The SL-1 reactor exploded during maintenance. It took only a single control rod pulled out too far by hand. So how could a single control rod pulled out too far by hand do this? The answer is prompt criticality from manual withdrawal of the central control rod, causing a steam explosion — and it is why reactors were designed so no single rod can make them critical.",
+    "puan": 100
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}
