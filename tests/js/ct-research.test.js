@@ -133,3 +133,27 @@ test("inventory runway uses production's gates: unused, selectable bucket, viral
   const firstBelow = result.queue.findIndex((item) => !(item.viral >= result.viralMinimum));
   if (firstBelow > 0) assert.ok(result.queue.slice(firstBelow).every((item) => !(item.viral >= result.viralMinimum)), "records at the viral minimum come first");
 });
+
+test("an event record is researched from the event's article, not a loose match on the system's name", async () => {
+  // 2026-10-12 dry run: CT-265 (the 2008 melamine scandal) searched only "food safety laboratory"
+  // and drafted from an article about India's food regulator, then answered NOT_ANSWERABLE.
+  const topic = { id: "CT-265", canonicalTopic: "food safety laboratory", coreQuestion: "How did melamine in baby formula sicken hundreds of thousands of children?",
+    openingLine: "Why tainted milk sickened 300,000 children.", secondBeat: "In 2008, melamine was added to Chinese dairy products." };
+  const PAGES = {
+    "2008 Chinese milk scandal": "The 2008 Chinese milk scandal was a food safety incident in China. Milk and infant formula were adulterated with melamine; an estimated 300,000 children were affected and many were hospitalised with kidney stones. " + "x".repeat(600),
+    "Food Safety and Standards Authority of India": "The Food Safety and Standards Authority of India is a statutory body that regulates food safety laboratories in India. " + "x".repeat(600),
+  };
+  const get = async (url) => {
+    const params = new URL(url).searchParams;
+    if (params.get("generator") === "search") {
+      const q = params.get("gsrsearch").toLowerCase();
+      const titles = q.includes("melamine") || q.includes("milk") ? ["Food Safety and Standards Authority of India", "2008 Chinese milk scandal"] : ["Food Safety and Standards Authority of India"];
+      return { body: { query: { pages: Object.fromEntries(titles.map((title, i) => [String(i), { title, extract: PAGES[title] }])) } } };
+    }
+    if (params.get("list") === "search") return { body: { query: { search: [{ title: "Food Safety and Standards Authority of India" }] } } };
+    const title = params.get("titles");
+    return { body: { query: { pages: { 1: PAGES[title] ? { title, extract: PAGES[title] } : { title, missing: "" } } } } };
+  };
+  const docs = await Research.articles(topic, get);
+  assert.deepEqual(docs.map((doc) => doc.title), ["2008 Chinese milk scandal"]);
+});
