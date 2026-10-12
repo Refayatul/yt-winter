@@ -86,11 +86,36 @@ function assTime(seconds) {
 }
 
 // Timing inside a claim is proportional to characters (closer to speech than
-// equal splits).
-function captionRows(claims, captionConfig) {
+// equal splits). With measured word timings (continuous Edge narration), each chunk starts on its
+// first spoken word instead; a claim whose words do not line up keeps the proportional timing.
+const alnum = (text) => String(text).toLowerCase().replace(/[^a-z0-9]+/g, "");
+function wordTimedChunks(chunks, claim, words, cursor) {
+  const starts = [];
+  let w = cursor.index;
+  for (const chunk of chunks) {
+    const target = alnum(chunk).length;
+    while (w < words.length && words[w].start < claim.start - 0.25) w += 1;
+    if (w >= words.length || words[w].start > claim.end + 0.25) return null;
+    starts.push(Math.max(claim.start, words[w].start));
+    let got = 0;
+    while (w < words.length && got < target) { got += alnum(words[w].text).length; w += 1; }
+    if (got < target * 0.8) return null;
+  }
+  cursor.index = w;
+  return starts;
+}
+
+function captionRows(claims, captionConfig, options = {}) {
   const rows = [];
+  const words = Array.isArray(options.words) ? options.words : null;
+  const cursor = { index: 0 };
   for (const claim of claims) {
     const chunks = chunkWords(claim.text, captionConfig);
+    const timed = words ? wordTimedChunks(chunks, claim, words, cursor) : null;
+    if (timed) {
+      chunks.forEach((text, index) => rows.push({ start: timed[index], end: index + 1 < chunks.length ? timed[index + 1] : claim.end, text }));
+      continue;
+    }
     const weights = chunks.map((chunk) => Math.max(3, chunk.replace(/\s/g, "").length));
     const total = weights.reduce((a, b) => a + b, 0);
     let t = claim.start;
@@ -106,23 +131,28 @@ function captionRows(claims, captionConfig) {
 function wrap(text, maxChars) {
   if (text.length <= maxChars) return [text];
   const words = text.split(" ");
-  let best = [text];
+  // The first split that keeps both lines within the limit; when none does ("Dinosaur-Killing" +
+  // "Asteroid Hit Today?"), the most balanced split. One unwrapped 36-character line ran past
+  // both edges of the frame once captions were set larger.
+  let balanced = null;
   for (let i = 1; i < words.length; i += 1) {
     const a = words.slice(0, i).join(" ");
     const b = words.slice(i).join(" ");
-    if (a.length <= maxChars && b.length <= maxChars) { best = [a, b]; break; }
+    if (a.length <= maxChars && b.length <= maxChars) return [a, b];
+    const longest = Math.max(a.length, b.length);
+    if (!balanced || longest < balanced.longest) balanced = { lines: [a, b], longest };
   }
-  return best;
+  return balanced ? balanced.lines : [text];
 }
 
-function srt(claims, captionConfig) {
-  return captionRows(claims, captionConfig).map((row, index) => `${index + 1}\n${srtTime(row.start)} --> ${srtTime(row.end)}\n${wrap(row.text, captionConfig.maxCharsPerLine).join("\n")}\n`).join("\n");
+function srt(claims, captionConfig, options = {}) {
+  return captionRows(claims, captionConfig, options).map((row, index) => `${index + 1}\n${srtTime(row.start)} --> ${srtTime(row.end)}\n${wrap(row.text, captionConfig.maxCharsPerLine).join("\n")}\n`).join("\n");
 }
 
 // Each channel keeps its own caption look (channels/<slug>/growth-engine.json
 // "captions"): one shared template across channels reads as mass-produced.
-function ass(claims, captionConfig) {
-  const rows = captionRows(claims, captionConfig).map((row) => captionConfig.uppercase ? { ...row, text: row.text.toUpperCase() } : row);
+function ass(claims, captionConfig, options = {}) {
+  const rows = captionRows(claims, captionConfig, options).map((row) => captionConfig.uppercase ? { ...row, text: row.text.toUpperCase() } : row);
   const font = String(captionConfig.font || "Arial").replace(/,/g, " ");
   const outline = Number.isFinite(captionConfig.outline) ? captionConfig.outline : 5;
   const spacing = Number.isFinite(captionConfig.spacing) ? captionConfig.spacing : 0;

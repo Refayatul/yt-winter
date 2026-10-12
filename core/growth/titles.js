@@ -10,6 +10,7 @@
 const M = require("../../lib/metin");
 const Model = require("./topic-model");
 const Sources = require("./sources");
+const Grammar = require("./title-grammar");
 
 const CLICKBAIT = /\b(shocking|insane|unbelievable|you won'?t believe|mind[- ]blowing|terrifying truth|exposed|gone wrong|must see)\b/i;
 const CURIOSITY = /\?|\b(why|how|what|real|hidden|nobody|never|only|inside|first|behind|quietly|actually)\b/gi;
@@ -42,7 +43,7 @@ function add(list, text, source) {
   const value = Model.clean(text).replace(/\s+([?.!,:])/g, "$1").replace(/\.$/, "");
   if (!value || /undefined|null/.test(value) || value.length > 100) return;
   if (list.some((item) => item.title.toLowerCase() === value.toLowerCase())) return;
-  list.push({ title: M.baslikBicim ? M.baslikBicim(value) : value, source, pattern: pattern(value) });
+  list.push({ title: Grammar.hyphenCase(M.baslikBicim ? M.baslikBicim(value) : value), source, pattern: pattern(value) });
 }
 
 function shortCandidates(topic, extra = []) {
@@ -78,8 +79,11 @@ function shortCandidates(topic, extra = []) {
     add(list, `${S}: The Failure Reconstructed`, "brand");
   } else if (topic.channel === "impossible-brief") {
     const E = topic.event || S;
+    // A scenario subject ("fusion reached practical power-plant gain") is a clause: it only fits
+    // after "If"/"What If", never in a noun slot ("How … Would Unfold").
+    const nounSubject = !Grammar.isClause(S);
     add(list, `If ${E}, What Happens First?`, "what-happens-first");
-    add(list, `${cap(S)}: What Changes First?`, "changes-first");
+    if (nounSubject) add(list, `${cap(S)}: What Changes First?`, "changes-first");
     add(list, `What Breaks First If ${E}?`, "breaks-first");
     add(list, `How Fast Would We Notice If ${E}?`, "how-fast");
     add(list, `Could Earth Handle It If ${E}?`, "could-earth");
@@ -92,12 +96,14 @@ function shortCandidates(topic, extra = []) {
     add(list, `What Would Stay the Same If ${E}?`, "what-stays");
     add(list, `The Immediate Effect If ${E}`, "immediate-effect");
     add(list, `If ${E}: Cause to Consequence`, "cause-to-consequence");
-    add(list, `How ${cap(S)} Would Unfold`, "how-unfolds");
-    add(list, `${cap(S)}: The Mechanism Explained`, "mechanism-explained");
-    add(list, `What We Know About ${cap(S)}`, "what-we-know");
-    add(list, `${cap(S)}: What Happens Next?`, "happens-next");
+    if (nounSubject) {
+      add(list, `How ${cap(S)} Would Unfold`, "how-unfolds");
+      add(list, `${cap(S)}: The Mechanism Explained`, "mechanism-explained");
+      add(list, `What We Know About ${cap(S)}`, "what-we-know");
+      add(list, `${cap(S)}: What Happens Next?`, "happens-next");
+    }
     add(list, `What If ${cap(topic.scenario)}?`, "what-if");
-    if (topic.mechanism) add(list, `${cap(topic.mechanism.split(/[,;]/)[0])}: The Key to ${cap(S)}`, "mechanism-key");
+    if (topic.mechanism && nounSubject) add(list, `${cap(topic.mechanism.split(/[,;]/)[0])}: The Key to ${cap(S)}`, "mechanism-key");
     if (topic.consequence) add(list, `If ${E}, ${topic.consequence.split(/[,;]/)[0]}`, "consequence-led");
   } else if (topic.channel === "behind-the-ordinary") {
     const detail = topic.designDetail || "This Detail";
@@ -123,27 +129,29 @@ function shortCandidates(topic, extra = []) {
     add(list, `${Model.capital(S)} Explained Through One Small Detail`, "one-detail");
   } else {
     const target = topic.dependencyTarget || topic.category.toLowerCase();
-    add(list, `The World Quietly Depends on ${S}`, "quiet-dependency");
-    add(list, `Why ${cap(S)} Is So Hard to Replace`, "hard-to-replace");
-    add(list, `What Stops If ${S} Stops`, "what-stops");
-    add(list, `The Bottleneck Nobody Sees: ${S}`, "bottleneck");
-    add(list, `${cap(target)} Runs Through ${S}`, "runs-through");
-    add(list, `Inside ${S}: The Hidden Dependency`, "inside");
+    // "the high-lift water pump": a singular common noun takes an article in every slot.
+    const N = Grammar.nounPhrase(S);
+    add(list, `The World Quietly Depends on ${N}`, "quiet-dependency");
+    add(list, `Why ${cap(N)} Is So Hard to Replace`, "hard-to-replace");
+    add(list, `What Stops If ${N} Stops`, "what-stops");
+    add(list, `The Bottleneck Nobody Sees: ${N}`, "bottleneck");
+    add(list, `${cap(target)} Runs Through ${N}`, "runs-through");
+    add(list, `Inside ${N}: The Hidden Dependency`, "inside");
     add(list, `The ${S} Problem`, "the-x-problem");
-    add(list, `Can We Replace ${S} Fast Enough?`, "replace-fast");
-    add(list, `Why There Is No Quick Substitute for ${S}`, "no-substitute");
-    add(list, `The Fragile Chain Behind ${S}`, "fragile-chain");
-    add(list, `What Depends on ${S}?`, "what-depends");
-    add(list, `${S}: The System Behind the System`, "system-behind-system");
-    add(list, `Why ${cap(S)} Became Irreplaceable`, "became-irreplaceable");
-    add(list, `The Chain Reaction If ${S} Fails`, "failure-chain");
-    add(list, `How ${cap(S)} Holds the Chain Together`, "holds-chain");
-    add(list, `${cap(S)}: One Bottleneck, Global Consequences`, "global-consequences");
+    add(list, `Can We Replace ${N} Fast Enough?`, "replace-fast");
+    add(list, `Why There Is No Quick Substitute for ${N}`, "no-substitute");
+    add(list, `The Fragile Chain Behind ${N}`, "fragile-chain");
+    add(list, `What Depends on ${N}?`, "what-depends");
+    add(list, `${N}: The System Behind the System`, "system-behind-system");
+    add(list, `Why ${cap(N)} Became Irreplaceable`, "became-irreplaceable");
+    add(list, `The Chain Reaction If ${N} Fails`, "failure-chain");
+    add(list, `How ${cap(N)} Holds the Chain Together`, "holds-chain");
+    add(list, `${cap(N)}: One Bottleneck, Global Consequences`, "global-consequences");
     add(list, `Where the ${S} Dependency Starts`, "dependency-start");
-    add(list, `${cap(S)}: The Risk Hidden in Plain Sight`, "hidden-risk");
+    add(list, `${cap(N)}: The Risk Hidden in Plain Sight`, "hidden-risk");
     for (const claim of (topic.evidence || []).filter((item) => /VERIFIED/.test(item.layer)).slice(0, 2)) {
       const number = Model.numbersIn(claim.claim)[0];
-      if (number) add(list, `${number}: Inside ${S}`, "number-led");
+      if (number) add(list, `${number}: Inside ${Grammar.nounPhrase(S)}`, "number-led");
     }
   }
   return list;
@@ -341,9 +349,13 @@ function generate(topic, config, kind = "short", context = {}) {
   // Researched/editorial titles receive only a small provenance tie-break.
   // They no longer override a materially stronger truthful title candidate.
   const rankScore = (candidate) => candidate.adjustedTotal + (editorialFirst && candidate.source === "editorial" ? 3 : 0);
-  const scored = pool.map((candidate) => scoreOne(candidate, topic, config, kind, context))
-    .sort((a, b) => Number(a.misleading) - Number(b.misleading) || rankScore(b) - rankScore(a) || b.adjustedTotal - a.adjustedTotal);
-  const selected = scored.find((item) => !item.misleading) || null;
+  // Grammar gate: broken English is never selected; it stays in the list for the audit.
+  const rejected = (item) => item.misleading || item.ungrammatical;
+  const scored = pool.map((candidate) => {
+    const grammar = Grammar.problems(candidate.title, topic);
+    return { ...scoreOne(candidate, topic, config, kind, context), grammar, ungrammatical: grammar.length > 0 };
+  }).sort((a, b) => Number(rejected(a)) - Number(rejected(b)) || rankScore(b) - rankScore(a) || b.adjustedTotal - a.adjustedTotal);
+  const selected = scored.find((item) => !rejected(item)) || null;
   const minimum = kind === "long" ? config.titles.longform.minimumCandidates : config.titles.shorts.minimumCandidates;
   return {
     kind,

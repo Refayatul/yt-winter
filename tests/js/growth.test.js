@@ -293,6 +293,16 @@ test("experiment metadata: one variable, deterministic arm, idempotent assignmen
   assert.equal(Experiments.load(IB()).experiments.length, 0);
 });
 
+test("planned experiment: only the planned topics join, each in its planned arm; others are not assigned", () => {
+  const planned = { "what-if-water-refused-to-freeze": "control", "what-if-you-melted-a-diamond": "variant" };
+  const exp = Experiments.create(IB(), { contentType: "short", variable: "opening_visual", control: "current", variant: "craft-v2-opening", metric: "averageViewPercentage", planned });
+  assert.deepEqual(exp.planned, planned);
+  assert.equal(Experiments.assign(IB(), "short", "what-if-you-melted-a-diamond").value, "craft-v2-opening");
+  assert.equal(Experiments.assign(IB(), "short", "what-if-water-refused-to-freeze").arm, "control");
+  assert.equal(Experiments.assign(IB(), "short", "what-if-mosquitoes-went-extinct"), null, "an unplanned topic is produced as before");
+  assert.equal(Experiments.load(IB()).experiments[0].sample.variant.length, 1);
+});
+
 // ---------------------------------------------------------------- long-form
 test("LongFormPotentialScore: factors, bucket and deterministic ranking", () => {
   const ctx = ctxFor("failure-reconstructed");

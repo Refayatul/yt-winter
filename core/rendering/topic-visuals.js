@@ -7,6 +7,7 @@ const cp = require("child_process");
 const { ROOT } = require("../channel-context");
 const Explainers = require("./explainers");
 
+const Craft = require("./craft");
 const CACHE_SCHEMA = 2;
 const MAX_HOLD_SECONDS = 4;
 // Enough licensed pictures that a 30-second Short rarely needs to reuse one.
@@ -152,6 +153,10 @@ function visualAssetText(shot) {
   return [asset.file, asset.description, asset.alt, asset.title, asset.origin, shot && shot.scene].filter(Boolean).join(" ");
 }
 
+// Craft v2: subjects that make a picture off-topic unless the topic names them (people at work,
+// events, artworks, branding).
+const OFF_SUBJECT = /\b(?:sculptors?|sculptures?|statues?|festivals?|portraits?|selfies?|tourists?|weddings?|mascots?|logos?|carnivals?|parades?)\b/g;
+
 function semanticVisualEvidence(topic, shot) {
   const assetText = visualAssetText(shot);
   const normalized = assetText.toLowerCase().replace(/[^a-z0-9]+/g, " ");
@@ -235,6 +240,35 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
   // A curator can name the opening picture outright (curatedVisuals[].lead).
   const curatedLead = ordered.find((still) => still.lead === true);
   if (curatedLead) ordered = [curatedLead, ...ordered.filter((still) => still !== curatedLead)];
+  // Craft v2: the first picture is the most vivid one of the hook's subject, never a data figure.
+  const craftFeatures = options.craft === true ? { opening: true, repeats: true } : options.craft || {};
+  const craftOpening = !!craftFeatures.opening && !behindOrdinary;
+  const craft = !!craftFeatures.repeats && !behindOrdinary;
+  // Craft v2 relevance gate: a picture or clip that names nothing distinctive about the topic is not
+  // used, and the rejection is reported (render.json craft.rejectedVisuals) instead of hidden.
+  const rejectedVisuals = [];
+  if (craft) {
+    // A picture can share the topic's word and still be about something else ("Ice sculptor at
+    // work" for a Short on lake ice): a person, event or artwork as the subject is off-topic unless
+    // the topic itself names it.
+    const topicText = [topic.canonicalTopic, topic.subject, topic.topic, topic.title, topic.scenario, topic.mechanism].join(" ").toLowerCase();
+    const offSubject = (asset) => {
+      const text = visualAssetText({ still: asset, clip: asset }).toLowerCase();
+      return (text.match(OFF_SUBJECT) || []).find((term) => !topicText.includes(term.replace(/s$/, ""))) || null;
+    };
+    const relevant = (asset, type) => {
+      const evidence = semanticVisualEvidence(topic, type === "stock-video" ? { type, clip: asset } : { type, still: asset });
+      const off = evidence.relevant ? offSubject(asset) : null;
+      const reason = !evidence.relevant ? evidence.reason : off ? `the picture's subject is a ${off}, not the topic` : null;
+      if (reason) rejectedVisuals.push({ type, asset: asset.file || asset.title || asset.id || null, reason });
+      return !reason;
+    };
+    ordered = ordered.filter((still) => still.lead === true || relevant(still, "licensed-still"));
+    clips = clips.filter((clip) => relevant(clip, "stock-video"));
+  }
+  const craftLead = craftOpening && !curatedLead ? Craft.chooseOpening(ordered, topic, claims[0] && claims[0].text, options.measure === undefined ? Craft.frameStats : options.measure) : null;
+  if (craftLead) ordered = [craftLead, ...ordered.filter((still) => still !== craftLead)];
+  const kindOf = (still) => (craftOpening && !still.fit && Craft.figureType(still) === "illustration" ? "photo" : stillKind(still));
   const maxCards = ordered.length >= 2 ? MAX_CARDS_WITH_STILLS : MAX_CARDS_WITHOUT_STILLS;
   const stillUses = new Map();
   const cardedClaims = new Set();
@@ -261,9 +295,38 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
         return lineMatch(still) > lineMatch(best) ? still : best;
       }, candidates[0]);
     }
+    // Craft v2: a picture is shown at most three times, and every return is a detail crop on another
+    // region; a data figure (map, chart) at most twice, always whole. Past that,
+    // cards or other shots carry the line.
+    if (craft) {
+      const fresh = candidates.filter((still) => (stillUses.get(still.file) || 0) < (Craft.figureType(still) === "data" ? 2 : 3));
+      if (!fresh.length) return null;
+      // The first shot is the chosen opening (a curator's lead or the craft opening pick).
+      if (!plan.length && fresh.includes(ordered[0])) return ordered[0];
+      // The picture that names what the line says ("150 metres apart" over the 150 m sign), then the
+      // least used one.
+      return fresh.reduce((best, still) => {
+        const match = lineMatch(still) - lineMatch(best);
+        if (match !== 0) return match > 0 ? still : best;
+        return (stillUses.get(still.file) || 0) < (stillUses.get(best.file) || 0) ? still : best;
+      }, fresh[0]);
+    }
     // Unused stills first; once all are used, the least used one returns with
     // a different camera move.
     return candidates.reduce((best, still) => ((stillUses.get(still.file) || 0) < (stillUses.get(best.file) || 0) ? still : best), candidates[0]);
+  };
+
+  // Craft v2 overflow: the photo or illustration (never a data figure) that best matches the line,
+  // least used first, never the picture already on screen.
+  const overflowStill = () => {
+    const last = plan.length ? plan[plan.length - 1].still : null;
+    const candidates = ordered.filter((still) => still !== last && Craft.figureType(still) !== "data");
+    if (!candidates.length) return null;
+    return candidates.reduce((best, still) => {
+      const match = lineMatch(still) - lineMatch(best);
+      if (match !== 0) return match > 0 ? still : best;
+      return (stillUses.get(still.file) || 0) < (stillUses.get(best.file) || 0) ? still : best;
+    }, candidates[0]);
   };
 
   for (let shotIndex = 0; shotIndex < boundaries.length - 1; shotIndex += 1) {
@@ -320,7 +383,8 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
       const reused = candidate && (stillUses.get(candidate.file) || 0) > 0;
       // The Hidden Logic of Things never uses generic procedural filler; a
       // relevant still may return once (the visual audit caps reuse at 2).
-      if (reused && distinctKeys().size < 5 && scenes.length && !behindOrdinary) type = "procedural";
+      // Craft v2 returns a reused picture as a detail crop instead (procedural frames are abstract).
+      if (reused && distinctKeys().size < 5 && scenes.length && !behindOrdinary && !craft) type = "procedural";
     }
 
     // A picture the viewer has already seen reads as a slideshow. Before a
@@ -329,7 +393,10 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     if (type === "licensed-still") {
       const candidate = nextStill();
       const reused = candidate && (stillUses.get(candidate.file) || 0) > 0;
-      if (reused && previous && ["licensed-still", "stock-video"].includes(previous.type) &&
+      // Craft v2: a returning picture that names what this line says (the memorial on "39 people died")
+      // comes back as a detail crop instead of the previous shot holding over the line.
+      const named = craft && candidate && lineMatch(candidate) > 0 && (!previous || previous.still !== candidate);
+      if (reused && !named && previous && ["licensed-still", "stock-video"].includes(previous.type) &&
         previous.duration + (end - start) <= maximumHoldSeconds) {
         previous.end = end;
         previous.duration = previous.end - previous.start;
@@ -337,18 +404,43 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
       }
     }
 
+    // Craft v2: an illustration is drawn for the scene that matches the spoken line; with no matching
+    // scene a relevant picture returns as a detail crop instead of unrelated filler.
+    const sceneFor = () => {
+      if (!craft || !scenes.length) return scenes[claimIndex % Math.max(1, scenes.length)] || claim.text;
+      const lineWords = words(claim.text);
+      const scored = scenes.map((scene) => ({ scene, hits: [...words(scene)].filter((word) => lineWords.has(word)).length }));
+      const best = scored.reduce((a, b) => (b.hits > a.hits ? b : a), scored[0]);
+      return best.hits > 0 ? best.scene : null;
+    };
+    let scene = sceneFor();
+    if (type === "procedural" && craft && !scene && nextStill()) type = "licensed-still";
+    // Past the repeat cap: hold the previous real shot a little longer, or bring back the picture
+    // that best matches the line as a detail crop. Procedural frames are abstract shapes whatever the
+    // scene, and the visual audit counts them as irrelevant, so they are the last resort.
+    let overflow = null;
+    if (type === "procedural" && craft) {
+      if (previous && ["licensed-still", "stock-video"].includes(previous.type) && previous.duration + (end - start) <= maximumHoldSeconds) {
+        previous.end = end;
+        previous.duration = previous.end - previous.start;
+        continue;
+      }
+      overflow = overflowStill();
+      if (overflow) type = "licensed-still";
+    }
+    if (!scene) scene = claim.text;
     const entry = { shot: plan.length + 1, start, end, duration: end - start, claimIndex, claimText: claim.text,
-      scene: scenes[claimIndex % Math.max(1, scenes.length)] || claim.text, type, numbers, comparison: [], still: null,
+      scene, type, numbers, comparison: [], still: null,
       proceduralFrame: claimIndex * 97 + shotIndex };
     if (type === "stock-video") {
       const clip = clips[clipIndex++];
       lastClipShot = plan.length;
       Object.assign(entry, { clip, sourceId: `video:${clip.id}`, visualKey: `video:${clip.id}` });
     } else if (type === "licensed-still") {
-      const still = nextStill();
+      const still = overflow || nextStill();
       const use = stillUses.get(still.file) || 0;
       stillUses.set(still.file, use + 1);
-      Object.assign(entry, { still, kind: stillKind(still), motion: use, sourceId: use ? `still:${still.file}#${use + 1}` : `still:${still.file}`, visualKey: `still:${still.file}` });
+      Object.assign(entry, { still, kind: kindOf(still), motion: use, detail: craft && use > 0, sourceId: use ? `still:${still.file}#${use + 1}` : `still:${still.file}`, visualKey: `still:${still.file}` });
     } else if (type === "number-card") {
       const sameUnit = eligible.length >= 2 && tokenUnit(eligible[0]) && tokenUnit(eligible[0]) === tokenUnit(eligible[1]);
       const cardNumbers = sameUnit ? eligible.slice(0, 2) : eligible.slice(0, 1);
@@ -365,7 +457,9 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     }
     plan.push(entry);
   }
-  return loopBack(plan);
+  const finished = loopBack(plan, { closeOnPicture: craft });
+  finished.rejectedVisuals = rejectedVisuals;
+  return finished;
 }
 
 // Loop ending: the last shot returns to the opening picture (with another
@@ -373,11 +467,13 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
 // rewatches feel natural. Only a real picture opening, only over a closing
 // still or clip, and only when the Short has enough shots to make it a
 // callback rather than a repeat.
-function loopBack(plan) {
+function loopBack(plan, options = {}) {
   const first = plan[0];
   const last = plan[plan.length - 1];
   if (plan.length < 5 || !first || !last || first === last) return plan;
-  if (!["licensed-still", "stock-video"].includes(first.type) || !["licensed-still", "stock-video"].includes(last.type)) return plan;
+  // Craft v2: the payoff never closes on a procedural filler frame when the opening was a picture.
+  const closing = options.closeOnPicture ? ["licensed-still", "stock-video", "procedural"] : ["licensed-still", "stock-video"];
+  if (!["licensed-still", "stock-video"].includes(first.type) || !closing.includes(last.type)) return plan;
   if (first.type === "licensed-still" && first.kind !== "photo") return plan;
   // Never at the cost of variety: the visual gate needs 5 distinct visuals.
   const key = (shot) => shot.visualKey || shot.sourceId;
@@ -389,7 +485,7 @@ function loopBack(plan) {
   if (first.type === "stock-video") {
     Object.assign(last, { type: "stock-video", clip: first.clip, still: null, kind: undefined, sourceId: `${first.sourceId}#loop`, visualKey: first.visualKey, loopBack: true });
   } else {
-    Object.assign(last, { type: "licensed-still", still: first.still, kind: first.kind, clip: undefined, motion: (first.motion || 0) + 2,
+    Object.assign(last, { type: "licensed-still", still: first.still, kind: first.kind, clip: undefined, motion: (first.motion || 0) + 2, detail: options.closeOnPicture ? true : last.detail,
       sourceId: `${first.sourceId}#loop`, visualKey: first.visualKey, loopBack: true });
   }
   return plan;
@@ -693,6 +789,10 @@ async function prepareAssets(topic, outputDirectory) {
       sourceUrl: item.sourceUrl,
       description: item.description,
       trademarkNotice: item.trademarkNotice || null,
+      // A curator's choices survive the download (they were dropped here, so curatedVisuals[].lead
+      // never reached the planner for IB and CT).
+      ...(item.lead === true ? { lead: true } : {}),
+      ...(item.fit === true ? { fit: true } : {}),
       origin: item.origin,
       score: item.score,
       articleRank: Number.isFinite(item.articleRank) ? item.articleRank : articles.length,

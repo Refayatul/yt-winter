@@ -52,6 +52,9 @@ function create(channel, spec, options = {}) {
     created_at: startedAt,
     start_time: startedAt,
     notes: spec.notes || null,
+    // Optional pre-assigned design: { "<topic slug>": "control" | "variant" }. Only these topics join
+    // the experiment, each in its planned arm (matched pairs keep the arms balanced at small n).
+    planned: spec.planned || null,
   };
   value.experiments.push(row);
   if (options.write !== false) save(channel, value);
@@ -64,7 +67,8 @@ function assign(channel, contentType, videoKey, options = {}) {
   if (!running) return null;
   const already = ["control", "variant"].find((arm) => running.sample[arm].some((item) => item.key === videoKey));
   if (already) return { experiment_id: running.experiment_id, arm: already, variable: running.variable, value: running[already] };
-  const arm = Engagement.hash01(`${running.experiment_id}:${videoKey}`) < 0.5 ? "control" : "variant";
+  if (running.planned && !["control", "variant"].includes(running.planned[videoKey])) return null;
+  const arm = running.planned ? running.planned[videoKey] : Engagement.hash01(`${running.experiment_id}:${videoKey}`) < 0.5 ? "control" : "variant";
   running.sample[arm].push({ key: videoKey, videoId: null, assignedAt: (options.now || new Date()).toISOString() });
   if (options.write !== false) save(channel, value);
   return { experiment_id: running.experiment_id, arm, variable: running.variable, value: running[arm] };

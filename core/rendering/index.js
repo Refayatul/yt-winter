@@ -8,6 +8,7 @@ const Scripting = require("../scripting");
 const Visuals = require("../visuals");
 const Quality = require("../quality");
 const TopicVisuals = require("./topic-visuals");
+const Craft = require("./craft");
 const Hashtags = require("../hashtags");
 const Series = require("../series");
 const { ROOT } = require("../channel-context");
@@ -131,14 +132,27 @@ function retimeAudio(file, currentDuration, targetDuration) {
   return probe(file).durationSeconds;
 }
 
-function synthesizeNarration(script, outputDirectory, channel) {
+function synthesizeNarration(script, outputDirectory, channel, craftFeatures = null) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const voiceConfig = channel.config.voice || {};
   // Every line, hook included, is read at the same unhurried rate. The hook's
   // brevity comes from the script, never from speeding the voice up.
+  // Craft v2: a beat after the hook and before the payoff, short joins between, a slower payoff.
+  const craft = craftFeatures ? !!craftFeatures.pacing : Craft.enabled(channel.slug);
+  // Craft v2 with the Edge voice: the whole script in ONE request (continuous intonation), the
+  // pauses as SSML breaks and each line's timing measured from Edge word boundaries. Any failure
+  // falls back to the line-by-line takes below, and the result records which path ran.
+  const edgeVoice = !(process.platform === "darwin" && process.env.TTS_PROVIDER !== "edge");
+  if (craft && edgeVoice && script.claims.length > 1) {
+    const continuous = continuousNarration(script, outputDirectory, voiceConfig);
+    if (continuous) return continuous;
+  }
+  const craftPauses = craft ? Craft.linePauses(script.claims.length) : null;
   const takes = script.claims.map((claim, index) => {
-    const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { voice: voiceConfig.voice, rate: voiceConfig.rate || DEFAULT_VOICE_RATE });
-    const pause = index < script.claims.length - 1 ? LINE_PAUSE_SECONDS : 0;
+    const baseRate = voiceConfig.rate || DEFAULT_VOICE_RATE;
+    const rate = craft && index === script.claims.length - 1 && script.claims.length > 2 ? Craft.payoffRate(baseRate) : baseRate;
+    const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { voice: voiceConfig.voice, rate });
+    const pause = craftPauses ? craftPauses[index] : index < script.claims.length - 1 ? LINE_PAUSE_SECONDS : 0;
     return { ...voice, pause, durationSeconds: probe(voice.file).durationSeconds + pause };
   });
   const output = path.join(outputDirectory, "narration.m4a");
@@ -167,6 +181,38 @@ function synthesizeNarration(script, outputDirectory, channel) {
   };
 }
 
+function continuousNarration(script, outputDirectory, voiceConfig) {
+  const ffmpeg = require("../../ff-yol").ffmpeg;
+  const mp3 = path.join(outputDirectory, "narration-continuous.mp3");
+  const spec = path.join(outputDirectory, "narration-continuous.json");
+  const pausesMs = Craft.linePauses(script.claims.length).map((seconds) => Math.round(seconds * 1000));
+  write(spec, { lines: script.claims.map((claim) => claim.text), voice: voiceConfig.voice || "en-US-AndrewMultilingualNeural", rate: voiceConfig.rate || DEFAULT_VOICE_RATE, pausesMs, out: mp3 });
+  try {
+    cp.execFileSync(process.execPath, [path.join(__dirname, "..", "..", "scripts", "narrate-continuous.js"), spec], { stdio: ["ignore", "ignore", "pipe"], timeout: 120000 });
+  } catch (error) {
+    console.log(`  continuous narration unavailable (${String(error.stderr || error.message).trim().slice(0, 120)}); line-by-line takes instead`);
+    return null;
+  }
+  const timing = JSON.parse(fs.readFileSync(mp3 + ".timing.json", "utf8"));
+  const output = path.join(outputDirectory, "narration.m4a");
+  cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", mp3, "-filter_complex", "[0:a]aresample=44100,aformat=channel_layouts=mono,loudnorm=I=-14:TP=-1.5:LRA=11[a]",
+    "-map", "[a]", "-ar", "44100", "-c:a", "aac", "-b:a", "160k", output], { stdio: "ignore", timeout: 120000 });
+  const durationSeconds = probe(output).durationSeconds;
+  const scale = durationSeconds / (timing.durationSec || durationSeconds);
+  const claimDurations = timing.lineTimes.map((line) => (line.end - line.start) * scale);
+  const words = (timing.words || []).map((word) => ({ ...word, start: word.start * scale, end: word.end * scale }));
+  write(path.join(outputDirectory, "narration-timing.json"), { mode: timing.mode, lineTimes: timing.lineTimes, words });
+  return {
+    file: output,
+    provider: `Edge TTS continuous read (${timing.mode}, word-boundary timed)`,
+    syntheticVoice: false,
+    rate: voiceConfig.rate || DEFAULT_VOICE_RATE,
+    claimDurations,
+    words,
+    continuous: { mode: timing.mode, pausesMs },
+  };
+}
+
 // Atmosphere bed: the same procedural, licence-free generator and ducking
 // chain as Failure Reconstructed (lib/muzik.js, shorts-yap.js), with a mood
 // chosen from the topic's category so every video does not play one bed.
@@ -186,7 +232,23 @@ function musicMood(topic) {
   return moods[String(topic.category || "").toUpperCase()] || moods.default || "structural-failures";
 }
 
-function mixMusicBed(voiceFile, duration, topic, outputDirectory) {
+// Craft v2 sound cues, synthesized (nothing to license): a low impact under the first frame and a
+// soft noise riser that ends where the payoff line starts. Mixed after the ducking; measured on the CT
+// tunnel Short: the impact adds about 6 dB below 120 Hz in the first 0.6 s, the riser peaks about
+// 12 dB under the voice. Levels only: nobody has listened yet, so the owner judges the sound.
+function soundCues(duration, payoffStart) {
+  const total = duration.toFixed(2);
+  const riseLength = Math.min(1.4, Math.max(0.6, payoffStart - 0.2));
+  const riseStart = Math.max(0, payoffStart - riseLength);
+  return {
+    inputs: ["-f", "lavfi", "-i", `sine=frequency=52:duration=0.9`, "-f", "lavfi", "-i", `anoisesrc=d=${riseLength.toFixed(2)}:c=pink:a=0.5`],
+    filter: (hitIndex, riseIndex) => `[${hitIndex}:a]aresample=48000,volume=1.8,afade=t=out:st=0.05:d=0.85:curve=exp,lowpass=f=140,apad=whole_dur=${total}[hit];`
+      + `[${riseIndex}:a]aresample=48000,highpass=f=900,lowpass=f=6000,afade=t=in:st=0:d=${riseLength.toFixed(2)}:curve=qsin,afade=t=out:st=${(riseLength - 0.08).toFixed(2)}:d=0.08,volume=1.2,`
+      + `adelay=${Math.round(riseStart * 1000)}|${Math.round(riseStart * 1000)},apad=whole_dur=${total}[rise];`,
+  };
+}
+
+function mixMusicBed(voiceFile, duration, topic, outputDirectory, cues = null) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const mood = musicMood(topic);
   const profile = require("../../lib/muzik").profil(topic.slug || topic.id, mood);
@@ -204,10 +266,14 @@ function mixMusicBed(voiceFile, duration, topic, outputDirectory) {
       + `afade=t=in:st=0:d=1.6,afade=t=out:st=${Math.max(0, duration - 1.6).toFixed(2)}:d=1.6[m]`,
       "-map", "[m]", "-t", total, bed], { stdio: "ignore", timeout: 120000 });
     // Narration ducks the bed (sidechain); the final mix is brought to -14 LUFS.
-    cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", voiceFile, "-i", bed, "-filter_complex",
+    const sfx = cues && Number.isFinite(cues.payoffStart) ? soundCues(duration, cues.payoffStart) : null;
+    // v1 keeps its exact mix (amix's default normalisation); with cues each input keeps its own level.
+    const mixInputs = sfx ? "[duck][vo2][hit][rise]amix=inputs=4:normalize=0" : "[duck][vo2]amix=inputs=2";
+    cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-i", voiceFile, "-i", bed, ...(sfx ? sfx.inputs : []), "-filter_complex",
       "[0:a]loudnorm=I=-16:TP=-1.5:LRA=11,aresample=48000,apad,asplit=2[vo1][vo2];[1:a]aresample=48000,volume=1.0[mus];"
       + "[mus][vo1]sidechaincompress=threshold=0.035:ratio=6:attack=6:release=340[duck];"
-      + "[duck][vo2]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[a]",
+      + (sfx ? sfx.filter(2, 3) : "")
+      + `${mixInputs}:duration=first:dropout_transition=0,alimiter=limit=0.95,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000,aformat=sample_fmts=fltp:channel_layouts=stereo[a]`,
       "-map", "[a]", "-t", duration.toFixed(3), "-ar", "48000", "-c:a", "aac", "-b:a", "160k", output], { stdio: "ignore", timeout: 120000 });
   } finally { try { fs.unlinkSync(bed); } catch (error) {} }
   const mixed = probe(output).durationSeconds;
@@ -480,9 +546,10 @@ function fitFontSize(text, maximum) {
   return Math.max(36, Math.min(maximum, Math.floor(960 / (Math.max(1, String(text).length) * 0.72))));
 }
 
-function overlayText(topic, duration, opening, firstShotType = null, seriesLabel = null, endLine = null) {
+function overlayText(topic, duration, opening, firstShotType = null, seriesLabel = null, endLine = null, craft = false) {
   const parts = [];
   const on = `enable='lt(t,${HOOK_SECONDS})'`;
+  if (craft) return craftOverlay(topic, duration, opening, firstShotType, seriesLabel, endLine, on);
   // Series tag ("CRITICAL THREAD #3") sits above the hook in the channel accent:
   // a numbered, recurring format is a reason to subscribe.
   if (seriesLabel) parts.push(`drawtext=expansion=none:text='${drawtextSafe(seriesLabel)}':fontcolor=${channelAccent(topic)}:fontsize=44:borderw=4:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=262:${on}`);
@@ -490,6 +557,20 @@ function overlayText(topic, duration, opening, firstShotType = null, seriesLabel
   const hook = showHook ? drawtextSafe(String(topic.thumbnailText || "").toUpperCase()) : "";
   if (hook) parts.push(`drawtext=expansion=none:text='${hook}':fontcolor=white:fontsize=${fitFontSize(hook, 112)}:borderw=8:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=330:${on}`);
   // Series promise for the last ~2.2 s (on screen only; the loop stays clean).
+  if (endLine && duration > 6) parts.push(`drawtext=expansion=none:text='${drawtextSafe(endLine)}':fontcolor=${channelAccent(topic)}:fontsize=${fitFontSize(endLine, 52)}:borderw=4:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=170:enable='gte(t,${(duration - 2.2).toFixed(2)})'`);
+  return parts.length ? "," + parts.join(",") : "";
+}
+
+// Craft v2 hook: series tag, then the hook words large on one or two lines over a band that keeps
+// them readable on any picture; the end line is unchanged.
+function craftOverlay(topic, duration, opening, firstShotType, seriesLabel, endLine, on) {
+  const parts = [];
+  const showHook = opening === "motion" || (firstShotType && firstShotType !== "number-card");
+  const lines = showHook ? Craft.hookLines(String(topic.thumbnailText || "").toUpperCase()).filter(Boolean) : [];
+  const size = lines.length ? Craft.hookFontSize(lines) : 0;
+  if (seriesLabel || lines.length) parts.push(`drawbox=x=0:y=190:w=iw:h=${lines.length ? Math.round(110 + lines.length * size * 1.12) : 110}:color=black@0.42:t=fill:${on}`);
+  if (seriesLabel) parts.push(`drawtext=expansion=none:text='${drawtextSafe(seriesLabel)}':fontcolor=${channelAccent(topic)}:fontsize=44:borderw=4:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=222:${on}`);
+  lines.forEach((line, index) => parts.push(`drawtext=expansion=none:text='${drawtextSafe(line)}':fontcolor=white:fontsize=${size}:borderw=8:bordercolor=0x000000@0.80:x=(w-text_w)/2:y=${Math.round(292 + index * size * 1.12)}:${on}`));
   if (endLine && duration > 6) parts.push(`drawtext=expansion=none:text='${drawtextSafe(endLine)}':fontcolor=${channelAccent(topic)}:fontsize=${fitFontSize(endLine, 52)}:borderw=4:bordercolor=0x000000@0.75:x=(w-text_w)/2:y=170:enable='gte(t,${(duration - 2.2).toFixed(2)})'`);
   return parts.length ? "," + parts.join(",") : "";
 }
@@ -520,18 +601,24 @@ function diagramCrop(shot) {
 }
 
 // Distinct slow camera moves, so a photograph shown twice is a different shot.
-function cameraMove(variant, frames) {
+// `scale` widens every move (craft v2: a shot held longer keeps its speed instead of slowing down;
+// a 4 s hold with a fixed move measured 42% near-static frames on the ice Short). Scale 1 is v1.
+function cameraMove(variant, frames, scale = 1) {
   const t = `on/${Math.max(1, frames)}`;
   const center = "x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)'";
+  const k = (value) => +(value * scale).toFixed(3);
   const moves = [
-    `z='1+0.10*${t}':${center}`,
-    `z='1.16':x='(iw-iw/zoom)*${t}':y='ih/2-(ih/zoom/2)'`,
-    `z='1.12-0.10*${t}':${center}`,
-    `z='1.16':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*${t}'`,
-    `z='1.16':x='(iw-iw/zoom)*(1-${t})':y='ih/2-(ih/zoom/2)'`,
+    `z='1+${k(0.10)}*${t}':${center}`,
+    `z='${1 + k(0.16)}':x='(iw-iw/zoom)*${t}':y='ih/2-(ih/zoom/2)'`,
+    `z='${+(1 + k(0.12)).toFixed(3)}-${k(0.10)}*${t}':${center}`,
+    `z='${1 + k(0.16)}':x='iw/2-(iw/zoom/2)':y='(ih-ih/zoom)*${t}'`,
+    `z='${1 + k(0.16)}':x='(iw-iw/zoom)*(1-${t})':y='ih/2-(ih/zoom/2)'`,
   ];
   return moves[variant % moves.length];
 }
+
+// Craft v2: the move grows with the shot past 2.4 s (at most 1.8x), so the camera never crawls.
+const moveScale = (frames, craft) => (craft ? Math.min(1.8, Math.max(1, frames / FPS / 2.4)) : 1);
 
 // The climbing number (t is the shot's own clock after zoompan), then the
 // exact sourced headline. floor(V*t/T) never exceeds V while t < T.
@@ -547,7 +634,9 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   const ff = require("../../ff-yol");
   const ffmpeg = ff.ffmpeg;
   const opening = TopicVisuals.openingVariant(topic);
-  const plan = TopicVisuals.buildVisualPlan(topic, options.script, options.assets && options.assets.stills || [], options.segments || [], duration, options.assets && options.assets.clips || [], { opening });
+  const craftFeatures = options.craft || Craft.features(topic.channel);
+  const craft = craftFeatures.opening || craftFeatures.repeats;
+  const plan = TopicVisuals.buildVisualPlan(topic, options.script, options.assets && options.assets.stills || [], options.segments || [], duration, options.assets && options.assets.clips || [], { opening, craft: craftFeatures });
   const generated = [];
   const cardDirectory = path.join(path.dirname(output), "visual-cache");
   const inputs = [];
@@ -602,8 +691,14 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
         + `[bg${index}]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,gblur=sigma=30,eq=brightness=-0.30:saturation=0.65[bgb${index}];`
         + `[fg${index}]${shot.kind === "diagram" ? diagramCrop(shot) : ""}scale=1000:1000:force_original_aspect_ratio=decrease[fgs${index}];`
         + `[bgb${index}][fgs${index}]overlay=(W-w)/2:210+(1000-h)/2,zoompan=z='1+0.0004*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
+    } else if (shot.type === "licensed-still" && shot.detail) {
+      // Craft v2: a returning picture is a tighter detail crop on another region (1.5x punch-in).
+      const fx = (shot.motion || 1) % 2 ? 0.2 : 0.8;
+      chain = `[${index}:v]scale=2430:4320:force_original_aspect_ratio=increase,crop=1620:2880:x='(iw-1620)*${fx}':y='(ih-2880)*0.4',zoompan=${cameraMove(shot.motion || 0, frames, moveScale(frames, craft))}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
     } else if (shot.type === "licensed-still") {
-      chain = `[${index}:v]scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,zoompan=${cameraMove(shot.motion || 0, frames)}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
+      chain = `[${index}:v]scale=1620:2880:force_original_aspect_ratio=increase,crop=1620:2880,zoompan=${cameraMove(shot.motion || 0, frames, moveScale(frames, craft))}:d=${frames}:s=1080x1920:fps=${FPS}${colourGrade(topic)}`;
+      // Craft v2: a dark opening picture is lifted a little so it reads at first glance.
+      if (shot === plan[0] && craftFeatures.opening) chain += Craft.openingLift(Craft.frameStats(shot.still));
     } else if (shot.type === "number-card") {
       chain = `[${index}:v]scale=1080:1920,zoompan=z='1+0.0006*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
       if (shot.countUp) chain += countUpFilter(shot);
@@ -620,7 +715,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   }
   const concatInputs = plan.map((_, index) => `[v${index}]`).join("");
   const escapedCaptions = captionsFile.replace(/\\/g, "/").replace(/:/g, "\\:").replace(/'/g, "\\'");
-  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening, plan[0] && plan[0].type, options.seriesLabel || null, options.seriesEnd || null)}[v]`);
+  filters.push(`${concatInputs}concat=n=${plan.length}:v=1:a=0,ass=filename='${escapedCaptions}'${overlayText(topic, duration, opening, plan[0] && plan[0].type, options.seriesLabel || null, options.seriesEnd || null, craftFeatures.opening)}[v]`);
   const filterFile = path.join(path.dirname(output), ".visual-filter.txt");
   fs.writeFileSync(filterFile, filters.join(";\n") + "\n");
   args.push(ff.filtreBayragi, filterFile, "-map", "[v]", "-map", `${plan.length}:a`, "-t", String(duration), "-r", String(FPS), "-c:v", "libx264", "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart", output);
@@ -634,7 +729,7 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
     try { fs.unlinkSync(filterFile); } catch (error) {}
   }
   const metrics = TopicVisuals.visualMetrics(plan, topic);
-  return { ...metrics, opening, visualQuality: TopicVisuals.evaluateVisualQuality(metrics), segmentSeconds: plan.flatMap((shot) => shot.type === "explainer"
+  return { ...metrics, opening, craft: craft ? { version: 2, features: craftFeatures, openingStill: plan[0] && plan[0].still ? plan[0].still.file : null, detailCrops: plan.filter((shot) => shot.detail).length, rejectedVisuals: plan.rejectedVisuals || [] } : null, visualQuality: TopicVisuals.evaluateVisualQuality(metrics), segmentSeconds: plan.flatMap((shot) => shot.type === "explainer"
     // An explainer animates in beats (draw, label, move, settle) of at most ~3s.
     ? Array(Math.max(1, Math.ceil(shot.duration / 3))).fill(shot.duration / Math.max(1, Math.ceil(shot.duration / 3)))
     : [shot.duration]), sources: plan.map(({ shot, claimIndex, type, sourceId, numbers }) => ({ shot, claimIndex, type, sourceId, numbers })) };
@@ -688,8 +783,11 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     spoken: growth.script.spoken || (growth.script.lines || []).join(" "), claims: growthLines.map(({ role, ...claim }) => ({ ...claim, role })),
     forbiddenOpening: growth.script.forbiddenOpening || false, sourceIds: growth.script.sourceIds || (topic.sources || []).map((source) => source.name) })) : Scripting.shortScript(topic);
   const titles = growth ? growth.titles.candidates.filter((item) => !item.misleading).map((item) => item.title) : Scripting.titleCandidates(topic);
-  const captionSrt = (value) => growth ? Pacing.srt(value.claims, growthConfig.captions) : captions(value);
-  const captionAss = (value) => growth ? Pacing.ass(value.claims, growthConfig.captions) : assCaptions(value);
+  // Craft v2: captions timed on the spoken words when the narration was measured, in a larger style.
+  const captionTiming = {};
+  const captionConfig = () => (growth && Craft.features(channel.slug, growth).captions ? Craft.captionStyle(growthConfig.captions) : growth && growthConfig.captions);
+  const captionSrt = (value) => growth ? Pacing.srt(value.claims, captionConfig(), captionTiming) : captions(value);
+  const captionAss = (value) => growth ? Pacing.ass(value.claims, captionConfig(), captionTiming) : assCaptions(value);
   let visuals = Visuals.plan(topic, script);
   const thumbnail = Visuals.thumbnail(topic);
   const isCriticalThread = channel.slug === "critical-thread";
@@ -765,10 +863,15 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
       write(path.join(outputDirectory, "description.txt"), metadata.description + "\n");
     }
     write(path.join(outputDirectory, "visual-attribution.json"), { count: assets.stills.length, stills: assets.stills.map(({ path: localPath, ...still }) => still), clips: (assets.clips || []).map(({ path: localPath, ...clip }) => clip), error: assets.error || null });
-    const voice = synthesizeNarration(script, outputDirectory, channel);
+    const craftFeatures = Craft.features(channel.slug, growth);
+    // Craft v2: precise decimals are read (and captioned) as "about 11.6"; the story shape is recorded.
+    if (craftFeatures.pacing) for (const claim of script.claims) claim.text = Craft.simplifyNumbers(claim.text);
+    const storyShape = Craft.storyShape(script.claims.map((claim) => claim.text));
+    const voice = synthesizeNarration(script, outputDirectory, channel, craftFeatures);
     const audioProbe = probe(voice.file);
     const duration = audioProbe.durationSeconds;
     applyMeasuredTiming(script, voice.claimDurations, duration);
+    if (voice.words) captionTiming.words = voice.words;
     visuals = Visuals.plan(topic, script);
     pkg.visuals = visuals;
     pkg.render = render;
@@ -783,13 +886,15 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
     // ImpossibleBrief records do not carry their channel; the look, the music
     // mood and the card accent are chosen per channel.
     const renderTopic = topic.channel ? topic : { ...topic, channel: channel.slug };
-    const music = channel.config.music && channel.config.music.enabled === false || process.env.MUSIC === "0" ? null : mixMusicBed(voice.file, duration, renderTopic, outputDirectory);
+    const music = channel.config.music && channel.config.music.enabled === false || process.env.MUSIC === "0" ? null : mixMusicBed(voice.file, duration, renderTopic, outputDirectory,
+      craftFeatures.pacing && script.claims.length > 2 ? { payoffStart: script.claims[script.claims.length - 1].start } : null);
     const visualRender = renderVideo(music ? music.file : voice.file, duration, video, path.join(outputDirectory, "captions.ass"), renderTopic,
-      { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [], seriesLabel: Series.label(channel, topic.slug), seriesEnd: Series.endLine(channel) });
+      { script, assets, segments: growth ? Pacing.segments(duration, growthConfig, { minimumSegments }) : [], seriesLabel: Series.label(channel, topic.slug), seriesEnd: Series.endLine(channel), craft: craftFeatures });
     const thumbnailRender = renderThumbnail(image, renderTopic, assets, script);
     render.completed = true;
-    render.audio = { ...voice, ...audioProbe, music: music ? { mood: music.mood, profile: music.profile } : null };
+    render.audio = { ...Object.fromEntries(Object.entries(voice).filter(([key]) => key !== "words")), ...audioProbe, music: music ? { mood: music.mood, profile: music.profile } : null };
     render.video = { file: video, captionsBurned: true, ...visualRender, ...probe(video) };
+    render.story = storyShape;
     render.thumbnail = { file: image, bytes: fs.statSync(image).size, ...thumbnailRender };
     // Provenance manifest (every external + generated asset, licence, duty to
     // attribute) and the thumbnail variant ledger.
@@ -848,4 +953,4 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations, validationReasons };
 }
 
-module.exports = { countUp, countUpFilter, overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
+module.exports = { soundCues, cameraMove, countUp, countUpFilter, overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
