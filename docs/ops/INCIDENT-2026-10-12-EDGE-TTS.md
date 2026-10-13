@@ -82,6 +82,9 @@ On macOS, the kokoro-onnx wheel's espeak-ng loader fails with a hard-coded build
   - `package.json` allowed `^2.0.7` and there is no lockfile, so the 14:26 run installed 2.1.0 automatically, and the 13:58 run had 2.0.9.
   - Both runs used the same runner region and image.
   - The logs did not print the installed version, so this is a strong inference, not proof.
+- **Corroborated the same day:** at 15:17–15:24 UTC on GitHub runners, the PR's *TTS availability and fallback check* (run 38420784653) compared both clients.
+  - Node `msedge-tts` 2.1.0 synthesised 6/6, with one handshake rate-limited (HTTP 429) but still completed.
+  - Python `edge-tts` 7.2.8, which still uses `speech.platform.bing.com`, got 403 on 6/6.
 - **Changes made afterwards:**
   - `msedge-tts` is pinned to exactly `2.1.0`.
   - Every narration health line now names the installed client version (`msedge-tts X.Y.Z`).
