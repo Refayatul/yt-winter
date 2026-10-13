@@ -108,7 +108,7 @@ jobs:
       - name: System packages (ffmpeg, ImageMagick, fonts)
         if: inputs.through != 'script' && inputs.through != 'preflight'
         run: bash scripts/ci-apt.sh ffmpeg imagemagick fonts-dejavu-core fonts-liberation
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - run: pip install --quiet kokoro-onnx soundfile
         if: inputs.through != 'script' && inputs.through != 'preflight'
       - name: Kokoro model cache

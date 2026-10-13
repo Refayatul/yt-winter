@@ -42,7 +42,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - name: Runner
         run: |
           echo "date: $(date -u +%FT%TZ)"
@@ -89,7 +89,7 @@ jobs:
       - name: ffmpeg and node packages
         run: |
           bash scripts/ci-apt.sh --no-install-recommends ffmpeg
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
       - name: Install kokoro-onnx (timed, cold)
         run: |
           start=$(date +%s.%N)

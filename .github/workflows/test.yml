@@ -24,7 +24,7 @@ jobs:
       - name: Bagimliliklar
         run: |
           bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
       - name: JS testleri + sozdizimi
         run: node --test tests/js/*.test.js
       - name: GitHub Actions semantic validation
@@ -97,7 +97,7 @@ jobs:
       - name: ffmpeg + font kur
         run: bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
       - name: Bagimliliklar
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
       - id: production
         name: Gunluk is akisi (yuklemesiz) — ${{ matrix.slug }}
         run: |

@@ -49,7 +49,7 @@ jobs:
           python-version: '3.12'
       - name: System packages (ffmpeg for mp3 decoding)
         run: bash scripts/ci-apt.sh ffmpeg
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - run: pip install --quiet kokoro-onnx soundfile
       - name: Kokoro model cache
         id: kokoro-cache
@@ -112,7 +112,7 @@ jobs:
           node-version: '20'
       - name: System packages (ffmpeg for m4a)
         run: bash scripts/ci-apt.sh ffmpeg
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - name: Cartesia voice list (metadata only, no credits)
         if: inputs.cartesia == 'list'
         env:

@@ -43,7 +43,7 @@ jobs:
       - name: Runtime dependencies
         run: |
           bash scripts/ci-apt.sh --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation python3-pil
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
       - name: Render, gate and upload (private + scheduled)
         run: node scripts/bto-publish-short.js "${{ inputs.slug }}" ${{ inputs.dry_run && '--dry-run' || '' }}
       - name: Uploaded media for review

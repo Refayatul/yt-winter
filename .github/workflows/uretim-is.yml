@@ -101,7 +101,7 @@ jobs:
         run: bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
 
       - name: Bagimliliklar
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
 
       # Saglik: YouTube yetkisi (bitmek uzere mi?), kapsamlar, Pexels, kutuphane.
       # Sorun varsa bildirim adimi "Sistem uyarisi" issue'su acar; yetki gecersizse
