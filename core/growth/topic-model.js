@@ -125,6 +125,20 @@ function factEvidence(raw) {
   return (raw.facts || []).map((fact) => ({ layer: fact.layer || "VERIFIED FACT", confidence: fact.layer || "VERIFIED FACT", claim: clean(fact.claim), source: clean(fact.source), url: fact.url || null, role: fact.role || null }));
 }
 
+// Licensed archival pictures a record confirms (curatedVisuals): the same validity rule the renderer
+// applies (core/rendering/topic-visuals.js curatedVisuals). IB/CT/BTO records used to be scored as
+// "no archival footage confirmed" whatever they listed, so their footage risk was a guess from the
+// number of visualScenes (about 33 points for every CriticalThread record).
+const CONFIRMED_STILLS_MINIMUM = 3;
+function confirmedStills(raw) {
+  return (Array.isArray(raw && raw.curatedVisuals) ? raw.curatedVisuals : []).filter((item) => {
+    try {
+      const host = new URL(item.imageUrl).hostname;
+      return /^https:/.test(item.imageUrl) && ["upload.wikimedia.org", "thumb.wikimedia.org"].includes(host) && item.file && item.sourceUrl && item.licence;
+    } catch (error) { return false; }
+  }).length;
+}
+
 function fromImpossibleBrief(raw) {
   const subject = impossibleSubject(raw);
   const handcrafted = clean(raw.hook);
@@ -169,7 +183,7 @@ function fromImpossibleBrief(raw) {
     narrationBeats: editorialBeats(raw),
     editorialTitles: (raw.editorialTitles || []).map(clean),
     thumbnailTexts: raw.thumbnailText ? [clean(raw.thumbnailText)] : [],
-    archival: false,
+    archival: confirmedStills(raw) >= CONFIRMED_STILLS_MINIMUM,
     archivalFilm: false,
     stock: false,
     signals: {
@@ -225,7 +239,7 @@ function fromCriticalThread(raw) {
     narrationBeats: editorialBeats(raw),
     editorialTitles: [clean(raw.topic), ...(raw.editorialTitles || []).map(clean)],
     thumbnailTexts: raw.thumbnailText ? [clean(raw.thumbnailText)] : [],
-    archival: false,
+    archival: confirmedStills(raw) >= CONFIRMED_STILLS_MINIMUM,
     archivalFilm: false,
     stock: false,
     signals: {
@@ -282,7 +296,7 @@ function fromHiddenLogicOfThings(raw) {
     narrationBeats: beats,
     editorialTitles: (raw.editorialTitles || [raw.topic]).map(clean),
     thumbnailTexts: raw.thumbnailText ? [clean(raw.thumbnailText)] : [],
-    archival: false,
+    archival: confirmedStills(raw) >= CONFIRMED_STILLS_MINIMUM,
     archivalFilm: false,
     stock: false,
     researchStatus: raw.researchStatus,
@@ -417,7 +431,7 @@ function durableInventory(channel) {
   };
 }
 
-module.exports = {
+module.exports = { confirmedStills, CONFIRMED_STILLS_MINIMUM,
   normalize, inventory, durableInventory, templateIndex, boilerplate, skeleton, numbersIn,
   clean, firstSentence, stripEnd, capital, lower, TEMPLATE_FIELDS,
 };

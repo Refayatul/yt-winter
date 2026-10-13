@@ -147,6 +147,9 @@ function selectShortTopic(channel, options = {}) {
   else if (policy.fallbackToC && experimental.length) { choice = experimental[0]; reason = "FALLBACK_TO_C: no A/B topic remains; C must still pass full production readiness"; }
   const inventory = { A: 0, B: 0, C: 0, D: 0 };
   for (const row of eligible) inventory[row.score.bucket] += 1;
+  // The daily decision log must say why nothing was chosen (it recorded null while the real reason
+  // was only returned to the caller, so CriticalThread's skipped days had no logged cause).
+  const skipReason = choice ? null : reason || `NO_QUALIFIED_TOPIC: ${primary.length} A/B, ${experimental.length} C${policy.fallbackToC ? "" : " (C fallback disabled)"}; skipping is better than publishing weak content${bindingConstraint(eligible, selectionPolicy, viralMinimum, candidatePool)}`;
   const decision = {
     schema: "growth-topic-decision/1",
     channel: channel.slug,
@@ -163,7 +166,7 @@ function selectShortTopic(channel, options = {}) {
       candidates: candidatePool.slice(0, poolPolicy.maximumLogged).map(decisionCandidate),
     },
     selected: choice ? decisionCandidate(choice) : null,
-    reason,
+    reason: choice ? reason : skipReason,
   };
   if (options.write) writeDecision(channel, decision);
   return {
@@ -172,7 +175,7 @@ function selectShortTopic(channel, options = {}) {
     date: day,
     mode,
     selected: choice,
-    reason: choice ? reason : reason || `NO_QUALIFIED_TOPIC: ${primary.length} A/B, ${experimental.length} C${policy.fallbackToC ? "" : " (C fallback disabled)"}; skipping is better than publishing weak content${bindingConstraint(eligible, selectionPolicy, viralMinimum, candidatePool)}`,
+    reason: choice ? reason : skipReason,
     inventory,
     candidatePool: decision.pool,
     decision,
