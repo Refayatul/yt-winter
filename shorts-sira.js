@@ -117,8 +117,10 @@ class IncelemeGerekli extends Error {}
 class YuklemeHatasi extends Error {}
 // Altyapi (seslendirme servisi) hatasi: her konu ayni sekilde patlar. 2026-10-12'de Edge TTS 403
 // yuzunden 28 nitelikli konu tek tek "basarisiz" isaretlenip harcandi; artik dongu durur.
-class AltyapiHatasi extends Error {}
+// Ayni durum gorsel kaynak kesintisi icin de gecerli (Wikimedia/archive.org/Pexels; lib/source-outage.js).
+class AltyapiHatasi extends Error { constructor(kind, message) { super(message); this.kind = kind; } }
 const { NARRATION_UNAVAILABLE_EXIT } = require("./lib/shorts-tts");
+const { ASSET_SOURCE_UNAVAILABLE_EXIT } = require("./lib/source-outage");
 function kapi(slug, final) {
   const r = require("./quality-gate").degerlendir(slug, { final });
   console.log(`  kalite kapisi (${final ? "final" : "pre"}): ${r.karar} ${r.toplam}/100` + (r.engelleyen.length ? " — " + r.engelleyen.join("; ") : ""));
@@ -134,7 +136,11 @@ function konuListesi() {
 function calistir(script, slug) {
   const r = cp.spawnSync("node", [script, slug], { cwd: KOK, stdio: "inherit" });
   // Seslendirme servisi (ve onaylı yedek ses) yoksa hata konuya ait degildir: konu harcanmaz.
-  if (r.status === NARRATION_UNAVAILABLE_EXIT) throw new AltyapiHatasi(script + ": seslendirme yok (slug: " + slug + ")");
+  if (r.status === NARRATION_UNAVAILABLE_EXIT) throw new AltyapiHatasi("NARRATION_UNAVAILABLE", script + ": seslendirme yok (slug: " + slug + ")");
+  // Gorsel kaynak kesintisi ya da eksik PEXELS_KEY (stok-bul.js cikis 2): konunun degil altyapinin hatasi.
+  if (r.status === ASSET_SOURCE_UNAVAILABLE_EXIT || (script === "stok-bul.js" && r.status === 2)) {
+    throw new AltyapiHatasi("ASSET_SOURCE_UNAVAILABLE", script + ": gorsel kaynagi ulasilamaz (slug: " + slug + ", cikis " + r.status + ")");
+  }
   if (r.status !== 0) throw new Error(script + " basarisiz (slug: " + slug + ")");
 }
 
@@ -200,7 +206,7 @@ function uretBir(slug) {
   catch (e) { asama().fail("ASSETS", e.message); throw e; }
   asama().done("ASSETS");
   try { calistir("shorts-yap.js", slug); }
-  catch (e) { if (e instanceof AltyapiHatasi) asama().fail("NARRATION", e.message); else asama().fail("RENDER", e.message); throw e; }
+  catch (e) { if (e instanceof AltyapiHatasi && e.kind === "NARRATION_UNAVAILABLE") asama().fail("NARRATION", e.message); else asama().fail("RENDER", e.message); throw e; }
   asama().done("NARRATION").done("RENDER");
   const son = kapi(slug, true);
   asama().done("QA", "final gate " + son.karar + " " + son.toplam);
@@ -318,10 +324,12 @@ function main() {
       // Yukleme hatasi konuya ait degildir (yetki/ag): baska konuyu da harcamamak icin dur.
       if (e instanceof YuklemeHatasi) { asama().fail("UPLOAD", e.message).outcome("FAILED", `${slug}: ${e.message}`); console.error(`  ✗ ${slug}: ${e.message}`); return 1; }
       if (e instanceof AltyapiHatasi) {
-        asama().outcome("FAILED", `NARRATION_UNAVAILABLE (${slug}): ${e.message}`);
-        GrowthRuntime.alert(CHANNEL, "NARRATION_UNAVAILABLE", slug, { message: e.message });
-        console.error(`  ✗ ${slug}: ${e.message} — konu harcanmadi; seslendirme gelene kadar baska konu denenmez`);
-        console.log("::error::[" + CHANNEL.name + "] NARRATION_UNAVAILABLE: Edge TTS refused and no approved fallback voice; nothing rendered or uploaded");
+        asama().outcome("FAILED", `${e.kind} (${slug}): ${e.message}`);
+        GrowthRuntime.alert(CHANNEL, e.kind, slug, { message: e.message });
+        console.error(`  ✗ ${slug}: ${e.message} — konu harcanmadi; altyapi duzelene kadar baska konu denenmez`);
+        console.log("::error::[" + CHANNEL.name + "] " + e.kind + (e.kind === "NARRATION_UNAVAILABLE"
+          ? ": Edge TTS refused and no approved fallback voice; nothing rendered or uploaded"
+          : ": an asset source (Wikimedia/archive.org/Pexels) is unreachable; topic kept for the next run"));
         return 1;
       }
       console.error(`  ✗ ${slug} basarisiz: ${e.message} — atlaniyor`);
