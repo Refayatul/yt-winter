@@ -190,4 +190,9 @@ async function wikimediaUrl(baslik, kalite) {
   fs.writeFileSync(path.join(BASE, "GORSEL-KAYNAKLARI.txt"),
     kayit.map(r => `${r.ad}  <=  ${r.kaynak}  [${r.lisans}]`).join("\n") + "\n");
   console.log("✓ Bitti. Kaynak/lisans kaydi: GORSEL-KAYNAKLARI.txt");
-})().catch(e => { console.error("Hata: " + e.message); process.exit(1); });
+})().catch(e => {
+  console.error("Hata: " + e.message);
+  // Kaynak servis kesintisi konuya ait degildir: shorts-sira.js konuyu harcamadan durur.
+  const Outage = require("./lib/source-outage");
+  process.exit(Outage.isTransient(e) ? Outage.ASSET_SOURCE_UNAVAILABLE_EXIT : 1);
+});

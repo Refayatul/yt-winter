@@ -273,11 +273,11 @@ async function main() {
     process.exit(8);
   }
 
-  // An unreviewed fallback voice never reaches YouTube, however the package was produced.
+  // Narration must be verifiable real speech; an unreviewed fallback voice never reaches YouTube.
   const sesOnay = require("./lib/shorts-tts").uploadAllowed(CHANNEL, BASE);
   if (!sesOnay.ok) {
-    hataYaz(BASE, IS, `UNAPPROVED_FALLBACK_VOICE: ${sesOnay.reason}`);
-    console.error(`⛔ UNAPPROVED_FALLBACK_VOICE: ${sesOnay.reason} — yukleme YAPILMADI.`);
+    hataYaz(BASE, IS, `NARRATION_NOT_PUBLISHABLE: ${sesOnay.reason}`);
+    console.error(`⛔ NARRATION_NOT_PUBLISHABLE: ${sesOnay.reason} — yukleme YAPILMADI.`);
     process.exit(14);
   }
 
