@@ -72,6 +72,13 @@ function youtubeVideoForDate(videos, date, timeZone = Calendar.DEFAULT_TIME_ZONE
     .pop() || null;
 }
 
+// The deadline instant for production day `date` (YYYY-MM-DD, channel calendar day) at
+// `deadlineUtc` (HH:MM, UTC). A watchdog that GitHub starts hours late can run after midnight
+// Istanbul, when "today" is already the next production day and its deadline is still ahead.
+function deadlineAt(date, deadlineUtc = "16:30") {
+  return `${date}T${deadlineUtc}:00.000Z`;
+}
+
 function evaluateSnapshot(snapshot) {
   const timeZone = snapshot.timeZone || Calendar.DEFAULT_TIME_ZONE;
   const record = recordForDate(snapshot.published, snapshot.date, timeZone, snapshot.publishTimeZone || timeZone);
@@ -96,13 +103,18 @@ function evaluateSnapshot(snapshot) {
   // Fail closed. An API/authentication failure is never interpreted as an
   // empty day, because doing so could upload a duplicate after a state-commit
   // failure. Recovery is authorized only by a successful remote absence check.
-  const safeToRecover = youtubeVerified && !youtubeTodayExists;
+  // Before the day's deadline nothing is missing yet: never recover (the scheduled run owns the
+  // slot) and never report a failure for a day that has not reached its deadline.
+  const deadlinePassed = snapshot.deadlinePassed !== false;
+  const safeToRecover = youtubeVerified && !youtubeTodayExists && deadlinePassed;
   const productionReady = produced && uploaded && scheduled && videoIdExists && qualityPassed;
   const healthy = productionReady && notificationExists;
   return {
     date: snapshot.date,
     timeZone,
     deadlineUtc: snapshot.deadlineUtc || "16:30",
+    deadlineAt: deadlineAt(snapshot.date, snapshot.deadlineUtc || "16:30"),
+    deadlinePassed,
     channel: snapshot.channel,
     slug,
     produced,
@@ -140,6 +152,8 @@ async function check(options = {}) {
   const date = options.date || Calendar.dayKey(new Date(), timeZone);
   const deadlineUtc = options.deadlineUtc || process.env.PRODUCTION_DEADLINE_UTC || "16:30";
   if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(deadlineUtc)) throw new Error("PRODUCTION_DEADLINE_UTC must be HH:MM");
+  const now = options.now ? new Date(options.now) : new Date();
+  const deadlinePassed = now.getTime() >= Date.parse(deadlineAt(date, deadlineUtc));
   const published = jsonOku(path.join(channel.paths.state, legacy ? "yayinlananlar.json" : "published.json"), []);
   const generated = jsonOku(path.join(channel.paths.state, legacy ? "uretilenler.json" : "generated.json"), []);
   const notificationsState = jsonOku(path.join(channel.paths.state, legacy ? "bildirim-durum.json" : "notification-state.json"), { gonderilen: {} });
@@ -175,6 +189,7 @@ async function check(options = {}) {
     timeZone,
     publishTimeZone,
     deadlineUtc,
+    deadlinePassed,
     channel: channel.slug,
     published,
     generated,
@@ -198,6 +213,7 @@ function writeGitHubOutput(result, outputPath = process.env.GITHUB_OUTPUT) {
     youtube_verified: result.youtubeVerified,
     youtube_today_exists: result.youtubeTodayExists,
     safe_to_recover: result.safeToRecover,
+    deadline_passed: result.deadlinePassed !== false,
     slug: result.slug || "",
     video_id: result.videoId || "",
     publish_at: result.publishAt || "",
@@ -236,6 +252,7 @@ async function main(argv = process.argv.slice(2)) {
     result.youtubeVerified = true;
     result.youtubeTodayExists = false;
     result.safeToRecover = true;
+    result.deadlinePassed = true;
     result.verification = "simulated-scheduler-failure";
   }
   const output = argValue(selected.argv, "--output");
@@ -245,7 +262,7 @@ async function main(argv = process.argv.slice(2)) {
   return result.healthy ? 0 : 2;
 }
 
-module.exports = { argValue, recordForDate, youtubeVideoForDate, evaluateSnapshot, check, writeGitHubOutput, main };
+module.exports = { argValue, deadlineAt, recordForDate, youtubeVideoForDate, evaluateSnapshot, check, writeGitHubOutput, main };
 
 if (require.main === module) main().then((code) => { process.exitCode = code; }).catch((error) => {
   process.stderr.write(JSON.stringify({ healthy: false, checkerError: String(error.message || error) }) + "\n");
