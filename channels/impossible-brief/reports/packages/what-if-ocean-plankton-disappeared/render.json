@@ -2,21 +2,35 @@
   "requested": true,
   "completed": true,
   "audio": {
+    "fallback": null,
+    "speechCheck": {
+      "ok": true,
+      "problems": [],
+      "metrics": {
+        "durationSeconds": 29.4,
+        "voicedShare": 0.774,
+        "rmsVariation": 0.645,
+        "zcrVariation": 1.289,
+        "clippedShare": 0,
+        "longestSilenceSeconds": 0.7,
+        "wordsPerSecond": 2.52
+      }
+    },
     "file": "channels/impossible-brief/state/production/what-if-ocean-plankton-disappeared/narration.m4a",
-    "provider": "non-speech CI fallback; production voice remains configured Edge TTS (claim-timed)",
-    "syntheticVoice": false,
+    "provider": "Microsoft Edge neural TTS (claim-timed)",
+    "syntheticVoice": true,
     "rate": "+2%",
     "claimDurations": [
-      2.6909394432077023,
-      2.6909394432077023,
-      2.6909394432077023,
-      4.124773390818827,
-      4.842679887318897,
-      3.766309130445226,
-      3.766309130445226,
-      3.2271101313487187
+      2.989220089832584,
+      3.6614944875459363,
+      3.2533278889342583,
+      3.6614944875459363,
+      4.501837484687627,
+      3.8055532870559405,
+      3.6134748877092684,
+      3.9135973866884433
     ],
-    "durationSeconds": 27.8,
+    "durationSeconds": 29.4,
     "width": null,
     "height": null,
     "hasAudio": true,
@@ -43,7 +57,7 @@
     "maxVisualUses": 2,
     "explainerShots": 0,
     "proceduralShots": 0,
-    "relevantShare": 0.766,
+    "relevantShare": 0.728,
     "irrelevantShots": [
       {
         "shot": 1,
@@ -85,7 +99,7 @@
     "distinctVisuals": 10,
     "realImageCount": 9,
     "numberCardCount": 1,
-    "maxStaticSeconds": 3.766,
+    "maxStaticSeconds": 3.914,
     "visualChanges": 15,
     "openingHookCovered": true,
     "cardNumbersValid": true,
@@ -180,18 +194,18 @@
       0.843,
       0.5510000000000002,
       0.8639999999999999,
-      0.43293944320770184,
-      0.8160605567922983,
+      0.7312200898325845,
+      0.5177799101674156,
       1.1379999999999995,
-      0.7368788864154041,
-      0.8531211135845957,
-      2.436,
-      3.5265917204419317,
-      1.6134082795580689,
-      3.229271607760829,
-      3.766309130445226,
-      3.766309130445226,
-      3.2271101313487165
+      1.5899999999999999,
+      0.41571457737852135,
+      3.2533278889342583,
+      3.661494487545937,
+      3.4204630461412844,
+      2.4540000000000006,
+      2.4329277256022834,
+      3.6134748877092697,
+      3.913597386688444
     ],
     "sources": [
       {
@@ -245,7 +259,7 @@
       },
       {
         "shot": 8,
-        "claimIndex": 2,
+        "claimIndex": 1,
         "type": "licensed-still",
         "sourceId": "still:NASA GSFC_20171208_Archive_e000413 - The California Current System.jpg",
         "numbers": []
@@ -304,7 +318,7 @@
         "numbers": []
       }
     ],
-    "durationSeconds": 27.8,
+    "durationSeconds": 29.4,
     "width": 1080,
     "height": 1920,
     "hasAudio": true

@@ -141,7 +141,7 @@
     "popularityBand": "unknown",
     "readiness": 95,
     "normalized": {
-      "ageHours": 208,
+      "ageHours": 208.59,
       "viewsPerHour": null,
       "recentViewVelocity": null,
       "likeRate": null,
@@ -46862,6 +46862,215 @@
         "subscriberConversion": 0.00174
       },
       "missing": [],
+      "plateau": null,
+      "breakout": null,
+      "probableCauses": [],
+      "caveat": "Classification is channel-relative correlation, not proof of YouTube recommendation causality."
+    }
+  },
+  {
+    "checkpoints": {},
+    "hookType": "shocking_consequence",
+    "hookScore": 82,
+    "selectedHook": "United Airlines Flight 232 lost all flight controls.",
+    "firstLine": "United Airlines Flight 232 lost all flight controls.",
+    "firstSecondsScore": 97,
+    "topicCluster": "aviation-failures",
+    "bucket": "A",
+    "viralScore": 78,
+    "viralComponents": {
+      "curiosity_gap": {
+        "value": 98,
+        "basis": "derived"
+      },
+      "immediate_stakes": {
+        "value": 94,
+        "basis": "derived"
+      },
+      "human_consequence": {
+        "value": 75,
+        "basis": "derived"
+      },
+      "recognizability": {
+        "value": 77,
+        "basis": "measured"
+      },
+      "surprise": {
+        "value": 90,
+        "basis": "derived"
+      },
+      "visual_potential": {
+        "value": 78,
+        "basis": "derived"
+      },
+      "archival_footage_potential": {
+        "value": 80,
+        "basis": "inventory-signal"
+      },
+      "first_frame_potential": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "title_potential": {
+        "value": 92,
+        "basis": "derived",
+        "note": "4 source-backed title seeds"
+      },
+      "emotional_tension": {
+        "value": 89,
+        "basis": "derived"
+      },
+      "contradiction": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "unexpected_cause": {
+        "value": 82,
+        "basis": "derived"
+      },
+      "numerical_anomaly": {
+        "value": 95,
+        "basis": "derived"
+      },
+      "didnt_know_factor": {
+        "value": 89,
+        "basis": "derived"
+      },
+      "shareability": {
+        "value": 97,
+        "basis": "derived"
+      },
+      "channel_fit": {
+        "value": 100,
+        "basis": "derived"
+      },
+      "historical_similarity": {
+        "value": 61,
+        "basis": "learned",
+        "note": "2 same-cluster upload(s), breakout rate 0"
+      },
+      "subscriber_conversion_potential": {
+        "value": 50,
+        "basis": "learned",
+        "note": "0.00 subscribers / 1,000 views in this topic family"
+      },
+      "audience_breadth": {
+        "value": 85,
+        "basis": "derived"
+      },
+      "hook_potential": {
+        "value": 74,
+        "basis": "derived"
+      },
+      "visual_availability": {
+        "value": 85,
+        "basis": "inventory-signal"
+      },
+      "research_confidence": {
+        "value": 78,
+        "basis": "derived"
+      },
+      "duplicate_risk": {
+        "value": 0,
+        "basis": "penalty",
+        "note": "no published-title collision"
+      },
+      "saturation_risk": {
+        "value": -11,
+        "basis": "penalty",
+        "note": "2 published / 53 inventory in cluster"
+      },
+      "recent_fatigue_risk": {
+        "value": -44,
+        "basis": "penalty",
+        "note": "2 same-family upload(s) in the last 30 days"
+      },
+      "source_confidence_risk": {
+        "value": -22,
+        "basis": "penalty",
+        "note": "78/100 source quality"
+      },
+      "weak_footage_risk": {
+        "value": -15,
+        "basis": "penalty",
+        "note": "archival stills available"
+      }
+    },
+    "storyStructure": "CONSEQUENCE>FAILURE>CAUSE>ESCALATION>ENGINEERING_REVEAL",
+    "titlePattern": "statement",
+    "selectedTitle": "The Hidden Flaw Inside United 232",
+    "titleScore": 86,
+    "titleCandidates": 23,
+    "hookCandidates": 18,
+    "topicScore": 86,
+    "popularityScore": 77,
+    "ctaStyle": "NONE",
+    "durationBucket": "26-35s",
+    "openingVisual": "REAL_ARCHIVAL",
+    "experimentVariant": null,
+    "factors": {
+      "TopicDemandScore": 77,
+      "CuriosityScore": 98,
+      "HookPotentialScore": 74,
+      "VisualImpactScore": 78,
+      "EmotionalImpactScore": 89,
+      "StoryCompressionScore": 100,
+      "RewatchPotentialScore": 79,
+      "SharePotentialScore": 97,
+      "CommentPotentialScore": 83,
+      "SubscriberConversionPotential": 88,
+      "NoveltyScore": 80,
+      "AudienceFitScore": 85,
+      "SourceQualityScore": 78,
+      "ChannelFitScore": 100
+    },
+    "selectionMode": "EXPLOIT",
+    "videoId": "BukKRJfO7zI",
+    "slug": "united-232-1989",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "title": "The Hidden Flaw Inside United 232",
+    "publishAt": "2026-10-13T18:00:00.000Z",
+    "publishHourUTC": 18,
+    "publishSlot": "21:00 TR",
+    "popularityBand": "unknown",
+    "readiness": 93,
+    "normalized": {
+      "ageHours": 1,
+      "viewsPerHour": null,
+      "recentViewVelocity": null,
+      "likeRate": null,
+      "commentRate": null,
+      "shareRate": null,
+      "engagementRate": null,
+      "engagedViewRate": null,
+      "subscriberConversion": null,
+      "subscribersPer1000Views": null
+    },
+    "performance": {
+      "growthScore": null,
+      "classification": "NORMAL",
+      "percentiles": {
+        "viewVelocity": null,
+        "retention": null,
+        "engagement": null,
+        "subscriberConversion": null,
+        "views": null
+      },
+      "baselines": {
+        "views": 928,
+        "viewsPerHour": 5.16,
+        "averagePercentageViewed": 67.92,
+        "engagementRate": 0.02419,
+        "subscriberConversion": 0.00174
+      },
+      "missing": [
+        "viewVelocity",
+        "retention",
+        "engagement",
+        "subscriberConversion",
+        "views"
+      ],
       "plateau": null,
       "breakout": null,
       "probableCauses": [],

@@ -1,17 +1,17 @@
 {
-  "at": "2026-10-13T14:00:19.265Z",
-  "runId": "38409326669",
+  "at": "2026-10-13T14:35:49.785Z",
+  "runId": "38413360708",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "FAILED",
-      "category": "AWAITING_APPROVAL",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "health pre-flight: seslendirme: NARRATION_UNAVAILABLE: Edge sesi reddedildi (Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403); yedek ses yok — fallback voice am_michael is not approved for publishing (config.voice.fallback.approved)",
-      "slug": null,
-      "videoId": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-13T18:00:00.000Z",
+      "reason": null,
+      "slug": "united-232-1989",
+      "videoId": "BukKRJfO7zI",
       "targetDay": "2026-10-13",
       "trigger": {
         "event": "schedule",
@@ -19,121 +19,168 @@
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "growth queue selected united-232-1989",
+          "at": "2026-10-13T14:27:35.380Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre gate PUBLISH 85",
+          "at": "2026-10-13T14:27:35.765Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-13T14:27:39.503Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-13T14:32:45.905Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-13T14:32:45.905Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "final gate PUBLISH 90",
+          "at": "2026-10-13T14:32:48.926Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "BukKRJfO7zI",
+          "at": "2026-10-13T14:32:54.697Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-13T18:00:00.000Z",
+          "at": "2026-10-13T14:32:54.698Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-13T18:00:00.000Z",
+          "at": "2026-10-13T14:32:54.698Z"
         }
       }
     },
     {
       "channel": "impossible-brief",
-      "outcome": "FAILED",
-      "category": "AWAITING_APPROVAL",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "health pre-flight: seslendirme: NARRATION_UNAVAILABLE: Edge sesi reddedildi (Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403); yedek ses yok — fallback voice am_fenrir is not approved for publishing (config.voice.fallback.approved)",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-13T18:00:00.000Z",
+      "reason": null,
+      "slug": "what-if-ocean-plankton-disappeared",
+      "videoId": "yIX2WcN9dEQ",
+      "targetDay": "2026-10-13",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
+          "at": "2026-10-13T14:33:02.010Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre-render readiness PUBLISH 89",
+          "at": "2026-10-13T14:33:02.011Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-13T14:34:03.973Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "Microsoft Edge neural TTS (claim-timed)",
+          "at": "2026-10-13T14:34:03.973Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-13T14:34:03.974Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "validations passed",
+          "at": "2026-10-13T14:34:04.087Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "yIX2WcN9dEQ",
+          "at": "2026-10-13T14:34:08.359Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-13T18:00:00.000Z",
+          "at": "2026-10-13T14:34:08.360Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-13T18:00:00.000Z",
+          "at": "2026-10-13T14:34:08.360Z"
         }
       }
     },
     {
       "channel": "critical-thread",
-      "outcome": "FAILED",
-      "category": "AWAITING_APPROVAL",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "health pre-flight: seslendirme: NARRATION_UNAVAILABLE: Edge sesi reddedildi (Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403); yedek ses yok — fallback voice af_heart is not approved for publishing (config.voice.fallback.approved)",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-13T18:00:00.000Z",
+      "reason": null,
+      "slug": "inside-the-system-built-around-rapid-sand-filter",
+      "videoId": "OOFFfcr0rC4",
+      "targetDay": "2026-10-13",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
+          "at": "2026-10-13T14:34:14.733Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre-render readiness REVIEW 85",
+          "at": "2026-10-13T14:34:14.733Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-13T14:35:27.381Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "Microsoft Edge neural TTS (claim-timed)",
+          "at": "2026-10-13T14:35:27.381Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-13T14:35:27.381Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "validations passed",
+          "at": "2026-10-13T14:35:27.525Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "OOFFfcr0rC4",
+          "at": "2026-10-13T14:35:32.546Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-13T18:00:00.000Z",
+          "at": "2026-10-13T14:35:32.546Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-13T18:00:00.000Z",
+          "at": "2026-10-13T14:35:32.546Z"
         }
       }
     }

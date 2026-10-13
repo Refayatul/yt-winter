@@ -1,6 +1,6 @@
 # Pronunciation validation — united-232-1989
 
-Score: **100/100** (unresolved risky words: 0, AI-cliché phrases: 0)
+Score: **84/100** (unresolved risky words: 2, AI-cliché phrases: 0)
 
 ## Dictionary matches (handled automatically)
 
@@ -8,7 +8,10 @@ _none_
 
 ## Needs a human ear (not in config/pronunciation.json)
 
-_none_
+| Word | Type | Why |
+|---|---|---|
+| Airlines | proper-noun | name/place — confirm the voice pronounces it correctly |
+| Flight | proper-noun | name/place — confirm the voice pronounces it correctly |
 
 ## AI-cliché phrases
 
