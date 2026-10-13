@@ -7,13 +7,21 @@ https://youtu.be/d_xBJEX6QJ8
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-11 | 695 | 16 | 1 | — | — |  |
+| 3d | 2026-10-13 | 984 | 23 | 1 | 61.11 | 1 | Shorts feed 84%, Search 15% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 695 views after 1 days — too early/small for rate-based conclusions.
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 48.1/100 in the title engine; best editorial option scores 48.1.
 
 ## Suggested interventions
 
-- INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
 - WEAK PACKAGING (heuristic) → candidate for a logged title experiment once data exists.
+
+## First major observed retention drop
+
+- Timestamp: 6s; magnitude: 13 percentage points.
+- Active sentence: Cars fell onto Interstate 5, and three people on board were killed.
+- Visual type: REAL ARCHIVAL IMAGE
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 289.

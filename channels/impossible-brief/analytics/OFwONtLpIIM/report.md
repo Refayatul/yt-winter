@@ -8,8 +8,9 @@ https://youtu.be/OFwONtLpIIM
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-07 | 713 | 10 | 1 | — | — |  |
 | 3d | 2026-10-09 | 1155 | 16 | 3 | 65.76 | 0 | Shorts feed 97%, Search 2% |
+| 7d | 2026-10-13 | 1217 | 16 | 3 | 78.26 | 0 | Shorts feed 95%, Search 4% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **HIGH_VIEWS_LOW_SUB_CONVERSION** (medium) — 0.0 subscribers per 1,000 views.
 
@@ -24,4 +25,4 @@ https://youtu.be/OFwONtLpIIM
 - Visual type: AI-GENERATED VISUAL
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 442.
+Views gained between 3d and 7d: 62.

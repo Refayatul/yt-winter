@@ -1,6 +1,6 @@
 {
   "channel": "impossible-brief",
-  "updatedAt": "2026-10-13T17:38:42.535Z",
+  "updatedAt": "2026-10-13T18:23:24.989Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 10,
@@ -10,31 +10,31 @@
       "averagePercentageViewed": 69.31,
       "subscribersPer1000Views": 0,
       "watchHoursPer1000Views": 3.01,
-      "engagementPer1000Views": 20.51
+      "engagementPer1000Views": 20.1
     },
     "observations": [
       {
         "stage": "OBSERVATION",
         "dimension": "hookType",
-        "value": "visual_first_reveal",
-        "sample": 6,
-        "lift": -0.025,
-        "z": -0.19
+        "value": "impossible_question",
+        "sample": 2,
+        "lift": 0.131,
+        "z": 0.7
       },
       {
         "stage": "OBSERVATION",
         "dimension": "hookType",
-        "value": "impossible_question",
-        "sample": 2,
-        "lift": 0.039,
-        "z": 0.26
+        "value": "visual_first_reveal",
+        "sample": 6,
+        "lift": -0.125,
+        "z": -0.98
       },
       {
         "stage": "OBSERVATION",
         "dimension": "hookType",
         "value": "countdown",
         "sample": 1,
-        "lift": 0.37,
+        "lift": 0.473,
         "z": 0
       },
       {
@@ -42,15 +42,7 @@
         "dimension": "hookType",
         "value": "contradiction",
         "sample": 1,
-        "lift": -0.3,
-        "z": 0
-      },
-      {
-        "stage": "OBSERVATION",
-        "dimension": "topicCluster",
-        "value": "EARTH",
-        "sample": 2,
-        "lift": -0.001,
+        "lift": 0.016,
         "z": 0
       },
       {
@@ -58,7 +50,7 @@
         "dimension": "topicCluster",
         "value": "PHYSICS",
         "sample": 1,
-        "lift": -0.11,
+        "lift": -0.055,
         "z": 0
       },
       {
@@ -66,15 +58,15 @@
         "dimension": "topicCluster",
         "value": "SPACE",
         "sample": 3,
-        "lift": -0.137,
-        "z": -0.58
+        "lift": -0.229,
+        "z": -1.17
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "OTHER",
         "sample": 1,
-        "lift": 0.189,
+        "lift": 0.317,
         "z": 0
       },
       {
@@ -82,15 +74,7 @@
         "dimension": "topicCluster",
         "value": "HUMAN",
         "sample": 1,
-        "lift": 0.37,
-        "z": 0
-      },
-      {
-        "stage": "OBSERVATION",
-        "dimension": "topicCluster",
-        "value": "FUTURE TECHNOLOGY",
-        "sample": 1,
-        "lift": -0.3,
+        "lift": 0.473,
         "z": 0
       },
       {
@@ -98,63 +82,79 @@
         "dimension": "topicCluster",
         "value": "EXTREME SCIENCE",
         "sample": 1,
-        "lift": 0.263,
+        "lift": 0.336,
         "z": 0
       },
       {
         "stage": "OBSERVATION",
-        "dimension": "durationBucket",
-        "value": "26-35s",
-        "sample": 5,
-        "lift": -0.105,
-        "z": -0.68
+        "dimension": "topicCluster",
+        "value": "EARTH",
+        "sample": 2,
+        "lift": -0.2,
+        "z": -3.9
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "FUTURE TECHNOLOGY",
+        "sample": 1,
+        "lift": 0.016,
+        "z": 0
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 5,
-        "lift": 0.105,
-        "z": 0.97
+        "lift": 0.16,
+        "z": 1.16
       },
       {
         "stage": "OBSERVATION",
-        "dimension": "titlePattern",
-        "value": "question",
-        "sample": 3,
-        "lift": 0.29,
-        "z": 6.18
+        "dimension": "durationBucket",
+        "value": "26-35s",
+        "sample": 5,
+        "lift": -0.16,
+        "z": -1.37
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "statement",
         "sample": 2,
-        "lift": -0.314,
-        "z": -1.54
+        "lift": -0.301,
+        "z": -1.23
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "what-if-question",
         "sample": 3,
-        "lift": 0.081,
-        "z": 0.55
+        "lift": 0.134,
+        "z": 0.7
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "why",
         "sample": 1,
-        "lift": -0.186,
+        "lift": -0.269,
         "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "question",
+        "sample": 3,
+        "lift": 0.151,
+        "z": 0.84
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "how",
         "sample": 1,
-        "lift": -0.3,
+        "lift": 0.016,
         "z": 0
       },
       {
@@ -168,57 +168,57 @@
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
-        "value": "COMMENT_PROMPT",
-        "sample": 4,
-        "lift": 0.144,
-        "z": 1.29
+        "value": "NONE",
+        "sample": 6,
+        "lift": -0.008,
+        "z": -0.05
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
-        "value": "NONE",
-        "sample": 6,
-        "lift": -0.096,
-        "z": -0.72
+        "value": "COMMENT_PROMPT",
+        "sample": 4,
+        "lift": 0.012,
+        "z": 0.09
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "18",
         "sample": 8,
-        "lift": -0.013,
-        "z": -0.12
+        "lift": 0.017,
+        "z": 0.14
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "22",
         "sample": 2,
-        "lift": 0.053,
-        "z": 0.22
+        "lift": -0.07,
+        "z": -0.35
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "21:00 TR",
         "sample": 7,
-        "lift": 0.059,
-        "z": 0.6
+        "lift": 0.098,
+        "z": 0.94
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "18:00 New York",
         "sample": 2,
-        "lift": 0.053,
-        "z": 0.22
+        "lift": -0.07,
+        "z": -0.35
       },
       {
         "stage": "OBSERVATION",
         "dimension": "popularityBand",
         "value": "unknown",
         "sample": 9,
-        "lift": 0.057,
+        "lift": 0.061,
         "z": 0.68
       },
       {
@@ -241,58 +241,67 @@
     "hypotheses": [
       {
         "stage": "HYPOTHESIS",
-        "dimension": "topicCluster",
-        "value": "SPACE",
-        "sample": 3,
-        "lift": -0.137,
-        "z": -0.58
+        "dimension": "hookType",
+        "value": "visual_first_reveal",
+        "sample": 6,
+        "lift": -0.125,
+        "z": -0.98
       },
       {
         "stage": "HYPOTHESIS",
-        "dimension": "durationBucket",
-        "value": "26-35s",
-        "sample": 5,
-        "lift": -0.105,
-        "z": -0.68
+        "dimension": "topicCluster",
+        "value": "SPACE",
+        "sample": 3,
+        "lift": -0.229,
+        "z": -1.17
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 5,
-        "lift": 0.105,
-        "z": 0.97
+        "lift": 0.16,
+        "z": 1.16
+      },
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "durationBucket",
+        "value": "26-35s",
+        "sample": 5,
+        "lift": -0.16,
+        "z": -1.37
+      },
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "titlePattern",
+        "value": "what-if-question",
+        "sample": 3,
+        "lift": 0.134,
+        "z": 0.7
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "titlePattern",
         "value": "question",
         "sample": 3,
-        "lift": 0.29,
-        "z": 6.18
-      },
-      {
-        "stage": "HYPOTHESIS",
-        "dimension": "ctaStyle",
-        "value": "COMMENT_PROMPT",
-        "sample": 4,
-        "lift": 0.144,
-        "z": 1.29
+        "lift": 0.151,
+        "z": 0.84
       }
     ],
     "adopted": [],
     "suppressed": [],
     "adoptedWeights": {
-      "TopicDemandScore": 1.178,
-      "HookPotentialScore": 0.889,
+      "CuriosityScore": 0.836,
+      "HookPotentialScore": 0.8,
       "EmotionalImpactScore": 0.8,
       "StoryCompressionScore": 0.8,
       "RewatchPotentialScore": 0.8,
-      "SharePotentialScore": 0.889,
+      "SharePotentialScore": 0.863,
       "CommentPotentialScore": 0.8,
       "SubscriberConversionPotential": 0.8,
       "NoveltyScore": 0.8,
-      "SourceQualityScore": 0.8
+      "SourceQualityScore": 0.8,
+      "ChannelFitScore": 0.838
     },
     "adoptedHookFamilyBonus": {},
     "adoptedTitlePatternBonus": {},

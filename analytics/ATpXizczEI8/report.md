@@ -8,8 +8,9 @@ https://youtu.be/ATpXizczEI8
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-07 | 112 | 5 | 1 | — | — |  |
 | 3d | 2026-10-09 | 419 | 6 | 1 | 61.96 | 0 | Shorts feed 73%, Search 25% |
+| 7d | 2026-10-13 | 451 | 6 | 1 | 53.43 | 0 | Shorts feed 67%, Search 32% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 46.1/100 in the title engine; best editorial option scores 46.1.
 
@@ -19,9 +20,9 @@ https://youtu.be/ATpXizczEI8
 
 ## First major observed retention drop
 
-- Timestamp: 5s; magnitude: 19 percentage points.
+- Timestamp: 5s; magnitude: 17 percentage points.
 - Active sentence: It landed safely, yet all three hundred one people aboard died.
 - Visual type: REAL ARCHIVAL IMAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 307.
+Views gained between 3d and 7d: 32.

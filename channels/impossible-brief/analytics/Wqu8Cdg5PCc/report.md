@@ -7,11 +7,21 @@ https://youtu.be/Wqu8Cdg5PCc
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-11 | 744 | 15 | 3 | — | — |  |
+| 3d | 2026-10-13 | 1037 | 17 | 3 | 61.36000000000001 | 1 | Shorts feed 96%, Browse/other YouTube 2% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 744 views after 1 days — too early/small for rate-based conclusions.
+- **HIGH_VIEWS_LOW_SUB_CONVERSION** (medium) — 1.0 subscribers per 1,000 views.
 
 ## Suggested interventions
 
-- INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
+- HIGH VIEWS + LOW SUBS → improve subscriber conversion (contextual CTA after the payoff, series links, pinned comment).
+
+## First major observed retention drop
+
+- Timestamp: 5s; magnitude: 16 percentage points.
+- Active sentence: neutron star size over a city map
+- Visual type: AI-GENERATED VISUAL
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 293.

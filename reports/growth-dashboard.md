@@ -1,18 +1,18 @@
 # Growth dashboard
 
-Generated 2026-10-13T17:38:45.141Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-10-13T18:23:35.159Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
-**Shorts health** — last published 2026-10-13T18:00:00.000Z · 22 published · inventory A83/B151/C61/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-13T18:00:00.000Z · 22 published · inventory A81/B154/C60/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — challenger-1986 84/A, chernobyl-1986 83/A, columbia-2003 83/A, lahaina-fire-2023 83/A, laquila-earthquake-2009 83/A
+**Long-form backlog** — challenger-1986 84/A, air-france-447-2009 83/A, armero-1985 83/A, chernobyl-1986 83/A, columbia-2003 83/A
 
 **Content clusters** — 12 · integrity OK
 
-**Growth / subscriber conversion** — tracked 23 · subs/1k Shorts 1.92 · subs/1k long n/a
+**Growth / subscriber conversion** — tracked 23 · subs/1k Shorts 1.56 · subs/1k long n/a
 
 **Learning** — Shorts adaptive (n=21, adopted 0) · Long-form heuristics-only (n=0)
 
@@ -20,11 +20,11 @@ Generated 2026-10-13T17:38:45.141Z. Per-channel baselines are computed separatel
 
 **Research/source enrichment tasks**
 
-- apollo-1-1967 (C): VideoPotential 87 in experimental band 58–71; sources 41 < 62
-- new-london-school-1937 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
-- munich-1958 (C): VideoPotential 86 in experimental band 58–71; sources 41 < 62
+- apollo-1-1967 (C): VideoPotential 86 in experimental band 58–71; sources 41 < 62
+- munich-1958 (C): VideoPotential 85 in experimental band 58–71; sources 41 < 62
+- castle-bravo-1954 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
 - skylab-1973 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
-- castle-bravo-1954 (C): VideoPotential 85 in experimental band 58–71; sources 41 < 62
+- boston-molasses-1919 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
 
 **Recent alerts**
 
@@ -35,11 +35,11 @@ Generated 2026-10-13T17:38:45.141Z. Per-channel baselines are computed separatel
 
 ## ImpossibleBrief
 
-**Shorts health** — last published 2026-10-13T18:00:00.000Z · 13 published · inventory A113/B28/C139/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-13T18:00:00.000Z · 13 published · inventory A118/B22/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — what-if-we-swam-in-europas-ocean 81/A, what-if-you-visited-io-the-volcano-moon 81/A, what-if-the-dinosaur-killing-asteroid-hit-today 81/A, what-if-a-90-day-rover-lasted-14-years 81/A, could-earth-survive-one-day-without-earth-s-magnetic-field 81/A
+**Long-form backlog** — what-if-we-swam-in-europas-ocean 81/A, what-if-you-visited-io-the-volcano-moon 81/A, what-if-the-dinosaur-killing-asteroid-hit-today 81/A, what-if-a-90-day-rover-lasted-14-years 81/A, what-if-synthetic-fertilizer-disappeared 81/A
 
 **Content clusters** — 7 · integrity OK
 
@@ -51,10 +51,10 @@ Generated 2026-10-13T17:38:45.141Z. Per-channel baselines are computed separatel
 
 **Research/source enrichment tasks**
 
-- what-if-human-heat-tolerance-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
+- what-if-human-heat-tolerance-doubled-overnight (C): VideoPotential 72 in experimental band 58–71; boilerplate 0.5
 - could-we-function-with-half-human-heat-tolerance (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - what-if-human-muscle-efficiency-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
-- what-if-the-brain-s-energy-use-doubled-overnight (C): VideoPotential 72 in experimental band 58–71; boilerplate 0.5
+- what-if-the-brain-s-energy-use-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - would-doubling-all-synthetic-fertilizers-help-or-harm-us (C): VideoPotential 72 in experimental band 58–71; boilerplate 0.5
 
 **Recent alerts**
@@ -72,7 +72,7 @@ Generated 2026-10-13T17:38:45.141Z. Per-channel baselines are computed separatel
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — why-submarine-fiber-optic-cable-is-so-hard-to-replace 79/A, what-quietly-depends-on-cable-landing-station 79/A, the-critical-role-of-cable-laying-ship 79/A, the-critical-role-of-urban-traffic-control-network 79/A, inside-the-system-built-around-road-tunnel-ventilation-system 78/A
+**Long-form backlog** — inside-the-system-built-around-road-tunnel-ventilation-system 79/A, the-critical-role-of-urban-traffic-control-network 79/A, why-submarine-fiber-optic-cable-is-so-hard-to-replace 78/A, what-quietly-depends-on-cable-landing-station 78/A, the-critical-role-of-cable-laying-ship 78/A
 
 **Content clusters** — 6 · integrity OK
 
