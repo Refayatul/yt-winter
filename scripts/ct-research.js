@@ -292,10 +292,12 @@ async function main(argv = process.argv.slice(2), deps = {}) {
     try { outcome = await researchOne(topic, { get, generate, verify }); }
     catch (error) {
       if (error instanceof Provider.LongformProviderError && error.defer) {
-        console.log(`provider deferred (${error.code}${error.status ? ` HTTP ${error.status}` : ""}); stopping this batch`);
+        console.log(`✗ ${topic.id} ${topic.slug}: provider deferred (${Provider.describeError(error)}); stopping this batch`);
         break;
       }
-      outcome = { status: "ERROR", reason: String(error.code || error.message).slice(0, 200) };
+      // Provider failures carry HTTP status, sanitized provider code/message, request size, stage
+      // and retry class (core/llm/longform-provider.js describeError); never keys or prompts.
+      outcome = { status: "ERROR", reason: (error instanceof Provider.LongformProviderError ? Provider.describeError(error) : String(error.code || error.message)).slice(0, 400) };
     }
     outcomes.push({ topic: topic.slug, ...outcome });
     console.log(`${outcome.status === "VERIFIED" ? "✓" : "✗"} ${topic.id} ${topic.slug}: ${outcome.status}${outcome.reason ? " — " + outcome.reason : ""}`);

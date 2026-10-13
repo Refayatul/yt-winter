@@ -30,7 +30,10 @@ const httpReplacement = `  if (!response.ok) {
     if (detail) classified.message = classified.message + ": " + detail;
     throw classified;
   }`;
-if (!provider.includes(httpReplacement)) {
+// The provider now reports sanitized HTTP diagnostics itself (groqHttpError); the patch is only
+// needed for an older provider file.
+const nativeDiagnostics = provider.includes("throw await groqHttpError(response, input, sent);");
+if (!nativeDiagnostics && !provider.includes(httpReplacement)) {
   if (!provider.includes(httpNeedle)) throw new Error("Groq HTTP diagnostic patch target not found");
   provider = provider.replace(httpNeedle, httpReplacement);
 }
