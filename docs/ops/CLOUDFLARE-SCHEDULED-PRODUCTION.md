@@ -140,25 +140,44 @@ with the old `35 16 * * *` trigger. The new script maps that cron to the same wa
 the watchdog keeps working. A regression test covers this. The deploy workflow then turns red at
 its schedule check.
 
-## Deployment (owner, after review and merge)
+## Deployment (owner)
 
-1. Merge the PR. Nothing changes in production yet: the Worker still runs the old version with
-   one cron.
-2. Run **Deploy independent production watchdog** (`deploy-watchdog.yml`). It deploys the Worker
-   with the four crons and verifies the deployment list, the schedules and `/health`.
-3. Run **Watchdog repository_dispatch self-test** to confirm the token still works.
-4. Watch one day with the flags still unset. At 07:05, 13:05 and 19:05 UTC, gate-only runs should
-   appear and log `Dispatch verified … correlation …` followed by the "nothing is produced"
-   notice. A `Dispatch rejected` error means signing is misconfigured. Fix it before enabling.
-5. Set `CF_PUBLICATION_DISPATCH=1` (the check is read-only). After one good day, set
-   `CF_PRODUCTION_DISPATCH=1`.
+Deploy only through **Deploy independent production watchdog** (`deploy-watchdog.yml`), run from
+`main`. Its `mode` input defaults to `preflight`, which is read-only.
+
+1. **Preflight.** Run the workflow with `mode: preflight`. It changes nothing in Cloudflare. It:
+   - refuses (exit 7) when `CF_PRODUCTION_DISPATCH` or `CF_PUBLICATION_DISPATCH` is `1`;
+   - lists every Worker on the account and counts their Cron Triggers;
+   - refuses (exit 9) when the Cron Triggers on other Workers plus this Worker's 4 exceed the limit
+     (5, the Free limit, unless the repository variable `CF_WORKERS_PLAN=paid`);
+   - refuses (exit 8) when the token cannot list Workers or read their schedules;
+   - writes the currently deployed version, commit and triggers to the run summary, and saves the
+     `deployments-before.json` and `health-before.json` evidence.
+2. **Go/no-go.** Continue only if the preflight is green, the summary shows ≤ 1 Cron Trigger on
+   other Workers (on Free), and the current watchdog reports `tokenConfigured: true`.
+3. **Deploy.** Run the workflow again with `mode: deploy` and `confirm_flags_enabled` left off.
+   The preflight runs again, then the workflow:
+   1. stores the token;
+   2. deploys the Worker with the four crons;
+   3. verifies the deployment list, the four schedules and `/health` (`signatureVersion: v1`,
+      same commit).
+4. Run **Watchdog repository_dispatch self-test** to confirm the token still works.
+5. **Watch one day with the flags unset.**
+   - At 07:05, 13:05 and 19:05 UTC, gate-only runs of *Multi-channel portfolio production* and
+     *Gunluk kontrol* should log `Dispatch verified … correlation …` and then the "nothing is
+     produced" / "nothing runs" notice. The production or check job should be skipped.
+   - At 16:35 UTC the watchdog should run exactly as before.
+   - A `Dispatch rejected` error means signing is misconfigured. Fix it before enabling anything.
+6. Set `CF_PUBLICATION_DISPATCH=1` (read-only towards YouTube). After a clean day, consider
+   `CF_PRODUCTION_DISPATCH=1`. That second flag needs a separate owner decision and a working
+   narration provider.
 
 ## Rollback
 
 | Goal | Action |
 |---|---|
 | Stop dispatch-driven production immediately | Unset `CF_PRODUCTION_DISPATCH` and/or `CF_PUBLICATION_DISPATCH`. Runs end at the gate. GitHub crons and the watchdog continue. |
-| Return to the single watchdog cron | Revert the Worker files (`src/index.mjs`, `wrangler.toml`) and `deploy-watchdog.yml`, then rerun the deploy workflow. It replaces the Worker and its Cron Triggers. |
+| Return to the single watchdog cron (code **and** crons) | Create a branch at the last pre-#263 commit, for example `git push origin 55db5a51:refs/heads/watchdog-rollback`. Then run *Deploy independent production watchdog* with **Use workflow from: `watchdog-rollback`**. That version's `wrangler.toml` has only `35 16 * * *`, and `wrangler deploy` replaces the Worker code and all its Cron Triggers in one run. Its verify step checks the single cron and `/health`. Delete the branch afterwards. |
 | **Do not** use the Cloudflare dashboard's version rollback | Cron Triggers are not part of a Worker version. A rolled-back old script would keep all four crons, and the old script sends the watchdog event for *every* cron. That means four watchdog runs a day: 07:05 and 13:05 are harmless because they come before the deadline, but at 19:05 an empty day would be "recovered" after the 21:00 release. Always roll back by redeploying from the repository. |
 | Stop ahead-of-time production | Set `leadDays` back to `0`. Short already scheduled for future days stay scheduled. Delete them in YouTube Studio only if needed. |
 

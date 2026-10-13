@@ -1,7 +1,20 @@
 name: Deploy independent production watchdog
 
+# mode=preflight (the default) is read-only: it checks the account's Cron Trigger capacity, the
+# repository flags and the currently deployed watchdog, and changes nothing in Cloudflare.
+# mode=deploy runs the same preflight first and deploys only when it passes.
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: preflight = read-only checks; deploy = preflight, then deploy and verify
+        type: choice
+        options: [preflight, deploy]
+        default: preflight
+      confirm_flags_enabled:
+        description: Deploy even though CF_PRODUCTION_DISPATCH or CF_PUBLICATION_DISPATCH is '1'
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -17,6 +30,9 @@ jobs:
       # Every Cron Trigger the Worker must have (src/index.mjs SCHEDULE, wrangler.toml [triggers]).
       DISPATCH_CRONS: '5 7 * * *|5 13 * * *|35 16 * * *|5 19 * * *'
       PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
+      # Workers Free allows 5 Cron Triggers per account, Paid 250. The plan cannot be read with a
+      # Workers-scoped token, so the Free limit is assumed unless the owner sets CF_WORKERS_PLAN=paid.
+      CRON_LIMIT: ${{ vars.CF_WORKERS_PLAN == 'paid' && '250' || '5' }}
     defaults:
       run:
         working-directory: ops/production-watchdog-worker
@@ -71,7 +87,85 @@ jobs:
           console.log(`Cron triggers verified: ${crons.join(", ")}`);
           NODE
 
+      - name: Refuse when dispatch flags are already enabled
+        env:
+          PRODUCTION_FLAG: ${{ vars.CF_PRODUCTION_DISPATCH }}
+          PUBLICATION_FLAG: ${{ vars.CF_PUBLICATION_DISPATCH }}
+          CONFIRMED: ${{ inputs.confirm_flags_enabled }}
+        run: |
+          echo "CF_PRODUCTION_DISPATCH=${PRODUCTION_FLAG:-unset} · CF_PUBLICATION_DISPATCH=${PUBLICATION_FLAG:-unset}"
+          if [ "$PRODUCTION_FLAG" = "1" ] || [ "$PUBLICATION_FLAG" = "1" ]; then
+            if [ "$CONFIRMED" = "true" ]; then echo "::warning::Dispatch flags are enabled and the owner confirmed it."; exit 0; fi
+            echo "::error::A dispatch flag is enabled. The first deployment must run with both flags unset (or set confirm_flags_enabled)."
+            exit 7
+          fi
+
+      # Read-only. Counts every Cron Trigger on the account (all Workers) and refuses when this
+      # Worker's triggers would not fit; records the currently deployed watchdog as rollback evidence.
+      - name: Preflight — account cron capacity and current watchdog
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          set -o pipefail
+          EVIDENCE="$RUNNER_TEMP/watchdog-deployment-evidence/preflight"
+          mkdir -p "$EVIDENCE"
+          api() {
+            curl --fail --silent --show-error -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
+              "https://api.cloudflare.com/client/v4/accounts/$CLOUDFLARE_ACCOUNT_ID/$1"
+          }
+          api "workers/scripts" > "$EVIDENCE/scripts.json" || {
+            echo "::error::Cannot list the account's Workers; the API token needs Workers Scripts read access."
+            exit 8
+          }
+          jq -e '.success == true' "$EVIDENCE/scripts.json" >/dev/null
+          echo '[]' > "$EVIDENCE/crons.json"
+          for script in $(jq -r '.result[].id' "$EVIDENCE/scripts.json"); do
+            api "workers/scripts/$script/schedules" > "$EVIDENCE/schedules-$script.json" || {
+              echo "::error::Cannot read the Cron Triggers of Worker $script; capacity cannot be verified."
+              exit 8
+            }
+            jq --arg s "$script" '. + [ (input.result.schedules // [])[] | {script: $s, cron} ]' \
+              "$EVIDENCE/crons.json" "$EVIDENCE/schedules-$script.json" > "$EVIDENCE/crons.next" && mv "$EVIDENCE/crons.next" "$EVIDENCE/crons.json"
+          done
+          OTHER=$(jq --arg w "$WORKER_NAME" '[.[] | select(.script != $w)] | length' "$EVIDENCE/crons.json")
+          CURRENT=$(jq -c --arg w "$WORKER_NAME" '[.[] | select(.script == $w) | .cron]' "$EVIDENCE/crons.json")
+          NEEDED=$(awk -F'|' '{print NF}' <<< "$DISPATCH_CRONS")
+          WORKERS=$(jq '.result | length' "$EVIDENCE/scripts.json")
+          {
+            echo "## Watchdog preflight"
+            echo ""
+            echo "| Check | Value |"
+            echo "|---|---|"
+            echo "| Workers on the account | $WORKERS |"
+            echo "| Cron Triggers on other Workers | $OTHER |"
+            echo "| $WORKER_NAME triggers now | \`$CURRENT\` |"
+            echo "| Triggers after deploy | $NEEDED |"
+            echo "| Account limit assumed | $CRON_LIMIT (set CF_WORKERS_PLAN=paid only for a Workers Paid account) |"
+          } >> "$GITHUB_STEP_SUMMARY"
+          if [ $((OTHER + NEEDED)) -gt "$CRON_LIMIT" ]; then
+            echo "::error::Not enough Cron Trigger capacity: $OTHER on other Workers + $NEEDED needed > limit $CRON_LIMIT. Nothing was changed."
+            exit 9
+          fi
+          echo "Capacity OK: $OTHER + $NEEDED <= $CRON_LIMIT"
+          echo "$CURRENT" | jq -e --arg cron "$WATCHDOG_CRON" 'index($cron) != null' >/dev/null \
+            || echo "::warning::The deployed watchdog does not currently have the $WATCHDOG_CRON trigger."
+          npx --yes "wrangler@$WRANGLER_VERSION" deployments list --json > "$EVIDENCE/deployments-before.json" \
+            || echo "::warning::wrangler deployments list failed (evidence only)."
+          SUBDOMAIN=$(api "workers/subdomain" | jq -er 'select(.success == true) | .result.subdomain') || SUBDOMAIN=""
+          if [ -n "$SUBDOMAIN" ] && curl --fail --silent --show-error "https://$WORKER_NAME.$SUBDOMAIN.workers.dev/health" > "$EVIDENCE/health-before.json"; then
+            jq '{ok,tokenConfigured,cron,deadlineUtc,version,commit,signatureVersion}' "$EVIDENCE/health-before.json"
+            {
+              echo "| Deployed version | $(jq -r '.version // "?"' "$EVIDENCE/health-before.json") |"
+              echo "| Deployed commit | $(jq -r '.commit // "?"' "$EVIDENCE/health-before.json") |"
+              echo "| Token configured | $(jq -r '.tokenConfigured' "$EVIDENCE/health-before.json") |"
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::warning::The current watchdog /health endpoint is not reachable."
+          fi
+
       - name: Store GitHub dispatch token in the Worker
+        if: inputs.mode == 'deploy'
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -79,6 +173,7 @@ jobs:
         run: printf '%s' "$WATCHDOG_GITHUB_TOKEN" | npx --yes "wrangler@$WRANGLER_VERSION" secret put WATCHDOG_GITHUB_TOKEN
 
       - name: Deploy Worker and independent cron trigger
+        if: inputs.mode == 'deploy'
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
@@ -96,6 +191,7 @@ jobs:
             | tee "$RUNNER_TEMP/watchdog-deployment-evidence/deploy.log"
 
       - name: Verify deployed version, cron, secret and health endpoint
+        if: inputs.mode == 'deploy'
         env:
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
