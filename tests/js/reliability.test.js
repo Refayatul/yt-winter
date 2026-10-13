@@ -20,7 +20,7 @@ test("production SLA emits the required healthy machine-readable shape", () => {
     published: [{ slug: "deepwater-horizon-2010", videoId: "aScjSrwqeRk", format: "short", tarih: "2026-09-27T12:31:08Z", publishAt: "2026-09-27T18:00:00Z", kalite: "PUBLISH" }],
     generated: ["deepwater-horizon-2010"],
     notifications: { "video:aScjSrwqeRk": "2026-09-27T12:33:01Z" },
-    quality: { asama: "final", karar: "PUBLISH" },
+    quality: { slug: "deepwater-horizon-2010", asama: "final", karar: "PUBLISH", tarih: "2026-09-27T12:30:40Z" },
     remoteVideoExists: true,
     youtubeVerified: true,
   });
