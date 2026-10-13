@@ -80,8 +80,10 @@ async function main() {
     const result = Analytics.backfillLegacy(channel);
     const rows = Performance.refresh(channel, Analytics.readAll(channel));
     const learning = Learning.learn(channel, rows);
+    // Per-cluster performance statistics. Not clusters.json: that file holds the content-cluster
+    // membership (core/growth/funnel.js), and overwriting it broke every later Short's afterUpload.
     const clusters = { channel: channel.slug, updatedAt: new Date().toISOString(), clusters: Performance.clusterStats(rows) };
-    Store.writeState(channel, "growth", "clusters.json", clusters);
+    Store.writeState(channel, "growth", "cluster-stats.json", clusters);
     const report = Report.detailedChannel(channel);
     const directory = path.join("reports", channel.slug.replace(/-/g, "_"));
     fs.mkdirSync(directory, { recursive: true });
