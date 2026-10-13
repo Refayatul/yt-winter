@@ -1,9 +1,9 @@
 {
   "channel": "failure-reconstructed",
   "channelName": "Failure Reconstructed",
-  "tarih": "2026-10-12T23:06:11.417Z",
+  "tarih": "2026-10-13T13:59:25.213Z",
   "aggregateManaged": true,
-  "yuklemeUygun": true,
+  "yuklemeUygun": false,
   "bulgular": [
     {
       "ad": "youtube-yetki",
@@ -33,7 +33,28 @@
     {
       "ad": "kutuphane",
       "durum": "ok",
-      "mesaj": "327 günlük üretilmemiş konu var"
+      "mesaj": "355 günlük üretilmemiş konu var"
+    },
+    {
+      "ad": "nitelikli-konu",
+      "durum": "ok",
+      "mesaj": "29 nitelikli konu (ilk: united-232-1989)"
+    },
+    {
+      "ad": "seslendirme",
+      "durum": "kritik",
+      "mesaj": "NARRATION_UNAVAILABLE: Edge sesi reddedildi (Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403); yedek ses yok — fallback voice am_michael is not approved for publishing (config.voice.fallback.approved)",
+      "cozum": "Yedek sesi (config.voice.fallback) dinleyip onaylayın ya da Edge'in düzelmesini bekleyin. Konu harcanmaz, hiçbir şey render edilmez."
+    },
+    {
+      "ad": "render-araclari",
+      "durum": "ok",
+      "mesaj": "ffmpeg, ffprobe ve gereken filtreler hazır"
+    },
+    {
+      "ad": "disk",
+      "durum": "ok",
+      "mesaj": "89.8 GB boş alan"
     }
   ]
 }

@@ -1,9 +1,9 @@
 {
   "channel": "critical-thread",
   "channelName": "CriticalThread",
-  "tarih": "2026-10-12T23:37:58.103Z",
+  "tarih": "2026-10-13T13:59:59.899Z",
   "aggregateManaged": true,
-  "yuklemeUygun": true,
+  "yuklemeUygun": false,
   "bulgular": [
     {
       "ad": "youtube-yetki",
@@ -34,6 +34,28 @@
       "ad": "kutuphane",
       "durum": "ok",
       "mesaj": "513 günlük üretilmemiş konu var"
+    },
+    {
+      "ad": "nitelikli-konu",
+      "durum": "uyari",
+      "mesaj": "3 nitelikli konu (ilk: inside-the-system-built-around-rapid-sand-filter)",
+      "cozum": "Konu araştırması/görsel kürasyonu gerekiyor; eşik düşürülmez."
+    },
+    {
+      "ad": "seslendirme",
+      "durum": "kritik",
+      "mesaj": "NARRATION_UNAVAILABLE: Edge sesi reddedildi (Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403); yedek ses yok — fallback voice af_heart is not approved for publishing (config.voice.fallback.approved)",
+      "cozum": "Yedek sesi (config.voice.fallback) dinleyip onaylayın ya da Edge'in düzelmesini bekleyin. Konu harcanmaz, hiçbir şey render edilmez."
+    },
+    {
+      "ad": "render-araclari",
+      "durum": "ok",
+      "mesaj": "ffmpeg, ffprobe ve gereken filtreler hazır"
+    },
+    {
+      "ad": "disk",
+      "durum": "ok",
+      "mesaj": "89.8 GB boş alan"
     }
   ]
 }
