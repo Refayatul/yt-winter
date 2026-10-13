@@ -3,7 +3,7 @@
   "channel": "critical-thread",
   "channelName": "CriticalThread",
   "contentType": "long",
-  "createdAt": "2026-10-12T16:32:45.260Z",
+  "createdAt": "2026-10-12T16:54:00.455Z",
   "topic": {
     "id": "CT-077",
     "slug": "the-critical-role-of-cable-laying-ship",
@@ -119,7 +119,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 1
+    "reuseCount": 2
   },
   "outline": {
     "structure": [
@@ -401,18 +401,237 @@
     }
   },
   "script": {
-    "generator": "deterministic-evidence",
+    "generator": "llm:groq:openai/gpt-oss-120b",
     "provider": "groq",
-    "model": null,
-    "status": "DEFERRED",
-    "pipeline": null,
-    "blueprint": null,
-    "quality": null,
+    "model": "openai/gpt-oss-120b",
+    "status": "QUALITY_REVIEW",
+    "pipeline": [
+      "TOPIC",
+      "RESEARCH_EVIDENCE",
+      "FACT_PACK",
+      "NARRATIVE_ANGLE",
+      "OUTLINE",
+      "SECTION_PLAN",
+      "SECTION_GENERATION",
+      "CONTINUITY_PASS",
+      "RETENTION_PASS",
+      "FACTUAL_CONSISTENCY_CHECK",
+      "FINAL_VOICEOVER_SCRIPT"
+    ],
+    "blueprint": {
+      "central_question": "Why do the internet's fastest links depend on a small fleet of slow, specialised ships?",
+      "audience_promise": "Answer one precise question about cable‑laying ship using only documented evidence.",
+      "narrative_angle": "A hidden, slow‑moving fleet of purpose‑built cable ships is the invisible backbone that makes today’s ultra‑fast internet possible – their deliberate pace, specialized gear, and limited numbers create a critical bottleneck that shapes global connectivity.",
+      "hook_candidates": [
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object]."
+      ],
+      "retention_beats": [
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object].",
+        "[object Object]."
+      ],
+      "uncertain_claims": [],
+      "section_plan": [
+        {
+          "section": "COLD_OPEN",
+          "question": "What is the unresolved consequence the viewer sees first?",
+          "claimIds": [
+            "C1",
+            "C4",
+            "C5",
+            "C6",
+            "C7",
+            "C8",
+            "C9",
+            "C10",
+            "C21"
+          ]
+        },
+        {
+          "section": "INVISIBLE_SYSTEM",
+          "question": "What is it?",
+          "claimIds": [
+            "C11",
+            "C12",
+            "C13",
+            "C14",
+            "C15",
+            "C16",
+            "C17",
+            "C18",
+            "C28",
+            "C29",
+            "C30",
+            "C31",
+            "C32",
+            "C33",
+            "C34",
+            "C35",
+            "C36",
+            "C37",
+            "C38",
+            "C39",
+            "C40",
+            "C41",
+            "C42",
+            "C43",
+            "C44",
+            "C45",
+            "C46",
+            "C47",
+            "C48",
+            "C49",
+            "C50",
+            "C51",
+            "C52",
+            "C53",
+            "C54",
+            "C55",
+            "C56",
+            "C57",
+            "C58",
+            "C59",
+            "C60",
+            "C61",
+            "C62",
+            "C63",
+            "C64",
+            "C65",
+            "C66",
+            "C67",
+            "C68",
+            "C69",
+            "C70",
+            "C71",
+            "C72",
+            "C73",
+            "C74",
+            "C75",
+            "C76",
+            "C77",
+            "C78",
+            "C79",
+            "C80",
+            "C81",
+            "C82",
+            "C83",
+            "C84",
+            "C85",
+            "C86",
+            "C87",
+            "C88",
+            "C89",
+            "C90",
+            "C91",
+            "C92",
+            "C93",
+            "C94",
+            "C95",
+            "C96",
+            "C97",
+            "C98",
+            "C99",
+            "C100"
+          ]
+        },
+        {
+          "section": "WHERE_IT_EXISTS",
+          "question": "Where is it?",
+          "claimIds": [
+            "C22",
+            "C23",
+            "C24",
+            "C25",
+            "C26",
+            "C27"
+          ]
+        },
+        {
+          "section": "HOW_IT_WORKS",
+          "question": "How does it work?",
+          "claimIds": [
+            "C2"
+          ]
+        },
+        {
+          "section": "WHAT_DEPENDS_ON_IT",
+          "question": "What depends on it?",
+          "claimIds": []
+        },
+        {
+          "section": "BOTTLENECK",
+          "question": "Where is the chokepoint?",
+          "claimIds": [
+            "C19"
+          ]
+        },
+        {
+          "section": "WHY_THE_BOTTLENECK_EXISTS",
+          "question": "Why can't it be replaced quickly?",
+          "claimIds": []
+        },
+        {
+          "section": "FAILURE_SCENARIO",
+          "question": "What if it fails?",
+          "claimIds": []
+        },
+        {
+          "section": "CASCADING_CONSEQUENCES",
+          "question": "What fails next?",
+          "claimIds": [
+            "C1",
+            "C21"
+          ]
+        },
+        {
+          "section": "REDUNDANCY_ALTERNATIVES",
+          "question": "What protects the system?",
+          "claimIds": [
+            "C20"
+          ]
+        },
+        {
+          "section": "FINAL_SYSTEM_INSIGHT",
+          "question": "What does this reveal about the modern world?",
+          "claimIds": []
+        }
+      ]
+    },
+    "quality": {
+      "duplicateSections": [],
+      "repeatedPhrases": [],
+      "weakHook": false,
+      "payoff": false,
+      "filler": [],
+      "introShare": 0.44,
+      "missingPlanSections": [],
+      "hardFails": [
+        "missing final payoff"
+      ],
+      "notes": [
+        "introduction exceeds 25% of the script"
+      ]
+    },
     "checkpoint": "generation/the-critical-role-of-cable-laying-ship.json",
-    "llmError": "groq rate limit reached; long-form generation deferred",
-    "llmErrorCode": "RATE_LIMIT",
-    "llmErrorStage": "section:HOW_IT_WORKS",
-    "depthNote": null,
+    "llmError": null,
+    "llmErrorCode": null,
+    "llmErrorStage": null,
+    "depthNote": "Section stays under 171 words, each paragraph cites only its supporting claim IDs and rewrites all flagged claims. All paragraphs rely exclusively on the six supplied confirmed‑fact claims; no additional inference was added. Only claim C2 was used for this section. Highlights the physical chokepoint caused by the limited, specialized cable‑ship fleet. Only the supplied claims C1 and C21 are used; no additional information added. Only claim C20 used for this section",
     "sections": [
       {
         "section": "COLD_OPEN",
@@ -428,16 +647,51 @@
         "section": "INVISIBLE_SYSTEM",
         "paragraphs": [
           {
-            "text": "Most people never see it. Cable ships are limited to a speed of eight knots while laying cable so it lies properly on the sea floor. A cable's position must be carefully mapped as it is laid. In 1866 the SS Great Eastern successfully laid two transatlantic cables. Oersted, built in 1872 for the Great Northern Telegraph Company, was the first ship specifically designed for cable repair. USNS Zeus can lay about 1,600 km of cable to a depth of 2,700 m. Cable engines can feed 240 m of cable a minute. Goliath was the first ship to lay an ocean cable, in 1850. Every new or broken submarine cable depends on a cable ship to lay or repair it.",
+            "text": "Cable ships are limited to eight knots while laying cable, and they map the cable’s path to place it correctly on the seabed. Every new or repaired submarine cable depends on such vessels.",
             "claims": [
               "C11",
               "C12",
-              "C13",
-              "C14",
-              "C15",
-              "C16",
-              "C17",
               "C18"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "There are two main types: smaller, maneuverable repair ships that can also lay cable, and larger, less agile laying ships with parallel drums that lay cable faster. Both use linear cable engines.",
+            "claims": [
+              "C29",
+              "C30",
+              "C31",
+              "C32",
+              "C33"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "The linear cable engine feeds up to 240 m per minute, includes a brake, and can reverse to retrieve cable. Grapple systems on synthetic ropes pull damaged sections, while plows use water jets to bury cable three feet deep.",
+            "claims": [
+              "C49",
+              "C51",
+              "C52",
+              "C48",
+              "C44",
+              "C46",
+              "C47",
+              "C54",
+              "C55"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "Modern hybrid ships like USNS Zeus can both lay and repair cable, travel 15 knots and lay 1,600 km to 2,700 m depth. Its design mirrors the Great Eastern and it runs MakaiLay software used by most cable ships.",
+            "claims": [
+              "C35",
+              "C36",
+              "C37",
+              "C38",
+              "C40",
+              "C57",
+              "C58",
+              "C59"
             ],
             "role": "evidence"
           }
@@ -445,13 +699,38 @@
       },
       {
         "section": "WHERE_IT_EXISTS",
-        "paragraphs": []
+        "paragraphs": [
+          {
+            "text": "Cable ships are built around oversized sheaves that guide the cable across the hull, positioned at the bow, the stern, or both, depending on the vessel’s generation.",
+            "claims": [
+              "C22",
+              "C23"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "Their official designations commonly begin with the prefix “C.S.”—for example, CS Long Lines—signalling their role as cable layers.",
+            "claims": [
+              "C24"
+            ],
+            "role": "evidence"
+          },
+          {
+            "text": "The earliest transatlantic telegraph link was laid by cable‑laying vessels between 1857 and 1858, achieving a brief operational window before technical misuse caused failure; a later successful deployment occurred in 1866 when the SS Great Eastern laid two durable cables, establishing a lasting conduit between Europe and North America.",
+            "claims": [
+              "C25",
+              "C26",
+              "C27"
+            ],
+            "role": "evidence"
+          }
+        ]
       },
       {
         "section": "HOW_IT_WORKS",
         "paragraphs": [
           {
-            "text": "Here is how it works. A cable ship pays out cable at low speed along a carefully mapped route, and in repairs grapples the cable from the seabed and splices it on deck.",
+            "text": "A cable ship pays out cable at low speed along a carefully mapped route, and in repairs grapples the cable from the seabed and splices it on deck.",
             "claims": [
               "C2"
             ],
@@ -467,7 +746,7 @@
         "section": "BOTTLENECK",
         "paragraphs": [
           {
-            "text": "That is the bottleneck. Cable ships are purpose-built, carry specialised handling gear and trained crews, and cannot be improvised from ordinary vessels.",
+            "text": "Cable ships are purpose‑built, equipped with specialised handling gear and staffed by trained crews; they cannot be improvised from ordinary vessels.",
             "claims": [
               "C19"
             ],
@@ -487,9 +766,10 @@
         "section": "CASCADING_CONSEQUENCES",
         "paragraphs": [
           {
-            "text": "The failure would not stay contained. When repair ships are busy or far away, a damaged cable stays down longer and traffic runs on thinner backup routes.",
+            "text": "When repair ships are occupied or distant, a damaged cable remains offline longer, forcing traffic onto thinner backup routes; cable layers are deep‑sea vessels built to install underwater cables for telecom, power, or military purposes.",
             "claims": [
-              "C1"
+              "C1",
+              "C21"
             ],
             "role": "evidence"
           }
@@ -499,7 +779,7 @@
         "section": "REDUNDANCY_ALTERNATIVES",
         "paragraphs": [
           {
-            "text": "So what protects the system? Regional maintenance agreements keep repair ships on standby, and route diversity keeps traffic moving while a repair waits.",
+            "text": "Regional maintenance agreements keep repair ships on standby, and route diversity keeps traffic moving while a repair waits.",
             "claims": [
               "C20"
             ],
@@ -512,10 +792,10 @@
         "paragraphs": []
       }
     ],
-    "words": 233,
-    "estimatedMinutes": 1.6,
-    "paragraphs": 6,
-    "secondsPerNewBeat": 16
+    "words": 347,
+    "estimatedMinutes": 2.3,
+    "paragraphs": 12,
+    "secondsPerNewBeat": 12
   },
   "claimSourceMap": {
     "rows": [
@@ -526,7 +806,7 @@
       },
       {
         "section": "INVISIBLE_SYSTEM",
-        "excerpt": "Most people never see it. Cable ships are limited to a speed of eight knots while laying c",
+        "excerpt": "Cable ships are limited to eight knots while laying cable, and they map the cable’s path t",
         "claims": [
           {
             "id": "C11",
@@ -539,31 +819,6 @@
             "source": "Wikipedia — Cable layer"
           },
           {
-            "id": "C13",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Cable layer"
-          },
-          {
-            "id": "C14",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Cable layer"
-          },
-          {
-            "id": "C15",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Cable layer"
-          },
-          {
-            "id": "C16",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Cable layer"
-          },
-          {
-            "id": "C17",
-            "class": "CONFIRMED_FACT",
-            "source": "Wikipedia — Cable layer"
-          },
-          {
             "id": "C18",
             "class": "CONFIRMED_FACT",
             "source": "International Telecommunication Union"
@@ -571,8 +826,184 @@
         ]
       },
       {
+        "section": "INVISIBLE_SYSTEM",
+        "excerpt": "There are two main types: smaller, maneuverable repair ships that can also lay cable, and ",
+        "claims": [
+          {
+            "id": "C29",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C30",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C31",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C32",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C33",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          }
+        ]
+      },
+      {
+        "section": "INVISIBLE_SYSTEM",
+        "excerpt": "The linear cable engine feeds up to 240 m per minute, includes a brake, and can reverse to",
+        "claims": [
+          {
+            "id": "C49",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C51",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C52",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C48",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C44",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C46",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C47",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C54",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C55",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          }
+        ]
+      },
+      {
+        "section": "INVISIBLE_SYSTEM",
+        "excerpt": "Modern hybrid ships like USNS Zeus can both lay and repair cable, travel 15 knots and lay ",
+        "claims": [
+          {
+            "id": "C35",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C36",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C37",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C38",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C40",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C57",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C58",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C59",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          }
+        ]
+      },
+      {
+        "section": "WHERE_IT_EXISTS",
+        "excerpt": "Cable ships are built around oversized sheaves that guide the cable across the hull, posit",
+        "claims": [
+          {
+            "id": "C22",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C23",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          }
+        ]
+      },
+      {
+        "section": "WHERE_IT_EXISTS",
+        "excerpt": "Their official designations commonly begin with the prefix “C.S.”—for example, CS Long Lin",
+        "claims": [
+          {
+            "id": "C24",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          }
+        ]
+      },
+      {
+        "section": "WHERE_IT_EXISTS",
+        "excerpt": "The earliest transatlantic telegraph link was laid by cable‑laying vessels between 1857 an",
+        "claims": [
+          {
+            "id": "C25",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C26",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          },
+          {
+            "id": "C27",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
+          }
+        ]
+      },
+      {
         "section": "HOW_IT_WORKS",
-        "excerpt": "Here is how it works. A cable ship pays out cable at low speed along a carefully mapped ro",
+        "excerpt": "A cable ship pays out cable at low speed along a carefully mapped route, and in repairs gr",
         "claims": [
           {
             "id": "C2",
@@ -583,7 +1014,7 @@
       },
       {
         "section": "BOTTLENECK",
-        "excerpt": "That is the bottleneck. Cable ships are purpose-built, carry specialised handling gear and",
+        "excerpt": "Cable ships are purpose‑built, equipped with specialised handling gear and staffed by trai",
         "claims": [
           {
             "id": "C19",
@@ -594,18 +1025,23 @@
       },
       {
         "section": "CASCADING_CONSEQUENCES",
-        "excerpt": "The failure would not stay contained. When repair ships are busy or far away, a damaged ca",
+        "excerpt": "When repair ships are occupied or distant, a damaged cable remains offline longer, forcing",
         "claims": [
           {
             "id": "C1",
             "class": "CONFIRMED_FACT",
             "source": "International Telecommunication Union"
+          },
+          {
+            "id": "C21",
+            "class": "CONFIRMED_FACT",
+            "source": "Wikipedia — Cable layer"
           }
         ]
       },
       {
         "section": "REDUNDANCY_ALTERNATIVES",
-        "excerpt": "So what protects the system? Regional maintenance agreements keep repair ships on standby,",
+        "excerpt": "Regional maintenance agreements keep repair ships on standby, and route diversity keeps tr",
         "claims": [
           {
             "id": "C20",
@@ -617,12 +1053,7 @@
     ],
     "unsupportedParagraphs": 0,
     "unsupportedNumbers": [],
-    "copyRisks": [
-      {
-        "section": "INVISIBLE_SYSTEM",
-        "overlap": "in 1866 the ss great eastern successfully laid two"
-      }
-    ]
+    "copyRisks": []
   },
   "scenePlan": [
     {
@@ -647,7 +1078,7 @@
       "scene": 2,
       "narrationSpan": [
         3,
-        19
+        16
       ],
       "section": "INVISIBLE_SYSTEM",
       "visualPurpose": "visualise scenario",
@@ -655,7 +1086,7 @@
       "subject": "Cable ships are limited to a speed of eight knots while laying cable so",
       "asset": "diagram:INVISIBLE_SYSTEM:C11",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 16,
+      "durationEstimateSeconds": 13.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C11",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -664,44 +1095,116 @@
     {
       "scene": 3,
       "narrationSpan": [
-        19,
-        35
+        16,
+        29
       ],
       "section": "INVISIBLE_SYSTEM",
       "visualPurpose": "visualise scenario",
       "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "A cable's position must be carefully mapped as it is laid.",
-      "asset": "diagram:INVISIBLE_SYSTEM:C12",
+      "subject": "There are two main types of cable ships: cable repair ships and cable-laying ships.",
+      "asset": "diagram:INVISIBLE_SYSTEM:C29",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 16,
-      "motion": "lateral reframe / crop to evidence",
-      "claimSupported": "C12",
+      "durationEstimateSeconds": 12.8,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C29",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 4,
       "narrationSpan": [
-        35,
-        51
+        29,
+        45
       ],
       "section": "INVISIBLE_SYSTEM",
       "visualPurpose": "visualise scenario",
       "visualType": "TECHNICAL_ILLUSTRATION",
-      "subject": "In 1866 the SS Great Eastern successfully laid two transatlantic cables.",
-      "asset": "diagram:INVISIBLE_SYSTEM:C13",
+      "subject": "The most common laying engine in use is the Linear Cable Engine (LCE).",
+      "asset": "diagram:INVISIBLE_SYSTEM:C49",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 16,
-      "motion": "hold, animated highlight on the claimed element",
-      "claimSupported": "C13",
+      "durationEstimateSeconds": 15.6,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C49",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
       "scene": 5,
       "narrationSpan": [
-        51,
-        64
+        45,
+        60
+      ],
+      "section": "INVISIBLE_SYSTEM",
+      "visualPurpose": "visualise scenario",
+      "visualType": "TECHNICAL_ILLUSTRATION",
+      "subject": "The newest design of cable layers, though, is a combination of cable-laying and repair",
+      "asset": "diagram:INVISIBLE_SYSTEM:C35",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 15.6,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C35",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": "on-screen label required"
+    },
+    {
+      "scene": 6,
+      "narrationSpan": [
+        60,
+        71
+      ],
+      "section": "WHERE_IT_EXISTS",
+      "visualPurpose": "explain mechanism",
+      "visualType": "MAP",
+      "subject": "Cable ships are distinguished by large cable sheaves for guiding cable over bow or",
+      "asset": "diagram:WHERE_IT_EXISTS:C22",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 10.8,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C22",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": null
+    },
+    {
+      "scene": 7,
+      "narrationSpan": [
+        71,
+        78
+      ],
+      "section": "WHERE_IT_EXISTS",
+      "visualPurpose": "explain mechanism",
+      "visualType": "MAP",
+      "subject": "The names of cable ships are often preceded by \"C.S.\" as in CS Long",
+      "asset": "diagram:WHERE_IT_EXISTS:C24",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 7.2,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C24",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": null
+    },
+    {
+      "scene": 8,
+      "narrationSpan": [
+        78,
+        98
+      ],
+      "section": "WHERE_IT_EXISTS",
+      "visualPurpose": "explain mechanism",
+      "visualType": "MAP",
+      "subject": "The first transatlantic telegraph cable was laid by cable layers in 1857 to 1858.",
+      "asset": "diagram:WHERE_IT_EXISTS:C25",
+      "sourceRequirement": "procedural render, labelled on screen",
+      "durationEstimateSeconds": 19.6,
+      "motion": "slow push-in to detail",
+      "claimSupported": "C25",
+      "fallbackAssetStrategy": "labelled procedural diagram",
+      "disclosure": null
+    },
+    {
+      "scene": 9,
+      "narrationSpan": [
+        98,
+        109
       ],
       "section": "HOW_IT_WORKS",
       "visualPurpose": "explain mechanism",
@@ -709,17 +1212,17 @@
       "subject": "A cable ship pays out cable at low speed along a carefully mapped route,",
       "asset": "diagram:HOW_IT_WORKS:C2",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 13.2,
+      "durationEstimateSeconds": 11.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C2",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": null
     },
     {
-      "scene": 6,
+      "scene": 10,
       "narrationSpan": [
-        64,
-        73
+        109,
+        118
       ],
       "section": "BOTTLENECK",
       "visualPurpose": "visualise scenario",
@@ -727,17 +1230,17 @@
       "subject": "Cable ships are purpose-built, carry specialised handling gear and trained crews, and cannot be",
       "asset": "diagram:BOTTLENECK:C19",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 8.8,
+      "durationEstimateSeconds": 8.4,
       "motion": "slow push-in to detail",
       "claimSupported": "C19",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": "on-screen label required"
     },
     {
-      "scene": 7,
+      "scene": 11,
       "narrationSpan": [
-        73,
-        84
+        118,
+        132
       ],
       "section": "CASCADING_CONSEQUENCES",
       "visualPurpose": "explain mechanism",
@@ -745,17 +1248,17 @@
       "subject": "When repair ships are busy or far away, a damaged cable stays down longer",
       "asset": "diagram:CASCADING_CONSEQUENCES:C1",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 10.8,
+      "durationEstimateSeconds": 14,
       "motion": "slow push-in to detail",
       "claimSupported": "C1",
       "fallbackAssetStrategy": "labelled procedural diagram",
       "disclosure": null
     },
     {
-      "scene": 8,
+      "scene": 12,
       "narrationSpan": [
-        84,
-        93
+        132,
+        139
       ],
       "section": "REDUNDANCY_ALTERNATIVES",
       "visualPurpose": "visualise scenario",
@@ -763,7 +1266,7 @@
       "subject": "Regional maintenance agreements keep repair ships on standby, and route diversity keeps traffic moving",
       "asset": "diagram:REDUNDANCY_ALTERNATIVES:C20",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 9.2,
+      "durationEstimateSeconds": 7.2,
       "motion": "slow push-in to detail",
       "claimSupported": "C20",
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -773,11 +1276,11 @@
   "assetPlan": {
     "byType": {
       "REAL_INFRASTRUCTURE": 1,
-      "TECHNICAL_ILLUSTRATION": 5,
-      "PROCESS_DIAGRAM": 1,
-      "MAP": 1
+      "TECHNICAL_ILLUSTRATION": 6,
+      "MAP": 4,
+      "PROCESS_DIAGRAM": 1
     },
-    "distinctSubjects": 8,
+    "distinctSubjects": 12,
     "archivalLeads": 22,
     "articleImageCandidates": 16,
     "overused": [],
@@ -2084,7 +2587,7 @@
     "playlist": "SUBMARINE CABLES",
     "subscribe_element": true,
     "timing": {
-      "startSeconds": 76,
+      "startSeconds": 118,
       "durationSeconds": 20,
       "note": "final 20 s; narration must not end abruptly"
     },
@@ -2092,19 +2595,19 @@
     "apiSupport": "UNSUPPORTED — YouTube Data API v3 has no end-screen write endpoint; configure in Studio (task emitted)."
   },
   "cost": {
-    "estimated_production_cost": 0.05,
+    "estimated_production_cost": 0.4,
     "currency": "USD",
     "breakdown": {
-      "llmTokens": 0,
-      "ttsMinutes": 1.6,
-      "renderMinutesCpu": 4.8,
-      "assets": 8,
+      "llmTokens": 22070,
+      "ttsMinutes": 2.3,
+      "renderMinutesCpu": 6.9,
+      "assets": 12,
       "youtubeQuotaUnits": 1650
     },
     "note": "approximate; update config/growth-engine.json cost units from invoices"
   },
   "readiness": {
-    "LongFormProductionReadinessScore": 83,
+    "LongFormProductionReadinessScore": 84,
     "decision": "BLOCK",
     "dimensions": {
       "TopicDepth": 87,
@@ -2113,7 +2616,7 @@
       "ResearchQuality": 97,
       "SourceCoverage": 90,
       "FactualAccuracy": 100,
-      "ScriptRetention": 49,
+      "ScriptRetention": 54,
       "VisualCoverage": 90,
       "AudioQuality": null,
       "Editing": null,
@@ -2129,14 +2632,9 @@
       "Editing"
     ],
     "hardFails": [
-      "COPY_RISK: 1 paragraph(s) reproduce encyclopedia wording (e.g. \"in 1866 the ss great eastern successfully laid two\")",
-      "INSUFFICIENT_DEPTH: evidence supports ~1.6 min; target 8–12 min — not padded",
-      "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+      "INSUFFICIENT_DEPTH: evidence supports ~2.3 min; target 8–12 min — not padded"
     ],
-    "notes": [
-      "80 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim",
-      "LLM generation safely deferred at section:HOW_IT_WORKS; resume from generation/the-critical-role-of-cable-laying-ship.json"
-    ],
+    "notes": [],
     "thresholds": {
       "publish": 85,
       "review": 70
@@ -2154,11 +2652,11 @@
     "Topic Bucket": "A",
     "Cold Open": "When an ocean cable breaks, who fixes it?",
     "Target Duration": "8–12 min",
-    "Actual Duration": "~1.6 min (script estimate, deterministic-evidence)",
-    "Scenes": 8,
+    "Actual Duration": "~2.3 min (script estimate, llm:groq:openai/gpt-oss-120b)",
+    "Scenes": 12,
     "Thumbnail Score": 87,
     "Title Score": 81,
-    "LongFormProductionReadinessScore": "83 → BLOCK",
+    "LongFormProductionReadinessScore": "84 → BLOCK",
     "Related Shorts": "why-submarine-fiber-optic-cable-is-so-hard-to-replace",
     "Primary Next Video": "The Volcano That Cut a Country's Only Cable"
   }

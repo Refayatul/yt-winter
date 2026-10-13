@@ -1329,5 +1329,93 @@
     "status": 429,
     "retryable": true,
     "retryAfterMs": 22000
+  },
+  {
+    "at": "2026-10-12T16:54:06.721Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:REAL_WORLD_CONSEQUENCE",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-12T16:54:06.721Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:REAL_WORLD_CONSEQUENCE",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 513,
+      "output_tokens": 700
+    }
+  },
+  {
+    "at": "2026-10-12T16:54:06.721Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FINAL_PAYOFF",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-12T16:54:06.721Z",
+    "channel": "behind-the-ordinary",
+    "event": "success",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "section:FINAL_PAYOFF",
+    "attempt": 1,
+    "usage": {
+      "input_tokens": 461,
+      "output_tokens": 393
+    }
+  },
+  {
+    "at": "2026-10-12T16:54:06.721Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-12T16:54:06.721Z",
+    "channel": "behind-the-ordinary",
+    "event": "failed",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "REQUEST",
+    "status": 413,
+    "retryable": false,
+    "retryAfterMs": null
+  },
+  {
+    "at": "2026-10-12T16:54:06.721Z",
+    "channel": "behind-the-ordinary",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-12T16:54:06.721Z",
+    "channel": "behind-the-ordinary",
+    "event": "failed",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "REQUEST",
+    "status": 413,
+    "retryable": false,
+    "retryAfterMs": null
   }
 ]

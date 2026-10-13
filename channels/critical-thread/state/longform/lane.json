@@ -96,8 +96,8 @@
     {
       "cycleId": "2026-W42",
       "channel": "critical-thread",
-      "startedAt": "2026-10-12T16:32:45.260Z",
-      "status": "DEFERRED_PROVIDER",
+      "startedAt": "2026-10-12T16:54:00.455Z",
+      "status": "QUALITY_BLOCKED",
       "evaluated": [
         {
           "slug": "why-submarine-fiber-optic-cable-is-so-hard-to-replace",
@@ -131,19 +131,16 @@
           "LongFormPotentialScore": 79,
           "bucket": "A",
           "decision": "BLOCK",
-          "score": 83,
+          "score": 84,
           "hardFails": [
-            "COPY_RISK: 1 paragraph(s) reproduce encyclopedia wording (e.g. \"in 1866 the ss great eastern successfully laid two\")",
-            "INSUFFICIENT_DEPTH: evidence supports ~1.6 min; target 8–12 min — not padded",
-            "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+            "INSUFFICIENT_DEPTH: evidence supports ~2.3 min; target 8–12 min — not padded"
           ],
-          "generationStatus": "DEFERRED"
+          "generationStatus": "QUALITY_REVIEW"
         }
       ],
       "selected": null,
-      "reason": "provider deferred the-critical-role-of-cable-laying-ship; retry this cycle and resume its checkpoint",
-      "checkpoint": "generation/the-critical-role-of-cable-laying-ship.json",
-      "finishedAt": "2026-10-12T16:33:08.982Z"
+      "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
+      "finishedAt": "2026-10-12T16:54:06.683Z"
     }
   ]
 }

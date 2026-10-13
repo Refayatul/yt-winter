@@ -3,9 +3,9 @@
   "channel": "critical-thread",
   "slug": "the-critical-role-of-cable-laying-ship",
   "topicHash": "d68ea10db859:100",
-  "status": "DEFERRED",
+  "status": "QUALITY_REVIEW",
   "createdAt": "2026-10-12T15:53:17.617Z",
-  "updatedAt": "2026-10-12T16:32:45.260Z",
+  "updatedAt": "2026-10-12T16:54:00.455Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -1015,11 +1015,76 @@
           "role": "evidence"
         }
       ]
+    },
+    {
+      "section": "HOW_IT_WORKS",
+      "paragraphs": [
+        {
+          "text": "A cable ship pays out cable at low speed along a carefully mapped route, and in repairs grapples the cable from the seabed and splices it on deck.",
+          "claims": [
+            "C2"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHAT_DEPENDS_ON_IT",
+      "paragraphs": []
+    },
+    {
+      "section": "BOTTLENECK",
+      "paragraphs": [
+        {
+          "text": "Cable ships are purpose‑built, equipped with specialised handling gear and staffed by trained crews; they cannot be improvised from ordinary vessels.",
+          "claims": [
+            "C19"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHY_THE_BOTTLENECK_EXISTS",
+      "paragraphs": []
+    },
+    {
+      "section": "FAILURE_SCENARIO",
+      "paragraphs": []
+    },
+    {
+      "section": "CASCADING_CONSEQUENCES",
+      "paragraphs": [
+        {
+          "text": "When repair ships are occupied or distant, a damaged cable remains offline longer, forcing traffic onto thinner backup routes; cable layers are deep‑sea vessels built to install underwater cables for telecom, power, or military purposes.",
+          "claims": [
+            "C1",
+            "C21"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "REDUNDANCY_ALTERNATIVES",
+      "paragraphs": [
+        {
+          "text": "Regional maintenance agreements keep repair ships on standby, and route diversity keeps traffic moving while a repair waits.",
+          "claims": [
+            "C20"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FINAL_SYSTEM_INSIGHT",
+      "paragraphs": []
     }
   ],
   "usage": {
-    "input_tokens": 12040,
-    "output_tokens": 5995
+    "input_tokens": 13931,
+    "output_tokens": 8139
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
@@ -1030,5 +1095,20 @@
     "retryable": true,
     "retryAfterMs": 1000
   },
-  "depthNote": "Section stays under 171 words, each paragraph cites only its supporting claim IDs and rewrites all flagged claims. All paragraphs rely exclusively on the six supplied confirmed‑fact claims; no additional inference was added."
+  "depthNote": "Section stays under 171 words, each paragraph cites only its supporting claim IDs and rewrites all flagged claims. All paragraphs rely exclusively on the six supplied confirmed‑fact claims; no additional inference was added. Only claim C2 was used for this section. Highlights the physical chokepoint caused by the limited, specialized cable‑ship fleet. Only the supplied claims C1 and C21 are used; no additional information added. Only claim C20 used for this section",
+  "quality": {
+    "duplicateSections": [],
+    "repeatedPhrases": [],
+    "weakHook": false,
+    "payoff": false,
+    "filler": [],
+    "introShare": 0.44,
+    "missingPlanSections": [],
+    "hardFails": [
+      "missing final payoff"
+    ],
+    "notes": [
+      "introduction exceeds 25% of the script"
+    ]
+  }
 }
