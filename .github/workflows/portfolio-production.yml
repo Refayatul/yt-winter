@@ -13,7 +13,16 @@ name: Multi-channel portfolio production
 # Eligibility is one Short per channel per Istanbul calendar day, so the hourly
 # retries below only produce for a channel whose slot has passed and whose day
 # is still empty.
+#
+# Primary clock: the Cloudflare Worker (ops/production-watchdog-worker) sends a signed
+# repository_dispatch "shorts-production" at 07:05 and 13:05 UTC. It acts like a scheduled run only
+# when scripts/verify-dispatch.js accepts it AND the repository variable CF_PRODUCTION_DISPATCH is
+# '1' (unset by default: the event is acknowledged and nothing is produced). The GitHub crons below
+# stay as the backup; every run is idempotent (one Short per channel and target day, shared
+# concurrency group), so a cron run after a dispatched run finds the day taken and does nothing.
 on:
+  repository_dispatch:
+    types: [shorts-production]
   schedule:
     - cron: '0 6 * * *'
     - cron: '30 6 * * *'
@@ -50,10 +59,45 @@ permissions:
   issues: write
 
 jobs:
+  # Schedule and manual runs pass straight through. A repository_dispatch must carry a valid
+  # Cloudflare signature and be explicitly enabled (CF_PRODUCTION_DISPATCH=1).
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+      correlation_id: ${{ steps.verify.outputs.correlation_id }}
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event_name == 'repository_dispatch'
+        with:
+          ref: ${{ github.ref_name }}
+          sparse-checkout: scripts/verify-dispatch.js
+          sparse-checkout-cone-mode: false
+      - id: verify
+        name: Verify Cloudflare dispatch signature
+        if: github.event_name == 'repository_dispatch'
+        env:
+          DISPATCH_SIGNING_KEY: ${{ secrets.WATCHDOG_GITHUB_TOKEN }}
+        run: node scripts/verify-dispatch.js --event shorts-production --max-age-minutes 360
+      - id: decide
+        name: Decide whether this run produces
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_ENABLED: ${{ vars.CF_PRODUCTION_DISPATCH }}
+        run: |
+          if [ "$EVENT_NAME" != "repository_dispatch" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if [ "$DISPATCH_ENABLED" = "1" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "::notice::Verified Cloudflare shorts-production dispatch; CF_PRODUCTION_DISPATCH is not '1', so nothing is produced."
+          echo "run=false" >> "$GITHUB_OUTPUT"
+
   portfolio:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
+      DISPATCH_CORRELATION_ID: ${{ needs.gate.outputs.correlation_id }}
       FR_YT_CLIENT_ID: ${{ secrets.FR_YT_CLIENT_ID }}
       FR_YT_CLIENT_SECRET: ${{ secrets.FR_YT_CLIENT_SECRET }}
       FR_YT_REFRESH_TOKEN: ${{ secrets.FR_YT_REFRESH_TOKEN }}
@@ -123,10 +167,10 @@ jobs:
         run: node portfolio-scheduler.js --enqueue
 
       - name: Failure Reconstructed Short
-        if: github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed'
+        if: github.event_name != 'workflow_dispatch' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed'
         continue-on-error: true
         env:
-          PUBLISH: ${{ github.event_name == 'schedule' && '1' || vars.FR_PUBLISH || vars.PUBLISH }}
+          PUBLISH: ${{ github.event_name != 'workflow_dispatch' && '1' || vars.FR_PUBLISH || vars.PUBLISH }}
           PRODUCTION_RESULT_PATH: ${{ runner.temp }}/fr-production-result.json
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
@@ -134,20 +178,20 @@ jobs:
           node shorts-sira.js --channel failure-reconstructed
 
       - name: ImpossibleBrief Short
-        if: ${{ always() && (github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'impossible-brief') }}
+        if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'impossible-brief') }}
         continue-on-error: true
         env:
-          PUBLISH: ${{ github.event_name == 'schedule' && '1' || vars.IB_PUBLISH }}
+          PUBLISH: ${{ github.event_name != 'workflow_dispatch' && '1' || vars.IB_PUBLISH }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
           node saglik.js --channel impossible-brief || true
           node shorts-sira.js --channel impossible-brief
 
       - name: CriticalThread Short
-        if: ${{ always() && (github.event_name == 'schedule' || inputs.channel == 'all' || inputs.channel == 'critical-thread') }}
+        if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.channel == 'all' || inputs.channel == 'critical-thread') }}
         continue-on-error: true
         env:
-          PUBLISH: ${{ github.event_name == 'schedule' && '1' || vars.CT_PUBLISH }}
+          PUBLISH: ${{ github.event_name != 'workflow_dispatch' && '1' || vars.CT_PUBLISH }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
           node saglik.js --channel critical-thread || true
@@ -254,5 +298,5 @@ jobs:
       # A green run means real output: it fails when an active channel was due and nothing was
       # uploaded (narration outage, no qualified topic, a blocked video, or a crashed step).
       - name: Production verdict
-        if: always() && github.event_name == 'schedule'
+        if: always() && github.event_name != 'workflow_dispatch'
         run: node scripts/production-outcome.js --verdict

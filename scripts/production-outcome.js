@@ -63,6 +63,10 @@ function classify(record, channel = null) {
     case "NO_TOPIC": return "CONTENT_BLOCKED";
     case "BLOCKED": return "QUALITY_REJECTED";
     case "FAILED":
+      // Specific codes first: a run that uploaded but could not verify the schedule, a target slot that
+      // was taken or missed (never moved), or a spent retry budget are not "upload failed".
+      if (/PUBLISH_VERIFICATION_FAILED/.test(reason)) return "PUBLISH_VERIFICATION_FAILED";
+      if (/PUBLISH_SLOT_UNAVAILABLE|RETRY_BUDGET_EXHAUSTED/.test(reason)) return "PRODUCTION_FAILED";
       if (status("UPLOAD") === "failed" || /^rendered but not uploaded/.test(reason)) return "UPLOAD_FAILED";
       if (/NARRATION_UNAVAILABLE/.test(reason) && fallbackAwaitingApproval(channel)) return "AWAITING_APPROVAL";
       return "PRODUCTION_FAILED";
@@ -85,7 +89,8 @@ function evaluate(runId = process.env.GITHUB_RUN_ID || null, channels = activeSh
     const videoId = record.videoId || (record.stages && record.stages.UPLOAD && record.stages.UPLOAD.detail) || null;
     const publication = category === "SCHEDULED" ? Publication.forChannel(channel, { videoId, publishAt }).state : "NOT_SCHEDULED";
     return { channel: slug, outcome: record.outcome || "FAILED", category, scheduled: category === "SCHEDULED", publication, publishAt,
-      reason: record.reason || (record.outcome ? null : "run ended without an outcome"), slug: record.slug, videoId: record.videoId || null, stages: record.stages };
+      reason: record.reason || (record.outcome ? null : "run ended without an outcome"), slug: record.slug, videoId: record.videoId || null,
+      targetDay: record.targetDay || null, trigger: record.trigger || null, stages: record.stages };
   });
 }
 

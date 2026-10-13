@@ -9,6 +9,7 @@ const Rendering = require("../rendering");
 const Scripting = require("../scripting");
 const Growth = require("../growth");
 const GrowthRuntime = require("../growth/runtime");
+const Budget = require("../../lib/attempt-budget");
 
 function writeCompatibilityFiles(result, topic, channel) {
   const directory = result.outputDirectory;
@@ -158,6 +159,7 @@ function runChannel(slug, argv = []) {
   if (channel.config.pathMode === "legacy-adapter") throw new Error(`Isolated documentary pipeline cannot run legacy channel: ${slug}`);
   const explicit = argv.find((arg) => !arg.startsWith("--"));
   const run = require("../../lib/run-stages").start(channel);
+  let targetDay = null;
   if (process.env.PUBLISH === "1" && !process.env.SAGLIK_ATLA) {
     const health = cp.spawnSync(process.execPath, [path.join(Channel.ROOT, "saglik.js"), "--channel", channel.slug, "--sessiz"], {
       cwd: Channel.ROOT, stdio: "inherit", env: process.env,
@@ -174,7 +176,20 @@ function runChannel(slug, argv = []) {
   if (!explicit && process.env.PUBLISH === "1") {
     const due = require("../scheduling").channelPlan(channel).short;
     if (!due.due) { run.outcome("NOT_DUE", due.reason); console.log(`[${channel.name}] Takvim: henuz degil — ${due.reason}`); return 0; }
+    targetDay = due.targetDay || null;
+    run.record.targetDay = targetDay;
+    console.log(`[${channel.name}] ${due.reason} · target publication day ${targetDay} (${due.targetPublishAt || "?"})`);
   }
+  // Per-channel, per-target-day retry budget (lib/attempt-budget.js); only in scheduled publishing runs.
+  const budget = (kind) => {
+    if (!targetDay) return true;
+    const result = Budget.take(channel, targetDay, kind);
+    if (result.ok) return true;
+    run.outcome("FAILED", Budget.exhaustedReason(result));
+    GrowthRuntime.alert(channel, "RETRY_BUDGET_EXHAUSTED", topic && topic.slug || null, { ...result });
+    console.log(`::error::[${channel.name}] ${Budget.exhaustedReason(result)} — no more attempts for this day; topic kept`);
+    return false;
+  };
   const universe = Discovery.universe(channel).topics;
   const noRender = argv.includes("--no-render");
   let choice, topic, output, result, finalPlan;
@@ -207,6 +222,7 @@ function runChannel(slug, argv = []) {
       attempt -= 1;
       continue;
     }
+    if (!budget("topics") || (!noRender && !budget("render"))) return 1;
     try { result = Rendering.buildPackage(topic, channel, output, { render: !noRender, growthPlan: choice.plan }); }
     catch (error) {
       if (error.code === "NARRATION_UNAVAILABLE") {
@@ -266,7 +282,21 @@ function runChannel(slug, argv = []) {
       console.log(GrowthRuntime.shortSummary(finalPlan, { "Upload Status": "not uploaded — readiness " + finalPlan.readiness.decision, "Video ID": "—" }));
       return 0;
     }
-    const upload = cp.spawnSync(process.execPath, [path.join(Channel.ROOT, "youtube-yukle.js"), "--channel", channel.slug, topic.slug], { cwd: Channel.ROOT, stdio: "inherit", env: process.env });
+    if (!budget("upload")) return 1;
+    const upload = cp.spawnSync(process.execPath, [path.join(Channel.ROOT, "youtube-yukle.js"), "--channel", channel.slug, topic.slug], { cwd: Channel.ROOT, stdio: "inherit",
+      env: { ...process.env, ...(targetDay ? { SHORTS_TARGET_DAY: targetDay } : {}) } });
+    if (upload.status === 15 || upload.status === 16) {
+      // 15: uploaded, but YouTube did not confirm private + publishAt (never re-uploaded).
+      // 16: the target day's slot is taken or missed (never moved to another day). Topic kept.
+      const code = upload.status === 15 ? "PUBLISH_VERIFICATION_FAILED" : "PUBLISH_SLOT_UNAVAILABLE";
+      const registered = (() => { try { return [].concat(JSON.parse(fs.readFileSync(path.join(channel.paths.state, "published.json"), "utf8"))).reverse().find((item) => item && item.slug === topic.slug) || {}; } catch (error) { return {}; } })();
+      if (upload.status === 15) run.done("UPLOAD", registered.videoId || null).fail("SCHEDULE", code);
+      else run.fail("UPLOAD", code);
+      run.outcome("FAILED", `${topic.slug}: ${code}`);
+      GrowthRuntime.alert(channel, code, topic.slug, { targetDay });
+      console.log(`::error::[${channel.name}] ${code} for ${topic.slug} (target day ${targetDay})`);
+      return 1;
+    }
     if (upload.status !== 0) {
       run.fail("UPLOAD", `youtube-yukle exit ${upload.status}`).outcome("FAILED", `${topic.slug}: upload failed (exit ${upload.status})`);
       throw new Error(`${channel.name} upload failed; generated state was not advanced`);

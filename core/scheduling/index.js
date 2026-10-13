@@ -40,6 +40,7 @@ function isDue(last, everyDays, now) {
 function shortPlan(channel, last, everyDays, now) {
   const decision = Calendar.shortDecision(channel, shortRecords(channel), now);
   return { due: decision.due, last, everyDays, reason: decision.reason, today: decision.today, timeZone: decision.timeZone,
+    targetDay: decision.targetDay, ahead: decision.ahead, targetPublishAt: decision.targetPublishAt, leadDays: decision.leadDays,
     productionAt: decision.productionAt, publishAt: decision.publishAt, closesAt: decision.closesAt, existing: decision.existing };
 }
 

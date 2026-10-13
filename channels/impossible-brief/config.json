@@ -17,7 +17,7 @@
   "publishTimeZone": "Europe/Istanbul",
   "publishTimeUtc": "18:00",
   "publishingCadence": {
-    "shorts": { "everyDays": 1, "productionTime": "09:30", "targetDurationSeconds": [18, 42] },
+    "shorts": { "everyDays": 1, "leadDays": 0, "productionTime": "09:30", "targetDurationSeconds": [18, 42] },
     "longForm": { "everyDays": 7, "targetDurationMinutes": [8, 12], "qualityOverCadence": true }
   },
   "voice": {"provider": "edge-tts", "voice": "en-US-BrianMultilingualNeural", "rate": "+2%", "style": "cinematic science, curious, controlled and conversational", "fallback": {"provider": "kokoro", "voice": "am_fenrir", "speed": 1.0, "approved": false, "note": "Offline Kokoro-82M voice used only when Edge refuses. NOT approved: a person must listen to reports/tts-benchmark samples and set approved=true before it can be published."}},

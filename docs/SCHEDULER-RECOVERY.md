@@ -6,6 +6,7 @@
 2. `production-watchdog.yml` is the GitHub-native backup (`17:07 UTC`) and the receiver for the independent dispatch.
 3. `ops/production-watchdog-worker` is the independent Cloudflare clock. Its Cron Trigger is `35 16 * * *`: `16:35 UTC`, exactly five minutes after the `16:30 UTC` SLA deadline.
 4. `yayin-kontrol.yml` remains a GitHub-native publication/empty-day observer. It does not replace the independent clock.
+5. The same Worker can also start production (`shorts-production` at `07:05` and `13:05 UTC`) and the publication check (`publication-check` at `19:05 UTC`). These dispatches are signed and verified, and stay inert until `CF_PRODUCTION_DISPATCH` / `CF_PUBLICATION_DISPATCH` are set to `1`. See `docs/ops/CLOUDFLARE-SCHEDULED-PRODUCTION.md`.
 
 Cloudflare sends `repository_dispatch: production-sla-watchdog`. The receiver authenticates to the expected Failure Reconstructed YouTube channel, scans its recent uploads, and authorizes recovery only when no Short has today's `status.publishAt`/`snippet.publishedAt`. An API, OAuth or channel-identity error fails closed and creates an issue instead of risking a duplicate.
 

@@ -15,5 +15,9 @@ enabled = true
 head_sampling_rate = 1
 
 [triggers]
-# Independent of GitHub's scheduler. Five minutes after the 16:30 UTC SLA.
-crons = ["35 16 * * *"]
+# Independent of GitHub's scheduler. src/index.mjs maps each cron to one GitHub event:
+#   05 07 / 05 13 UTC  shorts-production   (needs repository variable CF_PRODUCTION_DISPATCH=1)
+#   35 16 UTC          production-sla-watchdog (five minutes after the 16:30 UTC SLA; unchanged)
+#   05 19 UTC          publication-check   (needs repository variable CF_PUBLICATION_DISPATCH=1)
+# Cloudflare Workers Free allows 5 Cron Triggers per ACCOUNT; this Worker uses 4.
+crons = ["5 7 * * *", "5 13 * * *", "35 16 * * *", "5 19 * * *"]

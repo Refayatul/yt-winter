@@ -44,15 +44,15 @@ test("TEST-07: production behaviour reflects the approved 21:00 all-channel sche
   for (const slug of ["failure-reconstructed", "impossible-brief", "critical-thread", "behind-the-ordinary"]) {
     assert.match(portfolio, new RegExp(`node shorts-sira\\.js --channel ${slug}`), `${slug} still produced by the portfolio run`);
   }
-  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name == 'schedule' && '1' \|\| vars\.IB_PUBLISH \}\}/);
-  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name == 'schedule' && '1' \|\| vars\.CT_PUBLISH \}\}/);
+  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name != 'workflow_dispatch' && '1' \|\| vars\.IB_PUBLISH \}\}/);
+  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name != 'workflow_dispatch' && '1' \|\| vars\.CT_PUBLISH \}\}/);
   // The Hidden Logic of Things publishes only when BTO_PUBLISH=1, even on schedule.
   assert.match(portfolio, /PUBLISH: \$\{\{ vars\.BTO_PUBLISH == '1' && '1' \|\| '0' \}\}/);
-  assert.doesNotMatch(portfolio, /github\.event_name == 'schedule' && '1' \|\| vars\.BTO_PUBLISH/);
+  assert.doesNotMatch(portfolio, /github\.event_name (==|!=) '[a-z_]+' && '1' \|\| vars\.BTO_PUBLISH/);
   assert.doesNotMatch(portfolio, /PUBLISH_MODE|PROVENANCE_REQUIRED/, "new platform gates are not silently switched on in production");
   const uploader = read("youtube-yukle.js");
   assert.match(uploader, /let gizlilik = \(env\("YT_PRIVACY"\) \|\| "private"\)\.toLowerCase\(\);/, "default privacy unchanged");
-  assert.match(uploader, /require\("\.\/core\/scheduling\/calendar"\)\.publishSlot\(CHANNEL/, "publish slot logic unchanged");
+  assert.match(uploader, /Calendar\.publishSlot\(CHANNEL, require\("\.\/lib\/kutuphane"\)\.yayinlananlar\(\), new Date\(\), Calendar\.MIN_UPLOAD_LEAD_MINUTES/, "publish slot logic unchanged");
   const calendar = require("../../core/scheduling/calendar");
   const Channel = require("../../core/channel-context");
   assert.equal(calendar.shortSchedule(Channel.getChannel("failure-reconstructed")).timeZone, "Europe/Istanbul");

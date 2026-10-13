@@ -37,6 +37,7 @@ function durum(format, simdi = new Date(), kayit = K.yayinlananlar(), kalite = K
     const gun = Calendar.shortDecision(Channel.getChannel(), kayit, simdi, { everyDays: aralik });
     return { format, sonYayin: son ? son.toISOString() : null, aralikGun: aralik, taban: f.everyDays, esnetme,
       sonKararlar, uygun: gun.due, bugun: gun.today, uretimSaati: gun.productionAt, yayinSaati: gun.publishAt,
+      hedefGun: gun.targetDay, onceden: gun.ahead, hedefYayin: gun.targetPublishAt,
       sonrakiUygun: gun.due ? simdi.toISOString() : gun.productionAt,
       neden: gun.reason + (esnetme ? ` (stretched +${esnetme}d: recent gate results ${sonKararlar.join(", ")})` : "") };
   }

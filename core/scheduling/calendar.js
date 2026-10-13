@@ -25,6 +25,8 @@ const DEFAULT_MIN_LEAD_MINUTES = 60;
 // YouTube only needs publishAt in the future; this is the floor for an upload
 // that finishes after the production window closed.
 const MIN_UPLOAD_LEAD_MINUTES = 10;
+// One-day-ahead production is the supported target; more would only widen the window for stale content.
+const MAX_LEAD_DAYS = 2;
 
 const formatters = new Map();
 function parts(date, timeZone) {
@@ -91,6 +93,8 @@ function shortSchedule(channel) {
     publishTime: validTime(shorts.publishTime || config.publishTime, DEFAULT_PUBLISH_TIME),
     minLeadMinutes: Number.isFinite(shorts.minLeadMinutes) ? shorts.minLeadMinutes : DEFAULT_MIN_LEAD_MINUTES,
     everyDays: shorts.everyDays || 1,
+    // Produce up to this many days ahead of publication (0 = only for today, the historical behaviour).
+    leadDays: Number.isInteger(shorts.leadDays) && shorts.leadDays >= 0 ? Math.min(shorts.leadDays, MAX_LEAD_DAYS) : 0,
   };
 }
 
@@ -138,6 +142,7 @@ function shortDecision(channel, records, now = new Date(), options = {}) {
   const schedule = shortSchedule(channel);
   const timeZone = schedule.timeZone;
   const everyDays = options.everyDays || schedule.everyDays;
+  const leadDays = Number.isInteger(options.leadDays) ? Math.max(0, Math.min(options.leadDays, MAX_LEAD_DAYS)) : schedule.leadDays;
   const today = dayKey(now, timeZone);
   const productionAt = zonedTime(today, schedule.productionTime, timeZone);
   const publishAt = zonedTime(today, schedule.publishTime, schedule.publishTimeZone);
@@ -152,8 +157,27 @@ function shortDecision(channel, records, now = new Date(), options = {}) {
   else if (now < productionAt) reason = `before production slot ${schedule.productionTime} ${timeZone}`;
   else if (now >= closesAt) reason = `production window closed at ${schedule.publishTime} ${schedule.publishTimeZone} minus ${schedule.minLeadMinutes} min`;
   else { due = true; reason = "due"; }
+  let targetDay = due ? today : null;
+  let ahead = false;
+  // One-day-ahead production (leadDays >= 1): once today's slot is filled or its window has closed,
+  // the next free future slot may be produced now. Never before today's production time (today
+  // always comes first), never into a taken day, and a missed today is never moved forward: the
+  // future Short is that future day's own Short.
+  if (!due && leadDays > 0 && now >= productionAt && (existing || now >= closesAt)) {
+    for (let offset = 1; offset <= leadDays; offset += 1) {
+      const day = addDays(today, offset);
+      if (shortForDay(records, day, timeZone, schedule.publishTimeZone)) continue;
+      const lastBefore = lastShortDay(shortRows(records).filter((row) => !occupiedDays(row, timeZone, schedule.publishTimeZone).some((key) => key >= day)), timeZone, schedule.publishTimeZone);
+      if (lastBefore && daysBetween(lastBefore, day) < everyDays) continue;
+      due = true; ahead = true; targetDay = day;
+      reason = `ahead: producing ${day}'s Short (${offset} day${offset > 1 ? "s" : ""} early; ${existing ? "today's Short exists" : "today's window closed"})`;
+      break;
+    }
+  }
+  const targetPublishAt = targetDay ? zonedTime(targetDay, schedule.publishTime, schedule.publishTimeZone) : null;
   return {
-    due, reason, today, timeZone, publishTimeZone: schedule.publishTimeZone, everyDays, lastDay,
+    due, reason, today, timeZone, publishTimeZone: schedule.publishTimeZone, everyDays, lastDay, leadDays,
+    targetDay, ahead, targetPublishAt: targetPublishAt ? targetPublishAt.toISOString() : null,
     productionAt: productionAt.toISOString(),
     publishAt: publishAt.toISOString(),
     closesAt: closesAt.toISOString(),
@@ -164,10 +188,21 @@ function shortDecision(channel, records, now = new Date(), options = {}) {
 // publishAt for a Short being uploaded now: today's publish time (in the
 // publish zone, on today's production date) when that day is free and still in
 // the future, otherwise the next free day.
-function publishSlot(channel, records, now = new Date(), minLeadMinutes = MIN_UPLOAD_LEAD_MINUTES) {
+function publishSlot(channel, records, now = new Date(), minLeadMinutes = MIN_UPLOAD_LEAD_MINUTES, options = {}) {
   const schedule = shortSchedule(channel);
   const timeZone = schedule.timeZone;
   const taken = new Set(shortRows(records).map((row) => publicationDay(row, schedule.timeZone, schedule.publishTimeZone)).filter(Boolean));
+  // Explicit target day (the production decision's targetDay): exactly that day's slot or nothing.
+  // A late or taken slot is refused, never moved to another day.
+  if (options.targetDay) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(options.targetDay)) throw Object.assign(new Error(`invalid target day ${options.targetDay}`), { code: "PUBLISH_SLOT_INVALID" });
+    const candidate = zonedTime(options.targetDay, schedule.publishTime, schedule.publishTimeZone);
+    if (taken.has(options.targetDay)) throw Object.assign(new Error(`the ${options.targetDay} slot is already taken`), { code: "PUBLISH_SLOT_TAKEN" });
+    if (candidate.getTime() - now.getTime() < minLeadMinutes * 60000) {
+      throw Object.assign(new Error(`the ${options.targetDay} slot (${candidate.toISOString()}) is less than ${minLeadMinutes} min away`), { code: "PUBLISH_SLOT_MISSED" });
+    }
+    return candidate;
+  }
   // Start one day back: after local midnight the previous production day's
   // release (e.g. 18:00 New York = 01:00 Istanbul) can still be ahead and free.
   let key = addDays(dayKey(now, timeZone), -1);
@@ -179,6 +214,6 @@ function publishSlot(channel, records, now = new Date(), minLeadMinutes = MIN_UP
 }
 
 module.exports = {
-  DEFAULT_TIME_ZONE, MIN_UPLOAD_LEAD_MINUTES,
+  DEFAULT_TIME_ZONE, MIN_UPLOAD_LEAD_MINUTES, MAX_LEAD_DAYS,
   dayKey, zonedTime, addDays, daysBetween, shortSchedule, publicationDay, occupiedDays, shortForDay, lastShortDay, publishDay, shortDecision, publishSlot,
 };

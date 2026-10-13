@@ -121,6 +121,20 @@ class YuklemeHatasi extends Error {}
 class AltyapiHatasi extends Error { constructor(kind, message) { super(message); this.kind = kind; } }
 const { NARRATION_UNAVAILABLE_EXIT } = require("./lib/shorts-tts");
 const { ASSET_SOURCE_UNAVAILABLE_EXIT } = require("./lib/source-outage");
+// Hedef yayin gunu (takvim kararindan; lib/attempt-budget.js ve youtube-yukle.js SHORTS_TARGET_DAY).
+// Gunluk yayin modunda dolu; elle/dogrudan slug calismalarinda null (eski davranis).
+let HEDEF_GUN = null;
+const Budget = require("./lib/attempt-budget");
+class ButceBitti extends Error { constructor(result) { super(Budget.exhaustedReason(result)); this.result = result; } }
+// youtube-yukle.js cikis 15: yuklendi ama YouTube geri okumasi (private + publishAt) tutmadi.
+class YayinDogrulamaHatasi extends Error {}
+// youtube-yukle.js cikis 16: hedef gunun slotu dolu ya da kacmis; baska gune kaydirilmaz.
+class SlotHatasi extends Error {}
+function butce(kind) {
+  if (!HEDEF_GUN) return;
+  const r = Budget.take(CHANNEL, HEDEF_GUN, kind);
+  if (!r.ok) throw new ButceBitti(r);
+}
 function kapi(slug, final) {
   const r = require("./quality-gate").degerlendir(slug, { final });
   console.log(`  kalite kapisi (${final ? "final" : "pre"}): ${r.karar} ${r.toplam}/100` + (r.engelleyen.length ? " — " + r.engelleyen.join("; ") : ""));
@@ -201,10 +215,13 @@ function uretBir(slug) {
   // the editorial source in icerik/konular/.
   fs.writeFileSync(path.join(job, "konu.json"), JSON.stringify(Growth.applyLegacyOverlay(konu, preGrowth), null, 2) + "\n");
   asama().done("SCRIPT", "pre gate " + oncekiKapi.karar + " " + oncekiKapi.toplam);
+  // Bu konu artik uretime giriyor: hedef gunun konu ve render butcesinden duser.
+  butce("topics");
   // Goruntu kaynagi: "stok" (Pexels) ya da arsiv (kamu mali).
   try { calistir(konu.tur === "stok" ? "stok-bul.js" : "arsiv-bul.js", slug); }
   catch (e) { asama().fail("ASSETS", e.message); throw e; }
   asama().done("ASSETS");
+  butce("render");
   try { calistir("shorts-yap.js", slug); }
   catch (e) { if (e instanceof AltyapiHatasi && e.kind === "NARRATION_UNAVAILABLE") asama().fail("NARRATION", e.message); else asama().fail("RENDER", e.message); throw e; }
   asama().done("NARRATION").done("RENDER");
@@ -236,7 +253,15 @@ function uretBir(slug) {
   // Yukleme: yalnizca PUBLISH=1 ve kimlik varsa; her zaman private.
   const publish = process.env.PUBLISH === "1";
   if (publish && uploadHazir()) {
-    const r = cp.spawnSync("node", ["youtube-yukle.js", "--channel", CHANNEL.slug, slug], { cwd: KOK, stdio: "inherit" });
+    butce("upload");
+    const r = cp.spawnSync("node", ["youtube-yukle.js", "--channel", CHANNEL.slug, slug], { cwd: KOK, stdio: "inherit",
+      env: { ...process.env, ...(HEDEF_GUN ? { SHORTS_TARGET_DAY: HEDEF_GUN } : {}) } });
+    if (r.status === 15) {
+      const yayin = require("./lib/kutuphane").yayinBul(slug) || {};
+      asama().done("UPLOAD", yayin.videoId || null).fail("SCHEDULE", "PUBLISH_VERIFICATION_FAILED");
+      throw new YayinDogrulamaHatasi(`PUBLISH_VERIFICATION_FAILED: ${yayin.videoId || "video"} uploaded but YouTube did not confirm private + publishAt`);
+    }
+    if (r.status === 16) throw new SlotHatasi(`PUBLISH_SLOT_UNAVAILABLE: target day ${HEDEF_GUN} slot taken or missed; not moved to another day`);
     if (r.status !== 0) {
       // Yukleme olmadiysa konu HARCANMAZ: "uretildi" isaretlenmez, sonraki calisma tekrar dener.
       // Neden uretim/<slug>/YUKLEME-HATASI.json'da; bildirim.js issue acar.
@@ -278,6 +303,9 @@ function main() {
   if (!hepsi && process.env.PUBLISH === "1") {
     const d = require("./yayin-plani").durum("short");
     if (!d.uygun) { asama().outcome("NOT_DUE", d.neden); console.log("Takvim: henuz degil — " + d.neden); return 0; }
+    HEDEF_GUN = d.hedefGun || null;
+    if (RUN) RUN.record.targetDay = HEDEF_GUN;
+    console.log(`Takvim: ${d.neden} · hedef yayin gunu ${HEDEF_GUN} (${d.hedefYayin || "?"})`);
   }
   // Uretilmemis, kalici basarisiz olmamis ve (ayni spec ile) engellenmemis konular.
   // Yayin kaydindaki (icerik/yayinlananlar.json) slug'lar da atlanir: elle yuklenmis bir
@@ -321,6 +349,19 @@ function main() {
     catch (e) {
       if (e instanceof Engellendi) { asama().outcome("BLOCKED", `${slug}: ${e.message}`); console.error(`  ⛔ ${slug} kalite kapisinda engellendi — rapor: icerik/paket/${slug}/quality-gate.md`); continue; }
       if (e instanceof IncelemeGerekli) { asama().fail("QA", "REVIEW").outcome("BLOCKED", `${slug}: ${e.message}`); console.error(`  ⚠ ${slug} insan incelemesine ayrildi; YouTube'a yuklenmedi — rapor: icerik/paket/${slug}/quality-gate.md`); continue; }
+      if (e instanceof ButceBitti) {
+        asama().outcome("FAILED", e.message);
+        GrowthRuntime.alert(CHANNEL, "RETRY_BUDGET_EXHAUSTED", slug, { ...e.result });
+        console.log("::error::[" + CHANNEL.name + "] " + e.message + " — no more attempts for this day; topic kept");
+        return 1;
+      }
+      if (e instanceof YayinDogrulamaHatasi || e instanceof SlotHatasi) {
+        if (e instanceof SlotHatasi) asama().fail("UPLOAD", e.message);
+        asama().outcome("FAILED", `${slug}: ${e.message}`);
+        GrowthRuntime.alert(CHANNEL, e instanceof SlotHatasi ? "PUBLISH_SLOT_UNAVAILABLE" : "PUBLISH_VERIFICATION_FAILED", slug, { message: e.message });
+        console.log("::error::[" + CHANNEL.name + "] " + e.message);
+        return 1;
+      }
       // Yukleme hatasi konuya ait degildir (yetki/ag): baska konuyu da harcamamak icin dur.
       if (e instanceof YuklemeHatasi) { asama().fail("UPLOAD", e.message).outcome("FAILED", `${slug}: ${e.message}`); console.error(`  ✗ ${slug}: ${e.message}`); return 1; }
       if (e instanceof AltyapiHatasi) {
