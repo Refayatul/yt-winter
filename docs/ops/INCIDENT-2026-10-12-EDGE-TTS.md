@@ -72,3 +72,21 @@ On macOS, the kokoro-onnx wheel's espeak-ng loader fails with a hard-coded build
 1. Listen to the samples, then approve or reject each channel's fallback voice by setting `config.voice.fallback.approved` to true.
 2. Merge this PR.
 3. Decide whether to keep Edge as the primary voice at all. Its availability from GitHub runners is outside our control.
+
+## Recovery on 2026-10-13 (not a permanent fix)
+
+- **13:58 UTC, run 38409326669:** all three channels got Edge 403 three times. They were correctly reported as `AWAITING_APPROVAL` and nothing was rendered or uploaded.
+- **14:26 UTC, run 38413360708:** Edge worked for FR, IB and CT. Three Shorts were uploaded private for 2026-10-13 21:00 Istanbul, and each was read back from YouTube.
+- **Most likely cause of the recovery:** `msedge-tts` 2.1.0 was published to npm at **14:14:59 UTC**, between the two runs.
+  - 2.1.0 moves to a new endpoint (`wss://api.msedgeservices.com/tts/cognitiveservices/websocket/v1`) and a new query parameter. It also adds server clock-offset correction.
+  - `package.json` allowed `^2.0.7` and there is no lockfile, so the 14:26 run installed 2.1.0 automatically, and the 13:58 run had 2.0.9.
+  - Both runs used the same runner region and image.
+  - The logs did not print the installed version, so this is a strong inference, not proof.
+- **Corroborated the same day:** at 15:17–15:24 UTC on GitHub runners, the PR's *TTS availability and fallback check* (run 38420784653) compared both clients.
+  - Node `msedge-tts` 2.1.0 synthesised 6/6, with one handshake rate-limited (HTTP 429) but still completed.
+  - Python `edge-tts` 7.2.8, which still uses `speech.platform.bing.com`, got 403 on 6/6.
+- **Changes made afterwards:**
+  - `msedge-tts` is pinned to exactly `2.1.0`.
+  - Every narration health line now names the installed client version (`msedge-tts X.Y.Z`).
+  - Regression tests: `tests/js/ops-nonfatal-fixes.test.js`.
+- **Still a risk:** this is an unofficial endpoint kept working by a third-party library. Microsoft can change it again at any time, and a pinned version will not follow such a change by itself. A licensed provider (Azure AI Speech) and an approved emergency fallback are still owner decisions, kept separate in `TTS-FALLBACK-OPTIONS.md`.

@@ -195,9 +195,10 @@ async function denetle(ops = {}) {
     const TTS = require("./lib/shorts-tts");
     const probe = await (ops.seslendirme || ((v) => TTS.edgeProbe(v)))(voice);
     const policy = ops.fallbackPolicy || TTS.fallbackPolicy(CHANNEL);
-    if (probe.ok) ekle("seslendirme", "ok", `Edge sesi çalışıyor (${voice})`);
-    else if (policy.allowed && policy.approved) ekle("seslendirme", "uyari", `Edge sesi reddedildi (${probe.tries.join(", ")}); onaylı yedek ses kullanılacak (${policy.voice})`);
-    else ekle("seslendirme", "kritik", `NARRATION_UNAVAILABLE: Edge sesi reddedildi (${probe.tries.join(", ")}); yedek ses yok — ${policy.reason}`,
+    const kutuphane = `msedge-tts ${(TTS.edgeLibraryVersion || (() => "unknown"))()}`;
+    if (probe.ok) ekle("seslendirme", "ok", `Edge sesi çalışıyor (${voice}; ${kutuphane})`);
+    else if (policy.allowed && policy.approved) ekle("seslendirme", "uyari", `Edge sesi reddedildi (${probe.tries.join(", ")}; ${kutuphane}); onaylı yedek ses kullanılacak (${policy.voice})`);
+    else ekle("seslendirme", "kritik", `NARRATION_UNAVAILABLE: Edge sesi reddedildi (${probe.tries.join(", ")}; ${kutuphane}); yedek ses yok — ${policy.reason}`,
       "Yedek sesi (config.voice.fallback) dinleyip onaylayın ya da Edge'in düzelmesini bekleyin. Konu harcanmaz, hiçbir şey render edilmez.");
   }
 

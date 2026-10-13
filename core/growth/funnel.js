@@ -167,12 +167,22 @@ function bridgeLine(slug, from, to) {
   return `And this is only one thread. ${to.title} shows what it connects to.`;
 }
 
+// A clusters.json row with membership lists. Until 2026-10-13 `growth.js backfill` wrote
+// performance statistics ({ n, medianViews, ... }) into the same file; such rows have no lists and
+// are read as empty membership instead of crashing afterUpload and the growth report.
+function membership(id, row) {
+  const list = (value) => (Array.isArray(value) ? value : []);
+  const source = row && typeof row === "object" ? row : {};
+  return { id: source.id || id, anchorLong: source.anchorLong || null, longs: list(source.longs), shorts: list(source.shorts), futureLongs: list(source.futureLongs) };
+}
+
 // CONTENT CLUSTERS (PHASE 32R): 1 long-form anchor + Shorts + future longs.
 function updateCluster(channel, cluster, entry, options = {}) {
   if (entry.channel && entry.channel !== channel.slug) throw new Error(`CROSS_CHANNEL_CLUSTER_BLOCKED: ${entry.channel} → ${channel.slug}`);
   const clusters = Store.readState(channel, "growth", "clusters.json", { channel: channel.slug, clusters: {} });
   if (clusters.channel !== channel.slug) throw new Error("CLUSTER_ISOLATION_VIOLATION");
-  const row = clusters.clusters[cluster] || { id: cluster, anchorLong: null, longs: [], shorts: [], futureLongs: [] };
+  clusters.clusters = clusters.clusters && typeof clusters.clusters === "object" ? clusters.clusters : {};
+  const row = membership(cluster, clusters.clusters[cluster]);
   const list = entry.type === "long" ? row.longs : entry.type === "future-long" ? row.futureLongs : row.shorts;
   if (!list.some((item) => item.slug === entry.slug)) list.push({ slug: entry.slug, videoId: entry.videoId || null, title: entry.title || null });
   else list.forEach((item) => { if (item.slug === entry.slug && entry.videoId) item.videoId = entry.videoId; });
@@ -185,7 +195,8 @@ function updateCluster(channel, cluster, entry, options = {}) {
 function clusterIntegrity(channel) {
   const clusters = Store.readState(channel, "growth", "clusters.json", { channel: channel.slug, clusters: {} });
   const problems = [];
-  for (const [id, row] of Object.entries(clusters.clusters || {})) {
+  for (const [id, raw] of Object.entries(clusters.clusters || {})) {
+    const row = membership(id, raw);
     if (row.anchorLong && !row.longs.some((item) => item.slug === row.anchorLong)) problems.push(`${id}: anchor ${row.anchorLong} not in longs`);
     // A topic may appear once as a Short AND once as its long-form episode
     // (that is the funnel); duplicates are only within the same content type.
