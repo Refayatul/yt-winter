@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-12T15:16:26.073Z
+Generated: 2026-10-12T23:38:17.042Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -9,7 +9,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Signal | Status |
 |---|---|
 | Today topic | unavailable |
-| Short | due-not-produced |
+| Short | not-due |
 | Long | due-not-produced |
 | Quality | unavailable / unavailable |
 | YouTube | not-uploaded |
@@ -17,14 +17,14 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Video ID | unavailable |
 | Analytics | measured |
 | Scheduler | pending-before-deadline |
-| Ready topic backlog | 328 |
-| Errors/review/blocks | 42 |
+| Ready topic backlog | 327 |
+| Errors/review/blocks | 43 |
 | TikTok today | NO_TODAY_VIDEO |
 | TikTok backlog | 11 |
 | Analytics warehouse | through 2026-10-10 (lag 2 d) |
-| Ops (24 h) | publish.public 1, analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-12 (0 d) |
-| API quota today | 10 / 9800 units (project 1012165386949) |
+| Ops (24 h) | analytics.load 1 |
+| Scheduler queue | 1 queued, oldest 2026-10-13 (-1 d) |
+| API quota today | 0 / 9800 units (project channel:failure-reconstructed) |
 | YPP readiness (estimate) | subs 25/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
@@ -32,7 +32,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Signal | Status |
 |---|---|
 | Today topic | unavailable |
-| Short | due-not-produced |
+| Short | not-due |
 | Long | due-not-produced |
 | Quality | unavailable / unavailable |
 | YouTube | not-uploaded |
@@ -40,12 +40,12 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Video ID | unavailable |
 | Analytics | measured |
 | Scheduler | pending-before-deadline |
-| Ready topic backlog | 482 |
-| Errors/review/blocks | 5 |
+| Ready topic backlog | 481 |
+| Errors/review/blocks | 6 |
 | Analytics warehouse | through 2026-10-10 (lag 2 d) |
-| Ops (24 h) | publish.public 1, analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-12 (0 d) |
-| API quota today | 10 / 9800 units (project 684098966511) |
+| Ops (24 h) | analytics.load 1 |
+| Scheduler queue | 1 queued, oldest 2026-10-13 (-1 d) |
+| API quota today | 0 / 9800 units (project channel:impossible-brief) |
 | YPP readiness (estimate) | subs 10/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
@@ -53,7 +53,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Signal | Status |
 |---|---|
 | Today topic | unavailable |
-| Short | due-not-produced |
+| Short | not-due |
 | Long | due-not-produced |
 | Quality | unavailable / unavailable |
 | YouTube | not-uploaded |
@@ -65,7 +65,7 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Errors/review/blocks | 2 |
 | Analytics warehouse | through 2026-10-10 (lag 2 d) |
 | Ops (24 h) | analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-12 (0 d) |
-| API quota today | 10 / 9800 units (project 208987599838) |
+| Scheduler queue | 1 queued, oldest 2026-10-13 (-1 d) |
+| API quota today | 109 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 

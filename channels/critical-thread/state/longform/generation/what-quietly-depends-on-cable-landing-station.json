@@ -3,9 +3,9 @@
   "channel": "critical-thread",
   "slug": "what-quietly-depends-on-cable-landing-station",
   "topicHash": "5263dc490ef5:34",
-  "status": "DEFERRED",
+  "status": "QUALITY_REVIEW",
   "createdAt": "2026-10-12T15:14:07.434Z",
-  "updatedAt": "2026-10-12T15:14:07.434Z",
+  "updatedAt": "2026-10-12T16:54:00.455Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -453,20 +453,106 @@
           "role": "evidence"
         }
       ]
+    },
+    {
+      "section": "HOW_IT_WORKS",
+      "paragraphs": [
+        {
+          "text": "The cable lands on shore and links the islands to the global network; repairs need a specialist ship.",
+          "claims": [
+            "C2"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHAT_DEPENDS_ON_IT",
+      "paragraphs": []
+    },
+    {
+      "section": "BOTTLENECK",
+      "paragraphs": [
+        {
+          "text": "Tonga depended on a single international submarine cable, providing no alternative path for data traffic.",
+          "claims": [
+            "C17"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "WHY_THE_BOTTLENECK_EXISTS",
+      "paragraphs": []
+    },
+    {
+      "section": "FAILURE_SCENARIO",
+      "paragraphs": []
+    },
+    {
+      "section": "CASCADING_CONSEQUENCES",
+      "paragraphs": [
+        {
+          "text": "The volcanic eruption severed the submarine cable, leaving Tonga without international connectivity until repair crews can restore service.",
+          "claims": [
+            "C1"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "A cable landing point refers to the spot where an undersea communications cable reaches the shore.",
+          "claims": [
+            "C19"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "REDUNDANCY_ALTERNATIVES",
+      "paragraphs": [
+        {
+          "text": "Satellite links restored limited service in the meantime.",
+          "claims": [
+            "C18"
+          ],
+          "role": "evidence"
+        }
+      ]
+    },
+    {
+      "section": "FINAL_SYSTEM_INSIGHT",
+      "paragraphs": []
     }
   ],
   "usage": {
-    "input_tokens": 4604,
-    "output_tokens": 4963
+    "input_tokens": 6279,
+    "output_tokens": 6618
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "All paragraphs use only the supplied claim IDs; rewrite‑marked claims have been paraphrased without copying eight‑word phrases. All paragraphs rely exclusively on claims C20‑C22; no additional facts were introduced.",
+  "depthNote": "All paragraphs use only the supplied claim IDs; rewrite‑marked claims have been paraphrased without copying eight‑word phrases. All paragraphs rely exclusively on claims C20‑C22; no additional facts were introduced. Only claim C2 used as per request. Only one supporting claim; evidence limited. Only two confirmed facts provided; each paragraph directly cites its supporting claim. Only claim C18 provided; paragraph limited to that evidence.",
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
     "stage": "section:HOW_IT_WORKS",
     "retryable": true,
     "retryAfterMs": 18000
+  },
+  "quality": {
+    "duplicateSections": [],
+    "repeatedPhrases": [],
+    "weakHook": false,
+    "payoff": false,
+    "filler": [],
+    "introShare": 0.62,
+    "missingPlanSections": [],
+    "hardFails": [
+      "missing final payoff"
+    ],
+    "notes": [
+      "introduction exceeds 25% of the script"
+    ]
   }
 }

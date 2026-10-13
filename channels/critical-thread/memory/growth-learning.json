@@ -1,12 +1,12 @@
 {
   "channel": "critical-thread",
-  "updatedAt": "2026-10-12T15:16:16.985Z",
+  "updatedAt": "2026-10-12T23:06:17.659Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 5,
     "status": "observing",
     "baselines": {
-      "views": 61,
+      "views": 63,
       "averagePercentageViewed": 79.23,
       "subscribersPer1000Views": 0,
       "watchHoursPer1000Views": 2.67,
@@ -27,14 +27,6 @@
         "value": "countdown",
         "sample": 1,
         "lift": -0.091,
-        "z": 0
-      },
-      {
-        "stage": "OBSERVATION",
-        "dimension": "topicCluster",
-        "value": "ELECTRICAL GRID",
-        "sample": 1,
-        "lift": -0.59,
         "z": 0
       },
       {
@@ -71,8 +63,8 @@
       },
       {
         "stage": "OBSERVATION",
-        "dimension": "durationBucket",
-        "value": "26-35s",
+        "dimension": "topicCluster",
+        "value": "ELECTRICAL GRID",
         "sample": 1,
         "lift": -0.59,
         "z": 0
@@ -87,8 +79,8 @@
       },
       {
         "stage": "OBSERVATION",
-        "dimension": "titlePattern",
-        "value": "how",
+        "dimension": "durationBucket",
+        "value": "26-35s",
         "sample": 1,
         "lift": -0.59,
         "z": 0
@@ -115,6 +107,14 @@
         "value": "statement",
         "sample": 1,
         "lift": -0.22,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "how",
+        "sample": 1,
+        "lift": -0.59,
         "z": 0
       },
       {

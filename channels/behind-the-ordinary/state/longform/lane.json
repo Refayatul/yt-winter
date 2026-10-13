@@ -105,8 +105,8 @@
     {
       "cycleId": "2026-W42",
       "channel": "behind-the-ordinary",
-      "startedAt": "2026-10-12T15:15:24.880Z",
-      "status": "DEFERRED_PROVIDER",
+      "startedAt": "2026-10-12T16:54:06.721Z",
+      "status": "QUALITY_BLOCKED",
       "evaluated": [
         {
           "slug": "why-the-bluetooth-logo-looks-like-that",
@@ -116,16 +116,40 @@
           "decision": "BLOCK",
           "score": 81,
           "hardFails": [
-            "INSUFFICIENT_DEPTH: evidence supports ~2.3 min; target 8–12 min — not padded",
-            "LLM generation deferred safely (RATE_LIMIT); do not render or publish until the checkpoint resumes"
+            "INSUFFICIENT_DEPTH: evidence supports ~2.6 min; target 8–12 min — not padded"
           ],
-          "generationStatus": "DEFERRED"
+          "generationStatus": "COMPLETE"
+        },
+        {
+          "slug": "why-jeans-have-a-tiny-pocket",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 67,
+          "bucket": "B",
+          "decision": "BLOCK",
+          "score": 85,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~2.7 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
+        },
+        {
+          "slug": "why-jeans-have-copper-rivets",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 67,
+          "bucket": "B",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~2.1 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
         }
       ],
       "selected": null,
-      "reason": "provider deferred why-the-bluetooth-logo-looks-like-that; retry this cycle and resume its checkpoint",
-      "checkpoint": "generation/why-the-bluetooth-logo-looks-like-that.json",
-      "finishedAt": "2026-10-12T15:15:55.322Z"
+      "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
+      "finishedAt": "2026-10-12T16:54:10.644Z"
     }
   ]
 }

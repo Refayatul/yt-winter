@@ -8,10 +8,11 @@ https://youtu.be/7g6pgV-E0PE
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-07 | 61 | 0 | 1 | 48.06 | 0 | Shorts feed 93%, Browse/other YouTube 3% |
 | 3d | 2026-10-08 | 62 | 0 | 1 | 48.06 | 0 | Shorts feed 93%, Browse/other YouTube 3% |
+| 7d | 2026-10-12 | 63 | 0 | 1 | 45.55 | 0 | Shorts feed 89%, Search 6% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
-- **INSUFFICIENT_DATA** (high) — 62 views after 3 days — too early/small for rate-based conclusions.
+- **INSUFFICIENT_DATA** (high) — 63 views after 7 days — too early/small for rate-based conclusions.
 
 ## Suggested interventions
 
@@ -19,9 +20,9 @@ https://youtu.be/7g6pgV-E0PE
 
 ## First major observed retention drop
 
-- Timestamp: 8s; magnitude: 25 percentage points.
+- Timestamp: 8s; magnitude: 28 percentage points.
 - Active sentence: unavailable
 - Visual type: unavailable
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 1.
+Views gained between 3d and 7d: 1.
