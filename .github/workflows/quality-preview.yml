@@ -75,10 +75,23 @@ jobs:
         run: |
           mkdir -p preview
           if [ "$CHANNEL" = "failure-reconstructed" ]; then
+            # Like IB/CT (--advisory-readiness): a rendered preview whose FINAL quality gate says REVIEW or
+            # BLOCK is reported, not failed. That verdict still blocks any real upload. Anything else (no
+            # MP4, narration, render or tool failure) fails the job.
+            set +e
             node shorts-sira.js --channel failure-reconstructed "$FR_SLUG"
-            cp "uretim/$FR_SLUG/Videos/$FR_SLUG.mp4" preview/
+            CODE=$?
+            set -e
             cp "icerik/paket/$FR_SLUG/quality-gate.json" "preview/$FR_SLUG.quality-gate.json" 2>/dev/null || true
             cp "uretim/$FR_SLUG/Videos/denetim.json" "preview/$FR_SLUG.denetim.json" 2>/dev/null || true
+            cp "uretim/$FR_SLUG/Videos/$FR_SLUG.mp4" preview/
+            if [ "$CODE" -ne 0 ]; then
+              node -e '
+                const q = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"));
+                if (q.asama !== "final" || !["REVIEW", "BLOCK"].includes(q.karar)) { console.error("not a final quality-gate verdict: " + JSON.stringify({ asama: q.asama, karar: q.karar })); process.exit(1); }
+                console.log("::notice::FR preview rendered; final quality gate " + q.karar + " " + q.toplam + "/100 - this topic would not be uploaded");
+              ' "preview/$FR_SLUG.quality-gate.json"
+            fi
           else
             if [ "$CHANNEL" = "impossible-brief" ]; then
               SLUG="$IB_SLUG"
