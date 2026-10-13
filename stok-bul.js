@@ -153,4 +153,9 @@ async function klipSec(terim, kullanilan) {
   fs.writeFileSync(path.join(BASE, "GORSEL-KAYNAKLARI.txt"),
     kayit.join("\n") + "\n\nPexels License (free, commercial use OK).\n");
   console.log("✓ Bitti. Klipler indi + konu.json guncellendi.");
-})().catch(e => { console.error("Hata: " + e.message); process.exit(1); });
+})().catch(e => {
+  console.error("Hata: " + e.message);
+  // Kaynak servis kesintisi konuya ait degildir: shorts-sira.js konuyu harcamadan durur.
+  const Outage = require("./lib/source-outage");
+  process.exit(Outage.isTransient(e) ? Outage.ASSET_SOURCE_UNAVAILABLE_EXIT : 1);
+});

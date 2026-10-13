@@ -115,6 +115,8 @@ function seslendir(metin, dosya) {
 
 // Edge TTS ara sira baglantiyi dusurur ("Stream closed..."). Tekrar dene.
 async function seslendirGuvenli(metin, dosya, deneme = 4) {
+  // Kesinti sirasinda operator anahtari: her istegi reddeden servise hic gidilmez.
+  if (process.env.SHORTS_EDGE_TTS === "off") throw new Error("Edge TTS disabled (SHORTS_EDGE_TTS=off)");
   for (let i = 1; ; i++) {
     try {
       await seslendir(metin, dosya);
@@ -141,7 +143,7 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
   // Craft v2: one continuous read with measured line timing (lib/edge-narration.js); scenes start
   // where their sentence is actually spoken. Otherwise (or if the service refuses) the v1 read.
   let olculen = null;
-  if (CRAFT.pacing) {
+  if (CRAFT.pacing && process.env.SHORTS_EDGE_TTS !== "off") {
     try {
       olculen = await require("./lib/edge-narration").narrate({ lines: sahneler.map(s => telaffuz.ttsMetni(s.metin.trim())), voice: SES, rate: HIZ,
         pausesMs: require("./core/rendering/craft").linePauses(sahneler.length).map(x => Math.round(x * 1000)), out: vo, probe: sure });
@@ -149,8 +151,31 @@ const assKacis = (s) => String(s).replace(/[{}]/g, "").replace(/\\/g, "");
     } catch (e) { console.log("  (surekli anlatim olmadi: " + String(e.message).slice(0, 100) + "; satir payi zamanlamasi)"); olculen = null; }
   }
   // Ses sozluk karsiliklariyla okunur (O-ring -> "O ring"); altyazi orijinal yazimi korur.
-  if (!olculen) await seslendirGuvenli(telaffuz.ttsMetni(anlati), vo);
-  if (!fs.existsSync(vo) || fs.statSync(vo).size < 1000) throw new Error("Seslendirme uretilemedi.");
+  // Edge reddederse (yukaridaki sinirli denemelerden sonra) kanalin YEDEK sesi, yalnizca politika
+  // izin veriyorsa (lib/shorts-tts.js: onayli ses ya da PUBLISH=0 + SHORTS_TTS_FALLBACK=preview).
+  // Aksi halde NARRATION_UNAVAILABLE ile cikilir: hicbir sey render edilmez, konu harcanmaz.
+  const TTS = require("./lib/shorts-tts");
+  const anlatimYok = (neden) => Object.assign(new Error("NARRATION_UNAVAILABLE: " + neden), { exitCode: TTS.NARRATION_UNAVAILABLE_EXIT });
+  let sesKaydi = { provider: "Microsoft Edge neural TTS (" + SES + ")", fallback: null };
+  if (!olculen) {
+    try { await seslendirGuvenli(telaffuz.ttsMetni(anlati), vo); }
+    catch (e) {
+      const politika = TTS.fallbackPolicy(CURRENT_CHANNEL);
+      console.log(`  Edge seslendirme yok (${String(e.message).slice(0, 100)}); yedek ses: ${politika.allowed ? politika.voice + " (" + politika.reason + ")" : "YOK — " + politika.reason}`);
+      if (!politika.allowed) throw anlatimYok(e.message);
+      const aralar = CRAFT.pacing ? require("./core/rendering/craft").linePauses(sahneler.length) : sahneler.map(() => 0.15);
+      try { olculen = TTS.fallbackNarration(sahneler.map(s => telaffuz.ttsMetni(s.metin.trim())), vo, politika, { pauses: aralar }); }
+      catch (y) { throw anlatimYok("fallback: " + y.message); }
+      olculen.mode = "fallback";
+      sesKaydi = { provider: olculen.provider, fallback: olculen.fallback };
+      fs.writeFileSync(path.join(VID, "anlatim-zamanlama.json"), JSON.stringify({ mode: olculen.mode, provider: olculen.provider, fallback: olculen.fallback, lineTimes: olculen.lineTimes }, null, 2));
+    }
+  }
+  if (!fs.existsSync(vo) || fs.statSync(vo).size < 1000) throw anlatimYok("seslendirme dosyasi yok");
+  // Sessizlik, ton ya da yarim okuma asla render edilmez (lib/speech-check.js).
+  const konusma = require("./lib/speech-check").check(vo, { text: anlati });
+  console.log(`  konusma kontrolu: ${konusma.ok ? "gecti" : "KALDI — " + konusma.problems.join("; ")} (${sesKaydi.provider})`);
+  if (!konusma.ok) throw anlatimYok("speech check: " + konusma.problems.join("; "));
   const VODUR = sure(vo);
 
   // sahne sureleri: olculen satir zamanlari (v2) ya da kelime payina gore (v1)
@@ -488,7 +513,9 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     captionBurned: true, captionEvents: events.length,
     captionMaxWords: events.reduce((max, event) => Math.max(max, event.txt.split(/\s+/).length), 0),
     captionMaxLines: 1, captionSafeZoneMeasured: tasma !== null,
-    voice: { provider: VOICE_PROFILE.provider || "edge-tts", voice: SES, rate: HIZ, channel: CURRENT_CHANNEL.slug } };
+    voice: { provider: VOICE_PROFILE.provider || "edge-tts", voice: SES, rate: HIZ, channel: CURRENT_CHANNEL.slug,
+      // Yedek ses kullanildiysa kayit onu soyler; youtube-yukle.js onaysiz yedek sesi yuklemez.
+      ...(sesKaydi.fallback ? { provider: "kokoro", voice: sesKaydi.fallback.voice, fallback: sesKaydi.fallback, primary: SES } : {}) } };
   try { Object.assign(denetim, DEN.videoDenetim(cikti)); } catch (e) { denetim.videoDenetimHata = String(e.message).slice(0, 160); }
   try { DEN.onizleme(cikti, path.join(VID, "onizleme.jpg"), sure(cikti)); denetim.onizleme = "Videos/onizleme.jpg"; }
   catch (e) { denetim.onizlemeHata = String(e.message).slice(0, 160); }
@@ -503,8 +530,8 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
     const P = require("./lib/provenance");
     const krediler = ((K.defter() || {})[IS] || {}).krediler || [];
     P.write(path.dirname(K.paketYolu(IS, "provenance.json")), P.build({ channel: CURRENT_CHANNEL.slug, slug: IS,
-      extra: krediler.map(P.fromCreditLine), voiceProvider: "Microsoft Edge neural TTS (" + SES + ")", music: true }));
+      extra: krediler.map(P.fromCreditLine), voiceProvider: sesKaydi.provider, music: true }));
   } catch (e) { console.log("  (provenance yazilamadi: " + e.message.slice(0, 120) + ")"); }
   console.log(`✓ Bitti: ${path.relative(KOK, cikti)}  (${sure(cikti).toFixed(1)}s, ${W}x${H}${ustKatman ? ", failure-chain katmani" : ""})`);
   if (!process.env.SHORTS_TMP_SAKLA) { try { fs.rmSync(TMP, { recursive: true, force: true }); } catch (e) {} } else console.log("  (ara dosyalar: " + TMP + ")");
-})().catch(e => { console.error("\nHata: " + e.message); try { fs.rmSync(TMP, { recursive: true, force: true }); } catch (_) {} process.exit(1); });
+})().catch(e => { console.error("\nHata: " + e.message); try { fs.rmSync(TMP, { recursive: true, force: true }); } catch (_) {} process.exit(e.exitCode || 1); });
