@@ -31,7 +31,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        channel: [failure-reconstructed, impossible-brief, critical-thread, behind-the-ordinary]
+        # The Hidden Logic of Things is inactive (config/channels.json enabled:false).
+        channel: [failure-reconstructed, impossible-brief, critical-thread]
     env:
       PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
       FR_SLUG: ${{ inputs.fr_slug || 'lower-van-norman-dam-1971' }}
@@ -68,13 +69,29 @@ jobs:
           PUBLISH: '0'
           SAGLIK_ATLA: '1'
           CHANNEL: ${{ matrix.channel }}
+          # A visual preview, never an upload: the topic-level growth gate is printed but does not stop
+          # the render (the default preview topics drifted below the viral minimum after 2026-10-04).
+          GROWTH_GATE_MODE: shadow
         run: |
           mkdir -p preview
           if [ "$CHANNEL" = "failure-reconstructed" ]; then
+            # Like IB/CT (--advisory-readiness): a rendered preview whose FINAL quality gate says REVIEW or
+            # BLOCK is reported, not failed. That verdict still blocks any real upload. Anything else (no
+            # MP4, narration, render or tool failure) fails the job.
+            set +e
             node shorts-sira.js --channel failure-reconstructed "$FR_SLUG"
-            cp "uretim/$FR_SLUG/Videos/$FR_SLUG.mp4" preview/
+            CODE=$?
+            set -e
             cp "icerik/paket/$FR_SLUG/quality-gate.json" "preview/$FR_SLUG.quality-gate.json" 2>/dev/null || true
             cp "uretim/$FR_SLUG/Videos/denetim.json" "preview/$FR_SLUG.denetim.json" 2>/dev/null || true
+            cp "uretim/$FR_SLUG/Videos/$FR_SLUG.mp4" preview/
+            if [ "$CODE" -ne 0 ]; then
+              node -e '
+                const q = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8"));
+                if (q.asama !== "final" || !["REVIEW", "BLOCK"].includes(q.karar)) { console.error("not a final quality-gate verdict: " + JSON.stringify({ asama: q.asama, karar: q.karar })); process.exit(1); }
+                console.log("::notice::FR preview rendered; final quality gate " + q.karar + " " + q.toplam + "/100 - this topic would not be uploaded");
+              ' "preview/$FR_SLUG.quality-gate.json"
+            fi
           else
             if [ "$CHANNEL" = "impossible-brief" ]; then
               SLUG="$IB_SLUG"
@@ -83,7 +100,7 @@ jobs:
             else
               SLUG="$BTO_SLUG"
             fi
-            node scripts/quality-preview.js --channel "$CHANNEL" "$SLUG"
+            node scripts/quality-preview.js --channel "$CHANNEL" "$SLUG" --advisory-readiness
             DIR="channels/$CHANNEL/reports/previews/$SLUG"
             cp "$DIR/$SLUG.mp4" preview/
             cp "$DIR/render.json" "preview/$SLUG.render.json"

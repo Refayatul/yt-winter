@@ -58,6 +58,24 @@ function optimizeEditorialOpening(lines, selectedHook, config) {
   return { lines: next, changed: true, original: original[0], selected: next[0], source: existing > 0 ? `editorial line ${existing + 1} promoted` : "fact-checked hook candidate" };
 }
 
+// IB/CT spoken opening: the topic's headline question read aloud ("What If Ice Sank Instead of
+// Floating?") repeats the title the viewer already sees and pushes a sourced line out of the opening.
+// The best passing hook that is not a restatement of the headline or the selected title opens
+// instead; with none, the editorial line 1 stays.
+function restates(a, b) {
+  const words = (value) => new Set(String(value || "").toLowerCase().replace(/[^a-z0-9 ]+/g, " ").split(/\s+/).filter((w) => w.length > 2));
+  const x = words(a); const y = words(b);
+  if (!x.size || !y.size) return false;
+  const shared = [...x].filter((w) => y.has(w)).length;
+  return shared / Math.min(x.size, y.size) >= 0.7;
+}
+
+function spokenOpeningHook(hooks, topic, titles, config) {
+  const headlines = [topic.title, topic.question, topic.topic, titles && titles.selected && (titles.selected.title || titles.selected)].filter(Boolean);
+  const passing = (hooks.candidates || []).filter((hook) => !hook.blocked && hook.fitsOpening !== false && hook.adjustedTotal >= config.hooks.minimumScore && hook.spoken);
+  return passing.find((hook) => !headlines.some((headline) => restates(hook.spoken, headline))) || null;
+}
+
 function findTopic(ctx, idOrSlug) {
   return ctx.inventory.find((topic) => topic.id === idOrSlug || topic.slug === idOrSlug) || null;
 }
@@ -283,7 +301,7 @@ function planShort(channel, idOrTopic, options = {}) {
     // Researched ImpossibleBrief / CriticalThread records: editorial narration,
     // one timed claim per line with its evidence layer (the renderer's
     // contract); nominal timing is replaced by measured takes at render.
-    script = editorialClaims(topic, config, evaluation.boilerplate.templatedFields, hooks.selected);
+    script = editorialClaims(topic, config, evaluation.boilerplate.templatedFields, spokenOpeningHook(hooks, topic, titles, config));
   } else if (hooks.selected) {
     script = Script.buildShort(topic, hooks, config, { templatedFields: evaluation.boilerplate.templatedFields, cta: cta.type !== "NONE" && cta.delivery !== "on-screen" ? cta.text : null });
   } else {
@@ -421,6 +439,6 @@ function printSummary(summaryObject, extra = {}) {
   return Object.entries(rows).map(([key, value]) => `${(key + ":").padEnd(width + 2)}${value == null ? "—" : value}`).join("\n");
 }
 
-module.exports = {
+module.exports = { restates, spokenOpeningHook,
   Config, Store, Model, Context, selectShortTopic, orderedQueue, gateMode, planShort, externalFromLegacyGate, summary, printSummary, durationBucket, channelFeatures, optimizeEditorialOpening, applyLegacyOverlay, findTopic, decisionCandidate, writeDecision,
 };

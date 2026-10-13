@@ -36,4 +36,8 @@ console.log(JSON.stringify(result.render && result.render.video ? {
   opening: result.render.video.opening,
   visualQuality: result.render.video.visualQuality,
 } : result.render, null, 2));
-if (failed.length) process.exitCode = 4;
+// --advisory-readiness (CI preview job): the topic-level growth readiness verdict is reported but does
+// not fail a visual preview; any render validation failure still does.
+const advisory = selected.argv.includes("--advisory-readiness");
+const blocking = advisory ? failed.filter((name) => name !== "growthReadiness") : failed;
+if (blocking.length) process.exitCode = 4;

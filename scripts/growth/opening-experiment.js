@@ -23,6 +23,10 @@ const Growth = require("../../core/growth");
 const Discovery = require("../../core/discovery");
 const Experiments = require("../../core/growth/experiments");
 const Engagement = require("../../core/growth/engagement");
+const Scripting = require("../../core/scripting");
+const Craft = require("../../core/rendering/craft");
+const Pipeline = require("../../core/pipeline/impossible-brief");
+const os = require("os");
 
 const argv = process.argv.slice(2);
 const command = argv[0] && !argv[0].startsWith("--") ? argv[0] : "plan";
@@ -32,15 +36,27 @@ const ID = option("id", `${channel.slug}-short-opening_visual-craft-v2`);
 
 function plan(count) {
   const exclude = [...Discovery.usedIds(channel)];
-  const picked = [];
-  while (picked.length < count) {
+  const picked = []; const blocked = [];
+  const universe = Discovery.universe(channel).topics || [];
+  while (picked.length < count && blocked.length < 40) {
     const selection = Growth.selectShortTopic(channel, { exclude, write: false });
     if (!selection.selected) break;
     const topic = selection.selected.topic;
+    exclude.push(topic.id);
+    // Production's own pre-render gate (core/pipeline/impossible-brief.js chooseTopic): a topic it
+    // would BLOCK never gets produced, so it cannot hold an experiment slot.
+    const raw = universe.find((item) => item.id === topic.id);
+    const pre = Growth.planShort(channel, topic.id, { legacyTitles: Scripting.titleCandidates(raw), write: false, selection: selection.decision });
+    if (pre.readiness.decision === "BLOCK") { blocked.push(`${topic.slug} (${pre.readiness.hardFails.join("; ") || pre.readiness.ProductionReadinessScore})`); continue; }
+    // ...and its visual pre-check (at least 4 licensed pictures/clips), which skipped two planned
+    // topics in the 2026-10-12 production run. Downloads into a temporary folder; free sources only.
+    if (!argv.includes("--no-visual-check")) {
+      const shortfall = Pipeline.visualShortfall(raw, fs.mkdtempSync(path.join(os.tmpdir(), "opening-experiment-")));
+      if (shortfall) { blocked.push(`${topic.slug} (visual pre-check: ${shortfall})`); continue; }
+    }
     const score = selection.selected.score || {};
     picked.push({ slug: topic.slug, id: topic.id, category: topic.category || "OTHER", bucket: score.bucket || "?",
       score: Number(score.SelectionScore) || 0, viral: Number(score.ViralPotentialScore) || 0 });
-    exclude.push(topic.id);
   }
   if (picked.length < count || count % 2) throw new Error(`need an even ${count} qualified topics; the selector returned ${picked.length}`);
   // Same-category pairs first (closest selector scores), then the leftovers paired by score.
@@ -57,7 +73,7 @@ function plan(count) {
     const flip = Engagement.hash01(`${ID}:pair:${a.slug}:${b.slug}`) < 0.5;
     return { pair: i + 1, control: flip ? a : b, variant: flip ? b : a };
   });
-  return { picked, pairs };
+  return { picked, pairs, blocked };
 }
 
 function metricsFor(videoId, checkpoint) {
@@ -92,7 +108,15 @@ function report() {
 if (command === "report") report();
 else {
   const count = Number(option("count", 10));
-  const { pairs } = plan(count);
+  const { pairs, blocked } = plan(count);
+  if (blocked.length) console.log(`Skipped (production's pre-render gate would block them): ${blocked.join(", ")}\n`);
+  // What each arm switches on in the renderer (Craft.features), with SHORTS_CRAFT_V2 unset as in production.
+  const arm = (value) => Craft.features(channel.slug, { experiment: { variable: "opening_visual", value } }, {});
+  const control = arm("current"); const variant = arm("craft-v2-opening");
+  const onlyOpening = !Object.values(control).some(Boolean) && variant.opening && !variant.repeats && !variant.pacing && !variant.captions;
+  console.log(`Arm check: control ${JSON.stringify(control)}; variant ${JSON.stringify(variant)} -> ${onlyOpening ? "only the opening differs" : "MORE THAN THE OPENING DIFFERS: do not start"}`);
+  if (process.env.SHORTS_CRAFT_V2) console.log("WARNING: SHORTS_CRAFT_V2 is set in this environment; production must leave it unset for IB during the experiment.");
+  if (!onlyOpening) process.exitCode = 3;
   console.log(`Experiment ${ID}: opening_visual, control "current", variant "craft-v2-opening", ${count / 2} per arm (matched pairs).\n`);
   console.log("| Pair | Control (current opening) | Variant (craft v2 opening) | Category | Selection score | Viral potential | Bucket |\n|---|---|---|---|---|---|---|");
   const both = (p, key) => (p.control[key] === p.variant[key] ? p.control[key] : `${p.control[key]} / ${p.variant[key]}`);

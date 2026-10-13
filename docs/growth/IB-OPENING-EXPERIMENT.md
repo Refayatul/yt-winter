@@ -31,19 +31,29 @@ How the pairs are built:
 
 Hash-random assignment could give 7/3 at this size. Matched pairs keep the arms at 5/5 and balanced.
 
-### Plan computed on 2026-10-11 (latest `main` with all six PRs; it is recomputed at activation)
+### Plan computed on 2026-10-12 (actual `main`; it is recomputed at activation)
+
+Before planning, the CLI applies production's own checks, so a topic production would skip never holds a slot:
+- **The pre-render readiness gate** (`chooseTopic` → `planShort`).
+- **The IB visual pre-check:** at least 4 licensed pictures or clips (`visualShortfall`). It skipped two planned topics in the 2026-10-12 production run. This time it removed three topics: pulsar (1 picture), Mars atmosphere (3) and toilets (2).
+- **The arm check:**
+  - control: `{opening:false, repeats:false, pacing:false, captions:false}`;
+  - variant: `{opening:true, repeats:false, pacing:false, captions:false}`;
+  - result: **only the opening differs**.
 
 | Pair | A: current opening | B: craft v2 opening | Category | Selection score | Viral potential | Bucket |
 |---|---|---|---|---|---|---|
-| 1 | what-if-water-refused-to-freeze | what-if-you-melted-a-diamond | PHYSICS | 78 / 77 | 77 / 75 | A |
-| 2 | what-if-synthetic-fertilizer-disappeared | what-if-mosquitoes-went-extinct | OTHER | 80 / 79 | 79 / 78 | A |
-| 3 | what-if-ocean-plankton-disappeared | what-if-a-whale-fed-the-deep-sea-for-decades | OTHER | 79 / 78 | 78 / 77 | A |
-| 4 | what-if-earth-spun-like-the-fastest-pulsar | what-if-all-the-ants-disappeared | EXTREME SCIENCE / OTHER | 79 / 78 | 78 / 77 | A |
-| 5 | what-if-your-microbes-disappeared | what-happens-if-the-speed-of-light-doubles-everywhere | HUMAN / PHYSICS | 77 | 76 / 75 | A |
+| 1 | what-if-we-beamed-solar-power-from-space | what-if-we-built-a-star-on-earth | FUTURE TECHNOLOGY | 78 / 79 | 77 | A |
+| 2 | what-if-ocean-plankton-disappeared | what-if-mosquitoes-went-extinct | OTHER | 79 | 78 | A |
+| 3 | what-happens-if-the-speed-of-light-doubles-everywhere | what-if-water-refused-to-freeze | PHYSICS | 77 | 75 / 76 | A |
+| 4 | what-if-you-flew-through-enceladuss-geysers | what-if-a-whale-fed-the-deep-sea-for-decades | SPACE / OTHER | 77 / 78 | 75 / 77 | A |
+| 5 | what-if-lake-baikal-drained | what-if-your-microbes-disappeared | EARTH / HUMAN | 77 | 75 / 76 | A |
 
 Arm means:
-- selection score: 78.6 (A) vs 77.8 (B);
-- viral potential: 77.6 (A) vs 76.4 (B).
+- selection score: 77.6 (A) vs 78.0 (B);
+- viral potential: 76.0 (A) vs 76.8 (B).
+
+**Fixed before activation.** For a hook containing a number, both arms used to open on the figure card, because the existing "numeric hook opens on its card" rule ran before the craft opening. Under the craft opening, the first frame is now the chosen subject picture (`tests/js/shorts-craft.test.js`).
 
 ## Metrics
 

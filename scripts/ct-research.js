@@ -145,6 +145,7 @@ const SYSTEM = [
   "Every fact needs a quote copied EXACTLY, character for character, from its source excerpt (at least 6 consecutive words), and the sourceId it came from. Give 10 to 14 facts, each claim one short sentence (at most 16 words) carrying one distinct detail: the record needs at least 20 distinct evidence-backed hook candidates. Every number in a claim must appear in its quote.",
   "dependency, mechanism, bottleneck, failureConsequence and resilience: one plain sentence each, each stated by the facts.",
   "Narration: 5 to 8 short spoken lines, 55 to 90 words in total, no sentence longer than 16 words, plain English, precise, no filler, no 'Did you know'.",
+  "Speak at most 3 figures in the whole narration (years, counts and measurements all count) and never repeat a figure or a date. Explain how one fact causes the next (because, so, which means) instead of listing figures.",
   "Line 1 is the hook and openingLine: at most 9 words, a concrete surprising statement about the dependency or the failure, not starting with a date. Lines 1 and 2 together: at most 18 words. The last line is the specific payoff.",
   `Each line has a role (${ROLES.join("|")}), a layer ("VERIFIED FACT" when the cited facts state it, "MODEL" when it explains how cited facts connect), and the fact ids it is based on. Add no detail that is not in those facts. Only use numbers that appear in a cited fact.`,
   "thumbnailText: 1 to 3 words, capital letters, no apostrophes. number: the one key figure exactly as a fact writes it, or empty. Titles must be accurate and supported by the facts.",
@@ -164,6 +165,9 @@ function strongestHook(topic, record) {
   return hooks.selected ? hooks.selected.spoken : null;
 }
 
+const FIGURE = /\b\d[\d,.]*\b/g;
+const MAX_SPOKEN_FIGURES = 3;
+
 // Upgrade in place: same slug and id, so used-topic and duplicate tracking stay intact.
 function toRecord(topic, draft, sources) {
   if (!draft || draft.answerable !== true) return { skip: (draft && draft.reason) || "provider returned no answer" };
@@ -177,6 +181,11 @@ function toRecord(topic, draft, sources) {
   const cited = [...new Set(facts.map((fact) => fact.sourceId))].map((id) => sourceById.get(id));
   const links = [...new Set(cited.flatMap((source) => source.links || []))];
   if (links.length < 2) supportErrors.push("the cited articles have fewer than 2 reachable primary references");
+  // A list of figures is hard to follow by ear (the Mont Blanc Short spoke 7 in 8 lines and said "2002" twice).
+  const spoken = narration.map((line) => line.text).join(" ");
+  const figures = spoken.match(FIGURE) || [];
+  if (figures.length > MAX_SPOKEN_FIGURES) supportErrors.push(`narration speaks ${figures.length} figures; at most ${MAX_SPOKEN_FIGURES} (${figures.join(", ")})`);
+  if (new Set(figures).size < figures.length) supportErrors.push(`narration repeats a figure (${figures.filter((f, i) => figures.indexOf(f) !== i).join(", ")})`);
   const opening = narration[0] ? narration[0].text : String(draft.openingLine || "");
   const text = (value) => String(value || "").trim().replace(/\.$/, "");
   const title = String(draft.title || topic.topic).trim();

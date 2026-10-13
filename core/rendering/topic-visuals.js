@@ -365,11 +365,20 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
     let type;
     const motionOpen = opening === "motion" && shotIndex === 0 && (clips.length || ordered.some((still) => stillKind(still) === "photo"));
     const clipDue = clipIndex < clips.length && plan.length > 0 && plan.length - lastClipShot >= CLIP_SPACING && (!previous || previous.type !== "stock-video");
+    // Craft v2: once every clip has played, a relevant clip may return once, from another part of its
+    // footage, instead of a still coming back again (thin pools: the ice Short showed two stills in
+    // eight of twelve shots while its two moving clips played once each).
+    const stillReturn = () => { const candidate = nextStill(); return !candidate || (stillUses.get(candidate.file) || 0) >= 1; };
+    const clipReturn = craft && clips.length > 0 && clipIndex >= clips.length && clipIndex < clips.length * 2 && plan.length - lastClipShot >= CLIP_SPACING - 1
+      && (!previous || previous.type !== "stock-video") && stillReturn();
     // A numeric hook is the opening visual; later, one card per claim at most,
     // never two in a row, and stills carry everything else.
     if (motionOpen) type = clips.length ? "stock-video" : "licensed-still";
+    // Craft v2 opening: the first frame is the chosen subject picture, never a figure card (the hook's
+    // number still gets its card on a later shot of the line).
+    else if (shotIndex === 0 && craftOpening && ordered.length) type = "licensed-still";
     else if (shotIndex === 0 && cardAllowed) type = "number-card";
-    else if (clipDue) type = "stock-video";
+    else if (clipDue || clipReturn) type = "stock-video";
     else if (cardAllowed && (!ordered.length || (previous && previous.type === "licensed-still"))) type = "number-card";
     else if (ordered.length && nextStill()) type = "licensed-still";
     else if (cardAllowed) type = "number-card";
@@ -433,9 +442,10 @@ function buildVisualPlan(topic, script, stills = [], pacingSegments = [], durati
       scene, type, numbers, comparison: [], still: null,
       proceduralFrame: claimIndex * 97 + shotIndex };
     if (type === "stock-video") {
-      const clip = clips[clipIndex++];
+      const pass = Math.floor(clipIndex / clips.length);
+      const clip = clips[clipIndex++ % clips.length];
       lastClipShot = plan.length;
-      Object.assign(entry, { clip, sourceId: `video:${clip.id}`, visualKey: `video:${clip.id}` });
+      Object.assign(entry, { clip, clipPass: pass, sourceId: pass ? `video:${clip.id}#${pass + 1}` : `video:${clip.id}`, visualKey: `video:${clip.id}` });
     } else if (type === "licensed-still") {
       const still = overflow || nextStill();
       const use = stillUses.get(still.file) || 0;

@@ -702,7 +702,9 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
   for (const shot of plan) {
     if (shot.type === "stock-video") {
       // The middle of the clip, just long enough for the shot.
-      const offset = Math.max(0, ((shot.clip.duration || shot.duration) - shot.duration) / 2);
+      // A returning clip (craft v2) plays another part of its footage: near the start instead of the middle.
+      const span = Math.max(0, (shot.clip.duration || shot.duration) - shot.duration);
+      const offset = shot.clipPass ? span * 0.1 : span / 2;
       inputs.push({ pre: ["-ss", offset.toFixed(2), "-t", (shot.duration + 0.3).toFixed(2)], file: shot.clip.path });
     } else if (shot.type === "licensed-still") inputs.push(shot.still.path);
     else if (shot.type === "explainer") {
@@ -759,7 +761,9 @@ function renderVideo(audioFile, duration, output, captionsFile, topic, options =
       // Craft v2: a dark opening picture is lifted a little so it reads at first glance.
       if (shot === plan[0] && craftFeatures.opening) chain += Craft.openingLift(Craft.frameStats(shot.still));
     } else if (shot.type === "number-card") {
-      chain = `[${index}:v]scale=1080:1920,zoompan=z='1+0.0006*on':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
+      // Craft v2: an eased 8% push, so a figure card is not a still frame (it measured near-static).
+      const cardZoom = craft ? `1+0.08*(1-pow(1-on/${Math.max(1, frames)},2))` : "1+0.0006*on";
+      chain = `[${index}:v]scale=1080:1920,zoompan=z='${cardZoom}':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
       if (shot.countUp) chain += countUpFilter(shot);
     } else {
       chain = `[${index}:v]scale=1080:1920,zoompan=z='min(zoom+0.0004,1.08)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=${frames}:s=1080x1920:fps=${FPS}`;
