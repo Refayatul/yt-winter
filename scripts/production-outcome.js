@@ -5,6 +5,7 @@
 //
 //   node scripts/production-outcome.js            writes reports/production-outcome.json and the
 //                                                 run summary ($GITHUB_STEP_SUMMARY); exit 0
+//   node scripts/production-outcome.js --channel failure-reconstructed   the same for one channel
 //   node scripts/production-outcome.js --verdict  exit 1 when a channel needs action: a production,
 //                                                 upload or schedule failure, or an owner approval
 //
@@ -93,7 +94,10 @@ function markdown(rows) {
 }
 
 if (require.main === module) {
-  const rows = evaluate();
+  // --channel <slug>: one channel only (the FR primary workflow, uretim-is.yml, produces FR alone).
+  const only = process.argv.includes("--channel") ? process.argv[process.argv.indexOf("--channel") + 1] : null;
+  if (only && !activeShortsChannels().includes(only)) { console.error(`not an active Shorts channel: ${only}`); process.exit(2); }
+  const rows = evaluate(undefined, only ? [only] : undefined);
   const verdict = process.argv.includes("--verdict");
   if (!verdict) {
     const out = path.join(ROOT, "reports", "production-outcome.json");

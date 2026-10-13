@@ -151,4 +151,9 @@ test("5. outcome categories: SUCCESS needs a videoId and publishAt; every failur
   for (const category of ["SUCCESS", "NOT_DUE", "DRY_RUN"]) assert.ok(!Outcome.FAILING.has(category) && !Outcome.WARNING.has(category));
   const md = Outcome.markdown([{ channel: "critical-thread", category: "CONTENT_BLOCKED", published: false, reason: "no topic", stages: null }]);
   assert.match(md, /\| critical-thread \| \*\*CONTENT_BLOCKED\*\* \| \*\*no\*\* \|/, "the summary says plainly that nothing is on its way");
+  // The FR primary workflow reports the same table for FR alone (a green run there is not a published video).
+  const primary = fs.readFileSync(path.join(ROOT, ".github", "workflows", "uretim-is.yml"), "utf8");
+  assert.match(primary, /node scripts\/production-outcome\.js --channel failure-reconstructed/);
+  const refused = cp.spawnSync(process.execPath, [path.join(ROOT, "scripts", "production-outcome.js"), "--channel", "behind-the-ordinary"], { encoding: "utf8" });
+  assert.equal(refused.status, 2, "an inactive channel is refused");
 });
