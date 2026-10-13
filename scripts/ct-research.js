@@ -101,6 +101,20 @@ async function articles(topic, get) {
   const eventText = [question, topic.openingLine, topic.secondBeat].filter(Boolean).join(" ");
   // One request per search: the hits come back with their introductions (generator=search).
   const scored = [];
+  // Exact Wikipedia titles curated on the record (researchTargets) for events the question's own
+  // words do not find: CT-437 asks about the internet "running out of numbers", which searches to
+  // generic Internet Protocol pages instead of "IPv4 address exhaustion" (2026-10-12 and 10-13 dry
+  // runs: NOT_ANSWERABLE). A target is fetched first and kept only when its introduction matches
+  // the record's own specific words like any search hit; it is a search hint, never evidence, and
+  // everything it yields passes the same quote, number and primary-source checks.
+  for (const target of (Array.isArray(topic.researchTargets) ? topic.researchTargets : []).filter((title) => typeof title === "string" && title.trim()).slice(0, 2)) {
+    const data = await wiki({ action: "query", prop: "extracts", exintro: 1, explaintext: 1, redirects: 1, titles: target.trim() });
+    const page = data && data.query && Object.values(data.query.pages || {})[0];
+    if (page && page.title && page.extract && !scored.some((item) => item.title === page.title)) {
+      const score = questionMatch(page.extract, eventText);
+      scored.push({ title: page.title, score: score > 0 ? score + 1000 : 0 });
+    }
+  }
   for (const query of [question, topic.openingLine, topic.secondBeat].filter(Boolean)) {
     const data = await wiki({ action: "query", generator: "search", gsrsearch: String(query).replace(/[?.]/g, ""), gsrlimit: 4, prop: "extracts", exintro: 1, explaintext: 1, exlimit: "max" });
     for (const page of Object.values((data && data.query && data.query.pages) || {})) {
