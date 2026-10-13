@@ -14,6 +14,8 @@ jobs:
       WRANGLER_VERSION: '4.45.3'
       WORKER_NAME: youtube-production-watchdog
       WATCHDOG_CRON: '35 16 * * *'
+      # Every Cron Trigger the Worker must have (src/index.mjs SCHEDULE, wrangler.toml [triggers]).
+      DISPATCH_CRONS: '5 7 * * *|5 13 * * *|35 16 * * *|5 19 * * *'
       PRODUCTION_DEADLINE_UTC: ${{ vars.PRODUCTION_DEADLINE_UTC || '16:30' }}
     defaults:
       run:
@@ -58,6 +60,15 @@ jobs:
           const delay = Number(parts[1]) * 60 + Number(parts[0]) - (hour * 60 + minute);
           if (delay !== 5) throw new Error(`WATCHDOG_CRON ${cron} must be exactly five minutes after deadline ${deadline} UTC; got ${delay} minutes`);
           console.log(`SLA timing verified: ${deadline} UTC deadline -> ${cron} (five-minute delay).`);
+          // The full trigger set must match wrangler.toml, include the SLA watchdog cron and fit the
+          // Workers Free account limit of 5 Cron Triggers.
+          const crons = process.env.DISPATCH_CRONS.split("|").map((value) => value.trim()).filter(Boolean);
+          const toml = require("fs").readFileSync("wrangler.toml", "utf8");
+          const declared = JSON.parse(toml.match(/^crons\s*=\s*(\[.*\])\s*$/m)[1]);
+          if (JSON.stringify([...crons].sort()) !== JSON.stringify([...declared].sort())) throw new Error(`DISPATCH_CRONS ${JSON.stringify(crons)} does not match wrangler.toml ${JSON.stringify(declared)}`);
+          if (!crons.includes(cron)) throw new Error(`the SLA watchdog cron ${cron} is missing from DISPATCH_CRONS`);
+          if (crons.length > 5) throw new Error(`${crons.length} cron triggers exceed the Workers Free account limit of 5`);
+          console.log(`Cron triggers verified: ${crons.join(", ")}`);
           NODE
 
       - name: Store GitHub dispatch token in the Worker
@@ -79,6 +90,7 @@ jobs:
             --var "GITHUB_REPOSITORY:$GITHUB_REPOSITORY" \
             --var "PRODUCTION_DEADLINE_UTC:$PRODUCTION_DEADLINE_UTC" \
             --var "WATCHDOG_CRON:$WATCHDOG_CRON" \
+            --var "DISPATCH_CRONS:$DISPATCH_CRONS" \
             --var "WATCHDOG_VERSION:$WATCHDOG_VERSION" \
             --var "WATCHDOG_COMMIT:$GITHUB_SHA" \
             | tee "$RUNNER_TEMP/watchdog-deployment-evidence/deploy.log"
@@ -100,6 +112,14 @@ jobs:
               echo "::error::Cloudflare did not report the expected cron trigger: $WATCHDOG_CRON"
               exit 3
             }
+          IFS='|' read -r -a EXPECTED_CRONS <<< "$DISPATCH_CRONS"
+          for expected in "${EXPECTED_CRONS[@]}"; do
+            jq -e --arg cron "$expected" 'any(.result.schedules[]; .cron == $cron)' \
+              "$RUNNER_TEMP/watchdog-deployment-evidence/schedules.json" >/dev/null || {
+                echo "::error::Cloudflare did not report the expected cron trigger: $expected"
+                exit 3
+              }
+          done
 
           curl --fail --silent --show-error \
             -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
@@ -128,7 +148,8 @@ jobs:
             --arg cron "$WATCHDOG_CRON" \
             --arg deadline "$PRODUCTION_DEADLINE_UTC" \
             --arg commit "$GITHUB_SHA" \
-            '.ok == true and .tokenConfigured == true and .repository == $repository and .cron == $cron and .deadlineUtc == $deadline and .commit == $commit' \
+            --arg crons "$DISPATCH_CRONS" \
+            '.ok == true and .tokenConfigured == true and .repository == $repository and .cron == $cron and .deadlineUtc == $deadline and .commit == $commit and .signatureVersion == "v1" and ([.schedule[].cron] | sort) == ($crons | split("|") | sort)' \
             "$RUNNER_TEMP/watchdog-deployment-evidence/health.json" >/dev/null || {
               echo "::error::Worker /health metadata does not match this deployment."
               jq '{ok,tokenConfigured,repository,cron,deadlineUtc,version,commit}' "$RUNNER_TEMP/watchdog-deployment-evidence/health.json"
@@ -150,7 +171,8 @@ jobs:
             echo "- Health: $HEALTH_URL"
             echo "- Repository: $GITHUB_REPOSITORY"
             echo "- SLA deadline: $PRODUCTION_DEADLINE_UTC UTC"
-            echo "- Cron: $WATCHDOG_CRON"
+            echo "- SLA watchdog cron: $WATCHDOG_CRON"
+            echo "- All cron triggers: $DISPATCH_CRONS"
             echo "- Commit: $GITHUB_SHA"
           } >> "$GITHUB_STEP_SUMMARY"
 

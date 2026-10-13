@@ -228,6 +228,12 @@ async function main() {
   // belirlenen saatte YouTube tarafindan otomatik Public yapilir (publishAt).
   // BLOCK zaten yuklenmez; listede olmayan karar private kalir (elle inceleme).
   let publishAt = null, kapiKarari = null;
+  // Explicit target publication day from the production decision (core/scheduling/calendar.js
+  // shortDecision().targetDay, passed by shorts-sira.js / core/pipeline as SHORTS_TARGET_DAY): exactly
+  // that day's 21:00 Istanbul slot or no upload at all. Never moved to another day, never left without
+  // publishAt.
+  const hedefGun = process.env.SHORTS_TARGET_DAY || null;
+  let hedefHatasi = null;
   try {
     const plan = require("./lib/ayar").ayar().publishing.schedule || {};
     const kapi = require("./lib/ortak").jsonOku(require("./lib/kutuphane").paketYolu(IS, "quality-gate.json"), null);
@@ -236,10 +242,22 @@ async function main() {
       // Bugunun yerel yayin saati (Europe/Istanbul 21:00), gun bossa ve hala
       // gelecekteyse; yoksa sonraki bos gun. Uretim penceresi (calendar.js)
       // uretimin bu saatten en az minLeadMinutes once baslamasini zaten saglar.
-      publishAt = require("./core/scheduling/calendar").publishSlot(CHANNEL, require("./lib/kutuphane").yayinlananlar(), new Date()).toISOString();
+      const Calendar = require("./core/scheduling/calendar");
+      publishAt = Calendar.publishSlot(CHANNEL, require("./lib/kutuphane").yayinlananlar(), new Date(), Calendar.MIN_UPLOAD_LEAD_MINUTES, hedefGun ? { targetDay: hedefGun } : {}).toISOString();
       status.publishAt = publishAt;
     }
-  } catch (e) { console.log("  (zamanlama atlandi: " + e.message + ")"); }
+  } catch (e) {
+    if (hedefGun) hedefHatasi = e;
+    else console.log("  (zamanlama atlandi: " + e.message + ")");
+  }
+  if (hedefGun && !kuru && (hedefHatasi || !publishAt)) {
+    const kod = (hedefHatasi && hedefHatasi.code) || "PUBLISH_SLOT_UNAVAILABLE";
+    const neden = hedefHatasi ? hedefHatasi.message : `no scheduled publishAt for target day ${hedefGun} (quality gate ${kapiKarari || "missing"})`;
+    hataYaz(BASE, IS, `${kod}: ${neden}`);
+    require("./lib/ops-log").event(CHANNEL, "publish.blocked", { slug: IS, code: kod, targetDay: hedefGun });
+    console.error(`⛔ ${kod}: ${neden} — yukleme YAPILMADI (gun baska bir gune kaydirilmaz).`);
+    process.exit(16);
+  }
 
   console.log("Dosya      : " + path.relative(KOK, dosya) + "  (" + (boyut / 1e6).toFixed(1) + " MB)");
   console.log("Kanal      : " + CHANNEL.name + " (" + CHANNEL.slug + ")");
@@ -430,7 +448,7 @@ async function main() {
     // from the journal instead of uploading again.
     Safety.upsertIntent(CHANNEL, anahtar, { state: "COMPLETED", videoId: j.id, completedBy: "upload" });
     try { Quota.record(CHANNEL, "videos.insert"); } catch (e) {}
-    Ops.event(CHANNEL, "publish.success", { slug: IS, videoId: j.id, publishAt, privacy: gizlilik });
+    Ops.event(CHANNEL, "publish.success", { slug: IS, videoId: j.id, publishAt, privacy: gizlilik, ...(hedefGun ? { targetDay: hedefGun } : {}) });
     console.log("\n✓ Yuklendi. Video kimligi: " + j.id);
     console.log("  https://youtu.be/" + j.id + "  (gizlilik: " + gizlilik + ")");
     if (gizlilik !== "public") {
@@ -446,6 +464,20 @@ async function main() {
       fs.writeFileSync(path.join(BASE, "BILDIRIM.json"), JSON.stringify({ channel: CHANNEL.slug, channelName: CHANNEL.name, slug: IS, videoId: j.id, baslik: snippet.title,
         kalite: kapiKarari, publishAt, tarih: new Date().toISOString(), ...(replacement.replacement || {}) }, null, 2));
     } catch (e) { console.log("  (yayin kaydi yazilamadi: " + e.message + ")"); }
+    // Read-back: YouTube must hold the video private with exactly this publishAt. A mismatch or an
+    // unreadable status is reported and alerted (exit 15); the upload is never repeated.
+    if (publishAt) {
+      const geriOku = await Safety.verifyScheduled(api, j.id, { publishAt, privacy: gizlilik });
+      if (geriOku.ok) {
+        Ops.event(CHANNEL, "publish.scheduled_verified", { slug: IS, videoId: j.id, publishAt });
+        console.log("  ✓ YouTube kaydi dogrulandi: " + geriOku.actualPrivacy + ", publishAt " + geriOku.actualPublishAt);
+      } else {
+        Ops.event(CHANNEL, "publish.verification_failed", { slug: IS, videoId: j.id, code: geriOku.code, detail: geriOku.detail, publishAt });
+        hataYaz(BASE, IS, `PUBLISH_VERIFICATION_FAILED: ${geriOku.code}: ${geriOku.detail}`);
+        console.error(`⛔ PUBLISH_VERIFICATION_FAILED (${geriOku.code}): ${geriOku.detail} — video ${j.id} yuklendi ama zamanlamasi dogrulanamadi; tekrar YUKLENMEZ, Studio'dan kontrol et.`);
+        process.exitCode = 15;
+      }
+    }
     try { const kol = require("./experiments").otomatikAta(j.id, snippet.title); if (kol) console.log("  deney: title-style / " + kol); } catch (e) {}
     // Seriye (playlist) ekle — binge/oturum suresi icin. Hata yuklemeyi bozmaz.
     try {

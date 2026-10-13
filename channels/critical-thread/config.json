@@ -19,7 +19,7 @@
   "publishTimeZone": "Europe/Istanbul",
   "publishTimeUtc": "18:00",
   "publishingCadence": {
-    "shorts": { "everyDays": 1, "productionTime": "10:00", "targetDurationSeconds": [20, 45] },
+    "shorts": { "everyDays": 1, "leadDays": 0, "productionTime": "10:00", "targetDurationSeconds": [20, 45] },
     "longForm": { "everyDays": 7, "targetDurationMinutes": [8, 12], "qualityOverCadence": true }
   },
   "voice": {"provider": "edge-tts", "voice": "en-US-AvaMultilingualNeural", "rate": "+1%", "style": "measured premium technical documentary, calm and human", "fallback": {"provider": "kokoro", "voice": "af_heart", "speed": 1.0, "approved": false, "note": "Offline Kokoro-82M voice used only when Edge refuses. NOT approved: a person must listen to reports/tts-benchmark samples and set approved=true before it can be published."}},

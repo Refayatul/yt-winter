@@ -7,7 +7,13 @@ name: Gunluk kontrol (yayin + bos gun)
 #      videonun bildirim issue'suna "✅ Yayina girdi" yorumu duser; bir saat gectigi
 #      halde olmadiysa "❌ Otomatik yayin gerceklesmedi" issue'su acilir.
 # GitHub zamanlanmis isleri geciktirebildigi/atlayabildigi icin ucer saat.
+# Primary clock for the publication check: the Cloudflare Worker sends a signed repository_dispatch
+# "publication-check" at 19:05 UTC (65 min after the 21:00 Istanbul / 18:00 UTC release). It runs
+# only when scripts/verify-dispatch.js accepts it and CF_PUBLICATION_DISPATCH is '1' (unset by
+# default). The crons below remain as the backup. The check is read-only towards YouTube.
 on:
+  repository_dispatch:
+    types: [publication-check]
   schedule:
     # Bu is akisinin zamanlamalari calisiyor (olculen: 26 Eylul'de ikisi de tetiklendi),
     # uretim.yml'inkiler ayni gun hic tetiklenmedi. Bu yuzden erken saatlere de kuruldu:
@@ -36,7 +42,36 @@ permissions:
   issues: write
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      run: ${{ steps.decide.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+        if: github.event_name == 'repository_dispatch'
+        with:
+          ref: ${{ github.ref_name }}
+          sparse-checkout: scripts/verify-dispatch.js
+          sparse-checkout-cone-mode: false
+      - name: Verify Cloudflare dispatch signature
+        if: github.event_name == 'repository_dispatch'
+        env:
+          DISPATCH_SIGNING_KEY: ${{ secrets.WATCHDOG_GITHUB_TOKEN }}
+        run: node scripts/verify-dispatch.js --event publication-check --max-age-minutes 360
+      - id: decide
+        name: Decide whether this run checks
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DISPATCH_ENABLED: ${{ vars.CF_PUBLICATION_DISPATCH }}
+        run: |
+          if [ "$EVENT_NAME" != "repository_dispatch" ] || [ "$DISPATCH_ENABLED" = "1" ]; then echo "run=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "::notice::Verified Cloudflare publication-check dispatch; CF_PUBLICATION_DISPATCH is not '1', so nothing runs."
+          echo "run=false" >> "$GITHUB_OUTPUT"
+
   kontrol:
+    needs: gate
+    if: needs.gate.outputs.run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -70,12 +105,26 @@ jobs:
           if [ "${{ vars.IB_PUBLISH }}" = "1" ]; then node bildirim.js --channel impossible-brief --gun-kontrol || true; fi
           if [ "${{ vars.CT_PUBLISH }}" = "1" ]; then node bildirim.js --channel critical-thread --gun-kontrol || true; fi
           if [ "${{ vars.BTO_PUBLISH }}" = "1" ]; then node bildirim.js --channel behind-the-ordinary --gun-kontrol || true; fi
+      # SCHEDULED is not published: only a YouTube-API "public" observation (publish.public, written by
+      # the step above) makes a Short PUBLICATION_CONFIRMED (lib/publication-evidence.js).
+      - name: Publication evidence (last 3 days)
+        if: always()
+        run: |
+          {
+            echo "## Publication evidence"
+            echo ""
+            echo "| Channel | publishAt | Video | State | Confirmed at | Minutes |"
+            echo "|---|---|---|---|---|---|"
+            node scripts/production-outcome.js --publication --days 3 | awk -F '\t' '{ printf "| %s | %s | %s | %s | %s | %s |\n", $1, $2, $3, $4, $5, $6 }'
+          } >> "$GITHUB_STEP_SUMMARY" || true
       - name: Bildirim durumunu kaydet
         run: |
           git config user.name  "uretim-bot"
           git config user.email "actions@users.noreply.github.com"
           git config merge.json-union.driver "node scripts/git-json-merge.js %O %A %B"
           git add icerik/bildirim-durum.json channels/*/state/notification-state.json 2>/dev/null || true
+          # publish.public evidence (PUBLICATION_CONFIRMED) lives in each channel's ops log.
+          git add icerik/ops/events.jsonl channels/*/state/ops/events.jsonl 2>/dev/null || true
           if git diff --cached --quiet; then echo "degisiklik yok"; exit 0; fi
           git commit -m "chore: gunluk kontrol (otomatik)"
           for i in 1 2 3 4 5; do git pull --rebase --autostash origin main && git push && exit 0; sleep $((i * 5)); done
