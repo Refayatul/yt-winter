@@ -124,10 +124,10 @@ test("stage record and verdict: nothing uploaded is never a green production", (
   assert.equal(record.stages.UPLOAD.status, "not-reached");
   const Outcome = require("../../scripts/production-outcome");
   for (const kind of ["PRODUCTION_FAILED", "UPLOAD_FAILED", "PUBLISH_VERIFICATION_FAILED", "AWAITING_APPROVAL"]) assert.ok(Outcome.FAILING.has(kind));
-  for (const kind of ["SUCCESS", "NOT_DUE", "DRY_RUN", "CONTENT_BLOCKED", "QUALITY_REJECTED"]) assert.ok(!Outcome.FAILING.has(kind));
+  for (const kind of ["SCHEDULED", "NOT_DUE", "DRY_RUN", "CONTENT_BLOCKED", "QUALITY_REJECTED"]) assert.ok(!Outcome.FAILING.has(kind));
   assert.equal(Outcome.classify(record, { config: { voice: { fallback: { voice: "am_michael", approved: false } } } }), "AWAITING_APPROVAL");
-  const md = Outcome.markdown([{ channel: "failure-reconstructed", outcome: "FAILED", category: "AWAITING_APPROVAL", published: false, reason: "NARRATION_UNAVAILABLE", stages: record.stages }]);
-  assert.match(md, /\| failure-reconstructed \| \*\*AWAITING_APPROVAL\*\* \| \*\*no\*\* \| ✅ \| ✅ \| ✅ \| ❌ \| · \|/);
+  const md = Outcome.markdown([{ channel: "failure-reconstructed", outcome: "FAILED", category: "AWAITING_APPROVAL", scheduled: false, publication: "NOT_SCHEDULED", reason: "NARRATION_UNAVAILABLE", stages: record.stages }]);
+  assert.match(md, /\| failure-reconstructed \| \*\*AWAITING_APPROVAL\*\* \| \*\*no\*\* \| NOT_SCHEDULED \| ✅ \| ✅ \| ✅ \| ❌ \| · \|/);
   const workflow = fs.readFileSync(path.join(ROOT, ".github", "workflows", "portfolio-production.yml"), "utf8");
   assert.match(workflow, /production-outcome\.js --verdict/);
   assert.ok(workflow.indexOf("--verdict") > workflow.indexOf("Commit isolated state"), "the verdict runs after state is committed");

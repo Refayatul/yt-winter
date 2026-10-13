@@ -5,7 +5,8 @@
 //   2. a corrupt Kokoro model could be cached and then fail every later run;
 //   3. "no qualified topic" was reported as a failed production (now CONTENT_BLOCKED);
 //   4. a Wikimedia/Pexels outage still marked FR topics permanently failed;
-//   5. outcome categories: only an upload with a videoId and publishAt counts as SUCCESS.
+//   5. outcome categories: an upload with a videoId and publishAt is SCHEDULED, nothing more;
+//   6. publication: only the YouTube API reporting the video public is PUBLICATION_CONFIRMED.
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
@@ -134,10 +135,10 @@ test("4. a Wikimedia/archive.org/Pexels outage exits 76 and never spends an FR t
   }
 });
 
-test("5. outcome categories: SUCCESS needs a videoId and publishAt; every failure kind is distinct and actionable", () => {
+test("5. outcome categories: SCHEDULED needs a videoId and publishAt; every failure kind is distinct and actionable", () => {
   const stages = (over = {}) => ({ RESEARCH: { status: "done" }, NARRATION: { status: "done" }, UPLOAD: { status: "not-reached" }, SCHEDULE: { status: "not-reached" }, ...over });
   const ok = { outcome: "UPLOADED", videoId: "tSanOctggR4", stages: stages({ UPLOAD: { status: "done", detail: "tSanOctggR4" }, SCHEDULE: { status: "done", detail: "2026-10-13T18:00:00.000Z" } }) };
-  assert.equal(Outcome.classify(ok), "SUCCESS");
+  assert.equal(Outcome.classify(ok), "SCHEDULED");
   assert.equal(Outcome.classify({ ...ok, stages: stages({ UPLOAD: { status: "done", detail: "tSanOctggR4" }, SCHEDULE: { status: "skipped" } }) }), "PUBLISH_VERIFICATION_FAILED", "no publishAt");
   assert.equal(Outcome.classify({ ...ok, videoId: null, stages: stages({ UPLOAD: { status: "done", detail: null }, SCHEDULE: { status: "done", detail: "2026-10-13T18:00:00.000Z" } }) }), "PUBLISH_VERIFICATION_FAILED", "no videoId");
   assert.equal(Outcome.classify({ outcome: "FAILED", reason: "x: upload failed (exit 3)", stages: stages({ UPLOAD: { status: "failed" } }) }), "UPLOAD_FAILED");
@@ -148,12 +149,33 @@ test("5. outcome categories: SUCCESS needs a videoId and publishAt; every failur
   assert.equal(Outcome.classify({ outcome: "FAILED", reason: "ASSET_SOURCE_UNAVAILABLE (slug): arsiv-bul.js", stages: stages() }), "PRODUCTION_FAILED");
   assert.equal(Outcome.classify(null), "PRODUCTION_FAILED", "no stage record is a failure, never success");
   for (const category of ["PRODUCTION_FAILED", "UPLOAD_FAILED", "PUBLISH_VERIFICATION_FAILED", "AWAITING_APPROVAL"]) assert.ok(Outcome.FAILING.has(category));
-  for (const category of ["SUCCESS", "NOT_DUE", "DRY_RUN"]) assert.ok(!Outcome.FAILING.has(category) && !Outcome.WARNING.has(category));
-  const md = Outcome.markdown([{ channel: "critical-thread", category: "CONTENT_BLOCKED", published: false, reason: "no topic", stages: null }]);
-  assert.match(md, /\| critical-thread \| \*\*CONTENT_BLOCKED\*\* \| \*\*no\*\* \|/, "the summary says plainly that nothing is on its way");
+  for (const category of ["SCHEDULED", "NOT_DUE", "DRY_RUN"]) assert.ok(!Outcome.FAILING.has(category) && !Outcome.WARNING.has(category));
+  const md = Outcome.markdown([{ channel: "critical-thread", category: "CONTENT_BLOCKED", scheduled: false, publication: "NOT_SCHEDULED", reason: "no topic", stages: null }]);
+  assert.match(md, /\| critical-thread \| \*\*CONTENT_BLOCKED\*\* \| \*\*no\*\* \| NOT_SCHEDULED \|/, "the summary says plainly that nothing is on its way");
+  assert.match(md, /Scheduled is not published/);
   // The FR primary workflow reports the same table for FR alone (a green run there is not a published video).
   const primary = fs.readFileSync(path.join(ROOT, ".github", "workflows", "uretim-is.yml"), "utf8");
   assert.match(primary, /node scripts\/production-outcome\.js --channel failure-reconstructed/);
   const refused = cp.spawnSync(process.execPath, [path.join(ROOT, "scripts", "production-outcome.js"), "--channel", "behind-the-ordinary"], { encoding: "utf8" });
   assert.equal(refused.status, 2, "an inactive channel is refused");
+});
+
+test("6. SCHEDULED is not PUBLICATION_CONFIRMED: only a YouTube-API public observation of that exact video confirms it", () => {
+  const Publication = require("../../lib/publication-evidence");
+  const video = { videoId: "tSanOctggR4", publishAt: "2026-10-11T18:00:00.000Z" };
+  const confirmed = { at: "2026-10-11T18:09:20.695Z", type: "publish.public", videoId: "tSanOctggR4", publishAt: video.publishAt, delayMinutes: 9 };
+  assert.equal(Publication.status(video, [], Date.parse("2026-10-11T12:34:00Z")).state, "SCHEDULED", "uploaded with publishAt ahead");
+  assert.equal(Publication.status(video, [], Date.parse("2026-10-11T18:30:00Z")).state, "PUBLICATION_PENDING_CHECK");
+  const late = Publication.status(video, [], Date.parse("2026-10-11T19:01:00Z"));
+  assert.equal(late.state, "PUBLICATION_NOT_CONFIRMED");
+  assert.equal(late.overdueMinutes, 61);
+  assert.equal(Publication.status(video, [confirmed], Date.parse("2026-10-11T18:10:00Z")).state, "PUBLICATION_CONFIRMED");
+  assert.equal(Publication.status(video, [{ ...confirmed, videoId: "d_xBJEX6QJ8" }], Date.parse("2026-10-11T20:00:00Z")).state, "PUBLICATION_NOT_CONFIRMED", "another video's confirmation does not count");
+  assert.equal(Publication.status(video, [{ ...confirmed, type: "publish.unexpected_public" }], Date.parse("2026-10-11T20:00:00Z")).state, "PUBLICATION_NOT_CONFIRMED", "only the scheduled-publication check confirms");
+  assert.equal(Publication.status({ videoId: "short", publishAt: video.publishAt }, [confirmed]).state, "NOT_SCHEDULED");
+  assert.equal(Publication.status({ videoId: video.videoId, publishAt: null }, [confirmed]).state, "NOT_SCHEDULED");
+  // The confirmation event is written only on privacyStatus === "public" from the API (bildirim.js yayinKontrol).
+  const notifier = fs.readFileSync(path.join(ROOT, "bildirim.js"), "utf8");
+  assert.match(notifier, /if \(v && v\.status\.privacyStatus === "public"\) \{\s*\n\s*\/\/[^\n]*\n\s*try \{ require\("\.\/lib\/ops-log"\)\.event\(CHANNEL, "publish\.public"/);
+  assert.equal(Publication.CONFIRM_GRACE_MINUTES, 60, "matches bildirim.js: an issue opens 60 minutes after publishAt");
 });
