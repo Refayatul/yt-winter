@@ -226,6 +226,8 @@ function runChannel(slug, argv = []) {
     try { result = Rendering.buildPackage(topic, channel, output, { render: !noRender, growthPlan: choice.plan }); }
     catch (error) {
       if (error.code === "NARRATION_UNAVAILABLE") {
+        // An outage, not a failed attempt: give back this topic's topic/render budget (never upload).
+        if (targetDay) { Budget.release(channel, targetDay, "topics"); if (!noRender) Budget.release(channel, targetDay, "render"); }
         run.done("ASSETS").fail("NARRATION", error.message).outcome("FAILED", `${topic.slug}: ${error.message}`);
         GrowthRuntime.alert(channel, "NARRATION_UNAVAILABLE", topic.slug, { message: error.message });
         console.log(`::error::[${channel.name}] ${error.message} (topic ${topic.slug} not spent)`);
@@ -290,8 +292,11 @@ function runChannel(slug, argv = []) {
       // 16: the target day's slot is taken or missed (never moved to another day). Topic kept.
       const code = upload.status === 15 ? "PUBLISH_VERIFICATION_FAILED" : "PUBLISH_SLOT_UNAVAILABLE";
       const registered = (() => { try { return [].concat(JSON.parse(fs.readFileSync(path.join(channel.paths.state, "published.json"), "utf8"))).reverse().find((item) => item && item.slug === topic.slug) || {}; } catch (error) { return {}; } })();
-      if (upload.status === 15) run.done("UPLOAD", registered.videoId || null).fail("SCHEDULE", code);
-      else run.fail("UPLOAD", code);
+      if (upload.status === 15) {
+        run.done("UPLOAD", registered.videoId || null).fail("SCHEDULE", code);
+        // The video is on YouTube and in published.json: the topic is spent, never produced twice.
+        recordGenerated(channel, topic, true);
+      } else run.fail("UPLOAD", code);
       run.outcome("FAILED", `${topic.slug}: ${code}`);
       GrowthRuntime.alert(channel, code, topic.slug, { targetDay });
       console.log(`::error::[${channel.name}] ${code} for ${topic.slug} (target day ${targetDay})`);
@@ -311,14 +316,18 @@ function runChannel(slug, argv = []) {
   } else {
     run.skip("UPLOAD", "PUBLISH!=1").outcome("DRY_RUN", "rendered without upload");
   }
-  const generatedFile = path.join(channel.paths.state, "generated.json");
-  const generated = (() => { try { return JSON.parse(fs.readFileSync(generatedFile, "utf8")); } catch (error) { return []; } })();
-  if (!generated.some((item) => item.topicId === topic.id)) generated.push({ topicId: topic.id, slug: topic.slug, generatedAt: new Date().toISOString(), uploaded: process.env.PUBLISH === "1" });
-  fs.writeFileSync(generatedFile, JSON.stringify(generated, null, 2) + "\n");
+  recordGenerated(channel, topic, process.env.PUBLISH === "1");
   const videoId = uploadStatus === "uploaded" ? GrowthRuntime.afterUpload(channel, topic.slug, finalPlan) : null;
   console.log(`[${channel.name}] ${topic.topic} — ${noRender ? "package only" : "rendered"}${process.env.PUBLISH === "1" ? " and uploaded" : "; upload skipped"}`);
   console.log(GrowthRuntime.shortSummary(finalPlan, { "Upload Status": uploadStatus, "Video ID": videoId || "—" }));
   return 0;
+}
+
+function recordGenerated(channel, topic, uploaded) {
+  const generatedFile = path.join(channel.paths.state, "generated.json");
+  const generated = (() => { try { return JSON.parse(fs.readFileSync(generatedFile, "utf8")); } catch (error) { return []; } })();
+  if (!generated.some((item) => item.topicId === topic.id)) generated.push({ topicId: topic.id, slug: topic.slug, generatedAt: new Date().toISOString(), uploaded });
+  fs.writeFileSync(generatedFile, JSON.stringify(generated, null, 2) + "\n");
 }
 
 function main(argv = []) { return runChannel("impossible-brief", argv); }

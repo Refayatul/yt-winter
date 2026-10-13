@@ -44,8 +44,8 @@ test("TEST-07: production behaviour reflects the approved 21:00 all-channel sche
   for (const slug of ["failure-reconstructed", "impossible-brief", "critical-thread", "behind-the-ordinary"]) {
     assert.match(portfolio, new RegExp(`node shorts-sira\\.js --channel ${slug}`), `${slug} still produced by the portfolio run`);
   }
-  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name != 'workflow_dispatch' && '1' \|\| vars\.IB_PUBLISH \}\}/);
-  assert.match(portfolio, /PUBLISH: \$\{\{ github\.event_name != 'workflow_dispatch' && '1' \|\| vars\.CT_PUBLISH \}\}/);
+  assert.match(portfolio, /PUBLISH: \$\{\{ \(github\.event_name == 'schedule' \|\| github\.event_name == 'repository_dispatch'\) && '1' \|\| vars\.IB_PUBLISH \}\}/);
+  assert.match(portfolio, /PUBLISH: \$\{\{ \(github\.event_name == 'schedule' \|\| github\.event_name == 'repository_dispatch'\) && '1' \|\| vars\.CT_PUBLISH \}\}/);
   // The Hidden Logic of Things publishes only when BTO_PUBLISH=1, even on schedule.
   assert.match(portfolio, /PUBLISH: \$\{\{ vars\.BTO_PUBLISH == '1' && '1' \|\| '0' \}\}/);
   assert.doesNotMatch(portfolio, /github\.event_name (==|!=) '[a-z_]+' && '1' \|\| vars\.BTO_PUBLISH/);

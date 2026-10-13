@@ -74,6 +74,10 @@ of Things (BTO) stays opt-in through `BTO_PUBLISH`. ProfitDecoded is not touched
   - upload attempts (2).
 - A spent budget ends the run as `PRODUCTION_FAILED: RETRY_BUDGET_EXHAUSTED` and raises an alert.
   The topic is kept. Other channels and other days are unaffected.
+- An infrastructure outage before rendering or uploading gives back that topic's topic and render
+  attempts. This covers a refused narration provider and an unreachable asset source. A morning
+  outage therefore cannot spend the day's budget and block a recovered provider later the same
+  day. Upload attempts are never given back.
 - **One deterministic slot per target day.** `youtube-yukle.js` receives `SHORTS_TARGET_DAY` and
   asks `Calendar.publishSlot(..., { targetDay })` for exactly that day's 21:00 slot.
   - A taken slot is refused (`PUBLISH_SLOT_TAKEN`), and so is a missed one (`PUBLISH_SLOT_MISSED`).
@@ -87,7 +91,10 @@ of Things (BTO) stays opt-in through `BTO_PUBLISH`. ProfitDecoded is not touched
 - **Read-back after upload.** `Safety.verifyScheduled` reads `videos.list` and requires
   `privacyStatus: private` and the exact `publishAt`.
   - On success it records `publish.scheduled_verified`.
-  - A mismatch or an unreadable API exits 15. The outcome becomes `PUBLISH_VERIFICATION_FAILED`,
+  - YouTube can lag a few seconds after an upload. A video not yet returned, or an unreadable API,
+    is read again: 3 reads, 10 seconds apart. A privacy or publishAt mismatch is final at once.
+  - A mismatch or a still-unreadable API exits 15. The topic is marked as spent, so the same
+    story is never produced a second time. The outcome becomes `PUBLISH_VERIFICATION_FAILED`,
     an alert is raised, and **nothing is re-uploaded**.
 - **Scheduled is not published.** `PUBLICATION_CONFIRMED` requires YouTube to report the video
   public (the `publish.public` event). The 19:05 UTC check writes a 3-day evidence table to the
@@ -125,6 +132,14 @@ unchanged. A dispatch-triggered run passes through exactly the same checks as a 
 
 The YouTube OAuth secrets are unchanged. The production workflows already read them.
 
+## Partial deployment
+
+`wrangler deploy` uploads the script first and updates the Cron Triggers second. If the
+trigger update fails (for example, the account's cron limit is reached), the new script is live
+with the old `35 16 * * *` trigger. The new script maps that cron to the same watchdog event, so
+the watchdog keeps working. A regression test covers this. The deploy workflow then turns red at
+its schedule check.
+
 ## Deployment (owner, after review and merge)
 
 1. Merge the PR. Nothing changes in production yet: the Worker still runs the old version with
@@ -144,6 +159,7 @@ The YouTube OAuth secrets are unchanged. The production workflows already read t
 |---|---|
 | Stop dispatch-driven production immediately | Unset `CF_PRODUCTION_DISPATCH` and/or `CF_PUBLICATION_DISPATCH`. Runs end at the gate. GitHub crons and the watchdog continue. |
 | Return to the single watchdog cron | Revert the Worker files (`src/index.mjs`, `wrangler.toml`) and `deploy-watchdog.yml`, then rerun the deploy workflow. It replaces the Worker and its Cron Triggers. |
+| **Do not** use the Cloudflare dashboard's version rollback | Cron Triggers are not part of a Worker version. A rolled-back old script would keep all four crons, and the old script sends the watchdog event for *every* cron. That means four watchdog runs a day: 07:05 and 13:05 are harmless because they come before the deadline, but at 19:05 an empty day would be "recovered" after the 21:00 release. Always roll back by redeploying from the repository. |
 | Stop ahead-of-time production | Set `leadDays` back to `0`. Short already scheduled for future days stay scheduled. Delete them in YouTube Studio only if needed. |
 
 ## Activating `leadDays: 1` (not enabled; owner decision)
@@ -174,6 +190,18 @@ The YouTube OAuth secrets are unchanged. The production workflows already read t
   automatically. The owner checks it in YouTube Studio.
 - **The publication check uses the YouTube Data API quota.** It is a small read, already used by
   the existing crons.
+- **One shared concurrency group.** Seven workflows use `portfolio-production`. GitHub keeps one
+  running and one pending run per group, and a newer pending run cancels the older one. A
+  pending `shorts-production` dispatch can therefore be replaced by, say, a `yayin-kontrol` cron
+  while a long run is in progress. The 13:05 retry dispatch and the GitHub crons cover this, but
+  it is not exactly-once.
+- **The signature is not a defence against a leaked token.** It proves a dispatch came from a
+  holder of `WATCHDOG_GITHUB_TOKEN`. Anyone with that token could sign, and could also write to
+  the repository. Its value is rejecting dispatches sent with any *other* credential, and
+  rejecting replays older than 6 hours. A replay inside 6 hours is harmless, because production is
+  idempotent per target day.
+- **The token is visible to two more jobs.** The two gate jobs read `WATCHDOG_GITHUB_TOKEN` (as
+  the HMAC key) on `repository_dispatch` only. They run code from the default branch.
 - **Owner approvals still pending** (unchanged by this PR):
   - Kokoro and other fallback voices;
   - any paid TTS (Azure);

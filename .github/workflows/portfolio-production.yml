@@ -167,10 +167,10 @@ jobs:
         run: node portfolio-scheduler.js --enqueue
 
       - name: Failure Reconstructed Short
-        if: github.event_name != 'workflow_dispatch' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed'
+        if: (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'failure-reconstructed'
         continue-on-error: true
         env:
-          PUBLISH: ${{ github.event_name != 'workflow_dispatch' && '1' || vars.FR_PUBLISH || vars.PUBLISH }}
+          PUBLISH: ${{ (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') && '1' || vars.FR_PUBLISH || vars.PUBLISH }}
           PRODUCTION_RESULT_PATH: ${{ runner.temp }}/fr-production-result.json
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
@@ -178,20 +178,20 @@ jobs:
           node shorts-sira.js --channel failure-reconstructed
 
       - name: ImpossibleBrief Short
-        if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'impossible-brief') }}
+        if: ${{ always() && ((github.event_name == 'schedule' || github.event_name == 'repository_dispatch') || inputs.channel == 'all' || inputs.channel == 'both' || inputs.channel == 'impossible-brief') }}
         continue-on-error: true
         env:
-          PUBLISH: ${{ github.event_name != 'workflow_dispatch' && '1' || vars.IB_PUBLISH }}
+          PUBLISH: ${{ (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') && '1' || vars.IB_PUBLISH }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
           node saglik.js --channel impossible-brief || true
           node shorts-sira.js --channel impossible-brief
 
       - name: CriticalThread Short
-        if: ${{ always() && (github.event_name != 'workflow_dispatch' || inputs.channel == 'all' || inputs.channel == 'critical-thread') }}
+        if: ${{ always() && ((github.event_name == 'schedule' || github.event_name == 'repository_dispatch') || inputs.channel == 'all' || inputs.channel == 'critical-thread') }}
         continue-on-error: true
         env:
-          PUBLISH: ${{ github.event_name != 'workflow_dispatch' && '1' || vars.CT_PUBLISH }}
+          PUBLISH: ${{ (github.event_name == 'schedule' || github.event_name == 'repository_dispatch') && '1' || vars.CT_PUBLISH }}
         run: |
           if [ "${{ inputs.dry_run }}" = "true" ]; then export PUBLISH=0; fi
           node saglik.js --channel critical-thread || true
@@ -298,5 +298,5 @@ jobs:
       # A green run means real output: it fails when an active channel was due and nothing was
       # uploaded (narration outage, no qualified topic, a blocked video, or a crashed step).
       - name: Production verdict
-        if: always() && github.event_name != 'workflow_dispatch'
+        if: always() && (github.event_name == 'schedule' || github.event_name == 'repository_dispatch')
         run: node scripts/production-outcome.js --verdict

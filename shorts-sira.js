@@ -130,10 +130,17 @@ class ButceBitti extends Error { constructor(result) { super(Budget.exhaustedRea
 class YayinDogrulamaHatasi extends Error {}
 // youtube-yukle.js cikis 16: hedef gunun slotu dolu ya da kacmis; baska gune kaydirilmaz.
 class SlotHatasi extends Error {}
+// Bu konu icin alinan butce kalemleri (altyapi kesintisinde geri verilir; yukleme asla).
+let ALINAN = [];
 function butce(kind) {
   if (!HEDEF_GUN) return;
   const r = Budget.take(CHANNEL, HEDEF_GUN, kind);
   if (!r.ok) throw new ButceBitti(r);
+  ALINAN.push(kind);
+}
+function butceIade() {
+  for (const kind of ALINAN.filter((k) => k !== "upload")) Budget.release(CHANNEL, HEDEF_GUN, kind);
+  ALINAN = [];
 }
 function kapi(slug, final) {
   const r = require("./quality-gate").degerlendir(slug, { final });
@@ -198,6 +205,7 @@ const asama = () => RUN || { reset() { return this; }, topic() { return this; },
 
 function uretBir(slug) {
   asama().reset().topic(slug).done("RESEARCH", "growth queue selected " + slug);
+  ALINAN = [];
   if (!slugGecerli(slug)) throw new Error("Gecersiz slug: " + slug);
   const spec = path.join(KONULAR, slug + ".json");
   if (!fs.existsSync(spec)) throw new Error("Konu bulunamadi: " + spec);
@@ -259,6 +267,8 @@ function uretBir(slug) {
     if (r.status === 15) {
       const yayin = require("./lib/kutuphane").yayinBul(slug) || {};
       asama().done("UPLOAD", yayin.videoId || null).fail("SCHEDULE", "PUBLISH_VERIFICATION_FAILED");
+      // Video YouTube'da ve yayin kaydinda: konu harcandi, bir daha uretilmez (ikinci kopya olmaz).
+      isaretle(slug);
       throw new YayinDogrulamaHatasi(`PUBLISH_VERIFICATION_FAILED: ${yayin.videoId || "video"} uploaded but YouTube did not confirm private + publishAt`);
     }
     if (r.status === 16) throw new SlotHatasi(`PUBLISH_SLOT_UNAVAILABLE: target day ${HEDEF_GUN} slot taken or missed; not moved to another day`);
@@ -365,6 +375,7 @@ function main() {
       // Yukleme hatasi konuya ait degildir (yetki/ag): baska konuyu da harcamamak icin dur.
       if (e instanceof YuklemeHatasi) { asama().fail("UPLOAD", e.message).outcome("FAILED", `${slug}: ${e.message}`); console.error(`  ✗ ${slug}: ${e.message}`); return 1; }
       if (e instanceof AltyapiHatasi) {
+        if (HEDEF_GUN) butceIade();
         asama().outcome("FAILED", `${e.kind} (${slug}): ${e.message}`);
         GrowthRuntime.alert(CHANNEL, e.kind, slug, { message: e.message });
         console.error(`  ✗ ${slug}: ${e.message} — konu harcanmadi; altyapi duzelene kadar baska konu denenmez`);

@@ -195,15 +195,16 @@ test("LEAD: the target day reaches the uploader and both pipelines", () => {
 
 test("READBACK: an upload is only SCHEDULED when YouTube reports private + the exact publishAt", async () => {
   const api = (response) => ({ data: async () => response });
+  const once = { attempts: 1 };
   const item = (status) => ({ ok: true, veri: { items: [{ id: "abcdefghijk", status }] } });
   const publishAt = "2026-10-15T18:00:00.000Z";
-  assert.equal((await Safety.verifyScheduled(api(item({ privacyStatus: "private", publishAt: "2026-10-15T18:00:00Z" })), "abcdefghijk", { publishAt })).ok, true);
-  assert.equal((await Safety.verifyScheduled(api(item({ privacyStatus: "public", publishAt })), "abcdefghijk", { publishAt })).code, "READBACK_PRIVACY_MISMATCH");
-  assert.equal((await Safety.verifyScheduled(api(item({ privacyStatus: "private", publishAt: "2026-10-16T18:00:00Z" })), "abcdefghijk", { publishAt })).code, "READBACK_PUBLISHAT_MISMATCH");
-  assert.equal((await Safety.verifyScheduled(api(item({ privacyStatus: "private" })), "abcdefghijk", { publishAt })).code, "READBACK_PUBLISHAT_MISMATCH");
-  assert.equal((await Safety.verifyScheduled(api({ ok: true, veri: { items: [] } }), "abcdefghijk", { publishAt })).code, "READBACK_NOT_FOUND");
-  assert.equal((await Safety.verifyScheduled(api({ ok: false, durum: 503 }), "abcdefghijk", { publishAt })).code, "READBACK_UNAVAILABLE");
-  assert.equal((await Safety.verifyScheduled({ data: async () => { throw new Error("socket hang up"); } }, "abcdefghijk", { publishAt })).code, "READBACK_UNAVAILABLE");
+  assert.equal((await Safety.verifyScheduled(api(item({ privacyStatus: "private", publishAt: "2026-10-15T18:00:00Z" })), "abcdefghijk", { publishAt, ...once })).ok, true);
+  assert.equal((await Safety.verifyScheduled(api(item({ privacyStatus: "public", publishAt })), "abcdefghijk", { publishAt, ...once })).code, "READBACK_PRIVACY_MISMATCH");
+  assert.equal((await Safety.verifyScheduled(api(item({ privacyStatus: "private", publishAt: "2026-10-16T18:00:00Z" })), "abcdefghijk", { publishAt, ...once })).code, "READBACK_PUBLISHAT_MISMATCH");
+  assert.equal((await Safety.verifyScheduled(api(item({ privacyStatus: "private" })), "abcdefghijk", { publishAt, ...once })).code, "READBACK_PUBLISHAT_MISMATCH");
+  assert.equal((await Safety.verifyScheduled(api({ ok: true, veri: { items: [] } }), "abcdefghijk", { publishAt, ...once })).code, "READBACK_NOT_FOUND");
+  assert.equal((await Safety.verifyScheduled(api({ ok: false, durum: 503 }), "abcdefghijk", { publishAt, ...once })).code, "READBACK_UNAVAILABLE");
+  assert.equal((await Safety.verifyScheduled({ data: async () => { throw new Error("socket hang up"); } }, "abcdefghijk", { publishAt, ...once })).code, "READBACK_UNAVAILABLE");
 });
 
 test("READBACK: the uploader stays private by default, exits 15 on a failed read-back and 16 on an unavailable target slot", () => {
@@ -395,8 +396,83 @@ test("WATCHDOG: wrangler.toml, the deploy workflow and the Worker agree on four 
 test("GITHUB BACKUP: schedule runs still publish; manual runs stay opt-in; dispatch runs act like schedule runs only behind the gate", () => {
   const wf = read(".github/workflows/portfolio-production.yml");
   assert.match(wf, /\n {2}schedule:\n/, "the GitHub crons stay as the backup");
-  assert.doesNotMatch(wf, /github\.event_name == 'schedule'/, "no step treats a verified dispatch differently from a schedule run");
+  assert.doesNotMatch(wf, /!= 'workflow_dispatch'/, "publishing is an allow-list, never 'any event except manual'");
+  for (const line of wf.split("\n").filter((l) => /github\.event_name == 'schedule'/.test(l))) {
+    assert.match(line, /\(github\.event_name == 'schedule' \|\| github\.event_name == 'repository_dispatch'\)/, `schedule and verified dispatch are treated alike: ${line.trim()}`);
+  }
   assert.match(wf, /if: needs\.gate\.outputs\.run == 'true'/);
   assert.match(wf, /DISPATCH_CORRELATION_ID: \$\{\{ needs\.gate\.outputs\.correlation_id \}\}/);
   assert.match(read("lib/run-stages.js"), /correlationId: env\.DISPATCH_CORRELATION_ID/);
+});
+
+// Review regressions (final security / production-readiness review) ------------------------------
+
+test("REVIEW: publishing follows an explicit event allow-list; a new trigger type would not publish", () => {
+  const wf = read(".github/workflows/portfolio-production.yml");
+  const publishLines = wf.split("\n").filter((line) => /PUBLISH: \$\{\{/.test(line) && /'1'/.test(line));
+  assert.ok(publishLines.length >= 4);
+  for (const line of publishLines) {
+    if (/BTO_PUBLISH/.test(line)) continue;
+    assert.match(line, /\(github\.event_name == 'schedule' \|\| github\.event_name == 'repository_dispatch'\) && '1'/, line.trim());
+  }
+  const triggers = wf.slice(wf.indexOf("\non:"), wf.indexOf("\nconcurrency:"));
+  assert.deepEqual([...triggers.matchAll(/^ {2}([a-z_]+):/gm)].map((m) => m[1]).sort(), ["repository_dispatch", "schedule", "workflow_dispatch"]);
+});
+
+test("REVIEW: read-back retries YouTube's post-insert lag, but a mismatch is final at once", async () => {
+  const publishAt = "2026-10-15T18:00:00.000Z";
+  const ok = { ok: true, veri: { items: [{ id: "abcdefghijk", status: { privacyStatus: "private", publishAt } }] } };
+  const sequence = (...responses) => { let i = 0; return { data: async () => responses[Math.min(i++, responses.length - 1)] }; };
+  const sleeps = [];
+  const sleep = async (ms) => { sleeps.push(ms); };
+  const lagged = await Safety.verifyScheduled(sequence({ ok: true, veri: { items: [] } }, ok), "abcdefghijk", { publishAt, sleep });
+  assert.deepEqual([lagged.ok, lagged.attempts, sleeps], [true, 2, [10000]]);
+  sleeps.length = 0;
+  const down = await Safety.verifyScheduled(sequence({ ok: false, durum: 503 }), "abcdefghijk", { publishAt, sleep });
+  assert.deepEqual([down.ok, down.code, down.attempts, sleeps.length], [false, "READBACK_UNAVAILABLE", 3, 2]);
+  sleeps.length = 0;
+  const wrong = await Safety.verifyScheduled(sequence({ ok: true, veri: { items: [{ status: { privacyStatus: "public", publishAt } }] } }), "abcdefghijk", { publishAt, sleep });
+  assert.deepEqual([wrong.code, wrong.attempts, sleeps.length], ["READBACK_PRIVACY_MISMATCH", 1, 0]);
+});
+
+test("REVIEW: an upload whose read-back failed still spends its topic (never produced a second time)", () => {
+  const fr = read("shorts-sira.js");
+  const exit15 = fr.slice(fr.indexOf("if (r.status === 15)"), fr.indexOf("if (r.status === 16)"));
+  assert.ok(exit15.indexOf("isaretle(slug)") > 0 && exit15.indexOf("isaretle(slug)") < exit15.indexOf("throw new YayinDogrulamaHatasi"));
+  const ib = read("core/pipeline/impossible-brief.js");
+  const ib15 = ib.slice(ib.indexOf("if (upload.status === 15) {"), ib.indexOf("run.outcome(\"FAILED\", `${topic.slug}: ${code}`)"));
+  assert.match(ib15, /recordGenerated\(channel, topic, true\)/);
+});
+
+test("REVIEW: an outage before rendering/uploading gives back topic and render attempts, never upload attempts", () => {
+  const channel = tempChannel("outage");
+  for (let i = 0; i < 3; i += 1) { Budget.take(channel, "2026-10-14", "topics"); Budget.take(channel, "2026-10-14", "render"); }
+  assert.equal(Budget.status(channel, "2026-10-14", "render").ok, false, "three narration outages would have spent the day");
+  for (let i = 0; i < 3; i += 1) { Budget.release(channel, "2026-10-14", "topics"); Budget.release(channel, "2026-10-14", "render"); }
+  assert.deepEqual([Budget.status(channel, "2026-10-14", "render").used, Budget.status(channel, "2026-10-14", "topics").used], [0, 0]);
+  assert.equal(Budget.release(channel, "2026-10-14", "render").used, 0, "never below zero");
+  Budget.take(channel, "2026-10-14", "upload");
+  assert.throws(() => Budget.release(channel, "2026-10-14", "upload"), /never released/);
+  assert.equal(Budget.status(channel, "2026-10-14", "upload").used, 1);
+  const fr = read("shorts-sira.js");
+  assert.match(fr, /if \(e instanceof AltyapiHatasi\) \{\n\s+if \(HEDEF_GUN\) butceIade\(\);/);
+  assert.match(fr, /ALINAN\.filter\(\(k\) => k !== "upload"\)/);
+  const ib = read("core/pipeline/impossible-brief.js");
+  const narration = ib.slice(ib.indexOf("if (error.code === \"NARRATION_UNAVAILABLE\")"), ib.indexOf("GrowthRuntime.alert(channel, \"NARRATION_UNAVAILABLE\""));
+  assert.match(narration, /Budget\.release\(channel, targetDay, "topics"\)/);
+  assert.match(narration, /Budget\.release\(channel, targetDay, "render"\)/);
+  assert.doesNotMatch(ib, /Budget\.release\([^)]*"upload"\)/);
+});
+
+test("REVIEW: a partial deploy (new script, old single cron) keeps the watchdog working", async () => {
+  const w = await worker();
+  const original = globalThis.fetch;
+  const sent = [];
+  globalThis.fetch = async (url, options) => { sent.push(JSON.parse(options.body)); return { status: 204 }; };
+  try {
+    const pending = [];
+    await w.default.scheduled({ cron: "35 16 * * *" }, { WATCHDOG_GITHUB_TOKEN: KEY }, { waitUntil: (p) => pending.push(p) });
+    await Promise.all(pending);
+  } finally { globalThis.fetch = original; }
+  assert.deepEqual(sent.map((body) => [body.event_type, body.client_payload.slot]), [["production-sla-watchdog", "sla-watchdog"]]);
 });
