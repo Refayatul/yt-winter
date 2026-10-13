@@ -123,6 +123,12 @@ jobs:
             node shorts-sira.js
           fi
 
+      # What this run actually achieved (lib/run-stages.js): category per stage and whether a video is
+      # on its way. A green run is not a published video; this table says which. Summary only.
+      - name: Production outcome (stages)
+        if: ${{ always() && !inputs.kuru && !inputs.hepsi && inputs.slug == '' }}
+        run: node scripts/production-outcome.js --channel failure-reconstructed || true
+
       # KURU CALISMA: gercek secret'lar ve gercek indirme/render ile uctan uca, ama yuklemesiz.
       - name: Kuru calisma (uctan uca, yuklemesiz)
         if: ${{ inputs.kuru }}

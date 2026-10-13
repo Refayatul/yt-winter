@@ -88,6 +88,8 @@ const MAX_TEMPO = 1.08;
 function synthesizeVoice(text, outputDirectory, basename = "narration", options = {}) {
   const ffmpeg = require("../../ff-yol").ffmpeg;
   const output = path.join(outputDirectory, basename + ".m4a");
+  // Operator lever during an Edge outage: do not call a service that refuses every request.
+  if (process.env.SHORTS_EDGE_TTS === "off") return placeholderTone(text, outputDirectory, basename);
   if (process.platform === "darwin" && process.env.TTS_PROVIDER !== "edge" && commandExists("say")) {
     const aiff = path.join(outputDirectory, basename + ".aiff");
     cp.execFileSync("say", ["-r", "170", "-o", aiff, text], { stdio: "ignore" });
@@ -104,9 +106,24 @@ function synthesizeVoice(text, outputDirectory, basename = "narration", options 
     fs.unlinkSync(input);
     return { file: mp3, provider: "Microsoft Edge neural TTS", syntheticVoice: true };
   } catch (error) {}
+  return placeholderTone(text, outputDirectory, basename);
+}
+
+// Non-speech structural placeholder for offline previews only: syntheticVoice false, so it can
+// never pass the publish gate; publishing runs stop before rendering instead (synthesizeNarration).
+function placeholderTone(text, outputDirectory, basename) {
+  const ffmpeg = require("../../ff-yol").ffmpeg;
+  const output = path.join(outputDirectory, basename + ".m4a");
   const estimatedDuration = Math.max(1, text.trim().split(/\s+/).length / 2.8);
   cp.execFileSync(ffmpeg, ["-y", "-hide_banner", "-loglevel", "error", "-f", "lavfi", "-i", `sine=frequency=180:sample_rate=44100:duration=${estimatedDuration}`, "-c:a", "aac", "-b:a", "96k", output], { stdio: "ignore" });
   return { file: output, provider: "non-speech CI fallback; production voice remains configured Edge TTS", syntheticVoice: false };
+}
+
+// The channel's offline fallback voice for every claim (lib/shorts-tts.js): one voice per Short.
+function fallbackTakes(script, outputDirectory, policy, pauseFor) {
+  const TTS = require("../../lib/shorts-tts");
+  const summary = TTS.kokoroLines(script.claims.map((claim) => claim.text), path.join(outputDirectory, "narration-fallback"), { voice: policy.voice, speed: policy.speed });
+  return summary.lines.map((line, index) => ({ file: line.file, provider: `Kokoro-82M offline fallback (${policy.voice})`, syntheticVoice: true, pause: pauseFor(index), durationSeconds: line.seconds + pauseFor(index) }));
 }
 
 function atempoFilter(rate) {
@@ -142,19 +159,40 @@ function synthesizeNarration(script, outputDirectory, channel, craftFeatures = n
   // Craft v2 with the Edge voice: the whole script in ONE request (continuous intonation), the
   // pauses as SSML breaks and each line's timing measured from Edge word boundaries. Any failure
   // falls back to the line-by-line takes below, and the result records which path ran.
-  const edgeVoice = !(process.platform === "darwin" && process.env.TTS_PROVIDER !== "edge");
+  const edgeVoice = !(process.platform === "darwin" && process.env.TTS_PROVIDER !== "edge") && process.env.SHORTS_EDGE_TTS !== "off";
   if (craft && edgeVoice && script.claims.length > 1) {
     const continuous = continuousNarration(script, outputDirectory, voiceConfig);
     if (continuous) return continuous;
   }
   const craftPauses = craft ? Craft.linePauses(script.claims.length) : null;
-  const takes = script.claims.map((claim, index) => {
+  const pauseFor = (index) => (craftPauses ? craftPauses[index] : index < script.claims.length - 1 ? LINE_PAUSE_SECONDS : 0);
+  // Once Edge refuses a line it is not asked again for this Short (each refusal costs its bounded
+  // retries); the remaining lines get placeholders and the whole narration is then re-read by
+  // the fallback voice, or the render stops when publishing.
+  let primaryDown = false;
+  let takes = script.claims.map((claim, index) => {
     const baseRate = voiceConfig.rate || DEFAULT_VOICE_RATE;
     const rate = craft && index === script.claims.length - 1 && script.claims.length > 2 ? Craft.payoffRate(baseRate) : baseRate;
-    const voice = synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { voice: voiceConfig.voice, rate });
-    const pause = craftPauses ? craftPauses[index] : index < script.claims.length - 1 ? LINE_PAUSE_SECONDS : 0;
+    const voice = primaryDown ? placeholderTone(claim.text, outputDirectory, `narration-claim-${index + 1}`)
+      : synthesizeVoice(claim.text, outputDirectory, `narration-claim-${index + 1}`, { voice: voiceConfig.voice, rate });
+    if (!voice.syntheticVoice) primaryDown = true;
+    const pause = pauseFor(index);
     return { ...voice, pause, durationSeconds: probe(voice.file).durationSeconds + pause };
   });
+  let fallback = null;
+  if (primaryDown) {
+    const TTS = require("../../lib/shorts-tts");
+    const policy = TTS.fallbackPolicy(channel);
+    console.log(`  primary voice unavailable; fallback voice: ${policy.allowed ? `${policy.voice} (${policy.reason})` : `none — ${policy.reason}`}`);
+    if (policy.allowed) {
+      for (const take of takes) try { fs.unlinkSync(take.file); } catch (error) {}
+      takes = fallbackTakes(script, outputDirectory, policy, pauseFor);
+      fallback = { provider: "kokoro", voice: policy.voice, approved: policy.approved, reason: policy.reason };
+    } else if (process.env.PUBLISH === "1") {
+      for (const take of takes) try { fs.unlinkSync(take.file); } catch (error) {}
+      throw Object.assign(new Error(`NARRATION_UNAVAILABLE: the primary voice was refused and ${policy.reason}; nothing rendered`), { code: "NARRATION_UNAVAILABLE" });
+    }
+  }
   const output = path.join(outputDirectory, "narration.m4a");
   const args = ["-y", "-hide_banner", "-loglevel", "error"];
   for (const take of takes) args.push("-i", take.file);
@@ -163,7 +201,10 @@ function synthesizeNarration(script, outputDirectory, channel, craftFeatures = n
   // Consistent loudness for mobile playback (YouTube normalises to about -14 LUFS).
   args.push("-filter_complex", `${padded};${inputs}concat=n=${takes.length}:v=0:a=1,loudnorm=I=-14:TP=-1.5:LRA=11[a]`, "-map", "[a]", "-ar", "44100", "-c:a", "aac", "-b:a", "160k", output);
   try { cp.execFileSync(ffmpeg, args, { stdio: "ignore", timeout: 120000 }); }
-  finally { for (const take of takes) try { fs.unlinkSync(take.file); } catch (error) {} }
+  finally {
+    for (const take of takes) try { fs.unlinkSync(take.file); } catch (error) {}
+    if (fallback) fs.rmSync(path.join(outputDirectory, "narration-fallback"), { recursive: true, force: true });
+  }
   let claimDurations = takes.map((take) => take.durationSeconds);
   const durationRange = channel.config.publishingCadence.shorts.targetDurationSeconds || [18, 40];
   const beforeFinalRetime = probe(output).durationSeconds;
@@ -172,10 +213,19 @@ function synthesizeNarration(script, outputDirectory, channel, craftFeatures = n
   const finalDuration = beforeFinalRetime > target ? retimeAudio(output, beforeFinalRetime, target) : beforeFinalRetime;
   const scale = finalDuration / (claimDurations.reduce((sum, value) => sum + value, 0) || finalDuration);
   claimDurations = claimDurations.map((duration) => duration * scale);
+  // Silence, a tone or a truncated read never becomes a publishable narration (lib/speech-check.js).
+  const synthetic = takes.every((take) => take.syntheticVoice);
+  const speech = synthetic ? require("../../lib/speech-check").check(output, { text: script.claims.map((claim) => claim.text).join(" ") }) : null;
+  if (speech && !speech.ok) {
+    console.log(`  narration failed the speech check: ${speech.problems.join("; ")}`);
+    if (process.env.PUBLISH === "1") throw Object.assign(new Error(`NARRATION_UNAVAILABLE: speech check failed (${speech.problems.join("; ")})`), { code: "NARRATION_UNAVAILABLE" });
+  }
   return {
+    fallback,
+    speechCheck: speech ? { ok: speech.ok, problems: speech.problems, metrics: speech.metrics } : null,
     file: output,
     provider: takes.every((take) => take.provider === takes[0].provider) ? takes[0].provider + " (claim-timed)" : "mixed claim-timed narration",
-    syntheticVoice: takes.every((take) => take.syntheticVoice),
+    syntheticVoice: synthetic && (!speech || speech.ok),
     rate: voiceConfig.rate || DEFAULT_VOICE_RATE,
     claimDurations,
   };
@@ -202,10 +252,19 @@ function continuousNarration(script, outputDirectory, voiceConfig) {
   const claimDurations = timing.lineTimes.map((line) => (line.end - line.start) * scale);
   const words = (timing.words || []).map((word) => ({ ...word, start: word.start * scale, end: word.end * scale }));
   write(path.join(outputDirectory, "narration-timing.json"), { mode: timing.mode, lineTimes: timing.lineTimes, words });
+  const speech = require("../../lib/speech-check").check(output, { text: script.claims.map((claim) => claim.text).join(" ") });
+  if (!speech.ok) {
+    console.log(`  continuous narration failed the speech check (${speech.problems.join("; ")}); line-by-line takes instead`);
+    return null;
+  }
   return {
     file: output,
     provider: `Edge TTS continuous read (${timing.mode}, word-boundary timed)`,
-    syntheticVoice: false,
+    // A real Edge read (it was false here from 2026-10-11, which would have blocked every
+    // craft-paced IB/CT Short at the publish gate).
+    syntheticVoice: true,
+    speechCheck: { ok: speech.ok, problems: speech.problems, metrics: speech.metrics },
+    fallback: null,
     rate: voiceConfig.rate || DEFAULT_VOICE_RATE,
     claimDurations,
     words,
@@ -957,4 +1016,4 @@ function buildPackage(topic, channel, outputDirectory, options = {}) {
   return { topicId: topic.id, slug: topic.slug, category: topic.category, outputDirectory, qualityGate: pkg.qualityGate, render, validations, validationReasons };
 }
 
-module.exports = { soundCues, cameraMove, countUp, countUpFilter, overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };
+module.exports = { synthesizeNarration, soundCues, cameraMove, countUp, countUpFilter, overlayText, musicMood, colourGrade, srtTime, captions, assTime, assCaptions, probe, drawtextSafe, numberCardFontSize, scientificFrames, renderVideo, renderThumbnail, buildPackage };

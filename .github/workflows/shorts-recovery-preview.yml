@@ -1,0 +1,84 @@
+name: Shorts recovery preview (no upload)
+
+# Renders candidate Shorts for missed days on the real runner, for the owner to review. It holds
+# NO YouTube credentials and runs with PUBLISH=0, so nothing can be uploaded, scheduled or
+# published; no state is committed. When Edge refuses the runner, the channel's (unapproved)
+# fallback voice is used in preview mode and every narration is speech-checked. The videos are
+# workflow artifacts only.
+on:
+  push:
+    branches: [fix/tts-fallback-health]
+    paths:
+      - 'reports/recovery/preview-request.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: shorts-recovery-preview
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        channel: [failure-reconstructed, impossible-brief, critical-thread]
+    env:
+      PUBLISH: '0'
+      PEXELS_KEY: ${{ secrets.PEXELS_KEY }}
+      SHORTS_FONT: DejaVu Sans
+      SHORTS_KOKORO_DIR: ${{ github.workspace }}/kokoro-model
+      SHORTS_KOKORO_PYTHON: python
+      SHORTS_TTS_FALLBACK: preview
+      GROWTH_GATE_MODE: enforce
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Runtime dependencies
+        run: |
+          bash scripts/ci-apt.sh --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation python3-pil
+          npm install --no-audit --no-fund
+          pip install --quiet kokoro-onnx==0.6.1 soundfile
+          mkdir -p kokoro-model
+          curl -fL --retry 3 -sS -o kokoro-model/kokoro-v1.0.onnx https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/kokoro-v1.0.onnx
+          curl -fL --retry 3 -sS -o kokoro-model/voices-v1.0.bin https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.0/voices-v1.0.bin
+          echo "7d5df8ecf7d4b1878015a32686053fd0eebe2bc377234608764cc0ef3636a6c5  kokoro-model/kokoro-v1.0.onnx" | sha256sum -c -
+          echo "bca610b8308e8d99f32e6fe4197e7ec01679264efed0cac9140fe9c29f1fbf7d  kokoro-model/voices-v1.0.bin" | sha256sum -c -
+      - name: Health pre-flight (report only)
+        run: node saglik.js --channel ${{ matrix.channel }} || true
+      - name: Render candidate (PUBLISH=0, no credentials)
+        continue-on-error: true
+        run: node shorts-sira.js --channel ${{ matrix.channel }}
+      - name: Stage record
+        if: always()
+        run: |
+          node -e 'const S=require("./lib/run-stages");const C=require("./core/channel-context");const r=S.latest(C.getChannel(process.argv[1]));console.log(JSON.stringify(r,null,2))' ${{ matrix.channel }} | tee stage-record.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: recovery-${{ matrix.channel }}
+          path: |
+            stage-record.json
+            uretim/*/Videos/*.mp4
+            uretim/*/Videos/denetim.json
+            uretim/*/Videos/anlatim-zamanlama.json
+            channels/*/state/production/*/*.mp4
+            channels/*/state/production/*/Videos/*.mp4
+            channels/*/state/production/*/render.json
+            channels/*/state/production/*/validations.json
+            channels/*/state/production/*/quality-gate.json
+            channels/*/state/production/*/titles.json
+            channels/*/state/production/*/metadata.json
+            channels/*/state/production/*/visual-attribution.json
+          if-no-files-found: ignore
+          retention-days: 14

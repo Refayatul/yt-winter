@@ -10,9 +10,14 @@
 //   oauth-reauth-deadline — yalniz Testing/explicit deadline icin esik uyarisi
 //   pexels          PEXELS_KEY calisiyor mu (stok konular icin)
 //   kutuphane       kac gunluk uretilmemis konu kaldi (<7 uyari, 0 kritik)
+//   nitelikli-konu  kalite cubugunu (bucket + ViralPotential minimum) gecen secilebilir konu var mi
+//   seslendirme     Edge sesi su an calisiyor mu; calismiyorsa onayli yedek ses (lib/shorts-tts.js) hazir mi
+//   render-araclari ffmpeg/ffprobe ve gereken filtreler (subtitles, loudnorm, zoompan)
+//   disk            bos alan (render + arsiv indirmeleri icin)
 //
 // Cikti: icerik/saglik.json (bildirim.js okur). Cikis kodu: 0 = yuklemeye uygun,
-// 5 = yukleme yapilamaz (kritik) — shorts-sira bu durumda konu harcamaz.
+// 5 = yukleme yapilamaz (kritik: yetki, kanal, seslendirme, render araclari, disk) —
+// shorts-sira ve IB/CT hatti bu durumda konu harcamaz ve hicbir sey render etmez.
 // Kullanim: node saglik.js [--sessiz]
 "use strict";
 const fs = require("fs");
@@ -42,6 +47,50 @@ function kalanKonu() {
   const bitti = new Set([...jsonOku(K.YOL.uretildi, []), ...jsonOku(K.YOL.basarisiz, []),
     ...K.yayinlananlar().map((y) => y.slug)]);
   return K.konular().filter((k) => !bitti.has(k.slug) && K.formatBul(k) === "short").length;
+}
+
+// Kalite cubugunu gecen ve henuz uretilmemis konular (yazmadan; uretimdeki secimle ayni dislamalar).
+function nitelikliKonu() {
+  try {
+    const Growth = require("./core/growth");
+    if (CHANNEL.config.pathMode !== "legacy-adapter") {
+      const exclude = [...require("./core/discovery").usedIds(CHANNEL)];
+      const selection = Growth.selectShortTopic(CHANNEL, { exclude, write: false });
+      return { count: selection.selected ? (selection.candidatePool || {}).count || 1 : 0, first: selection.selected ? selection.selected.topic.slug : null, reason: selection.reason };
+    }
+    const K = require("./lib/kutuphane");
+    const durum = (ad) => jsonOku(path.join(CHANNEL.paths.state, ad), null);
+    const exclude = [...(durum("uretilenler.json") || []), ...(durum("basarisiz.json") || []), ...K.yayinlananlar().map((y) => y.slug),
+      ...Object.keys(durum("engellenen.json") || {}), ...Object.keys(durum("inceleme.json") || {})].filter(Boolean);
+    const queue = Growth.orderedQueue(CHANNEL, { exclude, write: false });
+    const order = queue.order.filter((slug) => !exclude.includes(slug));
+    return { count: order.length, first: order[0] || null, reason: queue.reason };
+  } catch (error) {
+    return { count: -1, first: null, reason: "could not evaluate: " + String(error.message).slice(0, 120) };
+  }
+}
+
+function renderAraclari() {
+  const cp = require("child_process");
+  const FF = require("./ff-yol");
+  for (const tool of [FF.ffmpeg, FF.ffprobe]) {
+    const r = cp.spawnSync(tool, ["-version"], { encoding: "utf8" });
+    if (r.status !== 0) return { ok: false, reason: `${path.basename(tool)} çalışmıyor` };
+  }
+  const filters = cp.spawnSync(FF.ffmpeg, ["-hide_banner", "-filters"], { encoding: "utf8" }).stdout || "";
+  const missing = ["subtitles", "loudnorm", "zoompan", "drawtext"].filter((name) => !new RegExp(`\\s${name}\\s`).test(filters));
+  return missing.length ? { ok: false, reason: `ffmpeg filtreleri eksik: ${missing.join(", ")}` } : { ok: true };
+}
+
+function diskGB() {
+  try { const s = fs.statfsSync(KOK); return (s.bavail * s.bsize) / 1e9; } catch (error) { return 99; }
+}
+
+// The blocking findings of the last health check, in one line (shorts-sira and the stage record).
+function kritikOzet(channel = CHANNEL) {
+  const s = jsonOku(path.join(channel.paths.state, channel.config.pathMode === "legacy-adapter" ? "saglik.json" : "health.json"), null);
+  const k = s ? (s.bulgular || []).filter((x) => x.durum === "kritik") : [];
+  return k.length ? k.map((x) => `${x.ad}: ${x.mesaj}`).join("; ") : "health pre-flight failed";
 }
 
 async function denetle(ops = {}) {
@@ -133,11 +182,37 @@ async function denetle(ops = {}) {
   ekle("kutuphane", n === 0 ? "kritik" : n < 7 ? "uyari" : "ok", `${n} günlük üretilmemiş konu var`,
     n < 7 ? "Kütüphaneye yeni konu eklenmeli (icerik/konular/)." : null);
 
-  const kritik = b.some((x) => x.durum === "kritik" && ["youtube-yetki", "youtube-kanal"].includes(x.ad));
+  // 5) Nitelikli konu: "N gunluk konu" kalite cubugunu gecenlerin sayisi DEGILDIR (2026-10-12: FR 327
+  // gun gosterirken 0 nitelikli konu vardi). Yayin icin secilebilecek konu yoksa bugun Short cikmaz.
+  const nitelikli = ops.nitelikli ?? nitelikliKonu();
+  ekle("nitelikli-konu", nitelikli.count === 0 ? "kritik" : nitelikli.count < 7 ? "uyari" : "ok",
+    nitelikli.count === 0 ? `kalite çubuğunu geçen konu yok — ${nitelikli.reason}` : `${nitelikli.count} nitelikli konu (ilk: ${nitelikli.first})`,
+    nitelikli.count < 7 ? "Konu araştırması/görsel kürasyonu gerekiyor; eşik düşürülmez." : null);
+
+  // 6) Seslendirme: Edge sesi; reddedilirse yalnizca ONAYLI yedek ses uretimi kurtarir.
+  if (publish || ops.seslendirme) {
+    const voice = (CHANNEL.config.voice || {}).voice || "en-US-AndrewMultilingualNeural";
+    const TTS = require("./lib/shorts-tts");
+    const probe = await (ops.seslendirme || ((v) => TTS.edgeProbe(v)))(voice);
+    const policy = ops.fallbackPolicy || TTS.fallbackPolicy(CHANNEL);
+    if (probe.ok) ekle("seslendirme", "ok", `Edge sesi çalışıyor (${voice})`);
+    else if (policy.allowed && policy.approved) ekle("seslendirme", "uyari", `Edge sesi reddedildi (${probe.tries.join(", ")}); onaylı yedek ses kullanılacak (${policy.voice})`);
+    else ekle("seslendirme", "kritik", `NARRATION_UNAVAILABLE: Edge sesi reddedildi (${probe.tries.join(", ")}); yedek ses yok — ${policy.reason}`,
+      "Yedek sesi (config.voice.fallback) dinleyip onaylayın ya da Edge'in düzelmesini bekleyin. Konu harcanmaz, hiçbir şey render edilmez.");
+  }
+
+  // 7) Render araclari ve disk
+  const araclar = ops.araclar || renderAraclari();
+  ekle("render-araclari", araclar.ok ? "ok" : "kritik", araclar.ok ? "ffmpeg, ffprobe ve gereken filtreler hazır" : araclar.reason,
+    araclar.ok ? null : "Runner'da `bash scripts/ci-apt.sh ffmpeg` adımını kontrol edin.");
+  const bos = ops.diskGB ?? diskGB();
+  ekle("disk", bos < 2 ? "kritik" : bos < 5 ? "uyari" : "ok", `${bos.toFixed(1)} GB boş alan`, bos < 5 ? "Eski uretim/ ve render çıktıları temizlenmeli." : null);
+
+  const kritik = b.some((x) => x.durum === "kritik" && ["youtube-yetki", "youtube-kanal", "seslendirme", "render-araclari", "disk"].includes(x.ad));
   return { channel: CHANNEL.slug, channelName: CHANNEL.name, tarih: new Date().toISOString(), aggregateManaged: true, yuklemeUygun: !kritik || !publish, bulgular: b };
 }
 
-module.exports = { denetle, GEREKLI_KAPSAM };
+module.exports = { denetle, kritikOzet, nitelikliKonu, renderAraclari, GEREKLI_KAPSAM };
 
 if (require.main === module) {
   denetle().then((r) => {

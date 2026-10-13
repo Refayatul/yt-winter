@@ -20,7 +20,7 @@
     "shorts": { "everyDays": 1, "productionTime": "09:00", "targetDurationSeconds": [20, 60] },
     "longForm": { "everyDays": 7, "targetDurationMinutes": [8, 12], "qualityOverCadence": true }
   },
-  "voice": { "provider": "edge-tts", "voice": "en-US-AndrewMultilingualNeural", "rate": "+1%", "style": "measured documentary, warm, restrained and human" },
+  "voice": {"provider": "edge-tts", "voice": "en-US-AndrewMultilingualNeural", "rate": "+1%", "style": "measured documentary, warm, restrained and human", "fallback": {"provider": "kokoro", "voice": "am_michael", "speed": 1.0, "approved": false, "note": "Offline Kokoro-82M voice used only when Edge refuses. NOT approved: a person must listen to reports/tts-benchmark samples and set approved=true before it can be published."}},
   "brandStyle": "forensic engineering documentary, archival, restrained, evidence-led",
   "contentNiche": "engineering failures, disasters, mechanisms and lessons",
   "topicRules": { "requiresMechanism": true, "requiresSources": true, "avoidDuplicates": true },

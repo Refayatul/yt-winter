@@ -115,6 +115,12 @@ function renderBilgisi(slug) {
 class Engellendi extends Error {}
 class IncelemeGerekli extends Error {}
 class YuklemeHatasi extends Error {}
+// Altyapi (seslendirme servisi) hatasi: her konu ayni sekilde patlar. 2026-10-12'de Edge TTS 403
+// yuzunden 28 nitelikli konu tek tek "basarisiz" isaretlenip harcandi; artik dongu durur.
+// Ayni durum gorsel kaynak kesintisi icin de gecerli (Wikimedia/archive.org/Pexels; lib/source-outage.js).
+class AltyapiHatasi extends Error { constructor(kind, message) { super(message); this.kind = kind; } }
+const { NARRATION_UNAVAILABLE_EXIT } = require("./lib/shorts-tts");
+const { ASSET_SOURCE_UNAVAILABLE_EXIT } = require("./lib/source-outage");
 function kapi(slug, final) {
   const r = require("./quality-gate").degerlendir(slug, { final });
   console.log(`  kalite kapisi (${final ? "final" : "pre"}): ${r.karar} ${r.toplam}/100` + (r.engelleyen.length ? " — " + r.engelleyen.join("; ") : ""));
@@ -129,6 +135,12 @@ function konuListesi() {
 
 function calistir(script, slug) {
   const r = cp.spawnSync("node", [script, slug], { cwd: KOK, stdio: "inherit" });
+  // Seslendirme servisi (ve onaylı yedek ses) yoksa hata konuya ait degildir: konu harcanmaz.
+  if (r.status === NARRATION_UNAVAILABLE_EXIT) throw new AltyapiHatasi("NARRATION_UNAVAILABLE", script + ": seslendirme yok (slug: " + slug + ")");
+  // Gorsel kaynak kesintisi ya da eksik PEXELS_KEY (stok-bul.js cikis 2): konunun degil altyapinin hatasi.
+  if (r.status === ASSET_SOURCE_UNAVAILABLE_EXIT || (script === "stok-bul.js" && r.status === 2)) {
+    throw new AltyapiHatasi("ASSET_SOURCE_UNAVAILABLE", script + ": gorsel kaynagi ulasilamaz (slug: " + slug + ", cikis " + r.status + ")");
+  }
   if (r.status !== 0) throw new Error(script + " basarisiz (slug: " + slug + ")");
 }
 
@@ -166,7 +178,12 @@ function uploadHazir() {
   return !!(credentials.clientId && credentials.clientSecret && credentials.refreshToken);
 }
 
+// Uretim asamalari (lib/run-stages.js): yesil workflow artik neyin gercekten tamamlandigini soyler.
+let RUN = null;
+const asama = () => RUN || { reset() { return this; }, topic() { return this; }, done() { return this; }, fail() { return this; }, skip() { return this; }, scheduled() { return this; }, outcome() { return this; } };
+
 function uretBir(slug) {
+  asama().reset().topic(slug).done("RESEARCH", "growth queue selected " + slug);
   if (!slugGecerli(slug)) throw new Error("Gecersiz slug: " + slug);
   const spec = path.join(KONULAR, slug + ".json");
   if (!fs.existsSync(spec)) throw new Error("Konu bulunamadi: " + spec);
@@ -183,10 +200,16 @@ function uretBir(slug) {
   // the selected title/hook/script before either process starts; never modify
   // the editorial source in icerik/konular/.
   fs.writeFileSync(path.join(job, "konu.json"), JSON.stringify(Growth.applyLegacyOverlay(konu, preGrowth), null, 2) + "\n");
+  asama().done("SCRIPT", "pre gate " + oncekiKapi.karar + " " + oncekiKapi.toplam);
   // Goruntu kaynagi: "stok" (Pexels) ya da arsiv (kamu mali).
-  calistir(konu.tur === "stok" ? "stok-bul.js" : "arsiv-bul.js", slug);
-  calistir("shorts-yap.js", slug);
+  try { calistir(konu.tur === "stok" ? "stok-bul.js" : "arsiv-bul.js", slug); }
+  catch (e) { asama().fail("ASSETS", e.message); throw e; }
+  asama().done("ASSETS");
+  try { calistir("shorts-yap.js", slug); }
+  catch (e) { if (e instanceof AltyapiHatasi && e.kind === "NARRATION_UNAVAILABLE") asama().fail("NARRATION", e.message); else asama().fail("RENDER", e.message); throw e; }
+  asama().done("NARRATION").done("RENDER");
   const son = kapi(slug, true);
+  asama().done("QA", "final gate " + son.karar + " " + son.toplam);
   // Onizleme gorseli (8 kare) + denetim ozeti depoya kopyalanir; bildirimde gosterilir.
   try {
     const vd = path.join(job, "Videos");
@@ -222,9 +245,14 @@ function uretBir(slug) {
       throw new YuklemeHatasi("yukleme basarisiz (konu kuyrukta kaldi)");
     }
     console.log(`yukleme: tamam (kalite: ${son.karar})`);
+    const yayin = require("./lib/kutuphane").yayinBul(slug) || {};
+    asama().done("UPLOAD", yayin.videoId || null);
+    if (yayin.publishAt) asama().done("SCHEDULE", yayin.publishAt).scheduled("PUBLISH", "YouTube makes it public at " + yayin.publishAt);
+    else asama().skip("SCHEDULE", "uploaded private without publishAt (manual review)");
     const videoId = GrowthRuntime.afterUpload(CHANNEL, slug, growthPlans[slug]);
     console.log(GrowthRuntime.shortSummary(growthPlans[slug], { "Upload Status": "uploaded (scheduled)", "Video ID": videoId || "—" }));
   } else {
+    asama().skip("UPLOAD", publish ? "no credentials" : "PUBLISH!=1");
     console.log("yukleme atlandi (" + (publish ? "kimlik yok" : "PUBLISH!=1") + "); video: uretim/" + slug + "/Videos/");
     console.log(GrowthRuntime.shortSummary(growthPlans[slug], { "Upload Status": "skipped (" + (publish ? "no credentials" : "PUBLISH!=1") + ")", "Video ID": "—" }));
   }
@@ -245,10 +273,11 @@ function main() {
   // Belirli slug: dogrudan uret (hata firlatir).
   if (acikSlug) { uretBir(acikSlug); return 0; }
 
+  if (!hepsi) RUN = require("./lib/run-stages").start(CHANNEL);
   // Takvim: gunluk (varsayilan) modda slot dolmadiysa uretme (kalite > siklik).
   if (!hepsi && process.env.PUBLISH === "1") {
     const d = require("./yayin-plani").durum("short");
-    if (!d.uygun) { console.log("Takvim: henuz degil — " + d.neden); return 0; }
+    if (!d.uygun) { asama().outcome("NOT_DUE", d.neden); console.log("Takvim: henuz degil — " + d.neden); return 0; }
   }
   // Uretilmemis, kalici basarisiz olmamis ve (ayni spec ile) engellenmemis konular.
   // Yayin kaydindaki (icerik/yayinlananlar.json) slug'lar da atlanir: elle yuklenmis bir
@@ -264,6 +293,7 @@ function main() {
   const kalan = buyume.order.filter((s) => !atla.has(s) && tum.includes(s));
   console.log(`growth queue: ${buyume.reason} · ${buyume.mode} · candidate pool ${buyume.candidatePool.count}/${buyume.candidatePool.target} (minimum ${buyume.candidatePool.minimum}) · inventory A${buyume.inventory.A}/B${buyume.inventory.B}/C${buyume.inventory.C}/D${buyume.inventory.D}`);
   if (!kalan.length) {
+    asama().fail("RESEARCH", buyume.reason).outcome("NO_TOPIC", buyume.reason);
     GrowthRuntime.alert(CHANNEL, "NO_QUALIFIED_TOPIC", buyume.reason, { inventory: buyume.inventory });
     console.log("::warning::Uretilecek nitelikli konu yok (" + tum.length + " toplam) — " + buyume.reason);
     return 0;
@@ -273,7 +303,12 @@ function main() {
   // uretilmez (eskiden konu uretilip yuklenemeden "uretildi" sayiliyordu).
   if (!hepsi && process.env.PUBLISH === "1" && !process.env.SAGLIK_ATLA) {
     const sg = cp.spawnSync(process.execPath, ["saglik.js", "--channel", CHANNEL.slug], { cwd: KOK, stdio: "inherit" });
-    if (sg.status === 5) { console.error("⛔ Saglik kontrolu: YouTube'a yukleme yapilamaz — uretim atlandi, konu harcanmadi (bkz. icerik/saglik.json)."); return 0; }
+    if (sg.status === 5) {
+      const neden = require("./saglik").kritikOzet(CHANNEL);
+      asama().outcome("FAILED", "health pre-flight: " + neden);
+      console.error("⛔ Saglik kontrolu: " + neden + " — uretim atlandi, konu harcanmadi (bkz. icerik/saglik.json).");
+      return 0;
+    }
   }
 
   // Gunluk: ilk BASARILI konuyu uret; biri patlarsa sonrakine gec (gun bosa gitmesin).
@@ -284,15 +319,29 @@ function main() {
     if (basari >= hedefSayi) break;
     try { uretBir(slug); basari++; }
     catch (e) {
-      if (e instanceof Engellendi) { console.error(`  ⛔ ${slug} kalite kapisinda engellendi — rapor: icerik/paket/${slug}/quality-gate.md`); continue; }
-      if (e instanceof IncelemeGerekli) { console.error(`  ⚠ ${slug} insan incelemesine ayrildi; YouTube'a yuklenmedi — rapor: icerik/paket/${slug}/quality-gate.md`); continue; }
+      if (e instanceof Engellendi) { asama().outcome("BLOCKED", `${slug}: ${e.message}`); console.error(`  ⛔ ${slug} kalite kapisinda engellendi — rapor: icerik/paket/${slug}/quality-gate.md`); continue; }
+      if (e instanceof IncelemeGerekli) { asama().fail("QA", "REVIEW").outcome("BLOCKED", `${slug}: ${e.message}`); console.error(`  ⚠ ${slug} insan incelemesine ayrildi; YouTube'a yuklenmedi — rapor: icerik/paket/${slug}/quality-gate.md`); continue; }
       // Yukleme hatasi konuya ait degildir (yetki/ag): baska konuyu da harcamamak icin dur.
-      if (e instanceof YuklemeHatasi) { console.error(`  ✗ ${slug}: ${e.message}`); return 1; }
+      if (e instanceof YuklemeHatasi) { asama().fail("UPLOAD", e.message).outcome("FAILED", `${slug}: ${e.message}`); console.error(`  ✗ ${slug}: ${e.message}`); return 1; }
+      if (e instanceof AltyapiHatasi) {
+        asama().outcome("FAILED", `${e.kind} (${slug}): ${e.message}`);
+        GrowthRuntime.alert(CHANNEL, e.kind, slug, { message: e.message });
+        console.error(`  ✗ ${slug}: ${e.message} — konu harcanmadi; altyapi duzelene kadar baska konu denenmez`);
+        console.log("::error::[" + CHANNEL.name + "] " + e.kind + (e.kind === "NARRATION_UNAVAILABLE"
+          ? ": Edge TTS refused and no approved fallback voice; nothing rendered or uploaded"
+          : ": an asset source (Wikimedia/archive.org/Pexels) is unreachable; topic kept for the next run"));
+        return 1;
+      }
       console.error(`  ✗ ${slug} basarisiz: ${e.message} — atlaniyor`);
+      asama().outcome("FAILED", `${slug}: ${e.message}`);
       basarisizIsaretle(slug);
     }
   }
   if (!basari) { console.error("Hicbir konu uretilemedi."); return 1; }
+  const son = RUN && RUN.record;
+  if (son && son.stages.UPLOAD.status === "done") asama().outcome("UPLOADED", null, { videoId: son.stages.UPLOAD.detail || null });
+  else if (process.env.PUBLISH !== "1") asama().outcome("DRY_RUN", "rendered without upload");
+  else asama().outcome("FAILED", "rendered but not uploaded (" + ((son && son.stages.UPLOAD.detail) || "no upload") + ")");
   return 0;
 }
 

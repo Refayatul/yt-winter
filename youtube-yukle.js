@@ -273,6 +273,14 @@ async function main() {
     process.exit(8);
   }
 
+  // Narration must be verifiable real speech; an unreviewed fallback voice never reaches YouTube.
+  const sesOnay = require("./lib/shorts-tts").uploadAllowed(CHANNEL, BASE);
+  if (!sesOnay.ok) {
+    hataYaz(BASE, IS, `NARRATION_NOT_PUBLISHABLE: ${sesOnay.reason}`);
+    console.error(`⛔ NARRATION_NOT_PUBLISHABLE: ${sesOnay.reason} — yukleme YAPILMADI.`);
+    process.exit(14);
+  }
+
   if (!kimlikVar) {
     console.error("\nKimlik bilgileri eksik — yukleme YAPILMADI.");
     console.error("Gereken: " + [CHANNEL.credentialNames.clientId[0], CHANNEL.credentialNames.clientSecret[0], CHANNEL.credentialNames.refreshToken[0]].join(", "));

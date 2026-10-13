@@ -68,20 +68,56 @@ function relevantArticle(title, extract, subject) {
   return String(extract || "").slice(0, 1500).toLowerCase().includes(String(subject).toLowerCase());
 }
 
+// Most CT records are about one event (the Milwaukee outbreak, the 2008 melamine scandal), while
+// canonicalTopic names the system ("food safety laboratory"). Searching the system alone found
+// the wrong articles (2026-10-12 dry run: CT-265 matched India's food regulator). The record's own
+// question is searched first, so the article about the event comes first; an article is kept only
+// when it is relevant to the question's specific words or to the system.
+// How well an article's introduction matches the record's own specific words (place names,
+// figures, the substance): 0 unless at least three of them, or half, appear, so a search hit
+// about something else is never used as evidence. Returns the number of matched words.
+function questionMatch(extract, text) {
+  const opening = String(extract || "").slice(0, 3000).toLowerCase();
+  const specific = [...new Set(String(text).toLowerCase().replace(/[^a-z0-9,\s]/g, " ").split(/\s+/)
+    .filter((word) => (word.length > 4 && !GENERIC.has(word)) || /^\d[\d,]{2,}$/.test(word)))];
+  const found = specific.filter((word) => opening.includes(/^\d/.test(word) ? word : stem(word))).length;
+  return found >= Math.min(3, Math.ceil(specific.length / 2)) ? found : 0;
+}
+
 async function articles(topic, get) {
   const subject = topic.canonicalTopic || topic.topic;
+  const question = String(topic.coreQuestion || "").replace(/[?]/g, "").trim();
   const wiki = async (params) => {
     const query = Object.entries({ format: "json", ...params }).map(([key, value]) => `${key}=${encodeURIComponent(value)}`).join("&");
     const response = await get(`https://en.wikipedia.org/w/api.php?${query}`, { json: true });
     return response && response.body;
   };
-  const search = await wiki({ action: "query", list: "search", srsearch: subject, srlimit: 5 });
-  const titles = [...new Set([subject.charAt(0).toUpperCase() + subject.slice(1), ...((search && search.query && search.query.search) || []).map((hit) => hit.title)])].slice(0, 5);
+  const hits = async (query) => {
+    const search = query ? await wiki({ action: "query", list: "search", srsearch: query, srlimit: 5 }) : null;
+    return ((search && search.query && search.query.search) || []).map((hit) => hit.title);
+  };
+  // The question, then the record's own opening beats (they name the place and figure), as
+  // separate searches; candidates are ordered by how many of the record's specific words they use.
+  const eventText = [question, topic.openingLine, topic.secondBeat].filter(Boolean).join(" ");
+  // One request per search: the hits come back with their introductions (generator=search).
+  const scored = [];
+  for (const query of [question, topic.openingLine, topic.secondBeat].filter(Boolean)) {
+    const data = await wiki({ action: "query", generator: "search", gsrsearch: String(query).replace(/[?.]/g, ""), gsrlimit: 4, prop: "extracts", exintro: 1, explaintext: 1, exlimit: "max" });
+    for (const page of Object.values((data && data.query && data.query.pages) || {})) {
+      if (!scored.some((item) => item.title === page.title)) scored.push({ title: page.title, score: questionMatch(page.extract, eventText) });
+    }
+  }
+  const eventTitles = scored.filter((item) => item.score > 0).sort((a, b) => b.score - a.score).slice(0, 2).map((item) => item.title);
+  // With an event article in hand, the system's own article joins only under its exact name;
+  // loose matches on the system's words ("food safety" -> a national regulator) are not evidence.
+  const canonical = subject.charAt(0).toUpperCase() + subject.slice(1);
+  const titles = eventTitles.length ? [...new Set([...eventTitles, canonical])] : [...new Set([canonical, ...(await hits(subject))])].slice(0, 5);
   const out = [];
   for (const title of titles) {
     const data = await wiki({ action: "query", prop: "extracts", explaintext: 1, redirects: 1, titles: title });
     const page = data && data.query && Object.values(data.query.pages || {})[0];
-    if (page && page.extract && page.extract.length > 500 && !out.some((doc) => doc.title === page.title) && relevantArticle(page.title, page.extract, subject)) {
+    const relevant = page && (eventTitles.includes(title) || (eventTitles.length ? page.title.toLowerCase() === subject.toLowerCase() : relevantArticle(page.title, page.extract, subject)));
+    if (page && page.extract && page.extract.length > 500 && !out.some((doc) => doc.title === page.title) && relevant) {
       out.push({ title: page.title, url: `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/ /g, "_"))}`, text: page.extract });
     }
     if (out.length >= 2) break;
