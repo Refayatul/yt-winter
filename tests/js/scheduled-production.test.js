@@ -476,3 +476,23 @@ test("REVIEW: a partial deploy (new script, old single cron) keeps the watchdog 
   } finally { globalThis.fetch = original; }
   assert.deepEqual(sent.map((body) => [body.event_type, body.client_payload.slot]), [["production-sla-watchdog", "sla-watchdog"]]);
 });
+
+test("DEPLOY: the watchdog deploy workflow defaults to a read-only preflight and checks capacity before any change", () => {
+  const deploy = read(".github/workflows/deploy-watchdog.yml");
+  assert.match(deploy, /mode:\n\s+description:[^\n]*\n\s+type: choice\n\s+options: \[preflight, deploy\]\n\s+default: preflight/);
+  const step = (name) => deploy.indexOf(`- name: ${name}`);
+  const order = ["Refuse when dispatch flags are already enabled", "Preflight — account cron capacity and current watchdog",
+    "Store GitHub dispatch token in the Worker", "Deploy Worker and independent cron trigger", "Verify deployed version, cron, secret and health endpoint"].map(step);
+  assert.ok(order.every((i) => i > 0) && order.every((v, i) => i === 0 || order[i - 1] < v), "flags and capacity are checked before the secret, deploy and verify steps");
+  for (const name of ["Store GitHub dispatch token in the Worker", "Deploy Worker and independent cron trigger", "Verify deployed version, cron, secret and health endpoint"]) {
+    assert.match(deploy.slice(step(name), step(name) + 200), /\n\s+if: inputs\.mode == 'deploy'\n/, `${name} runs only in deploy mode`);
+  }
+  const preflight = deploy.slice(step("Preflight — account cron capacity and current watchdog"), step("Store GitHub dispatch token in the Worker"));
+  assert.doesNotMatch(preflight, /-X (PUT|POST|DELETE|PATCH)|wrangler@\$WRANGLER_VERSION" (deploy|secret|rollback|triggers)\s/, "the preflight is read-only");
+  assert.match(preflight, /workers\/scripts"/);
+  assert.match(preflight, /\/schedules"/);
+  assert.match(preflight, /if \[ \$\(\(OTHER \+ NEEDED\)\) -gt "\$CRON_LIMIT" \]; then[\s\S]*?exit 9/);
+  assert.match(deploy, /CRON_LIMIT: \$\{\{ vars\.CF_WORKERS_PLAN == 'paid' && '250' \|\| '5' \}\}/, "the Free limit is assumed unless the owner says otherwise");
+  assert.match(deploy, /vars\.CF_PRODUCTION_DISPATCH[\s\S]*vars\.CF_PUBLICATION_DISPATCH[\s\S]*exit 7/);
+  assert.doesNotMatch(deploy, /wrangler@\$WRANGLER_VERSION" rollback/, "rollback goes through a redeploy, never Cloudflare version rollback");
+});
