@@ -52,7 +52,7 @@ jobs:
       - name: ffmpeg + fonts
         run: |
           bash scripts/ci-apt.sh --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation python3-pil
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -122,7 +122,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - name: Read one line in each free Edge voice
         run: node scripts/voice-samples.js voice-samples
       - uses: actions/upload-artifact@v4

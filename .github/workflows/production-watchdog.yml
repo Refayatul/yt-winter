@@ -224,7 +224,7 @@ jobs:
       - name: Runtime dependencies
         run: |
           bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
       - name: Recover one ImpossibleBrief Short
         run: |
           node saglik.js --channel impossible-brief
@@ -349,7 +349,7 @@ jobs:
       - name: Runtime dependencies
         run: |
           bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
       - name: Recover one CriticalThread Short
         run: |
           node saglik.js --channel critical-thread
@@ -474,7 +474,7 @@ jobs:
       - name: Runtime dependencies
         run: |
           bash scripts/ci-apt.sh ffmpeg fonts-dejavu-core fonts-liberation python3-pil
-          npm install --no-audit --no-fund
+          npm ci --no-audit --no-fund
       - name: Recover one The Hidden Logic of Things Short
         run: |
           node saglik.js --channel behind-the-ordinary

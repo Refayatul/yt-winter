@@ -50,7 +50,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - name: Inventory runway
         run: node scripts/growth/topic-inventory.js --channel critical-thread --target-days 14 | tee -a "$GITHUB_STEP_SUMMARY"
       - name: Research and verify

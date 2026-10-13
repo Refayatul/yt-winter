@@ -26,7 +26,7 @@ jobs:
           node-version: '20'
       - name: System packages (ffmpeg, ImageMagick, fonts)
         run: bash scripts/ci-apt.sh ffmpeg imagemagick fonts-dejavu-core fonts-liberation
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -87,7 +87,7 @@ jobs:
           python-version: '3.12'
       - name: System packages (ffmpeg)
         run: bash scripts/ci-apt.sh ffmpeg
-      - run: npm install --no-audit --no-fund
+      - run: npm ci --no-audit --no-fund
       - name: Pinned render dependencies
         run: node -e 'const p=require("./package.json").devDependencies; for (const k of ["playwright-core","@fontsource/source-serif-4","@fontsource/inter","@fontsource/barlow-semi-condensed"]) { if (!/^\d+\.\d+\.\d+$/.test(p[k]||"")) { console.error(k+" is not pinned to an exact version"); process.exit(1); } console.log(k, p[k], "installed", require(k+"/package.json").version); }'
       - name: Chromium headless shell cache
