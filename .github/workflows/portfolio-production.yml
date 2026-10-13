@@ -242,8 +242,14 @@ jobs:
 
       - name: Channel-scoped analytics, plans, health and notifications
         if: always()
+        env:
+          BTO_ACTIVE: ${{ vars.BTO_PUBLISH }}
         run: |
-          for CHANNEL in failure-reconstructed impossible-brief critical-thread behind-the-ordinary; do
+          # The Hidden Logic of Things is inactive: its analytics, plans and notifications run only
+          # when BTO_PUBLISH=1 (its OAuth client is not maintained while the channel is paused).
+          CHANNELS="failure-reconstructed impossible-brief critical-thread"
+          if [ "$BTO_ACTIVE" = "1" ]; then CHANNELS="$CHANNELS behind-the-ordinary"; fi
+          for CHANNEL in $CHANNELS; do
             node post-publish-analyzer.js --channel "$CHANNEL" --due || true
             node analytics-sync.js --channel "$CHANNEL" || true
             node channel-plan.js --channel "$CHANNEL" || true

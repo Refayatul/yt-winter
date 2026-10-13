@@ -77,16 +77,36 @@ async function listeBulYaDaOlustur(tok, ad) {
   return yeni.id;
 }
 
+// playlistItems.insert right after an upload can fail with HTTP 409 "SERVICE_UNAVAILABLE" (or a 5xx)
+// while YouTube is still processing the new video (seen 2026-10-13 on Failure Reconstructed). Those
+// are retried a bounded number of times; any other error (quota, auth, 404) is not.
+function geciciHata(error) {
+  const m = /HTTP (\d{3})/.exec(String(error && error.message || ""));
+  const status = m ? Number(m[1]) : 0;
+  return (status === 409 && /SERVICE_UNAVAILABLE/.test(error.message)) || status >= 500;
+}
+async function geciciTekrar(fn, { delays = [10000, 30000], sleep = (ms) => new Promise((r) => setTimeout(r, ms)) } = {}) {
+  for (let i = 0; ; i += 1) {
+    try { return await fn(); } catch (error) {
+      if (i >= delays.length || !geciciHata(error)) throw error;
+      console.log(`  (seri: gecici YouTube hatasi, ${delays[i] / 1000} sn sonra tekrar: ${error.message.slice(0, 120)})`);
+      await sleep(delays[i]);
+    }
+  }
+}
+
 async function ekle(tok, videoId, ad) {
   const listeId = await listeBulYaDaOlustur(tok, ad);
-  // zaten listede mi?
-  const mevcut = await get(tok, "playlistItems?part=contentDetails&maxResults=50&playlistId=" + listeId);
-  if ((mevcut.items || []).some(i => i.contentDetails.videoId === videoId)) {
-    console.log("  = zaten serinin icinde: " + ad); return;
-  }
-  await post(tok, "playlistItems?part=snippet", {
-    snippet: { playlistId: listeId, resourceId: { kind: "youtube#video", videoId } },
+  // Each attempt re-reads the playlist first, so a retried insert never adds the video twice.
+  const eklendi = await geciciTekrar(async () => {
+    const mevcut = await get(tok, "playlistItems?part=contentDetails&maxResults=50&playlistId=" + listeId);
+    if ((mevcut.items || []).some(i => i.contentDetails.videoId === videoId)) return false;
+    await post(tok, "playlistItems?part=snippet", {
+      snippet: { playlistId: listeId, resourceId: { kind: "youtube#video", videoId } },
+    });
+    return true;
   });
+  if (!eklendi) { console.log("  = zaten serinin icinde: " + ad); return; }
   console.log("  ✓ seriye eklendi: " + ad);
 }
 
@@ -108,7 +128,7 @@ async function kumeyeEkle(tok, videoId, konu) {
   for (const y of ayni) await ekle(tok, y.videoId, ad);
 }
 
-module.exports = { ekle, kumeyeEkle, seriAdi, token, SERILER };
+module.exports = { ekle, kumeyeEkle, seriAdi, token, SERILER, geciciHata, geciciTekrar };
 
 // --- CLI ---
 if (require.main === module) {
