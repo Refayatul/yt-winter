@@ -1,0 +1,49 @@
+{
+  "slug": "admiral-nakhimov-1986",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:08:10.639Z",
+  "ekranHook": "Don't worry, they said",
+  "mevcut": {
+    "puan": 70,
+    "pencereler": {
+      "0-5": "Near Novorossiysk, a bulk carrier rammed the Soviet liner Admiral Nakhimov. It sank within",
+      "5-12": "minutes, and four hundred twenty three people died. A pilot radioed a warning to the freighter. The reply was:",
+      "12-20": "don't worry. The freighter didn't slow or turn. The liner's captain had gone to his cabin. The officers exchanged radio calls, but",
+      "20-30": "it was too late. Both captains were sentenced to fifteen years."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 4 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "The SS Admiral Nakhimov sank after a collision near Novorossiysk."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a freighter holding course despite warnings."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a freighter holding course despite warnings do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is collision after both captains violated navigation rules and assumed the other would give way — and it is why both captains were jailed and Soviet maritime safety came under scrutiny."
+      }
+    ],
+    "metin": "The SS Admiral Nakhimov sank after a collision near Novorossiysk. It took only a freighter holding course despite warnings. So how could a freighter holding course despite warnings do this? The answer is collision after both captains violated navigation rules and assumed the other would give way — and it is why both captains were jailed and Soviet maritime safety came under scrutiny.",
+    "puan": 95
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

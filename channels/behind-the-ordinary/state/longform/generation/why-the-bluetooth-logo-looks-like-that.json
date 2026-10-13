@@ -2,10 +2,10 @@
   "schema": "longform-generation/2",
   "channel": "behind-the-ordinary",
   "slug": "why-the-bluetooth-logo-looks-like-that",
-  "topicHash": "711babbc4433:98",
+  "topicHash": "f8857aa76a53:98",
   "status": "COMPLETE",
-  "createdAt": "2026-10-05T14:31:31.934Z",
-  "updatedAt": "2026-10-05T16:11:53.723Z",
+  "createdAt": "2026-10-12T15:15:24.880Z",
+  "updatedAt": "2026-10-12T16:54:06.721Z",
   "provider": {
     "primary": "groq",
     "fallback": null
@@ -35,7 +35,7 @@
       },
       {
         "id": "C4",
-        "text": "The Bluetooth logo is a Viking king's initials.",
+        "text": "That strange Bluetooth symbol hides two letters.",
         "source": "editorial narration (case file)",
         "rewrite": false
       },
@@ -645,13 +645,13 @@
     ]
   },
   "blueprint": {
-    "central_question": "Why is the Bluetooth logo that angular symbol, and where did the name come from?",
-    "audience_promise": "Answer one precise question about the Bluetooth symbol using only documented evidence.",
-    "narrative_angle": "Evidence‑led hidden‑logic explainer that traces the Bluetooth logo’s Viking‑runic origin, the practical naming shortcut that became permanent, and why the design endures today.",
+    "central_question": "Why is the Bluetooth logo an angular symbol and where did its name come from?",
+    "audience_promise": "We’ll answer exactly why the Bluetooth logo looks the way it does and how its name originated, using only documented evidence.",
+    "narrative_angle": "A hidden‑engineering tale that treats the Bluetooth logo as a purposeful bind‑rune created as a placeholder name, linking King Harald Bluetooth’s initials to the modern goal of uniting devices across brands.",
     "hook_candidates": [
-      "Two ancient runes, merged into one sleek symbol you see on every phone.",
-      "A king’s dead tooth gave a tech standard its name.",
-      "What a placeholder code name and a Viking king have in common."
+      "That strange Bluetooth symbol hides two letters.",
+      "A temporary code name became the permanent name and logo of a global wireless standard.",
+      "At an industry meeting, Intel’s Jim Kardach suggested it as a temporary code name."
     ],
     "retention_beats": [
       "[object Object].",
@@ -664,28 +664,7 @@
       "[object Object].",
       "[object Object]."
     ],
-    "uncertain_claims": [
-      "C23",
-      "C24",
-      "C25",
-      "C26",
-      "C27",
-      "C28",
-      "C29",
-      "C30",
-      "C31",
-      "C32",
-      "C33",
-      "C34",
-      "C35",
-      "C36",
-      "C37",
-      "C38",
-      "C39",
-      "C40",
-      "C41",
-      "C42"
-    ],
+    "uncertain_claims": [],
     "section_plan": [
       {
         "section": "COLD_OPEN",
@@ -833,7 +812,7 @@
       "section": "COLD_OPEN",
       "paragraphs": [
         {
-          "text": "Two runes, merged into one symbol.",
+          "text": "That strange Bluetooth symbol hides two letters.",
           "claims": [],
           "role": "cold-open"
         }
@@ -843,7 +822,7 @@
       "section": "THE_QUESTION",
       "paragraphs": [
         {
-          "text": "The Bluetooth logo is a Viking king's initials. Two runes, merged into one symbol. So the logo merges Harald's initials in runes: H and B.",
+          "text": "The emblem conceals two characters, formed by merging the runic symbols for H and B into a single shape.",
           "claims": [
             "C4",
             "C5",
@@ -852,7 +831,7 @@
           "role": "evidence"
         },
         {
-          "text": "The name honours King Harald Bluetooth, who united Denmark and Norway. At an industry meeting, Intel's Jim Kardach suggested it as a temporary code name. Harald united Scandinavia. This radio link would unite PCs and phones. It was only a placeholder. RadioWire or PAN was meant to replace it. PAN was already everywhere online, and RadioWire's trademark check ran out of time.",
+          "text": "The name pays tribute to King Harald Bluetooth, whose unification of Scandinavia inspired the goal of linking PCs and phones; Intel’s Jim Kardach proposed the mark as a temporary code name, intended to be replaced by RadioWire or PAN, with PAN already widespread and RadioWire’s trademark check expiring.",
           "claims": [
             "C6",
             "C7",
@@ -868,16 +847,10 @@
       "section": "ORIGIN_CONTEXT",
       "paragraphs": [
         {
-          "text": "King Harald Bluetooth Gormsson, who united Denmark and Norway, earned his nickname from a dead tooth of a dark blue‑grey colour.",
+          "text": "King Harald Bluetooth Gormsson, noted for uniting Denmark and Norway in 958, earned his nickname from a dead tooth of a dark blue‑grey colour. In 1996 Intel, Ericsson and Nokia convened to plan a short‑range radio standard. At that meeting Jim Kardich of Intel suggested Bluetooth as a temporary code name, inspired after he saw a picture of Harald Bluetooth’s runestone in a Viking history.",
           "claims": [
             "C12",
-            "C13"
-          ],
-          "role": "evidence"
-        },
-        {
-          "text": "In 1996 Intel, Ericsson and Nokia convened to standardize a short‑range radio technology; Jim Kardach suggested \"Bluetooth\" as a temporary code name after seeing a picture of Harald Bluetooth’s runestone.",
-          "claims": [
+            "C13",
             "C14",
             "C15",
             "C22"
@@ -890,7 +863,7 @@
       "section": "THE_PROBLEM",
       "paragraphs": [
         {
-          "text": "The practical issue arose because the existing PAN name already had tens of thousands of hits on the internet, and a full trademark search on RadioWire could not be completed in time for launch.",
+          "text": "The practical problem was that PAN already had tens of thousands of hits on the internet, and a full trademark search on RadioWire could not be completed in time for launch.",
           "claims": [
             "C19",
             "C20"
@@ -903,7 +876,7 @@
       "section": "THE_EXPLANATION",
       "paragraphs": [
         {
-          "text": "The Bluetooth emblem is a bind rune that fuses the Younger Futhark characters representing Harald Bluetooth’s initials. Kardach likened Harald’s historic unification of Scandinavia to the modern linking of personal computers and mobile devices through a short‑range wireless protocol.",
+          "text": "The Bluetooth emblem is a bind rune merging the Younger Futhark characters for Harald’s initials, and its designer likened Harald’s historic unification of Scandinavia to the goal of linking computer and cellular ecosystems.",
           "claims": [
             "C2",
             "C16"
@@ -911,32 +884,40 @@
           "role": "evidence"
         },
         {
-          "text": "A symbol acts as an outward sign that represents another concept, a usage documented in English literature since the late 1500s. Symbols enable layered communication, often bearing multiple levels of meaning and forming the basis of human understanding. They aid interpretation of the world and facilitate social coordination through shared rhetoric. Cultural background shapes a symbol’s reading, making its meaning a learned construct rather than an inherent property.",
+          "text": "A symbol acts as an outward sign that conveys a sender’s message, enables layered communication, and its meaning is learned culturally rather than inherent.",
           "claims": [
             "C30",
-            "C31",
             "C32",
-            "C33",
-            "C34",
-            "C35",
-            "C36",
-            "C37",
             "C38"
           ],
           "role": "evidence"
         },
         {
-          "text": "Semiotics examines the link between a sign’s form and its referent, analyzing how visual cues generate meaning. Symbols can convey ideological, comparative, or isomorphic value, indicating beliefs, judgments of superiority, or conformity within a cultural setting. Their significance may shift as history, popular usage, and context evolve.",
+          "text": "Semiotics studies signs as communication, exploring signifier‑signified relations with visual and contextual cues; symbols can cause translation confusion when meanings differ across languages.",
           "claims": [
             "C45",
             "C46",
+            "C49"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Symbols hold ideological, comparative, or isomorphic value; Tillich noted they are born and die, and a living symbol can reveal hidden meanings and point beyond itself to mysterious depths.",
+          "claims": [
             "C68",
-            "C69",
-            "C70",
-            "C71",
-            "C82",
-            "C83",
-            "C85"
+            "C74",
+            "C76",
+            "C77"
+          ],
+          "role": "evidence"
+        },
+        {
+          "text": "Symbol meanings evolve with culture or personal change, and context shifts interpretation; a symbolic action signals intent, and groups may use such actions to address criticism without direct change.",
+          "claims": [
+            "C78",
+            "C85",
+            "C95",
+            "C98"
           ],
           "role": "evidence"
         }
@@ -960,14 +941,14 @@
       "section": "REAL_WORLD_CONSEQUENCE",
       "paragraphs": [
         {
-          "text": "The Bluetooth identifier began as a provisional code name, yet it was adopted as the enduring name and visual emblem for the worldwide wireless protocol.",
+          "text": "A temporary code name became the permanent name and logo of a global wireless standard.",
           "claims": [
             "C1"
           ],
           "role": "evidence"
         },
         {
-          "text": "In this context, the emblem functions as a symbol—a visual mark that conveys a specific concept or relationship.",
+          "text": "A symbol functions as a visual marker that conveys an idea, object, relationship, or formula.",
           "claims": [
             "C23"
           ],
@@ -979,7 +960,7 @@
       "section": "FINAL_PAYOFF",
       "paragraphs": [
         {
-          "text": "The Bluetooth logo is a bind rune that combines the Younger Futhark runes Hagall and Bjarkan, representing the initials of King Harald Bluetooth.",
+          "text": "The Bluetooth logo is a bind rune merging the Younger Futhark runes Hagall and Bjarkan, Harald's initials.",
           "claims": [
             "C21"
           ],
@@ -993,26 +974,26 @@
     }
   ],
   "usage": {
-    "input_tokens": 12110,
-    "output_tokens": 7463
+    "input_tokens": 12077,
+    "output_tokens": 8998
   },
   "error": {
     "code": "RATE_LIMIT",
     "provider": "groq",
-    "stage": "section:ORIGIN_CONTEXT",
+    "stage": "section:REAL_WORLD_CONSEQUENCE",
     "retryable": true,
-    "retryAfterMs": 5000
+    "retryAfterMs": 22000
   },
   "providerUsed": "groq",
   "model": "openai/gpt-oss-120b",
-  "depthNote": "All paragraphs rely solely on the provided claim IDs; no additional facts were introduced. Uses only the five provided claims, each paragraph cites its supporting IDs and avoids unsupported additions. Only claims C19 and C20 were used as evidence. Evidence ties the Bluetooth logo’s rune origin to broader theories of symbols and semiotics, showing how cultural and functional meanings intertwine. All content derived solely from claims C3, C17, C18. Only two claims were available; each paragraph is limited to the evidence they provide. Only claim C21 supports this answer.",
+  "depthNote": "Section answers the question using only provided claims. All statements are directly supported by the supplied claim IDs; no additional facts were introduced. Only two supporting claims were provided for this section. Section crafted within 150 words using only provided claim IDs. Paragraph constructed solely from claims C3, C17, and C18 as required. Section built solely from claims C1 and C23. Used only claim C21 as instructed.",
   "quality": {
     "duplicateSections": [],
     "repeatedPhrases": [],
     "weakHook": false,
     "payoff": true,
     "filler": [],
-    "introShare": 0.21,
+    "introShare": 0.19,
     "missingPlanSections": [],
     "hardFails": [],
     "notes": []

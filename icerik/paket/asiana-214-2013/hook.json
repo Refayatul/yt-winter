@@ -1,0 +1,49 @@
+{
+  "slug": "asiana-214-2013",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:05:49.330Z",
+  "ekranHook": "Nobody was holding speed",
+  "mevcut": {
+    "puan": 70,
+    "pencereler": {
+      "0-5": "A Boeing 777 slammed into the seawall at San Francisco airport. Its tail broke",
+      "5-12": "off, and three people were killed. The approach had been too slow and too low. The crew believed the",
+      "12-20": "autothrottle was holding speed. It had been left in a mode that didn't. The airspeed kept falling, and nobody noticed in time.",
+      "20-30": "The go-around came seconds too late. Training on automation modes was strengthened afterward."
+    },
+    "bulgular": [
+      "0-5s: lands the event/result immediately",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 4 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "Asiana Airlines Flight 214 hit the seawall short of the runway in San Francisco."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only an autothrottle left in a mode that did not hold speed."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could an autothrottle left in a mode that did not hold speed do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is unintended autothrottle mode on a visual approach, letting airspeed decay unnoticed — and it is why training on automation modes and manual approaches was strengthened."
+      }
+    ],
+    "metin": "Asiana Airlines Flight 214 hit the seawall short of the runway in San Francisco. It took only an autothrottle left in a mode that did not hold speed. So how could an autothrottle left in a mode that did not hold speed do this? The answer is unintended autothrottle mode on a visual approach, letting airspeed decay unnoticed — and it is why training on automation modes and manual approaches was strengthened.",
+    "puan": 100
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

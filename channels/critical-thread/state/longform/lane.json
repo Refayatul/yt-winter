@@ -92,6 +92,55 @@
       "selected": null,
       "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
       "finishedAt": "2026-10-05T15:32:20.334Z"
+    },
+    {
+      "cycleId": "2026-W42",
+      "channel": "critical-thread",
+      "startedAt": "2026-10-12T16:54:00.455Z",
+      "status": "QUALITY_BLOCKED",
+      "evaluated": [
+        {
+          "slug": "why-submarine-fiber-optic-cable-is-so-hard-to-replace",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 79,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.5 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
+        },
+        {
+          "slug": "what-quietly-depends-on-cable-landing-station",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 79,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 74,
+          "hardFails": [
+            "unsupported central claim/number: 3, 000, 000 V",
+            "INSUFFICIENT_DEPTH: evidence supports ~2 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        },
+        {
+          "slug": "the-critical-role-of-cable-laying-ship",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 79,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~2.3 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        }
+      ],
+      "selected": null,
+      "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
+      "finishedAt": "2026-10-12T16:54:06.683Z"
     }
   ]
 }

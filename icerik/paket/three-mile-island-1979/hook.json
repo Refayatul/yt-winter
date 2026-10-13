@@ -1,0 +1,50 @@
+{
+  "slug": "three-mile-island-1979",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:05:23.455Z",
+  "ekranHook": "The light said closed",
+  "mevcut": {
+    "puan": 60,
+    "pencereler": {
+      "0-5": "Part of the core at Three Mile Island melted down. Cooling water escaped for",
+      "5-12": "hours through a valve stuck open. The operators didn't know. Their panel light said the valve was closed. It",
+      "12-20": "only showed the close signal was sent, not the valve's position. Thinking there was too much water, they cut emergency cooling. The",
+      "20-30": "core overheated and partly melted. That's why control rooms and training were rebuilt afterward."
+    },
+    "bulgular": [
+      "0-5s: no event or result in the first sentence",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "payoff line present (why/how/reason)",
+      "on-screen hook is 4 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "Three Mile Island Unit 2 partially melted down."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only a relief valve stuck open while its light said closed."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could a relief valve stuck open while its light said closed do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is loss of coolant through a stuck-open pilot-operated relief valve, misread by operators — and it is why control rooms were redesigned and operator training was overhauled."
+      }
+    ],
+    "metin": "Three Mile Island Unit 2 partially melted down. It took only a relief valve stuck open while its light said closed. So how could a relief valve stuck open while its light said closed do this? The answer is loss of coolant through a stuck-open pilot-operated relief valve, misread by operators — and it is why control rooms were redesigned and operator training was overhauled.",
+    "puan": 95
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

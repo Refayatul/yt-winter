@@ -442,6 +442,12 @@ async function main() {
   if (slaIndex > 0) {
     const report = jsonOku(path.resolve(process.argv[slaIndex + 1] || ""), { date: bugun() });
     const key = "sla-failure:" + (report.date || bugun());
+    // A late watchdog run after midnight Istanbul checks the next day before its deadline. That day
+    // has not failed: do not alert, and do not use up its once-per-day alert key.
+    if (report.deadlinePassed === false) {
+      console.log(`SLA ${report.date}: deadline ${report.deadlineAt || ""} not reached yet — no failure alert.`);
+      return;
+    }
     if (!d.gonderilen[key]) {
       await issueAc(slaHataMesaji(report));
       isaretle(d, key);

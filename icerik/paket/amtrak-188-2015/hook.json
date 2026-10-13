@@ -1,0 +1,49 @@
+{
+  "slug": "amtrak-188-2015",
+  "format": "short",
+  "olusturuldu": "2026-10-12T15:49:50.475Z",
+  "ekranHook": "Twice the speed limit",
+  "mevcut": {
+    "puan": 50,
+    "pencereler": {
+      "0-5": "An Amtrak train derailed on a sharp curve in Philadelphia. Carriages were torn apart,",
+      "5-12": "and eight people were killed. The train entered the curve at about twice the speed limit. The engineer had",
+      "12-20": "lost track of where he was. He accelerated instead of slowing down. Automatic speed control wasn't active on that curve. Nothing stopped",
+      "20-30": "the train from overspeeding. The system was activated on the Northeast Corridor soon after."
+    },
+    "bulgular": [
+      "0-5s: no event or result in the first sentence",
+      "5-12s: missing an unexpected detail",
+      "12-20s: no central mystery or problem is posed",
+      "on-screen hook is 4 words (readable in <1s)"
+    ],
+    "engelleyici": false
+  },
+  "oneri": {
+    "segmentler": [
+      {
+        "pencere": "0-5s",
+        "rol": "event/result",
+        "metin": "Amtrak Train 188 derailed on a curve in Philadelphia."
+      },
+      {
+        "pencere": "5-12s",
+        "rol": "unexpected detail",
+        "metin": "It took only the train entering a curve at about twice the speed limit."
+      },
+      {
+        "pencere": "12-20s",
+        "rol": "central problem",
+        "metin": "So how could the train entering a curve at about twice the speed limit do this?"
+      },
+      {
+        "pencere": "20-30s",
+        "rol": "viewer promise",
+        "metin": "The answer is overspeed on a curve, with positive train control not yet active on that section — and it is why Positive Train Control was activated on the Northeast Corridor."
+      }
+    ],
+    "metin": "Amtrak Train 188 derailed on a curve in Philadelphia. It took only the train entering a curve at about twice the speed limit. So how could the train entering a curve at about twice the speed limit do this? The answer is overspeed on a curve, with positive train control not yet active on that section — and it is why Positive Train Control was activated on the Northeast Corridor.",
+    "puan": 95
+  },
+  "not": "Suggestions are drafts built from the case file; narration stays editorial — never auto-replaced."
+}

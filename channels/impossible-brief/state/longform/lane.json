@@ -91,6 +91,54 @@
       "selected": null,
       "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
       "finishedAt": "2026-10-05T14:33:52.519Z"
+    },
+    {
+      "cycleId": "2026-W42",
+      "channel": "impossible-brief",
+      "startedAt": "2026-10-12T15:13:53.946Z",
+      "status": "QUALITY_BLOCKED",
+      "evaluated": [
+        {
+          "slug": "what-if-we-swam-in-europas-ocean",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 82,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~0.8 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        },
+        {
+          "slug": "what-if-olympus-mons-stood-on-earth",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 81,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 87,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.8 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
+        },
+        {
+          "slug": "what-if-earth-had-rings-like-saturn",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 81,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.2 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        }
+      ],
+      "selected": null,
+      "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
+      "finishedAt": "2026-10-12T15:14:07.367Z"
     }
   ]
 }
