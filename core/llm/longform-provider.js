@@ -29,11 +29,18 @@ class LongformProviderError extends Error {
   }
 }
 
-// Provider error text can quote what was sent. Keep it short and strip anything key-like.
+// Provider error text can quote what was sent and name the account. Keep it short and strip
+// anything key-like and every account, project or request identifier: CI logs are public. Groq's
+// 429 text names the organization ("... in organization `org_…` service tier ..."; run
+// 38516520859, 2026-10-14).
 function sanitizeDetail(value, limit = 240) {
   return String(value == null ? "" : value)
     .replace(/\b(?:gsk|sk|sk-ant|xai|key)[-_][A-Za-z0-9_-]{8,}/gi, "[redacted]")
     .replace(/\bBearer\s+\S+/gi, "Bearer [redacted]")
+    .replace(/\b(organi[sz]ation|project|workspace|account|team)((?:[\s_-]*id)?\s*[:=]?\s*)(?:[`'"][^`'"\s]{2,}[`'"]|(?=[A-Za-z0-9_.:-]*\d)[A-Za-z0-9_.:-]{4,})/gi, "$1$2[redacted]")
+    .replace(/\b(?:org|proj|prj|req|request|user|usr|acct|account|sess|session|team|ws|workspace|tenant)[-_][A-Za-z0-9]{6,}\b/gi, "[redacted-id]")
+    .replace(/\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b/gi, "[redacted-id]")
+    .replace(/[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}/g, "[redacted-email]")
     .replace(/[\x00-\x1f\x7f]+/g, " ")
     .trim()
     .slice(0, limit);
