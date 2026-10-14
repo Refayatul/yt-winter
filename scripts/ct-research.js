@@ -42,6 +42,11 @@ const SLUG = "critical-thread";
 const EXCERPT_BUDGET_CHARS = Number(process.env.CT_RESEARCH_EXCERPT_CHARS) || 8000;
 const COMPLETION_TOKENS = Number(process.env.CT_RESEARCH_MAX_TOKENS) || 3200;
 const PAUSE_MS = process.env.CT_RESEARCH_PAUSE_MS != null ? Number(process.env.CT_RESEARCH_PAUSE_MS) : 65000;
+// Token ceilings (prompt + completion as Groq reports them). A request is sent only when its worst
+// case (prompt estimate + COMPLETION_TOKENS, ~6k) still fits: about three requests per topic, and
+// three topics per run. Groq's free tier allows 8,000 tokens per minute for openai/gpt-oss-120b.
+const TOPIC_TOKEN_BUDGET = Number(process.env.CT_RESEARCH_TOPIC_TOKEN_BUDGET) || 16000;
+const RUN_TOKEN_BUDGET = Number(process.env.CT_RESEARCH_RUN_TOKEN_BUDGET) || 45000;
 const ROLES = ["HIDDEN_SYSTEM", "WHY_IT_MATTERS", "WHAT_DEPENDS_ON_IT", "HOW_IT_WORKS", "BOTTLENECK", "FAILURE", "RESILIENCE", "WHERE_IT_EXISTS", "PAYOFF"];
 // Words too generic to tie an article to a subject on their own.
 const GENERIC = new Set(["system", "systems", "network", "networks", "plant", "station", "line", "lines", "chain", "supply", "global", "critical", "infrastructure", "industry", "production", "facility", "route", "control", "service", "services"]);
@@ -262,6 +267,7 @@ async function researchOne(topic, deps) {
   let feedback = null;
   for (let round = 0; round < 2; round += 1) {
     const response = await deps.generate({ stage: "ct-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM, clientJson: true, validateJson: draftProblems,
+      ...(deps.budget ? { budget: deps.budget } : {}),
       user: JSON.stringify(feedback ? { ...user, previous_errors: feedback } : user) });
     const built = toRecord(topic, response.json, sources);
     if (built.skip) return { status: "NOT_ANSWERABLE", reason: String(built.skip).slice(0, 200) };
@@ -316,24 +322,39 @@ async function main(argv = process.argv.slice(2), deps = {}) {
   const bySlug = new Map(universe.topics.map((topic) => [topic.slug, topic]));
   const list = (slug ? [{ slug }] : inventory.queue.slice(0, limit)).map((item) => bySlug.get(item.slug)).filter(Boolean);
   const get = deps.get || FR.get;
-  const generate = deps.generate || ((input) => Provider.generateJson(input));
+  // Every provider attempt is logged as one safe line: finish reason, token usage, reply length,
+  // JSON failure category, rate-limit state and waits (core/llm/longform-provider.js describeEvent);
+  // never the prompt, the reply, keys or account identifiers.
+  const log = deps.log || console.log;
+  const onEvent = (event) => { const line = Provider.describeEvent(event); if (line) log(`    · ${line}`); };
+  const generate = deps.generate || ((input) => Provider.generateJson(input, { onEvent }));
   const verify = deps.verify || ((seed) => Builder.run(seed, { write: false, log: () => {} }));
   const outcomes = [];
+  let runSpent = 0;
   for (const [index, topic] of list.entries()) {
     if (index > 0 && PAUSE_MS > 0 && !deps.generate) await new Promise((resolve) => setTimeout(resolve, PAUSE_MS));
+    // Each topic gets its own token budget, never more than the run has left.
+    const budget = Provider.tokenBudget(Math.min(deps.topicTokenBudget || TOPIC_TOKEN_BUDGET, (deps.runTokenBudget || RUN_TOKEN_BUDGET) - runSpent));
+    // One request can count its prompt (~3k tokens) plus COMPLETION_TOKENS.
+    if (budget.limit < COMPLETION_TOKENS + 3000) { log(`run token budget left (${budget.limit}) cannot hold one more request; stopping this batch`); break; }
+    log(`→ ${topic.id} ${topic.slug}`);
     let outcome;
-    try { outcome = await researchOne(topic, { get, generate, verify }); }
+    try { outcome = await researchOne(topic, { get, generate, verify, budget }); }
     catch (error) {
-      if (error instanceof Provider.LongformProviderError && error.defer) {
-        console.log(`✗ ${topic.id} ${topic.slug}: provider deferred (${Provider.describeError(error)}); stopping this batch`);
+      // A deferral (rate or daily limit, outage) or a rejected credential would fail every topic:
+      // stop the batch instead.
+      if (error instanceof Provider.LongformProviderError && (error.defer || error.code === "AUTH")) {
+        runSpent += budget.spent;
+        log(`✗ ${topic.id} ${topic.slug}: provider ${error.code === "AUTH" ? "rejected the credential" : "deferred"} (${Provider.describeError(error)}); stopping this batch`);
         break;
       }
       // Provider failures carry HTTP status, sanitized provider code/message, request size, stage
       // and retry class (core/llm/longform-provider.js describeError); never keys or prompts.
       outcome = { status: "ERROR", reason: (error instanceof Provider.LongformProviderError ? Provider.describeError(error) : String(error.code || error.message)).slice(0, 400) };
     }
-    outcomes.push({ topic: topic.slug, ...outcome });
-    console.log(`${outcome.status === "VERIFIED" ? "✓" : "✗"} ${topic.id} ${topic.slug}: ${outcome.status}${outcome.reason ? " — " + outcome.reason : ""}`);
+    runSpent += budget.spent;
+    outcomes.push({ topic: topic.slug, ...outcome, tokens: budget.spent, requests: budget.requests });
+    log(`${outcome.status === "VERIFIED" ? "✓" : "✗"} ${topic.id} ${topic.slug}: ${outcome.status}${outcome.reason ? " — " + outcome.reason : ""} [${budget.requests} request(s), ${budget.spent} tokens]`);
     attempts.attempts[topic.slug] = { at: new Date().toISOString(), status: outcome.status, reason: outcome.reason || null };
   }
   const verified = outcomes.filter((item) => item.status === "VERIFIED");
@@ -354,7 +375,8 @@ async function main(argv = process.argv.slice(2), deps = {}) {
     fs.mkdirSync(path.dirname(Inventory.attemptsFile(channel)), { recursive: true });
     fs.writeFileSync(Inventory.attemptsFile(channel), JSON.stringify({ ...attempts, channel: SLUG }, null, 2) + "\n");
   }
-  return { outcomes, verified: verified.length, ...result };
+  log(`provider tokens used this run: ${runSpent} of ${deps.runTokenBudget || RUN_TOKEN_BUDGET}`);
+  return { outcomes, verified: verified.length, tokens: runSpent, ...result };
 }
 
 if (require.main === module) main().catch((error) => { console.error(error.message); process.exitCode = 1; });

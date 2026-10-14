@@ -101,8 +101,8 @@ test("long or control-character provider messages are bounded", () => {
 test("ct-research reports provider failures with the diagnostic line and the topic id", () => {
   const source = fs.readFileSync(path.join(ROOT, "scripts", "ct-research.js"), "utf8");
   assert.match(source, /Provider\.describeError\(error\)/);
-  assert.match(source, /console\.log\(`✗ \$\{topic\.id\} \$\{topic\.slug\}: provider deferred/);
-  assert.match(source, /console\.log\(`\$\{outcome\.status === "VERIFIED" \? "✓" : "✗"\} \$\{topic\.id\} \$\{topic\.slug\}/);
+  assert.match(source, /log\(`✗ \$\{topic\.id\} \$\{topic\.slug\}: provider \$\{error\.code === "AUTH" \? "rejected the credential" : "deferred"\}/);
+  assert.match(source, /log\(`\$\{outcome\.status === "VERIFIED" \? "✓" : "✗"\} \$\{topic\.id\} \$\{topic\.slug\}/);
 });
 
 test("the BTO research runtime patch still applies to the provider (and is idempotent)", () => {
