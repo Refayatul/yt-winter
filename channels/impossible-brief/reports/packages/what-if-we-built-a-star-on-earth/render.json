@@ -2,20 +2,34 @@
   "requested": true,
   "completed": true,
   "audio": {
+    "fallback": null,
+    "speechCheck": {
+      "ok": true,
+      "problems": [],
+      "metrics": {
+        "durationSeconds": 25.89,
+        "voicedShare": 0.777,
+        "rmsVariation": 0.636,
+        "zcrVariation": 1.334,
+        "clippedShare": 0,
+        "longestSilenceSeconds": 0.7,
+        "wordsPerSecond": 2.32
+      }
+    },
     "file": "channels/impossible-brief/state/production/what-if-we-built-a-star-on-earth/narration.m4a",
-    "provider": "non-speech CI fallback; production voice remains configured Edge TTS (claim-timed)",
-    "syntheticVoice": false,
+    "provider": "Microsoft Edge neural TTS (claim-timed)",
+    "syntheticVoice": true,
     "rate": "+2%",
     "claimDurations": [
-      3.057708095155064,
-      3.057708095155064,
-      3.4171253986518413,
-      1.6189656150116936,
-      4.136006319194352,
-      2.698267634883809,
-      4.314218841948174
+      4.120454545454544,
+      3.351623376623376,
+      4.09642857142857,
+      3.1353896103896095,
+      4.649025974025973,
+      2.8470779220779217,
+      3.6999999999999993
     ],
-    "durationSeconds": 22.3,
+    "durationSeconds": 25.9,
     "width": null,
     "height": null,
     "hasAudio": true,
@@ -41,35 +55,28 @@
     "strict": false,
     "maxVisualUses": 3,
     "explainerShots": 0,
-    "proceduralShots": 1,
-    "relevantShare": 0.98,
-    "irrelevantShots": [
-      {
-        "shot": 5,
-        "type": "procedural",
-        "asset": "procedural:1:101:b55fb14f621e",
-        "line": "That's what ITER, in France, aims to harness."
-      }
-    ],
+    "proceduralShots": 0,
+    "relevantShare": 1,
+    "irrelevantShots": [],
     "payoffCovered": false,
     "shotTypes": [
       "licensed-still",
+      "number-card",
       "licensed-still",
       "licensed-still",
       "licensed-still",
-      "procedural",
+      "licensed-still",
       "licensed-still",
       "licensed-still",
       "number-card",
-      "licensed-still",
       "licensed-still",
       "licensed-still",
       "licensed-still"
     ],
     "distinctVisuals": 6,
     "realImageCount": 4,
-    "numberCardCount": 1,
-    "maxStaticSeconds": 3.882,
+    "numberCardCount": 2,
+    "maxStaticSeconds": 3.965,
     "visualChanges": 12,
     "openingHookCovered": true,
     "cardNumbersValid": true,
@@ -98,9 +105,7 @@
         "gram",
         "fuel",
         "tonnes",
-        "coal",
-        "built",
-        "star"
+        "coal"
       ],
       "matchedTerms": [
         "tokamak",
@@ -151,9 +156,7 @@
           "gram",
           "fuel",
           "tonnes",
-          "coal",
-          "built",
-          "star"
+          "coal"
         ],
         "matchedTerms": [
           "tokamak",
@@ -178,15 +181,15 @@
       0.843,
       0.5510000000000002,
       0.8639999999999999,
-      0.7997080951550646,
-      0.44929190484493553,
-      3.7629999999999995,
-      3.8815072039736656,
-      0.4144927960263338,
-      3.721513523168019,
-      2.698267634883811,
-      1.4542188419481725,
-      2.8599999999999994
+      1.249,
+      3.96507792207792,
+      1.198922077922079,
+      2.8975064935064907,
+      3.135389610389609,
+      2.2821038961039015,
+      2.366922077922073,
+      2.847077922077922,
+      3.6999999999999993
     ],
     "sources": [
       {
@@ -194,39 +197,49 @@
         "claimIndex": 0,
         "type": "licensed-still",
         "sourceId": "still:ITER construction in 2018 (41809718461).jpg",
-        "numbers": []
+        "numbers": [
+          "11 ton"
+        ]
       },
       {
         "shot": 2,
         "claimIndex": 0,
-        "type": "licensed-still",
-        "sourceId": "still:ITER Tokamak and Plant Systems (2016) (41783636452).jpg",
-        "numbers": []
+        "type": "number-card",
+        "sourceId": "card:0:c8a8862043b4",
+        "numbers": [
+          "11 ton"
+        ]
       },
       {
         "shot": 3,
         "claimIndex": 0,
         "type": "licensed-still",
-        "sourceId": "still:ITER site 2018 aerial view (41809720041).jpg",
-        "numbers": []
+        "sourceId": "still:ITER Tokamak and Plant Systems (2016) (41783636452).jpg",
+        "numbers": [
+          "11 ton"
+        ]
       },
       {
         "shot": 4,
         "claimIndex": 0,
         "type": "licensed-still",
-        "sourceId": "still:NIST Light Source Illuminates Fusion Power Diagnostics (5940503177).jpg",
-        "numbers": []
+        "sourceId": "still:ITER site 2018 aerial view (41809720041).jpg",
+        "numbers": [
+          "11 ton"
+        ]
       },
       {
         "shot": 5,
-        "claimIndex": 1,
-        "type": "procedural",
-        "sourceId": "procedural:1:101:b55fb14f621e",
-        "numbers": []
+        "claimIndex": 0,
+        "type": "licensed-still",
+        "sourceId": "still:NIST Light Source Illuminates Fusion Power Diagnostics (5940503177).jpg",
+        "numbers": [
+          "11 ton"
+        ]
       },
       {
         "shot": 6,
-        "claimIndex": 1,
+        "claimIndex": 2,
         "type": "licensed-still",
         "sourceId": "still:ITER construction in 2018 (41809718461).jpg#2",
         "numbers": []
@@ -240,6 +253,15 @@
       },
       {
         "shot": 8,
+        "claimIndex": 3,
+        "type": "licensed-still",
+        "sourceId": "still:ITER site 2018 aerial view (41809720041).jpg#2",
+        "numbers": [
+          "2013"
+        ]
+      },
+      {
+        "shot": 9,
         "claimIndex": 4,
         "type": "number-card",
         "sourceId": "card:4:01e5e7fd4d26",
@@ -249,10 +271,10 @@
         ]
       },
       {
-        "shot": 9,
+        "shot": 10,
         "claimIndex": 4,
         "type": "licensed-still",
-        "sourceId": "still:ITER site 2018 aerial view (41809720041).jpg#2",
+        "sourceId": "still:NIST Light Source Illuminates Fusion Power Diagnostics (5940503177).jpg#2",
         "numbers": [
           "5 billion",
           "18",
@@ -260,15 +282,8 @@
         ]
       },
       {
-        "shot": 10,
-        "claimIndex": 5,
-        "type": "licensed-still",
-        "sourceId": "still:NIST Light Source Illuminates Fusion Power Diagnostics (5940503177).jpg#2",
-        "numbers": []
-      },
-      {
         "shot": 11,
-        "claimIndex": 6,
+        "claimIndex": 5,
         "type": "licensed-still",
         "sourceId": "still:ITER construction in 2018 (41809718461).jpg#3",
         "numbers": []
@@ -281,7 +296,7 @@
         "numbers": []
       }
     ],
-    "durationSeconds": 22.3,
+    "durationSeconds": 25.9,
     "width": 1080,
     "height": 1920,
     "hasAudio": true
@@ -295,8 +310,8 @@
     "usesLicensedStill": true
   },
   "story": {
-    "figures": 4,
-    "figuresPer10Words": 0.68,
+    "figures": 5,
+    "figuresPer10Words": 0.83,
     "causalLinks": 1,
     "lines": 7
   }

@@ -1,115 +1,148 @@
 {
-  "at": "2026-10-13T21:23:44.045Z",
-  "runId": "38470120290",
+  "at": "2026-10-14T11:43:01.085Z",
+  "runId": "38557595428",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "before production slot 09:00 Europe/Istanbul",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-14T18:00:00.000Z",
+      "reason": null,
+      "slug": "hyatt-regency-walkway-1981",
+      "videoId": "gC62R2vVYcs",
+      "targetDay": "2026-10-14",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "growth queue selected hyatt-regency-walkway-1981",
+          "at": "2026-10-14T11:36:18.920Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre gate PUBLISH 85",
+          "at": "2026-10-14T11:36:19.264Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-14T11:36:20.653Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-14T11:41:24.271Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-14T11:41:24.272Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "final gate PUBLISH 90",
+          "at": "2026-10-14T11:41:26.636Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "gC62R2vVYcs",
+          "at": "2026-10-14T11:41:31.518Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-14T18:00:00.000Z",
+          "at": "2026-10-14T11:41:31.519Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-14T18:00:00.000Z",
+          "at": "2026-10-14T11:41:31.519Z"
         }
       }
     },
     {
       "channel": "impossible-brief",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "before production slot 09:30 Europe/Istanbul",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-14T18:00:00.000Z",
+      "reason": null,
+      "slug": "what-if-we-built-a-star-on-earth",
+      "videoId": "6zrtuhSsLgA",
+      "targetDay": "2026-10-14",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
+          "at": "2026-10-14T11:41:36.712Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre-render readiness PUBLISH 87",
+          "at": "2026-10-14T11:41:36.712Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-14T11:42:24.513Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "Microsoft Edge neural TTS (claim-timed)",
+          "at": "2026-10-14T11:42:24.514Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-14T11:42:24.514Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "validations passed",
+          "at": "2026-10-14T11:42:24.595Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "6zrtuhSsLgA",
+          "at": "2026-10-14T11:42:29.827Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-14T18:00:00.000Z",
+          "at": "2026-10-14T11:42:29.827Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-14T18:00:00.000Z",
+          "at": "2026-10-14T11:42:29.828Z"
         }
       }
     },
     {
       "channel": "critical-thread",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
+      "outcome": "NO_TOPIC",
+      "category": "CONTENT_BLOCKED",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "before production slot 10:00 Europe/Istanbul",
+      "reason": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
       "slug": null,
       "videoId": null,
-      "targetDay": null,
+      "targetDay": "2026-10-14",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "failed",
+          "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
+          "at": "2026-10-14T11:42:34.697Z"
         },
         "SCRIPT": {
           "status": "not-reached"

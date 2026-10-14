@@ -1,10 +1,10 @@
 # Growth dashboard
 
-Generated 2026-10-13T21:23:41.315Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-10-14T11:42:58.141Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
-**Shorts health** — last published 2026-10-13T18:00:00.000Z · 22 published · inventory A84/B150/C61/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-14T18:00:00.000Z · 23 published · inventory A77/B156/C61/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
@@ -12,7 +12,7 @@ Generated 2026-10-13T21:23:41.315Z. Per-channel baselines are computed separatel
 
 **Content clusters** — 12 · integrity OK
 
-**Growth / subscriber conversion** — tracked 23 · subs/1k Shorts 1.56 · subs/1k long n/a
+**Growth / subscriber conversion** — tracked 24 · subs/1k Shorts 1.56 · subs/1k long n/a
 
 **Learning** — Shorts adaptive (n=22, adopted 0) · Long-form heuristics-only (n=0)
 
@@ -24,7 +24,7 @@ Generated 2026-10-13T21:23:41.315Z. Per-channel baselines are computed separatel
 - munich-1958 (C): VideoPotential 85 in experimental band 58–71; sources 41 < 62
 - castle-bravo-1954 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
 - skylab-1973 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
-- boston-molasses-1919 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
+- eastland-1915 (C): VideoPotential 82 in experimental band 58–71; sources 41 < 62
 
 **Recent alerts**
 
@@ -35,15 +35,15 @@ Generated 2026-10-13T21:23:41.315Z. Per-channel baselines are computed separatel
 
 ## ImpossibleBrief
 
-**Shorts health** — last published 2026-10-13T18:00:00.000Z · 13 published · inventory A121/B19/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-14T18:00:00.000Z · 14 published · inventory A122/B17/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — what-if-synthetic-fertilizer-disappeared 83/A, what-if-coral-reefs-disappeared 82/A, what-if-all-fungi-disappeared 82/A, what-if-gps-went-dark-for-a-day 82/A, what-if-olympus-mons-stood-on-earth 81/A
+**Long-form backlog** — what-if-all-fungi-disappeared 82/A, what-if-synthetic-fertilizer-disappeared 82/A, what-if-gps-went-dark-for-a-day 82/A, what-if-olympus-mons-stood-on-earth 81/A, what-if-earth-had-rings-like-saturn 81/A
 
 **Content clusters** — 7 · integrity OK
 
-**Growth / subscriber conversion** — tracked 12 · subs/1k Shorts 0 · subs/1k long n/a
+**Growth / subscriber conversion** — tracked 13 · subs/1k Shorts 0 · subs/1k long n/a
 
 **Learning** — Shorts adaptive (n=11, adopted 0) · Long-form heuristics-only (n=0)
 
@@ -53,9 +53,9 @@ Generated 2026-10-13T21:23:41.315Z. Per-channel baselines are computed separatel
 
 - what-if-human-heat-tolerance-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - could-we-function-with-half-human-heat-tolerance (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
-- would-doubling-all-synthetic-fertilizers-help-or-harm-us (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - what-if-human-muscle-efficiency-doubled-overnight (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
 - what-if-the-brain-s-energy-use-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
+- would-doubling-all-synthetic-fertilizers-help-or-harm-us (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 
 **Recent alerts**
 
@@ -91,6 +91,7 @@ Generated 2026-10-13T21:23:41.315Z. Per-channel baselines are computed separatel
 - 2026-10-10 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content
 - 2026-10-11 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content
 - 2026-10-12 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [7 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]
+- 2026-10-14 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]
 
 ## Cross-channel infrastructure
 
