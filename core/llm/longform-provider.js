@@ -162,7 +162,21 @@ function parseJsonText(text, provider, stage) {
   catch (error) { throw new LongformProviderError("INVALID_JSON", `${provider} returned invalid JSON`, { provider, stage }); }
 }
 
+// Client-side JSON (input.clientJson). Groq's server-side JSON mode (response_format json_object)
+// rejects some valid research generations with HTTP 400 json_validate_failed before the caller can
+// inspect them (CriticalThread dry run 2026-10-13: 3 of 3 topics). With clientJson the request
+// leaves JSON mode off, states the output contract in the system prompt, hides reasoning, and the
+// reply is parsed and schema-checked here (input.validateJson). Malformed or incomplete replies
+// are retried a bounded number of times (withRetry) and are never returned to the caller.
+const CLIENT_JSON_CONTRACT = "\n\nOUTPUT CONTRACT: Return exactly one valid JSON object and nothing else. Use double-quoted property names and strings. Do not use markdown fences, comments, trailing commas, NaN, Infinity, or text before/after the JSON object.";
+
+function jsonRetryable(error) {
+  return error.code === "INVALID_JSON" || error.code === "INVALID_SCHEMA"
+    || (error.code === "REQUEST" && error.status === 400 && error.providerCode === "json_validate_failed");
+}
+
 async function groq(input, dependencies = {}) {
+  if (input.clientJson) input = { ...input, system: `${input.system}${CLIENT_JSON_CONTRACT}` };
   const rawFetch = dependencies.fetch || globalThis.fetch;
   if (typeof rawFetch !== "function") throw new LongformProviderError("RUNTIME", "fetch is unavailable for Groq", { provider: "groq", stage: input.stage });
   const sent = { size: {}, timedOut: false };
@@ -178,6 +192,7 @@ async function groq(input, dependencies = {}) {
         response_format: { type: "json_object" },
         temperature: 0.25,
         max_completion_tokens: input.maxTokens || 4096,
+        ...(input.clientJson ? { response_format: undefined, reasoning_format: "hidden", ...(input.jsonRecovery ? { temperature: 0 } : {}) } : {}),
       }),
     });
   } catch (error) {
@@ -190,6 +205,10 @@ async function groq(input, dependencies = {}) {
   catch (error) { throw new LongformProviderError("INVALID_RESPONSE", "groq returned an unreadable response", { provider: "groq", stage: input.stage }); }
   const message = body && body.choices && body.choices[0] && body.choices[0].message;
   const json = parseJsonText(message && message.content, "groq", input.stage);
+  if (input.clientJson && typeof input.validateJson === "function") {
+    const problems = [].concat(input.validateJson(json) || []).filter(Boolean);
+    if (problems.length) throw new LongformProviderError("INVALID_SCHEMA", `groq JSON is missing required content: ${problems.slice(0, 4).join("; ")}`.slice(0, 300), { provider: "groq", stage: input.stage });
+  }
   return {
     json,
     provider: "groq",
@@ -247,6 +266,12 @@ async function withRetry(spec, input, dependencies = {}, onEvent = () => {}) {
       return result;
     } catch (error) {
       const safe = error instanceof LongformProviderError ? error : new LongformProviderError("UNKNOWN", `${spec.name} long-form request failed`, { provider: spec.name, stage: input.stage });
+      // Client-side JSON: a malformed, incomplete or server-rejected JSON reply is retried (bounded by
+      // the same attempt limit) at temperature 0; it is never passed on.
+      if (input.clientJson && jsonRetryable(safe)) {
+        safe.retryable = true; safe.defer = false; safe.retryClass = "retry";
+        input = { ...input, jsonRecovery: true };
+      }
       onEvent({ event: safe.defer ? "deferred" : "failed", provider: spec.name, model: spec.model, stage: input.stage, attempt: attempt + 1, code: safe.code, status: safe.status, retryable: safe.retryable, retryAfterMs: safe.retryAfterMs,
         retryClass: safe.retryClass, providerCode: safe.providerCode, providerMessage: safe.providerMessage, requestBytes: safe.requestBytes, estimatedTokens: safe.estimatedTokens });
       if (!safe.retryable || attempt + 1 >= attempts) throw safe;
@@ -276,6 +301,6 @@ async function generateJson(input, options = {}) {
 
 module.exports = {
   LongformProviderError, envValue, providerSpec, configuration, available, retryAfterMs, classifyHttp, sanitizeDetail, describeError,
-  groqErrorDetail, instrumentedFetch,
+  groqErrorDetail, instrumentedFetch, jsonRetryable, CLIENT_JSON_CONTRACT,
   parseJsonText, groq, anthropic, delayFor, withRetry, generateJson,
 };
