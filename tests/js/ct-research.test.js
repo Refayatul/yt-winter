@@ -168,3 +168,42 @@ test("an event record is researched from the event's article, not a loose match 
   const docs = await Research.articles(topic, get);
   assert.deepEqual(docs.map((doc) => doc.title), ["2008 Chinese milk scandal"]);
 });
+
+test("CT-437: a curated research target finds IPv4 address exhaustion; an irrelevant target is ignored", async () => {
+  // 2026-10-12 and 10-13 dry runs: "ran out of numbers" searched to generic Internet Protocol pages
+  // and the record was NOT_ANSWERABLE. The target is a search hint only; it must still match the
+  // record's own words, and everything it yields passes the same evidence checks.
+  const record = { id: "CT-437", canonicalTopic: "internet protocol standardization",
+    coreQuestion: "What happened when the internet's original address system ran out of numbers?",
+    openingLine: "Why the internet's 4.3 billion addresses ran out.", secondBeat: "IPv4 was designed long before phones and smart devices." };
+  const PAGES = {
+    "IPv4 address exhaustion": "IPv4 address exhaustion is the depletion of the pool of unallocated IPv4 addresses. Because the original Internet architecture had fewer than 4.3 billion addresses available, depletion has been anticipated since the late 1980s. " + "x".repeat(600),
+    "Internet Protocol": "The Internet Protocol is the network layer communications protocol in the Internet protocol suite for relaying datagrams across network boundaries. " + "x".repeat(600),
+    "Banana": "The banana is an elongated, edible fruit produced by several kinds of large herbaceous flowering plants. " + "x".repeat(600),
+  };
+  const requested = [];
+  const get = async (url) => {
+    const params = new URL(url).searchParams;
+    requested.push(params.get("titles") || params.get("gsrsearch") || params.get("srsearch"));
+    if (params.get("generator") === "search") return { body: { query: { pages: { 0: { title: "Internet Protocol", extract: PAGES["Internet Protocol"] } } } } };
+    if (params.get("list") === "search") return { body: { query: { search: [{ title: "Internet Protocol" }] } } };
+    const title = params.get("titles");
+    return { body: { query: { pages: { 1: PAGES[title] ? { title, extract: PAGES[title] } : { title, missing: "" } } } } };
+  };
+  const without = await Research.articles(record, get);
+  assert.ok(!without.some((doc) => doc.title === "IPv4 address exhaustion"), "without a target the event article is not found");
+  const docs = await Research.articles({ ...record, researchTargets: ["IPv4 address exhaustion"] }, get);
+  assert.equal(docs[0].title, "IPv4 address exhaustion");
+  assert.equal(requested.filter((item) => item === "IPv4 address exhaustion").length >= 1, true);
+  const irrelevant = await Research.articles({ ...record, researchTargets: ["Banana"] }, get);
+  assert.ok(!irrelevant.some((doc) => doc.title === "Banana"), "a target that does not match the record's words is not used");
+});
+
+test("CT-437 carries its research target; no record gains scores, buckets or qualification from it", () => {
+  const universe = JSON.parse(require("node:fs").readFileSync(require("node:path").join(__dirname, "..", "..", "channels", "critical-thread", "topics", "topic-universe.json"), "utf8"));
+  const records = universe.topics || universe.records;
+  const ct437 = records.find((record) => record.id === "CT-437");
+  assert.deepEqual(ct437.researchTargets, ["IPv4 address exhaustion"]);
+  assert.deepEqual(records.filter((record) => record.researchTargets).map((record) => record.id), ["CT-437"]);
+  assert.match(require("node:fs").readFileSync(require("node:path").join(__dirname, "..", "..", "scripts", "ct-research.js"), "utf8"), /score: score > 0 \? score \+ 1000 : 0/, "a target only ranks first when its introduction matches the record");
+});
