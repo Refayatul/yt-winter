@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14T18:42:43.332Z",
+  "generatedAt": "2026-10-14T19:30:49.469Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -26,11 +26,11 @@
           "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
         },
         "baseline": {
-          "n": 22,
-          "views": 928,
+          "n": 23,
+          "views": 573,
           "averagePercentageViewed": 70.55,
           "subscribersPer1000Views": 1.56,
-          "engagementPer1000Views": 24.19,
+          "engagementPer1000Views": 22.64,
           "watchHoursPer1000Views": 2.56
         }
       },
@@ -95,33 +95,33 @@
         "backlog": [
           {
             "slug": "challenger-1986",
-            "LongFormPotentialScore": 84,
+            "LongFormPotentialScore": 85,
             "bucket": "A",
-            "mode": "A_LONG_FIRST"
+            "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
             "slug": "air-france-447-2009",
-            "LongFormPotentialScore": 83,
+            "LongFormPotentialScore": 84,
             "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "chernobyl-1986",
-            "LongFormPotentialScore": 83,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
+            "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
             "slug": "columbia-2003",
-            "LongFormPotentialScore": 83,
+            "LongFormPotentialScore": 84,
             "bucket": "A",
-            "mode": "A_LONG_FIRST"
+            "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
             "slug": "lahaina-fire-2023",
-            "LongFormPotentialScore": 83,
+            "LongFormPotentialScore": 84,
             "bucket": "A",
-            "mode": "A_LONG_FIRST"
+            "mode": "B_SHORT_PROVES_DEMAND"
+          },
+          {
+            "slug": "laquila-earthquake-2009",
+            "LongFormPotentialScore": 84,
+            "bucket": "A",
+            "mode": "B_SHORT_PROVES_DEMAND"
           }
         ],
         "baseline": {
@@ -159,9 +159,9 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 22,
+          "sampleSize": 23,
           "adopted": 0,
-          "hypotheses": 11
+          "hypotheses": 9
         },
         "longform": {
           "status": "heuristics-only",
@@ -177,14 +177,14 @@
           "reason": "VideoPotential 86 in experimental band 58–71; sources 41 < 62"
         },
         {
-          "slug": "castle-bravo-1954",
+          "slug": "munich-1958",
           "bucket": "C",
           "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
         },
         {
-          "slug": "munich-1958",
+          "slug": "castle-bravo-1954",
           "bucket": "C",
-          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "skylab-1973",
@@ -193,11 +193,6 @@
         },
         {
           "slug": "b2-guam-2008",
-          "bucket": "C",
-          "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
-        },
-        {
-          "slug": "controlled-impact-1984",
           "bucket": "C",
           "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
         },
@@ -218,6 +213,11 @@
         },
         {
           "slug": "uss-forrestal-1967",
+          "bucket": "C",
+          "reason": "VideoPotential 81 in experimental band 58–71; sources 41 < 62"
+        },
+        {
+          "slug": "vanguard-1957",
           "bucket": "C",
           "reason": "VideoPotential 81 in experimental band 58–71; sources 41 < 62"
         }
@@ -328,8 +328,8 @@
         "lastPublished": "2026-10-14T18:00:00.000Z",
         "published": 14,
         "inventory": {
-          "A": 118,
-          "B": 21,
+          "A": 122,
+          "B": 17,
           "C": 140,
           "D": 206
         },
@@ -345,11 +345,11 @@
           "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
         },
         "baseline": {
-          "n": 11,
+          "n": 12,
           "views": 610,
           "averagePercentageViewed": 74.45,
           "subscribersPer1000Views": 0,
-          "engagementPer1000Views": 20.1,
+          "engagementPer1000Views": 20.51,
           "watchHoursPer1000Views": 3.01
         }
       },
@@ -411,20 +411,14 @@
         "episodes": 0,
         "backlog": [
           {
+            "slug": "what-if-we-mined-a-metal-asteroid",
+            "LongFormPotentialScore": 82,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
             "slug": "what-if-synthetic-fertilizer-disappeared",
             "LongFormPotentialScore": 82,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-gps-went-dark-for-a-day",
-            "LongFormPotentialScore": 82,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-olympus-mons-stood-on-earth",
-            "LongFormPotentialScore": 81,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
           },
@@ -436,6 +430,12 @@
           },
           {
             "slug": "what-if-we-swam-in-europas-ocean",
+            "LongFormPotentialScore": 81,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-you-visited-io-the-volcano-moon",
             "LongFormPotentialScore": 81,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
@@ -476,9 +476,9 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 11,
+          "sampleSize": 12,
           "adopted": 0,
-          "hypotheses": 7
+          "hypotheses": 10
         },
         "longform": {
           "status": "heuristics-only",
@@ -491,7 +491,7 @@
         {
           "slug": "what-if-human-heat-tolerance-doubled-overnight",
           "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "could-we-function-with-half-human-heat-tolerance",
@@ -499,29 +499,29 @@
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
+          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
+          "bucket": "C",
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
+          "slug": "would-doubling-all-synthetic-fertilizers-help-or-harm-us",
+          "bucket": "C",
+          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
           "slug": "what-if-the-brain-s-energy-use-doubled-overnight",
           "bucket": "C",
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
+          "slug": "if-a-rogue-planet-vanished-right-now-what-would-change-first",
           "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
-          "slug": "would-doubling-all-synthetic-fertilizers-help-or-harm-us",
-          "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 73 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "what-happens-if-the-global-ocean-doubles",
           "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
-          "slug": "what-breaks-first-if-all-synthetic-fertilizers-is-cut-in-half",
-          "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "what-happens-if-all-synthetic-fertilizers-stops-for-one-day",
@@ -529,14 +529,14 @@
           "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "would-doubling-global-pollination-help-or-harm-us",
+          "slug": "could-we-function-with-half-human-muscle-efficiency",
           "bucket": "C",
           "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "could-we-function-with-half-human-muscle-efficiency",
+          "slug": "could-commercial-fusion-power-scale-worldwide-in-ten-years",
           "bucket": "C",
-          "reason": "VideoPotential 68 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.67"
         }
       ],
       "alerts": [
