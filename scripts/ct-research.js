@@ -169,6 +169,25 @@ const FIGURE = /\b\d[\d,.]*\b/g;
 const MAX_SPOKEN_FIGURES = 3;
 
 // Upgrade in place: same slug and id, so used-topic and duplicate tracking stay intact.
+// Structural check of a research reply before it is used (core/llm/longform-provider.js retries a
+// reply that fails it). It checks shape only; every fact, quote, number and source is still
+// verified by toRecord, Shared.narrationSupport and the builder.
+function draftProblems(draft) {
+  const problems = [];
+  const text = (value) => typeof value === "string" && value.trim().length > 0;
+  if (!draft || typeof draft !== "object" || Array.isArray(draft)) return ["reply is not a JSON object"];
+  if (draft.answerable === false) return text(draft.reason) ? [] : ["answerable:false without a reason"];
+  if (draft.answerable !== true) return ["answerable must be true or false"];
+  for (const field of ["openingLine", "dependency", "mechanism", "bottleneck", "failureConsequence", "resilience"]) if (!text(draft[field])) problems.push(`missing ${field}`);
+  const facts = Array.isArray(draft.facts) ? draft.facts : [];
+  if (!facts.length) problems.push("no facts");
+  if (facts.some((fact) => !fact || !text(fact.id) || !text(fact.claim) || !text(fact.quote) || !text(fact.sourceId))) problems.push("a fact lacks id, claim, quote or sourceId");
+  const narration = Array.isArray(draft.narration) ? draft.narration : [];
+  if (!narration.length) problems.push("no narration");
+  if (narration.some((line) => !line || !text(line.text) || !Array.isArray(line.facts))) problems.push("a narration line lacks text or facts");
+  return problems;
+}
+
 function toRecord(topic, draft, sources) {
   if (!draft || draft.answerable !== true) return { skip: (draft && draft.reason) || "provider returned no answer" };
   const sourceById = new Map(sources.map((source, index) => [`S${index + 1}`, source]));
@@ -228,7 +247,7 @@ async function researchOne(topic, deps) {
     sources: sources.map((source, index) => ({ id: `S${index + 1}`, title: source.title, excerpt: source.text })) };
   let feedback = null;
   for (let round = 0; round < 2; round += 1) {
-    const response = await deps.generate({ stage: "ct-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM,
+    const response = await deps.generate({ stage: "ct-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM, clientJson: true, validateJson: draftProblems,
       user: JSON.stringify(feedback ? { ...user, previous_errors: feedback } : user) });
     const built = toRecord(topic, response.json, sources);
     if (built.skip) return { status: "NOT_ANSWERABLE", reason: String(built.skip).slice(0, 200) };
@@ -326,4 +345,4 @@ async function main(argv = process.argv.slice(2), deps = {}) {
 
 if (require.main === module) main().catch((error) => { console.error(error.message); process.exitCode = 1; });
 
-module.exports = { freeProviderOnly, relevantArticle, articles, primaryLinks, toRecord, strongestHook, researchOne, writeQualified, main, SYSTEM, ROLES };
+module.exports = { draftProblems, freeProviderOnly, relevantArticle, articles, primaryLinks, toRecord, strongestHook, researchOne, writeQualified, main, SYSTEM, ROLES };
