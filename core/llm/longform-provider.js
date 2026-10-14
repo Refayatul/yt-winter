@@ -20,7 +20,35 @@ class LongformProviderError extends Error {
     this.defer = !!options.defer;
     this.retryAfterMs = options.retryAfterMs || null;
     this.stage = options.stage || null;
+    // Diagnostics (sanitized; never the key, the prompt or request headers).
+    this.retryClass = this.defer ? "defer" : this.retryable ? "retry" : "fail";
+    this.providerCode = options.providerCode || null;
+    this.providerMessage = options.providerMessage || null;
+    this.requestBytes = options.requestBytes ?? null;
+    this.estimatedTokens = options.estimatedTokens ?? null;
   }
+}
+
+// Provider error text can quote what was sent. Keep it short and strip anything key-like.
+function sanitizeDetail(value, limit = 240) {
+  return String(value == null ? "" : value)
+    .replace(/\b(?:gsk|sk|sk-ant|xai|key)[-_][A-Za-z0-9_-]{8,}/gi, "[redacted]")
+    .replace(/\bBearer\s+\S+/gi, "Bearer [redacted]")
+    .replace(/[\x00-\x1f\x7f]+/g, " ")
+    .trim()
+    .slice(0, limit);
+}
+
+// One-line, log-safe summary of a provider failure.
+function describeError(error) {
+  if (!error) return "UNKNOWN";
+  const parts = [error.code || "UNKNOWN"];
+  if (error.status) parts.push(`HTTP ${error.status}`);
+  if (error.providerCode) parts.push(`provider ${error.providerCode}`);
+  if (error.estimatedTokens != null) parts.push(`~${error.estimatedTokens} input tokens (${error.requestBytes} bytes)`);
+  if (error.stage) parts.push(`stage ${error.stage}`);
+  if (error.retryClass) parts.push(error.retryClass);
+  return parts.join(" · ") + (error.providerMessage ? ` — ${error.providerMessage}` : "");
 }
 
 function envValue(name) {
@@ -78,11 +106,51 @@ function retryAfterMs(headers) {
   return Number.isFinite(at) ? Math.max(0, at - Date.now()) : null;
 }
 
-function classifyHttp(provider, status, headers, stage) {
-  if (status === 429) return new LongformProviderError("RATE_LIMIT", `${provider} rate limit reached; long-form generation deferred`, { provider, status, stage, retryable: true, defer: true, retryAfterMs: retryAfterMs(headers) });
-  if (status === 401 || status === 403) return new LongformProviderError("AUTH", `${provider} authentication failed`, { provider, status, stage });
-  if (status === 408 || status === 409 || status === 425 || status >= 500) return new LongformProviderError("TRANSIENT", `${provider} temporarily unavailable (HTTP ${status})`, { provider, status, stage, retryable: true, defer: true, retryAfterMs: retryAfterMs(headers) });
-  return new LongformProviderError("REQUEST", `${provider} request failed (HTTP ${status})`, { provider, status, stage });
+function classifyHttp(provider, status, headers, stage, detail = {}) {
+  if (status === 429) return new LongformProviderError("RATE_LIMIT", `${provider} rate limit reached; long-form generation deferred`, { provider, status, stage, retryable: true, defer: true, retryAfterMs: retryAfterMs(headers), ...detail });
+  if (status === 401 || status === 403) return new LongformProviderError("AUTH", `${provider} authentication failed`, { provider, status, stage, ...detail });
+  if (status === 408 || status === 409 || status === 425 || status >= 500) return new LongformProviderError("TRANSIENT", `${provider} temporarily unavailable (HTTP ${status})`, { provider, status, stage, retryable: true, defer: true, retryAfterMs: retryAfterMs(headers), ...detail });
+  // The prompt itself is too big for the model's per-request/per-minute token limit: retrying the
+  // same request cannot succeed, so it fails (the caller must send less).
+  if (status === 413) return new LongformProviderError("REQUEST_TOO_LARGE", `${provider} request too large (HTTP 413)`, { provider, status, stage, ...detail });
+  return new LongformProviderError("REQUEST", `${provider} request failed (HTTP ${status})`, { provider, status, stage, ...detail });
+}
+
+// Groq error bodies are { error: { message, type, code } }. Only the code and a sanitized,
+// truncated message are kept (failed_generation and any echoed content are dropped).
+async function groqErrorDetail(response) {
+  let raw = "";
+  try { raw = await response.text(); } catch (error) { return {}; }
+  let parsed = null;
+  try { parsed = JSON.parse(raw); } catch (error) { /* plain-text error */ }
+  const error = parsed && parsed.error && typeof parsed.error === "object" ? parsed.error : null;
+  return {
+    providerCode: sanitizeDetail(error ? error.code || error.type || "" : "", 60) || null,
+    providerMessage: sanitizeDetail(error ? error.message : parsed ? "" : raw) || null,
+  };
+}
+
+async function groqHttpError(response, input, sent) {
+  const detail = await groqErrorDetail(response);
+  return classifyHttp("groq", response.status, response.headers, input.stage, { ...detail, ...sent.size });
+}
+
+// Wraps fetch: measures the request (bytes, ~4 bytes per token) and enforces a timeout, so a
+// stalled provider cannot hold a job until its workflow timeout.
+function instrumentedFetch(fetchImpl, sent, timeoutMs) {
+  return async (url, init = {}) => {
+    const bytes = Buffer.byteLength(String(init.body || ""), "utf8");
+    sent.size = { requestBytes: bytes, estimatedTokens: Math.ceil(bytes / 4) };
+    const controller = typeof AbortController === "function" ? new AbortController() : null;
+    const timer = controller && timeoutMs > 0 ? setTimeout(() => { sent.timedOut = true; controller.abort(); }, timeoutMs) : null;
+    try { return await fetchImpl(url, controller ? { ...init, signal: controller.signal } : init); }
+    finally { if (timer) clearTimeout(timer); }
+  };
+}
+
+function requestTimeoutMs() {
+  const configured = Number(envValue("LONGFORM_LLM_TIMEOUT_MS"));
+  return Number.isFinite(configured) && configured >= 1000 ? configured : 120000;
 }
 
 function parseJsonText(text, provider, stage) {
@@ -95,8 +163,10 @@ function parseJsonText(text, provider, stage) {
 }
 
 async function groq(input, dependencies = {}) {
-  const fetchImpl = dependencies.fetch || globalThis.fetch;
-  if (typeof fetchImpl !== "function") throw new LongformProviderError("RUNTIME", "fetch is unavailable for Groq", { provider: "groq", stage: input.stage });
+  const rawFetch = dependencies.fetch || globalThis.fetch;
+  if (typeof rawFetch !== "function") throw new LongformProviderError("RUNTIME", "fetch is unavailable for Groq", { provider: "groq", stage: input.stage });
+  const sent = { size: {}, timedOut: false };
+  const fetchImpl = instrumentedFetch(rawFetch, sent, dependencies.timeoutMs || requestTimeoutMs());
   let response;
   try {
     response = await fetchImpl("https://api.groq.com/openai/v1/chat/completions", {
@@ -111,9 +181,10 @@ async function groq(input, dependencies = {}) {
       }),
     });
   } catch (error) {
-    throw new LongformProviderError("NETWORK", "groq network request failed; long-form generation deferred", { provider: "groq", stage: input.stage, retryable: true, defer: true });
+    if (sent.timedOut) throw new LongformProviderError("TIMEOUT", "groq request timed out; long-form generation deferred", { provider: "groq", stage: input.stage, retryable: true, defer: true, ...sent.size });
+    throw new LongformProviderError("NETWORK", "groq network request failed; long-form generation deferred", { provider: "groq", stage: input.stage, retryable: true, defer: true, ...sent.size });
   }
-  if (!response.ok) throw classifyHttp("groq", response.status, response.headers, input.stage);
+  if (!response.ok) throw await groqHttpError(response, input, sent);
   let body;
   try { body = await response.json(); }
   catch (error) { throw new LongformProviderError("INVALID_RESPONSE", "groq returned an unreadable response", { provider: "groq", stage: input.stage }); }
@@ -176,7 +247,8 @@ async function withRetry(spec, input, dependencies = {}, onEvent = () => {}) {
       return result;
     } catch (error) {
       const safe = error instanceof LongformProviderError ? error : new LongformProviderError("UNKNOWN", `${spec.name} long-form request failed`, { provider: spec.name, stage: input.stage });
-      onEvent({ event: safe.defer ? "deferred" : "failed", provider: spec.name, model: spec.model, stage: input.stage, attempt: attempt + 1, code: safe.code, status: safe.status, retryable: safe.retryable, retryAfterMs: safe.retryAfterMs });
+      onEvent({ event: safe.defer ? "deferred" : "failed", provider: spec.name, model: spec.model, stage: input.stage, attempt: attempt + 1, code: safe.code, status: safe.status, retryable: safe.retryable, retryAfterMs: safe.retryAfterMs,
+        retryClass: safe.retryClass, providerCode: safe.providerCode, providerMessage: safe.providerMessage, requestBytes: safe.requestBytes, estimatedTokens: safe.estimatedTokens });
       if (!safe.retryable || attempt + 1 >= attempts) throw safe;
       const delay = delayFor(safe, attempt);
       onEvent({ event: "retry_scheduled", provider: spec.name, model: spec.model, stage: input.stage, attempt: attempt + 2, delayMs: delay, code: safe.code });
@@ -203,6 +275,7 @@ async function generateJson(input, options = {}) {
 }
 
 module.exports = {
-  LongformProviderError, envValue, providerSpec, configuration, available, retryAfterMs, classifyHttp,
+  LongformProviderError, envValue, providerSpec, configuration, available, retryAfterMs, classifyHttp, sanitizeDetail, describeError,
+  groqErrorDetail, instrumentedFetch,
   parseJsonText, groq, anthropic, delayFor, withRetry, generateJson,
 };
