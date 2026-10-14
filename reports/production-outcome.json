@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-14T19:30:53.261Z",
-  "runId": "38624103419",
+  "at": "2026-10-14T20:21:18.897Z",
+  "runId": "38630540480",
   "rows": [
     {
       "channel": "failure-reconstructed",
@@ -94,12 +94,12 @@
     },
     {
       "channel": "critical-thread",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
+      "outcome": "FAILED",
+      "category": "AWAITING_APPROVAL",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "production window closed at 21:00 Europe/Istanbul minus 60 min",
+      "reason": "health pre-flight: nitelikli-konu: kalite çubuğunu geçen konu yok — NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]; seslendirme: NARRATION_UNAVAILABLE: Edge sesi reddedildi (timeout, Edge TTS WebSocket error: Unexpected server respon",
       "slug": null,
       "videoId": null,
       "targetDay": null,
