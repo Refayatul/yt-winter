@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-14T13:51:41.179Z
+Generated: 2026-10-14T14:35:48.534Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -22,9 +22,9 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | TikTok today | NOT_SENT |
 | TikTok backlog | 13 |
 | Analytics warehouse | through 2026-10-12 (lag 2 d) |
-| Ops (24 h) | analytics.load 2, publish.success 2, publish.scheduled_verified 2, growth.decision 2, publish.public 1 |
+| Ops (24 h) | publish.public 1, publish.success 1, publish.scheduled_verified 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-14 (0 d) |
-| API quota today | 1649 / 9800 units (project 1012165386949) |
+| API quota today | 1656 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 26/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
@@ -43,9 +43,9 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Ready topic backlog | 479 |
 | Errors/review/blocks | 6 |
 | Analytics warehouse | through 2026-10-12 (lag 2 d) |
-| Ops (24 h) | analytics.load 2, publish.success 2, publish.scheduled_verified 2, growth.decision 2, publish.public 1 |
+| Ops (24 h) | publish.public 1, publish.success 1, publish.scheduled_verified 1, growth.decision 1, analytics.load 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-14 (0 d) |
-| API quota today | 1654 / 9800 units (project 684098966511) |
+| API quota today | 1662 / 9800 units (project 684098966511) |
 | YPP readiness (estimate) | subs 10/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
@@ -64,8 +64,8 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 | Ready topic backlog | 512 |
 | Errors/review/blocks | 2 |
 | Analytics warehouse | through 2026-10-12 (lag 2 d) · 1 table error(s) |
-| Ops (24 h) | analytics.load 1, publish.success 1, publish.scheduled_verified 1, growth.decision 1, publish.public 1, analytics.partial 1 |
+| Ops (24 h) | publish.public 1, analytics.partial 1 |
 | Scheduler queue | 2 queued, oldest 2026-10-14 (0 d) |
-| API quota today | 43 / 9800 units (project 208987599838) |
+| API quota today | 50 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
