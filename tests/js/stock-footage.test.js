@@ -70,7 +70,7 @@ test("stock footage: search authenticates only against the API, skips dark clips
       if (url.startsWith(Stock.API)) return { status: 200, body: JSON.stringify({ videos: [video(11, "tunnel-entrance-at-night"), video(12, "traffic-in-a-road-tunnel"), video(13, "man-in-a-tunnel")] }) };
       return { status: 200, body: Buffer.from("mp4") };
     };
-    const clips = await Stock.search(tunnel, directory, "KEY", { get, brightness: (file) => (file.includes("11") ? 12 : 90) });
+    const clips = await Stock.search(tunnel, directory, "KEY", { get, brightness: (file) => (path.basename(file) === "pexels-11.mp4" ? 12 : 90) });
     assert.deepEqual(clips.map((clip) => clip.id), [12], "dark #11 and people #13 are skipped");
     assert.equal(clips[0].licence, "Pexels License");
     assert.match(clips[0].sourceUrl, /pexels\.com\/video\/traffic-in-a-road-tunnel-12/);
