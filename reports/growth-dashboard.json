@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14T17:21:58.399Z",
+  "generatedAt": "2026-10-14T18:05:06.351Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -9,9 +9,9 @@
         "lastPublished": "2026-10-14T18:00:00.000Z",
         "published": 23,
         "inventory": {
-          "A": 78,
-          "B": 156,
-          "C": 60,
+          "A": 75,
+          "B": 158,
+          "C": 61,
           "D": 59
         },
         "durableInventory": {
@@ -28,7 +28,7 @@
         "baseline": {
           "n": 22,
           "views": 928,
-          "averagePercentageViewed": 65.29,
+          "averagePercentageViewed": 70.55,
           "subscribersPer1000Views": 1.56,
           "engagementPer1000Views": 24.19,
           "watchHoursPer1000Views": 2.56
@@ -106,12 +106,6 @@
             "mode": "A_LONG_FIRST"
           },
           {
-            "slug": "armero-1985",
-            "LongFormPotentialScore": 83,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
             "slug": "chernobyl-1986",
             "LongFormPotentialScore": 83,
             "bucket": "A",
@@ -119,6 +113,12 @@
           },
           {
             "slug": "columbia-2003",
+            "LongFormPotentialScore": 83,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "lahaina-fire-2023",
             "LongFormPotentialScore": 83,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
@@ -161,7 +161,7 @@
           "status": "adaptive",
           "sampleSize": 22,
           "adopted": 0,
-          "hypotheses": 10
+          "hypotheses": 11
         },
         "longform": {
           "status": "heuristics-only",
@@ -177,24 +177,19 @@
           "reason": "VideoPotential 86 in experimental band 58–71; sources 41 < 62"
         },
         {
-          "slug": "munich-1958",
+          "slug": "castle-bravo-1954",
           "bucket": "C",
-          "reason": "VideoPotential 85 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
         },
         {
-          "slug": "castle-bravo-1954",
+          "slug": "munich-1958",
           "bucket": "C",
           "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "skylab-1973",
           "bucket": "C",
-          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
-        },
-        {
-          "slug": "eastland-1915",
-          "bucket": "C",
-          "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "b2-guam-2008",
@@ -203,6 +198,11 @@
         },
         {
           "slug": "controlled-impact-1984",
+          "bucket": "C",
+          "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
+        },
+        {
+          "slug": "eastland-1915",
           "bucket": "C",
           "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
         },
@@ -219,7 +219,7 @@
         {
           "slug": "uss-forrestal-1967",
           "bucket": "C",
-          "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 81 in experimental band 58–71; sources 41 < 62"
         }
       ],
       "alerts": [
@@ -328,8 +328,8 @@
         "lastPublished": "2026-10-14T18:00:00.000Z",
         "published": 14,
         "inventory": {
-          "A": 117,
-          "B": 22,
+          "A": 118,
+          "B": 21,
           "C": 140,
           "D": 206
         },
@@ -347,7 +347,7 @@
         "baseline": {
           "n": 11,
           "views": 610,
-          "averagePercentageViewed": 69.31,
+          "averagePercentageViewed": 74.45,
           "subscribersPer1000Views": 0,
           "engagementPer1000Views": 20.1,
           "watchHoursPer1000Views": 3.01
@@ -411,12 +411,6 @@
         "episodes": 0,
         "backlog": [
           {
-            "slug": "what-if-all-fungi-disappeared",
-            "LongFormPotentialScore": 82,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
             "slug": "what-if-synthetic-fertilizer-disappeared",
             "LongFormPotentialScore": 82,
             "bucket": "A",
@@ -436,6 +430,12 @@
           },
           {
             "slug": "what-if-earth-had-rings-like-saturn",
+            "LongFormPotentialScore": 81,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-we-swam-in-europas-ocean",
             "LongFormPotentialScore": 81,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
@@ -478,7 +478,7 @@
           "status": "adaptive",
           "sampleSize": 11,
           "adopted": 0,
-          "hypotheses": 4
+          "hypotheses": 7
         },
         "longform": {
           "status": "heuristics-only",
@@ -499,14 +499,14 @@
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
-          "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
           "slug": "what-if-the-brain-s-energy-use-doubled-overnight",
           "bucket": "C",
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
+          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
+          "bucket": "C",
+          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "would-doubling-all-synthetic-fertilizers-help-or-harm-us",
@@ -694,12 +694,6 @@
         "episodes": 0,
         "backlog": [
           {
-            "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
-            "LongFormPotentialScore": 79,
-            "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
-          },
-          {
             "slug": "the-critical-role-of-urban-traffic-control-network",
             "LongFormPotentialScore": 79,
             "bucket": "A",
@@ -722,6 +716,12 @@
             "LongFormPotentialScore": 78,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
+            "LongFormPotentialScore": 78,
+            "bucket": "A",
+            "mode": "B_SHORT_PROVES_DEMAND"
           }
         ],
         "baseline": {
@@ -761,7 +761,7 @@
           "status": "observing",
           "sampleSize": 6,
           "adopted": 0,
-          "hypotheses": 4
+          "hypotheses": 2
         },
         "longform": {
           "status": "heuristics-only",

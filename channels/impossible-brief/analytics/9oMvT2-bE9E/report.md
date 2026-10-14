@@ -7,11 +7,21 @@ https://youtu.be/9oMvT2-bE9E
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-12 | 377 | 7 | 1 | — | — |  |
+| 3d | 2026-10-14 | 398 | 7 | 1 | 70.16 | 1 | Shorts feed 87%, Search 11% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 377 views after 1 days — too early/small for rate-based conclusions.
+- **HEALTHY** (low) — No problem pattern detected with available data.
 
 ## Suggested interventions
 
-- INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
+- HEALTHY → no action.
+
+## First major observed retention drop
+
+- Timestamp: 7s; magnitude: 19 percentage points.
+- Active sentence: fuel capsule implosion sequence
+- Visual type: AI-GENERATED VISUAL
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 21.
