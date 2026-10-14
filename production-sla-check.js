@@ -39,9 +39,63 @@ function recordForDate(records, date, timeZone = Calendar.DEFAULT_TIME_ZONE, pub
   return (scheduled.length ? scheduled : produced).sort((a, b) => String(a.tarih || "").localeCompare(String(b.tarih || ""))).pop() || null;
 }
 
-function qualityFor(channel, slug) {
-  if (!slug) return null;
-  return jsonOku(path.join(channel.paths.packages, slug, "quality-gate.json"), null);
+// Final-gate evidence for the package of the day's Short. Two producers write it differently:
+//   - Failure Reconstructed (quality-gate.js): one file with { slug, asama: "final", karar, tarih }.
+//   - ImpossibleBrief / CriticalThread (core/pipeline): quality-gate.json { decision, blockers } plus
+//     the post-render validations.json { channel, slug, topicId, passed, checks } and render.json
+//     { completed }. These carry no "final" marker; the render and validation files are the proof
+//     that the gate was the final, post-render one. Before 2026-10-13 only the first shape was
+//     recognised, so every valid IB/CT package read as "quality not passed" (issues #270, #271).
+function evidenceFor(channel, slug) {
+  if (!slug) return { gate: null, validations: null, render: null };
+  const dir = path.join(channel.paths.packages, slug);
+  return {
+    gate: jsonOku(path.join(dir, "quality-gate.json"), null),
+    validations: jsonOku(path.join(dir, "validations.json"), null),
+    render: jsonOku(path.join(dir, "render.json"), null),
+  };
+}
+
+// A FR final gate must be written before the upload and not long before it (same production run).
+const MAX_GATE_AGE_MS = 48 * 3600 * 1000;
+const MAX_GATE_SKEW_MS = 10 * 60 * 1000;
+
+// Returns { passed, decision, source, reason }. Fails closed: anything missing, malformed,
+// inconsistent, stale or for another channel/topic is "not passed" with the reason. Only an
+// explicit PUBLISH counts; REVIEW and BLOCK never pass (neither may be uploaded).
+function finalQualityVerdict({ channel, record, gate, validations, render, generated }) {
+  const fail = (reason, decision = null, source = null) => ({ passed: false, decision, source, reason });
+  if (!record || !record.slug) return fail("NO_RECORD");
+  if (record.channel && channel && record.channel !== channel) return fail("WRONG_CHANNEL: record belongs to " + record.channel);
+  if (!gate || typeof gate !== "object" || Array.isArray(gate)) return fail("MISSING_GATE");
+  const legacy = gate.karar != null || gate.asama != null;
+  const decision = legacy ? gate.karar : gate.decision;
+  const source = legacy ? "quality-gate.final" : "quality-gate+validations+render";
+  if (typeof decision !== "string") return fail("MALFORMED_GATE: no decision", null, source);
+  if (decision !== "PUBLISH") return fail("GATE_NOT_PUBLISH: " + decision, decision, source);
+  if (record.kalite && record.kalite !== decision) return fail(`EVIDENCE_MISMATCH: uploaded as ${record.kalite}, package says ${decision}`, decision, source);
+  if (legacy) {
+    if (gate.asama !== "final") return fail("NOT_FINAL_GATE: " + (gate.asama || "no stage"), decision, source);
+    if (gate.slug && gate.slug !== record.slug) return fail(`WRONG_TOPIC: gate for ${gate.slug}`, decision, source);
+    const gateAt = Date.parse(gate.tarih || "");
+    const uploadAt = Date.parse(record.tarih || "");
+    if (Number.isNaN(gateAt) || Number.isNaN(uploadAt)) return fail("MALFORMED_GATE: missing gate or upload time", decision, source);
+    if (gateAt - uploadAt > MAX_GATE_SKEW_MS || uploadAt - gateAt > MAX_GATE_AGE_MS) return fail(`STALE_GATE: gate ${gate.tarih}, upload ${record.tarih}`, decision, source);
+    return { passed: true, decision, source, reason: null };
+  }
+  if (!Array.isArray(gate.blockers) || gate.blockers.length) return fail("GATE_BLOCKERS: " + JSON.stringify(gate.blockers ?? null).slice(0, 120), decision, source);
+  if (!validations || typeof validations !== "object") return fail("MISSING_VALIDATIONS", decision, source);
+  if (channel && validations.channel !== channel) return fail(`WRONG_CHANNEL: validations for ${validations.channel}`, decision, source);
+  if (validations.slug !== record.slug) return fail(`WRONG_TOPIC: validations for ${validations.slug}`, decision, source);
+  if (validations.passed !== true || !validations.checks || validations.checks.video !== true || validations.checks.qualityGate !== true) {
+    return fail("VALIDATIONS_FAILED: " + JSON.stringify(validations.failed || []).slice(0, 120), decision, source);
+  }
+  if (!render || render.completed !== true) return fail("RENDER_NOT_COMPLETED", decision, source);
+  const produced = (Array.isArray(generated) ? generated : []).find((item) => item && typeof item === "object" && item.slug === record.slug);
+  if (produced && produced.topicId && validations.topicId && produced.topicId !== validations.topicId) {
+    return fail(`STALE_GATE: validations for topic ${validations.topicId}, produced ${produced.topicId}`, decision, source);
+  }
+  return { passed: true, decision, source, reason: null };
 }
 
 function isoDay(value, timeZone = Calendar.DEFAULT_TIME_ZONE) {
@@ -83,9 +137,9 @@ function evaluateSnapshot(snapshot) {
   const timeZone = snapshot.timeZone || Calendar.DEFAULT_TIME_ZONE;
   const record = recordForDate(snapshot.published, snapshot.date, timeZone, snapshot.publishTimeZone || timeZone);
   const slug = record && record.slug || null;
-  const quality = snapshot.quality || null;
-  const decision = quality && (quality.karar || quality.decision) || record && record.kalite || null;
-  const finalGate = !quality || quality.asama === "final" || quality.stage === "final";
+  const verdict = finalQualityVerdict({ channel: snapshot.channel, record, gate: snapshot.quality || null,
+    validations: snapshot.validations || null, render: snapshot.render || null, generated: snapshot.generated });
+  const decision = verdict.decision;
   const generated = ids(snapshot.generated);
   const produced = !!(slug && (generated.has(slug) || record));
   const remoteTodayVideo = snapshot.remoteTodayVideo || null;
@@ -95,7 +149,7 @@ function evaluateSnapshot(snapshot) {
   const publishTimeZone = snapshot.publishTimeZone || timeZone;
   const scheduled = !!((record && record.publishAt && isoDay(record.publishAt, publishTimeZone) === snapshot.date)
     || (remotePublishAt && isoDay(remotePublishAt, publishTimeZone) === snapshot.date));
-  const qualityPassed = !!(decision && decision !== "BLOCK" && finalGate);
+  const qualityPassed = verdict.passed;
   const notificationExists = !!(videoId && snapshot.notifications && snapshot.notifications["video:" + videoId]);
   const videoIdExists = uploaded && snapshot.remoteVideoExists !== false;
   const youtubeVerified = !!snapshot.youtubeVerified;
@@ -132,6 +186,8 @@ function evaluateSnapshot(snapshot) {
     quality: decision,
     qualityGate: decision,
     qualityPassed,
+    qualityEvidence: verdict.source,
+    qualityReason: verdict.reason,
     notificationExists,
     productionReady,
     youtubeVerified,
@@ -194,7 +250,7 @@ async function check(options = {}) {
     published,
     generated,
     notifications: notificationsState.gonderilen || {},
-    quality: qualityFor(channel, record && record.slug),
+    ...(() => { const evidence = evidenceFor(channel, record && record.slug); return { quality: evidence.gate, validations: evidence.validations, render: evidence.render }; })(),
     remoteVideoExists,
     remoteTodayVideo,
     youtubeVerified,
@@ -262,7 +318,7 @@ async function main(argv = process.argv.slice(2)) {
   return result.healthy ? 0 : 2;
 }
 
-module.exports = { argValue, deadlineAt, recordForDate, youtubeVideoForDate, evaluateSnapshot, check, writeGitHubOutput, main };
+module.exports = { argValue, deadlineAt, recordForDate, finalQualityVerdict, evidenceFor, youtubeVideoForDate, evaluateSnapshot, check, writeGitHubOutput, main };
 
 if (require.main === module) main().then((code) => { process.exitCode = code; }).catch((error) => {
   process.stderr.write(JSON.stringify({ healthy: false, checkerError: String(error.message || error) }) + "\n");
