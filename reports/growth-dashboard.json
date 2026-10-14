@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14T11:42:58.141Z",
+  "generatedAt": "2026-10-14T12:12:57.597Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -9,9 +9,9 @@
         "lastPublished": "2026-10-14T18:00:00.000Z",
         "published": 23,
         "inventory": {
-          "A": 77,
+          "A": 78,
           "B": 156,
-          "C": 61,
+          "C": 60,
           "D": 59
         },
         "durableInventory": {
@@ -106,6 +106,12 @@
             "mode": "A_LONG_FIRST"
           },
           {
+            "slug": "armero-1985",
+            "LongFormPotentialScore": 83,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
             "slug": "chernobyl-1986",
             "LongFormPotentialScore": 83,
             "bucket": "A",
@@ -113,12 +119,6 @@
           },
           {
             "slug": "columbia-2003",
-            "LongFormPotentialScore": 83,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "lahaina-fire-2023",
             "LongFormPotentialScore": 83,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
@@ -328,8 +328,8 @@
         "lastPublished": "2026-10-14T18:00:00.000Z",
         "published": 14,
         "inventory": {
-          "A": 122,
-          "B": 17,
+          "A": 117,
+          "B": 22,
           "C": 140,
           "D": 206
         },
@@ -694,6 +694,12 @@
         "episodes": 0,
         "backlog": [
           {
+            "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
+            "LongFormPotentialScore": 79,
+            "bucket": "A",
+            "mode": "B_SHORT_PROVES_DEMAND"
+          },
+          {
             "slug": "the-critical-role-of-urban-traffic-control-network",
             "LongFormPotentialScore": 79,
             "bucket": "A",
@@ -716,12 +722,6 @@
             "LongFormPotentialScore": 78,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "inside-the-system-built-around-road-tunnel-ventilation-system",
-            "LongFormPotentialScore": 78,
-            "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
           }
         ],
         "baseline": {
@@ -761,7 +761,7 @@
           "status": "observing",
           "sampleSize": 6,
           "adopted": 0,
-          "hypotheses": 2
+          "hypotheses": 4
         },
         "longform": {
           "status": "heuristics-only",

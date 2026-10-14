@@ -1,14 +1,14 @@
 # Growth dashboard
 
-Generated 2026-10-14T11:42:58.141Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-10-14T12:12:57.597Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
-**Shorts health** — last published 2026-10-14T18:00:00.000Z · 23 published · inventory A77/B156/C61/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-14T18:00:00.000Z · 23 published · inventory A78/B156/C60/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — challenger-1986 84/A, air-france-447-2009 83/A, chernobyl-1986 83/A, columbia-2003 83/A, lahaina-fire-2023 83/A
+**Long-form backlog** — challenger-1986 84/A, air-france-447-2009 83/A, armero-1985 83/A, chernobyl-1986 83/A, columbia-2003 83/A
 
 **Content clusters** — 12 · integrity OK
 
@@ -35,7 +35,7 @@ Generated 2026-10-14T11:42:58.141Z. Per-channel baselines are computed separatel
 
 ## ImpossibleBrief
 
-**Shorts health** — last published 2026-10-14T18:00:00.000Z · 14 published · inventory A122/B17/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-14T18:00:00.000Z · 14 published · inventory A117/B22/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
@@ -72,7 +72,7 @@ Generated 2026-10-14T11:42:58.141Z. Per-channel baselines are computed separatel
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — the-critical-role-of-urban-traffic-control-network 79/A, why-submarine-fiber-optic-cable-is-so-hard-to-replace 78/A, what-quietly-depends-on-cable-landing-station 78/A, the-critical-role-of-cable-laying-ship 78/A, inside-the-system-built-around-road-tunnel-ventilation-system 78/A
+**Long-form backlog** — inside-the-system-built-around-road-tunnel-ventilation-system 79/A, the-critical-role-of-urban-traffic-control-network 79/A, why-submarine-fiber-optic-cable-is-so-hard-to-replace 78/A, what-quietly-depends-on-cable-landing-station 78/A, the-critical-role-of-cable-laying-ship 78/A
 
 **Content clusters** — 6 · integrity OK
 

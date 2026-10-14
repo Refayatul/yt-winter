@@ -1,6 +1,6 @@
 {
   "channel": "critical-thread",
-  "updatedAt": "2026-10-14T11:42:54.926Z",
+  "updatedAt": "2026-10-14T12:12:56.022Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 6,
@@ -18,15 +18,15 @@
         "dimension": "hookType",
         "value": "visual_first_reveal",
         "sample": 5,
-        "lift": 0.015,
-        "z": 0.07
+        "lift": -0.005,
+        "z": -0.03
       },
       {
         "stage": "OBSERVATION",
         "dimension": "hookType",
         "value": "countdown",
         "sample": 1,
-        "lift": -0.075,
+        "lift": 0.027,
         "z": 0
       },
       {
@@ -34,7 +34,7 @@
         "dimension": "topicCluster",
         "value": "ROADS AND BRIDGES",
         "sample": 1,
-        "lift": 0.237,
+        "lift": 0.503,
         "z": 0
       },
       {
@@ -42,7 +42,7 @@
         "dimension": "topicCluster",
         "value": "DATA CENTERS",
         "sample": 1,
-        "lift": -0.075,
+        "lift": 0.027,
         "z": 0
       },
       {
@@ -50,7 +50,7 @@
         "dimension": "topicCluster",
         "value": "ENERGY",
         "sample": 1,
-        "lift": -0.189,
+        "lift": -0.161,
         "z": 0
       },
       {
@@ -58,7 +58,7 @@
         "dimension": "topicCluster",
         "value": "ELECTRICAL GRID",
         "sample": 1,
-        "lift": -0.479,
+        "lift": -0.392,
         "z": 0
       },
       {
@@ -66,7 +66,7 @@
         "dimension": "topicCluster",
         "value": "SUBMARINE CABLES",
         "sample": 1,
-        "lift": -0.221,
+        "lift": -0.124,
         "z": 0
       },
       {
@@ -74,7 +74,7 @@
         "dimension": "topicCluster",
         "value": "WATER",
         "sample": 1,
-        "lift": 0.727,
+        "lift": 0.147,
         "z": 0
       },
       {
@@ -82,15 +82,15 @@
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 5,
-        "lift": 0.096,
-        "z": 0.54
+        "lift": 0.078,
+        "z": 0.66
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 1,
-        "lift": -0.479,
+        "lift": -0.392,
         "z": 0
       },
       {
@@ -98,7 +98,7 @@
         "dimension": "titlePattern",
         "value": "the-x-that",
         "sample": 1,
-        "lift": 0.237,
+        "lift": 0.503,
         "z": 0
       },
       {
@@ -106,15 +106,15 @@
         "dimension": "titlePattern",
         "value": "why",
         "sample": 2,
-        "lift": -0.148,
-        "z": -2.03
+        "lift": -0.049,
+        "z": -0.65
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "statement",
         "sample": 1,
-        "lift": -0.189,
+        "lift": -0.161,
         "z": 0
       },
       {
@@ -122,7 +122,7 @@
         "dimension": "titlePattern",
         "value": "how",
         "sample": 1,
-        "lift": -0.479,
+        "lift": -0.392,
         "z": 0
       },
       {
@@ -130,7 +130,7 @@
         "dimension": "titlePattern",
         "value": "question",
         "sample": 1,
-        "lift": 0.727,
+        "lift": 0.147,
         "z": 0
       },
       {
@@ -146,56 +146,56 @@
         "dimension": "ctaStyle",
         "value": "NONE",
         "sample": 3,
-        "lift": 0.296,
-        "z": 1.27
+        "lift": 0.226,
+        "z": 1.58
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 3,
-        "lift": -0.296,
-        "z": -3.23
+        "lift": -0.226,
+        "z": -2.69
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "18",
         "sample": 4,
-        "lift": 0.066,
-        "z": 0.25
+        "lift": 0.033,
+        "z": 0.17
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "22",
         "sample": 2,
-        "lift": -0.132,
-        "z": -2.31
+        "lift": -0.067,
+        "z": -0.71
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "18:00 New York",
         "sample": 2,
-        "lift": -0.132,
-        "z": -2.31
+        "lift": -0.067,
+        "z": -0.71
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "21:00 TR",
         "sample": 3,
-        "lift": 0.009,
-        "z": 0.02
+        "lift": -0.123,
+        "z": -0.79
       },
       {
         "stage": "OBSERVATION",
         "dimension": "popularityBand",
         "value": "unknown",
         "sample": 5,
-        "lift": -0.047,
-        "z": -0.23
+        "lift": -0.101,
+        "z": -1.1
       },
       {
         "stage": "OBSERVATION",
@@ -220,16 +220,32 @@
         "dimension": "ctaStyle",
         "value": "NONE",
         "sample": 3,
-        "lift": 0.296,
-        "z": 1.27
+        "lift": 0.226,
+        "z": 1.58
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 3,
-        "lift": -0.296,
-        "z": -3.23
+        "lift": -0.226,
+        "z": -2.69
+      },
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "publishSlot",
+        "value": "21:00 TR",
+        "sample": 3,
+        "lift": -0.123,
+        "z": -0.79
+      },
+      {
+        "stage": "HYPOTHESIS",
+        "dimension": "popularityBand",
+        "value": "unknown",
+        "sample": 5,
+        "lift": -0.101,
+        "z": -1.1
       }
     ],
     "adopted": [],

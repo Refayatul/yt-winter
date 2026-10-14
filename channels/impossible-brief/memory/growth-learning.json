@@ -1,6 +1,6 @@
 {
   "channel": "impossible-brief",
-  "updatedAt": "2026-10-14T11:42:46.616Z",
+  "updatedAt": "2026-10-14T12:12:54.124Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 11,
@@ -34,7 +34,7 @@
         "dimension": "hookType",
         "value": "countdown",
         "sample": 1,
-        "lift": 0.345,
+        "lift": 0.421,
         "z": 0
       },
       {
@@ -50,7 +50,7 @@
         "dimension": "hookType",
         "value": "shocking_consequence",
         "sample": 1,
-        "lift": 0.619,
+        "lift": 0.543,
         "z": 0
       },
       {
@@ -74,15 +74,15 @@
         "dimension": "topicCluster",
         "value": "OTHER",
         "sample": 2,
-        "lift": 0.412,
-        "z": 1.99
+        "lift": 0.374,
+        "z": 2.22
       },
       {
         "stage": "OBSERVATION",
         "dimension": "topicCluster",
         "value": "HUMAN",
         "sample": 1,
-        "lift": 0.345,
+        "lift": 0.421,
         "z": 0
       },
       {
@@ -114,24 +114,24 @@
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 5,
-        "lift": 0.081,
-        "z": 0.63
+        "lift": 0.096,
+        "z": 0.7
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 6,
-        "lift": -0.068,
-        "z": -0.41
+        "lift": -0.08,
+        "z": -0.52
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "statement",
         "sample": 3,
-        "lift": -0.028,
-        "z": -0.08
+        "lift": -0.054,
+        "z": -0.17
       },
       {
         "stage": "OBSERVATION",
@@ -154,8 +154,8 @@
         "dimension": "titlePattern",
         "value": "question",
         "sample": 3,
-        "lift": 0.083,
-        "z": 0.55
+        "lift": 0.109,
+        "z": 0.62
       },
       {
         "stage": "OBSERVATION",
@@ -178,16 +178,16 @@
         "dimension": "ctaStyle",
         "value": "NONE",
         "sample": 6,
-        "lift": -0.085,
-        "z": -0.63
+        "lift": -0.072,
+        "z": -0.5
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 5,
-        "lift": 0.101,
-        "z": 0.61
+        "lift": 0.086,
+        "z": 0.55
       },
       {
         "stage": "OBSERVATION",
@@ -211,7 +211,7 @@
         "value": "21:00 TR",
         "sample": 8,
         "lift": 0.1,
-        "z": 0.91
+        "z": 0.93
       },
       {
         "stage": "OBSERVATION",
@@ -227,7 +227,7 @@
         "value": "unknown",
         "sample": 10,
         "lift": 0.058,
-        "z": 0.6
+        "z": 0.61
       },
       {
         "stage": "OBSERVATION",
@@ -265,11 +265,11 @@
       },
       {
         "stage": "HYPOTHESIS",
-        "dimension": "ctaStyle",
-        "value": "COMMENT_PROMPT",
-        "sample": 5,
-        "lift": 0.101,
-        "z": 0.61
+        "dimension": "titlePattern",
+        "value": "question",
+        "sample": 3,
+        "lift": 0.109,
+        "z": 0.62
       },
       {
         "stage": "HYPOTHESIS",
@@ -277,22 +277,21 @@
         "value": "21:00 TR",
         "sample": 8,
         "lift": 0.1,
-        "z": 0.91
+        "z": 0.93
       }
     ],
     "adopted": [],
     "suppressed": [],
     "adoptedWeights": {
-      "TopicDemandScore": 0.887,
       "HookPotentialScore": 0.8,
-      "VisualImpactScore": 0.829,
-      "EmotionalImpactScore": 0.801,
-      "StoryCompressionScore": 0.835,
-      "RewatchPotentialScore": 0.835,
-      "CommentPotentialScore": 0.835,
+      "VisualImpactScore": 0.836,
+      "EmotionalImpactScore": 0.8,
+      "StoryCompressionScore": 0.8,
+      "RewatchPotentialScore": 0.8,
+      "CommentPotentialScore": 0.8,
       "SubscriberConversionPotential": 0.8,
       "NoveltyScore": 0.8,
-      "SourceQualityScore": 0.845
+      "SourceQualityScore": 0.813
     },
     "adoptedHookFamilyBonus": {},
     "adoptedTitlePatternBonus": {},

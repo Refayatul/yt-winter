@@ -1,125 +1,94 @@
 {
-  "at": "2026-10-14T11:43:01.085Z",
-  "runId": "38557595428",
+  "at": "2026-10-14T12:13:00.555Z",
+  "runId": "38561943110",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "UPLOADED",
-      "category": "SCHEDULED",
-      "scheduled": true,
-      "publication": "SCHEDULED",
-      "publishAt": "2026-10-14T18:00:00.000Z",
-      "reason": null,
-      "slug": "hyatt-regency-walkway-1981",
-      "videoId": "gC62R2vVYcs",
-      "targetDay": "2026-10-14",
+      "outcome": "NOT_DUE",
+      "category": "NOT_DUE",
+      "scheduled": false,
+      "publication": "NOT_SCHEDULED",
+      "publishAt": null,
+      "reason": "today's Short already exists (hyatt-regency-walkway-1981)",
+      "slug": null,
+      "videoId": null,
+      "targetDay": null,
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "done",
-          "detail": "growth queue selected hyatt-regency-walkway-1981",
-          "at": "2026-10-14T11:36:18.920Z"
+          "status": "not-reached"
         },
         "SCRIPT": {
-          "status": "done",
-          "detail": "pre gate PUBLISH 85",
-          "at": "2026-10-14T11:36:19.264Z"
+          "status": "not-reached"
         },
         "ASSETS": {
-          "status": "done",
-          "at": "2026-10-14T11:36:20.653Z"
+          "status": "not-reached"
         },
         "NARRATION": {
-          "status": "done",
-          "at": "2026-10-14T11:41:24.271Z"
+          "status": "not-reached"
         },
         "RENDER": {
-          "status": "done",
-          "at": "2026-10-14T11:41:24.272Z"
+          "status": "not-reached"
         },
         "QA": {
-          "status": "done",
-          "detail": "final gate PUBLISH 90",
-          "at": "2026-10-14T11:41:26.636Z"
+          "status": "not-reached"
         },
         "UPLOAD": {
-          "status": "done",
-          "detail": "gC62R2vVYcs",
-          "at": "2026-10-14T11:41:31.518Z"
+          "status": "not-reached"
         },
         "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-14T18:00:00.000Z",
-          "at": "2026-10-14T11:41:31.519Z"
+          "status": "not-reached"
         },
         "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-14T18:00:00.000Z",
-          "at": "2026-10-14T11:41:31.519Z"
+          "status": "not-reached"
         }
       }
     },
     {
       "channel": "impossible-brief",
-      "outcome": "UPLOADED",
-      "category": "SCHEDULED",
-      "scheduled": true,
-      "publication": "SCHEDULED",
-      "publishAt": "2026-10-14T18:00:00.000Z",
-      "reason": null,
-      "slug": "what-if-we-built-a-star-on-earth",
-      "videoId": "6zrtuhSsLgA",
-      "targetDay": "2026-10-14",
+      "outcome": "NOT_DUE",
+      "category": "NOT_DUE",
+      "scheduled": false,
+      "publication": "NOT_SCHEDULED",
+      "publishAt": null,
+      "reason": "today's Short already exists (what-if-we-built-a-star-on-earth)",
+      "slug": null,
+      "videoId": null,
+      "targetDay": null,
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "done",
-          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
-          "at": "2026-10-14T11:41:36.712Z"
+          "status": "not-reached"
         },
         "SCRIPT": {
-          "status": "done",
-          "detail": "pre-render readiness PUBLISH 87",
-          "at": "2026-10-14T11:41:36.712Z"
+          "status": "not-reached"
         },
         "ASSETS": {
-          "status": "done",
-          "at": "2026-10-14T11:42:24.513Z"
+          "status": "not-reached"
         },
         "NARRATION": {
-          "status": "done",
-          "detail": "Microsoft Edge neural TTS (claim-timed)",
-          "at": "2026-10-14T11:42:24.514Z"
+          "status": "not-reached"
         },
         "RENDER": {
-          "status": "done",
-          "at": "2026-10-14T11:42:24.514Z"
+          "status": "not-reached"
         },
         "QA": {
-          "status": "done",
-          "detail": "validations passed",
-          "at": "2026-10-14T11:42:24.595Z"
+          "status": "not-reached"
         },
         "UPLOAD": {
-          "status": "done",
-          "detail": "6zrtuhSsLgA",
-          "at": "2026-10-14T11:42:29.827Z"
+          "status": "not-reached"
         },
         "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-14T18:00:00.000Z",
-          "at": "2026-10-14T11:42:29.827Z"
+          "status": "not-reached"
         },
         "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-14T18:00:00.000Z",
-          "at": "2026-10-14T11:42:29.828Z"
+          "status": "not-reached"
         }
       }
     },
@@ -142,7 +111,7 @@
         "RESEARCH": {
           "status": "failed",
           "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
-          "at": "2026-10-14T11:42:34.697Z"
+          "at": "2026-10-14T12:12:50.991Z"
         },
         "SCRIPT": {
           "status": "not-reached"
