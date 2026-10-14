@@ -132,7 +132,8 @@ test("callers without clientJson keep server-side JSON mode unchanged", async ()
 
 test("CT research asks for client-side JSON with its schema check; verification code is unchanged", () => {
   const source = fs.readFileSync(path.join(ROOT, "scripts", "ct-research.js"), "utf8");
-  assert.match(source, /deps\.generate\(\{ stage: "ct-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM, clientJson: true, validateJson: draftProblems,/);
+  assert.match(source, /const request = \(extra\) => \(\{ stage: "ct-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM, clientJson: true, validateJson: draftProblems,/);
+  assert.match(source, /deps\.generate\(request\(/, "every CT request goes through it");
   assert.match(source, /const supportErrors = Shared\.narrationSupport\(narration, facts\);/, "fact support is still checked after the schema check");
   assert.match(source, /if \(links\.length < 2\) supportErrors\.push/, "two primary references are still required");
 });

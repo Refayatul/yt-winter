@@ -347,4 +347,4 @@ async function main(argv = process.argv.slice(2), deps = {}) {
 
 if (require.main === module) main().catch((error) => { console.error(error.message); process.exitCode = 1; });
 
-module.exports = { relevantTitle, directTitles, articles, candidates, excerpt, primaryLinks, reachableLinks, narrationSupport, toSeedRecord, researchOne, main, SYSTEM, RETRY_AFTER_DAYS };
+module.exports = { contentWords, relevantTitle, directTitles, articles, candidates, excerpt, primaryLinks, reachableLinks, narrationSupport, toSeedRecord, researchOne, main, SYSTEM, RETRY_AFTER_DAYS };

@@ -37,6 +37,7 @@ const FR = require(path.join(ROOT, "scripts", "fr-library", "build"));
 // narration-support checks); only the subject search, prompt and record shape are CT-specific.
 const Shared = require(path.join(ROOT, "scripts", "bto-research"));
 const Inventory = require(path.join(ROOT, "scripts", "growth", "topic-inventory"));
+const LineRepair = require(path.join(ROOT, "scripts", "ct-line-repair"));
 
 const SLUG = "critical-thread";
 const EXCERPT_BUDGET_CHARS = Number(process.env.CT_RESEARCH_EXCERPT_CHARS) || 8000;
@@ -52,6 +53,8 @@ const RUN_TOKEN_BUDGET = Number(process.env.CT_RESEARCH_RUN_TOKEN_BUDGET) || 450
 // reply finished with 111–993 reasoning tokens and valid JSON (3 of 3). Every CT draft and repair
 // request asks for low reasoning effort; the completion limit and budgets are unchanged.
 const REASONING_EFFORT = "low";
+// A line-level repair returns a few narration lines, not a record: a smaller completion limit.
+const REPAIR_TOKENS = Number(process.env.CT_RESEARCH_REPAIR_MAX_TOKENS) || 1600;
 const ROLES = ["HIDDEN_SYSTEM", "WHY_IT_MATTERS", "WHAT_DEPENDS_ON_IT", "HOW_IT_WORKS", "BOTTLENECK", "FAILURE", "RESILIENCE", "WHERE_IT_EXISTS", "PAYOFF"];
 // Words too generic to tie an article to a subject on their own.
 const GENERIC = new Set(["system", "systems", "network", "networks", "plant", "station", "line", "lines", "chain", "supply", "global", "critical", "infrastructure", "industry", "production", "facility", "route", "control", "service", "services"]);
@@ -172,6 +175,8 @@ const SYSTEM = [
   "Speak at most 3 figures in the whole narration (years, counts and measurements all count) and never repeat a figure or a date. Explain how one fact causes the next (because, so, which means) instead of listing figures.",
   "Line 1 is the hook and openingLine: at most 9 words, a concrete surprising statement about the dependency or the failure, not starting with a date. Lines 1 and 2 together: at most 18 words. The last line is the specific payoff.",
   `Each line has a role (${ROLES.join("|")}), a layer ("VERIFIED FACT" when the cited facts state it, "MODEL" when it explains how cited facts connect), and the fact ids it is based on. Add no detail that is not in those facts. Only use numbers that appear in a cited fact.`,
+  LineRepair.SUPPORT_RULE,
+  LineRepair.PRIMARY_RULE,
   "thumbnailText: 1 to 3 words, capital letters, no apostrophes. number: the one key figure exactly as a fact writes it, or empty. Titles must be accurate and supported by the facts.",
   "Return JSON only: {\"answerable\":true,\"title\":\"...\",\"coreQuestion\":\"...?\",\"openingLine\":\"...\",\"secondBeat\":\"...\",\"dependency\":\"...\",\"mechanism\":\"...\",\"bottleneck\":\"...\",\"failureConsequence\":\"...\",\"resilience\":\"...\",\"expectedConsequence\":\"...\",\"number\":\"...\",",
   "\"thumbnailText\":\"...\",\"editorialTitles\":[10 distinct accurate titles],\"visualScenes\":[5 short shot descriptions],",
@@ -323,7 +328,27 @@ function toRecord(topic, draft, sources) {
   return { record, supportErrors };
 }
 
+// Every check that needs no network, run together so a repair sees all of them at once:
+// - the draft's own citation and figure checks (toRecord);
+// - the builder offline (shape, opening, facts count, primary hosts, numbers traced to facts, legacy
+//   audits, hooks).
+// Quotes are also compared with the excerpt the model was given. That comparison only informs a
+// repair; the builder's online check of the live source decides.
+async function precheck(topic, draft, sources, deps = {}) {
+  const built = toRecord(topic, draft, sources);
+  if (built.skip) return { skip: built.skip };
+  const errors = [...built.supportErrors];
+  const offline = await (deps.offlineVerify || ((seed) => Builder.run(seed, { offline: true, write: false, log: () => {} })))({ channel: SLUG, records: [built.record] });
+  for (const error of (offline.report[0] || { errors: [] }).errors) if (!errors.includes(error)) errors.push(error);
+  const quoteMisses = (draft.facts || []).filter((fact) => {
+    const source = sources[Number(String(fact && fact.sourceId || "").replace(/\D/g, "")) - 1];
+    return source && source.text && fact.quote && !Builder.quoteFound(source.text, fact.quote);
+  }).map((fact) => fact.id);
+  return { built, errors, quoteMisses };
+}
+
 async function researchOne(topic, deps) {
+  const log = deps.log || (() => {});
   const docs = await articles(topic, deps.get);
   if (!docs.length) return { status: "NO_SOURCE", reason: `no Wikipedia article about "${topic.canonicalTopic || topic.topic}"` };
   for (const doc of docs) doc.links = await Shared.reachableLinks(await primaryLinks(doc.title, deps.get), deps.get);
@@ -333,31 +358,70 @@ async function researchOne(topic, deps) {
   const keys = [...keywords(topic.canonicalTopic || topic.topic), ...keywords(topic.bottleneck || ""), ...keywords(topic.dependency || "")];
   const share = Math.floor(EXCERPT_BUDGET_CHARS / docs.length);
   const sources = docs.map((doc) => ({ title: doc.title, url: doc.url, text: Shared.excerpt(doc.text, keys, share), links: doc.links }));
+  // Each source says how many reachable primary references it carries, so the model can satisfy the
+  // two-reference rule knowingly.
   const user = { subject: topic.canonicalTopic || topic.topic, cluster: topic.cluster, currentQuestion: topic.coreQuestion,
-    sources: sources.map((source, index) => ({ id: `S${index + 1}`, title: source.title, excerpt: source.text })) };
-  let feedback = null;
+    sources: sources.map((source, index) => ({ id: `S${index + 1}`, title: source.title, primaryReferences: source.links.length, excerpt: source.text })) };
+  const request = (extra) => ({ stage: "ct-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM, clientJson: true, validateJson: draftProblems, reasoningEffort: REASONING_EFFORT,
+    ...(deps.budget ? { budget: deps.budget } : {}), ...extra });
   const verification = [];
+  const repairs = [];
+  let draft = null;
+  let plan = null;
+  let feedback = null;
   for (let round = 0; round < 2; round += 1) {
-    const response = await deps.generate({ stage: "ct-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM, clientJson: true, validateJson: draftProblems, reasoningEffort: REASONING_EFFORT,
-      ...(deps.budget ? { budget: deps.budget } : {}),
-      user: JSON.stringify(feedback ? { ...user, previous_errors: feedback } : user) });
-    const built = toRecord(topic, response.json, sources);
-    if (built.skip) return { status: "NOT_ANSWERABLE", reason: String(built.skip).slice(0, 200) };
-    const result = built.supportErrors.length ? { report: [{ slug: built.record.slug, errors: built.supportErrors }] }
-      : await deps.verify({ channel: SLUG, records: [built.record] });
-    const row = result.report[0];
-    if (!row.errors.length) return { status: "VERIFIED", record: built.record, slug: built.record.slug, ...(verification.length ? { verification } : {}) };
-    const summary = verificationSummary(row.errors, round + 1);
+    if (round === 0) draft = (await deps.generate(request({ user: JSON.stringify(user) }))).json;
+    else if (plan.mode === "lines") {
+      // Line-level repair: the model sees its own draft and replaces only the failing lines.
+      const allowed = new Set(plan.lines.keys());
+      const factIds = new Set((draft.facts || []).map((fact) => fact.id));
+      const validate = LineRepair.repairProblems(allowed, factIds);
+      const reply = (await deps.generate(request({ system: LineRepair.REPAIR_SYSTEM, maxTokens: REPAIR_TOKENS, validateJson: validate,
+        user: JSON.stringify(LineRepair.repairInput(draft, plan, sources, { strongestHook: plan.strongestHook })) }))).json;
+      // The provider already retries a malformed reply; one that still fails is not spliced (the draft
+      // is re-verified unchanged and fails again).
+      const problems = validate(reply);
+      if (problems.length) log(`    · repair ${topic.id}: reply rejected (${problems.length} structural problem(s)); draft unchanged`);
+      const before = draft;
+      draft = LineRepair.splice(draft, problems.length ? [] : reply.lines, allowed);
+      const byId = new Map((draft.facts || []).map((fact) => [fact.id, fact]));
+      const novelty = [...allowed].map((n) => ({ n, warnings: LineRepair.noveltyAudit(draft.narration[n - 1].text, (draft.narration[n - 1].facts || []).map((id) => byId.get(id)).filter(Boolean)) })).filter((row) => row.warnings.length);
+      const kept = before.narration.filter((line, index) => !allowed.has(index + 1) && JSON.stringify(line) === JSON.stringify(draft.narration[index])).length;
+      repairs.push({ mode: "lines", lines: [...allowed], kept, novelty: novelty.map((row) => ({ line: row.n, categories: row.warnings.map((w) => w.category) })) });
+      if (novelty.length) log(`    · novelty ${topic.id} (warning only): ${novelty.map((row) => `line ${row.n} ${[...new Set(row.warnings.map((w) => w.category))].join("+")}`).join(", ")}`);
+    } else {
+      // Bounded fallback for failures a line cannot fix: one full redraft that sees its previous draft.
+      draft = (await deps.generate(request({ user: JSON.stringify({ ...user, previous_draft: draft, previous_errors: feedback }) }))).json;
+      repairs.push({ mode: "full", reasons: plan.other });
+    }
+    if (!draft || draft.answerable !== true) return { status: "NOT_ANSWERABLE", reason: String((draft && draft.reason) || "provider returned no answer").slice(0, 200) };
+    const normalized = LineRepair.normalizeFactIds(draft);
+    draft = normalized.draft;
+    if (normalized.changes.length) log(`    · fact ids ${topic.id}: ${normalized.changes.filter((c) => c.to).length} normalised, ${normalized.changes.filter((c) => !c.to).length} unknown dropped`);
+    const pre = await precheck(topic, draft, sources, deps);
+    if (pre.skip) return { status: "NOT_ANSWERABLE", reason: String(pre.skip).slice(0, 200) };
+    // The network checks (quotes and numbers against the live source, reachability) run once nothing
+    // offline fails, as before.
+    const errors = pre.errors.length ? pre.errors : (await deps.verify({ channel: SLUG, records: [pre.built.record] })).report[0].errors;
+    if (!errors.length) return { status: "VERIFIED", record: pre.built.record, slug: pre.built.record.slug, ...(verification.length ? { verification, repairs } : {}) };
+    const summary = verificationSummary(errors, round + 1);
     verification.push(summary);
-    (deps.log || (() => {}))(`    · ${describeVerification(topic, summary)}`);
-    feedback = row.errors.slice(0, 12);
-    // The builder requires the spoken opening to be the strongest hook; name the one that won.
-    const strongest = (deps.strongestHook || strongestHook)(topic, built.record);
-    if (strongest && row.errors.some((error) => /spoken opening is not a valid hook/.test(error))) feedback.push(`the strongest hook candidate is "${strongest}": make the opening line at least as strong, using only cited facts`);
+    log(`    · ${describeVerification(topic, summary)}`);
+    if (pre.quoteMisses.length) log(`    · excerpt check ${topic.id}: ${pre.quoteMisses.length} quote(s) not found in the supplied excerpt`);
     // The reason names classified failures only, never the builder's text (it can quote the draft).
-    if (round === 1) return { status: "FAILED_CHECKS", reason: describeVerification(topic, summary).replace(/^verify \S+ /, ""), verification };
+    if (round === 1) return { status: "FAILED_CHECKS", reason: describeVerification(topic, summary).replace(/^verify \S+ /, ""), verification, repairs };
+    const targets = LineRepair.repairTargets(errors.map(classifyVerificationError), draft.narration);
+    plan = { ...targets, mode: targets.other.length || !targets.lines.size ? "full" : "lines" };
+    feedback = [...errors.slice(0, 12), ...pre.quoteMisses.map((id) => `fact ${id}: quote not found in its source excerpt`)];
+    // The builder requires the spoken opening to be the strongest hook; name the one that won.
+    const strongest = (deps.strongestHook || strongestHook)(topic, pre.built.record);
+    if (strongest && errors.some((error) => /spoken opening is not a valid hook/.test(error))) {
+      plan.strongestHook = strongest;
+      feedback.push(`the strongest hook candidate is "${strongest}": make the opening line at least as strong, using only cited facts`);
+    }
+    log(`    · repair ${topic.id}: ${plan.mode === "lines" ? `line-level, line(s) ${[...plan.lines.keys()].sort((a, b) => a - b).join(", ")}` : `full redraft (not line-fixable: ${plan.other.join(", ") || "no line identified"})`}`);
   }
-  return { status: "FAILED_CHECKS", verification };
+  return { status: "FAILED_CHECKS", verification, repairs };
 }
 
 // Writes verified upgrades, then keeps only those that are now production-qualified; the rest are
@@ -457,4 +521,4 @@ async function main(argv = process.argv.slice(2), deps = {}) {
 
 if (require.main === module) main().catch((error) => { console.error(error.message); process.exitCode = 1; });
 
-module.exports = { classifyVerificationError, verificationSummary, describeVerification, REASONING_EFFORT, draftProblems, freeProviderOnly, relevantArticle, articles, primaryLinks, toRecord, strongestHook, researchOne, writeQualified, main, SYSTEM, ROLES };
+module.exports = { precheck, classifyVerificationError, verificationSummary, describeVerification, REASONING_EFFORT, draftProblems, freeProviderOnly, relevantArticle, articles, primaryLinks, toRecord, strongestHook, researchOne, writeQualified, main, SYSTEM, ROLES };
