@@ -47,6 +47,11 @@ const PAUSE_MS = process.env.CT_RESEARCH_PAUSE_MS != null ? Number(process.env.C
 // three topics per run. Groq's free tier allows 8,000 tokens per minute for openai/gpt-oss-120b.
 const TOPIC_TOKEN_BUDGET = Number(process.env.CT_RESEARCH_TOPIC_TOKEN_BUDGET) || 16000;
 const RUN_TOKEN_BUDGET = Number(process.env.CT_RESEARCH_RUN_TOKEN_BUDGET) || 45000;
+// Groq's default (medium) reasoning spent 3,198 of the 3,200 completion tokens on hidden reasoning
+// and returned an empty reply on every first attempt (run 38542009457, 5 of 5); with "low" every
+// reply finished with 111–993 reasoning tokens and valid JSON (3 of 3). Every CT draft and repair
+// request asks for low reasoning effort; the completion limit and budgets are unchanged.
+const REASONING_EFFORT = "low";
 const ROLES = ["HIDDEN_SYSTEM", "WHY_IT_MATTERS", "WHAT_DEPENDS_ON_IT", "HOW_IT_WORKS", "BOTTLENECK", "FAILURE", "RESILIENCE", "WHERE_IT_EXISTS", "PAYOFF"];
 // Words too generic to tie an article to a subject on their own.
 const GENERIC = new Set(["system", "systems", "network", "networks", "plant", "station", "line", "lines", "chain", "supply", "global", "critical", "infrastructure", "industry", "production", "facility", "route", "control", "service", "services"]);
@@ -187,6 +192,72 @@ function strongestHook(topic, record) {
 const FIGURE = /\b\d[\d,.]*\b/g;
 const MAX_SPOKEN_FIGURES = 3;
 
+// Verification failures, reported without their text: builder messages can quote the model's
+// draft (an opening line, a claim) and source URLs. Each failure maps to a stage (support: the
+// draft's own citations; lint: shape and length; evidence: quotes, numbers and sources against the
+// source text; audit: the channel's legacy research and quality gates; hooks; identity), a fixed
+// category, a fact or line number where there is one, and whether a repair round can fix it.
+const VERIFICATION_RULES = [
+  ["support", "NARRATION_CITES_NO_FACT", /^narration line (\d+) cites no fact/, "line", "yes"],
+  ["support", "NARRATION_NOT_SUPPORTED", /^narration line (\d+) is not supported by its cited facts/, "line", "yes"],
+  ["support", "FEWER_THAN_2_PRIMARY_REFERENCES", /fewer than 2 reachable primary references/, null, "maybe"],
+  ["support", "TOO_MANY_SPOKEN_FIGURES", /^narration speaks \d+ figures/, null, "yes"],
+  ["support", "REPEATED_FIGURE", /^narration repeats a figure/, null, "yes"],
+  ["lint", "NARRATION_LINE_COUNT", /^narration has \d+ lines/, null, "yes"],
+  ["lint", "NARRATION_WORD_COUNT", /^narration \d+ words/, null, "yes"],
+  ["lint", "SENTENCE_TOO_LONG", /^line (\d+) has a \d+-word sentence/, "line", "yes"],
+  ["lint", "INVALID_LAYER", /^line (\d+) layer /, "line", "yes"],
+  ["lint", "MISSING_ROLE", /^line (\d+) has no role/, "line", "yes"],
+  ["lint", "OPENING_TOO_LONG", /^opening ".*" > \d+ words/s, null, "yes"],
+  ["lint", "SECOND_BEAT_TOO_LONG", /^opening \+ second beat > /, null, "yes"],
+  ["lint", "OPENING_NOT_LINE_1", /^narration line 1 must equal openingLine/, null, "yes"],
+  ["lint", "OPENING_STARTS_WITH_DATE", /^opening starts with a date/, null, "yes"],
+  ["lint", "OPENING_MISSING_OR_LONG", /^openingLine missing or too long/, null, "yes"],
+  ["lint", "TOO_FEW_FACTS", /^only \d+ sourced facts/, null, "yes"],
+  ["lint", "THUMBNAIL_TEXT", /^thumbnailText /, null, "yes"],
+  ["evidence", "INVALID_SOURCE_URL", /^invalid source URL/, null, "no"],
+  ["evidence", "SOURCE_NOT_PRIMARY_HOST", /^topic source .* is not a primary host/, null, "no"],
+  ["evidence", "FACT_WITHOUT_SOURCE", /^fact (\d+) has no source\/url/, "fact", "yes"],
+  ["evidence", "QUOTE_TOO_SHORT", /^fact (\d+): a verbatim source quote of at least 5 words is required/, "fact", "yes"],
+  ["evidence", "SOURCE_NOT_READABLE", /^fact (\d+): source not readable/, "fact", "no"],
+  ["evidence", "QUOTE_NOT_VERBATIM", /^fact (\d+): quote not found verbatim/, "fact", "yes"],
+  ["evidence", "NUMBER_NOT_IN_SOURCE", /^fact (\d+): .* not found in /s, "fact", "yes"],
+  ["evidence", "TOO_FEW_AUTHORITATIVE_FACTS", /^only \d+ fact\(s\) sourced to a non-Wikipedia authoritative page/, null, "no"],
+  ["evidence", "NUMBER_NOT_TRACED_TO_FACT", /^numbers not traced to a fact/, null, "yes"],
+  ["evidence", "SOURCE_UNREACHABLE", /^source unreachable/, null, "no"],
+  ["audit", "LEGACY_RESEARCH_AUDIT", /^legacy research audit:/, null, "maybe"],
+  ["audit", "LEGACY_QUALITY_BLOCK", /^legacy quality BLOCK:/, null, "maybe"],
+  ["hooks", "TOO_FEW_HOOK_CANDIDATES", /^only \d+ hook candidates/, null, "yes"],
+  ["hooks", "OPENING_NOT_A_VALID_HOOK", /^the spoken opening is not a valid hook candidate/, null, "yes"],
+  ["identity", "DUPLICATE_TOPIC", /^duplicate of /, null, "no"],
+  ["identity", "CATEGORY_MISMATCH", /^category .* ≠ replaced entry/, null, "no"],
+  ["identity", "NO_UNIVERSE_ENTRY", /^no universe entry with slug/, null, "no"],
+];
+
+function classifyVerificationError(text) {
+  const value = String(text || "");
+  for (const [stage, category, pattern, kind, repairable] of VERIFICATION_RULES) {
+    const match = value.match(pattern);
+    if (match) return { stage, category, ref: kind && match[1] ? `${kind} ${match[1]}` : null, repairable };
+  }
+  return { stage: "other", category: "UNCLASSIFIED", ref: null, repairable: "maybe" };
+}
+
+// The first `limit` failures of one verification round, classified, plus the total.
+function verificationSummary(errors, round, limit = 3) {
+  const classified = [].concat(errors || []).map(classifyVerificationError);
+  const counts = {};
+  for (const item of classified) counts[item.category] = (counts[item.category] || 0) + 1;
+  return { round, total: classified.length, failures: classified.slice(0, limit), counts, repairable: classified.some((item) => item.repairable !== "no") };
+}
+
+function describeVerification(topic, summary) {
+  const items = summary.failures.map((item) => `[${item.stage}] ${item.category}${item.ref ? " " + item.ref : ""} (repairable: ${item.repairable})`);
+  const tally = Object.entries(summary.counts || {}).map(([category, count]) => `${category}×${count}`).join(", ");
+  const more = summary.total > summary.failures.length ? ` · all: ${tally}` : "";
+  return `verify ${topic.id} round ${summary.round}: ${summary.total} failure(s), repair ${summary.repairable ? "possible" : "not possible"} · ${items.join(" · ")}${more}`;
+}
+
 // Upgrade in place: same slug and id, so used-topic and duplicate tracking stay intact.
 // Structural check of a research reply before it is used (core/llm/longform-provider.js retries a
 // reply that fails it). It checks shape only; every fact, quote, number and source is still
@@ -265,8 +336,9 @@ async function researchOne(topic, deps) {
   const user = { subject: topic.canonicalTopic || topic.topic, cluster: topic.cluster, currentQuestion: topic.coreQuestion,
     sources: sources.map((source, index) => ({ id: `S${index + 1}`, title: source.title, excerpt: source.text })) };
   let feedback = null;
+  const verification = [];
   for (let round = 0; round < 2; round += 1) {
-    const response = await deps.generate({ stage: "ct-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM, clientJson: true, validateJson: draftProblems,
+    const response = await deps.generate({ stage: "ct-research", maxTokens: COMPLETION_TOKENS, system: SYSTEM, clientJson: true, validateJson: draftProblems, reasoningEffort: REASONING_EFFORT,
       ...(deps.budget ? { budget: deps.budget } : {}),
       user: JSON.stringify(feedback ? { ...user, previous_errors: feedback } : user) });
     const built = toRecord(topic, response.json, sources);
@@ -274,14 +346,18 @@ async function researchOne(topic, deps) {
     const result = built.supportErrors.length ? { report: [{ slug: built.record.slug, errors: built.supportErrors }] }
       : await deps.verify({ channel: SLUG, records: [built.record] });
     const row = result.report[0];
-    if (!row.errors.length) return { status: "VERIFIED", record: built.record, slug: built.record.slug };
+    if (!row.errors.length) return { status: "VERIFIED", record: built.record, slug: built.record.slug, ...(verification.length ? { verification } : {}) };
+    const summary = verificationSummary(row.errors, round + 1);
+    verification.push(summary);
+    (deps.log || (() => {}))(`    · ${describeVerification(topic, summary)}`);
     feedback = row.errors.slice(0, 12);
     // The builder requires the spoken opening to be the strongest hook; name the one that won.
     const strongest = (deps.strongestHook || strongestHook)(topic, built.record);
     if (strongest && row.errors.some((error) => /spoken opening is not a valid hook/.test(error))) feedback.push(`the strongest hook candidate is "${strongest}": make the opening line at least as strong, using only cited facts`);
-    if (round === 1) return { status: "FAILED_CHECKS", reason: feedback.slice(0, 4).join("; ") };
+    // The reason names classified failures only, never the builder's text (it can quote the draft).
+    if (round === 1) return { status: "FAILED_CHECKS", reason: describeVerification(topic, summary).replace(/^verify \S+ /, ""), verification };
   }
-  return { status: "FAILED_CHECKS" };
+  return { status: "FAILED_CHECKS", verification };
 }
 
 // Writes verified upgrades, then keeps only those that are now production-qualified; the rest are
@@ -339,7 +415,7 @@ async function main(argv = process.argv.slice(2), deps = {}) {
     if (budget.limit < COMPLETION_TOKENS + 3000) { log(`run token budget left (${budget.limit}) cannot hold one more request; stopping this batch`); break; }
     log(`→ ${topic.id} ${topic.slug}`);
     let outcome;
-    try { outcome = await researchOne(topic, { get, generate, verify, budget }); }
+    try { outcome = await researchOne(topic, { get, generate, verify, budget, log }); }
     catch (error) {
       // A deferral (rate or daily limit, outage) or a rejected credential would fail every topic:
       // stop the batch instead.
@@ -381,4 +457,4 @@ async function main(argv = process.argv.slice(2), deps = {}) {
 
 if (require.main === module) main().catch((error) => { console.error(error.message); process.exitCode = 1; });
 
-module.exports = { draftProblems, freeProviderOnly, relevantArticle, articles, primaryLinks, toRecord, strongestHook, researchOne, writeQualified, main, SYSTEM, ROLES };
+module.exports = { classifyVerificationError, verificationSummary, describeVerification, REASONING_EFFORT, draftProblems, freeProviderOnly, relevantArticle, articles, primaryLinks, toRecord, strongestHook, researchOne, writeQualified, main, SYSTEM, ROLES };
