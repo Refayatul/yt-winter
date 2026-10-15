@@ -2,50 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "38409326669",
-      "attempt": "1",
-      "startedAt": "2026-10-13T13:59:14.422Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": "2026-10-13",
-      "slug": null,
-      "outcome": "FAILED",
-      "reason": "health pre-flight: seslendirme: NARRATION_UNAVAILABLE: Edge sesi reddedildi (Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403, Edge TTS WebSocket error: Unexpected server response: 403); yedek ses yok — fallback voice am_michael is not approved for publishing (config.voice.fallback.approved)",
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-13T13:59:25.234Z"
-    },
-    {
       "runId": "38413360708",
       "attempt": "1",
       "startedAt": "2026-10-13T14:27:30.664Z",
@@ -1368,6 +1324,50 @@
         }
       },
       "finishedAt": "2026-10-15T11:50:30.147Z"
+    },
+    {
+      "runId": "38734613204",
+      "attempt": "1",
+      "startedAt": "2026-10-15T12:27:11.349Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": null,
+      "slug": null,
+      "outcome": "NOT_DUE",
+      "reason": "today's Short already exists (daniel-j-morrell-1966)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-15T12:27:11.363Z"
     }
   ]
 }
