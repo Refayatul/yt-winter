@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CriticalThread Evidence-First V1 package",
+  "type": "object",
+  "required": [
+    "version",
+    "channel",
+    "topic_id",
+    "status",
+    "approved_facts",
+    "rejected_facts",
+    "sources",
+    "verification",
+    "integrity_sha256"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "const": 1
+    },
+    "channel": {
+      "const": "critical-thread"
+    },
+    "topic_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "INSUFFICIENT_EVIDENCE",
+        "READY_FOR_STORY_REVIEW_REQUIRED"
+      ]
+    },
+    "approved_facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fact_id",
+          "source_id",
+          "claim",
+          "verbatim_quote",
+          "source_url",
+          "evidence_status",
+          "semantic_status",
+          "numeric_values",
+          "primary_source_provenance"
+        ],
+        "properties": {
+          "fact_id": {
+            "type": "string",
+            "pattern": "^F[1-9][0-9]*$"
+          },
+          "source_id": {
+            "type": "string",
+            "pattern": "^S[1-9][0-9]*$"
+          },
+          "claim": {
+            "type": "string",
+            "minLength": 1
+          },
+          "verbatim_quote": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "evidence_status": {
+            "enum": [
+              "EXCERPT_MATCHED",
+              "PRIMARY_SOURCE_VERIFIED"
+            ]
+          },
+          "semantic_status": {
+            "const": "NEEDS_REVIEW"
+          },
+          "numeric_values": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "primary_source_provenance": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "source_url",
+                  "method"
+                ],
+                "properties": {
+                  "source_url": {
+                    "type": "string",
+                    "format": "uri"
+                  },
+                  "method": {
+                    "const": "DIRECT_DOCUMENT_QUOTE_MATCH"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+    "rejected_facts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "fact_id",
+          "code"
+        ],
+        "properties": {
+          "fact_id": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "url",
+          "kind",
+          "excerpt_sha256",
+          "excerpt"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "kind": {
+            "enum": [
+              "primary",
+              "secondary"
+            ]
+          },
+          "excerpt_sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "excerpt": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "distinct_primary_documents",
+        "valid_facts",
+        "diagnostics",
+        "semantic_accuracy",
+        "primary_document_urls"
+      ],
+      "properties": {
+        "distinct_primary_documents": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "valid_facts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "diagnostics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "semantic_accuracy": {
+          "const": "NEEDS_REVIEW"
+        },
+        "primary_document_urls": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "integrity_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  }
+}
