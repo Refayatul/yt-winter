@@ -89,23 +89,38 @@ function prepareRecord(topic, evidence, reviewed) {
     researchStatus:"REVIEW_REQUIRED", productionReady:false
   };
 }
-function hookDiagnostics(topic, record, evidence) {
+function hookDiagnostics(topic, record, evidence, story = {}) {
   const channel = Channel.getChannel(CHANNEL);
   const config = GrowthConfig.forChannel(channel);
   const calculate = (r) => Hooks.generate(TopicModel.normalize(channel, Builder.merge(CHANNEL,topic,r)),config,{
     openingMaxSeconds:channel.config.retentionRules.openingMaxSeconds
   });
   const before = calculate(record);
-  const matching = (text) => evidence.approved_facts.filter((f) =>
-    auditStatement(text,[f.fact_id],evidence.approved_facts).status === "SUPPORTED"
-  ).map((f) => f.fact_id);
-  const supported = before.candidates.map((candidate) => ({ spoken:candidate.spoken, fact_ids:matching(candidate.spoken),
+  // Map each hook generator input field back to its OWN source-linked facts. A hook cannot
+  // borrow an unrelated fact simply because some words happen to overlap elsewhere.
+  const provenance = {
+    consequence: story.fields?.failureConsequence?.fact_ids || [],
+    mechanism: story.fields?.mechanism?.fact_ids || [],
+    dependency: story.fields?.dependency?.fact_ids || [],
+    bottleneck: story.fields?.bottleneck?.fact_ids || [],
+    openingLine: story.openingCandidates?.[0]?.fact_ids || [],
+    secondBeat: story.narration?.[1]?.fact_ids || [],
+    editorialTitles: (story.editorialTitles || []).flatMap((v) => v.fact_ids || []),
+    question: story.coreQuestion?.fact_ids || [],
+    evidence: evidence.approved_facts.map((f) => f.fact_id)
+  };
+  const matching = (text, fields) => {
+    if (!Array.isArray(fields) || !fields.length || fields.some((field) => !Array.isArray(provenance[field]) || !provenance[field].length)) return [];
+    const ids = [...new Set(fields.flatMap((field) => provenance[field]))];
+    return auditStatement(text,ids,evidence.approved_facts).status === "SUPPORTED" ? ids : [];
+  };
+  const supported = before.candidates.map((candidate) => ({ spoken:candidate.spoken, fact_ids:matching(candidate.spoken,candidate.fields),
     score:candidate.adjustedTotal, blocked:candidate.blocked, fitsOpening:candidate.fitsOpening !== false }))
     .filter((c) => c.fact_ids.length && !c.blocked && c.fitsOpening && c.score >= config.hooks.minimumScore);
   // The builder re-ranks ALL candidates. Filtering its candidate list here would bypass the
   // existing selection contract. Refuse an unsupported winner rather than picking runner-up.
   const selected = before.selected;
-  const matched = selected && matching(selected.spoken);
+  const matched = selected && matching(selected.spoken,selected.fields);
   const problems = [];
   if (before.candidateCount < config.hooks.minimumCandidates) problems.push("INSUFFICIENT_HOOK_CANDIDATES");
   if (supported.length < config.hooks.minimumCandidates) problems.push("INSUFFICIENT_SUPPORTED_HOOK_CANDIDATES");
@@ -143,7 +158,7 @@ async function generateStory({ topic, evidence, generate, budget }) {
   });
   const reviewed=validateStory(response?.json,evidence);
   const record=prepareRecord(topic,evidence,reviewed);
-  const hooks=hookDiagnostics(topic,record,evidence);
+  const hooks=hookDiagnostics(topic,record,evidence,response.json);
   // Run the actual offline builder for diagnostics only, never write to production or claim
   // online verification. It may reject unsafe fields and legacy topic-gate requirements.
   const result=await Builder.run({channel:CHANNEL,records:[record]},{offline:true,write:false,log:()=>{}});
