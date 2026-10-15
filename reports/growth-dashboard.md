@@ -1,10 +1,10 @@
 # Growth dashboard
 
-Generated 2026-10-15T17:49:13.286Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-10-15T18:22:31.398Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
-**Shorts health** — last published 2026-10-15T18:00:00.000Z · 24 published · inventory A76/B156/C61/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-15T18:00:00.000Z · 24 published · inventory A72/B160/C61/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
@@ -21,10 +21,10 @@ Generated 2026-10-15T17:49:13.286Z. Per-channel baselines are computed separatel
 **Research/source enrichment tasks**
 
 - apollo-1-1967 (C): VideoPotential 86 in experimental band 58–71; sources 41 < 62
-- munich-1958 (C): VideoPotential 85 in experimental band 58–71; sources 41 < 62
-- castle-bravo-1954 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
-- skylab-1973 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
-- boston-molasses-1919 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
+- munich-1958 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
+- castle-bravo-1954 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
+- skylab-1973 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
+- boston-molasses-1919 (C): VideoPotential 82 in experimental band 58–71; sources 41 < 62
 
 **Recent alerts**
 
@@ -35,7 +35,7 @@ Generated 2026-10-15T17:49:13.286Z. Per-channel baselines are computed separatel
 
 ## ImpossibleBrief
 
-**Shorts health** — last published 2026-10-15T18:00:00.000Z · 15 published · inventory A114/B24/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-15T18:00:00.000Z · 15 published · inventory A120/B18/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
@@ -53,9 +53,9 @@ Generated 2026-10-15T17:49:13.286Z. Per-channel baselines are computed separatel
 
 - what-if-human-heat-tolerance-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - could-we-function-with-half-human-heat-tolerance (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
+- what-if-human-muscle-efficiency-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - what-if-the-brain-s-energy-use-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
-- what-if-human-muscle-efficiency-doubled-overnight (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
-- would-doubling-all-synthetic-fertilizers-help-or-harm-us (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
+- if-a-rogue-planet-vanished-right-now-what-would-change-first (C): VideoPotential 73 in experimental band 58–71; boilerplate 0.5
 
 **Recent alerts**
 
@@ -72,7 +72,7 @@ Generated 2026-10-15T17:49:13.286Z. Per-channel baselines are computed separatel
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — the-critical-role-of-urban-traffic-control-network 79/A, why-submarine-fiber-optic-cable-is-so-hard-to-replace 78/A, what-quietly-depends-on-cable-landing-station 78/A, the-critical-role-of-cable-laying-ship 78/A, inside-the-system-built-around-road-tunnel-ventilation-system 78/A
+**Long-form backlog** — inside-the-system-built-around-road-tunnel-ventilation-system 79/A, the-critical-role-of-urban-traffic-control-network 79/A, why-submarine-fiber-optic-cable-is-so-hard-to-replace 78/A, what-quietly-depends-on-cable-landing-station 78/A, the-critical-role-of-cable-laying-ship 78/A
 
 **Content clusters** — 6 · integrity OK
 
