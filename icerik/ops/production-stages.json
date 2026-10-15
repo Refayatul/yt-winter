@@ -2,66 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "38413360708",
-      "attempt": "1",
-      "startedAt": "2026-10-13T14:27:30.664Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": "2026-10-13",
-      "slug": "united-232-1989",
-      "outcome": "UPLOADED",
-      "reason": null,
-      "stages": {
-        "RESEARCH": {
-          "status": "done",
-          "detail": "growth queue selected united-232-1989",
-          "at": "2026-10-13T14:27:35.380Z"
-        },
-        "SCRIPT": {
-          "status": "done",
-          "detail": "pre gate PUBLISH 85",
-          "at": "2026-10-13T14:27:35.765Z"
-        },
-        "ASSETS": {
-          "status": "done",
-          "at": "2026-10-13T14:27:39.503Z"
-        },
-        "NARRATION": {
-          "status": "done",
-          "at": "2026-10-13T14:32:45.905Z"
-        },
-        "RENDER": {
-          "status": "done",
-          "at": "2026-10-13T14:32:45.905Z"
-        },
-        "QA": {
-          "status": "done",
-          "detail": "final gate PUBLISH 90",
-          "at": "2026-10-13T14:32:48.926Z"
-        },
-        "UPLOAD": {
-          "status": "done",
-          "detail": "BukKRJfO7zI",
-          "at": "2026-10-13T14:32:54.697Z"
-        },
-        "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-13T18:00:00.000Z",
-          "at": "2026-10-13T14:32:54.698Z"
-        },
-        "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-13T18:00:00.000Z",
-          "at": "2026-10-13T14:32:54.698Z"
-        }
-      },
-      "finishedAt": "2026-10-13T14:32:54.747Z",
-      "videoId": "BukKRJfO7zI"
-    },
-    {
       "runId": "38416275673",
       "attempt": "1",
       "startedAt": "2026-10-13T14:47:34.589Z",
@@ -1368,6 +1308,50 @@
         }
       },
       "finishedAt": "2026-10-15T12:27:11.363Z"
+    },
+    {
+      "runId": "38736780261",
+      "attempt": "1",
+      "startedAt": "2026-10-15T12:44:05.881Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": null,
+      "slug": null,
+      "outcome": "NOT_DUE",
+      "reason": "today's Short already exists (daniel-j-morrell-1966)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-15T12:44:05.902Z"
     }
   ]
 }
