@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T18:22:31.398Z",
+  "generatedAt": "2026-10-15T19:16:10.730Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -9,8 +9,8 @@
         "lastPublished": "2026-10-15T18:00:00.000Z",
         "published": 24,
         "inventory": {
-          "A": 72,
-          "B": 160,
+          "A": 73,
+          "B": 159,
           "C": 61,
           "D": 59
         },
@@ -26,7 +26,7 @@
           "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
         },
         "baseline": {
-          "n": 23,
+          "n": 24,
           "views": 573,
           "averagePercentageViewed": 65.29,
           "subscribersPer1000Views": 1.56,
@@ -106,6 +106,12 @@
             "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
+            "slug": "chernobyl-1986",
+            "LongFormPotentialScore": 84,
+            "bucket": "A",
+            "mode": "B_SHORT_PROVES_DEMAND"
+          },
+          {
             "slug": "columbia-2003",
             "LongFormPotentialScore": 84,
             "bucket": "A",
@@ -113,12 +119,6 @@
           },
           {
             "slug": "lahaina-fire-2023",
-            "LongFormPotentialScore": 84,
-            "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
-          },
-          {
-            "slug": "laquila-earthquake-2009",
             "LongFormPotentialScore": 84,
             "bucket": "A",
             "mode": "B_SHORT_PROVES_DEMAND"
@@ -159,7 +159,7 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 23,
+          "sampleSize": 24,
           "adopted": 0,
           "hypotheses": 8
         },
@@ -179,20 +179,35 @@
         {
           "slug": "munich-1958",
           "bucket": "C",
-          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 85 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "castle-bravo-1954",
           "bucket": "C",
-          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "skylab-1973",
           "bucket": "C",
-          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "boston-molasses-1919",
+          "bucket": "C",
+          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
+        },
+        {
+          "slug": "new-london-school-1937",
+          "bucket": "C",
+          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
+        },
+        {
+          "slug": "b2-guam-2008",
+          "bucket": "C",
+          "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
+        },
+        {
+          "slug": "controlled-impact-1984",
           "bucket": "C",
           "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
         },
@@ -202,24 +217,9 @@
           "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
         },
         {
-          "slug": "new-london-school-1937",
-          "bucket": "C",
-          "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
-        },
-        {
           "slug": "quebec-bridge-1907",
           "bucket": "C",
           "reason": "VideoPotential 82 in experimental band 58–71; sources 55 < 62"
-        },
-        {
-          "slug": "b2-guam-2008",
-          "bucket": "C",
-          "reason": "VideoPotential 81 in experimental band 58–71; sources 41 < 62"
-        },
-        {
-          "slug": "uss-forrestal-1967",
-          "bucket": "C",
-          "reason": "VideoPotential 81 in experimental band 58–71; sources 41 < 62"
         }
       ],
       "alerts": [
@@ -345,8 +345,8 @@
           "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
         },
         "baseline": {
-          "n": 12,
-          "views": 998,
+          "n": 13,
+          "views": 610,
           "averagePercentageViewed": 69.31,
           "subscribersPer1000Views": 0,
           "engagementPer1000Views": 20.05,
@@ -412,33 +412,33 @@
         "backlog": [
           {
             "slug": "what-if-we-mined-a-metal-asteroid",
-            "LongFormPotentialScore": 82,
+            "LongFormPotentialScore": 84,
             "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-synthetic-fertilizer-disappeared",
-            "LongFormPotentialScore": 82,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
+            "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
             "slug": "what-if-we-swam-in-europas-ocean",
-            "LongFormPotentialScore": 81,
+            "LongFormPotentialScore": 82,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
           },
           {
-            "slug": "what-if-you-visited-io-the-volcano-moon",
-            "LongFormPotentialScore": 81,
+            "slug": "what-if-we-gave-mars-a-thicker-atmosphere",
+            "LongFormPotentialScore": 82,
             "bucket": "A",
-            "mode": "A_LONG_FIRST"
+            "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
-            "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
-            "LongFormPotentialScore": 81,
+            "slug": "what-if-sunlight-could-push-a-spaceship",
+            "LongFormPotentialScore": 82,
             "bucket": "A",
-            "mode": "A_LONG_FIRST"
+            "mode": "B_SHORT_PROVES_DEMAND"
+          },
+          {
+            "slug": "what-if-we-built-a-star-on-earth",
+            "LongFormPotentialScore": 82,
+            "bucket": "A",
+            "mode": "B_SHORT_PROVES_DEMAND"
           }
         ],
         "baseline": {
@@ -476,9 +476,9 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 12,
+          "sampleSize": 13,
           "adopted": 0,
-          "hypotheses": 6
+          "hypotheses": 5
         },
         "longform": {
           "status": "heuristics-only",
@@ -499,24 +499,19 @@
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
-          "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
           "slug": "what-if-the-brain-s-energy-use-doubled-overnight",
           "bucket": "C",
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "if-a-rogue-planet-vanished-right-now-what-would-change-first",
+          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
           "bucket": "C",
-          "reason": "VideoPotential 73 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "what-happens-if-the-global-ocean-doubles",
           "bucket": "C",
-          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "would-doubling-all-synthetic-fertilizers-help-or-harm-us",
@@ -532,6 +527,11 @@
           "slug": "what-breaks-first-if-a-rogue-planet-suddenly-doubles-in-mass",
           "bucket": "C",
           "reason": "VideoPotential 73 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
+          "slug": "if-a-rogue-planet-vanished-right-now-what-would-change-first",
+          "bucket": "C",
+          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "if-a-rogue-planet-moved-twice-as-close-when-would-earth-notice",
