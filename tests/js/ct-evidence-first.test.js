@@ -56,6 +56,7 @@ test("reject hallucinated quotes, unsupported digits and unknown sources", async
 test("fail closed for duplicate claims, short quotes, insufficient and excess inventory", async () => {
   const a = fixture();
   a.facts[3].claim = a.facts[0].claim;
+  a.facts[3].verbatim_quote = a.facts[0].verbatim_quote;
   let p = await Evidence.validateEvidence({ topic: { id: "CT-TEST" }, ...a, verifyPrimary: primary });
   assert.ok(p.rejected_facts.some((f) => f.code === "DUPLICATE_CLAIM"));
   assert.equal(p.status, "INSUFFICIENT_EVIDENCE");
