@@ -38,6 +38,15 @@ const FR = require(path.join(ROOT, "scripts", "fr-library", "build"));
 const Shared = require(path.join(ROOT, "scripts", "bto-research"));
 const Inventory = require(path.join(ROOT, "scripts", "growth", "topic-inventory"));
 const LineRepair = require(path.join(ROOT, "scripts", "ct-line-repair"));
+const Preflight = require(path.join(ROOT, "scripts", "ct-evidence-preflight"));
+// The hook engine (core/growth/hooks.js) turns each fact claim into a hook candidate only when the
+// claim, or its first clause, is 4..maxSpokenWords words, and the builder requires minimumCandidates.
+// With the CT-230 fixture, 14 short distinct facts give 18 candidates and 16 give 20
+// (tests/js/ct-evidence-preflight.test.js), so the draft must ask for at least 16 short claims.
+const HOOK_RULES = require(path.join(ROOT, "core", "growth", "config")).forChannel(Channel.getChannel("critical-thread")).hooks;
+const CLAIM_MAX_WORDS = HOOK_RULES.maxSpokenWords;
+const MIN_FACTS = 16;
+const MAX_FACTS = 18;
 
 const SLUG = "critical-thread";
 const EXCERPT_BUDGET_CHARS = Number(process.env.CT_RESEARCH_EXCERPT_CHARS) || 8000;
@@ -169,7 +178,7 @@ async function primaryLinks(title, get, hosts = ResearchCore.PRIMARY_HOSTS) {
 const SYSTEM = [
   "You research one topic for CriticalThread, a channel about the hidden systems modern life depends on and what happens when they fail (chips, power grids, cables, ports, shipping, water, cold chains, minerals, chokepoints).",
   "Use ONLY the supplied source excerpts. Never use outside knowledge. If the excerpts do not clearly support a dependency, a bottleneck and a documented failure or disruption, return {\"answerable\":false,\"reason\":\"...\"}.",
-  "Every fact needs a quote copied EXACTLY, character for character, from its source excerpt (at least 6 consecutive words), and the sourceId it came from. Give 10 to 14 facts, each claim one short sentence (at most 16 words) carrying one distinct detail: the record needs at least 20 distinct evidence-backed hook candidates. Every number in a claim must appear in its quote.",
+  `Every fact needs a quote copied EXACTLY, character for character, from its source excerpt (at least 6 consecutive words), and the sourceId it came from. Give ${MIN_FACTS} to ${MAX_FACTS} facts, each claim one short sentence of at most ${CLAIM_MAX_WORDS} words carrying one distinct detail: the record needs at least ${HOOK_RULES.minimumCandidates} distinct evidence-backed hook candidates, and a claim longer than ${CLAIM_MAX_WORDS} words cannot become one. Every number in a claim must appear in its quote.`,
   "dependency, mechanism, bottleneck, failureConsequence and resilience: one plain sentence each, each stated by the facts.",
   "Narration: 5 to 8 short spoken lines, 55 to 90 words in total, no sentence longer than 16 words, plain English, precise, no filler, no 'Did you know'.",
   "Speak at most 3 figures in the whole narration (years, counts and measurements all count) and never repeat a figure or a date. Explain how one fact causes the next (because, so, which means) instead of listing figures.",
@@ -203,6 +212,10 @@ const MAX_SPOKEN_FIGURES = 3;
 // source text; audit: the channel's legacy research and quality gates; hooks; identity), a fixed
 // category, a fact or line number where there is one, and whether a repair round can fix it.
 const VERIFICATION_RULES = [
+  // Evidence pre-check (scripts/ct-evidence-preflight.js): facts named by id.
+  ["evidence", "INVALID_SOURCE_ID", /^fact (F\d+): sourceId .* is not a supplied source/, "fact", "no"],
+  ["evidence", "QUOTE_NOT_IN_EXCERPT", /^fact (F\d+): quote not found in its source excerpt/, "fact", "yes"],
+  ["evidence", "CLAIM_NUMBER_NOT_IN_QUOTE", /^fact (F\d+): claim number\(s\) not in its quote/, "fact", "yes"],
   ["support", "NARRATION_CITES_NO_FACT", /^narration line (\d+) cites no fact/, "line", "yes"],
   ["support", "NARRATION_NOT_SUPPORTED", /^narration line (\d+) is not supported by its cited facts/, "line", "yes"],
   ["support", "FEWER_THAN_2_PRIMARY_REFERENCES", /fewer than 2 reachable primary references/, null, "maybe"],
@@ -337,14 +350,11 @@ function toRecord(topic, draft, sources) {
 async function precheck(topic, draft, sources, deps = {}) {
   const built = toRecord(topic, draft, sources);
   if (built.skip) return { skip: built.skip };
-  const errors = [...built.supportErrors];
+  // The evidence pre-check fails earlier than the builder's online verification, never instead of it.
+  const errors = [...Preflight.evidencePreflight(draft, sources), ...built.supportErrors];
   const offline = await (deps.offlineVerify || ((seed) => Builder.run(seed, { offline: true, write: false, log: () => {} })))({ channel: SLUG, records: [built.record] });
   for (const error of (offline.report[0] || { errors: [] }).errors) if (!errors.includes(error)) errors.push(error);
-  const quoteMisses = (draft.facts || []).filter((fact) => {
-    const source = sources[Number(String(fact && fact.sourceId || "").replace(/\D/g, "")) - 1];
-    return source && source.text && fact.quote && !Builder.quoteFound(source.text, fact.quote);
-  }).map((fact) => fact.id);
-  return { built, errors, quoteMisses };
+  return { built, errors };
 }
 
 async function researchOne(topic, deps) {
@@ -371,11 +381,13 @@ async function researchOne(topic, deps) {
   let feedback = null;
   for (let round = 0; round < 2; round += 1) {
     if (round === 0) draft = (await deps.generate(request({ user: JSON.stringify(user) }))).json;
-    else if (plan.mode === "lines") {
-      // Line-level repair: the model sees its own draft and replaces only the failing lines.
+    else if (plan.mode === "targeted") {
+      // Targeted repair: the model sees its own draft and replaces only the failing lines and the
+      // failing facts' quotes (never their claims).
       const allowed = new Set(plan.lines.keys());
+      const allowedQuotes = new Set(plan.facts.keys());
       const factIds = new Set((draft.facts || []).map((fact) => fact.id));
-      const validate = LineRepair.repairProblems(allowed, factIds);
+      const validate = LineRepair.repairProblems(allowed, factIds, allowedQuotes);
       const reply = (await deps.generate(request({ system: LineRepair.REPAIR_SYSTEM, maxTokens: REPAIR_TOKENS, validateJson: validate,
         user: JSON.stringify(LineRepair.repairInput(draft, plan, sources, { strongestHook: plan.strongestHook })) }))).json;
       // The provider already retries a malformed reply; one that still fails is not spliced (the draft
@@ -383,11 +395,16 @@ async function researchOne(topic, deps) {
       const problems = validate(reply);
       if (problems.length) log(`    · repair ${topic.id}: reply rejected (${problems.length} structural problem(s)); draft unchanged`);
       const before = draft;
-      draft = LineRepair.splice(draft, problems.length ? [] : reply.lines, allowed);
+      draft = LineRepair.splice(draft, problems.length ? [] : reply.lines || [], allowed);
+      const quotes = LineRepair.applyQuotes(draft, problems.length ? [] : reply.quotes, sources, allowedQuotes);
+      draft = quotes.draft;
+      if (allowedQuotes.size) log(`    · quotes ${topic.id}: ${quotes.accepted.length} replaced, ${quotes.rejected.length} rejected (not in the excerpt, too short or missing a claim number), ${allowedQuotes.size - quotes.accepted.length - quotes.rejected.length} not returned`);
       const byId = new Map((draft.facts || []).map((fact) => [fact.id, fact]));
       const novelty = [...allowed].map((n) => ({ n, warnings: LineRepair.noveltyAudit(draft.narration[n - 1].text, (draft.narration[n - 1].facts || []).map((id) => byId.get(id)).filter(Boolean)) })).filter((row) => row.warnings.length);
       const kept = before.narration.filter((line, index) => !allowed.has(index + 1) && JSON.stringify(line) === JSON.stringify(draft.narration[index])).length;
-      repairs.push({ mode: "lines", lines: [...allowed], kept, novelty: novelty.map((row) => ({ line: row.n, categories: row.warnings.map((w) => w.category) })) });
+      repairs.push({ mode: "targeted", lines: [...allowed], kept, quotes: { requested: [...allowedQuotes], accepted: quotes.accepted, rejected: quotes.rejected },
+        claimsUnchanged: before.facts.every((fact, index) => draft.facts[index] && draft.facts[index].claim === fact.claim && draft.facts[index].id === fact.id),
+        novelty: novelty.map((row) => ({ line: row.n, categories: row.warnings.map((w) => w.category) })) });
       if (novelty.length) log(`    · novelty ${topic.id} (warning only): ${novelty.map((row) => `line ${row.n} ${[...new Set(row.warnings.map((w) => w.category))].join("+")}`).join(", ")}`);
     } else {
       // Bounded fallback for failures a line cannot fix: one full redraft that sees its previous draft.
@@ -407,19 +424,19 @@ async function researchOne(topic, deps) {
     const summary = verificationSummary(errors, round + 1);
     verification.push(summary);
     log(`    · ${describeVerification(topic, summary)}`);
-    if (pre.quoteMisses.length) log(`    · excerpt check ${topic.id}: ${pre.quoteMisses.length} quote(s) not found in the supplied excerpt`);
     // The reason names classified failures only, never the builder's text (it can quote the draft).
     if (round === 1) return { status: "FAILED_CHECKS", reason: describeVerification(topic, summary).replace(/^verify \S+ /, ""), verification, repairs };
-    const targets = LineRepair.repairTargets(errors.map(classifyVerificationError), draft.narration);
-    plan = { ...targets, mode: targets.other.length || !targets.lines.size ? "full" : "lines" };
-    feedback = [...errors.slice(0, 12), ...pre.quoteMisses.map((id) => `fact ${id}: quote not found in its source excerpt`)];
+    const targets = LineRepair.repairTargets(errors.map(classifyVerificationError), draft.narration, pre.built.record.facts.map((fact) => fact.factId));
+    plan = { ...targets, mode: targets.other.length || (!targets.lines.size && !targets.facts.size) ? "full" : "targeted" };
+    feedback = errors.slice(0, 12);
     // The builder requires the spoken opening to be the strongest hook; name the one that won.
     const strongest = (deps.strongestHook || strongestHook)(topic, pre.built.record);
     if (strongest && errors.some((error) => /spoken opening is not a valid hook/.test(error))) {
       plan.strongestHook = strongest;
       feedback.push(`the strongest hook candidate is "${strongest}": make the opening line at least as strong, using only cited facts`);
     }
-    log(`    · repair ${topic.id}: ${plan.mode === "lines" ? `line-level, line(s) ${[...plan.lines.keys()].sort((a, b) => a - b).join(", ")}` : `full redraft (not line-fixable: ${plan.other.join(", ") || "no line identified"})`}`);
+    const scope = [plan.lines.size ? `line(s) ${[...plan.lines.keys()].sort((a, b) => a - b).join(", ")}` : null, plan.facts.size ? `quote(s) ${[...plan.facts.keys()].join(", ")}` : null].filter(Boolean).join("; ");
+    log(`    · repair ${topic.id}: ${plan.mode === "targeted" ? `targeted, ${scope}` : `full redraft (not targetable: ${plan.other.join(", ") || "nothing identified"})`}`);
   }
   return { status: "FAILED_CHECKS", verification, repairs };
 }
