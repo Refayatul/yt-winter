@@ -34,7 +34,7 @@ test("safe exact quotations are SUPPORTED but lexical paraphrases still NEEDS_RE
   assert.equal(Story.auditStatement("Component 1 not triggered documented technical failures.",["F1"],p.approved_facts).status,"UNSUPPORTED");
   assert.equal(Story.auditStatement("Component 777 triggered documented technical failures.",["F1"],p.approved_facts).status,"UNSUPPORTED");
   assert.equal(Story.auditStatement("The company triggered more technical failures.",["F1"],p.approved_facts).status,"NEEDS_REVIEW");
-  assert.equal(Story.auditStatement("Because the component failed, the station closed.",["F1"],p.approved_facts).status,"NEEDS_REVIEW");
+  assert.equal(Story.auditStatement("Because component 1 triggered documented technical failures, the station closed.",["F1"],p.approved_facts).status,"NEEDS_REVIEW");
   assert.equal(Story.auditStatement(claim(1),["F777"],p.approved_facts).status,"UNSUPPORTED");
 });
 test("Stage B receives only approved facts, never rejected text or source excerpts",async()=>{
