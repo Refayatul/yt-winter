@@ -64,7 +64,7 @@ test("unsupported story fields cannot become VERIFIED or published",async()=>{
 test("hook engine is consulted without changing global ranking; unsupported top hook fails closed",async()=>{
   const p=await verified(),draft=safeStory();
   const reviewed=Story.validateStory(draft,p),record=Story.prepareRecord(t,p,reviewed);
-  const result=Story.hookDiagnostics(t,record,p);
+  const result=Story.hookDiagnostics(t,record,p,draft);
   assert.equal(typeof result.before.candidateCount,"number");
   assert.ok(result.problems.every((s)=>typeof s==="string"));
   assert.equal(Array.isArray(result.selectedHookFactIds),true);
