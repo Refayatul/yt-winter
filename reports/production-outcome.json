@@ -1,115 +1,148 @@
 {
-  "at": "2026-10-14T20:21:18.897Z",
-  "runId": "38630540480",
+  "at": "2026-10-15T11:21:53.157Z",
+  "runId": "38725807079",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "today's Short already exists (hyatt-regency-walkway-1981)",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-15T18:00:00.000Z",
+      "reason": null,
+      "slug": "daniel-j-morrell-1966",
+      "videoId": "6Xsisq9PrHo",
+      "targetDay": "2026-10-15",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "growth queue selected daniel-j-morrell-1966",
+          "at": "2026-10-15T11:14:30.458Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre gate REVIEW 84",
+          "at": "2026-10-15T11:14:30.830Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-15T11:14:33.316Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-15T11:19:35.442Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-15T11:19:35.443Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "final gate PUBLISH 88",
+          "at": "2026-10-15T11:19:38.601Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "6Xsisq9PrHo",
+          "at": "2026-10-15T11:19:42.188Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-15T18:00:00.000Z",
+          "at": "2026-10-15T11:19:42.189Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-15T18:00:00.000Z",
+          "at": "2026-10-15T11:19:42.189Z"
         }
       }
     },
     {
       "channel": "impossible-brief",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "today's Short already exists (what-if-we-built-a-star-on-earth)",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-15T18:00:00.000Z",
+      "reason": null,
+      "slug": "what-if-we-gave-mars-a-thicker-atmosphere",
+      "videoId": "G9lIDTt09R0",
+      "targetDay": "2026-10-15",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
+          "at": "2026-10-15T11:19:51.203Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre-render readiness PUBLISH 86",
+          "at": "2026-10-15T11:19:51.203Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-15T11:21:20.632Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "Microsoft Edge neural TTS (claim-timed)",
+          "at": "2026-10-15T11:21:20.633Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-15T11:21:20.634Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "validations passed",
+          "at": "2026-10-15T11:21:20.734Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "G9lIDTt09R0",
+          "at": "2026-10-15T11:21:25.087Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-15T18:00:00.000Z",
+          "at": "2026-10-15T11:21:25.087Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-15T18:00:00.000Z",
+          "at": "2026-10-15T11:21:25.088Z"
         }
       }
     },
     {
       "channel": "critical-thread",
-      "outcome": "FAILED",
-      "category": "AWAITING_APPROVAL",
+      "outcome": "NO_TOPIC",
+      "category": "CONTENT_BLOCKED",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "health pre-flight: nitelikli-konu: kalite çubuğunu geçen konu yok — NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]; seslendirme: NARRATION_UNAVAILABLE: Edge sesi reddedildi (timeout, Edge TTS WebSocket error: Unexpected server respon",
+      "reason": "NO_EXPLORE_CANDIDATE",
       "slug": null,
       "videoId": null,
-      "targetDay": null,
+      "targetDay": "2026-10-15",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "failed",
+          "detail": "NO_EXPLORE_CANDIDATE",
+          "at": "2026-10-15T11:21:30.239Z"
         },
         "SCRIPT": {
           "status": "not-reached"
