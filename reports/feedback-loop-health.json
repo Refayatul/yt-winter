@@ -1,17 +1,17 @@
 {
   "schema": "feedback-loop-health/1",
-  "generatedAt": "2026-10-15T07:25:28.023Z",
+  "generatedAt": "2026-10-15T13:24:49.831Z",
   "verdict": "CLOSED_LOOP_WORKING",
   "channels": [
     {
       "channel": "failure-reconstructed",
       "verdict": "CLOSED_LOOP_WORKING",
       "mode": "adaptive",
-      "publishedVideos": 23,
-      "performanceRows": 24,
-      "diagnosisRows": 80,
+      "publishedVideos": 24,
+      "performanceRows": 25,
+      "diagnosisRows": 81,
       "learning": {
-        "updatedAt": "2026-10-15T07:25:24.818Z",
+        "updatedAt": "2026-10-15T13:24:47.602Z",
         "sampleSize": 23,
         "status": "adaptive",
         "observations": 33,
@@ -76,23 +76,9 @@
         }
       ],
       "timing": {
-        "lateCheckpointCount": 73,
+        "lateCheckpointCount": 75,
         "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
         "examples": [
-          {
-            "videoId": "uqoAjXMbbls",
-            "label": "12h",
-            "scheduledHours": 12,
-            "collectedAgeHours": 21.81,
-            "driftHours": 9.81
-          },
-          {
-            "videoId": "uqoAjXMbbls",
-            "label": "6h",
-            "scheduledHours": 6,
-            "collectedAgeHours": 22.07,
-            "driftHours": 16.07
-          },
           {
             "videoId": "uqoAjXMbbls",
             "label": "1h",
@@ -148,6 +134,20 @@
             "scheduledHours": 168,
             "collectedAgeHours": 170.82,
             "driftHours": 2.82
+          },
+          {
+            "videoId": "gC62R2vVYcs",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 17.35,
+            "driftHours": 5.35
+          },
+          {
+            "videoId": "gC62R2vVYcs",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 17.84,
+            "driftHours": 11.84
           }
         ]
       },
@@ -158,11 +158,11 @@
       "channel": "impossible-brief",
       "verdict": "CLOSED_LOOP_WORKING",
       "mode": "adaptive",
-      "publishedVideos": 14,
-      "performanceRows": 13,
-      "diagnosisRows": 50,
+      "publishedVideos": 15,
+      "performanceRows": 14,
+      "diagnosisRows": 51,
       "learning": {
-        "updatedAt": "2026-10-15T07:25:26.263Z",
+        "updatedAt": "2026-10-15T13:24:48.596Z",
         "sampleSize": 12,
         "status": "adaptive",
         "observations": 29,
@@ -227,23 +227,9 @@
         }
       ],
       "timing": {
-        "lateCheckpointCount": 27,
+        "lateCheckpointCount": 29,
         "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
         "examples": [
-          {
-            "videoId": "6AdruLBoGiw",
-            "label": "48h",
-            "scheduledHours": 48,
-            "collectedAgeHours": 50.82,
-            "driftHours": 2.82
-          },
-          {
-            "videoId": "9oMvT2-bE9E",
-            "label": "12h",
-            "scheduledHours": 12,
-            "collectedAgeHours": 21.26,
-            "driftHours": 9.26
-          },
           {
             "videoId": "9oMvT2-bE9E",
             "label": "6h",
@@ -299,6 +285,20 @@
             "scheduledHours": 6,
             "collectedAgeHours": 19.43,
             "driftHours": 13.43
+          },
+          {
+            "videoId": "6zrtuhSsLgA",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 17.36,
+            "driftHours": 5.36
+          },
+          {
+            "videoId": "6zrtuhSsLgA",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 17.84,
+            "driftHours": 11.84
           }
         ]
       },
@@ -313,7 +313,7 @@
       "performanceRows": 7,
       "diagnosisRows": 22,
       "learning": {
-        "updatedAt": "2026-10-15T07:25:27.670Z",
+        "updatedAt": "2026-10-15T13:24:49.601Z",
         "sampleSize": 6,
         "status": "observing",
         "observations": 25,
