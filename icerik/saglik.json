@@ -1,9 +1,9 @@
 {
   "channel": "failure-reconstructed",
   "channelName": "Failure Reconstructed",
-  "tarih": "2026-10-15T15:39:24.548Z",
+  "tarih": "2026-10-15T17:10:49.750Z",
   "aggregateManaged": true,
-  "yuklemeUygun": true,
+  "yuklemeUygun": false,
   "bulgular": [
     {
       "ad": "youtube-yetki",
@@ -42,8 +42,9 @@
     },
     {
       "ad": "seslendirme",
-      "durum": "ok",
-      "mesaj": "Edge sesi çalışıyor (en-US-AndrewMultilingualNeural; msedge-tts 2.1.0)"
+      "durum": "kritik",
+      "mesaj": "NARRATION_UNAVAILABLE: Edge sesi reddedildi (Edge TTS WebSocket error: Unexpected server response: 429, Edge TTS WebSocket error: Unexpected server response: 429, Edge TTS WebSocket error: Unexpected server response: 429; msedge-tts 2.1.0); yedek ses yok — fallback voice am_michael is not approved for publishing (config.voice.fallback.approved)",
+      "cozum": "Yedek sesi (config.voice.fallback) dinleyip onaylayın ya da Edge'in düzelmesini bekleyin. Konu harcanmaz, hiçbir şey render edilmez."
     },
     {
       "ad": "render-araclari",
@@ -53,7 +54,7 @@
     {
       "ad": "disk",
       "durum": "ok",
-      "mesaj": "89.8 GB boş alan"
+      "mesaj": "90.5 GB boş alan"
     }
   ]
 }
