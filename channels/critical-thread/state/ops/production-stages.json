@@ -2,67 +2,6 @@
   "channel": "critical-thread",
   "runs": [
     {
-      "runId": "38413360708",
-      "attempt": "1",
-      "startedAt": "2026-10-13T14:34:11.077Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": "2026-10-13",
-      "slug": "inside-the-system-built-around-rapid-sand-filter",
-      "outcome": "UPLOADED",
-      "reason": null,
-      "stages": {
-        "RESEARCH": {
-          "status": "done",
-          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
-          "at": "2026-10-13T14:34:14.733Z"
-        },
-        "SCRIPT": {
-          "status": "done",
-          "detail": "pre-render readiness REVIEW 85",
-          "at": "2026-10-13T14:34:14.733Z"
-        },
-        "ASSETS": {
-          "status": "done",
-          "at": "2026-10-13T14:35:27.381Z"
-        },
-        "NARRATION": {
-          "status": "done",
-          "detail": "Microsoft Edge neural TTS (claim-timed)",
-          "at": "2026-10-13T14:35:27.381Z"
-        },
-        "RENDER": {
-          "status": "done",
-          "at": "2026-10-13T14:35:27.381Z"
-        },
-        "QA": {
-          "status": "done",
-          "detail": "validations passed",
-          "at": "2026-10-13T14:35:27.525Z"
-        },
-        "UPLOAD": {
-          "status": "done",
-          "detail": "OOFFfcr0rC4",
-          "at": "2026-10-13T14:35:32.546Z"
-        },
-        "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-13T18:00:00.000Z",
-          "at": "2026-10-13T14:35:32.546Z"
-        },
-        "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-13T18:00:00.000Z",
-          "at": "2026-10-13T14:35:32.546Z"
-        }
-      },
-      "finishedAt": "2026-10-13T14:35:32.547Z",
-      "videoId": "OOFFfcr0rC4"
-    },
-    {
       "runId": "38416275673",
       "attempt": "1",
       "startedAt": "2026-10-13T14:47:41.688Z",
@@ -1359,6 +1298,52 @@
         }
       },
       "finishedAt": "2026-10-15T11:21:30.240Z"
+    },
+    {
+      "runId": "38730108448",
+      "attempt": "1",
+      "startedAt": "2026-10-15T11:50:35.768Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": "2026-10-15",
+      "slug": null,
+      "outcome": "NO_TOPIC",
+      "reason": "NO_EXPLORE_CANDIDATE",
+      "stages": {
+        "RESEARCH": {
+          "status": "failed",
+          "detail": "NO_EXPLORE_CANDIDATE",
+          "at": "2026-10-15T11:50:38.094Z"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-15T11:50:38.095Z"
     }
   ]
 }
