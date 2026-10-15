@@ -217,7 +217,7 @@ function researchDeps(generate, extra = {}) {
       measure: () => ({ qualified: 0, runwayDays: 0, deficit: 14, queue: topics.map((topic) => ({ slug: topic.slug })) }),
       get: async (url) => {
         if (/list=search/.test(url)) return { body: { query: { search: [{ title: "Reverse osmosis" }] } } };
-        if (/prop=extracts/.test(url)) return { body: { query: { pages: { 1: { title: "Reverse osmosis", extract: "Reverse osmosis desalination membrane. ".repeat(40) } } } } };
+        if (/prop=extracts/.test(url)) return { body: { query: { pages: { 1: { title: "Reverse osmosis", extract: "Reverse osmosis desalination membrane. ".repeat(40) + JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "ct-research-draft.json"), "utf8")).facts.map((fact) => fact.quote).join(". ") } } } } };
         if (/prop=extlinks/.test(url)) return { body: { query: { pages: { 1: { extlinks: [{ "*": "https://www.epa.gov/water-research" }, { "*": "https://www.who.int/water" }] } } } } };
         return { status: 200 };
       },

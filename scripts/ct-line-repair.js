@@ -19,6 +19,7 @@
 
 const path = require("path");
 const Shared = require(path.join(__dirname, "bto-research"));
+const Preflight = require(path.join(__dirname, "ct-evidence-preflight"));
 
 const FIGURE = /\b\d[\d,.]*\b/g;
 const MAX_SPOKEN_FIGURES = 3;
@@ -55,7 +56,13 @@ function normalizeFactIds(draft) {
 
 // Categories (scripts/ct-research.js VERIFICATION_RULES) a replacement narration line can fix.
 const LINE_CATEGORIES = new Set(["NARRATION_CITES_NO_FACT", "NARRATION_NOT_SUPPORTED", "SENTENCE_TOO_LONG", "INVALID_LAYER", "MISSING_ROLE",
-  "TOO_MANY_SPOKEN_FIGURES", "REPEATED_FIGURE", "OPENING_TOO_LONG", "OPENING_STARTS_WITH_DATE", "OPENING_NOT_A_VALID_HOOK"]);
+  "TOO_MANY_SPOKEN_FIGURES", "REPEATED_FIGURE", "OPENING_TOO_LONG", "OPENING_STARTS_WITH_DATE", "OPENING_NOT_A_VALID_HOOK",
+  // Length rules over several lines: rewriting lines (facts unchanged) can fix them, so they no longer
+  // force a full redraft (dry run 38604605273, CT-265: NARRATION_WORD_COUNT).
+  "NARRATION_WORD_COUNT", "SECOND_BEAT_TOO_LONG"]);
+
+// Fact failures a replacement quote can fix: the claim stays as it is, only its quote changes.
+const QUOTE_CATEGORIES = new Set(["QUOTE_TOO_SHORT", "QUOTE_NOT_VERBATIM", "QUOTE_NOT_IN_EXCERPT", "CLAIM_NUMBER_NOT_IN_QUOTE"]);
 
 // Lines that push the narration over the figure limit or repeat a figure; earlier lines keep theirs.
 function figureLines(narration) {
@@ -73,24 +80,35 @@ function figureLines(narration) {
   return over;
 }
 
-// Splits classified failures into line repairs and everything else. `failures` are
-// { category, ref } objects from ct-research classifyVerificationError.
-function repairTargets(failures, narration) {
+// Splits classified failures into line repairs, quote repairs and everything else. `failures` are
+// { category, ref } objects from ct-research classifyVerificationError. The builder names facts by
+// position ("fact 3"), the evidence pre-check by id ("fact F3"); `factIds` maps positions to ids.
+function repairTargets(failures, narration, factIds = []) {
   const lines = new Map();
+  const facts = new Map();
   const other = [];
   const add = (n, category) => { if (n >= 1 && n <= narration.length) lines.set(n, [...new Set([...(lines.get(n) || []), category])]); };
   for (const failure of failures) {
+    if (QUOTE_CATEGORIES.has(failure.category)) {
+      const ref = String(failure.ref || "").match(/^fact (F\d+|\d+)$/);
+      const id = ref ? (/^F/.test(ref[1]) ? ref[1] : factIds[Number(ref[1]) - 1]) : null;
+      if (id) facts.set(id, [...new Set([...(facts.get(id) || []), failure.category])]);
+      else other.push(failure.category);
+      continue;
+    }
     if (!LINE_CATEGORIES.has(failure.category)) { other.push(failure.category); continue; }
     const ref = String(failure.ref || "").match(/^line (\d+)$/);
     if (ref) add(Number(ref[1]), failure.category);
     else if (/^OPENING_/.test(failure.category)) add(1, failure.category);
+    else if (failure.category === "SECOND_BEAT_TOO_LONG") { add(1, failure.category); add(2, failure.category); }
+    else if (failure.category === "NARRATION_WORD_COUNT") narration.forEach((line, index) => add(index + 1, failure.category));
     else if (failure.category === "TOO_MANY_SPOKEN_FIGURES" || failure.category === "REPEATED_FIGURE") {
       const over = figureLines(narration);
       if (!over.size) other.push(failure.category);
       for (const [n, category] of over) add(n, category);
     } else other.push(failure.category);
   }
-  return { lines, other: [...new Set(other)] };
+  return { lines, facts, other: [...new Set(other)] };
 }
 
 // Facts not cited by a line that would meet the support rule for its current words. A hint for the
@@ -108,13 +126,14 @@ function citationHints(draft, n) {
 // ---- The repair request -------------------------------------------------------------------------
 
 const REPAIR_SYSTEM = [
-  "You repair specific narration lines of a CriticalThread research draft. The facts are fixed and already checked: do not add, change or remove facts.",
+  "You repair specific parts of a CriticalThread research draft. Facts are never added, removed or reworded.",
   "Rewrite ONLY the lines listed in \"replace\". Every other line stays exactly as it is and counts toward the limits.",
+  "For each fact listed in \"quotes\", return a new quote only: a passage copied EXACTLY, character for character, from that fact's source excerpt in \"excerpts\", at least 6 consecutive words, that states the fact's unchanged claim and contains every number in it. If the excerpt has no such passage, leave that fact out.",
   "Each replacement keeps its line number, role and place in the story, uses only details stated by the facts it cites, and cites only fact ids from \"facts\". Add no name, place, organisation, number or technical term that is not in a cited fact.",
   SUPPORT_RULE,
   FIGURE_RULE,
-  "Line 1 is the spoken hook: at most 9 words, concrete, not starting with a date. No sentence longer than 16 words.",
-  "Return JSON only: {\"lines\":[{\"n\":4,\"role\":\"...\",\"layer\":\"VERIFIED FACT\",\"text\":\"...\",\"facts\":[\"F3\"]}]}",
+  "Line 1 is the spoken hook: at most 9 words, concrete, not starting with a date. Lines 1 and 2 together: at most 18 words. No sentence longer than 16 words. The whole narration (all lines) totals 55 to 90 words; \"narrationWords\" is the current total.",
+  "Return JSON only: {\"lines\":[{\"n\":4,\"role\":\"...\",\"layer\":\"VERIFIED FACT\",\"text\":\"...\",\"facts\":[\"F3\"]}],\"quotes\":[{\"id\":\"F5\",\"quote\":\"...\"}]}",
 ].join("\n");
 
 function repairInput(draft, targets, sources, extra = {}) {
@@ -123,18 +142,53 @@ function repairInput(draft, targets, sources, extra = {}) {
     sources: sources.map((source, index) => ({ id: `S${index + 1}`, title: source.title, primaryReferences: (source.links || []).length })),
     facts: (draft.facts || []).map((fact) => ({ id: fact.id, claim: fact.claim, quote: fact.quote, sourceId: fact.sourceId })),
     narration: draft.narration.map((line, index) => ({ n: index + 1, role: line.role, layer: line.layer, text: line.text, facts: line.facts })),
+    narrationWords: draft.narration.reduce((sum, line) => sum + String(line.text || "").split(/\s+/).filter(Boolean).length, 0),
     replace: [...targets.lines.entries()].sort((a, b) => a[0] - b[0]).map(([n, failures]) => ({ n, failures, candidateFacts: citationHints(draft, n) })),
+    ...quoteRequest(draft, targets, sources),
     ...(extra.strongestHook ? { strongestHook: extra.strongestHook } : {}),
   };
 }
 
+// The facts whose quotes need replacing and only the excerpts of their sources.
+function quoteRequest(draft, targets, sources) {
+  const facts = targets.facts || new Map();
+  if (!facts.size) return {};
+  const byId = new Map((draft.facts || []).map((fact) => [fact.id, fact]));
+  const quotes = [...facts.entries()].filter(([id]) => byId.has(id)).map(([id, failures]) => ({ id, claim: byId.get(id).claim, sourceId: byId.get(id).sourceId, currentQuote: byId.get(id).quote, failures }));
+  const used = [...new Set(quotes.map((item) => item.sourceId))];
+  const excerpts = used.map((id) => ({ id, source: Preflight.sourceFor({ sourceId: id }, sources) })).filter((item) => item.source).map((item) => ({ id: item.id, excerpt: item.source.text }));
+  return { quotes, excerpts };
+}
+
+// Replaces quotes of the requested facts only, and only with a passage that passes
+// ct-evidence-preflight acceptableQuote (in the excerpt, at least 5 words, every claim number).
+// Claims are never touched. Rejected replacements leave the old quote, which then fails again.
+function applyQuotes(draft, quotes, sources, allowed) {
+  const accepted = [];
+  const rejected = [];
+  const facts = (draft.facts || []).map((fact) => {
+    const replacement = (quotes || []).find((item) => item && item.id === fact.id && allowed.has(fact.id));
+    if (!replacement) return fact;
+    if (Preflight.acceptableQuote(fact, replacement.quote, sources)) { accepted.push(fact.id); return { ...fact, quote: String(replacement.quote).trim() }; }
+    rejected.push(fact.id);
+    return fact;
+  });
+  return { draft: { ...draft, facts }, accepted, rejected };
+}
+
 // Structural check of a repair reply (core/llm/longform-provider.js retries a reply that fails it).
-function repairProblems(allowed, factIds) {
+function repairProblems(allowed, factIds, allowedQuotes = new Set()) {
   return (reply) => {
-    if (!reply || !Array.isArray(reply.lines) || !reply.lines.length) return ["reply has no lines"];
+    if (!reply || typeof reply !== "object") return ["reply is not an object"];
     const problems = [];
+    if (allowed.size && (!Array.isArray(reply.lines) || !reply.lines.length)) return ["reply has no lines"];
+    for (const item of Array.isArray(reply.quotes) ? reply.quotes : []) {
+      if (!item || !allowedQuotes.has(item.id)) problems.push(`quote for ${item && item.id} was not requested`);
+      else if (typeof item.quote !== "string" || !item.quote.trim()) problems.push(`quote for ${item.id} is empty`);
+    }
+    if (!allowed.size && allowedQuotes.size && !(Array.isArray(reply.quotes) && reply.quotes.length)) problems.push("reply has no quotes");
     const seen = new Set();
-    for (const line of reply.lines) {
+    for (const line of Array.isArray(reply.lines) ? reply.lines : []) {
       if (!line || !allowed.has(Number(line.n))) { problems.push(`line ${line && line.n} was not requested`); continue; }
       if (seen.has(Number(line.n))) problems.push(`line ${line.n} returned twice`);
       seen.add(Number(line.n));
@@ -188,6 +242,6 @@ function noveltyAudit(text, citedFacts) {
 }
 
 module.exports = {
-  SUPPORT_RULE, PRIMARY_RULE, FIGURE_RULE, REPAIR_SYSTEM, LINE_CATEGORIES, MAX_SPOKEN_FIGURES,
-  normalizeFactIds, figureLines, repairTargets, citationHints, repairInput, repairProblems, splice, noveltyAudit,
+  SUPPORT_RULE, PRIMARY_RULE, FIGURE_RULE, REPAIR_SYSTEM, LINE_CATEGORIES, QUOTE_CATEGORIES, MAX_SPOKEN_FIGURES,
+  normalizeFactIds, figureLines, repairTargets, citationHints, repairInput, quoteRequest, applyQuotes, repairProblems, splice, noveltyAudit,
 };

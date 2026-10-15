@@ -88,7 +88,7 @@ test("a line-level repair request carries the original draft, facts, rules, fail
   assert.deepEqual(payload.sources, [{ id: "S1", title: "Reverse osmosis", primaryReferences: 2 }]);
   assert.match(payload.rules.support, /at least 2 in every later line/);
   assert.equal("excerpt" in payload.sources[0], false, "excerpts are not resent");
-  assert.ok(lines.some((line) => /repair CT-230: line-level, line\(s\) 4/.test(line)));
+  assert.ok(lines.some((line) => /repair CT-230: targeted, line\(s\) 4/.test(line)));
   const first = JSON.parse(requests[0].user);
   assert.equal(first.sources[0].primaryReferences, 2, "the first draft request also carries the counts");
 });
@@ -119,15 +119,16 @@ test("invalid evidence is never accepted: a repair that adds a number, stays uns
 });
 
 test("failures a line cannot fix use the bounded fallback: one full redraft that sees its previous draft", async () => {
-  const shortQuote = () => { const draft = fixture(); draft.facts[2] = { ...draft.facts[2], quote: "kWh per m3" }; return draft; };
-  const { requests, outcome, lines } = await research([shortQuote(), shortQuote()]);
+  // Three facts: TOO_FEW_FACTS. A line or a quote repair cannot add facts, so this is a full redraft.
+  const fewFacts = () => { const draft = fixture(); draft.facts = draft.facts.slice(0, 3); draft.narration = draft.narration.map((line) => ({ ...line, facts: ["F1", "F2", "F3"] })); return draft; };
+  const { requests, outcome, lines } = await research([fewFacts(), fewFacts()]);
   assert.equal(outcome.status, "FAILED_CHECKS");
-  assert.match(outcome.reason, /QUOTE_TOO_SHORT fact 3/);
+  assert.match(outcome.reason, /TOO_FEW_FACTS|NARRATION_NOT_SUPPORTED|TOO_FEW_HOOK_CANDIDATES/);
   assert.equal(requests.length, 2, "still one repair request");
   assert.equal(requests[1].system, Research.SYSTEM);
   const payload = JSON.parse(requests[1].user);
   assert.ok(payload.previous_draft && Array.isArray(payload.previous_errors), "the redraft sees its previous draft and errors");
-  assert.ok(lines.some((line) => /full redraft \(not line-fixable: QUOTE_TOO_SHORT\)/.test(line)));
+  assert.ok(lines.some((line) => /full redraft \(not targetable: .*TOO_FEW_FACTS/.test(line)));
 });
 
 test("a draft whose only problem is fact-id formatting verifies without any repair request", async () => {

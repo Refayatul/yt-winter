@@ -36,7 +36,7 @@ function deps(verify, extra = {}) {
       measure: () => ({ qualified: 0, runwayDays: 0, deficit: 14, queue: [{ slug: topic.slug }] }),
       get: async (url) => {
         if (/list=search/.test(url)) return { body: { query: { search: [{ title: "Reverse osmosis" }] } } };
-        if (/prop=extracts/.test(url)) return { body: { query: { pages: { 1: { title: "Reverse osmosis", extract: "Reverse osmosis desalination membrane. ".repeat(40) } } } } };
+        if (/prop=extracts/.test(url)) return { body: { query: { pages: { 1: { title: "Reverse osmosis", extract: "Reverse osmosis desalination membrane. ".repeat(40) + JSON.parse(fs.readFileSync(path.join(__dirname, "fixtures", "ct-research-draft.json"), "utf8")).facts.map((fact) => fact.quote).join(". ") } } } } };
         if (/prop=extlinks/.test(url)) return { body: { query: { pages: { 1: { extlinks: [{ "*": "https://www.epa.gov/water-research" }, { "*": "https://www.who.int/water" }] } } } } };
         return { status: 200 };
       },
@@ -56,7 +56,8 @@ const BUILDER_ERRORS = [
 
 test("TASK 1: every CT draft and repair request asks for low reasoning effort at the unchanged limits", async () => {
   let round = 0;
-  const { deps: d, inputs } = deps(async () => ({ report: [{ slug: "x", errors: round++ === 0 ? [BUILDER_ERRORS[0]] : [] }] }));
+  // An unreachable source cannot be fixed by a line or a quote, so the repair is the full redraft.
+  const { deps: d, inputs } = deps(async () => ({ report: [{ slug: "x", errors: round++ === 0 ? [BUILDER_ERRORS[3]] : [] }] }));
   const result = await Research.main(["--limit", "1"], d);
   assert.equal(result.verified, 1, "the repair round verified the record");
   assert.equal(inputs.length, 2, "first draft and one repair request");
