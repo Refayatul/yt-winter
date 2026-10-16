@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-16T11:26:16.407Z",
+  "generatedAt": "2026-10-16T11:43:28.399Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -9,8 +9,8 @@
         "lastPublished": "2026-10-15T18:00:00.000Z",
         "published": 24,
         "inventory": {
-          "A": 78,
-          "B": 154,
+          "A": 72,
+          "B": 160,
           "C": 61,
           "D": 59
         },
@@ -106,6 +106,12 @@
             "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
+            "slug": "chernobyl-1986",
+            "LongFormPotentialScore": 84,
+            "bucket": "A",
+            "mode": "B_SHORT_PROVES_DEMAND"
+          },
+          {
             "slug": "columbia-2003",
             "LongFormPotentialScore": 84,
             "bucket": "A",
@@ -113,12 +119,6 @@
           },
           {
             "slug": "lahaina-fire-2023",
-            "LongFormPotentialScore": 84,
-            "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
-          },
-          {
-            "slug": "laquila-earthquake-2009",
             "LongFormPotentialScore": 84,
             "bucket": "A",
             "mode": "B_SHORT_PROVES_DEMAND"
@@ -160,8 +160,8 @@
         "shorts": {
           "status": "adaptive",
           "sampleSize": 24,
-          "adopted": 2,
-          "hypotheses": 8
+          "adopted": 0,
+          "hypotheses": 7
         },
         "longform": {
           "status": "heuristics-only",
@@ -177,19 +177,24 @@
           "reason": "VideoPotential 86 in experimental band 58–71; sources 41 < 62"
         },
         {
+          "slug": "castle-bravo-1954",
+          "bucket": "C",
+          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
+        },
+        {
           "slug": "munich-1958",
           "bucket": "C",
           "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
         },
         {
-          "slug": "castle-bravo-1954",
+          "slug": "skylab-1973",
           "bucket": "C",
           "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
         },
         {
-          "slug": "skylab-1973",
+          "slug": "b2-guam-2008",
           "bucket": "C",
-          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "boston-molasses-1919",
@@ -215,11 +220,6 @@
           "slug": "quebec-bridge-1907",
           "bucket": "C",
           "reason": "VideoPotential 82 in experimental band 58–71; sources 55 < 62"
-        },
-        {
-          "slug": "b2-guam-2008",
-          "bucket": "C",
-          "reason": "VideoPotential 81 in experimental band 58–71; sources 41 < 62"
         }
       ],
       "alerts": [
@@ -343,8 +343,8 @@
         "lastPublished": "2026-10-16T18:00:00.000Z",
         "published": 16,
         "inventory": {
-          "A": 118,
-          "B": 19,
+          "A": 116,
+          "B": 21,
           "C": 140,
           "D": 206
         },
@@ -493,7 +493,7 @@
           "status": "adaptive",
           "sampleSize": 13,
           "adopted": 0,
-          "hypotheses": 5
+          "hypotheses": 4
         },
         "longform": {
           "status": "heuristics-only",
@@ -526,7 +526,7 @@
         {
           "slug": "what-happens-if-the-global-ocean-doubles",
           "bucket": "C",
-          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "would-doubling-all-synthetic-fertilizers-help-or-harm-us",
@@ -544,14 +544,14 @@
           "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "could-commercial-fusion-power-scale-worldwide-in-ten-years",
+          "slug": "would-doubling-global-pollination-help-or-harm-us",
           "bucket": "C",
-          "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.67"
+          "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "what-if-human-bone-density-doubled-overnight",
+          "slug": "could-commercial-fusion-power-scale-worldwide-in-ten-years",
           "bucket": "C",
-          "reason": "VideoPotential 68 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 68 in experimental band 58–71; boilerplate 0.67"
         }
       ],
       "alerts": [

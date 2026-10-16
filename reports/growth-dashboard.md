@@ -1,30 +1,30 @@
 # Growth dashboard
 
-Generated 2026-10-16T11:26:16.407Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-10-16T11:43:28.399Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
-**Shorts health** — last published 2026-10-15T18:00:00.000Z · 24 published · inventory A78/B154/C61/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-15T18:00:00.000Z · 24 published · inventory A72/B160/C61/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — challenger-1986 85/A, air-france-447-2009 84/A, columbia-2003 84/A, lahaina-fire-2023 84/A, laquila-earthquake-2009 84/A
+**Long-form backlog** — challenger-1986 85/A, air-france-447-2009 84/A, chernobyl-1986 84/A, columbia-2003 84/A, lahaina-fire-2023 84/A
 
 **Content clusters** — 12 · integrity OK
 
 **Growth / subscriber conversion** — tracked 25 · subs/1k Shorts 1.56 · subs/1k long n/a
 
-**Learning** — Shorts adaptive (n=24, adopted 2) · Long-form heuristics-only (n=0)
+**Learning** — Shorts adaptive (n=24, adopted 0) · Long-form heuristics-only (n=0)
 
 **Short → Long funnel** — 0 link(s), 0 long→long, 0 pending RELATED_VIDEO_MANUAL_ACTION_REQUIRED
 
 **Research/source enrichment tasks**
 
 - apollo-1-1967 (C): VideoPotential 86 in experimental band 58–71; sources 41 < 62
+- castle-bravo-1954 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
 - munich-1958 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
-- castle-bravo-1954 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
 - skylab-1973 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
-- boston-molasses-1919 (C): VideoPotential 82 in experimental band 58–71; sources 41 < 62
+- b2-guam-2008 (C): VideoPotential 82 in experimental band 58–71; sources 41 < 62
 
 **Recent alerts**
 
@@ -36,7 +36,7 @@ Generated 2026-10-16T11:26:16.407Z. Per-channel baselines are computed separatel
 
 ## ImpossibleBrief
 
-**Shorts health** — last published 2026-10-16T18:00:00.000Z · 16 published · inventory A118/B19/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-16T18:00:00.000Z · 16 published · inventory A116/B21/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
@@ -56,7 +56,7 @@ Generated 2026-10-16T11:26:16.407Z. Per-channel baselines are computed separatel
 - could-we-function-with-half-human-heat-tolerance (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - what-if-human-muscle-efficiency-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - what-if-the-brain-s-energy-use-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
-- what-happens-if-the-global-ocean-doubles (C): VideoPotential 72 in experimental band 58–71; boilerplate 0.5
+- what-happens-if-the-global-ocean-doubles (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 
 **Recent alerts**
 
