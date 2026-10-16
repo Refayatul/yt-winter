@@ -2,66 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "38557595428",
-      "attempt": "1",
-      "startedAt": "2026-10-14T11:36:15.298Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": "2026-10-14",
-      "slug": "hyatt-regency-walkway-1981",
-      "outcome": "UPLOADED",
-      "reason": null,
-      "stages": {
-        "RESEARCH": {
-          "status": "done",
-          "detail": "growth queue selected hyatt-regency-walkway-1981",
-          "at": "2026-10-14T11:36:18.920Z"
-        },
-        "SCRIPT": {
-          "status": "done",
-          "detail": "pre gate PUBLISH 85",
-          "at": "2026-10-14T11:36:19.264Z"
-        },
-        "ASSETS": {
-          "status": "done",
-          "at": "2026-10-14T11:36:20.653Z"
-        },
-        "NARRATION": {
-          "status": "done",
-          "at": "2026-10-14T11:41:24.271Z"
-        },
-        "RENDER": {
-          "status": "done",
-          "at": "2026-10-14T11:41:24.272Z"
-        },
-        "QA": {
-          "status": "done",
-          "detail": "final gate PUBLISH 90",
-          "at": "2026-10-14T11:41:26.636Z"
-        },
-        "UPLOAD": {
-          "status": "done",
-          "detail": "gC62R2vVYcs",
-          "at": "2026-10-14T11:41:31.518Z"
-        },
-        "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-14T18:00:00.000Z",
-          "at": "2026-10-14T11:41:31.519Z"
-        },
-        "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-14T18:00:00.000Z",
-          "at": "2026-10-14T11:41:31.519Z"
-        }
-      },
-      "finishedAt": "2026-10-14T11:41:31.550Z",
-      "videoId": "gC62R2vVYcs"
-    },
-    {
       "runId": "38561943110",
       "attempt": "1",
       "startedAt": "2026-10-14T12:12:42.084Z",
@@ -1352,6 +1292,50 @@
         }
       },
       "finishedAt": "2026-10-16T11:44:48.750Z"
+    },
+    {
+      "runId": "38897650844",
+      "attempt": "1",
+      "startedAt": "2026-10-16T12:02:17.963Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": "2026-10-16",
+      "slug": null,
+      "outcome": "FAILED",
+      "reason": "health pre-flight: youtube-yetki: YouTube kimlik bilgileri yok (FR_YT_CLIENT_ID, FR_YT_CLIENT_SECRET, FR_YT_REFRESH_TOKEN)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-16T12:02:21.691Z"
     }
   ]
 }
