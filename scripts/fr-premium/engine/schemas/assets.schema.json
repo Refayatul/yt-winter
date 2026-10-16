@@ -1,0 +1,358 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fr-premium.assets.v1",
+  "title": "Topic assets: archival media with licences and measured anchors",
+  "type": "object",
+  "required": [
+    "schema",
+    "topic",
+    "assets"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "fr-premium.assets.v1"
+    },
+    "topic": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "assets": {
+      "type": "object",
+      "patternProperties": {
+        "^[a-z0-9][a-z0-9-]*$": {
+          "$ref": "#/$defs/asset"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "asset": {
+      "type": "object",
+      "required": [
+        "kind",
+        "file",
+        "source",
+        "licence",
+        "width",
+        "height"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "photo",
+            "document",
+            "clip"
+          ]
+        },
+        "file": {
+          "type": "string",
+          "minLength": 3
+        },
+        "source": {
+          "type": "object",
+          "required": [
+            "title",
+            "page"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "title": {
+              "type": "string"
+            },
+            "page": {
+              "type": "string",
+              "pattern": "^https://"
+            },
+            "caption": {
+              "type": "string"
+            },
+            "author": {
+              "type": "string"
+            }
+          }
+        },
+        "licence": {
+          "type": "object",
+          "required": [
+            "id",
+            "statement"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "enum": [
+                "public-domain",
+                "cc0",
+                "cc-by",
+                "cc-by-sa"
+              ]
+            },
+            "statement": {
+              "type": "string",
+              "minLength": 5
+            },
+            "attribution": {
+              "type": "string"
+            }
+          }
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "provenanceLabel": {
+          "type": "string"
+        },
+        "clip": {
+          "type": "object",
+          "required": [
+            "from",
+            "to",
+            "crop",
+            "out"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "from": {
+              "type": "number",
+              "minimum": 0
+            },
+            "to": {
+              "type": "number"
+            },
+            "crop": {
+              "$ref": "#/$defs/rect"
+            },
+            "out": {
+              "type": "object",
+              "required": [
+                "w",
+                "h"
+              ],
+              "properties": {
+                "w": {
+                  "type": "integer"
+                },
+                "h": {
+                  "type": "integer"
+                }
+              },
+              "additionalProperties": false
+            }
+          }
+        },
+        "anchors": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-z0-9][a-z0-9-]*$": {
+              "$ref": "#/$defs/anchor"
+            }
+          },
+          "additionalProperties": false
+        },
+        "timeline": {
+          "type": "object",
+          "required": [
+            "edited",
+            "segments"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "edited": {
+              "type": "boolean"
+            },
+            "note": {
+              "type": "string"
+            },
+            "segments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "from",
+                  "to",
+                  "timeBase",
+                  "basis"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "from": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "to": {
+                    "type": "number"
+                  },
+                  "timeBase": {
+                    "type": "string",
+                    "pattern": "^C-[a-z0-9-]+$"
+                  },
+                  "basis": {
+                    "type": "string",
+                    "minLength": 10
+                  }
+                }
+              }
+            }
+          }
+        },
+        "depicts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^C-[a-z0-9-]+$"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "vehicle",
+              "damage",
+              "document",
+              "drawing",
+              "portrait",
+              "film",
+              "setting",
+              "recovered-hardware"
+            ]
+          }
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "rect": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "w",
+        "h"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "w": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "h": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        }
+      }
+    },
+    "anchor": {
+      "type": "object",
+      "required": [
+        "space",
+        "method",
+        "basis"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "point": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "rect": {
+          "$ref": "#/$defs/rect"
+        },
+        "angleDeg": {
+          "type": "number"
+        },
+        "lengthPx": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "space": {
+          "enum": [
+            "source-px",
+            "clip-frame"
+          ]
+        },
+        "method": {
+          "enum": [
+            "manual-measure",
+            "caption-located",
+            "document-layout"
+          ]
+        },
+        "basis": {
+          "type": "string",
+          "minLength": 5
+        },
+        "claim": {
+          "type": "string",
+          "pattern": "^C-[a-z0-9-]+$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 2
+        },
+        "registersTo": {
+          "type": "string",
+          "pattern": "^asset:[a-z0-9-]+#[a-z0-9-]+$"
+        },
+        "role": {
+          "enum": [
+            "point-of-interest",
+            "subject",
+            "traceable-part",
+            "registration",
+            "document-line",
+            "document-block",
+            "mechanism-part",
+            "mechanism-ring",
+            "mechanism-scale"
+          ]
+        },
+        "suggestion": {
+          "type": "string",
+          "pattern": "^SG-[a-z0-9-]+$"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "point"
+          ]
+        },
+        {
+          "required": [
+            "rect"
+          ]
+        },
+        {
+          "required": [
+            "angleDeg"
+          ]
+        },
+        {
+          "required": [
+            "lengthPx"
+          ]
+        }
+      ]
+    }
+  }
+}

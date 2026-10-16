@@ -1,0 +1,275 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fr-premium.shot-plan.v1",
+  "title": "Data-driven shot plan: narration beats -> templates with evidence-referenced parameters",
+  "type": "object",
+  "required": [
+    "schema",
+    "topic",
+    "channel",
+    "style",
+    "narration",
+    "evidence",
+    "assets",
+    "film",
+    "shots"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "fr-premium.shot-plan.v1"
+    },
+    "topic": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "channel": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "style": {
+      "type": "string"
+    },
+    "narration": {
+      "type": "string"
+    },
+    "evidence": {
+      "type": "string"
+    },
+    "assets": {
+      "type": "string"
+    },
+    "film": {
+      "type": "object",
+      "required": [
+        "tail"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "tail": {
+          "type": "number",
+          "minimum": 0
+        },
+        "captionSkip": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^L[0-9]+$"
+          }
+        },
+        "captionFrom": {
+          "$ref": "#/$defs/timeRef"
+        },
+        "legacyScenes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "shared": {
+      "type": "object"
+    },
+    "shots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/shot"
+      }
+    }
+  },
+  "$defs": {
+    "timeRef": {
+      "type": "string",
+      "pattern": "^(start|end|-?\\d+(\\.\\d+)?|(line|lineEnd):L\\d+|(word|wordEnd):L\\d+:[^\\s#]+(#\\d+)?)( [+-]\\d+(\\.\\d+)?)?$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^(claim:C-[a-z0-9-]+|asset:[a-z0-9-]+(#[a-z0-9-]+)?)$"
+    },
+    "shot": {
+      "type": "object",
+      "required": [
+        "id",
+        "beat",
+        "template",
+        "start",
+        "end",
+        "provenance",
+        "evidence",
+        "params",
+        "transition",
+        "qa"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^S[0-9]{2}$"
+        },
+        "beat": {
+          "enum": [
+            "hook",
+            "setting",
+            "mechanism",
+            "event-sequence",
+            "human-cost",
+            "decision",
+            "evidence",
+            "payoff"
+          ]
+        },
+        "line": {
+          "type": "string",
+          "pattern": "^L[0-9]+$"
+        },
+        "template": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "start": {
+          "$ref": "#/$defs/timeRef"
+        },
+        "end": {
+          "$ref": "#/$defs/timeRef"
+        },
+        "provenance": {
+          "type": "object",
+          "required": [
+            "kind",
+            "label"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "kind": {
+              "enum": [
+                "archival",
+                "document",
+                "explanatory",
+                "reconstruction"
+              ]
+            },
+            "label": {
+              "type": "string",
+              "minLength": 3
+            }
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^C-[a-z0-9-]+$"
+          }
+        },
+        "assets": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z0-9-]+$"
+          }
+        },
+        "params": {
+          "type": "object"
+        },
+        "transition": {
+          "type": "object",
+          "required": [
+            "type"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string",
+              "minLength": 5
+            },
+            "fade": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1.5
+            }
+          }
+        },
+        "qa": {
+          "type": "object",
+          "required": [
+            "states"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "states": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "at",
+                  "what"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "at": {
+                    "$ref": "#/$defs/timeRef"
+                  },
+                  "what": {
+                    "type": "string",
+                    "minLength": 3
+                  },
+                  "claim": {
+                    "type": "string",
+                    "pattern": "^C-[a-z0-9-]+$"
+                  }
+                }
+              }
+            },
+            "minStates": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "registered": {
+              "type": "boolean"
+            },
+            "maxTextTiers": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "manual": {
+          "type": "object",
+          "required": [
+            "reason"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "reason": {
+              "type": "string",
+              "minLength": 10
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "required": [
+            "codes"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "codes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "note": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

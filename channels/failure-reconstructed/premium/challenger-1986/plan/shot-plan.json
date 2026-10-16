@@ -1,0 +1,1860 @@
+{
+ "schema": "fr-premium.shot-plan.v1",
+ "topic": "challenger-1986",
+ "channel": "failure-reconstructed",
+ "style": "failure-reconstructed/forensic-v1",
+ "narration": "../v1/timeline-edge-andrew.json",
+ "evidence": "evidence.json",
+ "assets": "assets.json",
+ "film": {
+  "tail": 0.8,
+  "captionSkip": [
+   "L12"
+  ],
+  "captionFrom": "0.5"
+ },
+ "shared": {
+  "night-before": {
+   "pages": [
+    {
+     "asset": "asset:chart53",
+     "x": 540,
+     "y": 700,
+     "w": 1000,
+     "rot": -1.5,
+     "dimBy": {
+      "event": "slide",
+      "amount": 0.25
+     },
+     "hideMarksWhenCovered": true,
+     "marks": [
+      {
+       "region": "asset:chart53#line-53f",
+       "window": [
+        "word:L10:recommended -0.05",
+        "word:L10:below +0.3"
+       ]
+      },
+      {
+       "region": "asset:chart53#value-53f",
+       "window": [
+        "word:L10:fifty-three -0.05",
+        "word:L10:fifty-three +0.3"
+       ],
+       "color": "alert"
+      },
+      {
+       "region": "asset:chart53#reason",
+       "window": [
+        "wordEnd:L10:degrees -0.1",
+        "wordEnd:L10:degrees +0.5"
+       ],
+       "color": "note"
+      }
+     ]
+    },
+    {
+     "asset": "asset:fax",
+     "x": 540,
+     "y": 780,
+     "w": 1040,
+     "rot": 1,
+     "slideIn": {
+      "window": [
+       "word:L11:managers -0.05",
+       "word:L11:reversed +0.05"
+      ],
+      "fromDy": 1500,
+      "fromRot": 4
+     },
+     "dimBy": {
+      "event": "finding",
+      "amount": 0.3
+     },
+     "marks": [
+      {
+       "region": "asset:fax#recommend",
+       "window": [
+        "word:L11:reversed",
+        "word:L11:advice +0.05"
+       ]
+      },
+      {
+       "region": "asset:fax#signature",
+       "window": [
+        "word:L11:advice +0.1",
+        "word:L11:advice +0.5"
+       ]
+      }
+     ]
+    }
+   ],
+   "camera": [
+    {
+     "at": "line:L10 -0.1",
+     "world": [
+      540,
+      700
+     ],
+     "zoom": 1.0
+    },
+    {
+     "at": "word:L10:engineers",
+     "world": [
+      540,
+      690
+     ],
+     "zoom": 1.15
+    },
+    {
+     "at": "word:L10:recommended",
+     "page": "asset:chart53",
+     "point": [
+      202,
+      57
+     ],
+     "zoom": 2.2
+    },
+    {
+     "at": "word:L10:below +0.15",
+     "page": "asset:chart53",
+     "point": [
+      297.2,
+      57
+     ],
+     "zoom": 2.35
+    },
+    {
+     "at": "word:L10:fifty-three +0.2",
+     "page": "asset:chart53",
+     "point": [
+      321,
+      59.4
+     ],
+     "zoom": 2.7
+    },
+    {
+     "at": "wordEnd:L10:degrees +0.25",
+     "page": "asset:chart53",
+     "point": [
+      300,
+      90
+     ],
+     "zoom": 1.55
+    },
+    {
+     "at": "word:L11:managers",
+     "world": [
+      540,
+      760
+     ],
+     "zoom": 1.35
+    },
+    {
+     "at": "word:L11:reversed",
+     "page": "asset:fax",
+     "point": [
+      200,
+      428
+     ],
+     "zoom": 1.7
+    },
+    {
+     "at": "word:L11:advice -0.05",
+     "page": "asset:fax",
+     "point": [
+      470,
+      428
+     ],
+     "zoom": 1.75
+    },
+    {
+     "at": "word:L11:advice +0.45",
+     "page": "asset:fax",
+     "point": [
+      256.4,
+      514
+     ],
+     "zoom": 1.6
+    },
+    {
+     "at": "word:L11:NASA's +0.2",
+     "world": [
+      540,
+      800
+     ],
+     "zoom": 1.0
+    },
+    {
+     "at": "line:L12 -0.1",
+     "world": [
+      540,
+      805
+     ],
+     "zoom": 1.03
+    }
+   ],
+   "rail": {
+    "ticks": [
+     "claim:C-telecon-0845",
+     "claim:C-reversal-1100",
+     "claim:C-fax-1145",
+     "claim:C-launch-1138"
+    ],
+    "steps": [
+     {
+      "at": "word:L11:reversed",
+      "lead": 0.1,
+      "lag": 0.4
+     },
+     {
+      "at": "word:L11:advice",
+      "lead": 0.1,
+      "lag": 0.4
+     },
+     {
+      "at": "word:L11:NASA's",
+      "lead": 0.1,
+      "lag": 0.6
+     }
+    ]
+   },
+   "finding": {
+    "claim": "claim:C-finding-unaware",
+    "window": [
+     "word:L11:NASA's",
+     "word:L11:NASA's +0.45"
+    ],
+    "highlight": "unaware",
+    "highlightAt": "word:L11:never"
+   }
+  }
+ },
+ "shots": [
+  {
+   "id": "S01",
+   "beat": "hook",
+   "line": "L1",
+   "template": "archival-plate",
+   "start": "0",
+   "end": "line:L2 -0.1",
+   "provenance": {
+    "kind": "archival",
+    "label": "NASA photo"
+   },
+   "evidence": [
+    "C-smoke-0678",
+    "C-smoke-right-srb",
+    "C-launch-1986"
+   ],
+   "assets": [
+    "liftoff"
+   ],
+   "params": {
+    "media": "asset:liftoff",
+    "box": {
+     "x": 0,
+     "y": 0,
+     "w": 1080,
+     "h": 1400
+    },
+    "camera": {
+     "keys": [
+      {
+       "at": "0",
+       "focus": [
+        1300,
+        2200
+       ],
+       "zoom": 1.0
+      },
+      {
+       "at": "line:L2 +0.2",
+       "focus": [
+        1712,
+        2735
+       ],
+       "zoom": 1.38
+      }
+     ]
+    },
+    "under": "ink",
+    "shades": [
+     {
+      "kind": "top",
+      "h": 640
+     },
+     {
+      "kind": "bottom",
+      "y": 1120,
+      "h": 290
+     },
+     {
+      "kind": "ink",
+      "y": 1400,
+      "h": 520
+     }
+    ],
+    "headline": {
+     "kicker": "CHALLENGER · {C-launch-1986}",
+     "text": "Already<br>leaking",
+     "y": 330,
+     "out": [
+      "0.3",
+      "0.5"
+     ]
+    },
+    "mark": {
+     "anchor": "asset:liftoff#smoke",
+     "radius": 86,
+     "in": [
+      "0.5",
+      "1.15"
+     ],
+     "layer": "svg",
+     "label": {
+      "lines": "SMOKE AT THE<br>RIGHT BOOSTER JOINT",
+      "value": "{C-smoke-0678}",
+      "in": [
+       "0.95",
+       "1.4"
+      ]
+     }
+    },
+    "chip": {
+     "label": "NASA photo",
+     "kind": "archival"
+    }
+   },
+   "transition": {
+    "type": "cut"
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "0.3",
+      "what": "headline clears; captions take over at 0.5 s"
+     },
+     {
+      "at": "0.5",
+      "what": "ring on the photographed smoke",
+      "claim": "C-smoke-right-srb"
+     },
+     {
+      "at": "0.95",
+      "what": "evidence label with the documented time",
+      "claim": "C-smoke-0678"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S02",
+   "beat": "mechanism",
+   "line": "L2",
+   "template": "trace-over-photo",
+   "start": "line:L2 -0.1",
+   "end": "word:L2:sealed -0.05",
+   "provenance": {
+    "kind": "explanatory",
+    "label": "NASA photo · traced outline"
+   },
+   "evidence": [
+    "C-smoke-right-srb"
+   ],
+   "assets": [
+    "liftoff"
+   ],
+   "params": {
+    "media": "asset:liftoff",
+    "box": {
+     "x": 0,
+     "y": 0,
+     "w": 1080,
+     "h": 1400
+    },
+    "camera": {
+     "keys": [
+      {
+       "at": "0",
+       "focus": [
+        1300,
+        2200
+       ],
+       "zoom": 1.0
+      },
+      {
+       "at": "line:L2 +0.2",
+       "focus": [
+        1712,
+        2735
+       ],
+       "zoom": 1.38
+      },
+      {
+       "at": "word:L2:sealed",
+       "focus": [
+        1560,
+        2895
+       ],
+       "zoom": 3.1
+      }
+     ],
+     "zoomInterp": "log"
+    },
+    "reveal": {
+     "fromH": 1400,
+     "window": [
+      "line:L2 -0.1",
+      "line:L2 +0.6"
+     ]
+    },
+    "grade": {
+     "window": [
+      "line:L2 -0.1",
+      "line:L2 +0.5"
+     ],
+     "saturate": 0.45,
+     "brightness": 0.65
+    },
+    "fadeOut": {
+     "window": [
+      "word:L2:sealed -0.6",
+      "word:L2:sealed"
+     ],
+     "to": 0.25
+    },
+    "paths": [
+     {
+      "basis": "asset:liftoff#right-srb",
+      "points": [
+       [
+        1500,
+        1950
+       ],
+       [
+        1500,
+        2990
+       ]
+      ],
+      "window": [
+       "line:L2 +0.0",
+       "line:L2 +0.6"
+      ],
+      "color": "line",
+      "width": 5
+     },
+     {
+      "basis": "asset:liftoff#right-srb",
+      "points": [
+       [
+        1910,
+        1950
+       ],
+       [
+        1910,
+        2990
+       ]
+      ],
+      "window": [
+       "line:L2 +0.1",
+       "line:L2 +0.7"
+      ],
+      "color": "line",
+      "width": 5
+     },
+     {
+      "basis": "asset:liftoff#right-srb",
+      "points": [
+       [
+        1490,
+        2895
+       ],
+       [
+        1920,
+        2895
+       ]
+      ],
+      "window": [
+       "word:L2:joint -0.15",
+       "word:L2:joint +0.35"
+      ],
+      "color": "accent",
+      "width": 11
+     },
+     {
+      "basis": "asset:liftoff#smoke",
+      "points": [
+       [
+        1920,
+        2895
+       ],
+       [
+        1912,
+        2891
+       ]
+      ],
+      "window": [
+       "word:L2:joint -0.15",
+       "word:L2:joint +0.35"
+      ],
+      "color": "accent",
+      "width": 5,
+      "dash": "10 12"
+     }
+    ],
+    "marks": [
+     {
+      "anchor": "asset:liftoff#smoke",
+      "radius": 86
+     }
+    ],
+    "callouts": [
+     {
+      "from": {
+       "basis": "asset:liftoff#right-srb",
+       "point": [
+        1705,
+        2350
+       ]
+      },
+      "to": {
+       "x": 150,
+       "dy": -360,
+       "minY": 470
+      },
+      "label": "RIGHT BOOSTER",
+      "window": [
+       "word:L2:right -0.1",
+       "word:L2:right +0.3"
+      ],
+      "size": 40
+     },
+     {
+      "from": {
+       "basis": "asset:liftoff#right-srb",
+       "point": [
+        1623,
+        2895
+       ]
+      },
+      "to": {
+       "x": 150,
+       "dy": 210,
+       "maxY": 1180
+      },
+      "label": "AFT FIELD JOINT",
+      "window": [
+       "word:L2:joint",
+       "word:L2:joint +0.4"
+      ],
+      "size": 40
+     }
+    ],
+    "shades": [
+     {
+      "kind": "top",
+      "h": 640,
+      "opacity": 0.6
+     },
+     {
+      "kind": "bottom",
+      "y": 1060,
+      "h": 520
+     },
+     {
+      "kind": "ink",
+      "y": 1290,
+      "color": "#000000",
+      "opacity": 0.35
+     }
+    ],
+    "chip": {
+     "label": "NASA photo · traced",
+     "kind": "explanatory"
+    }
+   },
+   "transition": {
+    "type": "continuous",
+    "reason": "same photograph, same camera: the trace is registered to it"
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "line:L2 +0.0",
+      "what": "trace of the right booster draws on",
+      "claim": "C-smoke-right-srb"
+     },
+     {
+      "at": "word:L2:joint",
+      "what": "aft field joint band lights"
+     },
+     {
+      "at": "word:L2:right",
+      "what": "label: right booster"
+     },
+     {
+      "at": "word:L2:sealed -0.6",
+      "what": "photo dims, camera pushes into the joint"
+     }
+    ],
+    "registered": true
+   }
+  },
+  {
+   "id": "S03",
+   "beat": "mechanism",
+   "line": "L2",
+   "template": "document-zoom",
+   "start": "word:L2:sealed -0.05",
+   "end": "line:L3 -0.1",
+   "provenance": {
+    "kind": "document",
+    "label": "Commission record"
+   },
+   "evidence": [
+    "C-two-orings"
+   ],
+   "assets": [
+    "fig14",
+    "liftoff"
+   ],
+   "params": {
+    "media": "asset:fig14",
+    "box": {
+     "x": 0,
+     "y": 340,
+     "w": 1080,
+     "h": 740
+    },
+    "register": {
+     "fromShot": "S02",
+     "fromAnchor": "asset:liftoff#joint-wall",
+     "toAnchor": "asset:fig14#wall",
+     "at": "word:L2:sealed",
+     "startScale": 0.55
+    },
+    "crops": [
+     {
+      "at": "word:L2:sealed +0.55",
+      "rect": {
+       "x": 0,
+       "y": 120,
+       "w": 527,
+       "h": 360
+      },
+      "ease": "out"
+     },
+     {
+      "at": "word:L2:O-rings -0.45",
+      "rect": {
+       "x": 0,
+       "y": 120,
+       "w": 527,
+       "h": 360
+      }
+     },
+     {
+      "at": "word:L2:O-rings +0.35",
+      "rect": {
+       "x": 160,
+       "y": 153,
+       "w": 355,
+       "h": 243
+      },
+      "ease": "inOut"
+     }
+    ],
+    "ground": {
+     "fromShot": "S02",
+     "at": "word:L2:sealed -0.05",
+     "opacity": 0.3,
+     "grade": "dim"
+    },
+    "rings": [
+     {
+      "anchor": "asset:fig14#primary-oring",
+      "radiusPx": 15,
+      "window": [
+       "word:L2:O-rings -0.1",
+       "word:L2:O-rings +0.35"
+      ]
+     },
+     {
+      "anchor": "asset:fig14#secondary-oring",
+      "radiusPx": 15,
+      "window": [
+       "word:L2:O-rings +0.1",
+       "word:L2:O-rings +0.45"
+      ]
+     }
+    ],
+    "highlights": [
+     {
+      "anchor": "asset:fig14#label-primary",
+      "window": [
+       "word:L2:O-rings -0.1",
+       "word:L2:O-rings +0.35"
+      ]
+     },
+     {
+      "anchor": "asset:fig14#label-secondary",
+      "window": [
+       "word:L2:O-rings +0.1",
+       "word:L2:O-rings +0.45"
+      ]
+     }
+    ],
+    "enter": [
+     "word:L2:sealed -0.05",
+     "word:L2:sealed +0.35"
+    ],
+    "shades": [
+     {
+      "kind": "ink",
+      "y": 1120,
+      "color": "#000000",
+      "opacity": 0.35
+     }
+    ],
+    "chip": {
+     "label": "Commission record",
+     "kind": "document"
+    },
+    "source": {
+     "text": "Rogers Commission Report, Vol. 1, Figure 14 · the field joint",
+     "y": 1110
+    }
+   },
+   "transition": {
+    "type": "push-in",
+    "reason": "push-in through the traced joint band into the Commission's cross-section",
+    "fade": 0.4
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "word:L2:sealed -0.05",
+      "what": "cross-section grows out of the joint band",
+      "claim": "C-two-orings"
+     },
+     {
+      "at": "word:L2:O-rings -0.45",
+      "what": "camera closes on the two O-rings; rings drawn",
+      "claim": "C-two-orings"
+     }
+    ],
+    "registered": true
+   }
+  },
+  {
+   "id": "S04",
+   "beat": "setting",
+   "line": "L3",
+   "template": "archival-plate",
+   "start": "line:L3 -0.1",
+   "end": "line:L4 -0.1",
+   "provenance": {
+    "kind": "archival",
+    "label": "NASA photo · launch morning"
+   },
+   "evidence": [
+    "C-temp-36f",
+    "C-15f-colder"
+   ],
+   "assets": [
+    "icicles"
+   ],
+   "params": {
+    "media": "asset:icicles",
+    "camera": {
+     "keys": [
+      {
+       "at": "line:L3 -0.1",
+       "focus": [
+        1250,
+        1300
+       ],
+       "zoom": 1.04
+      },
+      {
+       "at": "line:L4 -0.1",
+       "focus": [
+        1250,
+        1700
+       ],
+       "zoom": 1.16
+      }
+     ]
+    },
+    "shades": [
+     {
+      "kind": "tint",
+      "color": "#06121c",
+      "opacity": 0.28
+     },
+     {
+      "kind": "top",
+      "h": 760
+     },
+     {
+      "kind": "bottom",
+      "y": 1180,
+      "h": 740
+     }
+    ],
+    "stat": {
+     "value": "{C-temp-36f}",
+     "sub": "{C-15f-colder}",
+     "y": 330,
+     "in": [
+      "line:L3 +0.0",
+      "line:L3 +0.35"
+     ]
+    },
+    "chip": {
+     "label": "NASA photo · launch morning",
+     "kind": "archival"
+    }
+   },
+   "transition": {
+    "type": "cut",
+    "reason": "cut on the narration beat to the launch-morning photograph"
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "line:L3 +0.0",
+      "what": "36 °F stat on the icicle photograph",
+      "claim": "C-temp-36f"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S05",
+   "beat": "mechanism",
+   "line": "L4",
+   "template": "joint-section",
+   "start": "line:L4 -0.1",
+   "end": "line:L5 -0.1",
+   "provenance": {
+    "kind": "explanatory",
+    "label": "Explanatory animation · not to scale"
+   },
+   "evidence": [
+    "C-test-75f",
+    "C-joint-28f",
+    "C-gap-600ms",
+    "C-resiliency-cold",
+    "C-gap-max",
+    "C-two-orings"
+   ],
+   "assets": [],
+   "params": {
+    "scale": {
+     "mode": "declared-exaggeration",
+     "factor": 2.6
+    },
+    "ringDiameter": "claim:C-two-orings",
+    "gapMax": "claim:C-gap-max",
+    "squeeze": 0.3,
+    "follow": 0.9,
+    "panels": [
+     {
+      "tint": "warm",
+      "label": "{C-test-75f.value}°F",
+      "temperature": "claim:C-test-75f",
+      "tauSec": 0.06
+     },
+     {
+      "tint": "cold",
+      "label": "{C-joint-28f}",
+      "temperature": "claim:C-joint-28f",
+      "tauSec": 4.0
+     }
+    ],
+    "gap": {
+     "duration": "claim:C-gap-600ms",
+     "startAt": "word:L4:springs -0.2"
+    },
+    "gas": {
+     "window": [
+      "word:L4:springs +0.22",
+      "word:L4:slowly +0.4"
+     ]
+    },
+    "frost": {
+     "window": [
+      "line:L4 -0.1",
+      "line:L4 +0.5"
+     ]
+    },
+    "gapLabel": {
+     "text": "GAP ×{scale}",
+     "window": [
+      "word:L4:springs +0.15",
+      "word:L4:springs +0.5"
+     ],
+     "to": [
+      780,
+      1190
+     ]
+    },
+    "chip": {
+     "label": "Animation · not to scale",
+     "kind": "explanatory"
+    },
+    "source": {
+     "text": "{C-test-75f}, {C-joint-28f} · Rogers Commission Ch. IV · speeds illustrative",
+     "y": 1494
+    }
+   },
+   "transition": {
+    "type": "follow-cause",
+    "reason": "from the frozen launch tower into the cold rubber (frost carries across)",
+    "fade": 0.3
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "word:L4:springs -0.2",
+      "what": "sealing face starts moving away (joint opens)",
+      "claim": "C-gap-600ms"
+     },
+     {
+      "at": "word:L4:springs -0.05",
+      "what": "warm ring springs out and keeps contact",
+      "claim": "C-test-75f"
+     },
+     {
+      "at": "word:L4:springs +0.4",
+      "what": "cold ring still squeezed: gap open",
+      "claim": "C-resiliency-cold"
+     },
+     {
+      "at": "word:L4:slowly",
+      "what": "hot gas passes the cold ring only"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S06",
+   "beat": "mechanism",
+   "line": "L5",
+   "template": "joint-mechanism",
+   "start": "line:L5 -0.1",
+   "end": "line:L6 -0.1",
+   "provenance": {
+    "kind": "explanatory",
+    "label": "Explanatory animation · Fig. 14 geometry, gap exaggerated"
+   },
+   "evidence": [
+    "C-gap-600ms",
+    "C-gap-max",
+    "C-two-orings",
+    "C-joint-28f",
+    "C-resiliency-cold",
+    "C-smoke-0678"
+   ],
+   "assets": [
+    "fig14"
+   ],
+   "params": {
+    "drawing": "asset:fig14",
+    "geometry": {
+     "tang": "asset:fig14#tang",
+     "innerLeg": "asset:fig14#clevis-inner-leg",
+     "outerLeg": "asset:fig14#clevis-outer-leg",
+     "pin": "asset:fig14#clevis-pin",
+     "rings": [
+      "asset:fig14#primary-oring",
+      "asset:fig14#secondary-oring"
+     ],
+     "ringSize": "asset:fig14#oring-size"
+    },
+    "view": {
+     "region": {
+      "x": 150,
+      "y": 262,
+      "w": 130,
+      "h": 183
+     },
+     "box": {
+      "x": 70,
+      "y": 300,
+      "w": 940,
+      "h": 1323
+     }
+    },
+    "fromDrawing": {
+     "window": [
+      "line:L5 -0.1",
+      "line:L5 +0.5"
+     ]
+    },
+    "ringDiameter": "claim:C-two-orings",
+    "gapMax": "claim:C-gap-max",
+    "scale": {
+     "mode": "declared-exaggeration",
+     "factor": 8
+    },
+    "open": {
+     "startAt": "word:L5:ignition",
+     "duration": "claim:C-gap-600ms"
+    },
+    "recovery": {
+     "temperature": "claim:C-joint-28f",
+     "tauSec": 4.0,
+     "squeeze": 0.3
+    },
+    "gas": {
+     "window": [
+      "word:L5:hot -0.15",
+      "word:L5:hot +1.0"
+     ],
+     "leadIn": {
+      "from": "word:L5:ignition +0.7",
+      "level": 0.45
+     }
+    },
+    "push": {
+     "window": [
+      "line:L5 -0.1",
+      "line:L6 -0.1"
+     ],
+     "zoom": 1.06
+    },
+    "labels": [
+     {
+      "text": "PRIMARY O-RING",
+      "target": "ring0",
+      "window": [
+       "line:L5 +0.0",
+       "word:L5:open -0.3"
+      ],
+      "to": [
+       90,
+       470
+      ]
+     },
+     {
+      "text": "SECONDARY O-RING",
+      "target": "ring1",
+      "window": [
+       "line:L5 +0.3",
+       "word:L5:open -0.3"
+      ],
+      "to": [
+       90,
+       1000
+      ]
+     },
+     {
+      "text": "GAP ×{scale}",
+      "target": "gap",
+      "window": [
+       "word:L5:open",
+       "line:L6 -0.1"
+      ],
+      "to": [
+       990,
+       420
+      ]
+     },
+     {
+      "text": "HOT GAS",
+      "target": "gas",
+      "window": [
+       "word:L5:hot",
+       "line:L6 -0.1"
+      ],
+      "to": [
+       90,
+       470
+      ]
+     }
+    ],
+    "chip": {
+     "label": "Animation · Fig. 14 geometry",
+     "kind": "explanatory"
+    },
+    "source": {
+     "text": "Rogers Fig. 14 geometry · gap ×{scale} · recovery illustrative",
+     "y": 1494
+    }
+   },
+   "transition": {
+    "type": "cut",
+    "reason": "cut on the narration beat into the joint itself, drawn from the Commission's figure"
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "word:L5:ignition -0.1",
+      "what": "combustion pressure builds on the inside"
+     },
+     {
+      "at": "word:L5:ignition",
+      "what": "joint opens over the documented 0.6 s",
+      "claim": "C-gap-600ms"
+     },
+     {
+      "at": "word:L5:ignition +0.7",
+      "what": "blow-by begins (smoke documented at 0.678 s)",
+      "claim": "C-smoke-0678"
+     },
+     {
+      "at": "word:L5:couldn't",
+      "what": "cold rings lag: gap stays open",
+      "claim": "C-resiliency-cold"
+     },
+     {
+      "at": "word:L5:hot",
+      "what": "hot gas flows past both rings"
+     }
+    ],
+    "registered": true
+   }
+  },
+  {
+   "id": "S07",
+   "beat": "event-sequence",
+   "line": "L6",
+   "template": "archival-plate",
+   "start": "line:L6 -0.1",
+   "end": "line:L7 -0.1",
+   "provenance": {
+    "kind": "archival",
+    "label": "NASA film"
+   },
+   "evidence": [],
+   "assets": [
+    "climb"
+   ],
+   "params": {
+    "media": "asset:climb",
+    "box": {
+     "x": 0,
+     "y": 290,
+     "w": 1080,
+     "h": 1080
+    },
+    "camera": {
+     "keys": [
+      {
+       "at": "line:L6 -0.1",
+       "focus": [
+        500,
+        500
+       ],
+       "zoom": 1.0
+      }
+     ]
+    },
+    "plate": {
+     "blur": 34,
+     "dim": 0.45
+    },
+    "under": "ink",
+    "shades": [
+     {
+      "kind": "bottom",
+      "y": 1170,
+      "h": 200
+     }
+    ],
+    "chip": {
+     "label": "NASA film",
+     "kind": "archival"
+    }
+   },
+   "transition": {
+    "type": "cut",
+    "reason": "cut on the narration beat to the climbing film"
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "line:L6",
+      "what": "film plays (edited compilation: no mission clock shown)"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S08",
+   "beat": "event-sequence",
+   "line": "L7",
+   "template": "archival-plate",
+   "start": "line:L7 -0.1",
+   "end": "word:L7:swept -0.05",
+   "provenance": {
+    "kind": "archival",
+    "label": "NASA tracking film E-207"
+   },
+   "evidence": [
+    "C-flame-58788"
+   ],
+   "assets": [
+    "e207"
+   ],
+   "params": {
+    "media": "asset:e207",
+    "box": {
+     "x": 0,
+     "y": 290,
+     "w": 1080,
+     "h": 1080
+    },
+    "camera": {
+     "mode": "crop",
+     "keys": [
+      {
+       "at": "line:L7 +0.3",
+       "focus": [
+        500,
+        500
+       ],
+       "zoom": 1.0
+      },
+      {
+       "at": "word:L7:swept -0.03",
+       "focus": "asset:e207#flame",
+       "zoom": 1.7
+      }
+     ]
+    },
+    "plate": {
+     "blur": 34,
+     "dim": 0.45
+    },
+    "under": "ink",
+    "shades": [
+     {
+      "kind": "bottom",
+      "y": 1170,
+      "h": 200
+     }
+    ],
+    "mark": {
+     "anchor": "asset:e207#flame",
+     "radius": 70,
+     "pulse": true,
+     "outline": true,
+     "layer": "hud",
+     "in": [
+      "line:L7 +0.0",
+      "line:L7 +0.4"
+     ]
+    },
+    "stamp": {
+     "label": "FIRST FLAME · DOCUMENTED TIME",
+     "value": "claim:C-flame-58788"
+    },
+    "chip": {
+     "label": "NASA tracking film E-207",
+     "kind": "archival"
+    }
+   },
+   "transition": {
+    "type": "cut",
+    "reason": "cut on the narration beat into the documented tracking film"
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "line:L7 +0.0",
+      "what": "ring on the flame",
+      "claim": "C-flame-58788"
+     },
+     {
+      "at": "line:L7 +0.3",
+      "what": "camera closes on the flame"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S09",
+   "beat": "event-sequence",
+   "line": "L7",
+   "template": "event-sequence",
+   "start": "word:L7:swept -0.05",
+   "end": "word:L8:broke -0.05",
+   "provenance": {
+    "kind": "reconstruction",
+    "label": "Reconstruction · proportions approximate"
+   },
+   "evidence": [
+    "C-deflect-60238",
+    "C-leak-64660",
+    "C-strut-7220",
+    "C-dome-73124",
+    "C-et-length",
+    "C-et-diameter",
+    "C-srb-diameter",
+    "C-srb-length"
+   ],
+   "assets": [
+    "e207"
+   ],
+   "params": {
+    "dims": {
+     "etLength": "claim:C-et-length",
+     "etDiameter": "claim:C-et-diameter",
+     "srbLength": "claim:C-srb-length",
+     "srbDiameter": "claim:C-srb-diameter",
+     "srbOffsetM": 6.3,
+     "srbAftBelowEtM": 2.4
+    },
+    "jointFromAft": 0.2,
+    "events": [
+     {
+      "claim": "claim:C-plume-59262",
+      "at": "word:L7:swept -0.05",
+      "key": "plume"
+     },
+     {
+      "claim": "claim:C-deflect-60238",
+      "at": "word:L7:swept +0.25",
+      "key": "deflect",
+      "dur": 0.8,
+      "label": "{C-deflect-60238}"
+     },
+     {
+      "claim": "claim:C-leak-64660",
+      "at": "word:L7:tank",
+      "key": "leak",
+      "dur": 0.6,
+      "label": "{C-leak-64660}"
+     },
+     {
+      "claim": "claim:C-strut-7220",
+      "at": "word:L8:seventy-three",
+      "key": "strut",
+      "dur": 0.7,
+      "label": "{C-strut-7220}"
+     },
+     {
+      "claim": "claim:C-dome-73124",
+      "at": "word:L8:failed",
+      "key": "dome",
+      "dur": 0.8,
+      "label": "{C-dome-73124}"
+     }
+    ],
+    "rotationDeg": 5,
+    "register": {
+     "fromShot": "S08",
+     "anchor": "asset:e207#flame",
+     "axis": "asset:e207#vehicle-axis",
+     "width": "asset:e207#srb-width"
+    },
+    "camera": {
+     "settle": {
+      "dur": 1.0,
+      "focusFrac": 0.845,
+      "zoom": 1.9,
+      "screenY": 760
+     },
+     "push": {
+      "afterEvent": "strut",
+      "lead": 0.3,
+      "lag": 0.5,
+      "fx": 600,
+      "focusFrac": 0.88,
+      "zoom": 2.4
+     }
+    },
+    "orbiterOpacity": 0.16,
+    "clipAboveY": 1290,
+    "endDim": {
+     "afterEvent": "dome",
+     "delay": 0.9,
+     "opacity": 0.35
+    },
+    "chip": {
+     "label": "Reconstruction",
+     "kind": "reconstruction"
+    },
+    "source": {
+     "text": "Times: Rogers Commission, Vol. 1, Ch. III · proportions approximate",
+     "y": 1556
+    }
+   },
+   "transition": {
+    "type": "match",
+    "reason": "match cut on position and angle: the film's flame becomes the joint in the reconstruction"
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "word:L7:swept +0.25",
+      "what": "plume turns onto the tank",
+      "claim": "C-deflect-60238"
+     },
+     {
+      "at": "word:L7:tank",
+      "what": "hydrogen tank leaks",
+      "claim": "C-leak-64660"
+     },
+     {
+      "at": "word:L8:seventy-three",
+      "what": "lower strut breaks; booster rotates",
+      "claim": "C-strut-7220"
+     },
+     {
+      "at": "word:L8:failed",
+      "what": "aft dome fails",
+      "claim": "C-dome-73124"
+     }
+    ],
+    "registered": true
+   }
+  },
+  {
+   "id": "S10",
+   "beat": "human-cost",
+   "line": "L8",
+   "template": "archival-plate",
+   "start": "word:L8:broke -0.05",
+   "end": "line:L9 -0.15",
+   "provenance": {
+    "kind": "archival",
+    "label": "NASA photo"
+   },
+   "evidence": [
+    "C-breakup-photo-76s",
+    "C-ended-73s"
+   ],
+   "assets": [
+    "breakup"
+   ],
+   "params": {
+    "media": "asset:breakup",
+    "camera": {
+     "keys": [
+      {
+       "at": "word:L8:broke -0.05",
+       "focus": [
+        780,
+        1000
+       ],
+       "zoom": 1.0
+      },
+      {
+       "at": "line:L9 -0.15",
+       "focus": [
+        780,
+        1000
+       ],
+       "zoom": 1.04
+      }
+     ]
+    },
+    "filter": "saturate(0.85)",
+    "shades": [
+     {
+      "kind": "bottom",
+      "y": 1180,
+      "h": 740
+     }
+    ],
+    "chip": {
+     "label": "NASA photo · {C-breakup-photo-76s}",
+     "kind": "archival"
+    }
+   },
+   "transition": {
+    "type": "dip",
+    "reason": "brief dissolve into the breakup photograph, held once, no replay",
+    "fade": 0.25
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "word:L8:broke",
+      "what": "breakup photograph, held"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S11",
+   "beat": "human-cost",
+   "line": "L9",
+   "template": "archival-plate",
+   "start": "line:L9 -0.15",
+   "end": "line:L10 -0.1",
+   "provenance": {
+    "kind": "archival",
+    "label": "NASA portrait"
+   },
+   "evidence": [
+    "C-crew-seven",
+    "C-mission-sts51l",
+    "C-crew-portrait-1985"
+   ],
+   "assets": [
+    "crew"
+   ],
+   "params": {
+    "media": "asset:crew",
+    "box": {
+     "x": 0,
+     "y": 420,
+     "w": 1080,
+     "h": "auto"
+    },
+    "camera": {
+     "keys": [
+      {
+       "at": "line:L9 -0.15",
+       "focus": [
+        1920,
+        1536
+       ],
+       "zoom": 1.0
+      },
+      {
+       "at": "line:L10 -0.1",
+       "focus": [
+        1920,
+        1536
+       ],
+       "zoom": 1.05
+      }
+     ]
+    },
+    "under": "ink",
+    "kicker": {
+     "text": "{C-mission-sts51l}",
+     "y": 330
+    },
+    "chip": {
+     "label": "NASA portrait · {C-crew-portrait-1985}",
+     "kind": "archival"
+    }
+   },
+   "transition": {
+    "type": "dip",
+    "reason": "slow dissolve: loss beat, whole portrait, no animation",
+    "fade": 0.35
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "line:L9",
+      "what": "crew portrait, still",
+      "claim": "C-crew-seven"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S12",
+   "beat": "decision",
+   "line": "L10",
+   "template": "document-desk",
+   "start": "line:L10 -0.1",
+   "end": "line:L11 -0.1",
+   "provenance": {
+    "kind": "document",
+    "label": "Commission record"
+   },
+   "evidence": [
+    "C-chart-53f",
+    "C-telecon-0845"
+   ],
+   "assets": [
+    "chart53",
+    "fax"
+   ],
+   "params": {
+    "desk": "shared:night-before",
+    "enter": [
+     "line:L10 -0.1",
+     "line:L10 +0.3"
+    ],
+    "chip": {
+     "label": "Commission record",
+     "kind": "document"
+    },
+    "source": {
+     "text": "Thiokol chart, Rogers Commission p. 90",
+     "y": 1494
+    }
+   },
+   "transition": {
+    "type": "dip",
+    "reason": "slow dissolve from the crew portrait (loss beat, respectful pace)",
+    "fade": 0.3
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "word:L10:recommended",
+      "what": "camera reads the engineers' line; highlight follows",
+      "claim": "C-chart-53f"
+     },
+     {
+      "at": "word:L10:fifty-three",
+      "what": "camera lands on '≥ 53 °F'",
+      "claim": "C-chart-53f"
+     },
+     {
+      "at": "wordEnd:L10:degrees",
+      "what": "pull back to the engineers' reason"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S13",
+   "beat": "decision",
+   "line": "L11",
+   "template": "document-desk",
+   "start": "line:L11 -0.1",
+   "end": "line:L12 -0.1",
+   "provenance": {
+    "kind": "document",
+    "label": "Commission record"
+   },
+   "evidence": [
+    "C-reversed-finding4",
+    "C-fax-recommend",
+    "C-reversal-1100",
+    "C-fax-1145",
+    "C-launch-1138",
+    "C-finding-unaware"
+   ],
+   "assets": [
+    "chart53",
+    "fax"
+   ],
+   "params": {
+    "desk": "shared:night-before",
+    "chip": {
+     "label": "Commission record",
+     "kind": "document"
+    },
+    "source": {
+     "text": "Thiokol telefax, Rogers Commission p. 97",
+     "y": 1494,
+     "fadeWith": "finding"
+    }
+   },
+   "transition": {
+    "type": "continuous",
+    "reason": "continuous document camera: the reversal is laid on top of the warning"
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "word:L11:managers",
+      "what": "telefax slides over the engineers' chart",
+      "claim": "C-reversed-finding4"
+     },
+     {
+      "at": "word:L11:reversed",
+      "what": "camera reads 'MTI recommends ... launch proceed'",
+      "claim": "C-fax-recommend"
+     },
+     {
+      "at": "word:L11:advice +0.1",
+      "what": "signature highlighted",
+      "claim": "C-fax-recommend"
+     },
+     {
+      "at": "word:L11:NASA's",
+      "what": "clock to launch; the Commission's finding laid on top",
+      "claim": "C-finding-unaware"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S14",
+   "beat": "evidence",
+   "line": "L12",
+   "template": "archival-plate",
+   "start": "line:L12 -0.1",
+   "end": "word:L12:But -0.05",
+   "provenance": {
+    "kind": "archival",
+    "label": "NASA photo · recovered hardware"
+   },
+   "evidence": [
+    "C-hole-recovered",
+    "C-payoff"
+   ],
+   "assets": [
+    "burn"
+   ],
+   "params": {
+    "media": "asset:burn",
+    "camera": {
+     "keys": [
+      {
+       "at": "line:L12 -0.1",
+       "focus": [
+        1250,
+        1480
+       ],
+       "zoom": 1.0
+      },
+      {
+       "at": "word:L12:But +0.95",
+       "focus": [
+        1250,
+        1480
+       ],
+       "zoom": 1.08
+      }
+     ]
+    },
+    "shades": [
+     {
+      "kind": "top",
+      "h": 820
+     },
+     {
+      "kind": "bottom",
+      "y": 1180,
+      "h": 740
+     }
+    ],
+    "headline": {
+     "text": "The seal failed<br>in the cold.",
+     "y": 340,
+     "in": [
+      "line:L12 -0.1",
+      "line:L12 +0.2"
+     ]
+    },
+    "chip": {
+     "label": "NASA photo · recovered",
+     "kind": "archival"
+    },
+    "source": {
+     "text": "Scorched hole in the recovered right motor segment · NASA",
+     "y": 1250
+    }
+   },
+   "transition": {
+    "type": "dip",
+    "reason": "brief dissolve from the documents to the recovered hardware",
+    "fade": 0.2
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "line:L12 -0.1",
+      "what": "headline over the recovered segment",
+      "claim": "C-hole-recovered"
+     }
+    ]
+   }
+  },
+  {
+   "id": "S15",
+   "beat": "payoff",
+   "line": "L12",
+   "template": "payoff",
+   "start": "word:L12:But -0.05",
+   "end": "end",
+   "provenance": {
+    "kind": "archival",
+    "label": "NASA photo"
+   },
+   "evidence": [
+    "C-payoff"
+   ],
+   "assets": [
+    "liftoff"
+   ],
+   "params": {
+    "media": "asset:liftoff",
+    "box": {
+     "x": 0,
+     "y": 0,
+     "w": 1080,
+     "h": 1400
+    },
+    "camera": {
+     "keys": [
+      {
+       "at": "word:L12:But -0.05",
+       "focus": [
+        1712,
+        2735
+       ],
+       "zoom": 1.38
+      },
+      {
+       "at": "end",
+       "focus": [
+        1300,
+        2200
+       ],
+       "zoom": 1.0
+      }
+     ]
+    },
+    "lines": [
+     {
+      "text": "The seal failed in the cold.",
+      "tier": "setup"
+     },
+     {
+      "text": "But the warning failed<br>the night before.",
+      "tier": "payoff",
+      "in": 0.35
+     }
+    ],
+    "y": 330,
+    "fadeOut": 0.35,
+    "dim": 0.25,
+    "shades": [
+     {
+      "kind": "top",
+      "h": 640
+     },
+     {
+      "kind": "bottom",
+      "y": 1120,
+      "h": 290
+     },
+     {
+      "kind": "ink",
+      "y": 1400,
+      "h": 520
+     }
+    ],
+    "chip": {
+     "label": "NASA photo",
+     "kind": "archival"
+    }
+   },
+   "transition": {
+    "type": "loop",
+    "reason": "hard cut, then the camera returns to frame 0's framing for the replay"
+   },
+   "qa": {
+    "states": [
+     {
+      "at": "word:L12:But",
+      "what": "payoff line",
+      "claim": "C-payoff"
+     },
+     {
+      "at": "end -0.35",
+      "what": "returns to the opening frame"
+     }
+    ]
+   }
+  }
+ ]
+}

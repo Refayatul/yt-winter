@@ -1,0 +1,160 @@
+{
+ "schema": "fr-premium.evidence.v1",
+ "topic": "apollo-13-1970",
+ "sources": {
+  "E1": {
+   "title": "Report of Apollo 13 Review Board (NASA), NSSDC plain-text edition",
+   "url": "https://nssdc.gsfc.nasa.gov/planetary/lunar/apollo_13_review_board.txt",
+   "kind": "official-report",
+   "publisher": "NASA"
+  }
+ },
+ "claims": {
+  "C-a13-mission": {
+   "source": "E1",
+   "status": "verified",
+   "text": "Apollo 13 was launched from Kennedy Space Center",
+   "kind": "fact",
+   "passage": "Apollo 13 was successfully launched on schedule from Launch Complex 39A, Kennedy Space Center, Florida, at 2:13 p.m. e.s.t., April 11, 1970.",
+   "display": "APOLLO 13",
+   "role": "designation"
+  },
+  "C-a13-launch": {
+   "source": "E1",
+   "status": "verified",
+   "text": "Launch at 2:13 p.m. e.s.t., April 11, 1970",
+   "kind": "fact",
+   "passage": "Apollo 13 was successfully launched on schedule from Launch Complex 39A, Kennedy Space Center, Florida, at 2:13 p.m. e.s.t., April 11, 1970.",
+   "value": 1970,
+   "display": "1970",
+   "role": "date"
+  },
+  "C-a13-detank-date": {
+   "source": "E1",
+   "status": "verified",
+   "text": "Detanking operations were resumed on March 27, 1970",
+   "kind": "fact",
+   "passage": "On Friday, March 27, 1970, detanking operations were resumed",
+   "display": "March 27, 1970",
+   "role": "chronology"
+  },
+  "C-a13-heaters-65v": {
+   "source": "E1",
+   "status": "verified",
+   "text": "During detanking the tank heaters were powered from the 65 V dc ground supply",
+   "kind": "fact",
+   "passage": "The heaters were energized with the 65 V dc. GSE power supply",
+   "value": 65,
+   "unit": "V",
+   "display": "65 V",
+   "role": "context"
+  },
+  "C-a13-switch-rating": {
+   "source": "E1",
+   "status": "verified",
+   "text": "The thermostatic switches were rated for the 28 V dc spacecraft supply and could not open properly at 65 V dc",
+   "kind": "fact",
+   "passage": "Subsequent investigations have shown that the thermostatic switches used, while rated as satisfactory for the 28 V dc spacecraft power supply, could not open properly at 65 V dc.",
+   "value": 28,
+   "unit": "V",
+   "display": "28 V",
+   "role": "context"
+  },
+  "C-a13-switch-80f": {
+   "source": "E1",
+   "status": "verified",
+   "text": "Each thermostatic switch was intended to open the heater circuit at 80 F",
+   "kind": "fact",
+   "passage": "each heater is protected with a thermostatic switch, mounted on the heater tube, which is intended to open the heater circuit when it senses a temperature of 80 F.",
+   "value": 80,
+   "unit": "°F",
+   "display": "80°F",
+   "role": "temperature"
+  },
+  "C-a13-1000f": {
+   "source": "E1",
+   "status": "verified",
+   "text": "Switch failure probably let the heater tube reach about 1000 F in spots during 8 hours of heater operation",
+   "kind": "estimate",
+   "passage": "failure of the thermostatic switches probably permitted the temperature of the heater tube assembly to reach about 1000 F in spots during the continuous 8-hour period of heater operation.",
+   "value": 1000,
+   "unit": "°F",
+   "display": "about 1000°F",
+   "approximate": true,
+   "role": "temperature"
+  },
+  "C-a13-teflon": {
+   "source": "E1",
+   "status": "verified",
+   "text": "That heating severely damages the Teflon insulation on the fan motor wires",
+   "kind": "fact",
+   "passage": "Such heating has been shown by tests to severely damage the Teflon insulation on the fan motor wires in the vicinity of the heater assembly.",
+   "role": "context"
+  },
+  "C-a13-hazard": {
+   "source": "E1",
+   "status": "verified",
+   "text": "From then on, including on the pad, oxygen tank no. 2 was hazardous when filled and powered",
+   "kind": "fact",
+   "passage": "From that time on, including pad occupancy, the oxygen tank no. 2 was in a hazardous condition when filled with oxygen and electrically powered.",
+   "role": "context"
+  },
+  "C-a13-fans": {
+   "source": "E1",
+   "status": "verified",
+   "text": "Current was applied to the oxygen tank no. 2 fan motors at 55:53:20 g.e.t.",
+   "kind": "fact",
+   "passage": "current was applied to the oxygen tank no. 2 fan motors at 55:53:20.",
+   "value": 201200,
+   "unit": "s",
+   "valueAsWritten": "55:53:20",
+   "display": "55:53:20 g.e.t.",
+   "role": "event"
+  },
+  "C-a13-dataloss": {
+   "source": "E1",
+   "status": "verified",
+   "text": "At 55:54:53.555 g.e.t. telemetry was lost almost totally for 1.8 seconds",
+   "kind": "fact",
+   "passage": "About 1-1/2 minutes later, at 55:54:53.555, telemetry from the spacecraft was lost almost totally for 1.8 seconds.",
+   "value": 201293.555,
+   "unit": "s",
+   "valueAsWritten": "55:54:53.555",
+   "display": "55:54:53 g.e.t.",
+   "role": "event"
+  },
+  "C-a13-pressure": {
+   "source": "E1",
+   "status": "verified",
+   "text": "Oxygen tank no. 2 lost pressure in that period and the panel separated",
+   "kind": "fact",
+   "passage": "All indications are that the cryogenic oxygen tank no. 2 lost pressure in this time period and the panel separated.",
+   "role": "context"
+  },
+  "C-a13-cause": {
+   "source": "E1",
+   "status": "verified",
+   "text": "An electrically initiated fire in oxygen tank no. 2 was the cause of the accident",
+   "kind": "quote",
+   "passage": "All indications are that an electrically initiated fire in oxygen tank no. 2 in the service module (SM) was the cause of the accident.",
+   "display": "an electrically initiated fire|in oxygen tank no. 2",
+   "role": "finding"
+  },
+  "C-a13-averted": {
+   "source": "E1",
+   "status": "verified",
+   "text": "A near disaster averted only by the crew and the ground control team",
+   "kind": "quote",
+   "passage": "The imperfection in Apollo 13 constituted a near disaster, averted only by outstanding performance on the part of the crew and the ground control team which supported them.",
+   "role": "context"
+  },
+  "C-a13-payoff": {
+   "source": "E1",
+   "status": "verified",
+   "text": "Editorial summary: the danger began on the ground; the mission was saved in space",
+   "kind": "editorial",
+   "note": "editorial summary of the board's findings; not a quotation",
+   "role": "editorial"
+  }
+ }
+}

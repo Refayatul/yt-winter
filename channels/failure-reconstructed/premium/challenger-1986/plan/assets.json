@@ -1,0 +1,534 @@
+{
+  "schema": "fr-premium.assets.v1",
+  "topic": "challenger-1986",
+  "assets": {
+    "liftoff": {
+      "kind": "photo",
+      "file": "liftoff-smoke-closeup.jpg",
+      "width": 2308,
+      "height": 3458,
+      "provenanceLabel": "NASA photo",
+      "source": {
+        "title": "File:Challenger - GPN-2000-001347.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Challenger_-_GPN-2000-001347.jpg",
+        "author": "NASA"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "NASA work, public domain (Wikimedia Commons: Public domain)"
+      },
+      "anchors": {
+        "smoke": {
+          "point": [
+            1972,
+            2885
+          ],
+          "space": "source-px",
+          "method": "caption-located",
+          "claim": "C-smoke-right-srb",
+          "basis": "grey-brown smoke on the right side of the SRB, as the NASA caption describes; measured centre",
+          "role": "point-of-interest",
+          "label": "smoke at the right booster joint"
+        },
+        "right-srb": {
+          "rect": {
+            "x": 1500,
+            "y": 1950,
+            "w": 410,
+            "h": 1040
+          },
+          "space": "source-px",
+          "method": "manual-measure",
+          "basis": "visible edges of the near booster (the right SRB: orbiter belly to the tank, nose up)",
+          "role": "traceable-part",
+          "label": "right booster"
+        },
+        "aft-field-joint": {
+          "point": [
+            1705,
+            2895
+          ],
+          "space": "source-px",
+          "method": "manual-measure",
+          "claim": "C-smoke-right-srb",
+          "basis": "aft field joint band, measured at the smoke's height",
+          "role": "subject",
+          "label": "aft field joint"
+        },
+        "joint-wall": {
+          "point": [
+            1560,
+            2895
+          ],
+          "space": "source-px",
+          "method": "manual-measure",
+          "basis": "left wall of the right SRB at the aft field joint band (registration point for the Fig. 14 hand-off)",
+          "role": "registration",
+          "registersTo": "asset:fig14#wall"
+        }
+      },
+      "depicts": [
+        "C-smoke-right-srb",
+        "C-smoke-0678"
+      ],
+      "tags": [
+        "vehicle"
+      ],
+      "sha256": "7f6a6b732d97449632002109f066f1f5cf3b44868bc4a88cb745e8a6318353b0"
+    },
+    "fig14": {
+      "kind": "document",
+      "file": "rogers-v1p57-field-joint.jpg",
+      "width": 527,
+      "height": 807,
+      "provenanceLabel": "Commission record",
+      "source": {
+        "title": "File:RogersCommission-v1p57.jpg (Rogers Vol. 1 Fig. 14)",
+        "page": "https://commons.wikimedia.org/wiki/File:RogersCommission-v1p57.jpg",
+        "author": "Rogers Commission"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "US Government work (Presidential Commission report), public domain"
+      },
+      "anchors": {
+        "primary-oring": {
+          "point": [
+            242,
+            305
+          ],
+          "space": "source-px",
+          "method": "document-layout",
+          "claim": "C-two-orings",
+          "basis": "the O-ring Fig. 14 labels 'Primary O-Ring'",
+          "role": "mechanism-ring",
+          "label": "primary O-ring"
+        },
+        "secondary-oring": {
+          "point": [
+            242,
+            337
+          ],
+          "space": "source-px",
+          "method": "document-layout",
+          "claim": "C-two-orings",
+          "basis": "the O-ring Fig. 14 labels 'Secondary O-Ring'",
+          "role": "mechanism-ring",
+          "label": "secondary O-ring"
+        },
+        "wall": {
+          "point": [
+            242,
+            321
+          ],
+          "space": "source-px",
+          "method": "document-layout",
+          "basis": "midpoint between the two O-rings (registration point)",
+          "role": "registration"
+        },
+        "label-primary": {
+          "rect": {
+            "x": 353,
+            "y": 172,
+            "w": 128,
+            "h": 22
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "basis": "printed label 'Primary O-Ring'",
+          "role": "document-block"
+        },
+        "label-secondary": {
+          "rect": {
+            "x": 393,
+            "y": 218,
+            "w": 96,
+            "h": 40
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "basis": "printed label 'Secondary O-Ring'",
+          "role": "document-block"
+        },
+        "tang": {
+          "rect": {
+            "x": 180,
+            "y": 260,
+            "w": 56,
+            "h": 151
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "basis": "segment tang (hatched, upper segment) around the O-rings, measured on Fig. 14",
+          "role": "mechanism-part"
+        },
+        "clevis-inner-leg": {
+          "rect": {
+            "x": 238,
+            "y": 280,
+            "w": 23,
+            "h": 131
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "basis": "clevis inner leg carrying the O-ring grooves, measured on Fig. 14",
+          "role": "mechanism-part"
+        },
+        "clevis-outer-leg": {
+          "rect": {
+            "x": 157,
+            "y": 316,
+            "w": 19,
+            "h": 95
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "basis": "clevis outer leg, measured on Fig. 14",
+          "role": "mechanism-part"
+        },
+        "oring-size": {
+          "lengthPx": 10,
+          "space": "source-px",
+          "method": "document-layout",
+          "claim": "C-two-orings",
+          "basis": "drawn O-ring cross-section about 10 px across on Fig. 14 (the 0.280 in ring)",
+          "role": "mechanism-scale"
+        },
+        "clevis-pin": {
+          "rect": {
+            "x": 158,
+            "y": 411,
+            "w": 103,
+            "h": 59
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "basis": "clevis pin crossing the outer leg, tang and inner leg, measured on Fig. 14 ('Clevis Pin')",
+          "role": "mechanism-part"
+        }
+      },
+      "depicts": [
+        "C-two-orings"
+      ],
+      "tags": [
+        "drawing",
+        "document"
+      ],
+      "sha256": "51732c19e7556f7d6a42e9946de2eff55f23a79e04a0c7c33ad408ead07d6386"
+    },
+    "icicles": {
+      "kind": "photo",
+      "file": "icicles-tower.jpg",
+      "width": 2404,
+      "height": 3000,
+      "provenanceLabel": "NASA photo · launch morning",
+      "source": {
+        "title": "File:Icicles on the Launch Tower - GPN-2000-001348.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Icicles_on_the_Launch_Tower_-_GPN-2000-001348.jpg",
+        "author": "NASA"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "NASA work, public domain"
+      },
+      "depicts": [
+        "C-temp-36f",
+        "C-15f-colder"
+      ],
+      "tags": [
+        "setting"
+      ],
+      "sha256": "c07c3cc715fcf223e031a1892b88f22de8b69d830fd8b0d23bfa57c71194fb01"
+    },
+    "climb": {
+      "kind": "clip",
+      "file": "launch-breakup.ogv",
+      "width": 854,
+      "height": 480,
+      "provenanceLabel": "NASA film",
+      "source": {
+        "title": "File:Challenger Launch and Breakup.ogv",
+        "page": "https://commons.wikimedia.org/wiki/File:Challenger_Launch_and_Breakup.ogv",
+        "author": "NASA STI Program"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "NASA work, public domain"
+      },
+      "clip": {
+        "from": 29.5,
+        "to": 33.0,
+        "crop": {
+          "x": 165,
+          "y": 25,
+          "w": 430,
+          "h": 430
+        },
+        "out": {
+          "w": 1000,
+          "h": 1000
+        }
+      },
+      "timeline": {
+        "edited": true,
+        "segments": [],
+        "note": "edited compilation: camera changes at about 3, 12, 16, 18 and 27 s (checked frame by frame); the caption's 'starts at T-10 seconds' does not map later segments to mission time"
+      },
+      "depicts": [],
+      "tags": [
+        "film"
+      ],
+      "sha256": "6a5f4df4a51f54a632eab429c49b4d1b8fca6311d55966abb29b6bd3ee8e41a3"
+    },
+    "e207": {
+      "kind": "clip",
+      "file": "e207.webm",
+      "width": 1280,
+      "height": 720,
+      "provenanceLabel": "NASA tracking film E-207",
+      "source": {
+        "title": "File:STS-51L Challenger Engineering Camera E-207.webm",
+        "page": "https://commons.wikimedia.org/wiki/File:STS-51L_Challenger_Engineering_Camera_E-207.webm",
+        "author": "NASA"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "NASA work, public domain"
+      },
+      "clip": {
+        "from": 18.6,
+        "to": 22.4,
+        "crop": {
+          "x": 400,
+          "y": 20,
+          "w": 620,
+          "h": 620
+        },
+        "out": {
+          "w": 1000,
+          "h": 1000
+        }
+      },
+      "anchors": {
+        "flame": {
+          "point": [
+            515,
+            458
+          ],
+          "space": "clip-frame",
+          "method": "manual-measure",
+          "claim": "C-flame-58788",
+          "basis": "flame at the right SRB aft field joint, measured on the extracted frames",
+          "role": "point-of-interest",
+          "label": "flame at the joint"
+        },
+        "vehicle-axis": {
+          "angleDeg": -28,
+          "space": "clip-frame",
+          "method": "manual-measure",
+          "basis": "vehicle long axis in the extracted frames (nose up-left)",
+          "role": "registration"
+        },
+        "srb-width": {
+          "lengthPx": 50,
+          "space": "clip-frame",
+          "method": "manual-measure",
+          "basis": "apparent booster width in the extracted frames (estimate)",
+          "role": "registration"
+        }
+      },
+      "timeline": {
+        "edited": false,
+        "segments": [],
+        "note": "no documented time code for this excerpt; only the documented event time (first flame) may be stated, not a running clock"
+      },
+      "depicts": [
+        "C-flame-58788"
+      ],
+      "tags": [
+        "film"
+      ],
+      "sha256": "041e739e616f304247c519164728267e7c2f0901d8b793e5f0d4cc4b6b6ba17d"
+    },
+    "breakup": {
+      "kind": "photo",
+      "file": "breakup-still.jpg",
+      "width": 1552,
+      "height": 2113,
+      "provenanceLabel": "NASA photo",
+      "source": {
+        "title": "File:Challenger breakup.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Challenger_breakup.jpg",
+        "author": "NASA"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "NASA work, public domain"
+      },
+      "depicts": [
+        "C-breakup-photo-76s"
+      ],
+      "tags": [
+        "damage"
+      ],
+      "sha256": "c980aadb35bff13fbe12cc48008ce19bef2430ff36b8410fd40b14d2bbf93bf3"
+    },
+    "crew": {
+      "kind": "photo",
+      "file": "crew-portrait.jpg",
+      "width": 3840,
+      "height": 3072,
+      "provenanceLabel": "NASA portrait",
+      "source": {
+        "title": "File:Challenger flight 51-l crew.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:Challenger_flight_51-l_crew.jpg",
+        "author": "NASA"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "NASA work, public domain"
+      },
+      "depicts": [
+        "C-crew-seven"
+      ],
+      "tags": [
+        "portrait"
+      ],
+      "sha256": "0d8a60ca15ab5391ebb993b147fc037b621051683403b248ad0ca2d85a8f3442"
+    },
+    "burn": {
+      "kind": "photo",
+      "file": "debris-burn-marks.jpg",
+      "width": 2307,
+      "height": 2281,
+      "provenanceLabel": "NASA photo · recovered",
+      "source": {
+        "title": "File:STS-51-L Recovered Debris (Burn Marks on the SRM) - GPN-2004-00004.jpg",
+        "page": "https://commons.wikimedia.org/wiki/File:STS-51-L_Recovered_Debris_(Burn_Marks_on_the_SRM)_-_GPN-2004-00004.jpg",
+        "author": "NASA"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "NASA work, public domain"
+      },
+      "depicts": [
+        "C-hole-recovered"
+      ],
+      "tags": [
+        "recovered-hardware"
+      ],
+      "sha256": "c60e545c226bf3f9902dbf6f073219836acbc2f42fc9583fe5b378ba3fcb1e52"
+    },
+    "chart53": {
+      "kind": "document",
+      "file": "rogers-v1p90-thiokol-chart.jpg",
+      "width": 599,
+      "height": 186,
+      "provenanceLabel": "Commission record",
+      "source": {
+        "title": "Thiokol initial recommendation chart, Rogers Vol. 1 p. 90",
+        "page": "https://www.nasa.gov/history/rogersrep/v1ch5.htm"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "US Government work (Presidential Commission report), public domain"
+      },
+      "anchors": {
+        "line-53f": {
+          "rect": {
+            "x": 52,
+            "y": 44,
+            "w": 470,
+            "h": 26
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "claim": "C-chart-53f",
+          "basis": "handwritten line 'O-RING TEMP MUST BE ≥ 53 °F AT LAUNCH'",
+          "role": "document-line"
+        },
+        "value-53f": {
+          "rect": {
+            "x": 262,
+            "y": 44,
+            "w": 118,
+            "h": 26
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "claim": "C-chart-53f",
+          "basis": "'≥ 53 °F' on the same line",
+          "role": "document-line"
+        },
+        "reason": {
+          "rect": {
+            "x": 58,
+            "y": 78,
+            "w": 500,
+            "h": 50
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "basis": "development-motor and SRM-15 lines under it",
+          "role": "document-block"
+        }
+      },
+      "depicts": [
+        "C-chart-53f"
+      ],
+      "tags": [
+        "document"
+      ],
+      "sha256": "315fa000b424692fed91921a315eb5f5b6427dcfe947b7e21926efad026912b9"
+    },
+    "fax": {
+      "kind": "document",
+      "file": "rogers-v1p97-thiokol-fax.jpg",
+      "width": 804,
+      "height": 689,
+      "provenanceLabel": "Commission record",
+      "source": {
+        "title": "Thiokol telefax of final position, Rogers Vol. 1 p. 97",
+        "page": "https://www.nasa.gov/history/rogersrep/v1ch5.htm"
+      },
+      "licence": {
+        "id": "public-domain",
+        "statement": "US Government work (Presidential Commission report), public domain"
+      },
+      "anchors": {
+        "recommend": {
+          "rect": {
+            "x": 44,
+            "y": 418,
+            "w": 560,
+            "h": 20
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "claim": "C-fax-recommend",
+          "basis": "typed line 'MTI RECOMMENDS STS-51L LAUNCH PROCEED ON 28 JANUARY 1986'",
+          "role": "document-line"
+        },
+        "signature": {
+          "rect": {
+            "x": 58,
+            "y": 468,
+            "w": 300,
+            "h": 92
+          },
+          "space": "source-px",
+          "method": "document-layout",
+          "basis": "Kilminster signature block",
+          "role": "document-block"
+        }
+      },
+      "depicts": [
+        "C-fax-recommend"
+      ],
+      "tags": [
+        "document"
+      ],
+      "sha256": "f4397e2f9d6ffbd35cabf646b93f02d627e5d56e21bc8be99309db229d4b024c"
+    }
+  }
+}

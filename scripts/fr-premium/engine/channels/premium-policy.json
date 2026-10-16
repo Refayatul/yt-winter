@@ -1,0 +1,25 @@
+{
+  "schema": "fr-premium.premium-policy.v1",
+  "note": "Which channels may use the premium engine and how. No workflow reads this file: the premium engine is an offline, manually invoked path. A channel's normal production pipeline (portfolio-production.yml, uretim.yml), its schedule, topics and voice approvals are unchanged by it. Changing a mode here never publishes anything; publication stays with the existing pipeline and its gates.",
+  "modes": {
+    "offline-review": "premium plans and renders may be produced offline; every result needs the contract's human approvals and is never auto-published",
+    "not-available": "no premium channel pack exists for this channel; it keeps its existing production path; other channels' templates must not be used"
+  },
+  "channels": {
+    "failure-reconstructed": {
+      "mode": "offline-review",
+      "pack": "failure-reconstructed",
+      "autoPublish": false,
+      "remakesOfPublishedTopics": "owner approval required per video (Challenger, Apollo 13: evaluation only)"
+    },
+    "impossible-brief": {
+      "mode": "not-available",
+      "pack": null,
+      "autoPublish": false,
+      "note": "ImpossibleBrief keeps its own visual identity and existing pipeline. The FR engineering/forensic templates are not allowed for it; an IB pack (cinematic what-if grammar) would be a separate, approved project."
+    },
+    "critical-thread": { "mode": "not-available", "pack": null, "autoPublish": false },
+    "behind-the-ordinary": { "mode": "not-available", "pack": null, "autoPublish": false },
+    "profitdecoded": { "mode": "not-available", "pack": null, "autoPublish": false }
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fr-premium.narration-script.v1",
+  "title": "Approved narration script: the planner's text input (lines and the claims each line states)",
+  "type": "object",
+  "required": [
+    "schema",
+    "topic",
+    "status",
+    "lines"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "fr-premium.narration-script.v1"
+    },
+    "topic": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "status": {
+      "enum": [
+        "approved",
+        "draft"
+      ]
+    },
+    "approvedBy": {
+      "type": "string"
+    },
+    "timeline": {
+      "type": "object",
+      "required": [
+        "kind",
+        "file"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "measured",
+            "estimated"
+          ]
+        },
+        "file": {
+          "type": "string"
+        }
+      }
+    },
+    "lines": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "text",
+          "claims"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^L[0-9]+$"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 3
+          },
+          "claims": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^C-[a-z0-9-]+$"
+            }
+          },
+          "beat": {
+            "enum": [
+              "hook",
+              "setting",
+              "mechanism",
+              "event-sequence",
+              "human-cost",
+              "decision",
+              "evidence",
+              "payoff"
+            ]
+          },
+          "headline": {
+            "type": "string"
+          },
+          "kicker": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
