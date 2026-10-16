@@ -2,67 +2,6 @@
   "channel": "impossible-brief",
   "runs": [
     {
-      "runId": "38557595428",
-      "attempt": "1",
-      "startedAt": "2026-10-14T11:41:33.501Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": "2026-10-14",
-      "slug": "what-if-we-built-a-star-on-earth",
-      "outcome": "UPLOADED",
-      "reason": null,
-      "stages": {
-        "RESEARCH": {
-          "status": "done",
-          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
-          "at": "2026-10-14T11:41:36.712Z"
-        },
-        "SCRIPT": {
-          "status": "done",
-          "detail": "pre-render readiness PUBLISH 87",
-          "at": "2026-10-14T11:41:36.712Z"
-        },
-        "ASSETS": {
-          "status": "done",
-          "at": "2026-10-14T11:42:24.513Z"
-        },
-        "NARRATION": {
-          "status": "done",
-          "detail": "Microsoft Edge neural TTS (claim-timed)",
-          "at": "2026-10-14T11:42:24.514Z"
-        },
-        "RENDER": {
-          "status": "done",
-          "at": "2026-10-14T11:42:24.514Z"
-        },
-        "QA": {
-          "status": "done",
-          "detail": "validations passed",
-          "at": "2026-10-14T11:42:24.595Z"
-        },
-        "UPLOAD": {
-          "status": "done",
-          "detail": "6zrtuhSsLgA",
-          "at": "2026-10-14T11:42:29.827Z"
-        },
-        "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-14T18:00:00.000Z",
-          "at": "2026-10-14T11:42:29.827Z"
-        },
-        "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-14T18:00:00.000Z",
-          "at": "2026-10-14T11:42:29.828Z"
-        }
-      },
-      "finishedAt": "2026-10-14T11:42:29.828Z",
-      "videoId": "6zrtuhSsLgA"
-    },
-    {
       "runId": "38561943110",
       "attempt": "1",
       "startedAt": "2026-10-14T12:12:44.167Z",
@@ -1371,6 +1310,50 @@
         }
       },
       "finishedAt": "2026-10-16T11:43:18.927Z"
+    },
+    {
+      "runId": "38898043361",
+      "attempt": "1",
+      "startedAt": "2026-10-16T12:06:17.993Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": null,
+      "slug": null,
+      "outcome": "NOT_DUE",
+      "reason": "today's Short already exists (what-if-you-flew-through-enceladuss-geysers)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-16T12:06:19.967Z"
     }
   ]
 }

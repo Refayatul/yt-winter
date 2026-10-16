@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-16T11:43:30.474Z",
-  "runId": "38895522463",
+  "at": "2026-10-16T12:06:32.425Z",
+  "runId": "38898043361",
   "rows": [
     {
       "channel": "failure-reconstructed",
@@ -9,7 +9,7 @@
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "RETRY_BUDGET_EXHAUSTED: render 3/3 for 2026-10-16",
+      "reason": "RETRY_BUDGET_EXHAUSTED: topics 5/5 for 2026-10-16",
       "slug": "sl-1-reactor-1961",
       "videoId": null,
       "targetDay": "2026-10-16",
@@ -21,16 +21,15 @@
         "RESEARCH": {
           "status": "done",
           "detail": "growth queue selected sl-1-reactor-1961",
-          "at": "2026-10-16T11:43:12.874Z"
+          "at": "2026-10-16T12:06:15.525Z"
         },
         "SCRIPT": {
           "status": "done",
           "detail": "pre gate REVIEW 82",
-          "at": "2026-10-16T11:43:13.092Z"
+          "at": "2026-10-16T12:06:15.823Z"
         },
         "ASSETS": {
-          "status": "done",
-          "at": "2026-10-16T11:43:15.056Z"
+          "status": "not-reached"
         },
         "NARRATION": {
           "status": "not-reached"
@@ -116,7 +115,7 @@
         "RESEARCH": {
           "status": "failed",
           "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
-          "at": "2026-10-16T11:43:22.926Z"
+          "at": "2026-10-16T12:06:24.129Z"
         },
         "SCRIPT": {
           "status": "not-reached"
