@@ -1,17 +1,17 @@
-# Quality gate — three-mile-island-1979 (pre)
+# Quality gate — three-mile-island-1979 (final)
 
-**REVIEW** — 79/100 (PUBLISH ≥ 85, REVIEW ≥ 70)
+**REVIEW** — 89/100 (PUBLISH ≥ 85, REVIEW ≥ 70)
 
 | Component | Score | Notes |
 |---|---:|---|
-| TITLE | 39 | "Why Three Mile Island Melted Down" (engine 39.6) |
+| TITLE | 47 | "Inside Three Mile Island: The Failure Chain" (engine 43.3) |
 | THUMBNAIL | 100 |  |
-| HOOK | 60 | 0-5s: no event or result in the first sentence; 5-12s: missing an unexpected detail; 12-20s: no central mystery or problem is posed |
+| HOOK | 95 | 12-20s: no central mystery or problem is posed |
 | SCRIPT | 88 | 3 pronunciation risk(s) |
-| ORIGINALITY | 83 | structure 1 ≥ 0.9 (vs rana-plaza-2013) |
-| VISUAL QUALITY | 80 (est.) | not rendered yet — source plan only |
+| ORIGINALITY | 79 | structure 1 ≥ 0.9 (vs rana-plaza-2013) |
+| VISUAL QUALITY | 100 |  |
 | ENGINEERING DEPTH | 100 |  |
 | SOURCE QUALITY | 100 |  |
-| AUDIO | 75 (est.) | not rendered yet — measured at the final gate |
+| AUDIO | 100 |  |
 
 _Scores are editorial heuristics plus real measurements (loudness, resolution, duration) at the final stage. They guide review; they do not predict views._

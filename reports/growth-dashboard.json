@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15T19:57:47.139Z",
+  "generatedAt": "2026-10-16T11:26:16.407Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -9,8 +9,8 @@
         "lastPublished": "2026-10-15T18:00:00.000Z",
         "published": 24,
         "inventory": {
-          "A": 73,
-          "B": 159,
+          "A": 78,
+          "B": 154,
           "C": 61,
           "D": 59
         },
@@ -30,7 +30,7 @@
           "views": 573,
           "averagePercentageViewed": 65.29,
           "subscribersPer1000Views": 1.56,
-          "engagementPer1000Views": 24.19,
+          "engagementPer1000Views": 25.86,
           "watchHoursPer1000Views": 2.48
         }
       },
@@ -106,12 +106,6 @@
             "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
-            "slug": "chernobyl-1986",
-            "LongFormPotentialScore": 84,
-            "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
-          },
-          {
             "slug": "columbia-2003",
             "LongFormPotentialScore": 84,
             "bucket": "A",
@@ -119,6 +113,12 @@
           },
           {
             "slug": "lahaina-fire-2023",
+            "LongFormPotentialScore": 84,
+            "bucket": "A",
+            "mode": "B_SHORT_PROVES_DEMAND"
+          },
+          {
+            "slug": "laquila-earthquake-2009",
             "LongFormPotentialScore": 84,
             "bucket": "A",
             "mode": "B_SHORT_PROVES_DEMAND"
@@ -160,7 +160,7 @@
         "shorts": {
           "status": "adaptive",
           "sampleSize": 24,
-          "adopted": 0,
+          "adopted": 2,
           "hypotheses": 8
         },
         "longform": {
@@ -179,30 +179,20 @@
         {
           "slug": "munich-1958",
           "bucket": "C",
-          "reason": "VideoPotential 85 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "castle-bravo-1954",
           "bucket": "C",
-          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "skylab-1973",
           "bucket": "C",
-          "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "boston-molasses-1919",
-          "bucket": "C",
-          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
-        },
-        {
-          "slug": "new-london-school-1937",
-          "bucket": "C",
-          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
-        },
-        {
-          "slug": "b2-guam-2008",
           "bucket": "C",
           "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
         },
@@ -217,9 +207,19 @@
           "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
         },
         {
+          "slug": "new-london-school-1937",
+          "bucket": "C",
+          "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
+        },
+        {
           "slug": "quebec-bridge-1907",
           "bucket": "C",
           "reason": "VideoPotential 82 in experimental band 58–71; sources 55 < 62"
+        },
+        {
+          "slug": "b2-guam-2008",
+          "bucket": "C",
+          "reason": "VideoPotential 81 in experimental band 58–71; sources 41 < 62"
         }
       ],
       "alerts": [
@@ -317,6 +317,21 @@
           },
           "date": "2026-10-12",
           "at": "2026-10-12T16:28:39.506Z"
+        },
+        {
+          "channel": "failure-reconstructed",
+          "code": "RETRY_BUDGET_EXHAUSTED",
+          "message": "sl-1-reactor-1961",
+          "details": {
+            "ok": false,
+            "used": 3,
+            "limit": 3,
+            "day": "2026-10-16",
+            "kind": "render",
+            "channel": "failure-reconstructed"
+          },
+          "date": "2026-10-16",
+          "at": "2026-10-16T11:24:40.710Z"
         }
       ],
       "legacyPaths": true
@@ -325,11 +340,11 @@
       "channel": "impossible-brief",
       "name": "ImpossibleBrief",
       "shorts": {
-        "lastPublished": "2026-10-15T18:00:00.000Z",
-        "published": 15,
+        "lastPublished": "2026-10-16T18:00:00.000Z",
+        "published": 16,
         "inventory": {
-          "A": 120,
-          "B": 18,
+          "A": 118,
+          "B": 19,
           "C": 140,
           "D": 206
         },
@@ -346,10 +361,10 @@
         },
         "baseline": {
           "n": 13,
-          "views": 610,
+          "views": 914,
           "averagePercentageViewed": 69.31,
           "subscribersPer1000Views": 0,
-          "engagementPer1000Views": 20.05,
+          "engagementPer1000Views": 20.04,
           "watchHoursPer1000Views": 2.64
         }
       },
@@ -412,33 +427,33 @@
         "backlog": [
           {
             "slug": "what-if-we-mined-a-metal-asteroid",
-            "LongFormPotentialScore": 84,
-            "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
-          },
-          {
-            "slug": "what-if-we-swam-in-europas-ocean",
             "LongFormPotentialScore": 82,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
           },
           {
-            "slug": "what-if-we-gave-mars-a-thicker-atmosphere",
+            "slug": "what-if-synthetic-fertilizer-disappeared",
             "LongFormPotentialScore": 82,
             "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
+            "mode": "A_LONG_FIRST"
           },
           {
-            "slug": "what-if-sunlight-could-push-a-spaceship",
-            "LongFormPotentialScore": 82,
+            "slug": "what-if-we-swam-in-europas-ocean",
+            "LongFormPotentialScore": 81,
             "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
+            "mode": "A_LONG_FIRST"
           },
           {
-            "slug": "what-if-we-built-a-star-on-earth",
-            "LongFormPotentialScore": 82,
+            "slug": "what-if-you-visited-io-the-volcano-moon",
+            "LongFormPotentialScore": 81,
             "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
+            "LongFormPotentialScore": 81,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
           }
         ],
         "baseline": {
@@ -467,7 +482,7 @@
         "pendingRelatedVideoManualActions": 0
       },
       "growth": {
-        "trackedVideos": 14,
+        "trackedVideos": 15,
         "subscriberConversion": {
           "shorts": 0,
           "longform": null
@@ -499,19 +514,19 @@
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
+          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
+          "bucket": "C",
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
           "slug": "what-if-the-brain-s-energy-use-doubled-overnight",
           "bucket": "C",
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
-          "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
           "slug": "what-happens-if-the-global-ocean-doubles",
           "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "would-doubling-all-synthetic-fertilizers-help-or-harm-us",
@@ -524,19 +539,19 @@
           "reason": "VideoPotential 68 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "what-breaks-first-if-a-rogue-planet-suddenly-doubles-in-mass",
+          "slug": "what-if-human-memory-capacity-doubled-overnight",
           "bucket": "C",
-          "reason": "VideoPotential 73 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "if-a-rogue-planet-vanished-right-now-what-would-change-first",
+          "slug": "could-commercial-fusion-power-scale-worldwide-in-ten-years",
           "bucket": "C",
-          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.67"
         },
         {
-          "slug": "if-a-rogue-planet-moved-twice-as-close-when-would-earth-notice",
+          "slug": "what-if-human-bone-density-doubled-overnight",
           "bucket": "C",
-          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 68 in experimental band 58–71; boilerplate 0.5"
         }
       ],
       "alerts": [
@@ -623,8 +638,8 @@
           "used": 0
         },
         "nextSelection": {
-          "slug": "why-rail-signaling-interlocking-is-so-hard-to-replace",
-          "reason": "EXPLORE (0.25): under-sampled cluster RAIL"
+          "slug": "the-hidden-system-behind-border-gateway-routing-system",
+          "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
         },
         "baseline": {
           "n": 6,
@@ -896,6 +911,21 @@
           },
           "date": "2026-10-15",
           "at": "2026-10-15T11:21:30.241Z"
+        },
+        {
+          "channel": "critical-thread",
+          "code": "NO_QUALIFIED_TOPIC",
+          "message": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
+          "details": {
+            "inventory": {
+              "A": 6,
+              "B": 144,
+              "C": 0,
+              "D": 362
+            }
+          },
+          "date": "2026-10-16",
+          "at": "2026-10-16T11:25:56.384Z"
         }
       ],
       "legacyPaths": false

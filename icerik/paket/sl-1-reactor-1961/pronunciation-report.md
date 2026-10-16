@@ -10,7 +10,7 @@ _none_
 
 | Word | Type | Why |
 |---|---|---|
-| Idaho | proper-noun | name/place — confirm the voice pronounces it correctly |
+| SL-1 | alphanumeric | mixed letters/digits (e.g. B-25) — verify spoken form |
 
 ## AI-cliché phrases
 

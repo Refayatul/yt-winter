@@ -1,31 +1,36 @@
 {
-  "at": "2026-10-15T19:57:50.028Z",
-  "runId": "38797907379",
+  "at": "2026-10-16T11:26:20.359Z",
+  "runId": "38891756799",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
+      "outcome": "FAILED",
+      "category": "PRODUCTION_FAILED",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "today's Short already exists (daniel-j-morrell-1966)",
-      "slug": null,
+      "reason": "RETRY_BUDGET_EXHAUSTED: render 3/3 for 2026-10-16",
+      "slug": "sl-1-reactor-1961",
       "videoId": null,
-      "targetDay": null,
+      "targetDay": "2026-10-16",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "growth queue selected sl-1-reactor-1961",
+          "at": "2026-10-16T11:24:37.992Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre gate REVIEW 82",
+          "at": "2026-10-16T11:24:38.311Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-16T11:24:40.709Z"
         },
         "NARRATION": {
           "status": "not-reached"
@@ -49,67 +54,85 @@
     },
     {
       "channel": "impossible-brief",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "today's Short already exists (what-if-we-gave-mars-a-thicker-atmosphere)",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-16T18:00:00.000Z",
+      "reason": null,
+      "slug": "what-if-you-flew-through-enceladuss-geysers",
+      "videoId": "hzMr-vEogR0",
+      "targetDay": "2026-10-16",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
+          "at": "2026-10-16T11:24:48.791Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre-render readiness PUBLISH 88",
+          "at": "2026-10-16T11:24:48.791Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-16T11:25:46.984Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "Microsoft Edge neural TTS (claim-timed)",
+          "at": "2026-10-16T11:25:46.985Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-16T11:25:46.985Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "validations passed",
+          "at": "2026-10-16T11:25:47.088Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "hzMr-vEogR0",
+          "at": "2026-10-16T11:25:50.894Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-16T18:00:00.000Z",
+          "at": "2026-10-16T11:25:50.894Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-16T18:00:00.000Z",
+          "at": "2026-10-16T11:25:50.895Z"
         }
       }
     },
     {
       "channel": "critical-thread",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
+      "outcome": "NO_TOPIC",
+      "category": "CONTENT_BLOCKED",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "production window closed at 21:00 Europe/Istanbul minus 60 min",
+      "reason": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
       "slug": null,
       "videoId": null,
-      "targetDay": null,
+      "targetDay": "2026-10-16",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "failed",
+          "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
+          "at": "2026-10-16T11:25:56.383Z"
         },
         "SCRIPT": {
           "status": "not-reached"

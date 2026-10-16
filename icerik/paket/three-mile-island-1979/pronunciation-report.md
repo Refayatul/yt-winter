@@ -10,9 +10,9 @@ _none_
 
 | Word | Type | Why |
 |---|---|---|
-| Three | proper-noun | name/place — confirm the voice pronounces it correctly |
 | Mile | proper-noun | name/place — confirm the voice pronounces it correctly |
 | Island | proper-noun | name/place — confirm the voice pronounces it correctly |
+| Unit | proper-noun | name/place — confirm the voice pronounces it correctly |
 
 ## AI-cliché phrases
 

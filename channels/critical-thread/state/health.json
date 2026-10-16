@@ -1,9 +1,9 @@
 {
   "channel": "critical-thread",
   "channelName": "CriticalThread",
-  "tarih": "2026-10-15T20:18:49.347Z",
+  "tarih": "2026-10-16T11:25:55.269Z",
   "aggregateManaged": true,
-  "yuklemeUygun": false,
+  "yuklemeUygun": true,
   "bulgular": [
     {
       "ad": "youtube-yetki",
@@ -38,14 +38,13 @@
     {
       "ad": "nitelikli-konu",
       "durum": "kritik",
-      "mesaj": "kalite çubuğunu geçen konu yok — NO_EXPLORE_CANDIDATE",
+      "mesaj": "kalite çubuğunu geçen konu yok — NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
       "cozum": "Konu araştırması/görsel kürasyonu gerekiyor; eşik düşürülmez."
     },
     {
       "ad": "seslendirme",
-      "durum": "kritik",
-      "mesaj": "NARRATION_UNAVAILABLE: Edge sesi reddedildi (Edge TTS WebSocket error: Unexpected server response: 429, Edge TTS WebSocket error: Unexpected server response: 429, Edge TTS WebSocket error: Unexpected server response: 429; msedge-tts 2.1.0); yedek ses yok — fallback voice af_heart is not approved for publishing (config.voice.fallback.approved)",
-      "cozum": "Yedek sesi (config.voice.fallback) dinleyip onaylayın ya da Edge'in düzelmesini bekleyin. Konu harcanmaz, hiçbir şey render edilmez."
+      "durum": "ok",
+      "mesaj": "Edge sesi çalışıyor (en-US-AvaMultilingualNeural; msedge-tts 2.1.0)"
     },
     {
       "ad": "render-araclari",
@@ -55,7 +54,7 @@
     {
       "ad": "disk",
       "durum": "ok",
-      "mesaj": "91.1 GB boş alan"
+      "mesaj": "90.3 GB boş alan"
     }
   ]
 }
