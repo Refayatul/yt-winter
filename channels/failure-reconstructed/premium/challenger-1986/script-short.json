@@ -1,0 +1,39 @@
+{
+  "schema": "fr-premium.script.v1",
+  "film": "challenger-premium-short-35s",
+  "language": "en-US",
+  "status": "PROPOSAL for a future controlled length test - not narrated, not rendered, not approved",
+  "purpose": "Arm B of a length test against the 51.7 s premium v1 (arm A). Same hook, same evidence, same visual system; only length and the number of causal steps change.",
+  "targetSeconds": [30, 35],
+  "estimate": "91 words; at the v1 Edge read's measured overall rate (158 wpm including pauses) about 34.5 s. Must be re-measured from real narration before rendering.",
+  "evidence": {
+    "E1": { "title": "Rogers Commission Report, Vol. 1, Ch. III: The Accident", "url": "https://www.nasa.gov/history/rogersrep/v1ch3.htm" },
+    "E2": { "title": "Rogers Commission Report, Vol. 1, Ch. IV: The Cause of the Accident", "url": "https://www.nasa.gov/history/rogersrep/v1ch4.htm" },
+    "E3": { "title": "Rogers Commission Report, Vol. 1, Ch. V: The Contributing Cause of the Accident", "url": "https://www.nasa.gov/history/rogersrep/v1ch5.htm" },
+    "E4": { "title": "NASA photo GPN-2000-001347 caption", "url": "https://commons.wikimedia.org/wiki/File:Challenger_-_GPN-2000-001347.jpg" }
+  },
+  "chosenHook": "H1",
+  "removedFromV1": [
+    "L2 smoke detail and the Fig. 14 insert (the joint animation carries the O-rings)",
+    "L6 'the smoke stopped' (keeps the 58 s jump without the explanation of the quiet minute)",
+    "L11 'their managers reversed that advice' (the short version keeps only the Commission's finding that the objection never reached the top officials; the reversal remains in the long version)"
+  ],
+  "beats": [
+    { "id": "B1", "rate": "-2%", "pauseAfterMs": 300, "lines": [
+      { "id": "S1", "text": "Less than a second after liftoff, Challenger was already leaking.", "evidence": ["E1: first smoke 0.678 s at the right SRB aft field joint", "E2 Finding 15"], "shot": "v1 S01 (NASA photo, ring on the smoke)" } ] },
+    { "id": "B2", "rate": "+0%", "pauseAfterMs": 400, "lines": [
+      { "id": "S2", "text": "That morning it was thirty-six degrees, and cold rubber springs back slowly.", "evidence": ["E1: 36 F at launch", "E2 Finding 9"], "shot": "v1 S04 (icicles, 36F) cut to v1.1 S05 (warm/cold: follows vs gap)" },
+      { "id": "S3", "text": "So when ignition flexed a joint on the right booster, its O-rings couldn't keep up.", "evidence": ["E2: gap opening begins upon ignition; O-rings may not follow the gap", "E2 Finding 1"], "shot": "v1.1 S06 (joint animation, steps 1-3)" } ] },
+    { "id": "B3", "rate": "-2%", "pauseAfterMs": 500, "lines": [
+      { "id": "S4", "text": "Fifty-eight seconds in, a flame broke through onto the fuel tank.", "evidence": ["E1: flame 58.788 s; plume deflected onto the External Tank from 60.238 s"], "shot": "v1.1 S08 (E-207, held ring) then v1 S09 first half" },
+      { "id": "S5", "text": "At seventy-three seconds, Challenger broke apart.", "evidence": ["E1: breakup began at approximately 73 s"], "shot": "v1 S10 (one NASA still, silence)" } ] },
+    { "id": "B4", "rate": "-8%", "pauseAfterMs": 650, "lines": [
+      { "id": "S6", "text": "All seven crew members were lost.", "evidence": ["E1"], "shot": "v1 S11 (crew portrait, whole)" } ] },
+    { "id": "B5", "rate": "+0%", "pauseAfterMs": 500, "lines": [
+      { "id": "S7", "text": "The night before, engineers had recommended not launching below fifty-three degrees.", "evidence": ["E3: 'would not recommend a launch below 53 degrees Fahrenheit'"], "shot": "v1.1 S12 (53 vs 36 columns)" },
+      { "id": "S8", "text": "NASA's top launch officials never heard it.", "evidence": ["E3: the objections never reached the Levels I and II program officials"], "shot": "v1.1 S13 (engineers -> X -> top officials; managers node omitted)" } ] },
+    { "id": "B6", "rate": "-6%", "pauseAfterMs": 0, "lines": [
+      { "id": "S9", "text": "The seal failed in the cold. But the warning failed the night before.", "evidence": ["editorial summary of E2 + E3, not a quote"], "shot": "v1.1 S15 (payoff on the opening photo; loop to frame 0)" } ] }
+  ],
+  "testDesign": "Use core/growth/experiments.js with variable 'length': control = long premium, variant = this script; 5+ Shorts per arm on comparable FR topics; primary metric engaged/views at 72 h, then % viewed and avg view duration. Decide only if the difference exceeds the within-arm spread; otherwise 'insufficient data'."
+}

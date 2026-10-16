@@ -1,0 +1,199 @@
+{
+ "schema": "fr-premium.script.v1",
+ "film": "challenger-premium-v1",
+ "language": "en-US",
+ "status": "offline prototype - not approved for publishing",
+ "evidence": {
+  "E1": {
+   "title": "Rogers Commission Report, Vol. 1, Ch. III: The Accident",
+   "url": "https://www.nasa.gov/history/rogersrep/v1ch3.htm"
+  },
+  "E2": {
+   "title": "Rogers Commission Report, Vol. 1, Ch. IV: The Cause of the Accident",
+   "url": "https://www.nasa.gov/history/rogersrep/v1ch4.htm"
+  },
+  "E3": {
+   "title": "Rogers Commission Report, Vol. 1, Ch. V: The Contributing Cause of the Accident",
+   "url": "https://www.nasa.gov/history/rogersrep/v1ch5.htm"
+  },
+  "E4": {
+   "title": "NASA photo GPN-2000-001347 caption (smoke at right SRB, liftoff)",
+   "url": "https://commons.wikimedia.org/wiki/File:Challenger_-_GPN-2000-001347.jpg"
+  },
+  "E5": {
+   "title": "NASA photo GPN-2004-00004 caption (scorched hole in right Solid Rocket Motor)",
+   "url": "https://commons.wikimedia.org/wiki/File:STS-51-L_Recovered_Debris_(Burn_Marks_on_the_SRM)_-_GPN-2004-00004.jpg"
+  }
+ },
+ "hooks": [
+  {
+   "id": "H1",
+   "text": "Less than a second after liftoff, Challenger was already leaking.",
+   "type": "engineering mystery",
+   "evidence": [
+    "E1",
+    "E2",
+    "E4"
+   ],
+   "for": "Opens on the cause, not the outcome; raises the question the film answers (how could it fly 73 s with a leak?). Matches an authentic NASA photo of the smoke at frame 0. Not the title read aloud.",
+   "against": "Needs the viewer to accept 'leaking' before the mechanism is shown; the photo's smoke is small on a phone, so it needs a marker."
+  },
+  {
+   "id": "H2",
+   "text": "Seventy-three seconds after launch, Challenger broke apart.",
+   "type": "consequence first",
+   "evidence": [
+    "E1"
+   ],
+   "for": "Instantly recognisable event.",
+   "against": "It is the published title and the published opening (Version A) - repeats what the viewer already read; leads with the loss of the crew, which pulls the opening toward the breakup footage the original looped."
+  },
+  {
+   "id": "H3",
+   "text": "The night before launch, engineers said: not below fifty-three degrees. Challenger launched at thirty-six.",
+   "type": "decision first",
+   "evidence": [
+    "E1",
+    "E3"
+   ],
+   "for": "Strong human stakes.",
+   "against": "Two numbers in the first 3 s; risks implying every decision maker heard the warning (the Commission found Levels I and II did not); spends the payoff before the mechanism is understood."
+  }
+ ],
+ "chosenHook": "H1",
+ "chosenHookReason": "H1 is the only opening that is (a) new to a viewer who read the title, (b) answerable by the film's own causal chain, (c) supported by an authentic NASA photograph that can fill the first frame, and (d) not built on the moment of the crew's death. H3's decision material is kept for the payoff, where the mechanism has been explained and the Commission's nuance (the objection never reached top officials) fits.",
+ "beats": [
+  {
+   "id": "B1",
+   "rate": "+4%",
+   "pauseAfterMs": 300,
+   "lines": [
+    {
+     "id": "L1",
+     "text": "Less than a second after liftoff, Challenger was already leaking.",
+     "evidence": [
+      "E1: first smoke at 0.678 s at the right SRB aft field joint",
+      "E2 Finding 15: the smoke was the first sign of the O-ring seal failure"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "B2",
+   "rate": "+8%",
+   "pauseAfterMs": 440,
+   "lines": [
+    {
+     "id": "L2",
+     "text": "Smoke was puffing from a joint on the right booster, sealed by two rubber O-rings.",
+     "evidence": [
+      "E1: puffs of increasingly blacker smoke 0.836-2.500 s, right SRB aft field joint",
+      "E2: joint sealed by a primary and a secondary O-ring"
+     ]
+    },
+    {
+     "id": "L3",
+     "text": "That morning was fifteen degrees colder than any launch before.",
+     "evidence": [
+      "E1: 36 F at launch, 15 degrees colder than any previous launch"
+     ]
+    },
+    {
+     "id": "L4",
+     "text": "And cold rubber springs back slowly.",
+     "evidence": [
+      "E2 Finding 9: O-ring resiliency is directly related to its temperature; cold O-rings return to shape more slowly"
+     ]
+    },
+    {
+     "id": "L5",
+     "text": "So when ignition flexed the joint open, the O-rings couldn't keep up, and hot gas blew past them.",
+     "evidence": [
+      "E2: gap opening begins upon ignition",
+      "E2 Finding 9: may not follow the opening of the tang-to-clevis gap",
+      "E2 Finding 1: combustion gas leak initiated at or shortly after ignition"
+     ]
+    },
+    {
+     "id": "L6",
+     "text": "Then the smoke stopped, and Challenger flew on.",
+     "evidence": [
+      "E1: last smoke above the joint at 2.733 s; flight continued"
+     ]
+    },
+    {
+     "id": "L7",
+     "text": "Fifty-eight seconds in, a flame broke through and swept onto the external fuel tank.",
+     "evidence": [
+      "E1: first flame at 58.788 s; plume deflected onto the External Tank from 60.238 s"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "B3",
+   "rate": "+4%",
+   "pauseAfterMs": 600,
+   "lines": [
+    {
+     "id": "L8",
+     "text": "At seventy-three seconds, the tank failed, and Challenger broke apart.",
+     "evidence": [
+      "E1: External Tank structural failure 73.124 s; structural breakup of the vehicle began at approximately 73 s"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "B4",
+   "rate": "-2%",
+   "pauseAfterMs": 650,
+   "lines": [
+    {
+     "id": "L9",
+     "text": "All seven crew members were lost.",
+     "evidence": [
+      "E1: all seven crew members perished"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "B5",
+   "rate": "+8%",
+   "pauseAfterMs": 520,
+   "lines": [
+    {
+     "id": "L10",
+     "text": "The night before, engineers had recommended not launching below fifty-three degrees.",
+     "evidence": [
+      "E3: 'the engineering people would not recommend a launch below 53 degrees Fahrenheit' (Thiokol charts, 27 Jan 1986 teleconference)"
+     ]
+    },
+    {
+     "id": "L11",
+     "text": "Their managers reversed that advice, and NASA's top launch officials never heard it.",
+     "evidence": [
+      "E3: Thiokol management reversed its position at the urging of Marshall",
+      "E3: the objections never reached Jesse Moore or Arnold Aldrich, the Levels I and II program officials"
+     ]
+    }
+   ]
+  },
+  {
+   "id": "B6",
+   "rate": "+0%",
+   "pauseAfterMs": 0,
+   "lines": [
+    {
+     "id": "L12",
+     "text": "The seal failed in the cold. But the warning failed the night before.",
+     "evidence": [
+      "E2 conclusion: failure of the pressure seal; design unacceptably sensitive to temperature",
+      "E3: 'a serious flaw in the decision making process' (editorial summary of E2+E3, not a quote)"
+     ]
+    }
+   ]
+  }
+ ]
+}

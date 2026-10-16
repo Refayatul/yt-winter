@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fr-premium.evidence.v1",
+  "title": "Topic evidence: sources and the claims a film may state",
+  "type": "object",
+  "required": [
+    "schema",
+    "topic",
+    "sources",
+    "claims"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "fr-premium.evidence.v1"
+    },
+    "topic": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "sources": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^E[0-9]+$": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "additionalProperties": false
+    },
+    "claims": {
+      "type": "object",
+      "patternProperties": {
+        "^C-[a-z0-9-]+$": {
+          "$ref": "#/$defs/claim"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": [
+        "title",
+        "url",
+        "kind"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "type": "string",
+          "minLength": 5
+        },
+        "url": {
+          "type": "string",
+          "pattern": "^https://"
+        },
+        "kind": {
+          "enum": [
+            "official-report",
+            "official-media-caption",
+            "official-reference",
+            "peer-reviewed",
+            "archival-record"
+          ]
+        },
+        "publisher": {
+          "type": "string"
+        }
+      }
+    },
+    "claim": {
+      "type": "object",
+      "required": [
+        "text",
+        "kind",
+        "source",
+        "status"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 5
+        },
+        "kind": {
+          "enum": [
+            "fact",
+            "estimate",
+            "quote",
+            "editorial",
+            "measurement"
+          ]
+        },
+        "source": {
+          "type": "string",
+          "pattern": "^E[0-9]+$"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "passage": {
+          "type": "string",
+          "minLength": 10
+        },
+        "value": {
+          "type": "number"
+        },
+        "valueAsWritten": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unit": {
+          "type": "string"
+        },
+        "display": {
+          "type": "string"
+        },
+        "approximate": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "verified",
+            "unverified",
+            "disputed"
+          ]
+        },
+        "note": {
+          "type": "string"
+        },
+        "role": {
+          "enum": [
+            "event",
+            "temperature",
+            "ring-diameter",
+            "gap-max",
+            "opening-duration",
+            "dimension-length",
+            "dimension-diameter",
+            "chronology",
+            "quote",
+            "finding",
+            "designation",
+            "date",
+            "editorial",
+            "context",
+            "tank-length",
+            "tank-diameter",
+            "booster-length",
+            "booster-diameter"
+          ]
+        }
+      }
+    }
+  }
+}

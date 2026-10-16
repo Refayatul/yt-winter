@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "fr-premium.channel-pack.v1",
+  "type": "object",
+  "required": [
+    "schema",
+    "channel",
+    "styles",
+    "templates",
+    "transitions",
+    "provenanceKinds"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "fr-premium.channel-pack.v1"
+    },
+    "channel": {
+      "type": "string"
+    },
+    "styles": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "templates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "provenanceKinds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "illustrativeLabels": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "minLabelPx": {
+      "type": "number",
+      "minimum": 12
+    }
+  }
+}
