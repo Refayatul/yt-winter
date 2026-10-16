@@ -2,50 +2,6 @@
   "channel": "impossible-brief",
   "runs": [
     {
-      "runId": "38465138550",
-      "attempt": "1",
-      "startedAt": "2026-10-13T20:45:33.142Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": null,
-      "slug": null,
-      "outcome": "NOT_DUE",
-      "reason": "today's Short already exists (what-if-ocean-plankton-disappeared)",
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-13T20:45:36.604Z"
-    },
-    {
       "runId": "38470120290",
       "attempt": "1",
       "startedAt": "2026-10-13T21:23:30.742Z",
@@ -1354,6 +1310,50 @@
         }
       },
       "finishedAt": "2026-10-15T19:57:37.395Z"
+    },
+    {
+      "runId": "38889040288",
+      "attempt": "1",
+      "startedAt": "2026-10-16T10:43:57.570Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": null,
+      "slug": null,
+      "outcome": "FAILED",
+      "reason": "health pre-flight: youtube-yetki: YouTube kimlik bilgileri yok (IB_CLIENT_ID, IB_CLIENT_SECRET, IB_YT_REFRESH_TOKEN)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-16T10:43:59.682Z"
     }
   ]
 }

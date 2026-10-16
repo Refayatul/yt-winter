@@ -1,27 +1,27 @@
 {
-  "generatedAt": "2026-10-15T20:19:07.473Z",
-  "date": "2026-10-15",
+  "generatedAt": "2026-10-16T10:44:09.595Z",
+  "date": "2026-10-16",
   "channels": [
     {
       "channel": "failure-reconstructed",
       "name": "Failure Reconstructed",
-      "date": "2026-10-15",
-      "todayTopic": "daniel-j-morrell-1966",
-      "shortStatus": "scheduled",
+      "date": "2026-10-16",
+      "todayTopic": null,
+      "shortStatus": "due-not-produced",
       "longStatus": "due-not-produced",
-      "qualityScore": 88,
-      "qualityGate": "PUBLISH",
-      "youtubeStatus": "scheduled",
-      "publishTime": "2026-10-15T18:00:00.000Z",
-      "videoId": "6Xsisq9PrHo",
+      "qualityScore": null,
+      "qualityGate": null,
+      "youtubeStatus": "not-uploaded",
+      "publishTime": null,
+      "videoId": null,
       "analyticsHealth": "measured",
-      "schedulerHealth": "healthy",
+      "schedulerHealth": "pending-before-deadline",
       "backlog": 352,
       "errors": 15,
       "inventory": {
         "channel": "failure-reconstructed",
         "channelName": "Failure Reconstructed",
-        "calculatedAt": "2026-10-15T20:19:07.516Z",
+        "calculatedAt": "2026-10-16T10:44:09.632Z",
         "qualifiedTopics": 377,
         "validatedCandidates": 0,
         "researchBacklog": 0,
@@ -822,14 +822,14 @@
       "platform": {
         "queue": {
           "depth": 2,
-          "oldestDate": "2026-10-15",
+          "oldestDate": "2026-10-16",
           "oldestAgeDays": 0
         },
         "analyticsFreshness": {
           "channel": "failure-reconstructed",
           "lastSyncAt": "2026-10-15T11:21:36.433Z",
           "newestDay": "2026-10-13",
-          "lagDays": 2,
+          "lagDays": 3,
           "errors": []
         },
         "ops24h": {
@@ -837,7 +837,8 @@
           "publish.scheduled_verified": 1,
           "growth.decision": 1,
           "analytics.load": 1,
-          "publish.public": 1
+          "publish.public": 1,
+          "analytics.failure": 1
         },
         "quota": {
           "usedToday": 0,
@@ -866,7 +867,7 @@
       },
       "tiktok": {
         "mode": "SEND_TO_USER_INBOX",
-        "todayStatus": "NOT_SENT",
+        "todayStatus": "NO_TODAY_VIDEO",
         "sent": 10,
         "publicationStateAvailable": false,
         "backlog": 14,
@@ -881,23 +882,23 @@
     {
       "channel": "impossible-brief",
       "name": "ImpossibleBrief",
-      "date": "2026-10-15",
-      "todayTopic": "what-if-we-gave-mars-a-thicker-atmosphere",
-      "shortStatus": "scheduled",
+      "date": "2026-10-16",
+      "todayTopic": null,
+      "shortStatus": "due-not-produced",
       "longStatus": "due-not-produced",
       "qualityScore": null,
-      "qualityGate": "PUBLISH",
-      "youtubeStatus": "scheduled",
-      "publishTime": "2026-10-15T18:00:00.000Z",
-      "videoId": "G9lIDTt09R0",
+      "qualityGate": null,
+      "youtubeStatus": "not-uploaded",
+      "publishTime": null,
+      "videoId": null,
       "analyticsHealth": "measured",
-      "schedulerHealth": "healthy",
+      "schedulerHealth": "pending-before-deadline",
       "backlog": 478,
       "errors": 6,
       "inventory": {
         "channel": "impossible-brief",
         "channelName": "ImpossibleBrief",
-        "calculatedAt": "2026-10-15T20:19:07.582Z",
+        "calculatedAt": "2026-10-16T10:44:09.697Z",
         "qualifiedTopics": 500,
         "validatedCandidates": 0,
         "researchBacklog": 0,
@@ -982,14 +983,14 @@
       "platform": {
         "queue": {
           "depth": 2,
-          "oldestDate": "2026-10-15",
+          "oldestDate": "2026-10-16",
           "oldestAgeDays": 0
         },
         "analyticsFreshness": {
           "channel": "impossible-brief",
           "lastSyncAt": "2026-10-15T11:21:43.342Z",
           "newestDay": "2026-10-13",
-          "lagDays": 2,
+          "lagDays": 3,
           "errors": []
         },
         "ops24h": {
@@ -997,7 +998,8 @@
           "publish.scheduled_verified": 1,
           "growth.decision": 1,
           "analytics.load": 1,
-          "publish.public": 1
+          "publish.public": 1,
+          "analytics.failure": 1
         },
         "quota": {
           "usedToday": 0,
@@ -1034,9 +1036,9 @@
     {
       "channel": "critical-thread",
       "name": "CriticalThread",
-      "date": "2026-10-15",
+      "date": "2026-10-16",
       "todayTopic": null,
-      "shortStatus": "not-due",
+      "shortStatus": "due-not-produced",
       "longStatus": "due-not-produced",
       "qualityScore": null,
       "qualityGate": null,
@@ -1044,13 +1046,13 @@
       "publishTime": null,
       "videoId": null,
       "analyticsHealth": "measured",
-      "schedulerHealth": "sla-missed-or-channel-disabled",
+      "schedulerHealth": "pending-before-deadline",
       "backlog": 512,
       "errors": 2,
       "inventory": {
         "channel": "critical-thread",
         "channelName": "CriticalThread",
-        "calculatedAt": "2026-10-15T20:19:07.652Z",
+        "calculatedAt": "2026-10-16T10:44:09.764Z",
         "qualifiedTopics": 522,
         "validatedCandidates": 0,
         "researchBacklog": 0,
@@ -1162,23 +1164,24 @@
       "platform": {
         "queue": {
           "depth": 2,
-          "oldestDate": "2026-10-15",
+          "oldestDate": "2026-10-16",
           "oldestAgeDays": 0
         },
         "analyticsFreshness": {
           "channel": "critical-thread",
           "lastSyncAt": "2026-10-15T11:21:48.893Z",
           "newestDay": "2026-10-13",
-          "lagDays": 2,
+          "lagDays": 3,
           "errors": []
         },
         "ops24h": {
-          "analytics.load": 1
+          "analytics.load": 1,
+          "analytics.failure": 1
         },
         "quota": {
-          "usedToday": 107,
+          "usedToday": 0,
           "budget": 9800,
-          "project": "208987599838"
+          "project": "channel:critical-thread"
         },
         "monetization": {
           "channel": "critical-thread",
