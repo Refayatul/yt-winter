@@ -2,50 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "38565293012",
-      "attempt": "1",
-      "startedAt": "2026-10-14T12:39:05.399Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": null,
-      "slug": null,
-      "outcome": "NOT_DUE",
-      "reason": "today's Short already exists (hyatt-regency-walkway-1981)",
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-14T12:39:05.418Z"
-    },
-    {
       "runId": "38567639856",
       "attempt": "1",
       "startedAt": "2026-10-14T12:56:54.259Z",
@@ -1354,6 +1310,54 @@
         }
       },
       "finishedAt": "2026-10-16T12:33:35.254Z"
+    },
+    {
+      "runId": "38901745290",
+      "attempt": "1",
+      "startedAt": "2026-10-16T12:37:48.783Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": "2026-10-16",
+      "slug": "sl-1-reactor-1961",
+      "outcome": "FAILED",
+      "reason": "RETRY_BUDGET_EXHAUSTED: topics 5/5 for 2026-10-16",
+      "stages": {
+        "RESEARCH": {
+          "status": "done",
+          "detail": "growth queue selected sl-1-reactor-1961",
+          "at": "2026-10-16T12:37:51.909Z"
+        },
+        "SCRIPT": {
+          "status": "done",
+          "detail": "pre gate REVIEW 82",
+          "at": "2026-10-16T12:37:52.145Z"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-16T12:37:52.146Z"
     }
   ]
 }
