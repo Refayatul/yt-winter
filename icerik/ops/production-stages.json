@@ -2,50 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "38470120290",
-      "attempt": "1",
-      "startedAt": "2026-10-13T21:23:28.587Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": null,
-      "slug": null,
-      "outcome": "NOT_DUE",
-      "reason": "before production slot 09:00 Europe/Istanbul",
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-13T21:23:28.671Z"
-    },
-    {
       "runId": "38557595428",
       "attempt": "1",
       "startedAt": "2026-10-14T11:36:15.298Z",
@@ -1352,6 +1308,50 @@
         }
       },
       "finishedAt": "2026-10-16T10:43:55.144Z"
+    },
+    {
+      "runId": "38895686272",
+      "attempt": "1",
+      "startedAt": "2026-10-16T11:44:45.096Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": "2026-10-16",
+      "slug": null,
+      "outcome": "FAILED",
+      "reason": "health pre-flight: youtube-yetki: YouTube kimlik bilgileri yok (FR_YT_CLIENT_ID, FR_YT_CLIENT_SECRET, FR_YT_REFRESH_TOKEN)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-16T11:44:48.750Z"
     }
   ]
 }
