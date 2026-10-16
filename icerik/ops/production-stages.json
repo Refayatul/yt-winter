@@ -2,50 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "38567639856",
-      "attempt": "1",
-      "startedAt": "2026-10-14T12:56:54.259Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": null,
-      "slug": null,
-      "outcome": "NOT_DUE",
-      "reason": "today's Short already exists (hyatt-regency-walkway-1981)",
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-14T12:56:54.280Z"
-    },
-    {
       "runId": "38567946038",
       "attempt": "1",
       "startedAt": "2026-10-14T12:59:27.858Z",
@@ -1336,6 +1292,50 @@
         }
       },
       "finishedAt": "2026-10-16T12:40:35.603Z"
+    },
+    {
+      "runId": "38907039313",
+      "attempt": "1",
+      "startedAt": "2026-10-16T13:20:50.285Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": "2026-10-16",
+      "slug": null,
+      "outcome": "FAILED",
+      "reason": "health pre-flight: youtube-yetki: YouTube kimlik bilgileri yok (FR_YT_CLIENT_ID, FR_YT_CLIENT_SECRET, FR_YT_REFRESH_TOKEN)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-16T13:20:52.866Z"
     }
   ]
 }
