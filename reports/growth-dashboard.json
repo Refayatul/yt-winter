@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-16T18:52:39.062Z",
+  "generatedAt": "2026-10-16T19:37:45.465Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -343,8 +343,8 @@
         "lastPublished": "2026-10-16T18:00:00.000Z",
         "published": 16,
         "inventory": {
-          "A": 119,
-          "B": 18,
+          "A": 117,
+          "B": 20,
           "C": 140,
           "D": 206
         },
@@ -360,11 +360,11 @@
           "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
         },
         "baseline": {
-          "n": 13,
+          "n": 14,
           "views": 920,
           "averagePercentageViewed": 69.31,
           "subscribersPer1000Views": 0,
-          "engagementPer1000Views": 19.42,
+          "engagementPer1000Views": 20.04,
           "watchHoursPer1000Views": 2.64
         }
       },
@@ -426,32 +426,32 @@
         "episodes": 0,
         "backlog": [
           {
-            "slug": "what-if-we-mined-a-metal-asteroid",
-            "LongFormPotentialScore": 83,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-we-built-a-star-on-earth",
-            "LongFormPotentialScore": 82,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-synthetic-fertilizer-disappeared",
-            "LongFormPotentialScore": 82,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
             "slug": "what-if-we-swam-in-europas-ocean",
-            "LongFormPotentialScore": 81,
+            "LongFormPotentialScore": 82,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
           },
           {
             "slug": "what-if-you-visited-io-the-volcano-moon",
-            "LongFormPotentialScore": 81,
+            "LongFormPotentialScore": 82,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-the-dinosaur-killing-asteroid-hit-today",
+            "LongFormPotentialScore": 82,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-a-90-day-rover-lasted-14-years",
+            "LongFormPotentialScore": 82,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-we-mined-a-metal-asteroid",
+            "LongFormPotentialScore": 82,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
           }
@@ -491,9 +491,9 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 13,
+          "sampleSize": 14,
           "adopted": 0,
-          "hypotheses": 4
+          "hypotheses": 3
         },
         "longform": {
           "status": "heuristics-only",
@@ -516,11 +516,6 @@
         {
           "slug": "what-happens-if-the-global-ocean-doubles",
           "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
-          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
-          "bucket": "C",
           "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
         },
         {
@@ -529,19 +524,19 @@
           "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
         },
         {
+          "slug": "what-if-human-muscle-efficiency-doubled-overnight",
+          "bucket": "C",
+          "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
+          "slug": "if-a-rogue-planet-vanished-right-now-what-would-change-first",
+          "bucket": "C",
+          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
           "slug": "what-if-the-brain-s-energy-use-doubled-overnight",
           "bucket": "C",
           "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
-          "slug": "could-we-function-with-half-human-muscle-efficiency",
-          "bucket": "C",
-          "reason": "VideoPotential 68 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
-          "slug": "could-commercial-fusion-power-scale-worldwide-in-ten-years",
-          "bucket": "C",
-          "reason": "VideoPotential 68 in experimental band 58–71; boilerplate 0.67"
         },
         {
           "slug": "would-doubling-global-pollination-help-or-harm-us",
@@ -549,9 +544,14 @@
           "reason": "VideoPotential 68 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "if-a-rogue-planet-vanished-right-now-what-would-change-first",
+          "slug": "what-breaks-first-if-a-rogue-planet-suddenly-doubles-in-mass",
           "bucket": "C",
           "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
+          "slug": "if-a-rogue-planet-moved-twice-as-close-when-would-earth-notice",
+          "bucket": "C",
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         }
       ],
       "alerts": [
