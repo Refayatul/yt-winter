@@ -8,8 +8,9 @@ https://youtu.be/sielLySz6r8
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-10 | 371 | 8 | 1 | — | — |  |
 | 3d | 2026-10-12 | 613 | 11 | 1 | 56.82000000000001 | 1 | Shorts feed 97%, Browse/other YouTube 2% |
+| 7d | 2026-10-16 | 618 | 11 | 1 | 52.61 | 1 | Shorts feed 96%, Search 2% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **HEALTHY** (low) — No problem pattern detected with available data.
 
@@ -19,9 +20,9 @@ https://youtu.be/sielLySz6r8
 
 ## First major observed retention drop
 
-- Timestamp: 8s; magnitude: 22 percentage points.
+- Timestamp: 8s; magnitude: 19 percentage points.
 - Active sentence: Arles street in the 1880s
 - Visual type: AI-GENERATED VISUAL
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 242.
+Views gained between 3d and 7d: 5.

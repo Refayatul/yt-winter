@@ -1555,5 +1555,83 @@
       }
     ],
     "at": "2026-10-16T11:43:23.913Z"
+  },
+  {
+    "videoId": "6Xsisq9PrHo",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "24h",
+    "diagnoses": [
+      {
+        "code": "INSUFFICIENT_DATA",
+        "confidence": "high",
+        "evidence": "14 views < 100",
+        "recommendation": "No intervention; wait for the next checkpoint.",
+        "specCode": "INSUFFICIENT_DATA"
+      }
+    ],
+    "at": "2026-10-16T18:08:30.578Z"
+  },
+  {
+    "videoId": "gC62R2vVYcs",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "48h",
+    "diagnoses": [
+      {
+        "code": "INSUFFICIENT_DATA",
+        "confidence": "high",
+        "evidence": "13 views < 100",
+        "recommendation": "No intervention; wait for the next checkpoint.",
+        "specCode": "INSUFFICIENT_DATA"
+      }
+    ],
+    "at": "2026-10-16T18:08:30.578Z"
+  },
+  {
+    "videoId": "aGG5f0Q2B9c",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "7d",
+    "diagnoses": [
+      {
+        "code": "RETENTION_FAILURE",
+        "confidence": "medium",
+        "evidence": "average viewed 63.9% < 65%",
+        "recommendation": "Cut setup sentences; move the mechanism earlier.",
+        "specCode": "RETENTION_WEAK"
+      }
+    ],
+    "at": "2026-10-16T18:08:30.578Z"
+  },
+  {
+    "videoId": "WlZ2z90pqx8",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "checkpoint": "14d",
+    "diagnoses": [
+      {
+        "code": "RETENTION_FAILURE",
+        "confidence": "medium",
+        "evidence": "average viewed 64.5% < 65%",
+        "recommendation": "Cut setup sentences; move the mechanism earlier.",
+        "specCode": "RETENTION_WEAK"
+      },
+      {
+        "code": "LOW_ENGAGEMENT",
+        "confidence": "low",
+        "evidence": "9.43 engagements / 1,000 views",
+        "recommendation": "Contextual comment prompt after the payoff.",
+        "specCode": "LOW_ENGAGEMENT"
+      },
+      {
+        "code": "LOW_SUBSCRIBER_CONVERSION",
+        "confidence": "medium",
+        "evidence": "0 subs / 1,000 views",
+        "recommendation": "Series-shaped payoff; link a related long-form episode.",
+        "specCode": "SUBSCRIBER_CONVERSION_WEAK"
+      }
+    ],
+    "at": "2026-10-16T18:08:30.578Z"
   }
 ]

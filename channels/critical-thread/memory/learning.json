@@ -2,19 +2,19 @@
   "channel": "critical-thread",
   "status": "sample-floor-met",
   "minimumSample": 5,
-  "sampleSize": 5,
+  "sampleSize": 6,
   "learnedRules": [
     {
       "key": "hookType",
       "value": "number-or-countdown",
       "weakValue": null,
-      "evidenceVideos": 5,
+      "evidenceVideos": 6,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "number-or-countdown",
-          "sample": 4,
-          "averagePercentageViewed": 74.42
+          "sample": 5,
+          "averagePercentageViewed": 69.79
         },
         {
           "value": "statement",
@@ -27,13 +27,13 @@
       "key": "durationRange",
       "value": "25-35s",
       "weakValue": null,
-      "evidenceVideos": 5,
+      "evidenceVideos": 6,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "25-35s",
-          "sample": 5,
-          "averagePercentageViewed": 68.28
+          "sample": 6,
+          "averagePercentageViewed": 65.44
         }
       ]
     },
@@ -41,13 +41,13 @@
       "key": "secondBeat",
       "value": "context",
       "weakValue": null,
-      "evidenceVideos": 5,
+      "evidenceVideos": 6,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "context",
-          "sample": 5,
-          "averagePercentageViewed": 68.28
+          "sample": 6,
+          "averagePercentageViewed": 65.44
         }
       ]
     },
@@ -55,7 +55,7 @@
       "key": "visualChangeFrequency",
       "value": null,
       "weakValue": null,
-      "evidenceVideos": 5,
+      "evidenceVideos": 6,
       "confidence": "INSUFFICIENT_DATA",
       "aggregates": []
     },
@@ -63,13 +63,13 @@
       "key": "questionStyle",
       "value": "question",
       "weakValue": null,
-      "evidenceVideos": 5,
+      "evidenceVideos": 6,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "question",
-          "sample": 5,
-          "averagePercentageViewed": 68.28
+          "sample": 6,
+          "averagePercentageViewed": 65.44
         }
       ]
     },
@@ -77,13 +77,13 @@
       "key": "category",
       "value": null,
       "weakValue": null,
-      "evidenceVideos": 5,
+      "evidenceVideos": 6,
       "confidence": "INSUFFICIENT_DATA",
       "aggregates": [
         {
           "value": "ROADS AND BRIDGES",
           "sample": 1,
-          "averagePercentageViewed": 107.02
+          "averagePercentageViewed": 106.43
         },
         {
           "value": "ENERGY",
@@ -94,6 +94,11 @@
           "value": "DATA CENTERS",
           "sample": 1,
           "averagePercentageViewed": 65.89
+        },
+        {
+          "value": "WATER",
+          "sample": 1,
+          "averagePercentageViewed": 51.84
         },
         {
           "value": "ELECTRICAL GRID",
@@ -111,17 +116,17 @@
       "key": "ctaStyle",
       "value": "optional system-dependency bridge after the factual payoff",
       "weakValue": null,
-      "evidenceVideos": 5,
+      "evidenceVideos": 6,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "optional system-dependency bridge after the factual payoff",
-          "sample": 5,
-          "averagePercentageViewed": 68.28
+          "sample": 6,
+          "averagePercentageViewed": 65.44
         }
       ]
     }
   ],
-  "lastUpdated": "2026-10-16T17:31:45.649Z",
+  "lastUpdated": "2026-10-16T18:08:56.616Z",
   "caveat": "Observed associations only; topic, timing and packaging can confound retention. No causal claim."
 }

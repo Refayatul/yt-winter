@@ -8,8 +8,9 @@ https://youtu.be/aGG5f0Q2B9c
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-10 | 446 | 23 | 3 | — | — |  |
 | 3d | 2026-10-12 | 600 | 27 | 3 | 68.5 | 0 | Shorts feed 92%, Search 7% |
+| 7d | 2026-10-16 | 600 | 27 | 3 | 63.9 | 0 | Shorts feed 91%, Search 8% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 46.9/100 in the title engine; best editorial option scores 46.9.
 
@@ -19,9 +20,9 @@ https://youtu.be/aGG5f0Q2B9c
 
 ## First major observed retention drop
 
-- Timestamp: 5s; magnitude: 20 percentage points.
+- Timestamp: 5s; magnitude: 19 percentage points.
 - Active sentence: Its north side collapsed in the largest landslide ever recorded.
 - Visual type: REAL ARCHIVAL/LICENCED FOOTAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 154.
+Views gained between 3d and 7d: 0.

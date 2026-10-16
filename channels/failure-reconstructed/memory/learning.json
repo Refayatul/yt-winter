@@ -2,29 +2,29 @@
   "channel": "failure-reconstructed",
   "status": "sample-floor-met",
   "minimumSample": 5,
-  "sampleSize": 19,
+  "sampleSize": 20,
   "learnedRules": [
     {
       "key": "hookType",
       "value": "number-or-countdown",
-      "weakValue": "statement",
-      "evidenceVideos": 19,
+      "weakValue": "consequence",
+      "evidenceVideos": 20,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "number-or-countdown",
           "sample": 3,
-          "averagePercentageViewed": 80.32
-        },
-        {
-          "value": "consequence",
-          "sample": 5,
-          "averagePercentageViewed": 73.27
+          "averagePercentageViewed": 78.79
         },
         {
           "value": "statement",
           "sample": 11,
           "averagePercentageViewed": 69.83
+        },
+        {
+          "value": "consequence",
+          "sample": 6,
+          "averagePercentageViewed": 69.02
         }
       ]
     },
@@ -32,7 +32,7 @@
       "key": "durationRange",
       "value": "over-35s",
       "weakValue": "25-35s",
-      "evidenceVideos": 19,
+      "evidenceVideos": 20,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
@@ -43,12 +43,12 @@
         {
           "value": "under-25s",
           "sample": 2,
-          "averagePercentageViewed": 91.34
+          "averagePercentageViewed": 91.37
         },
         {
           "value": "25-35s",
-          "sample": 15,
-          "averagePercentageViewed": 67.32
+          "sample": 16,
+          "averagePercentageViewed": 65.81
         }
       ]
     },
@@ -56,7 +56,7 @@
       "key": "secondBeat",
       "value": "emergency",
       "weakValue": "countdown",
-      "evidenceVideos": 19,
+      "evidenceVideos": 20,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
@@ -71,13 +71,13 @@
         },
         {
           "value": "event",
-          "sample": 11,
-          "averagePercentageViewed": 70.23
+          "sample": 12,
+          "averagePercentageViewed": 67.97
         },
         {
           "value": "countdown",
           "sample": 4,
-          "averagePercentageViewed": 66.13
+          "averagePercentageViewed": 66.14
         }
       ]
     },
@@ -85,18 +85,18 @@
       "key": "visualChangeFrequency",
       "value": "fast",
       "weakValue": "measured",
-      "evidenceVideos": 19,
+      "evidenceVideos": 20,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "fast",
-          "sample": 12,
-          "averagePercentageViewed": 73.19
+          "sample": 13,
+          "averagePercentageViewed": 71.24
         },
         {
           "value": "measured",
           "sample": 7,
-          "averagePercentageViewed": 71.03
+          "averagePercentageViewed": 70.37
         }
       ]
     },
@@ -104,21 +104,21 @@
       "key": "questionStyle",
       "value": "question",
       "weakValue": null,
-      "evidenceVideos": 19,
+      "evidenceVideos": 20,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "question",
-          "sample": 19,
-          "averagePercentageViewed": 72.39
+          "sample": 20,
+          "averagePercentageViewed": 70.93
         }
       ]
     },
     {
       "key": "category",
-      "value": "aviation-failures",
+      "value": "maritime-disasters",
       "weakValue": "fire-and-explosions",
-      "evidenceVideos": 19,
+      "evidenceVideos": 20,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
@@ -127,14 +127,14 @@
           "averagePercentageViewed": 108.58
         },
         {
-          "value": "aviation-failures",
-          "sample": 2,
-          "averagePercentageViewed": 96.31
-        },
-        {
           "value": "maritime-disasters",
           "sample": 2,
           "averagePercentageViewed": 84.19
+        },
+        {
+          "value": "aviation-failures",
+          "sample": 3,
+          "averagePercentageViewed": 80.13
         },
         {
           "value": "spaceflight-disasters",
@@ -149,7 +149,7 @@
         {
           "value": "natural-hazards",
           "sample": 4,
-          "averagePercentageViewed": 66.94
+          "averagePercentageViewed": 65.79
         },
         {
           "value": "bridge-failures",
@@ -159,7 +159,7 @@
         {
           "value": "infrastructure-failures",
           "sample": 2,
-          "averagePercentageViewed": 62.53
+          "averagePercentageViewed": 62.55
         },
         {
           "value": "rail-disasters",
@@ -182,17 +182,17 @@
       "key": "ctaStyle",
       "value": "adaptive after payoff",
       "weakValue": null,
-      "evidenceVideos": 19,
+      "evidenceVideos": 20,
       "confidence": "SUPPORTED",
       "aggregates": [
         {
           "value": "adaptive after payoff",
-          "sample": 19,
-          "averagePercentageViewed": 72.39
+          "sample": 20,
+          "averagePercentageViewed": 70.93
         }
       ]
     }
   ],
-  "lastUpdated": "2026-10-16T17:31:41.516Z",
+  "lastUpdated": "2026-10-16T18:08:32.286Z",
   "caveat": "Observed associations only; topic, timing and packaging can confound retention. No causal claim."
 }
