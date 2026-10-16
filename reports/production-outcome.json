@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-16T15:25:27.631Z",
-  "runId": "38923589503",
+  "at": "2026-10-16T16:37:15.787Z",
+  "runId": "38933189709",
   "rows": [
     {
       "channel": "failure-reconstructed",
@@ -14,111 +14,19 @@
       "videoId": null,
       "targetDay": "2026-10-16",
       "trigger": {
-        "event": "schedule",
+        "event": "repository_dispatch",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
           "status": "done",
           "detail": "growth queue selected sl-1-reactor-1961",
-          "at": "2026-10-16T15:25:00.693Z"
+          "at": "2026-10-16T16:37:15.363Z"
         },
         "SCRIPT": {
           "status": "done",
           "detail": "pre gate REVIEW 82",
-          "at": "2026-10-16T15:25:01.069Z"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      }
-    },
-    {
-      "channel": "impossible-brief",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "today's Short already exists (what-if-you-flew-through-enceladuss-geysers)",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      }
-    },
-    {
-      "channel": "critical-thread",
-      "outcome": "NO_TOPIC",
-      "category": "CONTENT_BLOCKED",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
-      "slug": null,
-      "videoId": null,
-      "targetDay": "2026-10-16",
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "stages": {
-        "RESEARCH": {
-          "status": "failed",
-          "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
-          "at": "2026-10-16T15:25:17.385Z"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
+          "at": "2026-10-16T16:37:15.731Z"
         },
         "ASSETS": {
           "status": "not-reached"
