@@ -1,125 +1,94 @@
 {
-  "at": "2026-10-17T10:35:42.528Z",
-  "runId": "39024967033",
+  "at": "2026-10-17T11:02:32.549Z",
+  "runId": "39027106955",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "UPLOADED",
-      "category": "SCHEDULED",
-      "scheduled": true,
-      "publication": "SCHEDULED",
-      "publishAt": "2026-10-17T18:00:00.000Z",
-      "reason": null,
-      "slug": "big-bayou-canot-1993",
-      "videoId": "X_EhSVzvv3o",
-      "targetDay": "2026-10-17",
+      "outcome": "NOT_DUE",
+      "category": "NOT_DUE",
+      "scheduled": false,
+      "publication": "NOT_SCHEDULED",
+      "publishAt": null,
+      "reason": "today's Short already exists (big-bayou-canot-1993)",
+      "slug": null,
+      "videoId": null,
+      "targetDay": null,
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "done",
-          "detail": "growth queue selected big-bayou-canot-1993",
-          "at": "2026-10-17T10:28:39.247Z"
+          "status": "not-reached"
         },
         "SCRIPT": {
-          "status": "done",
-          "detail": "pre gate REVIEW 82",
-          "at": "2026-10-17T10:28:39.559Z"
+          "status": "not-reached"
         },
         "ASSETS": {
-          "status": "done",
-          "at": "2026-10-17T10:28:41.583Z"
+          "status": "not-reached"
         },
         "NARRATION": {
-          "status": "done",
-          "at": "2026-10-17T10:33:44.124Z"
+          "status": "not-reached"
         },
         "RENDER": {
-          "status": "done",
-          "at": "2026-10-17T10:33:44.124Z"
+          "status": "not-reached"
         },
         "QA": {
-          "status": "done",
-          "detail": "final gate PUBLISH 86",
-          "at": "2026-10-17T10:33:46.530Z"
+          "status": "not-reached"
         },
         "UPLOAD": {
-          "status": "done",
-          "detail": "X_EhSVzvv3o",
-          "at": "2026-10-17T10:33:50.998Z"
+          "status": "not-reached"
         },
         "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-17T18:00:00.000Z",
-          "at": "2026-10-17T10:33:50.999Z"
+          "status": "not-reached"
         },
         "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-17T18:00:00.000Z",
-          "at": "2026-10-17T10:33:51.000Z"
+          "status": "not-reached"
         }
       }
     },
     {
       "channel": "impossible-brief",
-      "outcome": "UPLOADED",
-      "category": "SCHEDULED",
-      "scheduled": true,
-      "publication": "SCHEDULED",
-      "publishAt": "2026-10-17T18:00:00.000Z",
-      "reason": null,
-      "slug": "what-if-water-refused-to-freeze",
-      "videoId": "nyUpI3aKSNE",
-      "targetDay": "2026-10-17",
+      "outcome": "NOT_DUE",
+      "category": "NOT_DUE",
+      "scheduled": false,
+      "publication": "NOT_SCHEDULED",
+      "publishAt": null,
+      "reason": "today's Short already exists (what-if-water-refused-to-freeze)",
+      "slug": null,
+      "videoId": null,
+      "targetDay": null,
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "done",
-          "detail": "EXPLORE (0.25): under-sampled cluster PHYSICS",
-          "at": "2026-10-17T10:33:56.122Z"
+          "status": "not-reached"
         },
         "SCRIPT": {
-          "status": "done",
-          "detail": "pre-render readiness PUBLISH 88",
-          "at": "2026-10-17T10:33:56.123Z"
+          "status": "not-reached"
         },
         "ASSETS": {
-          "status": "done",
-          "at": "2026-10-17T10:35:09.309Z"
+          "status": "not-reached"
         },
         "NARRATION": {
-          "status": "done",
-          "detail": "Microsoft Edge neural TTS (claim-timed)",
-          "at": "2026-10-17T10:35:09.310Z"
+          "status": "not-reached"
         },
         "RENDER": {
-          "status": "done",
-          "at": "2026-10-17T10:35:09.310Z"
+          "status": "not-reached"
         },
         "QA": {
-          "status": "done",
-          "detail": "validations passed",
-          "at": "2026-10-17T10:35:09.392Z"
+          "status": "not-reached"
         },
         "UPLOAD": {
-          "status": "done",
-          "detail": "nyUpI3aKSNE",
-          "at": "2026-10-17T10:35:13.614Z"
+          "status": "not-reached"
         },
         "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-17T18:00:00.000Z",
-          "at": "2026-10-17T10:35:13.614Z"
+          "status": "not-reached"
         },
         "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-17T18:00:00.000Z",
-          "at": "2026-10-17T10:35:13.615Z"
+          "status": "not-reached"
         }
       }
     },
@@ -142,7 +111,7 @@
         "RESEARCH": {
           "status": "failed",
           "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
-          "at": "2026-10-17T10:35:18.069Z"
+          "at": "2026-10-17T11:02:21.882Z"
         },
         "SCRIPT": {
           "status": "not-reached"
