@@ -1,0 +1,152 @@
+{
+  "videoId": "gC62R2vVYcs",
+  "baslik": "Hyatt Regency: What Failed First",
+  "yayin": "2026-10-14",
+  "yasGun": 3,
+  "sureSn": 25,
+  "format": "short",
+  "gizlilik": "public",
+  "metrikler": {
+    "views": {
+      "deger": 13,
+      "durum": "ok",
+      "kaynak": "Data API"
+    },
+    "likes": {
+      "deger": 0,
+      "durum": "ok",
+      "kaynak": "Data API"
+    },
+    "comments": {
+      "deger": 1,
+      "durum": "ok",
+      "kaynak": "Data API"
+    },
+    "impressions": {
+      "deger": null,
+      "durum": "unavailable",
+      "neden": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+    },
+    "ctr": {
+      "deger": null,
+      "durum": "unavailable",
+      "neden": "not exposed by YouTube APIs — export from Studio into studio-manual.json"
+    },
+    "returningViewers": {
+      "deger": null,
+      "durum": "unavailable",
+      "neden": "not exposed per video by the public API"
+    },
+    "stayedToWatch": {
+      "deger": null,
+      "durum": "unavailable",
+      "neden": "Shorts 'Viewed vs swiped away' is Studio only — import with scripts/studio-import.js"
+    },
+    "watchTimeMinutes": {
+      "deger": 7,
+      "durum": "ok",
+      "kaynak": "Analytics API"
+    },
+    "averageViewDuration": {
+      "deger": 223,
+      "durum": "ok",
+      "kaynak": "Analytics API"
+    },
+    "averageViewPercentage": {
+      "deger": 894.37,
+      "durum": "ok",
+      "kaynak": "Analytics API"
+    },
+    "subscribersGained": {
+      "deger": 0,
+      "durum": "ok",
+      "kaynak": "Analytics API"
+    },
+    "subscribersLost": {
+      "deger": 0,
+      "durum": "ok",
+      "kaynak": "Analytics API"
+    },
+    "netSubscribers": {
+      "deger": 0,
+      "durum": "ok",
+      "kaynak": "derived from Analytics API gained − lost"
+    },
+    "shares": {
+      "deger": 0,
+      "durum": "ok",
+      "kaynak": "Analytics API"
+    },
+    "engagedViews": {
+      "deger": 2,
+      "durum": "ok",
+      "kaynak": "Analytics API"
+    },
+    "first30sRetention": {
+      "deger": null,
+      "durum": "unavailable",
+      "neden": "analytics unavailable"
+    }
+  },
+  "turetilmis": {
+    "subsPer1000": {
+      "deger": 0,
+      "durum": "ok",
+      "kaynak": "derived"
+    },
+    "netSubsPer1000": {
+      "deger": 0,
+      "durum": "ok",
+      "kaynak": "derived"
+    },
+    "likeRate": {
+      "deger": 0,
+      "durum": "ok",
+      "kaynak": "derived (% of views)"
+    },
+    "commentRate": {
+      "deger": 7.69,
+      "durum": "ok",
+      "kaynak": "derived (% of views)"
+    }
+  },
+  "trafik": [
+    {
+      "kaynak": "YT_SEARCH",
+      "ad": "Search",
+      "views": 5,
+      "oran": 0.8333333333333334
+    },
+    {
+      "kaynak": "YT_CHANNEL",
+      "ad": "Channel page",
+      "views": 1,
+      "oran": 0.16666666666666666
+    }
+  ],
+  "tutma": [],
+  "analitikDurumu": "ok",
+  "toplandi": "2026-10-17T18:38:09.422Z",
+  "checkpoint": "3d",
+  "teshis": [
+    {
+      "kod": "INSUFFICIENT_DATA",
+      "guven": "high",
+      "aciklama": "13 views after 3 days — too early/small for rate-based conclusions.",
+      "oneri": "Do not change packaging yet unless something is objectively broken (missing sources, typo). Re-check at 7 days."
+    },
+    {
+      "kod": "LOW_IMPRESSIONS_GOOD_RETENTION",
+      "guven": "low",
+      "aciklama": "Good retention with low reach (impressions unavailable — views used as a proxy).",
+      "oneri": "Monitor; strengthen cluster links and title/thumbnail packaging. Add Studio impressions/CTR to studio-manual.json for a firmer diagnosis."
+    },
+    {
+      "kod": "WEAK_TOPIC_PACKAGING",
+      "guven": "low",
+      "aciklama": "Current title scores 43.3/100 in the title engine; best editorial option scores 43.3.",
+      "oneri": "Heuristic only — test the stronger title as a logged experiment rather than switching silently."
+    }
+  ],
+  "retentionDrop": null
+}

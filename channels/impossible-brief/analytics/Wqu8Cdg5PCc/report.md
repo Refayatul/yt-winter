@@ -8,8 +8,9 @@ https://youtu.be/Wqu8Cdg5PCc
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-11 | 744 | 15 | 3 | — | — |  |
 | 3d | 2026-10-13 | 1037 | 17 | 3 | 61.36000000000001 | 1 | Shorts feed 96%, Browse/other YouTube 2% |
+| 7d | 2026-10-17 | 1041 | 17 | 3 | 66.19 | 1 | Shorts feed 95%, Search 3% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **HIGH_VIEWS_LOW_SUB_CONVERSION** (medium) — 1.0 subscribers per 1,000 views.
 
@@ -24,4 +25,4 @@ https://youtu.be/Wqu8Cdg5PCc
 - Visual type: AI-GENERATED VISUAL
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 293.
+Views gained between 3d and 7d: 4.
