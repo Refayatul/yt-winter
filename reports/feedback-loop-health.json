@@ -1,17 +1,17 @@
 {
   "schema": "feedback-loop-health/1",
-  "generatedAt": "2026-10-17T06:56:00.782Z",
+  "generatedAt": "2026-10-17T11:36:35.680Z",
   "verdict": "CLOSED_LOOP_WORKING",
   "channels": [
     {
       "channel": "failure-reconstructed",
       "verdict": "CLOSED_LOOP_WORKING",
       "mode": "adaptive",
-      "publishedVideos": 24,
-      "performanceRows": 25,
+      "publishedVideos": 25,
+      "performanceRows": 26,
       "diagnosisRows": 92,
       "learning": {
-        "updatedAt": "2026-10-17T06:55:57.952Z",
+        "updatedAt": "2026-10-17T11:36:33.224Z",
         "sampleSize": 24,
         "status": "adaptive",
         "observations": 34,
@@ -158,15 +158,15 @@
       "channel": "impossible-brief",
       "verdict": "CLOSED_LOOP_WORKING",
       "mode": "adaptive",
-      "publishedVideos": 16,
-      "performanceRows": 15,
-      "diagnosisRows": 63,
+      "publishedVideos": 17,
+      "performanceRows": 16,
+      "diagnosisRows": 64,
       "learning": {
-        "updatedAt": "2026-10-17T06:55:59.064Z",
+        "updatedAt": "2026-10-17T11:36:34.115Z",
         "sampleSize": 14,
         "status": "adaptive",
         "observations": 29,
-        "hypotheses": 1,
+        "hypotheses": 4,
         "adopted": 0,
         "suppressed": 0
       },
@@ -227,23 +227,9 @@
         }
       ],
       "timing": {
-        "lateCheckpointCount": 31,
+        "lateCheckpointCount": 33,
         "note": "Historical late collections are retained for audit, but performance math uses their real collection age.",
         "examples": [
-          {
-            "videoId": "FezZD3MMg_A",
-            "label": "12h",
-            "scheduledHours": 12,
-            "collectedAgeHours": 19.13,
-            "driftHours": 7.13
-          },
-          {
-            "videoId": "FezZD3MMg_A",
-            "label": "6h",
-            "scheduledHours": 6,
-            "collectedAgeHours": 19.55,
-            "driftHours": 13.55
-          },
           {
             "videoId": "G9lIDTt09R0",
             "label": "12h",
@@ -299,6 +285,20 @@
             "scheduledHours": 6,
             "collectedAgeHours": 17.86,
             "driftHours": 11.86
+          },
+          {
+            "videoId": "hzMr-vEogR0",
+            "label": "12h",
+            "scheduledHours": 12,
+            "collectedAgeHours": 16.58,
+            "driftHours": 4.58
+          },
+          {
+            "videoId": "hzMr-vEogR0",
+            "label": "6h",
+            "scheduledHours": 6,
+            "collectedAgeHours": 17.03,
+            "driftHours": 11.03
           }
         ]
       },
@@ -313,7 +313,7 @@
       "performanceRows": 7,
       "diagnosisRows": 24,
       "learning": {
-        "updatedAt": "2026-10-17T06:56:00.413Z",
+        "updatedAt": "2026-10-17T11:36:35.339Z",
         "sampleSize": 6,
         "status": "observing",
         "observations": 25,
