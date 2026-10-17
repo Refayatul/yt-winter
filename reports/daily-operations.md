@@ -1,6 +1,6 @@
 # Daily operations report
 
-Generated: 2026-10-16T19:56:29.909Z
+Generated: 2026-10-17T10:35:42.336Z
 
 Missing API-only metrics are reported as `unavailable`, never as zero.
 
@@ -8,64 +8,64 @@ Missing API-only metrics are reported as `unavailable`, never as zero.
 
 | Signal | Status |
 |---|---|
-| Today topic | unavailable |
-| Short | not-due |
+| Today topic | big-bayou-canot-1993 |
+| Short | scheduled |
 | Long | due-not-produced |
-| Quality | unavailable / unavailable |
-| YouTube | not-uploaded |
-| Publish time | unavailable |
-| Video ID | unavailable |
+| Quality | PUBLISH / 86 |
+| YouTube | scheduled |
+| Publish time | 2026-10-17T18:00:00.000Z |
+| Video ID | X_EhSVzvv3o |
 | Analytics | measured |
-| Scheduler | sla-missed-or-channel-disabled |
-| Ready topic backlog | 352 |
+| Scheduler | healthy |
+| Ready topic backlog | 351 |
 | Errors/review/blocks | 18 |
-| TikTok today | NO_TODAY_VIDEO |
-| TikTok backlog | 14 |
-| Analytics warehouse | through 2026-10-14 (lag 2 d) |
-| Ops (24 h) | analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-16 (0 d) |
-| API quota today | 0 / 9800 units (project channel:failure-reconstructed) |
+| TikTok today | NOT_SENT |
+| TikTok backlog | 15 |
+| Analytics warehouse | through 2026-10-15 (lag 2 d) |
+| Ops (24 h) | analytics.load 2, publish.success 1, publish.scheduled_verified 1, growth.decision 1 |
+| Scheduler queue | 2 queued, oldest 2026-10-17 (0 d) |
+| API quota today | 1614 / 9800 units (project 1012165386949) |
 | YPP readiness (estimate) | subs 26/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## ImpossibleBrief
 
 | Signal | Status |
 |---|---|
-| Today topic | what-if-you-flew-through-enceladuss-geysers |
+| Today topic | what-if-water-refused-to-freeze |
 | Short | scheduled |
 | Long | due-not-produced |
 | Quality | PUBLISH / unavailable |
 | YouTube | scheduled |
-| Publish time | 2026-10-16T18:00:00.000Z |
-| Video ID | hzMr-vEogR0 |
+| Publish time | 2026-10-17T18:00:00.000Z |
+| Video ID | nyUpI3aKSNE |
 | Analytics | measured |
 | Scheduler | healthy |
-| Ready topic backlog | 477 |
+| Ready topic backlog | 476 |
 | Errors/review/blocks | 6 |
-| Analytics warehouse | through 2026-10-14 (lag 2 d) |
-| Ops (24 h) | publish.success 1, publish.scheduled_verified 1, growth.decision 1, analytics.load 1, publish.public 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-16 (0 d) |
-| API quota today | 0 / 9800 units (project channel:impossible-brief) |
-| YPP readiness (estimate) | subs 10/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
+| Analytics warehouse | through 2026-10-15 (lag 2 d) |
+| Ops (24 h) | publish.success 2, publish.scheduled_verified 2, growth.decision 2, analytics.load 2, publish.public 1 |
+| Scheduler queue | 2 queued, oldest 2026-10-17 (0 d) |
+| API quota today | 1614 / 9800 units (project 684098966511) |
+| YPP readiness (estimate) | subs 11/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 
 ## CriticalThread
 
 | Signal | Status |
 |---|---|
 | Today topic | unavailable |
-| Short | not-due |
+| Short | due-not-produced |
 | Long | due-not-produced |
 | Quality | unavailable / unavailable |
 | YouTube | not-uploaded |
 | Publish time | unavailable |
 | Video ID | unavailable |
 | Analytics | measured |
-| Scheduler | sla-missed-or-channel-disabled |
+| Scheduler | pending-before-deadline |
 | Ready topic backlog | 512 |
 | Errors/review/blocks | 2 |
-| Analytics warehouse | through 2026-10-14 (lag 2 d) |
-| Ops (24 h) | analytics.load 1 |
-| Scheduler queue | 2 queued, oldest 2026-10-16 (0 d) |
-| API quota today | 107 / 9800 units (project 208987599838) |
+| Analytics warehouse | through 2026-10-15 (lag 2 d) |
+| Ops (24 h) | analytics.load 2 |
+| Scheduler queue | 2 queued, oldest 2026-10-17 (0 d) |
+| API quota today | 8 / 9800 units (project 208987599838) |
 | YPP readiness (estimate) | subs 0/1,000 · long-form watch h (365 d) unavailable/4,000 · Shorts views (90 d) unavailable/10M |
 

@@ -1,115 +1,148 @@
 {
-  "at": "2026-10-16T19:37:48.668Z",
-  "runId": "38956171843",
+  "at": "2026-10-17T10:35:42.528Z",
+  "runId": "39024967033",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "production window closed at 21:00 Europe/Istanbul minus 60 min",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-17T18:00:00.000Z",
+      "reason": null,
+      "slug": "big-bayou-canot-1993",
+      "videoId": "X_EhSVzvv3o",
+      "targetDay": "2026-10-17",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "growth queue selected big-bayou-canot-1993",
+          "at": "2026-10-17T10:28:39.247Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre gate REVIEW 82",
+          "at": "2026-10-17T10:28:39.559Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-17T10:28:41.583Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-17T10:33:44.124Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-17T10:33:44.124Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "final gate PUBLISH 86",
+          "at": "2026-10-17T10:33:46.530Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "X_EhSVzvv3o",
+          "at": "2026-10-17T10:33:50.998Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-17T18:00:00.000Z",
+          "at": "2026-10-17T10:33:50.999Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-17T18:00:00.000Z",
+          "at": "2026-10-17T10:33:51.000Z"
         }
       }
     },
     {
       "channel": "impossible-brief",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "today's Short already exists (what-if-you-flew-through-enceladuss-geysers)",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-17T18:00:00.000Z",
+      "reason": null,
+      "slug": "what-if-water-refused-to-freeze",
+      "videoId": "nyUpI3aKSNE",
+      "targetDay": "2026-10-17",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "EXPLORE (0.25): under-sampled cluster PHYSICS",
+          "at": "2026-10-17T10:33:56.122Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre-render readiness PUBLISH 88",
+          "at": "2026-10-17T10:33:56.123Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-17T10:35:09.309Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "Microsoft Edge neural TTS (claim-timed)",
+          "at": "2026-10-17T10:35:09.310Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-17T10:35:09.310Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "validations passed",
+          "at": "2026-10-17T10:35:09.392Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "nyUpI3aKSNE",
+          "at": "2026-10-17T10:35:13.614Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-17T18:00:00.000Z",
+          "at": "2026-10-17T10:35:13.614Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-17T18:00:00.000Z",
+          "at": "2026-10-17T10:35:13.615Z"
         }
       }
     },
     {
       "channel": "critical-thread",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
+      "outcome": "NO_TOPIC",
+      "category": "CONTENT_BLOCKED",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "production window closed at 21:00 Europe/Istanbul minus 60 min",
+      "reason": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
       "slug": null,
       "videoId": null,
-      "targetDay": null,
+      "targetDay": "2026-10-17",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "failed",
+          "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
+          "at": "2026-10-17T10:35:18.069Z"
         },
         "SCRIPT": {
           "status": "not-reached"
