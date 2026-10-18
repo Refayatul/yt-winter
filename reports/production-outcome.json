@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-18T16:36:32.428Z",
-  "runId": "39145673417",
+  "at": "2026-10-18T17:26:17.501Z",
+  "runId": "39149474623",
   "rows": [
     {
       "channel": "failure-reconstructed",
@@ -94,24 +94,22 @@
     },
     {
       "channel": "critical-thread",
-      "outcome": "NO_TOPIC",
-      "category": "CONTENT_BLOCKED",
+      "outcome": "NOT_DUE",
+      "category": "NOT_DUE",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
+      "reason": "production window closed at 21:00 Europe/Istanbul minus 60 min",
       "slug": null,
       "videoId": null,
-      "targetDay": "2026-10-18",
+      "targetDay": null,
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "failed",
-          "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
-          "at": "2026-10-18T16:36:21.781Z"
+          "status": "not-reached"
         },
         "SCRIPT": {
           "status": "not-reached"
