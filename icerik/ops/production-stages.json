@@ -2,54 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "38901745290",
-      "attempt": "1",
-      "startedAt": "2026-10-16T12:37:48.783Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": "2026-10-16",
-      "slug": "sl-1-reactor-1961",
-      "outcome": "FAILED",
-      "reason": "RETRY_BUDGET_EXHAUSTED: topics 5/5 for 2026-10-16",
-      "stages": {
-        "RESEARCH": {
-          "status": "done",
-          "detail": "growth queue selected sl-1-reactor-1961",
-          "at": "2026-10-16T12:37:51.909Z"
-        },
-        "SCRIPT": {
-          "status": "done",
-          "detail": "pre gate REVIEW 82",
-          "at": "2026-10-16T12:37:52.145Z"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-16T12:37:52.146Z"
-    },
-    {
       "runId": "38907057100",
       "attempt": "1",
       "startedAt": "2026-10-16T13:21:14.055Z",
@@ -1384,6 +1336,50 @@
         }
       },
       "finishedAt": "2026-10-18T12:07:33.680Z"
+    },
+    {
+      "runId": "39126022529",
+      "attempt": "1",
+      "startedAt": "2026-10-18T12:08:59.585Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": null,
+      "slug": null,
+      "outcome": "NOT_DUE",
+      "reason": "today's Short already exists (sl-1-reactor-1961)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-18T12:08:59.607Z"
     }
   ]
 }
