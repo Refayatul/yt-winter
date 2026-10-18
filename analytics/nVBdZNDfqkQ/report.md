@@ -9,13 +9,16 @@ https://youtu.be/nVBdZNDfqkQ
 | 1d | 2026-10-05 | 84 | 0 | 0 | — | — |  |
 | 3d | 2026-10-07 | 103 | 0 | 0 | 44.21 | 0 | Shorts feed 73%, Search 26% |
 | 7d | 2026-10-11 | 121 | 0 | 0 | 42.59 | 0 | Shorts feed 63%, Search 35% |
+| 14d | 2026-10-18 | 163 | 1 | 0 | 63.61 | 0 | Search 53%, Shorts feed 46% |
 
-## Diagnosis at 7d
+## Diagnosis at 14d
 
-- **HEALTHY** (low) — No problem pattern detected with available data.
+- **SEARCH_DEPENDENT** (medium) — 53% of views from Search.
+- **SHORTS_FEED_NOT_PICKED_UP** (low) — Most views are not from the Shorts feed.
 
 ## Suggested interventions
 
-- HEALTHY → no action.
+- SEARCH ONLY → build the Suggested network: same-cluster follow-ups, playlist, end screens.
+- NOT IN SHORTS FEED → review the opening frame and first sentence.
 
-Views gained between 3d and 7d: 18.
+Views gained between 7d and 14d: 42.

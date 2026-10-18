@@ -8,8 +8,9 @@ https://youtu.be/tSanOctggR4
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-12 | 178 | 2 | 1 | — | — |  |
 | 3d | 2026-10-14 | 236 | 2 | 1 | 54.230000000000004 | 0 | Shorts feed 73%, Search 27% |
+| 7d | 2026-10-18 | 245 | 2 | 1 | 50.74000000000001 | 0 | Shorts feed 53%, Search 44% |
 
-## Diagnosis at 3d
+## Diagnosis at 7d
 
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 43.2/100 in the title engine; best editorial option scores 43.2.
 
@@ -19,9 +20,9 @@ https://youtu.be/tSanOctggR4
 
 ## First major observed retention drop
 
-- Timestamp: 5s; magnitude: 23 percentage points.
+- Timestamp: 5s; magnitude: 19 percentage points.
 - Active sentence: In seconds, debris tore through the wing and cut wiring.
 - Visual type: REAL ARCHIVAL IMAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 1d and 3d: 58.
+Views gained between 3d and 7d: 9.
