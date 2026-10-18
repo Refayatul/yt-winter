@@ -1,30 +1,30 @@
 # Growth dashboard
 
-Generated 2026-10-17T18:38:28.280Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-10-18T10:54:31.306Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
-**Shorts health** — last published 2026-10-17T18:00:00.000Z · 25 published · inventory A85/B148/C59/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-18T18:00:00.000Z · 26 published · inventory A87/B145/C59/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — challenger-1986 85/A, air-france-447-2009 84/A, columbia-2003 84/A, air-canada-759-2017 83/A, apollo-13-1970 83/A
+**Long-form backlog** — challenger-1986 85/A, chernobyl-1986 85/A, columbia-2003 85/A, air-france-447-2009 84/A, lahaina-fire-2023 84/A
 
 **Content clusters** — 12 · integrity OK
 
-**Growth / subscriber conversion** — tracked 26 · subs/1k Shorts 1.56 · subs/1k long n/a
+**Growth / subscriber conversion** — tracked 27 · subs/1k Shorts 1.56 · subs/1k long n/a
 
-**Learning** — Shorts adaptive (n=24, adopted 0) · Long-form heuristics-only (n=0)
+**Learning** — Shorts adaptive (n=25, adopted 0) · Long-form heuristics-only (n=0)
 
 **Short → Long funnel** — 0 link(s), 0 long→long, 0 pending RELATED_VIDEO_MANUAL_ACTION_REQUIRED
 
 **Research/source enrichment tasks**
 
 - apollo-1-1967 (C): VideoPotential 86 in experimental band 58–71; sources 41 < 62
-- munich-1958 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
-- castle-bravo-1954 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
-- skylab-1973 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
+- munich-1958 (C): VideoPotential 85 in experimental band 58–71; sources 41 < 62
+- skylab-1973 (C): VideoPotential 84 in experimental band 58–71; sources 41 < 62
 - eastland-1915 (C): VideoPotential 82 in experimental band 58–71; sources 41 < 62
+- boston-molasses-1919 (C): VideoPotential 83 in experimental band 58–71; sources 41 < 62
 
 **Recent alerts**
 
@@ -36,17 +36,17 @@ Generated 2026-10-17T18:38:28.280Z. Per-channel baselines are computed separatel
 
 ## ImpossibleBrief
 
-**Shorts health** — last published 2026-10-17T18:00:00.000Z · 17 published · inventory A118/B18/C140/D206 · next: what-if-earth-spun-like-the-fastest-pulsar (EXPLORE (0.25): under-sampled cluster EXTREME SCIENCE)
+**Shorts health** — last published 2026-10-18T18:00:00.000Z · 18 published · inventory A115/B20/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
 
 **Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
 
-**Long-form backlog** — what-if-we-swam-in-europas-ocean 82/A, what-if-we-mined-a-metal-asteroid 82/A, what-if-synthetic-fertilizer-disappeared 82/A, what-if-olympus-mons-stood-on-earth 81/A, what-if-earth-had-rings-like-saturn 81/A
+**Long-form backlog** — what-if-we-mined-a-metal-asteroid 83/A, what-if-we-swam-in-europas-ocean 82/A, what-if-you-visited-io-the-volcano-moon 82/A, what-if-the-dinosaur-killing-asteroid-hit-today 82/A, what-if-a-90-day-rover-lasted-14-years 82/A
 
 **Content clusters** — 7 · integrity OK
 
-**Growth / subscriber conversion** — tracked 16 · subs/1k Shorts 0 · subs/1k long n/a
+**Growth / subscriber conversion** — tracked 17 · subs/1k Shorts 0 · subs/1k long n/a
 
-**Learning** — Shorts adaptive (n=14, adopted 0) · Long-form heuristics-only (n=0)
+**Learning** — Shorts adaptive (n=15, adopted 0) · Long-form heuristics-only (n=0)
 
 **Short → Long funnel** — 0 link(s), 0 long→long, 0 pending RELATED_VIDEO_MANUAL_ACTION_REQUIRED
 
@@ -54,9 +54,9 @@ Generated 2026-10-17T18:38:28.280Z. Per-channel baselines are computed separatel
 
 - what-if-human-heat-tolerance-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - could-we-function-with-half-human-heat-tolerance (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
-- what-happens-if-the-global-ocean-doubles (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - what-if-human-muscle-efficiency-doubled-overnight (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
 - would-doubling-all-synthetic-fertilizers-help-or-harm-us (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
+- if-a-rogue-planet-vanished-right-now-what-would-change-first (C): VideoPotential 72 in experimental band 58–71; boilerplate 0.5
 
 **Recent alerts**
 
@@ -85,7 +85,6 @@ Generated 2026-10-17T18:38:28.280Z. Per-channel baselines are computed separatel
 
 **Recent alerts**
 
-- 2026-10-08 VISUAL_PRECHECK_BLOCK: why-rail-signaling-interlocking-is-so-hard-to-replace
 - 2026-10-08 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content
 - 2026-10-09 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content
 - 2026-10-10 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content
@@ -95,6 +94,7 @@ Generated 2026-10-17T18:38:28.280Z. Per-channel baselines are computed separatel
 - 2026-10-15 NO_QUALIFIED_TOPIC: NO_EXPLORE_CANDIDATE
 - 2026-10-16 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]
 - 2026-10-17 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]
+- 2026-10-18 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]
 
 ## Cross-channel infrastructure
 

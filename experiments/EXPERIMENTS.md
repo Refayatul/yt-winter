@@ -9,8 +9,8 @@ Variable: title pattern · metric: `views_7d` · start: 2026-09-24
 
 | Arm | Meaning | Videos |
 |---|---|---|
-| TITLE_STYLE_A | object-that / two-beat story title | PGOKZhPYo7c, DLYpmaQ-EVw, aScjSrwqeRk, I86SnrokHMk, uqoAjXMbbls, M4rr4aVc4Uc, NnGoWJOdaW0, 7q3E09HMIGI, rgSsk8q6eyM, WlZ2z90pqx8, 5yPoQCElJuk, fGE8kZOaQZ4, Vuvx5nEqcaY, rAZ4cE4A0DE, PAi4kSZesNE, ATpXizczEI8, OFwONtLpIIM, wvn-RzNCb-M, aGG5f0Q2B9c, sielLySz6r8, BukKRJfO7zI, gC62R2vVYcs |
-| TITLE_STYLE_B | why/how question title | qkzRUqlEy5I, X0jw78mIGdk, ODZ7y6r1o6o, bqTpdauhlHo, tIXvjbAXStw, NobEECFBrwo, 4Mo58FxCr4A, u0iftg8gF5w, hsuWhB8lCvU, I9Lcpi9kPYs, Nk7vmybWY98, ZTtPwqBSxpA, 6AdruLBoGiw, 7g6pgV-E0PE, 24eJvZ2cswc, 8HybydJa-l8, MdDPiLh09K8, FezZD3MMg_A, d_xBJEX6QJ8, Wqu8Cdg5PCc, tSanOctggR4, 9oMvT2-bE9E, yIX2WcN9dEQ, OOFFfcr0rC4, 6zrtuhSsLgA, 6Xsisq9PrHo, G9lIDTt09R0, hzMr-vEogR0, X_EhSVzvv3o, nyUpI3aKSNE |
+| TITLE_STYLE_A | object-that / two-beat story title | PGOKZhPYo7c, DLYpmaQ-EVw, aScjSrwqeRk, I86SnrokHMk, uqoAjXMbbls, M4rr4aVc4Uc, NnGoWJOdaW0, 7q3E09HMIGI, rgSsk8q6eyM, WlZ2z90pqx8, 5yPoQCElJuk, fGE8kZOaQZ4, Vuvx5nEqcaY, rAZ4cE4A0DE, PAi4kSZesNE, ATpXizczEI8, OFwONtLpIIM, wvn-RzNCb-M, aGG5f0Q2B9c, sielLySz6r8, BukKRJfO7zI, gC62R2vVYcs, qVsgb-iZJZ8 |
+| TITLE_STYLE_B | why/how question title | qkzRUqlEy5I, X0jw78mIGdk, ODZ7y6r1o6o, bqTpdauhlHo, tIXvjbAXStw, NobEECFBrwo, 4Mo58FxCr4A, u0iftg8gF5w, hsuWhB8lCvU, I9Lcpi9kPYs, Nk7vmybWY98, ZTtPwqBSxpA, 6AdruLBoGiw, 7g6pgV-E0PE, 24eJvZ2cswc, 8HybydJa-l8, MdDPiLh09K8, FezZD3MMg_A, d_xBJEX6QJ8, Wqu8Cdg5PCc, tSanOctggR4, 9oMvT2-bE9E, yIX2WcN9dEQ, OOFFfcr0rC4, 6zrtuhSsLgA, 6Xsisq9PrHo, G9lIDTt09R0, hzMr-vEogR0, X_EhSVzvv3o, nyUpI3aKSNE, N0k8S0IMwlU |
 
 Result (none confidence): No meaningful difference between arms at this sample size.
 

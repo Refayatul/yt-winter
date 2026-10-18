@@ -2,50 +2,6 @@
   "channel": "impossible-brief",
   "runs": [
     {
-      "runId": "38792342225",
-      "attempt": "1",
-      "startedAt": "2026-10-15T19:16:00.238Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": null,
-      "slug": null,
-      "outcome": "NOT_DUE",
-      "reason": "today's Short already exists (what-if-we-gave-mars-a-thicker-atmosphere)",
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-15T19:16:01.949Z"
-    },
-    {
       "runId": "38797907379",
       "attempt": "1",
       "startedAt": "2026-10-15T19:57:35.169Z",
@@ -1354,6 +1310,67 @@
         }
       },
       "finishedAt": "2026-10-17T18:38:02.959Z"
+    },
+    {
+      "runId": "39120580325",
+      "attempt": "1",
+      "startedAt": "2026-10-18T10:52:48.919Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": "2026-10-18",
+      "slug": "what-if-a-lake-exploded",
+      "outcome": "UPLOADED",
+      "reason": null,
+      "stages": {
+        "RESEARCH": {
+          "status": "done",
+          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
+          "at": "2026-10-18T10:52:51.448Z"
+        },
+        "SCRIPT": {
+          "status": "done",
+          "detail": "pre-render readiness PUBLISH 90",
+          "at": "2026-10-18T10:52:51.448Z"
+        },
+        "ASSETS": {
+          "status": "done",
+          "at": "2026-10-18T10:53:58.263Z"
+        },
+        "NARRATION": {
+          "status": "done",
+          "detail": "Microsoft Edge neural TTS (claim-timed)",
+          "at": "2026-10-18T10:53:58.263Z"
+        },
+        "RENDER": {
+          "status": "done",
+          "at": "2026-10-18T10:53:58.264Z"
+        },
+        "QA": {
+          "status": "done",
+          "detail": "validations passed",
+          "at": "2026-10-18T10:53:58.325Z"
+        },
+        "UPLOAD": {
+          "status": "done",
+          "detail": "N0k8S0IMwlU",
+          "at": "2026-10-18T10:54:02.409Z"
+        },
+        "SCHEDULE": {
+          "status": "done",
+          "detail": "2026-10-18T18:00:00.000Z",
+          "at": "2026-10-18T10:54:02.410Z"
+        },
+        "PUBLISH": {
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-18T18:00:00.000Z",
+          "at": "2026-10-18T10:54:02.410Z"
+        }
+      },
+      "finishedAt": "2026-10-18T10:54:02.410Z",
+      "videoId": "N0k8S0IMwlU"
     }
   ]
 }

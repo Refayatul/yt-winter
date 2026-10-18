@@ -1,40 +1,32 @@
 {
   "channel": "critical-thread",
-  "updatedAt": "2026-10-17T18:38:27.571Z",
+  "updatedAt": "2026-10-18T10:54:26.604Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 6,
     "status": "observing",
     "baselines": {
       "views": 63,
-      "averagePercentageViewed": 65.89,
+      "averagePercentageViewed": 63.62,
       "subscribersPer1000Views": 0,
-      "watchHoursPer1000Views": 1.94,
+      "watchHoursPer1000Views": 1.89,
       "engagementPer1000Views": 21.15
     },
     "observations": [
       {
         "stage": "OBSERVATION",
         "dimension": "hookType",
-        "value": "countdown",
-        "sample": 1,
-        "lift": -0.018,
-        "z": 0
+        "value": "visual_first_reveal",
+        "sample": 5,
+        "lift": 0.03,
+        "z": 0.18
       },
       {
         "stage": "OBSERVATION",
         "dimension": "hookType",
-        "value": "visual_first_reveal",
-        "sample": 5,
-        "lift": 0.004,
-        "z": 0.02
-      },
-      {
-        "stage": "OBSERVATION",
-        "dimension": "topicCluster",
-        "value": "DATA CENTERS",
+        "value": "countdown",
         "sample": 1,
-        "lift": -0.018,
+        "lift": -0.15,
         "z": 0
       },
       {
@@ -50,7 +42,7 @@
         "dimension": "topicCluster",
         "value": "ELECTRICAL GRID",
         "sample": 1,
-        "lift": -0.484,
+        "lift": -0.418,
         "z": 0
       },
       {
@@ -74,7 +66,15 @@
         "dimension": "topicCluster",
         "value": "ROADS AND BRIDGES",
         "sample": 1,
-        "lift": 0.094,
+        "lift": 0.159,
+        "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "topicCluster",
+        "value": "DATA CENTERS",
+        "sample": 1,
+        "lift": -0.15,
         "z": 0
       },
       {
@@ -82,24 +82,16 @@
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 5,
-        "lift": 0.097,
-        "z": 0.77
+        "lift": 0.084,
+        "z": 0.62
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 1,
-        "lift": -0.484,
+        "lift": -0.418,
         "z": 0
-      },
-      {
-        "stage": "OBSERVATION",
-        "dimension": "titlePattern",
-        "value": "why",
-        "sample": 2,
-        "lift": 0.016,
-        "z": 0.47
       },
       {
         "stage": "OBSERVATION",
@@ -114,8 +106,16 @@
         "dimension": "titlePattern",
         "value": "how",
         "sample": 1,
-        "lift": -0.484,
+        "lift": -0.418,
         "z": 0
+      },
+      {
+        "stage": "OBSERVATION",
+        "dimension": "titlePattern",
+        "value": "why",
+        "sample": 2,
+        "lift": -0.05,
+        "z": -0.5
       },
       {
         "stage": "OBSERVATION",
@@ -130,7 +130,7 @@
         "dimension": "titlePattern",
         "value": "the-x-that",
         "sample": 1,
-        "lift": 0.094,
+        "lift": 0.159,
         "z": 0
       },
       {
@@ -144,58 +144,58 @@
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
-        "value": "NONE",
+        "value": "COMMENT_PROMPT",
         "sample": 3,
-        "lift": 0.211,
-        "z": 1.2
+        "lift": -0.189,
+        "z": -1.4
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
-        "value": "COMMENT_PROMPT",
+        "value": "NONE",
         "sample": 3,
-        "lift": -0.211,
-        "z": -1.36
+        "lift": 0.189,
+        "z": 0.92
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "22",
         "sample": 2,
-        "lift": -0.108,
-        "z": -1.2
+        "lift": -0.173,
+        "z": -7.29
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishHourUTC",
         "value": "18",
         "sample": 4,
-        "lift": 0.054,
-        "z": 0.25
+        "lift": 0.087,
+        "z": 0.43
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "18:00 New York",
         "sample": 2,
-        "lift": -0.108,
-        "z": -1.2
+        "lift": -0.173,
+        "z": -7.29
       },
       {
         "stage": "OBSERVATION",
         "dimension": "publishSlot",
         "value": "21:00 TR",
         "sample": 3,
-        "lift": 0.041,
-        "z": 0.13
+        "lift": 0.062,
+        "z": 0.22
       },
       {
         "stage": "OBSERVATION",
         "dimension": "popularityBand",
         "value": "unknown",
         "sample": 5,
-        "lift": -0.019,
-        "z": -0.11
+        "lift": -0.032,
+        "z": -0.19
       },
       {
         "stage": "OBSERVATION",
@@ -218,18 +218,18 @@
       {
         "stage": "HYPOTHESIS",
         "dimension": "ctaStyle",
-        "value": "NONE",
+        "value": "COMMENT_PROMPT",
         "sample": 3,
-        "lift": 0.211,
-        "z": 1.2
+        "lift": -0.189,
+        "z": -1.4
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "ctaStyle",
-        "value": "COMMENT_PROMPT",
+        "value": "NONE",
         "sample": 3,
-        "lift": -0.211,
-        "z": -1.36
+        "lift": 0.189,
+        "z": 0.92
       }
     ],
     "adopted": [],
