@@ -2,67 +2,6 @@
   "channel": "impossible-brief",
   "runs": [
     {
-      "runId": "38891756799",
-      "attempt": "1",
-      "startedAt": "2026-10-16T11:24:45.240Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": "2026-10-16",
-      "slug": "what-if-you-flew-through-enceladuss-geysers",
-      "outcome": "UPLOADED",
-      "reason": null,
-      "stages": {
-        "RESEARCH": {
-          "status": "done",
-          "detail": "EXPLOIT (0.75): best A topic by SelectionScore",
-          "at": "2026-10-16T11:24:48.791Z"
-        },
-        "SCRIPT": {
-          "status": "done",
-          "detail": "pre-render readiness PUBLISH 88",
-          "at": "2026-10-16T11:24:48.791Z"
-        },
-        "ASSETS": {
-          "status": "done",
-          "at": "2026-10-16T11:25:46.984Z"
-        },
-        "NARRATION": {
-          "status": "done",
-          "detail": "Microsoft Edge neural TTS (claim-timed)",
-          "at": "2026-10-16T11:25:46.985Z"
-        },
-        "RENDER": {
-          "status": "done",
-          "at": "2026-10-16T11:25:46.985Z"
-        },
-        "QA": {
-          "status": "done",
-          "detail": "validations passed",
-          "at": "2026-10-16T11:25:47.088Z"
-        },
-        "UPLOAD": {
-          "status": "done",
-          "detail": "hzMr-vEogR0",
-          "at": "2026-10-16T11:25:50.894Z"
-        },
-        "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-16T18:00:00.000Z",
-          "at": "2026-10-16T11:25:50.894Z"
-        },
-        "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-16T18:00:00.000Z",
-          "at": "2026-10-16T11:25:50.895Z"
-        }
-      },
-      "finishedAt": "2026-10-16T11:25:50.895Z",
-      "videoId": "hzMr-vEogR0"
-    },
-    {
       "runId": "38895522463",
       "attempt": "1",
       "startedAt": "2026-10-16T11:43:17.054Z",
@@ -1371,6 +1310,50 @@
         }
       },
       "finishedAt": "2026-10-18T11:28:47.808Z"
+    },
+    {
+      "runId": "39125176449",
+      "attempt": "1",
+      "startedAt": "2026-10-18T11:56:26.032Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": null,
+      "slug": null,
+      "outcome": "NOT_DUE",
+      "reason": "today's Short already exists (what-if-a-lake-exploded)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-18T11:56:27.546Z"
     }
   ]
 }
