@@ -1,6 +1,6 @@
 {
-  "at": "2026-10-19T16:33:59.582Z",
-  "runId": "39286292476",
+  "at": "2026-10-19T17:00:53.880Z",
+  "runId": "39290290970",
   "rows": [
     {
       "channel": "failure-reconstructed",
@@ -94,24 +94,22 @@
     },
     {
       "channel": "critical-thread",
-      "outcome": "NO_TOPIC",
-      "category": "CONTENT_BLOCKED",
+      "outcome": "NOT_DUE",
+      "category": "NOT_DUE",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "NO_EXPLORE_CANDIDATE",
+      "reason": "production window closed at 21:00 Europe/Istanbul minus 60 min",
       "slug": null,
       "videoId": null,
-      "targetDay": "2026-10-19",
+      "targetDay": null,
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "failed",
-          "detail": "NO_EXPLORE_CANDIDATE",
-          "at": "2026-10-19T16:33:48.648Z"
+          "status": "not-reached"
         },
         "SCRIPT": {
           "status": "not-reached"
