@@ -1,12 +1,12 @@
 # Growth Feedback Loop Health
 
-Generated: 2026-10-18T23:10:58.443Z
+Generated: 2026-10-19T01:15:17.107Z
 Portfolio verdict: **CLOSED_LOOP_WORKING**
 
 | Channel | Verdict | Mode | Samples | Performance rows | Diagnoses | Late checkpoints |
 |---|---|---|---:|---:|---:|---:|
-| failure-reconstructed | CLOSED_LOOP_WORKING | adaptive | 26 | 27 | 101 | 81 |
-| impossible-brief | CLOSED_LOOP_WORKING | adaptive | 16 | 17 | 76 | 39 |
+| failure-reconstructed | CLOSED_LOOP_WORKING | adaptive | 26 | 27 | 101 | 80 |
+| impossible-brief | CLOSED_LOOP_WORKING | adaptive | 16 | 17 | 76 | 38 |
 | critical-thread | CLOSED_LOOP_WORKING | observing | 6 | 7 | 26 | 22 |
 | behind-the-ordinary | CLOSED_LOOP_WORKING | observing | 2 | 2 | 3 | 6 |
 
