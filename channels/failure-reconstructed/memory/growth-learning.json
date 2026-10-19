@@ -1,6 +1,6 @@
 {
   "channel": "failure-reconstructed",
-  "updatedAt": "2026-10-19T12:54:11.643Z",
+  "updatedAt": "2026-10-19T13:46:07.275Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 26,
@@ -74,8 +74,8 @@
         "dimension": "topicCluster",
         "value": "aviation-failures",
         "sample": 3,
-        "lift": 0.278,
-        "z": 4.82
+        "lift": 0.288,
+        "z": 4.44
       },
       {
         "stage": "OBSERVATION",
@@ -90,8 +90,8 @@
         "dimension": "topicCluster",
         "value": "nuclear-accidents",
         "sample": 2,
-        "lift": 0.262,
-        "z": 0.9
+        "lift": 0.23,
+        "z": 0.88
       },
       {
         "stage": "OBSERVATION",
@@ -146,32 +146,32 @@
         "dimension": "topicCluster",
         "value": "rail-disasters",
         "sample": 2,
-        "lift": 0.198,
-        "z": 1.2
+        "lift": 0.214,
+        "z": 1.18
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 6,
-        "lift": -0.079,
-        "z": -0.45
+        "lift": -0.09,
+        "z": -0.54
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 9,
-        "lift": 0.052,
-        "z": 0.45
+        "lift": 0.06,
+        "z": 0.5
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "why",
         "sample": 4,
-        "lift": -0.1,
-        "z": -0.45
+        "lift": -0.092,
+        "z": -0.4
       },
       {
         "stage": "OBSERVATION",
@@ -186,16 +186,16 @@
         "dimension": "titlePattern",
         "value": "inside",
         "sample": 3,
-        "lift": -0.127,
-        "z": -0.37
+        "lift": -0.149,
+        "z": -0.47
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "statement",
         "sample": 2,
-        "lift": 0.009,
-        "z": 0.03
+        "lift": 0.025,
+        "z": 0.07
       },
       {
         "stage": "OBSERVATION",
@@ -218,16 +218,16 @@
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 6,
-        "lift": -0.111,
-        "z": -0.73
+        "lift": -0.105,
+        "z": -0.68
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "NONE",
         "sample": 9,
-        "lift": 0.074,
-        "z": 0.59
+        "lift": 0.07,
+        "z": 0.57
       },
       {
         "stage": "OBSERVATION",
@@ -292,8 +292,8 @@
         "dimension": "topicCluster",
         "value": "aviation-failures",
         "sample": 3,
-        "lift": 0.278,
-        "z": 4.82
+        "lift": 0.288,
+        "z": 4.44
       },
       {
         "stage": "HYPOTHESIS",
@@ -302,14 +302,6 @@
         "sample": 4,
         "lift": 0.121,
         "z": 0.58
-      },
-      {
-        "stage": "HYPOTHESIS",
-        "dimension": "titlePattern",
-        "value": "why",
-        "sample": 4,
-        "lift": -0.1,
-        "z": -0.45
       },
       {
         "stage": "HYPOTHESIS",
@@ -324,26 +316,26 @@
         "dimension": "titlePattern",
         "value": "inside",
         "sample": 3,
-        "lift": -0.127,
-        "z": -0.37
+        "lift": -0.149,
+        "z": -0.47
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 6,
-        "lift": -0.111,
-        "z": -0.73
+        "lift": -0.105,
+        "z": -0.68
       }
     ],
     "adopted": [],
     "suppressed": [],
     "adoptedWeights": {
-      "CuriosityScore": 1.134,
-      "HookPotentialScore": 0.831,
-      "CommentPotentialScore": 1.194,
-      "NoveltyScore": 1.196,
-      "SourceQualityScore": 1.111
+      "CuriosityScore": 1.135,
+      "HookPotentialScore": 0.832,
+      "CommentPotentialScore": 1.195,
+      "NoveltyScore": 1.19,
+      "SourceQualityScore": 1.124
     },
     "adoptedHookFamilyBonus": {},
     "adoptedTitlePatternBonus": {},

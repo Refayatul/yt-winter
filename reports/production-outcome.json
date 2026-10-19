@@ -1,125 +1,94 @@
 {
-  "at": "2026-10-19T12:54:46.223Z",
-  "runId": "39254760139",
+  "at": "2026-10-19T13:46:16.083Z",
+  "runId": "39262776968",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "UPLOADED",
-      "category": "SCHEDULED",
-      "scheduled": true,
-      "publication": "SCHEDULED",
-      "publishAt": "2026-10-19T18:00:00.000Z",
-      "reason": null,
-      "slug": "tasman-bridge-1975",
-      "videoId": "SjJHvPtSvcg",
-      "targetDay": "2026-10-19",
+      "outcome": "NOT_DUE",
+      "category": "NOT_DUE",
+      "scheduled": false,
+      "publication": "NOT_SCHEDULED",
+      "publishAt": null,
+      "reason": "today's Short already exists (tasman-bridge-1975)",
+      "slug": null,
+      "videoId": null,
+      "targetDay": null,
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "done",
-          "detail": "growth queue selected tasman-bridge-1975",
-          "at": "2026-10-19T12:48:02.827Z"
+          "status": "not-reached"
         },
         "SCRIPT": {
-          "status": "done",
-          "detail": "pre gate REVIEW 84",
-          "at": "2026-10-19T12:48:03.067Z"
+          "status": "not-reached"
         },
         "ASSETS": {
-          "status": "done",
-          "at": "2026-10-19T12:48:05.655Z"
+          "status": "not-reached"
         },
         "NARRATION": {
-          "status": "done",
-          "at": "2026-10-19T12:53:12.173Z"
+          "status": "not-reached"
         },
         "RENDER": {
-          "status": "done",
-          "at": "2026-10-19T12:53:12.173Z"
+          "status": "not-reached"
         },
         "QA": {
-          "status": "done",
-          "detail": "final gate PUBLISH 88",
-          "at": "2026-10-19T12:53:13.979Z"
+          "status": "not-reached"
         },
         "UPLOAD": {
-          "status": "done",
-          "detail": "SjJHvPtSvcg",
-          "at": "2026-10-19T12:53:18.346Z"
+          "status": "not-reached"
         },
         "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-19T18:00:00.000Z",
-          "at": "2026-10-19T12:53:18.347Z"
+          "status": "not-reached"
         },
         "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-19T18:00:00.000Z",
-          "at": "2026-10-19T12:53:18.347Z"
+          "status": "not-reached"
         }
       }
     },
     {
       "channel": "impossible-brief",
-      "outcome": "UPLOADED",
-      "category": "SCHEDULED",
-      "scheduled": true,
-      "publication": "SCHEDULED",
-      "publishAt": "2026-10-19T18:00:00.000Z",
-      "reason": null,
-      "slug": "what-if-mosquitoes-went-extinct",
-      "videoId": "x5VVXKhOhMQ",
-      "targetDay": "2026-10-19",
+      "outcome": "NOT_DUE",
+      "category": "NOT_DUE",
+      "scheduled": false,
+      "publication": "NOT_SCHEDULED",
+      "publishAt": null,
+      "reason": "today's Short already exists (what-if-mosquitoes-went-extinct)",
+      "slug": null,
+      "videoId": null,
+      "targetDay": null,
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "done",
-          "detail": "EXPLORE (0.25): under-sampled cluster OTHER",
-          "at": "2026-10-19T12:53:22.212Z"
+          "status": "not-reached"
         },
         "SCRIPT": {
-          "status": "done",
-          "detail": "pre-render readiness PUBLISH 88",
-          "at": "2026-10-19T12:53:22.212Z"
+          "status": "not-reached"
         },
         "ASSETS": {
-          "status": "done",
-          "at": "2026-10-19T12:54:00.780Z"
+          "status": "not-reached"
         },
         "NARRATION": {
-          "status": "done",
-          "detail": "Microsoft Edge neural TTS (claim-timed)",
-          "at": "2026-10-19T12:54:00.780Z"
+          "status": "not-reached"
         },
         "RENDER": {
-          "status": "done",
-          "at": "2026-10-19T12:54:00.780Z"
+          "status": "not-reached"
         },
         "QA": {
-          "status": "done",
-          "detail": "validations passed",
-          "at": "2026-10-19T12:54:00.837Z"
+          "status": "not-reached"
         },
         "UPLOAD": {
-          "status": "done",
-          "detail": "x5VVXKhOhMQ",
-          "at": "2026-10-19T12:54:04.235Z"
+          "status": "not-reached"
         },
         "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-19T18:00:00.000Z",
-          "at": "2026-10-19T12:54:04.235Z"
+          "status": "not-reached"
         },
         "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-19T18:00:00.000Z",
-          "at": "2026-10-19T12:54:04.236Z"
+          "status": "not-reached"
         }
       }
     },
@@ -142,7 +111,7 @@
         "RESEARCH": {
           "status": "failed",
           "detail": "NO_EXPLORE_CANDIDATE",
-          "at": "2026-10-19T12:54:08.009Z"
+          "at": "2026-10-19T13:46:06.206Z"
         },
         "SCRIPT": {
           "status": "not-reached"
