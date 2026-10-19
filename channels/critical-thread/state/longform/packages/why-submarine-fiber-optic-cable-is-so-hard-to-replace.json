@@ -3,7 +3,7 @@
   "channel": "critical-thread",
   "channelName": "CriticalThread",
   "contentType": "long",
-  "createdAt": "2026-10-12T16:54:00.455Z",
+  "createdAt": "2026-10-19T12:54:10.172Z",
   "topic": {
     "id": "CT-073",
     "slug": "why-submarine-fiber-optic-cable-is-so-hard-to-replace",
@@ -17,10 +17,10 @@
     "slug": "why-submarine-fiber-optic-cable-is-so-hard-to-replace",
     "title": "The Garden-Hose-Thin Cables That Carry the Internet Across Oceans",
     "cluster": "SUBMARINE CABLES",
-    "LongFormPotentialScore": 79,
+    "LongFormPotentialScore": 78,
     "bucket": "A",
     "reasons": [
-      "LongFormPotential 79 ≥ 78"
+      "LongFormPotential 78 ≥ 78"
     ],
     "factors": {
       "DepthPotential": {
@@ -58,9 +58,9 @@
         "basis": "inventory-signal"
       },
       "ShortsEvidence": {
-        "value": 84,
+        "value": 72,
         "basis": "measured",
-        "note": "best cluster Short 305 views vs channel median 61; best subscriber conversion unavailable; best growth score 97.5"
+        "note": "best cluster Short 331 views vs channel median 63; best subscriber conversion unavailable; best growth score 57.4"
       },
       "SeriesPotential": {
         "value": 85,
@@ -119,7 +119,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 3
+    "reuseCount": 4
   },
   "outline": {
     "structure": [
@@ -426,8 +426,8 @@
     "blueprint": null,
     "quality": null,
     "checkpoint": "generation/why-submarine-fiber-optic-cable-is-so-hard-to-replace.json",
-    "llmError": "groq request failed (HTTP 413)",
-    "llmErrorCode": "REQUEST",
+    "llmError": "groq request too large (HTTP 413)",
+    "llmErrorCode": "REQUEST_TOO_LARGE",
     "llmErrorStage": "narrative-angle",
     "depthNote": null,
     "sections": [
@@ -1001,6 +1001,38 @@
         "ungrammatical": false
       },
       {
+        "title": "Mapping the Submarine Fiber-Optic Cable Dependency Chain",
+        "source": "mapping",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 63,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 79,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
         "title": "How Submarine Fiber-Optic Cable Became Critical Infrastructure",
         "source": "became-critical",
         "pattern": "how",
@@ -1029,6 +1061,40 @@
         "adjustedTotal": 68,
         "unsupportedWords": [
           "became"
+        ],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "The Cascading Failure Hidden in Submarine Fiber-Optic Cable",
+        "source": "cascade",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 75,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 78,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 68,
+        "unsupportedWords": [
+          "cascading"
         ],
         "misleading": false,
         "grammar": [],
@@ -1103,14 +1169,14 @@
         "ungrammatical": false
       },
       {
-        "title": "Mapping the Submarine Fiber-Optic Cable Dependency Chain",
-        "source": "mapping",
+        "title": "Where the Submarine Fiber-Optic Cable Dependency Starts",
+        "source": "dependency-start",
         "pattern": "statement",
         "scores": {
           "clarity": 100,
           "curiosity": 40,
           "specificity": 77,
-          "truthfulness": 100,
+          "truthfulness": 85,
           "searchIntent": 83,
           "channelIdentity": 74,
           "ctrPotential": 63,
@@ -1120,13 +1186,47 @@
           "compactness": 100,
           "recognizability": 80,
           "nonRedundancy": 92,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 76,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 66,
+        "unsupportedWords": [
+          "starts"
+        ],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "The Garden-Hose-Thin Cables That Carry the Internet Across Oceans",
+        "source": "editorial",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 30,
+          "channelIdentity": 72,
+          "ctrPotential": 45,
+          "novelty": 100,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 90,
+          "recognizability": 38,
+          "nonRedundancy": 100,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
-        "total": 79,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
+        "total": 65,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
         "genericTemplatePenalty": 0,
         "adjustedTotal": 65,
         "unsupportedWords": [],
@@ -1135,35 +1235,65 @@
         "ungrammatical": false
       },
       {
-        "title": "The Cascading Failure Hidden in Submarine Fiber-Optic Cable",
-        "source": "cascade",
-        "pattern": "statement",
+        "title": "Why a Cut Cable Needs a Ship to Fix It",
+        "source": "editorial",
+        "pattern": "why",
         "scores": {
-          "clarity": 100,
+          "clarity": 97,
           "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 75,
-          "novelty": 92,
-          "evergreenPotential": 85,
-          "consequence": 80,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 42,
+          "channelIdentity": 72,
+          "ctrPotential": 57,
+          "novelty": 20,
+          "evergreenPotential": 75,
+          "consequence": 42,
           "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 92,
-          "factualIntegrity": 85,
+          "recognizability": 38,
+          "nonRedundancy": 20,
+          "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
-        "total": 78,
+        "total": 69,
         "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
+        "templateNaturalnessPenalty": 0,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 64,
-        "unsupportedWords": [
-          "cascading"
-        ],
+        "adjustedTotal": 65,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "The Internet Lies on the Ocean Floor",
+        "source": "editorial",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 94,
+          "curiosity": 40,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 30,
+          "channelIdentity": 60,
+          "ctrPotential": 45,
+          "novelty": 100,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 100,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 63,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 63,
+        "unsupportedWords": [],
         "misleading": false,
         "grammar": [],
         "ungrammatical": false
@@ -1204,38 +1334,6 @@
         "ungrammatical": false
       },
       {
-        "title": "Why a Cut Cable Needs a Ship to Fix It",
-        "source": "editorial",
-        "pattern": "why",
-        "scores": {
-          "clarity": 97,
-          "curiosity": 58,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 42,
-          "channelIdentity": 72,
-          "ctrPotential": 57,
-          "novelty": 20,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 20,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 69,
-        "patternPenalty": 7,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 62,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
         "title": "The Single Point of Failure: Submarine Fiber-Optic Cable",
         "source": "single-point",
         "pattern": "label-colon",
@@ -1271,164 +1369,32 @@
         "ungrammatical": false
       },
       {
-        "title": "Where the Submarine Fiber-Optic Cable Dependency Starts",
-        "source": "dependency-start",
+        "title": "The Hidden System Behind Submarine Fiber-Optic Cable",
+        "source": "hidden-system",
         "pattern": "statement",
         "scores": {
           "clarity": 100,
-          "curiosity": 40,
+          "curiosity": 76,
           "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 83,
+          "truthfulness": 100,
+          "searchIntent": 75,
           "channelIdentity": 74,
-          "ctrPotential": 63,
+          "ctrPotential": 79,
           "novelty": 92,
           "evergreenPotential": 85,
-          "consequence": 80,
+          "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
           "nonRedundancy": 92,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 76,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 62,
-        "unsupportedWords": [
-          "starts"
-        ],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
-        "title": "The Garden-Hose-Thin Cables That Carry the Internet Across Oceans",
-        "source": "editorial",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 30,
-          "channelIdentity": 72,
-          "ctrPotential": 45,
-          "novelty": 100,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 90,
-          "recognizability": 38,
-          "nonRedundancy": 100,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 65,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 61,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
-        "title": "The Internet Lies on the Ocean Floor",
-        "source": "editorial",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 94,
-          "curiosity": 40,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 30,
-          "channelIdentity": 60,
-          "ctrPotential": 45,
-          "novelty": 100,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 100,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 63,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 59,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
-        "title": "What Depends on Submarine Fiber-Optic Cable?",
-        "source": "what-depends",
-        "pattern": "question",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 84,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 74,
-          "ctrPotential": 87,
-          "novelty": 90,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 90,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
         },
-        "total": 89,
+        "total": 84,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 79,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "What Happens If Submarine Fiber-Optic Cable Fails?",
-        "source": "what-if-fails",
-        "pattern": "question",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 84,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 62,
-          "ctrPotential": 87,
-          "novelty": 80,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 80,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 88,
-        "patternPenalty": 0,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 78,
+        "adjustedTotal": 74,
         "unsupportedWords": [],
         "misleading": false,
         "grammar": [
@@ -1448,12 +1414,12 @@
           "searchIntent": 83,
           "channelIdentity": 74,
           "ctrPotential": 77,
-          "novelty": 92,
+          "novelty": 91,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 51,
           "recognizability": 80,
-          "nonRedundancy": 92,
+          "nonRedundancy": 91,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1505,6 +1471,40 @@
         "ungrammatical": true
       },
       {
+        "title": "What Depends on Submarine Fiber-Optic Cable?",
+        "source": "what-depends",
+        "pattern": "question",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 84,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 74,
+          "ctrPotential": 87,
+          "novelty": 89,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 89,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 89,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 72,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
         "title": "Submarine Fiber-Optic Cable: The System Behind the System",
         "source": "system-behind-system",
         "pattern": "label-colon",
@@ -1539,32 +1539,32 @@
         "ungrammatical": true
       },
       {
-        "title": "The Hidden System Behind Submarine Fiber-Optic Cable",
-        "source": "hidden-system",
-        "pattern": "statement",
+        "title": "What Happens If Submarine Fiber-Optic Cable Fails?",
+        "source": "what-if-fails",
+        "pattern": "question",
         "scores": {
           "clarity": 100,
-          "curiosity": 76,
+          "curiosity": 84,
           "specificity": 77,
           "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 74,
-          "ctrPotential": 79,
-          "novelty": 92,
+          "searchIntent": 95,
+          "channelIdentity": 62,
+          "ctrPotential": 87,
+          "novelty": 80,
           "evergreenPotential": 85,
-          "consequence": 42,
+          "consequence": 80,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 92,
+          "nonRedundancy": 80,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
-        "total": 84,
-        "patternPenalty": 4,
+        "total": 88,
+        "patternPenalty": 7,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 70,
+        "adjustedTotal": 71,
         "unsupportedWords": [],
         "misleading": false,
         "grammar": [
@@ -1584,12 +1584,12 @@
           "searchIntent": 87,
           "channelIdentity": 74,
           "ctrPotential": 75,
-          "novelty": 91,
+          "novelty": 90,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 91,
+          "nonRedundancy": 90,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1629,7 +1629,75 @@
           "patternFreshness": 70
         },
         "total": 83,
-        "patternPenalty": 7,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "Why Submarine Fiber-Optic Cable Matters More Than You Think",
+        "source": "matters-more",
+        "pattern": "why",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 62,
+          "ctrPotential": 67,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 82,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 68,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "The Backup Plan for Submarine Fiber-Optic Cable",
+        "source": "backup-plan",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 55,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 76,
+        "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
         "adjustedTotal": 66,
@@ -1677,33 +1745,35 @@
         "ungrammatical": true
       },
       {
-        "title": "Why Submarine Fiber-Optic Cable Matters More Than You Think",
-        "source": "matters-more",
-        "pattern": "why",
+        "title": "If Submarine Fiber-Optic Cable Stopped Tomorrow",
+        "source": "stopped-tomorrow",
+        "pattern": "statement",
         "scores": {
           "clarity": 100,
-          "curiosity": 58,
+          "curiosity": 40,
           "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 95,
+          "truthfulness": 85,
+          "searchIntent": 83,
           "channelIdentity": 62,
-          "ctrPotential": 67,
+          "ctrPotential": 63,
           "novelty": 91,
           "evergreenPotential": 85,
-          "consequence": 42,
+          "consequence": 80,
           "compactness": 100,
           "recognizability": 80,
           "nonRedundancy": 91,
-          "factualIntegrity": 100,
+          "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
-        "total": 82,
-        "patternPenalty": 7,
+        "total": 75,
+        "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
         "adjustedTotal": 65,
-        "unsupportedWords": [],
+        "unsupportedWords": [
+          "tomorrow"
+        ],
         "misleading": false,
         "grammar": [
           "a singular noun without an article"
@@ -1739,6 +1809,115 @@
         "adjustedTotal": 65,
         "unsupportedWords": [
           "global"
+        ],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "The Invisible Infrastructure of Submarine Fiber-Optic Cable",
+        "source": "invisible",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 74,
+          "ctrPotential": 55,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 64,
+        "unsupportedWords": [
+          "invisible"
+        ],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "Why Submarine Fiber-Optic Cable Became Irreplaceable",
+        "source": "became-irreplaceable",
+        "pattern": "why",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 70,
+          "searchIntent": 95,
+          "channelIdentity": 74,
+          "ctrPotential": 67,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 70,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 78,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 64,
+        "unsupportedWords": [
+          "became",
+          "irreplaceable"
+        ],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "The Chain Reaction If Submarine Fiber-Optic Cable Fails",
+        "source": "failure-chain",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 63,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 64,
+        "unsupportedWords": [
+          "reaction"
         ],
         "misleading": false,
         "grammar": [
@@ -1785,177 +1964,35 @@
         "ungrammatical": true
       },
       {
-        "title": "The Backup Plan for Submarine Fiber-Optic Cable",
-        "source": "backup-plan",
+        "title": "The Global Chain Built on Submarine Fiber-Optic Cable",
+        "source": "global-chain",
         "pattern": "statement",
         "scores": {
           "clarity": 100,
           "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 55,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 91,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 76,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 62,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "If Submarine Fiber-Optic Cable Stopped Tomorrow",
-        "source": "stopped-tomorrow",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 63,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 91,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 75,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 61,
-        "unsupportedWords": [
-          "tomorrow"
-        ],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "Why Submarine Fiber-Optic Cable Became Irreplaceable",
-        "source": "became-irreplaceable",
-        "pattern": "why",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
           "specificity": 77,
           "truthfulness": 70,
-          "searchIntent": 95,
-          "channelIdentity": 74,
-          "ctrPotential": 67,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 91,
-          "factualIntegrity": 70,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 78,
-        "patternPenalty": 7,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 61,
-        "unsupportedWords": [
-          "became",
-          "irreplaceable"
-        ],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "The Invisible Infrastructure of Submarine Fiber-Optic Cable",
-        "source": "invisible",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 75,
-          "channelIdentity": 74,
-          "ctrPotential": 55,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 91,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 74,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 60,
-        "unsupportedWords": [
-          "invisible"
-        ],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "The Chain Reaction If Submarine Fiber-Optic Cable Fails",
-        "source": "failure-chain",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 85,
           "searchIntent": 75,
           "channelIdentity": 62,
-          "ctrPotential": 63,
+          "ctrPotential": 55,
           "novelty": 92,
           "evergreenPotential": 85,
-          "consequence": 80,
+          "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
           "nonRedundancy": 92,
-          "factualIntegrity": 85,
+          "factualIntegrity": 70,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
-        "total": 74,
-        "patternPenalty": 4,
+        "total": 70,
+        "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
         "adjustedTotal": 60,
         "unsupportedWords": [
-          "reaction"
+          "global",
+          "built"
         ],
         "misleading": false,
         "grammar": [
@@ -1996,43 +2033,6 @@
           "recovery"
         ],
         "misleading": true,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "The Global Chain Built on Submarine Fiber-Optic Cable",
-        "source": "global-chain",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 70,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 55,
-          "novelty": 92,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 92,
-          "factualIntegrity": 70,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 70,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 56,
-        "unsupportedWords": [
-          "global",
-          "built"
-        ],
-        "misleading": false,
         "grammar": [
           "a singular noun without an article"
         ],
@@ -2378,7 +2378,7 @@
     ],
     "hardFails": [
       "INSUFFICIENT_DEPTH: evidence supports ~1.5 min; target 8–12 min — not padded",
-      "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+      "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
     ],
     "notes": [
       "116 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim"
@@ -2396,7 +2396,7 @@
     "Channel": "CriticalThread",
     "Content Type": "LONG_FORM",
     "Topic": "The Garden-Hose-Thin Cables That Carry the Internet Across Oceans",
-    "LongFormPotentialScore": 79,
+    "LongFormPotentialScore": 78,
     "Topic Bucket": "A",
     "Cold Open": "Your internet depends on hidden seabed cables.",
     "Target Duration": "8–12 min",

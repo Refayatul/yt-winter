@@ -3,7 +3,7 @@
   "channel": "behind-the-ordinary",
   "channelName": "The Hidden Logic of Things",
   "contentType": "long",
-  "createdAt": "2026-10-12T16:54:06.721Z",
+  "createdAt": "2026-10-19T12:54:10.530Z",
   "topic": {
     "id": "BTO-016",
     "slug": "why-jeans-have-a-tiny-pocket",
@@ -123,7 +123,7 @@
       "licence": "CC BY-SA 4.0 — facts only; never narrate verbatim"
     },
     "gaps": [],
-    "reuseCount": 0
+    "reuseCount": 1
   },
   "outline": {
     "structure": [
@@ -443,8 +443,8 @@
     "blueprint": null,
     "quality": null,
     "checkpoint": "generation/why-jeans-have-a-tiny-pocket.json",
-    "llmError": "groq request failed (HTTP 413)",
-    "llmErrorCode": "REQUEST",
+    "llmError": "groq request too large (HTTP 413)",
+    "llmErrorCode": "REQUEST_TOO_LARGE",
     "llmErrorStage": "narrative-angle",
     "depthNote": null,
     "sections": [
@@ -2349,7 +2349,7 @@
     ],
     "hardFails": [
       "INSUFFICIENT_DEPTH: evidence supports ~2.7 min; target 8–12 min — not padded",
-      "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+      "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
     ],
     "notes": [
       "160 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim"

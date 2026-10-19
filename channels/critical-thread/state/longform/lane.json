@@ -141,6 +141,55 @@
       "selected": null,
       "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
       "finishedAt": "2026-10-12T16:54:06.683Z"
+    },
+    {
+      "cycleId": "2026-W43",
+      "channel": "critical-thread",
+      "startedAt": "2026-10-19T12:54:10.172Z",
+      "status": "QUALITY_BLOCKED",
+      "evaluated": [
+        {
+          "slug": "the-critical-role-of-urban-traffic-control-network",
+          "mode": "B_SHORT_PROVES_DEMAND",
+          "LongFormPotentialScore": 79,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 81,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.2 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        },
+        {
+          "slug": "why-submarine-fiber-optic-cable-is-so-hard-to-replace",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 78,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.5 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
+        },
+        {
+          "slug": "what-quietly-depends-on-cable-landing-station",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 78,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 74,
+          "hardFails": [
+            "unsupported central claim/number: 3, 000, 000 V",
+            "INSUFFICIENT_DEPTH: evidence supports ~2 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        }
+      ],
+      "selected": null,
+      "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
+      "finishedAt": "2026-10-19T12:54:10.492Z"
     }
   ]
 }

@@ -3,7 +3,7 @@
   "channel": "impossible-brief",
   "channelName": "ImpossibleBrief",
   "contentType": "long",
-  "createdAt": "2026-09-30T15:48:34.232Z",
+  "createdAt": "2026-10-19T12:54:09.164Z",
   "topic": {
     "id": "IB-FUT-038",
     "slug": "what-if-we-mined-a-metal-asteroid",
@@ -17,10 +17,10 @@
     "slug": "what-if-we-mined-a-metal-asteroid",
     "title": "What If We Mined a Metal Asteroid?",
     "cluster": "FUTURE TECHNOLOGY",
-    "LongFormPotentialScore": 79,
+    "LongFormPotentialScore": 84,
     "bucket": "A",
     "reasons": [
-      "LongFormPotential 79 ≥ 78"
+      "LongFormPotential 84 ≥ 78"
     ],
     "factors": {
       "DepthPotential": {
@@ -58,16 +58,16 @@
         "basis": "inventory-signal"
       },
       "ShortsEvidence": {
-        "value": 50,
-        "basis": "derived",
-        "note": "no published Short in this cluster yet — neutral"
+        "value": 78,
+        "basis": "measured",
+        "note": "best cluster Short 1539 views vs channel median 737; best subscriber conversion 0.00251; best growth score 67.1 — MODE B: Short proved demand"
       },
       "SeriesPotential": {
-        "value": 85,
+        "value": 100,
         "basis": "derived"
       },
       "ViewerJourneyPotential": {
-        "value": 65,
+        "value": 85,
         "basis": "derived"
       }
     },
@@ -123,7 +123,7 @@
       "licence": "CC BY-SA 4.0 — facts only; never narrate verbatim"
     },
     "gaps": [],
-    "reuseCount": 0
+    "reuseCount": 1
   },
   "outline": {
     "structure": [
@@ -407,71 +407,86 @@
   "coldOpens": {
     "candidates": [
       {
-        "type": "unexpected_chain_reaction",
-        "text": "It's about 278 kilometres across at its longest.",
-        "score": 71,
-        "estimatedSeconds": 2.5
-      },
-      {
         "type": "impossible_question",
         "text": "What If We Mined a Metal Asteroid?",
-        "score": 71,
+        "score": 78,
         "estimatedSeconds": 2.2
       },
       {
         "type": "visual_first_reveal",
         "text": "Psyche is the only core-like metal world we know.",
-        "score": 69,
+        "score": 77,
         "estimatedSeconds": 2.8
       },
       {
+        "type": "unexpected_chain_reaction",
+        "text": "It's about 278 kilometres across at its longest.",
+        "score": 77,
+        "estimatedSeconds": 2.5
+      },
+      {
         "type": "impossible_sounding_fact",
-        "text": "16 Psyche is the only metallic core-like body discovered so far.",
-        "score": 69,
-        "estimatedSeconds": 3.4
+        "text": "Pure iron-nickel would be nearly double that, at 7.9.",
+        "score": 74,
+        "estimatedSeconds": 2.8
       },
       {
         "type": "hidden_cause",
         "text": "Humans tried to mine the metal-rich asteroid Psyche.",
-        "score": 65,
+        "score": 73,
         "estimatedSeconds": 2.5
-      },
-      {
-        "type": "shocking_consequence",
-        "text": "The first obstacle is knowing what it is made of; hauling metal across the Solar System comes after.",
-        "score": 63,
-        "estimatedSeconds": 5.6
       },
       {
         "type": "misconception_reversal",
         "text": "It would not all happen at once.",
-        "score": 63,
+        "score": 71,
         "estimatedSeconds": 2.2
+      },
+      {
+        "type": "shocking_consequence",
+        "text": "The first obstacle is knowing what it is made of; hauling metal across the Solar System comes after.",
+        "score": 68,
+        "estimatedSeconds": 5.6
       },
       {
         "type": "question_gap",
         "text": "What changes first?",
-        "score": 61,
+        "score": 68,
         "estimatedSeconds": 0.9
+      },
+      {
+        "type": "mechanism_reveal",
+        "text": "We Mined a Metal Asteroid failed because a body's bulk density reveals its mix of metal.",
+        "score": 65,
+        "estimatedSeconds": 5
       }
     ],
     "selected": {
-      "type": "unexpected_chain_reaction",
-      "text": "It's about 278 kilometres across at its longest.",
-      "score": 71,
-      "estimatedSeconds": 2.5
+      "type": "impossible_question",
+      "text": "What If We Mined a Metal Asteroid?",
+      "score": 78,
+      "estimatedSeconds": 2.2
     }
   },
   "script": {
     "generator": "deterministic-evidence",
-    "llmError": null,
+    "provider": "groq",
+    "model": null,
+    "status": "FAILED",
+    "pipeline": null,
+    "blueprint": null,
+    "quality": null,
+    "checkpoint": "generation/what-if-we-mined-a-metal-asteroid.json",
+    "llmError": "groq request too large (HTTP 413)",
+    "llmErrorCode": "REQUEST_TOO_LARGE",
+    "llmErrorStage": "narrative-angle",
     "depthNote": null,
     "sections": [
       {
         "section": "COLD_OPEN",
         "paragraphs": [
           {
-            "text": "It's about 278 kilometres across at its longest.",
+            "text": "What If We Mined a Metal Asteroid?",
             "claims": [],
             "role": "cold-open"
           }
@@ -564,7 +579,7 @@
         "paragraphs": []
       }
     ],
-    "words": 291,
+    "words": 290,
     "estimatedMinutes": 1.9,
     "paragraphs": 6,
     "secondsPerNewBeat": 19
@@ -573,7 +588,7 @@
     "rows": [
       {
         "section": "COLD_OPEN",
-        "excerpt": "It's about 278 kilometres across at its longest.",
+        "excerpt": "What If We Mined a Metal Asteroid?",
         "claims": []
       },
       {
@@ -719,7 +734,7 @@
       "subject": "Psyche asteroid shape model",
       "asset": "Psyche asteroid shape model",
       "sourceRequirement": "procedural render, labelled on screen",
-      "durationEstimateSeconds": 3.2,
+      "durationEstimateSeconds": 2.8,
       "motion": "slow push-in to detail",
       "claimSupported": null,
       "fallbackAssetStrategy": "labelled procedural diagram",
@@ -747,7 +762,7 @@
       "scene": 3,
       "narrationSpan": [
         12,
-        20
+        19
       ],
       "section": "INITIAL_CONDITIONS",
       "visualPurpose": "visualise scenario",
@@ -764,8 +779,8 @@
     {
       "scene": 4,
       "narrationSpan": [
-        20,
-        39
+        19,
+        38
       ],
       "section": "FIRST_EFFECT",
       "visualPurpose": "visualise scenario",
@@ -782,7 +797,7 @@
     {
       "scene": 5,
       "narrationSpan": [
-        39,
+        38,
         57
       ],
       "section": "FIRST_EFFECT",
@@ -837,7 +852,7 @@
       "scene": 8,
       "narrationSpan": [
         95,
-        107
+        106
       ],
       "section": "SCIENCE_EXPLANATION",
       "visualPurpose": "explain mechanism",
@@ -854,7 +869,7 @@
     {
       "scene": 9,
       "narrationSpan": [
-        107,
+        106,
         116
       ],
       "section": "LIMITS_UNCERTAINTIES",
@@ -1038,13 +1053,25 @@
         "searchIntent": 87,
         "channelIdentity": 62,
         "ctrPotential": 79,
-        "novelty": 100,
-        "evergreenPotential": 85
+        "novelty": 82,
+        "evergreenPotential": 85,
+        "consequence": 42,
+        "compactness": 93,
+        "recognizability": 80,
+        "nonRedundancy": 82,
+        "factualIntegrity": 100,
+        "historicalPerformanceSimilarity": 50,
+        "patternFreshness": 100
       },
       "total": 86,
+      "patternPenalty": 0,
+      "templateNaturalnessPenalty": 0,
+      "genericTemplatePenalty": 0,
       "adjustedTotal": 86,
       "unsupportedWords": [],
-      "misleading": false
+      "misleading": false,
+      "grammar": [],
+      "ungrammatical": false
     },
     "selectedScore": 86,
     "count": 23,
@@ -1061,13 +1088,25 @@
           "searchIntent": 87,
           "channelIdentity": 62,
           "ctrPotential": 79,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 82,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 93,
+          "recognizability": 80,
+          "nonRedundancy": 82,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 86,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 86,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "What Would Really Happen If We Mined a Metal Asteroid?",
@@ -1081,33 +1120,25 @@
           "searchIntent": 87,
           "channelIdentity": 50,
           "ctrPotential": 79,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 85,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 85,
         "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "What If We Mined a Metal Asteroid?",
-        "source": "current",
-        "pattern": "what-if-question",
-        "scores": {
-          "clarity": 91,
-          "curiosity": 84,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 50,
-          "ctrPotential": 79,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 85,
-        "adjustedTotal": 85,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If We Mined a Metal Asteroid: What Breaks First, and What Breaks Last",
@@ -1122,32 +1153,24 @@
           "channelIdentity": 50,
           "ctrPotential": 87,
           "novelty": 82,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 61,
+          "recognizability": 80,
+          "nonRedundancy": 82,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 83,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 83,
         "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "What If We Mined the Metal Asteroid Psyche",
-        "source": "editorial",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 60,
-          "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 82,
-        "adjustedTotal": 82,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If We Mined a Metal Asteroid — Simulated With Real Science",
@@ -1161,13 +1184,57 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 93,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 81,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 81,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "What If We Mined a Metal Asteroid?",
+        "source": "current",
+        "pattern": "what-if-question",
+        "scores": {
+          "clarity": 91,
+          "curiosity": 84,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 50,
+          "ctrPotential": 79,
+          "novelty": 89,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 89,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 85,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 81,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If We Mined a Metal Asteroid: First Effect to Final Outcome",
@@ -1182,32 +1249,24 @@
           "channelIdentity": 50,
           "ctrPotential": 67,
           "novelty": 93,
-          "evergreenPotential": 85
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 93,
+          "recognizability": 80,
+          "nonRedundancy": 93,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 80,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 80,
         "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Real Physics If We Mined a Metal Asteroid",
-        "source": "real-physics",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 80,
-        "adjustedTotal": 80,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Could Humanity Survive If We Mined a Metal Asteroid?",
@@ -1221,13 +1280,25 @@
           "searchIntent": 75,
           "channelIdentity": 50,
           "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 79,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 79,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If We Mined a Metal Asteroid — What Physics Says Happens Next",
@@ -1241,15 +1312,27 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 85,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 84,
+          "recognizability": 80,
+          "nonRedundancy": 85,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 77,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [
           "says"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If We Mined a Metal Asteroid: The Full Breakdown",
@@ -1263,13 +1346,25 @@
           "searchIntent": 83,
           "channelIdentity": 50,
           "ctrPotential": 63,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 77,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If We Mined a Metal Asteroid: The Complete Scientific Timeline",
@@ -1283,93 +1378,57 @@
           "searchIntent": 83,
           "channelIdentity": 50,
           "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 96,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 76,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
-        "title": "If We Mined a Metal Asteroid, Minute by Minute",
-        "source": "minute-by-minute",
+        "title": "What If We Mined the Metal Asteroid Psyche",
+        "source": "editorial",
         "pattern": "statement",
         "scores": {
           "clarity": 100,
-          "curiosity": 40,
+          "curiosity": 58,
           "specificity": 77,
           "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 50,
-          "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "searchIntent": 95,
+          "channelIdentity": 60,
+          "ctrPotential": 67,
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
-        "total": 76,
-        "adjustedTotal": 76,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "We Mined a Metal Asteroid: A Scientific Thought Experiment",
-        "source": "thought-experiment",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 50,
-          "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 76,
-        "adjustedTotal": 76,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Day After We Mined a Metal Asteroid",
-        "source": "day-after",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 99,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 50,
-          "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 76,
-        "adjustedTotal": 76,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Every Consequence If We Mined a Metal Asteroid, Explained",
-        "source": "every-consequence",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 50,
-          "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
-        },
-        "total": 75,
+        "total": 82,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 75,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "What Changes — And What Doesn't — If We Mined a Metal Asteroid",
@@ -1383,15 +1442,27 @@
           "searchIntent": 87,
           "channelIdentity": 50,
           "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 75,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 75,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 75,
         "unsupportedWords": [
           "doesnt"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If We Mined a Metal Asteroid: Known Science, Estimates and Speculation",
@@ -1405,38 +1476,59 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 93,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 73,
+          "recognizability": 80,
+          "nonRedundancy": 93,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 74,
         "unsupportedWords": [
           "estimates"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
-        "title": "What Scientists Can and Can't Predict If We Mined a Metal Asteroid",
-        "source": "can-cant-predict",
+        "title": "The Real Physics If We Mined a Metal Asteroid",
+        "source": "real-physics",
         "pattern": "statement",
         "scores": {
-          "clarity": 95,
+          "clarity": 100,
           "curiosity": 58,
           "specificity": 77,
-          "truthfulness": 70,
-          "searchIntent": 87,
-          "channelIdentity": 50,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 62,
           "ctrPotential": 67,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 84,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 84,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
-        "total": 74,
-        "adjustedTotal": 74,
-        "unsupportedWords": [
-          "scientists",
-          "cant"
-        ],
-        "misleading": false
+        "total": 80,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 73,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "The Chain Reaction That Follows If We Mined a Metal Asteroid",
@@ -1450,37 +1542,91 @@
           "searchIntent": 75,
           "channelIdentity": 50,
           "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 93,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 72,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 72,
         "unsupportedWords": [
           "reaction"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
-        "title": "The Second-Order Effects If We Mined a Metal Asteroid",
-        "source": "second-order",
+        "title": "If We Mined a Metal Asteroid, Minute by Minute",
+        "source": "minute-by-minute",
         "pattern": "statement",
         "scores": {
           "clarity": 100,
           "curiosity": 40,
           "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 75,
+          "truthfulness": 100,
+          "searchIntent": 83,
           "channelIdentity": 50,
           "ctrPotential": 55,
-          "novelty": 100,
-          "evergreenPotential": 85
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
-        "total": 72,
-        "adjustedTotal": 72,
-        "unsupportedWords": [
-          "second-order"
-        ],
-        "misleading": false
+        "total": 76,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "The Day After We Mined a Metal Asteroid",
+        "source": "day-after",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 99,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 50,
+          "ctrPotential": 55,
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 76,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Why Psyche May Not Be Solid Metal",
@@ -1495,15 +1641,128 @@
           "channelIdentity": 60,
           "ctrPotential": 57,
           "novelty": 100,
-          "evergreenPotential": 75
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 100,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
         },
         "total": 68,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 68,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
-        "title": "What If Humans Tried to Mine the Metal-rich Asteroid Psyche? the Full Scenario",
+        "title": "Every Consequence If We Mined a Metal Asteroid, Explained",
+        "source": "every-consequence",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 50,
+          "ctrPotential": 55,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 75,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 68,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "What Scientists Can and Can't Predict If We Mined a Metal Asteroid",
+        "source": "can-cant-predict",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 95,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 70,
+          "searchIntent": 87,
+          "channelIdentity": 50,
+          "ctrPotential": 67,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 74,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 70,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 74,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 67,
+        "unsupportedWords": [
+          "scientists",
+          "cant"
+        ],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "The Second-Order Effects If We Mined a Metal Asteroid",
+        "source": "second-order",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 50,
+          "ctrPotential": 55,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 72,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 65,
+        "unsupportedWords": [
+          "second-order"
+        ],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "What If Humans Tried to Mine the Metal-Rich Asteroid Psyche? the Full Scenario",
         "source": "full-scenario",
         "pattern": "statement",
         "scores": {
@@ -1514,15 +1773,61 @@
           "searchIntent": 42,
           "channelIdentity": 50,
           "ctrPotential": 59,
-          "novelty": 100,
-          "evergreenPotential": 75
+          "novelty": 93,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 43,
+          "recognizability": 38,
+          "nonRedundancy": 93,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
         },
         "total": 65,
-        "adjustedTotal": 65,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 58,
         "unsupportedWords": [
           "scenario"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "We Mined a Metal Asteroid: A Scientific Thought Experiment",
+        "source": "thought-experiment",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 50,
+          "ctrPotential": 55,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 76,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 76,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [
+          "a clause used as a noun"
+        ],
+        "ungrammatical": true
       }
     ]
   },
@@ -1530,11 +1835,11 @@
     "shorts": [
       {
         "angle": "impossible-question",
-        "hook": "Psyche is the only core-like metal world we know.",
-        "hookFamily": "countdown",
-        "hookScore": 69,
+        "hook": "What If We Mined a Metal Asteroid?",
+        "hookFamily": "impossible_question",
+        "hookScore": 78,
         "first3SecondPlan": {
-          "narration": "Psyche is the only core-like metal world we know.",
+          "narration": "What If We Mined a Metal Asteroid?",
           "firstFrame": {
             "description": "Psyche asteroid shape model at the moment the impossible change begins",
             "source": "procedural render",
@@ -1548,10 +1853,10 @@
           "motion": "scale shift: object shrinks/grows in 0.8 s, then hard cut",
           "cutTiming": [
             0,
-            1.4,
-            2.8
+            0.8,
+            1.6
           ],
-          "soundCue": "sub-bass swell resolving on the first cut",
+          "soundCue": "single low hit on the first cut",
           "communicates": "mystery"
         },
         "miniNarrative": [
@@ -1570,11 +1875,11 @@
       },
       {
         "angle": "initial-conditions",
-        "hook": "Psyche is the only core-like metal world we know.",
-        "hookFamily": "countdown",
-        "hookScore": 69,
+        "hook": "What If We Mined a Metal Asteroid?",
+        "hookFamily": "impossible_question",
+        "hookScore": 78,
         "first3SecondPlan": {
-          "narration": "Psyche is the only core-like metal world we know.",
+          "narration": "What If We Mined a Metal Asteroid?",
           "firstFrame": {
             "description": "Psyche asteroid shape model at the moment the impossible change begins",
             "source": "procedural render",
@@ -1588,10 +1893,10 @@
           "motion": "scale shift: object shrinks/grows in 0.8 s, then hard cut",
           "cutTiming": [
             0,
-            1.4,
-            2.8
+            0.8,
+            1.6
           ],
-          "soundCue": "sub-bass swell resolving on the first cut",
+          "soundCue": "single low hit on the first cut",
           "communicates": "mystery"
         },
         "miniNarrative": [
@@ -1615,11 +1920,11 @@
       },
       {
         "angle": "first-effect",
-        "hook": "Psyche is the only core-like metal world we know.",
-        "hookFamily": "visual_first_reveal",
-        "hookScore": 69,
+        "hook": "What If We Mined a Metal Asteroid?",
+        "hookFamily": "impossible_question",
+        "hookScore": 78,
         "first3SecondPlan": {
-          "narration": "Psyche is the only core-like metal world we know.",
+          "narration": "What If We Mined a Metal Asteroid?",
           "firstFrame": {
             "description": "Psyche asteroid shape model at the moment the impossible change begins",
             "source": "procedural render",
@@ -1633,10 +1938,10 @@
           "motion": "scale shift: object shrinks/grows in 0.8 s, then hard cut",
           "cutTiming": [
             0,
-            1.4,
-            2.8
+            0.8,
+            1.6
           ],
-          "soundCue": "sub-bass swell resolving on the first cut",
+          "soundCue": "single low hit on the first cut",
           "communicates": "mystery"
         },
         "miniNarrative": [
@@ -1834,6 +2139,27 @@
       "relationship_type": "SAME_SERIES",
       "relationship_reason": "same series; subject overlap 0.00, same cluster FUTURE TECHNOLOGY",
       "score": 0.4
+    },
+    {
+      "short_video_id": "9oMvT2-bE9E",
+      "short_slug": "what-if-fusion-power-actually-worked",
+      "relationship_type": "SAME_SERIES",
+      "relationship_reason": "same series; subject overlap 0.00, same cluster FUTURE TECHNOLOGY",
+      "score": 0.4
+    },
+    {
+      "short_video_id": "6zrtuhSsLgA",
+      "short_slug": "what-if-we-built-a-star-on-earth",
+      "relationship_type": "SAME_SERIES",
+      "relationship_reason": "same series; subject overlap 0.00, same cluster FUTURE TECHNOLOGY",
+      "score": 0.4
+    },
+    {
+      "short_video_id": "G9lIDTt09R0",
+      "short_slug": "what-if-we-gave-mars-a-thicker-atmosphere",
+      "relationship_type": "SAME_SERIES",
+      "relationship_reason": "same series; subject overlap 0.00, same cluster FUTURE TECHNOLOGY",
+      "score": 0.4
     }
   ],
   "nextVideos": {
@@ -1890,12 +2216,12 @@
     "note": "approximate; update config/growth-engine.json cost units from invoices"
   },
   "readiness": {
-    "LongFormProductionReadinessScore": 86,
+    "LongFormProductionReadinessScore": 87,
     "decision": "BLOCK",
     "dimensions": {
       "TopicDepth": 92,
       "NarrativeQuality": 74,
-      "Hook": 71,
+      "Hook": 78,
       "ResearchQuality": 100,
       "SourceCoverage": 100,
       "FactualAccuracy": 100,
@@ -1915,14 +2241,15 @@
       "Editing"
     ],
     "hardFails": [
-      "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded"
+      "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded",
+      "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
     ],
     "notes": [
-      "160 deep-research claims need the LLM writer (LONGFORM_LLM=1 + ANTHROPIC_API_KEY); the deterministic writer never narrates encyclopedia text verbatim"
+      "160 deep-research claims need the LLM writer via a configured long-form provider (LONGFORM_LLM_PROVIDER + provider key); the deterministic writer never narrates encyclopedia text verbatim"
     ],
     "thresholds": {
-      "publish": 85,
-      "review": 70
+      "publish": 86,
+      "review": 74
     }
   },
   "targetMinutes": [
@@ -1933,16 +2260,16 @@
     "Channel": "ImpossibleBrief",
     "Content Type": "LONG_FORM",
     "Topic": "What If We Mined a Metal Asteroid?",
-    "LongFormPotentialScore": 79,
+    "LongFormPotentialScore": 84,
     "Topic Bucket": "A",
-    "Cold Open": "It's about 278 kilometres across at its longest.",
+    "Cold Open": "What If We Mined a Metal Asteroid?",
     "Target Duration": "8–12 min",
     "Actual Duration": "~1.9 min (script estimate, deterministic-evidence)",
     "Scenes": 9,
     "Thumbnail Score": 91,
     "Title Score": 86,
-    "LongFormProductionReadinessScore": "86 → BLOCK",
-    "Related Shorts": "what-if-sunlight-could-push-a-spaceship",
+    "LongFormProductionReadinessScore": "87 → BLOCK",
+    "Related Shorts": "what-if-sunlight-could-push-a-spaceship, what-if-fusion-power-actually-worked, what-if-we-built-a-star-on-earth, what-if-we-gave-mars-a-thicker-atmosphere",
     "Primary Next Video": "What changes when commercial fusion power reaches one percent of global infrastructure?"
   }
 }

@@ -1,20 +1,20 @@
 # Growth dashboard
 
-Generated 2026-10-18T18:44:55.269Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-10-19T12:54:44.024Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
-**Shorts health** — last published 2026-10-18T18:00:00.000Z · 26 published · inventory A91/B141/C59/D59 · next: titanic-1912 (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-19T18:00:00.000Z · 27 published · inventory A92/B139/C59/D59 · next: ocean-ranger-1982 (EXPLORE (0.25): under-sampled cluster industrial-disasters)
 
-**Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
+**Long-form health** — cycle 2026-W43: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W43 already QUALITY_BLOCKED)
 
-**Long-form backlog** — challenger-1986 85/A, chernobyl-1986 85/A, columbia-2003 85/A, air-france-447-2009 84/A, lahaina-fire-2023 84/A
+**Long-form backlog** — chernobyl-1986 86/A, challenger-1986 85/A, columbia-2003 85/A, air-france-447-2009 84/A, lahaina-fire-2023 84/A
 
 **Content clusters** — 12 · integrity OK
 
-**Growth / subscriber conversion** — tracked 27 · subs/1k Shorts 1.56 · subs/1k long n/a
+**Growth / subscriber conversion** — tracked 28 · subs/1k Shorts 1.56 · subs/1k long n/a
 
-**Learning** — Shorts adaptive (n=25, adopted 0) · Long-form heuristics-only (n=0)
+**Learning** — Shorts adaptive (n=26, adopted 0) · Long-form heuristics-only (n=0)
 
 **Short → Long funnel** — 0 link(s), 0 long→long, 0 pending RELATED_VIDEO_MANUAL_ACTION_REQUIRED
 
@@ -36,27 +36,27 @@ Generated 2026-10-18T18:44:55.269Z. Per-channel baselines are computed separatel
 
 ## ImpossibleBrief
 
-**Shorts health** — last published 2026-10-18T18:00:00.000Z · 18 published · inventory A116/B19/C140/D206 · next: what-if-we-tried-to-drill-through-the-earth (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-19T18:00:00.000Z · 19 published · inventory A113/B21/C140/D206 · next: what-if-you-stopped-eating-for-a-year (EXPLORE (0.25): under-sampled cluster HUMAN)
 
-**Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
+**Long-form health** — cycle 2026-W43: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W43 already QUALITY_BLOCKED)
 
-**Long-form backlog** — what-if-we-mined-a-metal-asteroid 84/A, what-if-we-swam-in-europas-ocean 83/A, what-if-you-visited-io-the-volcano-moon 83/A, what-if-a-90-day-rover-lasted-14-years 83/A, what-if-we-built-a-star-on-earth 83/A
+**Long-form backlog** — could-earth-survive-one-day-without-earth-s-magnetic-field 83/A, what-if-we-mined-a-metal-asteroid 83/A, what-if-synthetic-fertilizer-disappeared 83/A, what-if-earth-had-rings-like-saturn 82/A, what-if-we-swam-in-europas-ocean 82/A
 
 **Content clusters** — 7 · integrity OK
 
-**Growth / subscriber conversion** — tracked 17 · subs/1k Shorts 0.96 · subs/1k long n/a
+**Growth / subscriber conversion** — tracked 18 · subs/1k Shorts 0.96 · subs/1k long n/a
 
-**Learning** — Shorts adaptive (n=15, adopted 0) · Long-form heuristics-only (n=0)
+**Learning** — Shorts adaptive (n=16, adopted 0) · Long-form heuristics-only (n=0)
 
 **Short → Long funnel** — 0 link(s), 0 long→long, 0 pending RELATED_VIDEO_MANUAL_ACTION_REQUIRED
 
 **Research/source enrichment tasks**
 
 - what-if-human-heat-tolerance-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
-- could-we-function-with-half-human-heat-tolerance (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
+- could-we-function-with-half-human-heat-tolerance (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - what-if-human-muscle-efficiency-doubled-overnight (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
-- would-doubling-all-synthetic-fertilizers-help-or-harm-us (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
-- what-if-the-brain-s-energy-use-doubled-overnight (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
+- what-happens-if-the-global-ocean-doubles (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
+- what-if-the-brain-s-energy-use-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 
 **Recent alerts**
 
@@ -69,9 +69,9 @@ Generated 2026-10-18T18:44:55.269Z. Per-channel baselines are computed separatel
 
 ## CriticalThread
 
-**Shorts health** — last published 2026-10-13T18:00:00.000Z · 8 published · inventory A8/B144/C0/D362 · next: the-hidden-system-behind-border-gateway-routing-system (EXPLOIT (0.75): best A topic by SelectionScore)
+**Shorts health** — last published 2026-10-13T18:00:00.000Z · 8 published · inventory A8/B144/C0/D362 · next: the-hidden-system-behind-border-gateway-routing-system (EXPLORE (0.25): under-sampled cluster TELECOMMUNICATIONS)
 
-**Long-form health** — cycle 2026-W42: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W42 already QUALITY_BLOCKED)
+**Long-form health** — cycle 2026-W43: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W43 already QUALITY_BLOCKED)
 
 **Long-form backlog** — the-critical-role-of-urban-traffic-control-network 79/A, why-submarine-fiber-optic-cable-is-so-hard-to-replace 78/A, what-quietly-depends-on-cable-landing-station 78/A, the-critical-role-of-cable-laying-ship 78/A, inside-the-system-built-around-road-tunnel-ventilation-system 78/A
 
@@ -85,7 +85,6 @@ Generated 2026-10-18T18:44:55.269Z. Per-channel baselines are computed separatel
 
 **Recent alerts**
 
-- 2026-10-08 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content
 - 2026-10-09 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content
 - 2026-10-10 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content
 - 2026-10-11 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content
@@ -95,6 +94,7 @@ Generated 2026-10-18T18:44:55.269Z. Per-channel baselines are computed separatel
 - 2026-10-16 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]
 - 2026-10-17 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]
 - 2026-10-18 NO_QUALIFIED_TOPIC: NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]
+- 2026-10-19 NO_QUALIFIED_TOPIC: NO_EXPLORE_CANDIDATE
 
 ## Cross-channel infrastructure
 

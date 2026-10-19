@@ -834,5 +834,38 @@
       "input_tokens": 425,
       "output_tokens": 413
     }
+  },
+  {
+    "at": "2026-10-19T12:54:09.164Z",
+    "channel": "impossible-brief",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-19T12:54:09.164Z",
+    "channel": "impossible-brief",
+    "event": "failed",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "REQUEST_TOO_LARGE",
+    "status": 413,
+    "retryable": false,
+    "retryAfterMs": null,
+    "retryClass": "fail",
+    "providerCode": "rate_limit_exceeded",
+    "providerMessage": "Request too large for model `openai/gpt-oss-120b` in organization [redacted] service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 10910, please reduce your message size and try again. Need more tokens? Upgrade to Dev T",
+    "requestBytes": 47030,
+    "estimatedTokens": 11758,
+    "rate": {
+      "limitTokens": 8000,
+      "remainingTokens": 8000,
+      "resetTokensMs": 1,
+      "remainingRequests": 1000
+    }
   }
 ]

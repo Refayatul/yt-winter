@@ -139,6 +139,54 @@
       "selected": null,
       "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
       "finishedAt": "2026-10-12T15:14:07.367Z"
+    },
+    {
+      "cycleId": "2026-W43",
+      "channel": "impossible-brief",
+      "startedAt": "2026-10-19T12:54:09.164Z",
+      "status": "QUALITY_BLOCKED",
+      "evaluated": [
+        {
+          "slug": "what-if-we-mined-a-metal-asteroid",
+          "mode": "B_SHORT_PROVES_DEMAND",
+          "LongFormPotentialScore": 84,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 87,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded",
+            "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
+          ],
+          "generationStatus": "FAILED"
+        },
+        {
+          "slug": "what-if-we-swam-in-europas-ocean",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 83,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 84,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~0.8 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        },
+        {
+          "slug": "what-if-you-visited-io-the-volcano-moon",
+          "mode": "A_LONG_FIRST",
+          "LongFormPotentialScore": 83,
+          "bucket": "A",
+          "decision": "BLOCK",
+          "score": 83,
+          "hardFails": [
+            "INSUFFICIENT_DEPTH: evidence supports ~0.9 min; target 8–12 min — not padded"
+          ],
+          "generationStatus": "QUALITY_REVIEW"
+        }
+      ],
+      "selected": null,
+      "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
+      "finishedAt": "2026-10-19T12:54:10.137Z"
     }
   ]
 }

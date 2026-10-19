@@ -3,7 +3,7 @@
   "channel": "critical-thread",
   "channelName": "CriticalThread",
   "contentType": "long",
-  "createdAt": "2026-10-12T16:54:00.455Z",
+  "createdAt": "2026-10-19T12:54:10.172Z",
   "topic": {
     "id": "CT-074",
     "slug": "what-quietly-depends-on-cable-landing-station",
@@ -17,10 +17,10 @@
     "slug": "what-quietly-depends-on-cable-landing-station",
     "title": "The Volcano That Cut a Country's Only Cable",
     "cluster": "SUBMARINE CABLES",
-    "LongFormPotentialScore": 79,
+    "LongFormPotentialScore": 78,
     "bucket": "A",
     "reasons": [
-      "LongFormPotential 79 ≥ 78"
+      "LongFormPotential 78 ≥ 78"
     ],
     "factors": {
       "DepthPotential": {
@@ -58,9 +58,9 @@
         "basis": "inventory-signal"
       },
       "ShortsEvidence": {
-        "value": 84,
+        "value": 72,
         "basis": "measured",
-        "note": "best cluster Short 305 views vs channel median 61; best subscriber conversion unavailable; best growth score 97.5"
+        "note": "best cluster Short 331 views vs channel median 63; best subscriber conversion unavailable; best growth score 57.4"
       },
       "SeriesPotential": {
         "value": 85,
@@ -119,7 +119,7 @@
     "gaps": [
       "2 source(s); long-form needs ≥ 3"
     ],
-    "reuseCount": 3
+    "reuseCount": 4
   },
   "outline": {
     "structure": [
@@ -1274,6 +1274,70 @@
         "ungrammatical": false
       },
       {
+        "title": "Why One Cable Is Never Enough",
+        "source": "editorial",
+        "pattern": "why",
+        "scores": {
+          "clarity": 84,
+          "curiosity": 76,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 50,
+          "channelIdentity": 72,
+          "ctrPotential": 77,
+          "novelty": 89,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 89,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 74,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 70,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Mapping the Cable Landing Station Dependency Chain",
+        "source": "mapping",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 63,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 79,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
         "title": "Cable Landing Station — A Critical Systems Documentary",
         "source": "documentary",
         "pattern": "two-beat",
@@ -1372,33 +1436,35 @@
         "ungrammatical": false
       },
       {
-        "title": "Why One Cable Is Never Enough",
-        "source": "editorial",
-        "pattern": "why",
+        "title": "The Cascading Failure Hidden in Cable Landing Station",
+        "source": "cascade",
+        "pattern": "statement",
         "scores": {
-          "clarity": 84,
-          "curiosity": 76,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 50,
-          "channelIdentity": 72,
-          "ctrPotential": 77,
-          "novelty": 89,
-          "evergreenPotential": 75,
-          "consequence": 42,
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 75,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 80,
           "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 89,
-          "factualIntegrity": 100,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
-        "total": 74,
-        "patternPenalty": 7,
-        "templateNaturalnessPenalty": 0,
+        "total": 78,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 67,
-        "unsupportedWords": [],
+        "adjustedTotal": 68,
+        "unsupportedWords": [
+          "cascading"
+        ],
         "misleading": false,
         "grammar": [],
         "ungrammatical": false
@@ -1438,38 +1504,6 @@
         "ungrammatical": false
       },
       {
-        "title": "Mapping the Cable Landing Station Dependency Chain",
-        "source": "mapping",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 63,
-          "novelty": 92,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 92,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 79,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 65,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
         "title": "The Single Point of Failure: Cable Landing Station",
         "source": "single-point",
         "pattern": "label-colon",
@@ -1504,34 +1538,35 @@
         "ungrammatical": false
       },
       {
-        "title": "The Cascading Failure Hidden in Cable Landing Station",
-        "source": "cascade",
+        "title": "Where the Cable Landing Station Dependency Starts",
+        "source": "dependency-start",
         "pattern": "statement",
         "scores": {
           "clarity": 100,
-          "curiosity": 58,
+          "curiosity": 40,
           "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 75,
+          "truthfulness": 70,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 63,
           "novelty": 92,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 100,
           "recognizability": 80,
           "nonRedundancy": 92,
-          "factualIntegrity": 85,
+          "factualIntegrity": 70,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
-        "total": 78,
-        "patternPenalty": 4,
+        "total": 74,
+        "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
         "adjustedTotal": 64,
         "unsupportedWords": [
-          "cascading"
+          "where",
+          "starts"
         ],
         "misleading": false,
         "grammar": [],
@@ -1605,101 +1640,32 @@
         "ungrammatical": false
       },
       {
-        "title": "Where the Cable Landing Station Dependency Starts",
-        "source": "dependency-start",
+        "title": "The Hidden System Behind Cable Landing Station",
+        "source": "hidden-system",
         "pattern": "statement",
         "scores": {
           "clarity": 100,
-          "curiosity": 40,
+          "curiosity": 76,
           "specificity": 77,
-          "truthfulness": 70,
-          "searchIntent": 83,
+          "truthfulness": 100,
+          "searchIntent": 75,
           "channelIdentity": 74,
-          "ctrPotential": 63,
+          "ctrPotential": 79,
           "novelty": 92,
           "evergreenPotential": 85,
-          "consequence": 80,
+          "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
           "nonRedundancy": 92,
-          "factualIntegrity": 70,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 74,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 60,
-        "unsupportedWords": [
-          "where",
-          "starts"
-        ],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
-        "title": "What Depends on Cable Landing Station?",
-        "source": "what-depends",
-        "pattern": "question",
-        "scores": {
-          "clarity": 97,
-          "curiosity": 84,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 74,
-          "ctrPotential": 87,
-          "novelty": 90,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 90,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
         },
-        "total": 89,
+        "total": 84,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 79,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "What Happens If Cable Landing Station Fails?",
-        "source": "what-if-fails",
-        "pattern": "question",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 84,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 62,
-          "ctrPotential": 87,
-          "novelty": 80,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 80,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 88,
-        "patternPenalty": 0,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 78,
+        "adjustedTotal": 74,
         "unsupportedWords": [],
         "misleading": false,
         "grammar": [
@@ -1719,12 +1685,12 @@
           "searchIntent": 83,
           "channelIdentity": 74,
           "ctrPotential": 87,
-          "novelty": 92,
+          "novelty": 91,
           "evergreenPotential": 85,
           "consequence": 80,
           "compactness": 63,
           "recognizability": 80,
-          "nonRedundancy": 92,
+          "nonRedundancy": 91,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1778,6 +1744,40 @@
         "ungrammatical": true
       },
       {
+        "title": "What Depends on Cable Landing Station?",
+        "source": "what-depends",
+        "pattern": "question",
+        "scores": {
+          "clarity": 97,
+          "curiosity": 84,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 74,
+          "ctrPotential": 87,
+          "novelty": 89,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 89,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 89,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 72,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
         "title": "Cable Landing Station: The System Behind the System",
         "source": "system-behind-system",
         "pattern": "label-colon",
@@ -1812,32 +1812,32 @@
         "ungrammatical": true
       },
       {
-        "title": "The Hidden System Behind Cable Landing Station",
-        "source": "hidden-system",
-        "pattern": "statement",
+        "title": "What Happens If Cable Landing Station Fails?",
+        "source": "what-if-fails",
+        "pattern": "question",
         "scores": {
           "clarity": 100,
-          "curiosity": 76,
+          "curiosity": 84,
           "specificity": 77,
           "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 74,
-          "ctrPotential": 79,
-          "novelty": 92,
+          "searchIntent": 95,
+          "channelIdentity": 62,
+          "ctrPotential": 87,
+          "novelty": 80,
           "evergreenPotential": 85,
-          "consequence": 42,
+          "consequence": 80,
           "compactness": 100,
           "recognizability": 80,
-          "nonRedundancy": 92,
+          "nonRedundancy": 80,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
-        "total": 84,
-        "patternPenalty": 4,
+        "total": 88,
+        "patternPenalty": 7,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 70,
+        "adjustedTotal": 71,
         "unsupportedWords": [],
         "misleading": false,
         "grammar": [
@@ -1857,9 +1857,43 @@
           "searchIntent": 87,
           "channelIdentity": 74,
           "ctrPotential": 75,
-          "novelty": 91,
+          "novelty": 90,
           "evergreenPotential": 85,
           "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 83,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "Why Cable Landing Station Is so Hard to Replace",
+        "source": "hard-to-replace",
+        "pattern": "why",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 74,
+          "ctrPotential": 67,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
           "compactness": 100,
           "recognizability": 80,
           "nonRedundancy": 91,
@@ -1872,6 +1906,40 @@
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
         "adjustedTotal": 69,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "Why Cable Landing Station Matters More Than You Think",
+        "source": "matters-more",
+        "pattern": "why",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 77,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 62,
+          "ctrPotential": 67,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 82,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 68,
         "unsupportedWords": [],
         "misleading": false,
         "grammar": [
@@ -1914,17 +1982,17 @@
         "ungrammatical": true
       },
       {
-        "title": "Why Cable Landing Station Is so Hard to Replace",
-        "source": "hard-to-replace",
-        "pattern": "why",
+        "title": "The Backup Plan for Cable Landing Station",
+        "source": "backup-plan",
+        "pattern": "statement",
         "scores": {
           "clarity": 100,
-          "curiosity": 58,
+          "curiosity": 40,
           "specificity": 77,
           "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 74,
-          "ctrPotential": 67,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 55,
           "novelty": 91,
           "evergreenPotential": 85,
           "consequence": 42,
@@ -1933,10 +2001,10 @@
           "nonRedundancy": 91,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
-        "total": 83,
-        "patternPenalty": 7,
+        "total": 76,
+        "patternPenalty": 0,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
         "adjustedTotal": 66,
@@ -1984,16 +2052,88 @@
         "ungrammatical": true
       },
       {
-        "title": "Why Cable Landing Station Matters More Than You Think",
-        "source": "matters-more",
+        "title": "If Cable Landing Station Stopped Tomorrow",
+        "source": "stopped-tomorrow",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 63,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 75,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 65,
+        "unsupportedWords": [
+          "tomorrow"
+        ],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "The Invisible Infrastructure of Cable Landing Station",
+        "source": "invisible",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 74,
+          "ctrPotential": 55,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 64,
+        "unsupportedWords": [
+          "invisible"
+        ],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "Why Cable Landing Station Became Irreplaceable",
+        "source": "became-irreplaceable",
         "pattern": "why",
         "scores": {
           "clarity": 100,
           "curiosity": 58,
           "specificity": 77,
-          "truthfulness": 100,
+          "truthfulness": 70,
           "searchIntent": 95,
-          "channelIdentity": 62,
+          "channelIdentity": 74,
           "ctrPotential": 67,
           "novelty": 91,
           "evergreenPotential": 85,
@@ -2001,16 +2141,91 @@
           "compactness": 100,
           "recognizability": 80,
           "nonRedundancy": 91,
-          "factualIntegrity": 100,
+          "factualIntegrity": 70,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
-        "total": 82,
-        "patternPenalty": 7,
+        "total": 78,
+        "patternPenalty": 4,
         "templateNaturalnessPenalty": 10,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 65,
-        "unsupportedWords": [],
+        "adjustedTotal": 64,
+        "unsupportedWords": [
+          "became",
+          "irreplaceable"
+        ],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "The Chain Reaction If Cable Landing Station Fails",
+        "source": "failure-chain",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 63,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 80,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 64,
+        "unsupportedWords": [
+          "reaction"
+        ],
+        "misleading": false,
+        "grammar": [
+          "a singular noun without an article"
+        ],
+        "ungrammatical": true
+      },
+      {
+        "title": "The Global Chain Built on Cable Landing Station",
+        "source": "global-chain",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 55,
+          "novelty": 92,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 92,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 73,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 10,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 63,
+        "unsupportedWords": [
+          "built"
+        ],
         "misleading": false,
         "grammar": [
           "a singular noun without an article"
@@ -2050,221 +2265,6 @@
           "sight"
         ],
         "misleading": true,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "The Backup Plan for Cable Landing Station",
-        "source": "backup-plan",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 100,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 55,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 91,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 76,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 62,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "If Cable Landing Station Stopped Tomorrow",
-        "source": "stopped-tomorrow",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 63,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 91,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 75,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 61,
-        "unsupportedWords": [
-          "tomorrow"
-        ],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "Why Cable Landing Station Became Irreplaceable",
-        "source": "became-irreplaceable",
-        "pattern": "why",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 77,
-          "truthfulness": 70,
-          "searchIntent": 95,
-          "channelIdentity": 74,
-          "ctrPotential": 67,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 91,
-          "factualIntegrity": 70,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 78,
-        "patternPenalty": 7,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 61,
-        "unsupportedWords": [
-          "became",
-          "irreplaceable"
-        ],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "The Invisible Infrastructure of Cable Landing Station",
-        "source": "invisible",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 75,
-          "channelIdentity": 74,
-          "ctrPotential": 55,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 91,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 74,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 60,
-        "unsupportedWords": [
-          "invisible"
-        ],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "The Chain Reaction If Cable Landing Station Fails",
-        "source": "failure-chain",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 63,
-          "novelty": 92,
-          "evergreenPotential": 85,
-          "consequence": 80,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 92,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 74,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 60,
-        "unsupportedWords": [
-          "reaction"
-        ],
-        "misleading": false,
-        "grammar": [
-          "a singular noun without an article"
-        ],
-        "ungrammatical": true
-      },
-      {
-        "title": "The Global Chain Built on Cable Landing Station",
-        "source": "global-chain",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 75,
-          "channelIdentity": 62,
-          "ctrPotential": 55,
-          "novelty": 92,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 92,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 73,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 10,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 59,
-        "unsupportedWords": [
-          "built"
-        ],
-        "misleading": false,
         "grammar": [
           "a singular noun without an article"
         ],
@@ -2561,7 +2561,7 @@
     "Channel": "CriticalThread",
     "Content Type": "LONG_FORM",
     "Topic": "The Volcano That Cut a Country's Only Cable",
-    "LongFormPotentialScore": 79,
+    "LongFormPotentialScore": 78,
     "Topic Bucket": "A",
     "Cold Open": "Why 1 broken cable cut off Tonga.",
     "Target Duration": "8–12 min",

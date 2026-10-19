@@ -130,5 +130,104 @@
     "status": 413,
     "retryable": false,
     "retryAfterMs": null
+  },
+  {
+    "at": "2026-10-19T12:54:08.066Z",
+    "channel": "failure-reconstructed",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-19T12:54:08.066Z",
+    "channel": "failure-reconstructed",
+    "event": "failed",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "REQUEST_TOO_LARGE",
+    "status": 413,
+    "retryable": false,
+    "retryAfterMs": null,
+    "retryClass": "fail",
+    "providerCode": "rate_limit_exceeded",
+    "providerMessage": "Request too large for model `openai/gpt-oss-120b` in organization [redacted] service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 11453, please reduce your message size and try again. Need more tokens? Upgrade to Dev T",
+    "requestBytes": 53522,
+    "estimatedTokens": 13381,
+    "rate": {
+      "limitTokens": 8000,
+      "remainingTokens": 8000,
+      "resetTokensMs": 1,
+      "remainingRequests": 1000
+    }
+  },
+  {
+    "at": "2026-10-19T12:54:08.066Z",
+    "channel": "failure-reconstructed",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-19T12:54:08.066Z",
+    "channel": "failure-reconstructed",
+    "event": "failed",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "REQUEST_TOO_LARGE",
+    "status": 413,
+    "retryable": false,
+    "retryAfterMs": null,
+    "retryClass": "fail",
+    "providerCode": "rate_limit_exceeded",
+    "providerMessage": "Request too large for model `openai/gpt-oss-120b` in organization [redacted] service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 10678, please reduce your message size and try again. Need more tokens? Upgrade to Dev T",
+    "requestBytes": 48310,
+    "estimatedTokens": 12078,
+    "rate": {
+      "limitTokens": 8000,
+      "remainingTokens": 8000,
+      "resetTokensMs": 1,
+      "remainingRequests": 1000
+    }
+  },
+  {
+    "at": "2026-10-19T12:54:08.066Z",
+    "channel": "failure-reconstructed",
+    "event": "request",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1
+  },
+  {
+    "at": "2026-10-19T12:54:08.066Z",
+    "channel": "failure-reconstructed",
+    "event": "failed",
+    "provider": "groq",
+    "model": "openai/gpt-oss-120b",
+    "stage": "narrative-angle",
+    "attempt": 1,
+    "code": "REQUEST_TOO_LARGE",
+    "status": 413,
+    "retryable": false,
+    "retryAfterMs": null,
+    "retryClass": "fail",
+    "providerCode": "rate_limit_exceeded",
+    "providerMessage": "Request too large for model `openai/gpt-oss-120b` in organization [redacted] service tier `on_demand` on tokens per minute (TPM): Limit 8000, Requested 10809, please reduce your message size and try again. Need more tokens? Upgrade to Dev T",
+    "requestBytes": 50628,
+    "estimatedTokens": 12657,
+    "rate": {
+      "limitTokens": 8000,
+      "remainingTokens": 8000,
+      "resetTokensMs": 1,
+      "remainingRequests": 1000
+    }
   }
 ]

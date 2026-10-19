@@ -2,50 +2,6 @@
   "channel": "impossible-brief",
   "runs": [
     {
-      "runId": "38950521677",
-      "attempt": "1",
-      "startedAt": "2026-10-16T18:52:26.387Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": null,
-      "slug": null,
-      "outcome": "NOT_DUE",
-      "reason": "today's Short already exists (what-if-you-flew-through-enceladuss-geysers)",
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-16T18:52:28.738Z"
-    },
-    {
       "runId": "38956171843",
       "attempt": "1",
       "startedAt": "2026-10-16T19:37:33.255Z",
@@ -1354,6 +1310,67 @@
         }
       },
       "finishedAt": "2026-10-18T18:44:45.324Z"
+    },
+    {
+      "runId": "39254760139",
+      "attempt": "1",
+      "startedAt": "2026-10-19T12:53:20.006Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": "2026-10-19",
+      "slug": "what-if-mosquitoes-went-extinct",
+      "outcome": "UPLOADED",
+      "reason": null,
+      "stages": {
+        "RESEARCH": {
+          "status": "done",
+          "detail": "EXPLORE (0.25): under-sampled cluster OTHER",
+          "at": "2026-10-19T12:53:22.212Z"
+        },
+        "SCRIPT": {
+          "status": "done",
+          "detail": "pre-render readiness PUBLISH 88",
+          "at": "2026-10-19T12:53:22.212Z"
+        },
+        "ASSETS": {
+          "status": "done",
+          "at": "2026-10-19T12:54:00.780Z"
+        },
+        "NARRATION": {
+          "status": "done",
+          "detail": "Microsoft Edge neural TTS (claim-timed)",
+          "at": "2026-10-19T12:54:00.780Z"
+        },
+        "RENDER": {
+          "status": "done",
+          "at": "2026-10-19T12:54:00.780Z"
+        },
+        "QA": {
+          "status": "done",
+          "detail": "validations passed",
+          "at": "2026-10-19T12:54:00.837Z"
+        },
+        "UPLOAD": {
+          "status": "done",
+          "detail": "x5VVXKhOhMQ",
+          "at": "2026-10-19T12:54:04.235Z"
+        },
+        "SCHEDULE": {
+          "status": "done",
+          "detail": "2026-10-19T18:00:00.000Z",
+          "at": "2026-10-19T12:54:04.235Z"
+        },
+        "PUBLISH": {
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-19T18:00:00.000Z",
+          "at": "2026-10-19T12:54:04.236Z"
+        }
+      },
+      "finishedAt": "2026-10-19T12:54:04.236Z",
+      "videoId": "x5VVXKhOhMQ"
     }
   ]
 }

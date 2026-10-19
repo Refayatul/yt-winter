@@ -1,16 +1,16 @@
 {
-  "generatedAt": "2026-10-18T18:44:55.269Z",
+  "generatedAt": "2026-10-19T12:54:44.024Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
       "channel": "failure-reconstructed",
       "name": "Failure Reconstructed",
       "shorts": {
-        "lastPublished": "2026-10-18T18:00:00.000Z",
-        "published": 26,
+        "lastPublished": "2026-10-19T18:00:00.000Z",
+        "published": 27,
         "inventory": {
-          "A": 91,
-          "B": 141,
+          "A": 92,
+          "B": 139,
           "C": 59,
           "D": 59
         },
@@ -22,85 +22,85 @@
           "used": 10
         },
         "nextSelection": {
-          "slug": "titanic-1912",
-          "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
+          "slug": "ocean-ranger-1982",
+          "reason": "EXPLORE (0.25): under-sampled cluster industrial-disasters"
         },
         "baseline": {
-          "n": 25,
+          "n": 26,
           "views": 496,
           "averagePercentageViewed": 64.5,
           "subscribersPer1000Views": 1.56,
-          "engagementPer1000Views": 26.09,
+          "engagementPer1000Views": 26.65,
           "watchHoursPer1000Views": 2.48
         }
       },
       "longform": {
         "lane": {
-          "cycleId": "2026-W42",
+          "cycleId": "2026-W43",
           "due": false,
-          "reason": "cycle 2026-W42 already QUALITY_BLOCKED",
+          "reason": "cycle 2026-W43 already QUALITY_BLOCKED",
           "lastPublished": null
         },
         "lastCycle": {
-          "cycleId": "2026-W42",
+          "cycleId": "2026-W43",
           "channel": "failure-reconstructed",
-          "startedAt": "2026-10-12T15:13:52.347Z",
+          "startedAt": "2026-10-19T12:54:08.066Z",
           "status": "QUALITY_BLOCKED",
           "evaluated": [
             {
               "slug": "challenger-1986",
               "mode": "B_SHORT_PROVES_DEMAND",
-              "LongFormPotentialScore": 84,
+              "LongFormPotentialScore": 85,
               "bucket": "A",
               "decision": "BLOCK",
               "score": 83,
               "hardFails": [
                 "INSUFFICIENT_DEPTH: evidence supports ~2.2 min; target 8–12 min — not padded",
-                "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+                "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
+              ],
+              "generationStatus": "FAILED"
+            },
+            {
+              "slug": "chernobyl-1986",
+              "mode": "B_SHORT_PROVES_DEMAND",
+              "LongFormPotentialScore": 85,
+              "bucket": "A",
+              "decision": "BLOCK",
+              "score": 89,
+              "hardFails": [
+                "INSUFFICIENT_DEPTH: evidence supports ~1.8 min; target 8–12 min — not padded",
+                "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
               ],
               "generationStatus": "FAILED"
             },
             {
               "slug": "columbia-2003",
               "mode": "B_SHORT_PROVES_DEMAND",
-              "LongFormPotentialScore": 84,
+              "LongFormPotentialScore": 85,
               "bucket": "A",
               "decision": "BLOCK",
               "score": 85,
               "hardFails": [
                 "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded",
-                "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
-              ],
-              "generationStatus": "FAILED"
-            },
-            {
-              "slug": "lahaina-fire-2023",
-              "mode": "A_LONG_FIRST",
-              "LongFormPotentialScore": 84,
-              "bucket": "A",
-              "decision": "BLOCK",
-              "score": 85,
-              "hardFails": [
-                "INSUFFICIENT_DEPTH: evidence supports ~1.7 min; target 8–12 min — not padded",
-                "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+                "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
               ],
               "generationStatus": "FAILED"
             }
           ],
           "selected": null,
           "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
-          "finishedAt": "2026-10-12T15:13:53.877Z"
+          "finishedAt": "2026-10-19T12:54:09.124Z"
         },
         "episodes": 0,
         "backlog": [
           {
-            "slug": "challenger-1986",
-            "LongFormPotentialScore": 85,
+            "slug": "chernobyl-1986",
+            "LongFormPotentialScore": 86,
             "bucket": "A",
             "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
-            "slug": "chernobyl-1986",
+            "slug": "challenger-1986",
             "LongFormPotentialScore": 85,
             "bucket": "A",
             "mode": "B_SHORT_PROVES_DEMAND"
@@ -150,7 +150,7 @@
         "pendingRelatedVideoManualActions": 0
       },
       "growth": {
-        "trackedVideos": 27,
+        "trackedVideos": 28,
         "subscriberConversion": {
           "shorts": 1.56,
           "longform": null
@@ -159,9 +159,9 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 25,
+          "sampleSize": 26,
           "adopted": 0,
-          "hypotheses": 4
+          "hypotheses": 6
         },
         "longform": {
           "status": "heuristics-only",
@@ -202,11 +202,6 @@
           "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
         },
         {
-          "slug": "quebec-bridge-1907",
-          "bucket": "C",
-          "reason": "VideoPotential 83 in experimental band 58–71; sources 55 < 62"
-        },
-        {
           "slug": "b2-guam-2008",
           "bucket": "C",
           "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
@@ -218,6 +213,11 @@
         },
         {
           "slug": "uss-forrestal-1967",
+          "bucket": "C",
+          "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
+        },
+        {
+          "slug": "vanguard-1957",
           "bucket": "C",
           "reason": "VideoPotential 82 in experimental band 58–71; sources 41 < 62"
         }
@@ -340,11 +340,11 @@
       "channel": "impossible-brief",
       "name": "ImpossibleBrief",
       "shorts": {
-        "lastPublished": "2026-10-18T18:00:00.000Z",
-        "published": 18,
+        "lastPublished": "2026-10-19T18:00:00.000Z",
+        "published": 19,
         "inventory": {
-          "A": 116,
-          "B": 19,
+          "A": 113,
+          "B": 21,
           "C": 140,
           "D": 206
         },
@@ -356,35 +356,48 @@
           "used": 0
         },
         "nextSelection": {
-          "slug": "what-if-we-tried-to-drill-through-the-earth",
-          "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
+          "slug": "what-if-you-stopped-eating-for-a-year",
+          "reason": "EXPLORE (0.25): under-sampled cluster HUMAN"
         },
         "baseline": {
-          "n": 15,
-          "views": 737,
+          "n": 16,
+          "views": 996,
           "averagePercentageViewed": 68.85,
           "subscribersPer1000Views": 0.96,
-          "engagementPer1000Views": 18.03,
+          "engagementPer1000Views": 19.21,
           "watchHoursPer1000Views": 2.64
         }
       },
       "longform": {
         "lane": {
-          "cycleId": "2026-W42",
+          "cycleId": "2026-W43",
           "due": false,
-          "reason": "cycle 2026-W42 already QUALITY_BLOCKED",
+          "reason": "cycle 2026-W43 already QUALITY_BLOCKED",
           "lastPublished": null
         },
         "lastCycle": {
-          "cycleId": "2026-W42",
+          "cycleId": "2026-W43",
           "channel": "impossible-brief",
-          "startedAt": "2026-10-12T15:13:53.946Z",
+          "startedAt": "2026-10-19T12:54:09.164Z",
           "status": "QUALITY_BLOCKED",
           "evaluated": [
             {
+              "slug": "what-if-we-mined-a-metal-asteroid",
+              "mode": "B_SHORT_PROVES_DEMAND",
+              "LongFormPotentialScore": 84,
+              "bucket": "A",
+              "decision": "BLOCK",
+              "score": 87,
+              "hardFails": [
+                "INSUFFICIENT_DEPTH: evidence supports ~1.9 min; target 8–12 min — not padded",
+                "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
+              ],
+              "generationStatus": "FAILED"
+            },
+            {
               "slug": "what-if-we-swam-in-europas-ocean",
               "mode": "A_LONG_FIRST",
-              "LongFormPotentialScore": 82,
+              "LongFormPotentialScore": 83,
               "bucket": "A",
               "decision": "BLOCK",
               "score": 84,
@@ -394,66 +407,53 @@
               "generationStatus": "QUALITY_REVIEW"
             },
             {
-              "slug": "what-if-olympus-mons-stood-on-earth",
+              "slug": "what-if-you-visited-io-the-volcano-moon",
               "mode": "A_LONG_FIRST",
-              "LongFormPotentialScore": 81,
+              "LongFormPotentialScore": 83,
               "bucket": "A",
               "decision": "BLOCK",
-              "score": 87,
+              "score": 83,
               "hardFails": [
-                "INSUFFICIENT_DEPTH: evidence supports ~1.8 min; target 8–12 min — not padded",
-                "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
-              ],
-              "generationStatus": "FAILED"
-            },
-            {
-              "slug": "what-if-earth-had-rings-like-saturn",
-              "mode": "A_LONG_FIRST",
-              "LongFormPotentialScore": 81,
-              "bucket": "A",
-              "decision": "BLOCK",
-              "score": 84,
-              "hardFails": [
-                "INSUFFICIENT_DEPTH: evidence supports ~1.2 min; target 8–12 min — not padded"
+                "INSUFFICIENT_DEPTH: evidence supports ~0.9 min; target 8–12 min — not padded"
               ],
               "generationStatus": "QUALITY_REVIEW"
             }
           ],
           "selected": null,
           "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
-          "finishedAt": "2026-10-12T15:14:07.367Z"
+          "finishedAt": "2026-10-19T12:54:10.137Z"
         },
         "episodes": 0,
         "backlog": [
           {
-            "slug": "what-if-we-mined-a-metal-asteroid",
-            "LongFormPotentialScore": 84,
+            "slug": "could-earth-survive-one-day-without-earth-s-magnetic-field",
+            "LongFormPotentialScore": 83,
             "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-we-mined-a-metal-asteroid",
+            "LongFormPotentialScore": 83,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-synthetic-fertilizer-disappeared",
+            "LongFormPotentialScore": 83,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-earth-had-rings-like-saturn",
+            "LongFormPotentialScore": 82,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
           },
           {
             "slug": "what-if-we-swam-in-europas-ocean",
-            "LongFormPotentialScore": 83,
+            "LongFormPotentialScore": 82,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-you-visited-io-the-volcano-moon",
-            "LongFormPotentialScore": 83,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-a-90-day-rover-lasted-14-years",
-            "LongFormPotentialScore": 83,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-we-built-a-star-on-earth",
-            "LongFormPotentialScore": 83,
-            "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
           }
         ],
         "baseline": {
@@ -482,7 +482,7 @@
         "pendingRelatedVideoManualActions": 0
       },
       "growth": {
-        "trackedVideos": 17,
+        "trackedVideos": 18,
         "subscriberConversion": {
           "shorts": 0.96,
           "longform": null
@@ -491,9 +491,9 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 15,
+          "sampleSize": 16,
           "adopted": 0,
-          "hypotheses": 3
+          "hypotheses": 4
         },
         "longform": {
           "status": "heuristics-only",
@@ -511,7 +511,7 @@
         {
           "slug": "could-we-function-with-half-human-heat-tolerance",
           "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "what-if-human-muscle-efficiency-doubled-overnight",
@@ -519,19 +519,14 @@
           "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "would-doubling-all-synthetic-fertilizers-help-or-harm-us",
+          "slug": "what-happens-if-the-global-ocean-doubles",
           "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "what-if-the-brain-s-energy-use-doubled-overnight",
           "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
-          "slug": "would-doubling-global-pollination-help-or-harm-us",
-          "bucket": "C",
-          "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "could-we-function-with-half-human-muscle-efficiency",
@@ -549,9 +544,14 @@
           "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
         },
         {
-          "slug": "what-happens-if-the-global-ocean-doubles",
+          "slug": "would-doubling-all-synthetic-fertilizers-help-or-harm-us",
           "bucket": "C",
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
+          "slug": "what-breaks-first-if-a-rogue-planet-suddenly-doubles-in-mass",
+          "bucket": "C",
+          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
         }
       ],
       "alerts": [
@@ -639,7 +639,7 @@
         },
         "nextSelection": {
           "slug": "the-hidden-system-behind-border-gateway-routing-system",
-          "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
+          "reason": "EXPLORE (0.25): under-sampled cluster TELECOMMUNICATIONS"
         },
         "baseline": {
           "n": 6,
@@ -652,34 +652,46 @@
       },
       "longform": {
         "lane": {
-          "cycleId": "2026-W42",
+          "cycleId": "2026-W43",
           "due": false,
-          "reason": "cycle 2026-W42 already QUALITY_BLOCKED",
+          "reason": "cycle 2026-W43 already QUALITY_BLOCKED",
           "lastPublished": null
         },
         "lastCycle": {
-          "cycleId": "2026-W42",
+          "cycleId": "2026-W43",
           "channel": "critical-thread",
-          "startedAt": "2026-10-12T16:54:00.455Z",
+          "startedAt": "2026-10-19T12:54:10.172Z",
           "status": "QUALITY_BLOCKED",
           "evaluated": [
             {
+              "slug": "the-critical-role-of-urban-traffic-control-network",
+              "mode": "B_SHORT_PROVES_DEMAND",
+              "LongFormPotentialScore": 79,
+              "bucket": "A",
+              "decision": "BLOCK",
+              "score": 81,
+              "hardFails": [
+                "INSUFFICIENT_DEPTH: evidence supports ~1.2 min; target 8–12 min — not padded"
+              ],
+              "generationStatus": "QUALITY_REVIEW"
+            },
+            {
               "slug": "why-submarine-fiber-optic-cable-is-so-hard-to-replace",
               "mode": "A_LONG_FIRST",
-              "LongFormPotentialScore": 79,
+              "LongFormPotentialScore": 78,
               "bucket": "A",
               "decision": "BLOCK",
               "score": 84,
               "hardFails": [
                 "INSUFFICIENT_DEPTH: evidence supports ~1.5 min; target 8–12 min — not padded",
-                "LLM generation failed safely (REQUEST); deterministic evidence draft retained"
+                "LLM generation failed safely (REQUEST_TOO_LARGE); deterministic evidence draft retained"
               ],
               "generationStatus": "FAILED"
             },
             {
               "slug": "what-quietly-depends-on-cable-landing-station",
               "mode": "A_LONG_FIRST",
-              "LongFormPotentialScore": 79,
+              "LongFormPotentialScore": 78,
               "bucket": "A",
               "decision": "BLOCK",
               "score": 74,
@@ -688,23 +700,11 @@
                 "INSUFFICIENT_DEPTH: evidence supports ~2 min; target 8–12 min — not padded"
               ],
               "generationStatus": "QUALITY_REVIEW"
-            },
-            {
-              "slug": "the-critical-role-of-cable-laying-ship",
-              "mode": "A_LONG_FIRST",
-              "LongFormPotentialScore": 79,
-              "bucket": "A",
-              "decision": "BLOCK",
-              "score": 84,
-              "hardFails": [
-                "INSUFFICIENT_DEPTH: evidence supports ~2.3 min; target 8–12 min — not padded"
-              ],
-              "generationStatus": "QUALITY_REVIEW"
             }
           ],
           "selected": null,
           "reason": "no candidate passed the long-form quality gate; cadence does not override quality",
-          "finishedAt": "2026-10-12T16:54:06.683Z"
+          "finishedAt": "2026-10-19T12:54:10.492Z"
         },
         "episodes": 0,
         "backlog": [
@@ -787,21 +787,6 @@
       "experiments": [],
       "enrichmentTasks": [],
       "alerts": [
-        {
-          "channel": "critical-thread",
-          "code": "NO_QUALIFIED_TOPIC",
-          "message": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content",
-          "details": {
-            "inventory": {
-              "A": 7,
-              "B": 144,
-              "C": 0,
-              "D": 362
-            }
-          },
-          "date": "2026-10-08",
-          "at": "2026-10-08T13:21:07.595Z"
-        },
         {
           "channel": "critical-thread",
           "code": "NO_QUALIFIED_TOPIC",
@@ -936,6 +921,21 @@
           },
           "date": "2026-10-18",
           "at": "2026-10-18T10:54:06.398Z"
+        },
+        {
+          "channel": "critical-thread",
+          "code": "NO_QUALIFIED_TOPIC",
+          "message": "NO_EXPLORE_CANDIDATE",
+          "details": {
+            "inventory": {
+              "A": 6,
+              "B": 144,
+              "C": 0,
+              "D": 362
+            }
+          },
+          "date": "2026-10-19",
+          "at": "2026-10-19T12:54:08.010Z"
         }
       ],
       "legacyPaths": false

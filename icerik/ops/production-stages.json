@@ -2,50 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "38950521677",
-      "attempt": "1",
-      "startedAt": "2026-10-16T18:52:23.696Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": null,
-      "slug": null,
-      "outcome": "NOT_DUE",
-      "reason": "production window closed at 21:00 Europe/Istanbul minus 60 min",
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-16T18:52:23.717Z"
-    },
-    {
       "runId": "38956171843",
       "attempt": "1",
       "startedAt": "2026-10-16T19:37:31.215Z",
@@ -1352,6 +1308,66 @@
         }
       },
       "finishedAt": "2026-10-18T18:44:40.804Z"
+    },
+    {
+      "runId": "39254760139",
+      "attempt": "1",
+      "startedAt": "2026-10-19T12:47:59.813Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": "2026-10-19",
+      "slug": "tasman-bridge-1975",
+      "outcome": "UPLOADED",
+      "reason": null,
+      "stages": {
+        "RESEARCH": {
+          "status": "done",
+          "detail": "growth queue selected tasman-bridge-1975",
+          "at": "2026-10-19T12:48:02.827Z"
+        },
+        "SCRIPT": {
+          "status": "done",
+          "detail": "pre gate REVIEW 84",
+          "at": "2026-10-19T12:48:03.067Z"
+        },
+        "ASSETS": {
+          "status": "done",
+          "at": "2026-10-19T12:48:05.655Z"
+        },
+        "NARRATION": {
+          "status": "done",
+          "at": "2026-10-19T12:53:12.173Z"
+        },
+        "RENDER": {
+          "status": "done",
+          "at": "2026-10-19T12:53:12.173Z"
+        },
+        "QA": {
+          "status": "done",
+          "detail": "final gate PUBLISH 88",
+          "at": "2026-10-19T12:53:13.979Z"
+        },
+        "UPLOAD": {
+          "status": "done",
+          "detail": "SjJHvPtSvcg",
+          "at": "2026-10-19T12:53:18.346Z"
+        },
+        "SCHEDULE": {
+          "status": "done",
+          "detail": "2026-10-19T18:00:00.000Z",
+          "at": "2026-10-19T12:53:18.347Z"
+        },
+        "PUBLISH": {
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-19T18:00:00.000Z",
+          "at": "2026-10-19T12:53:18.347Z"
+        }
+      },
+      "finishedAt": "2026-10-19T12:53:18.374Z",
+      "videoId": "SjJHvPtSvcg"
     }
   ]
 }

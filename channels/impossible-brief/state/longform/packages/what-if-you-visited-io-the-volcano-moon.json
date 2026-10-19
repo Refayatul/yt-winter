@@ -3,7 +3,7 @@
   "channel": "impossible-brief",
   "channelName": "ImpossibleBrief",
   "contentType": "long",
-  "createdAt": "2026-10-05T14:33:25.336Z",
+  "createdAt": "2026-10-19T12:54:09.164Z",
   "topic": {
     "id": "IB-SPA-061",
     "slug": "what-if-you-visited-io-the-volcano-moon",
@@ -17,10 +17,10 @@
     "slug": "what-if-you-visited-io-the-volcano-moon",
     "title": "What If You Visited Io, the Volcano Moon?",
     "cluster": "SPACE",
-    "LongFormPotentialScore": 82,
+    "LongFormPotentialScore": 83,
     "bucket": "A",
     "reasons": [
-      "LongFormPotential 82 ≥ 78"
+      "LongFormPotential 83 ≥ 78"
     ],
     "factors": {
       "DepthPotential": {
@@ -58,9 +58,9 @@
         "basis": "inventory-signal"
       },
       "ShortsEvidence": {
-        "value": 66,
+        "value": 76,
         "basis": "measured",
-        "note": "best cluster Short 965 views vs channel median 589; best subscriber conversion unavailable; best growth score 81.3"
+        "note": "best cluster Short 1045 views vs channel median 737; best subscriber conversion 0.00383; best growth score 71.4"
       },
       "SeriesPotential": {
         "value": 100,
@@ -123,7 +123,7 @@
     "gaps": [
       "no deep research — long-form depth limited to the Shorts case file"
     ],
-    "reuseCount": 1
+    "reuseCount": 2
   },
   "outline": {
     "structure": [
@@ -253,37 +253,37 @@
       {
         "type": "visual_first_reveal",
         "text": "Why one moon has over 400 active volcanoes.",
-        "score": 78,
+        "score": 77,
         "estimatedSeconds": 2.5
       },
       {
         "type": "impossible_sounding_fact",
         "text": "Some plumes rise 500 kilometres above its surface.",
-        "score": 76,
+        "score": 75,
         "estimatedSeconds": 2.5
       },
       {
         "type": "unexpected_chain_reaction",
         "text": "Io, orbiting Jupiter, is the most volcanic place known.",
-        "score": 75,
+        "score": 74,
         "estimatedSeconds": 2.8
       },
       {
         "type": "hidden_cause",
         "text": "Jupiter's tides flex Io, heating its interior.",
-        "score": 75,
+        "score": 74,
         "estimatedSeconds": 2.2
       },
       {
         "type": "shocking_consequence",
         "text": "A surface constantly repaved by lava and sulfur plumes.",
-        "score": 72,
+        "score": 71,
         "estimatedSeconds": 2.8
       },
       {
         "type": "misconception_reversal",
         "text": "It would not all happen at once.",
-        "score": 72,
+        "score": 71,
         "estimatedSeconds": 2.2
       },
       {
@@ -1003,70 +1003,40 @@
   },
   "titles": {
     "selected": {
-      "title": "What If a Visitor Landed on Io? the Full Scenario",
-      "source": "full-scenario",
-      "pattern": "statement",
+      "title": "A Visitor Landed on Io: A Scientific Thought Experiment",
+      "source": "thought-experiment",
+      "pattern": "label-colon",
       "scores": {
         "clarity": 100,
-        "curiosity": 76,
+        "curiosity": 40,
         "specificity": 77,
-        "truthfulness": 85,
-        "searchIntent": 95,
+        "truthfulness": 100,
+        "searchIntent": 83,
         "channelIdentity": 50,
-        "ctrPotential": 79,
+        "ctrPotential": 55,
         "novelty": 100,
         "evergreenPotential": 85,
         "consequence": 42,
         "compactness": 100,
         "recognizability": 80,
         "nonRedundancy": 100,
-        "factualIntegrity": 85,
+        "factualIntegrity": 100,
         "historicalPerformanceSimilarity": 50,
-        "patternFreshness": 70
+        "patternFreshness": 100
       },
-      "total": 82,
-      "patternPenalty": 4,
+      "total": 76,
+      "patternPenalty": 0,
       "templateNaturalnessPenalty": 0,
-      "adjustedTotal": 78,
-      "unsupportedWords": [
-        "scenario"
-      ],
-      "misleading": false
+      "genericTemplatePenalty": 0,
+      "adjustedTotal": 76,
+      "unsupportedWords": [],
+      "misleading": false,
+      "grammar": [],
+      "ungrammatical": false
     },
-    "selectedScore": 78,
+    "selectedScore": 76,
     "count": 23,
     "candidates": [
-      {
-        "title": "What If a Visitor Landed on Io? the Full Scenario",
-        "source": "full-scenario",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 76,
-          "specificity": 77,
-          "truthfulness": 85,
-          "searchIntent": 95,
-          "channelIdentity": 50,
-          "ctrPotential": 79,
-          "novelty": 100,
-          "evergreenPotential": 85,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 80,
-          "nonRedundancy": 100,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 82,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 78,
-        "unsupportedWords": [
-          "scenario"
-        ],
-        "misleading": false
-      },
       {
         "title": "A Visitor Landed on Io: A Scientific Thought Experiment",
         "source": "thought-experiment",
@@ -1092,9 +1062,110 @@
         "total": 76,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 76,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "What If a Visitor Landed on Io? the Full Scenario",
+        "source": "full-scenario",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 76,
+          "specificity": 77,
+          "truthfulness": 85,
+          "searchIntent": 95,
+          "channelIdentity": 50,
+          "ctrPotential": 79,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 80,
+          "nonRedundancy": 91,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 82,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 75,
+        "unsupportedWords": [
+          "scenario"
+        ],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "How Long Would Earth Last If You Visited Io, the Volcano Moon?",
+        "source": "how-long",
+        "pattern": "question",
+        "scores": {
+          "clarity": 95,
+          "curiosity": 84,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 42,
+          "channelIdentity": 74,
+          "ctrPotential": 69,
+          "novelty": 92,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 82,
+          "recognizability": 38,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 74,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 74,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "What Would Really Happen If You Visited Io, the Volcano Moon?",
+        "source": "what-would-happen",
+        "pattern": "question",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 84,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 42,
+          "channelIdentity": 62,
+          "ctrPotential": 69,
+          "novelty": 91,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 91,
+          "recognizability": 38,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 73,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 73,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "Why Io Never Stops Erupting",
@@ -1121,43 +1192,17 @@
         "total": 71,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 71,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
-        "title": "How Long Would Earth Last If You Visited Io, the Volcano Moon?",
-        "source": "how-long",
-        "pattern": "question",
-        "scores": {
-          "clarity": 95,
-          "curiosity": 84,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 42,
-          "channelIdentity": 74,
-          "ctrPotential": 69,
-          "novelty": 92,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 82,
-          "recognizability": 38,
-          "nonRedundancy": 92,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 74,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 70,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "What Would Really Happen If You Visited Io, the Volcano Moon?",
-        "source": "what-would-happen",
-        "pattern": "question",
+        "title": "What If You Visited Io, the Volcano Moon?",
+        "source": "current",
+        "pattern": "what-if-question",
         "scores": {
           "clarity": 100,
           "curiosity": 84,
@@ -1166,12 +1211,12 @@
           "searchIntent": 42,
           "channelIdentity": 62,
           "ctrPotential": 69,
-          "novelty": 91,
+          "novelty": 89,
           "evergreenPotential": 75,
           "consequence": 42,
-          "compactness": 91,
+          "compactness": 100,
           "recognizability": 38,
-          "nonRedundancy": 91,
+          "nonRedundancy": 89,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1179,9 +1224,44 @@
         "total": 73,
         "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 69,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Could Humanity Survive If You Visited Io, the Volcano Moon?",
+        "source": "survive",
+        "pattern": "question",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 66,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 30,
+          "channelIdentity": 62,
+          "ctrPotential": 57,
+          "novelty": 91,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 68,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 68,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If You Visited Io, the Volcano Moon: What Breaks First, and What Breaks Last",
@@ -1208,9 +1288,12 @@
         "total": 68,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 68,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If You Visited Io, the Volcano Moon — Simulated With Real Science",
@@ -1237,9 +1320,12 @@
         "total": 68,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 68,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If You Visited Io, the Volcano Moon: First Effect to Final Outcome",
@@ -1266,38 +1352,12 @@
         "total": 67,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 67,
         "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "What If You Visited Io, the Volcano Moon?",
-        "source": "current",
-        "pattern": "what-if-question",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 84,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 42,
-          "channelIdentity": 62,
-          "ctrPotential": 69,
-          "novelty": 89,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 89,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 73,
-        "patternPenalty": 7,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 66,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If You Visited Io, the Volcano Moon — What Physics Says Happens Next",
@@ -1311,12 +1371,12 @@
           "searchIntent": 30,
           "channelIdentity": 74,
           "ctrPotential": 57,
-          "novelty": 93,
+          "novelty": 87,
           "evergreenPotential": 75,
           "consequence": 42,
           "compactness": 63,
           "recognizability": 38,
-          "nonRedundancy": 93,
+          "nonRedundancy": 87,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1324,11 +1384,14 @@
         "total": 65,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 65,
         "unsupportedWords": [
           "says"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If You Visited Io, the Volcano Moon: The Full Breakdown",
@@ -1355,9 +1418,12 @@
         "total": 65,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 65,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If You Visited Io, the Volcano Moon: The Complete Scientific Timeline",
@@ -1384,67 +1450,12 @@
         "total": 64,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 64,
         "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "Could Humanity Survive If You Visited Io, the Volcano Moon?",
-        "source": "survive",
-        "pattern": "question",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 66,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 30,
-          "channelIdentity": 62,
-          "ctrPotential": 57,
-          "novelty": 91,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 91,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 68,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 64,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Real Physics If You Visited Io, the Volcano Moon",
-        "source": "real-physics",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 30,
-          "channelIdentity": 74,
-          "ctrPotential": 57,
-          "novelty": 91,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 91,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 68,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 64,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "What Changes — And What Doesn't — If You Visited Io, the Volcano Moon",
@@ -1471,40 +1482,46 @@
         "total": 63,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 63,
         "unsupportedWords": [
           "doesnt"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
-        "title": "If You Visited Io, the Volcano Moon, Minute by Minute",
-        "source": "minute-by-minute",
+        "title": "The Real Physics If You Visited Io, the Volcano Moon",
+        "source": "real-physics",
         "pattern": "statement",
         "scores": {
           "clarity": 100,
-          "curiosity": 40,
+          "curiosity": 58,
           "specificity": 47,
           "truthfulness": 100,
           "searchIntent": 30,
-          "channelIdentity": 62,
-          "ctrPotential": 45,
-          "novelty": 90,
+          "channelIdentity": 74,
+          "ctrPotential": 57,
+          "novelty": 85,
           "evergreenPotential": 75,
           "consequence": 42,
           "compactness": 100,
           "recognizability": 38,
-          "nonRedundancy": 90,
+          "nonRedundancy": 85,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
-        "total": 64,
-        "patternPenalty": 4,
+        "total": 68,
+        "patternPenalty": 7,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 60,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 61,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "The Chain Reaction That Follows If You Visited Io, the Volcano Moon",
@@ -1531,69 +1548,14 @@
         "total": 60,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 60,
         "unsupportedWords": [
           "reaction"
         ],
-        "misleading": false
-      },
-      {
-        "title": "Every Consequence If You Visited Io, the Volcano Moon, Explained",
-        "source": "every-consequence",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 30,
-          "channelIdentity": 62,
-          "ctrPotential": 45,
-          "novelty": 92,
-          "evergreenPotential": 75,
-          "consequence": 80,
-          "compactness": 92,
-          "recognizability": 38,
-          "nonRedundancy": 92,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 64,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 60,
-        "unsupportedWords": [],
-        "misleading": false
-      },
-      {
-        "title": "The Day After You Visited Io, the Volcano Moon",
-        "source": "day-after",
-        "pattern": "statement",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 30,
-          "channelIdentity": 62,
-          "ctrPotential": 45,
-          "novelty": 90,
-          "evergreenPotential": 75,
-          "consequence": 42,
-          "compactness": 100,
-          "recognizability": 38,
-          "nonRedundancy": 90,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 64,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 60,
-        "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "If You Visited Io, the Volcano Moon: Known Science, Estimates and Speculation",
@@ -1620,11 +1582,110 @@
         "total": 59,
         "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
         "adjustedTotal": 59,
         "unsupportedWords": [
           "estimates"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "If You Visited Io, the Volcano Moon, Minute by Minute",
+        "source": "minute-by-minute",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 30,
+          "channelIdentity": 62,
+          "ctrPotential": 45,
+          "novelty": 90,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 64,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 57,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Every Consequence If You Visited Io, the Volcano Moon, Explained",
+        "source": "every-consequence",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 30,
+          "channelIdentity": 62,
+          "ctrPotential": 45,
+          "novelty": 92,
+          "evergreenPotential": 75,
+          "consequence": 80,
+          "compactness": 92,
+          "recognizability": 38,
+          "nonRedundancy": 92,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 64,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 57,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "The Day After You Visited Io, the Volcano Moon",
+        "source": "day-after",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 30,
+          "channelIdentity": 62,
+          "ctrPotential": 45,
+          "novelty": 90,
+          "evergreenPotential": 75,
+          "consequence": 42,
+          "compactness": 100,
+          "recognizability": 38,
+          "nonRedundancy": 90,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 64,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 57,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "The Most Volcanic World We Know",
@@ -1649,11 +1710,14 @@
           "patternFreshness": 70
         },
         "total": 62,
-        "patternPenalty": 4,
+        "patternPenalty": 7,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 58,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 55,
         "unsupportedWords": [],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "What Scientists Can and Can't Predict If You Visited Io, the Volcano Moon",
@@ -1678,14 +1742,17 @@
           "patternFreshness": 70
         },
         "total": 61,
-        "patternPenalty": 4,
+        "patternPenalty": 7,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 57,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 54,
         "unsupportedWords": [
           "scientists",
           "cant"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       },
       {
         "title": "The Second-Order Effects If You Visited Io, the Volcano Moon",
@@ -1710,13 +1777,16 @@
           "patternFreshness": 70
         },
         "total": 61,
-        "patternPenalty": 4,
+        "patternPenalty": 7,
         "templateNaturalnessPenalty": 0,
-        "adjustedTotal": 57,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 54,
         "unsupportedWords": [
           "second-order"
         ],
-        "misleading": false
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
       }
     ]
   },
@@ -1742,8 +1812,8 @@
           "motion": "scale shift: object shrinks/grows in 0.8 s, then hard cut",
           "cutTiming": [
             0,
-            1,
-            2
+            0.8,
+            1.6
           ],
           "soundCue": "single low hit on the first cut",
           "communicates": "mystery"
@@ -1808,6 +1878,13 @@
       "relationship_type": "SAME_SERIES",
       "relationship_reason": "same series; subject overlap 0.00, same cluster SPACE",
       "score": 0.4
+    },
+    {
+      "short_video_id": "hzMr-vEogR0",
+      "short_slug": "what-if-you-flew-through-enceladuss-geysers",
+      "relationship_type": "SAME_SERIES",
+      "relationship_reason": "same series; subject overlap 0.00, same cluster SPACE",
+      "score": 0.4
     }
   ],
   "nextVideos": {
@@ -1864,7 +1941,7 @@
     "note": "approximate; update config/growth-engine.json cost units from invoices"
   },
   "readiness": {
-    "LongFormProductionReadinessScore": 84,
+    "LongFormProductionReadinessScore": 83,
     "decision": "BLOCK",
     "dimensions": {
       "TopicDepth": 86,
@@ -1878,7 +1955,7 @@
       "AudioQuality": null,
       "Editing": null,
       "Thumbnail": 91,
-      "Title": 78,
+      "Title": 76,
       "CopyrightSafety": 90,
       "Disclosure": 95,
       "EndScreenPlan": 90,
@@ -1893,8 +1970,8 @@
     ],
     "notes": [],
     "thresholds": {
-      "publish": 85,
-      "review": 70
+      "publish": 86,
+      "review": 74
     }
   },
   "targetMinutes": [
@@ -1905,16 +1982,16 @@
     "Channel": "ImpossibleBrief",
     "Content Type": "LONG_FORM",
     "Topic": "What If You Visited Io, the Volcano Moon?",
-    "LongFormPotentialScore": 82,
+    "LongFormPotentialScore": 83,
     "Topic Bucket": "A",
     "Cold Open": "What If You Visited Io, the Volcano Moon?",
     "Target Duration": "8–12 min",
     "Actual Duration": "~0.9 min (script estimate, llm:groq:openai/gpt-oss-120b)",
     "Scenes": 8,
     "Thumbnail Score": 91,
-    "Title Score": 78,
-    "LongFormProductionReadinessScore": "84 → BLOCK",
-    "Related Shorts": "what-if-we-swam-in-europas-ocean, what-if-the-dinosaur-killing-asteroid-hit-today, what-if-the-dinosaur-killing-asteroid-hit-today, what-if-you-put-saturn-in-a-bathtub",
+    "Title Score": 76,
+    "LongFormProductionReadinessScore": "83 → BLOCK",
+    "Related Shorts": "what-if-we-swam-in-europas-ocean, what-if-the-dinosaur-killing-asteroid-hit-today, what-if-the-dinosaur-killing-asteroid-hit-today, what-if-you-put-saturn-in-a-bathtub, what-if-you-flew-through-enceladuss-geysers",
     "Primary Next Video": "What If the 1859 Solar Superstorm Hit Today?"
   }
 }
