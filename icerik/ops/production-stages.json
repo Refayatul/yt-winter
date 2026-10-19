@@ -2,66 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "39024967033",
-      "attempt": "1",
-      "startedAt": "2026-10-17T10:28:35.533Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": "2026-10-17",
-      "slug": "big-bayou-canot-1993",
-      "outcome": "UPLOADED",
-      "reason": null,
-      "stages": {
-        "RESEARCH": {
-          "status": "done",
-          "detail": "growth queue selected big-bayou-canot-1993",
-          "at": "2026-10-17T10:28:39.247Z"
-        },
-        "SCRIPT": {
-          "status": "done",
-          "detail": "pre gate REVIEW 82",
-          "at": "2026-10-17T10:28:39.559Z"
-        },
-        "ASSETS": {
-          "status": "done",
-          "at": "2026-10-17T10:28:41.583Z"
-        },
-        "NARRATION": {
-          "status": "done",
-          "at": "2026-10-17T10:33:44.124Z"
-        },
-        "RENDER": {
-          "status": "done",
-          "at": "2026-10-17T10:33:44.124Z"
-        },
-        "QA": {
-          "status": "done",
-          "detail": "final gate PUBLISH 86",
-          "at": "2026-10-17T10:33:46.530Z"
-        },
-        "UPLOAD": {
-          "status": "done",
-          "detail": "X_EhSVzvv3o",
-          "at": "2026-10-17T10:33:50.998Z"
-        },
-        "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-17T18:00:00.000Z",
-          "at": "2026-10-17T10:33:50.999Z"
-        },
-        "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-17T18:00:00.000Z",
-          "at": "2026-10-17T10:33:51.000Z"
-        }
-      },
-      "finishedAt": "2026-10-17T10:33:51.034Z",
-      "videoId": "X_EhSVzvv3o"
-    },
-    {
       "runId": "39027106955",
       "attempt": "1",
       "startedAt": "2026-10-17T11:02:11.814Z",
@@ -1368,6 +1308,50 @@
         }
       },
       "finishedAt": "2026-10-19T13:45:57.776Z"
+    },
+    {
+      "runId": "39267746642",
+      "attempt": "1",
+      "startedAt": "2026-10-19T14:19:36.666Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": null,
+      "slug": null,
+      "outcome": "NOT_DUE",
+      "reason": "today's Short already exists (tasman-bridge-1975)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-19T14:19:36.686Z"
     }
   ]
 }
