@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-19T18:46:49.500Z",
+  "generatedAt": "2026-10-19T19:23:16.094Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -26,11 +26,11 @@
           "reason": "EXPLORE (0.25): under-sampled cluster industrial-disasters"
         },
         "baseline": {
-          "n": 26,
-          "views": 496,
+          "n": 27,
+          "views": 451,
           "averagePercentageViewed": 64.5,
           "subscribersPer1000Views": 1.56,
-          "engagementPer1000Views": 26.65,
+          "engagementPer1000Views": 24.19,
           "watchHoursPer1000Views": 2.48
         }
       },
@@ -118,7 +118,7 @@
             "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
-            "slug": "lahaina-fire-2023",
+            "slug": "armero-1985",
             "LongFormPotentialScore": 84,
             "bucket": "A",
             "mode": "B_SHORT_PROVES_DEMAND"
@@ -159,7 +159,7 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 26,
+          "sampleSize": 27,
           "adopted": 0,
           "hypotheses": 5
         },
@@ -343,8 +343,8 @@
         "lastPublished": "2026-10-19T18:00:00.000Z",
         "published": 19,
         "inventory": {
-          "A": 113,
-          "B": 21,
+          "A": 108,
+          "B": 26,
           "C": 140,
           "D": 206
         },
@@ -360,8 +360,8 @@
           "reason": "EXPLORE (0.25): under-sampled cluster HUMAN"
         },
         "baseline": {
-          "n": 16,
-          "views": 1001,
+          "n": 17,
+          "views": 922,
           "averagePercentageViewed": 68.85,
           "subscribersPer1000Views": 0.96,
           "engagementPer1000Views": 19.21,
@@ -438,20 +438,20 @@
             "mode": "A_LONG_FIRST"
           },
           {
+            "slug": "what-if-all-fungi-disappeared",
+            "LongFormPotentialScore": 83,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
             "slug": "what-if-synthetic-fertilizer-disappeared",
             "LongFormPotentialScore": 83,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
           },
           {
-            "slug": "what-if-olympus-mons-stood-on-earth",
-            "LongFormPotentialScore": 82,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-earth-had-rings-like-saturn",
-            "LongFormPotentialScore": 82,
+            "slug": "what-if-gps-went-dark-for-a-day",
+            "LongFormPotentialScore": 83,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
           }
@@ -491,9 +491,9 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 16,
+          "sampleSize": 17,
           "adopted": 0,
-          "hypotheses": 4
+          "hypotheses": 5
         },
         "longform": {
           "status": "heuristics-only",
@@ -516,17 +516,12 @@
         {
           "slug": "what-if-human-muscle-efficiency-doubled-overnight",
           "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
-        },
-        {
-          "slug": "what-happens-if-the-global-ocean-doubles",
-          "bucket": "C",
           "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "what-if-the-brain-s-energy-use-doubled-overnight",
           "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "could-we-function-with-half-human-muscle-efficiency",
@@ -536,12 +531,17 @@
         {
           "slug": "if-a-rogue-planet-vanished-right-now-what-would-change-first",
           "bucket": "C",
-          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 73 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "if-a-rogue-planet-moved-twice-as-close-when-would-earth-notice",
           "bucket": "C",
           "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
+        },
+        {
+          "slug": "what-happens-if-the-global-ocean-doubles",
+          "bucket": "C",
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "would-doubling-all-synthetic-fertilizers-help-or-harm-us",

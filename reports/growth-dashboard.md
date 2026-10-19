@@ -1,6 +1,6 @@
 # Growth dashboard
 
-Generated 2026-10-19T18:46:49.500Z. Per-channel baselines are computed separately and never blended.
+Generated 2026-10-19T19:23:16.094Z. Per-channel baselines are computed separately and never blended.
 
 ## Failure Reconstructed
 
@@ -8,13 +8,13 @@ Generated 2026-10-19T18:46:49.500Z. Per-channel baselines are computed separatel
 
 **Long-form health** — cycle 2026-W43: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W43 already QUALITY_BLOCKED)
 
-**Long-form backlog** — chernobyl-1986 86/A, challenger-1986 85/A, columbia-2003 85/A, air-france-447-2009 84/A, lahaina-fire-2023 84/A
+**Long-form backlog** — chernobyl-1986 86/A, challenger-1986 85/A, columbia-2003 85/A, air-france-447-2009 84/A, armero-1985 84/A
 
 **Content clusters** — 12 · integrity OK
 
 **Growth / subscriber conversion** — tracked 28 · subs/1k Shorts 1.56 · subs/1k long n/a
 
-**Learning** — Shorts adaptive (n=26, adopted 0) · Long-form heuristics-only (n=0)
+**Learning** — Shorts adaptive (n=27, adopted 0) · Long-form heuristics-only (n=0)
 
 **Short → Long funnel** — 0 link(s), 0 long→long, 0 pending RELATED_VIDEO_MANUAL_ACTION_REQUIRED
 
@@ -36,17 +36,17 @@ Generated 2026-10-19T18:46:49.500Z. Per-channel baselines are computed separatel
 
 ## ImpossibleBrief
 
-**Shorts health** — last published 2026-10-19T18:00:00.000Z · 19 published · inventory A113/B21/C140/D206 · next: what-if-you-stopped-eating-for-a-year (EXPLORE (0.25): under-sampled cluster HUMAN)
+**Shorts health** — last published 2026-10-19T18:00:00.000Z · 19 published · inventory A108/B26/C140/D206 · next: what-if-you-stopped-eating-for-a-year (EXPLORE (0.25): under-sampled cluster HUMAN)
 
 **Long-form health** — cycle 2026-W43: QUALITY_BLOCKED — no candidate passed the long-form quality gate; cadence does not override quality · episodes 0 · lane not due (cycle 2026-W43 already QUALITY_BLOCKED)
 
-**Long-form backlog** — what-if-we-swam-in-europas-ocean 83/A, what-if-we-mined-a-metal-asteroid 83/A, what-if-synthetic-fertilizer-disappeared 83/A, what-if-olympus-mons-stood-on-earth 82/A, what-if-earth-had-rings-like-saturn 82/A
+**Long-form backlog** — what-if-we-swam-in-europas-ocean 83/A, what-if-we-mined-a-metal-asteroid 83/A, what-if-all-fungi-disappeared 83/A, what-if-synthetic-fertilizer-disappeared 83/A, what-if-gps-went-dark-for-a-day 83/A
 
 **Content clusters** — 7 · integrity OK
 
 **Growth / subscriber conversion** — tracked 18 · subs/1k Shorts 0.96 · subs/1k long n/a
 
-**Learning** — Shorts adaptive (n=16, adopted 0) · Long-form heuristics-only (n=0)
+**Learning** — Shorts adaptive (n=17, adopted 0) · Long-form heuristics-only (n=0)
 
 **Short → Long funnel** — 0 link(s), 0 long→long, 0 pending RELATED_VIDEO_MANUAL_ACTION_REQUIRED
 
@@ -54,9 +54,9 @@ Generated 2026-10-19T18:46:49.500Z. Per-channel baselines are computed separatel
 
 - what-if-human-heat-tolerance-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
 - could-we-function-with-half-human-heat-tolerance (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
-- what-if-human-muscle-efficiency-doubled-overnight (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
-- what-happens-if-the-global-ocean-doubles (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
-- what-if-the-brain-s-energy-use-doubled-overnight (C): VideoPotential 70 in experimental band 58–71; boilerplate 0.5
+- what-if-human-muscle-efficiency-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
+- what-if-the-brain-s-energy-use-doubled-overnight (C): VideoPotential 71 in experimental band 58–71; boilerplate 0.5
+- could-we-function-with-half-human-muscle-efficiency (C): VideoPotential 68 in experimental band 58–71; boilerplate 0.5
 
 **Recent alerts**
 

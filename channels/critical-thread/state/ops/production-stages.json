@@ -2,50 +2,6 @@
   "channel": "critical-thread",
   "runs": [
     {
-      "runId": "39055640517",
-      "attempt": "1",
-      "startedAt": "2026-10-17T17:53:22.043Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": null,
-      "slug": null,
-      "outcome": "NOT_DUE",
-      "reason": "production window closed at 21:00 Europe/Istanbul minus 60 min",
-      "stages": {
-        "RESEARCH": {
-          "status": "not-reached"
-        },
-        "SCRIPT": {
-          "status": "not-reached"
-        },
-        "ASSETS": {
-          "status": "not-reached"
-        },
-        "NARRATION": {
-          "status": "not-reached"
-        },
-        "RENDER": {
-          "status": "not-reached"
-        },
-        "QA": {
-          "status": "not-reached"
-        },
-        "UPLOAD": {
-          "status": "not-reached"
-        },
-        "SCHEDULE": {
-          "status": "not-reached"
-        },
-        "PUBLISH": {
-          "status": "not-reached"
-        }
-      },
-      "finishedAt": "2026-10-17T17:53:24.081Z"
-    },
-    {
       "runId": "39058872251",
       "attempt": "1",
       "startedAt": "2026-10-17T18:38:05.428Z",
@@ -1360,6 +1316,50 @@
         }
       },
       "finishedAt": "2026-10-19T18:46:22.888Z"
+    },
+    {
+      "runId": "39310342747",
+      "attempt": "1",
+      "startedAt": "2026-10-19T19:23:00.668Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": null,
+      "slug": null,
+      "outcome": "FAILED",
+      "reason": "health pre-flight: nitelikli-konu: kalite çubuğunu geçen konu yok — NO_EXPLORE_CANDIDATE; seslendirme: NARRATION_UNAVAILABLE: Edge sesi reddedildi (Edge TTS WebSocket error: Unexpected server response: 429, Edge TTS WebSocket error: Unexpected server response: 429, Edge TTS WebSocket error: Unexpected server response: 429; msedge-tts 2.1.0); yedek ses yok — fallback voice af_heart is not approved ",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-19T19:23:08.880Z"
     }
   ]
 }
