@@ -9,8 +9,9 @@ https://youtu.be/PAi4kSZesNE
 | 1d | 2026-10-06 | 305 | 4 | 1 | — | — |  |
 | 3d | 2026-10-08 | 348 | 4 | 1 | 63.080000000000005 | 1 | Shorts feed 96%, Browse/other YouTube 3% |
 | 7d | 2026-10-12 | 353 | 4 | 1 | 60.6 | 1 | Shorts feed 94%, Browse/other YouTube 4% |
+| 14d | 2026-10-19 | 355 | 4 | 1 | 59.8 | 1 | Shorts feed 93%, Browse/other YouTube 4% |
 
-## Diagnosis at 7d
+## Diagnosis at 14d
 
 - **WEAK_TOPIC_PACKAGING** (low) — Current title scores 43.3/100 in the title engine; best editorial option scores 43.3.
 
@@ -25,4 +26,4 @@ https://youtu.be/PAi4kSZesNE
 - Visual type: REAL ARCHIVAL IMAGE
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 3d and 7d: 5.
+Views gained between 7d and 14d: 2.

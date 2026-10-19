@@ -9,8 +9,9 @@ https://youtu.be/6AdruLBoGiw
 | 1d | 2026-10-06 | 391 | 3 | 1 | — | — |  |
 | 3d | 2026-10-08 | 438 | 4 | 1 | 50.74000000000001 | 0 | Shorts feed 96%, Browse/other YouTube 3% |
 | 7d | 2026-10-12 | 438 | 4 | 1 | 154.52 | 0 | Shorts feed 95%, Browse/other YouTube 3% |
+| 14d | 2026-10-19 | 439 | 4 | 1 | 154.52 | 0 | Shorts feed 95%, Browse/other YouTube 3% |
 
-## Diagnosis at 7d
+## Diagnosis at 14d
 
 - **LOW_IMPRESSIONS_GOOD_RETENTION** (low) — Good retention with low reach (impressions unavailable — views used as a proxy).
 
@@ -25,4 +26,4 @@ https://youtu.be/6AdruLBoGiw
 - Visual type: AI-GENERATED VISUAL
 - This is an observed alignment, not proof that the sentence or visual caused the drop.
 
-Views gained between 3d and 7d: 0.
+Views gained between 7d and 14d: 1.

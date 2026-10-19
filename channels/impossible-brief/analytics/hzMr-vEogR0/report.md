@@ -7,11 +7,21 @@ https://youtu.be/hzMr-vEogR0
 | Checkpoint | Collected | Views | Likes | Comments | Avg % viewed | Subs (net) | Top traffic |
 |---|---|---:|---:|---:|---:|---:|---|
 | 1d | 2026-10-17 | 276 | 5 | 1 | — | — |  |
+| 3d | 2026-10-19 | 362 | 5 | 1 | 50.529999999999994 | 0 | Shorts feed 96%, Browse/other YouTube 3% |
 
-## Diagnosis at 1d
+## Diagnosis at 3d
 
-- **INSUFFICIENT_DATA** (high) — 276 views after 1 days — too early/small for rate-based conclusions.
+- **HEALTHY** (low) — No problem pattern detected with available data.
 
 ## Suggested interventions
 
-- INSUFFICIENT DATA → no intervention; wait for the next checkpoint.
+- HEALTHY → no action.
+
+## First major observed retention drop
+
+- Timestamp: 5s; magnitude: 26 percentage points.
+- Active sentence: cutaway of ice shell and ocean
+- Visual type: AI-GENERATED VISUAL
+- This is an observed alignment, not proof that the sentence or visual caused the drop.
+
+Views gained between 1d and 3d: 86.
