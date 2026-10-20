@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T17:20:29.857Z",
+  "generatedAt": "2026-10-20T18:02:32.560Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -9,8 +9,8 @@
         "lastPublished": "2026-10-20T18:00:00.000Z",
         "published": 28,
         "inventory": {
-          "A": 93,
-          "B": 137,
+          "A": 104,
+          "B": 126,
           "C": 59,
           "D": 59
         },
@@ -27,11 +27,11 @@
         },
         "baseline": {
           "n": 27,
-          "views": 451,
-          "averagePercentageViewed": 64.5,
-          "subscribersPer1000Views": 1.56,
-          "engagementPer1000Views": 26.65,
-          "watchHoursPer1000Views": 2.48
+          "views": 465,
+          "averagePercentageViewed": 64.36,
+          "subscribersPer1000Views": 1.46,
+          "engagementPer1000Views": 25.36,
+          "watchHoursPer1000Views": 2.05
         }
       },
       "longform": {
@@ -100,12 +100,6 @@
             "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
-            "slug": "air-france-447-2009",
-            "LongFormPotentialScore": 85,
-            "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
-          },
-          {
             "slug": "challenger-1986",
             "LongFormPotentialScore": 85,
             "bucket": "A",
@@ -118,7 +112,13 @@
             "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
-            "slug": "armero-1985",
+            "slug": "air-france-447-2009",
+            "LongFormPotentialScore": 84,
+            "bucket": "A",
+            "mode": "B_SHORT_PROVES_DEMAND"
+          },
+          {
+            "slug": "apollo-13-1970",
             "LongFormPotentialScore": 84,
             "bucket": "A",
             "mode": "B_SHORT_PROVES_DEMAND"
@@ -152,7 +152,7 @@
       "growth": {
         "trackedVideos": 29,
         "subscriberConversion": {
-          "shorts": 1.56,
+          "shorts": 1.46,
           "longform": null
         }
       },
@@ -161,7 +161,7 @@
           "status": "adaptive",
           "sampleSize": 27,
           "adopted": 0,
-          "hypotheses": 5
+          "hypotheses": 3
         },
         "longform": {
           "status": "heuristics-only",
@@ -202,11 +202,6 @@
           "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
         },
         {
-          "slug": "b2-guam-2008",
-          "bucket": "C",
-          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
-        },
-        {
           "slug": "new-london-school-1937",
           "bucket": "C",
           "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
@@ -220,6 +215,11 @@
           "slug": "castle-bravo-1954",
           "bucket": "C",
           "reason": "VideoPotential 84 in experimental band 58–71; sources 41 < 62"
+        },
+        {
+          "slug": "b2-guam-2008",
+          "bucket": "C",
+          "reason": "VideoPotential 83 in experimental band 58–71; sources 41 < 62"
         }
       ],
       "alerts": [
@@ -343,8 +343,8 @@
         "lastPublished": "2026-10-19T18:00:00.000Z",
         "published": 19,
         "inventory": {
-          "A": 115,
-          "B": 19,
+          "A": 110,
+          "B": 24,
           "C": 140,
           "D": 206
         },
@@ -362,10 +362,10 @@
         "baseline": {
           "n": 17,
           "views": 922,
-          "averagePercentageViewed": 68.85,
-          "subscribersPer1000Views": 0.96,
+          "averagePercentageViewed": 66.19,
+          "subscribersPer1000Views": 0,
           "engagementPer1000Views": 19.21,
-          "watchHoursPer1000Views": 2.64
+          "watchHoursPer1000Views": 2.6
         }
       },
       "longform": {
@@ -426,31 +426,31 @@
         "episodes": 0,
         "backlog": [
           {
-            "slug": "what-if-we-mined-a-metal-asteroid",
-            "LongFormPotentialScore": 84,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
-            "slug": "what-if-we-swam-in-europas-ocean",
-            "LongFormPotentialScore": 83,
-            "bucket": "A",
-            "mode": "A_LONG_FIRST"
-          },
-          {
             "slug": "what-if-synthetic-fertilizer-disappeared",
             "LongFormPotentialScore": 83,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
           },
           {
-            "slug": "what-if-olympus-mons-stood-on-earth",
+            "slug": "what-if-the-ozone-hole-never-closed",
             "LongFormPotentialScore": 82,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
           },
           {
-            "slug": "what-if-earth-had-rings-like-saturn",
+            "slug": "what-if-the-tunguska-blast-happened-over-a-city",
+            "LongFormPotentialScore": 82,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "could-earth-survive-one-day-without-earth-s-magnetic-field",
+            "LongFormPotentialScore": 82,
+            "bucket": "A",
+            "mode": "A_LONG_FIRST"
+          },
+          {
+            "slug": "what-if-the-permafrost-thawed",
             "LongFormPotentialScore": 82,
             "bucket": "A",
             "mode": "A_LONG_FIRST"
@@ -484,7 +484,7 @@
       "growth": {
         "trackedVideos": 18,
         "subscriberConversion": {
-          "shorts": 0.96,
+          "shorts": 0,
           "longform": null
         }
       },
@@ -506,7 +506,7 @@
         {
           "slug": "what-if-human-heat-tolerance-doubled-overnight",
           "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "could-we-function-with-half-human-heat-tolerance",
@@ -516,12 +516,12 @@
         {
           "slug": "what-if-human-muscle-efficiency-doubled-overnight",
           "bucket": "C",
-          "reason": "VideoPotential 70 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "what-happens-if-the-global-ocean-doubles",
           "bucket": "C",
-          "reason": "VideoPotential 71 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 72 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "what-if-the-brain-s-energy-use-doubled-overnight",
@@ -531,7 +531,7 @@
         {
           "slug": "could-we-function-with-half-human-muscle-efficiency",
           "bucket": "C",
-          "reason": "VideoPotential 68 in experimental band 58–71; boilerplate 0.5"
+          "reason": "VideoPotential 69 in experimental band 58–71; boilerplate 0.5"
         },
         {
           "slug": "if-a-rogue-planet-vanished-right-now-what-would-change-first",
