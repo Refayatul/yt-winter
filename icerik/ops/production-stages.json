@@ -2,66 +2,6 @@
   "channel": "failure-reconstructed",
   "runs": [
     {
-      "runId": "39120580325",
-      "attempt": "1",
-      "startedAt": "2026-10-18T10:47:15.373Z",
-      "publish": true,
-      "trigger": {
-        "event": "schedule",
-        "correlationId": null
-      },
-      "targetDay": "2026-10-18",
-      "slug": "sl-1-reactor-1961",
-      "outcome": "UPLOADED",
-      "reason": null,
-      "stages": {
-        "RESEARCH": {
-          "status": "done",
-          "detail": "growth queue selected sl-1-reactor-1961",
-          "at": "2026-10-18T10:47:18.484Z"
-        },
-        "SCRIPT": {
-          "status": "done",
-          "detail": "pre gate REVIEW 82",
-          "at": "2026-10-18T10:47:18.699Z"
-        },
-        "ASSETS": {
-          "status": "done",
-          "at": "2026-10-18T10:47:25.640Z"
-        },
-        "NARRATION": {
-          "status": "done",
-          "at": "2026-10-18T10:52:28.323Z"
-        },
-        "RENDER": {
-          "status": "done",
-          "at": "2026-10-18T10:52:28.324Z"
-        },
-        "QA": {
-          "status": "done",
-          "detail": "final gate PUBLISH 87",
-          "at": "2026-10-18T10:52:30.015Z"
-        },
-        "UPLOAD": {
-          "status": "done",
-          "detail": "qVsgb-iZJZ8",
-          "at": "2026-10-18T10:52:46.882Z"
-        },
-        "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-18T18:00:00.000Z",
-          "at": "2026-10-18T10:52:46.882Z"
-        },
-        "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-18T18:00:00.000Z",
-          "at": "2026-10-18T10:52:46.883Z"
-        }
-      },
-      "finishedAt": "2026-10-18T10:52:46.906Z",
-      "videoId": "qVsgb-iZJZ8"
-    },
-    {
       "runId": "39123343995",
       "attempt": "1",
       "startedAt": "2026-10-18T11:28:44.882Z",
@@ -1368,6 +1308,50 @@
         }
       },
       "finishedAt": "2026-10-20T11:55:36.385Z"
+    },
+    {
+      "runId": "39422843384",
+      "attempt": "1",
+      "startedAt": "2026-10-20T12:31:49.906Z",
+      "publish": true,
+      "trigger": {
+        "event": "schedule",
+        "correlationId": null
+      },
+      "targetDay": null,
+      "slug": null,
+      "outcome": "NOT_DUE",
+      "reason": "today's Short already exists (colgan-3407-2009)",
+      "stages": {
+        "RESEARCH": {
+          "status": "not-reached"
+        },
+        "SCRIPT": {
+          "status": "not-reached"
+        },
+        "ASSETS": {
+          "status": "not-reached"
+        },
+        "NARRATION": {
+          "status": "not-reached"
+        },
+        "RENDER": {
+          "status": "not-reached"
+        },
+        "QA": {
+          "status": "not-reached"
+        },
+        "UPLOAD": {
+          "status": "not-reached"
+        },
+        "SCHEDULE": {
+          "status": "not-reached"
+        },
+        "PUBLISH": {
+          "status": "not-reached"
+        }
+      },
+      "finishedAt": "2026-10-20T12:31:49.929Z"
     }
   ]
 }
