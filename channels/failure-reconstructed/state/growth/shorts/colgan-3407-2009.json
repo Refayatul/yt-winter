@@ -3,7 +3,7 @@
   "channel": "failure-reconstructed",
   "channelName": "Failure Reconstructed",
   "contentType": "short",
-  "createdAt": "2026-10-12T15:05:49.689Z",
+  "createdAt": "2026-10-20T11:23:38.754Z",
   "topic": {
     "id": "colgan-3407-2009",
     "slug": "colgan-3407-2009",
@@ -17,12 +17,12 @@
     "slug": "colgan-3407-2009",
     "title": "The Stall Warning Pilots Pulled Against",
     "cluster": "aviation-failures",
-    "VideoPotentialScore": 83,
-    "ViralPotentialScore": 77,
+    "VideoPotentialScore": 84,
+    "ViralPotentialScore": 76,
     "SelectionScore": 78,
     "bucket": "A",
     "reasons": [
-      "VideoPotential 83 ≥ 80",
+      "VideoPotential 84 ≥ 80",
       "hook 79",
       "sources 78"
     ],
@@ -156,9 +156,9 @@
         "basis": "derived"
       },
       "historical_similarity": {
-        "value": 58,
+        "value": 68,
         "basis": "learned",
-        "note": "2 same-cluster upload(s), breakout rate 0"
+        "note": "3 same-cluster upload(s), breakout rate 0"
       },
       "subscriber_conversion_potential": {
         "value": 50,
@@ -187,14 +187,14 @@
         "note": "no published-title collision"
       },
       "saturation_risk": {
-        "value": -11,
+        "value": -17,
         "basis": "penalty",
-        "note": "2 published / 53 inventory in cluster"
+        "note": "3 published / 53 inventory in cluster"
       },
       "recent_fatigue_risk": {
-        "value": -44,
+        "value": -66,
         "basis": "penalty",
-        "note": "2 same-family upload(s) in the last 30 days"
+        "note": "3 same-family upload(s) in the last 30 days"
       },
       "source_confidence_risk": {
         "value": -22,
@@ -237,23 +237,23 @@
       "weak_footage_risk": 1
     },
     "viralCalculation": {
-      "positive": 82.4,
-      "penalty": 5.6,
+      "positive": 82.8,
+      "penalty": 7.2,
       "penaltyScale": 0.3
     },
     "weights": {
-      "TopicDemandScore": 1.337,
-      "CuriosityScore": 1.2,
-      "HookPotentialScore": 1.32,
-      "VisualImpactScore": 1.32,
-      "EmotionalImpactScore": 1.12,
-      "StoryCompressionScore": 1.04,
-      "RewatchPotentialScore": 1.26,
-      "SharePotentialScore": 1.32,
-      "CommentPotentialScore": 0.6,
-      "SubscriberConversionPotential": 1.16,
-      "NoveltyScore": 0.8,
-      "AudienceFitScore": 1.12,
+      "TopicDemandScore": 1.5,
+      "CuriosityScore": 1.7,
+      "HookPotentialScore": 1.36,
+      "VisualImpactScore": 1.1,
+      "EmotionalImpactScore": 1.4,
+      "StoryCompressionScore": 1.3,
+      "RewatchPotentialScore": 1.05,
+      "SharePotentialScore": 1.5,
+      "CommentPotentialScore": 0.894,
+      "SubscriberConversionPotential": 1.45,
+      "NoveltyScore": 0.96,
+      "AudienceFitScore": 1.4,
       "SourceQualityScore": 1.1,
       "ChannelFitScore": 0.8
     },
@@ -290,7 +290,7 @@
     "curatedResearch": false
   },
   "viralPotentialGate": {
-    "score": 77,
+    "score": 76,
     "minimum": 75,
     "decision": "PRODUCE",
     "components": {
@@ -360,9 +360,9 @@
         "basis": "derived"
       },
       "historical_similarity": {
-        "value": 58,
+        "value": 68,
         "basis": "learned",
-        "note": "2 same-cluster upload(s), breakout rate 0"
+        "note": "3 same-cluster upload(s), breakout rate 0"
       },
       "subscriber_conversion_potential": {
         "value": 50,
@@ -391,14 +391,14 @@
         "note": "no published-title collision"
       },
       "saturation_risk": {
-        "value": -11,
+        "value": -17,
         "basis": "penalty",
-        "note": "2 published / 53 inventory in cluster"
+        "note": "3 published / 53 inventory in cluster"
       },
       "recent_fatigue_risk": {
-        "value": -44,
+        "value": -66,
         "basis": "penalty",
-        "note": "2 same-family upload(s) in the last 30 days"
+        "note": "3 same-family upload(s) in the last 30 days"
       },
       "source_confidence_risk": {
         "value": -22,
@@ -412,7 +412,3606 @@
       }
     }
   },
-  "topicDecision": null,
+  "topicDecision": {
+    "schema": "growth-topic-decision/1",
+    "channel": "failure-reconstructed",
+    "contentType": "short",
+    "date": "2026-10-20",
+    "createdAt": "2026-10-20T11:18:26.084Z",
+    "mode": "EXPLOIT",
+    "modeRoll": 0.854,
+    "pool": {
+      "minimum": 20,
+      "target": 50,
+      "count": 24,
+      "meetsMinimum": true,
+      "candidates": [
+        {
+          "topicId": "colgan-3407-2009",
+          "slug": "colgan-3407-2009",
+          "topic": "The Stall Warning Pilots Pulled Against",
+          "cluster": "aviation-failures",
+          "bucket": "A",
+          "viralScore": 76,
+          "videoPotentialScore": 84,
+          "selectionScore": 78,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 65,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 74,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 76,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 68,
+              "basis": "learned",
+              "note": "3 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 71,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -17,
+              "basis": "penalty",
+              "note": "3 published / 53 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -66,
+              "basis": "penalty",
+              "note": "3 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "Everyone aboard was killed.",
+            "score": 79
+          },
+          "rejectionReasons": [
+            "VideoPotential 84 ≥ 80",
+            "hook 79",
+            "sources 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "usair-1016-1994",
+          "slug": "usair-1016-1994",
+          "topic": "The Wind Shear Warning That Went to the Wrong Frequency",
+          "cluster": "aviation-failures",
+          "bucket": "A",
+          "viralScore": 76,
+          "videoPotentialScore": 84,
+          "selectionScore": 78,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 55,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 68,
+              "basis": "learned",
+              "note": "3 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 73,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -17,
+              "basis": "penalty",
+              "note": "3 published / 53 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -66,
+              "basis": "penalty",
+              "note": "3 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "mechanism_reveal",
+            "spoken": "USAir 1016 failed because microburst wind shear on approach.",
+            "score": 81
+          },
+          "rejectionReasons": [
+            "VideoPotential 84 ≥ 80",
+            "hook 81",
+            "sources 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "alaska-261-2000",
+          "slug": "alaska-261-2000",
+          "topic": "Too Little Grease Brought Down Alaska 261",
+          "cluster": "aviation-failures",
+          "bucket": "A",
+          "viralScore": 75,
+          "videoPotentialScore": 84,
+          "selectionScore": 77,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 75,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 74,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 76,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 68,
+              "basis": "learned",
+              "note": "3 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 72,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -17,
+              "basis": "penalty",
+              "note": "3 published / 53 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -66,
+              "basis": "penalty",
+              "note": "3 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "Alaska Airlines Flight 261 dove into the Pacific Ocean.",
+            "score": 80
+          },
+          "rejectionReasons": [
+            "VideoPotential 84 ≥ 80",
+            "hook 80",
+            "sources 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "comair-5191-2006",
+          "slug": "comair-5191-2006",
+          "topic": "The Jet That Took Off From the Wrong Runway",
+          "cluster": "aviation-failures",
+          "bucket": "A",
+          "viralScore": 75,
+          "videoPotentialScore": 84,
+          "selectionScore": 77,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 91,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 64,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 80,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 86,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 86,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 76,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 68,
+              "basis": "learned",
+              "note": "3 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 73,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -17,
+              "basis": "penalty",
+              "note": "3 published / 53 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -66,
+              "basis": "penalty",
+              "note": "3 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "mechanism_reveal",
+            "spoken": "Comair 5191 failed because take-off from a short.",
+            "score": 81
+          },
+          "rejectionReasons": [
+            "VideoPotential 84 ≥ 80",
+            "hook 81",
+            "sources 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "avianca-52-1990",
+          "slug": "avianca-52-1990",
+          "topic": "The Jet That Ran Out of Fuel Without Saying Emergency",
+          "cluster": "aviation-failures",
+          "bucket": "A",
+          "viralScore": 76,
+          "videoPotentialScore": 83,
+          "selectionScore": 77,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 60,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 68,
+              "basis": "learned",
+              "note": "3 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 71,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -17,
+              "basis": "penalty",
+              "note": "3 published / 53 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -66,
+              "basis": "penalty",
+              "note": "3 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "It broke apart, and seventy three people were killed.",
+            "score": 79
+          },
+          "rejectionReasons": [
+            "VideoPotential 83 ≥ 80",
+            "hook 79",
+            "sources 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "el-faro-2015",
+          "slug": "el-faro-2015",
+          "topic": "The Cargo Ship That Sailed Into a Hurricane",
+          "cluster": "maritime-disasters",
+          "bucket": "A",
+          "viralScore": 75,
+          "videoPotentialScore": 82,
+          "selectionScore": 76,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 84,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 60,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 92,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 53,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 73,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -14,
+              "basis": "penalty",
+              "note": "2 published / 42 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "El Faro sank in Hurricane Joaquin.",
+            "score": 81
+          },
+          "rejectionReasons": [
+            "VideoPotential 82 ≥ 80",
+            "hook 81",
+            "sources 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "ajka-red-mud-2010",
+          "slug": "ajka-red-mud-2010",
+          "topic": "The Wall That Released a Flood of Caustic Red Mud",
+          "cluster": "industrial-disasters",
+          "bucket": "A",
+          "viralScore": 75,
+          "videoPotentialScore": 81,
+          "selectionScore": 76,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 91,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 47,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 80,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 62,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 86,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 88,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 58,
+              "basis": "learned",
+              "note": "1 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 75,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -12,
+              "basis": "penalty",
+              "note": "1 published / 25 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "1 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -25,
+              "basis": "penalty",
+              "note": "75/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "It caused chemical burns to people and animals.",
+            "score": 78
+          },
+          "rejectionReasons": [
+            "VideoPotential 81 ≥ 80",
+            "hook 78",
+            "sources 75"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "ss-arctic-1854",
+          "slug": "ss-arctic-1854",
+          "topic": "The Liner Where the Crew Took the Lifeboats",
+          "cluster": "maritime-disasters",
+          "bucket": "A",
+          "viralScore": 75,
+          "videoPotentialScore": 81,
+          "selectionScore": 76,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 37,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 62,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 53,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 71,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 75,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -14,
+              "basis": "penalty",
+              "note": "2 published / 42 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -25,
+              "basis": "penalty",
+              "note": "75/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "RUN FOR LAND FAILS.",
+            "score": 79
+          },
+          "rejectionReasons": [
+            "VideoPotential 81 ≥ 80",
+            "hook 79",
+            "sources 75"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "i-35w-bridge-2007",
+          "slug": "i-35w-bridge-2007",
+          "topic": "The Undersized Steel Plate That Dropped a Freeway",
+          "cluster": "bridge-failures",
+          "bucket": "B",
+          "viralScore": 77,
+          "videoPotentialScore": 85,
+          "selectionScore": 79,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 59,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 100,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 47,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 68,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -30,
+              "basis": "penalty",
+              "note": "2 published / 20 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "number_anomaly",
+            "spoken": "PLATE AT U10 GIVES WAY.",
+            "score": 76
+          },
+          "rejectionReasons": [
+            "VideoPotential 85 ≥ 72",
+            "not A: hook 76 < 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "silver-bridge-1967",
+          "slug": "silver-bridge-1967",
+          "topic": "A Crack Smaller Than a Coin Dropped a Whole Bridge",
+          "cluster": "bridge-failures",
+          "bucket": "B",
+          "viralScore": 76,
+          "videoPotentialScore": 85,
+          "selectionScore": 78,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 61,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 86,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 86,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 100,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 47,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 68,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": -11,
+              "basis": "penalty",
+              "note": "published-title similarity 0.11"
+            },
+            "saturation_risk": {
+              "value": -30,
+              "basis": "penalty",
+              "note": "2 published / 20 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "countdown",
+            "spoken": "It collapsed in under a minute.",
+            "score": 76
+          },
+          "rejectionReasons": [
+            "VideoPotential 85 ≥ 72",
+            "not A: hook 76 < 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "a400m-seville-2015",
+          "slug": "a400m-seville-2015",
+          "topic": "Missing Engine Data Made Three Engines Freeze After Take-Off",
+          "cluster": "software-and-control-failures",
+          "bucket": "B",
+          "viralScore": 77,
+          "videoPotentialScore": 80,
+          "selectionScore": 78,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 84,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 72,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 86,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 80,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 92,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 50,
+              "basis": "neutral",
+              "note": "no same-cluster channel evidence yet"
+            },
+            "subscriber_conversion_potential": {
+              "value": 70,
+              "basis": "derived",
+              "note": "series-depth proxy; no measured conversion yet"
+            },
+            "audience_breadth": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 68,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 75,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": -8,
+              "basis": "penalty",
+              "note": "published-title similarity 0.08"
+            },
+            "saturation_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "0 published / 18 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "0 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -25,
+              "basis": "penalty",
+              "note": "75/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "visual_first_reveal",
+            "spoken": "Shortly after take-off, a new military transport crashed near Seville.",
+            "score": 76
+          },
+          "rejectionReasons": [
+            "VideoPotential 80 ≥ 72",
+            "not A: hook 76 < 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "gol-1907-2006",
+          "slug": "gol-1907-2006",
+          "topic": "A Business Jet's Collision Warning Was Switched Off",
+          "cluster": "aviation-failures",
+          "bucket": "B",
+          "viralScore": 75,
+          "videoPotentialScore": 85,
+          "selectionScore": 77,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 75,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 64,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 68,
+              "basis": "learned",
+              "note": "3 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 69,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -17,
+              "basis": "penalty",
+              "note": "3 published / 53 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -66,
+              "basis": "penalty",
+              "note": "3 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "hidden_cause",
+            "spoken": "Controllers failed to catch it.",
+            "score": 77
+          },
+          "rejectionReasons": [
+            "VideoPotential 85 ≥ 72",
+            "not A: hook 77 < 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "pike-river-2010",
+          "slug": "pike-river-2010",
+          "topic": "The New Zealand Mine With One Way Out",
+          "cluster": "industrial-disasters",
+          "bucket": "B",
+          "viralScore": 76,
+          "videoPotentialScore": 82,
+          "selectionScore": 77,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 58,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 62,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 58,
+              "basis": "learned",
+              "note": "1 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 68,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 75,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -12,
+              "basis": "penalty",
+              "note": "1 published / 25 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "1 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -25,
+              "basis": "penalty",
+              "note": "75/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "The Pike River mine exploded, trapping its workers underground.",
+            "score": 76
+          },
+          "rejectionReasons": [
+            "VideoPotential 82 ≥ 72",
+            "not A: hook 76 < 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "love-canal",
+          "slug": "love-canal",
+          "topic": "The School Built on a Chemical Waste Dump",
+          "cluster": "industrial-disasters",
+          "bucket": "B",
+          "viralScore": 76,
+          "videoPotentialScore": 81,
+          "selectionScore": 77,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 65,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 25,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 81,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 76,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 58,
+              "basis": "learned",
+              "note": "1 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 68,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 75,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -12,
+              "basis": "penalty",
+              "note": "1 published / 25 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "1 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -25,
+              "basis": "penalty",
+              "note": "75/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "hidden_cause",
+            "spoken": "Construction broke the cap, and water carried chemicals out.",
+            "score": 76
+          },
+          "rejectionReasons": [
+            "VideoPotential 81 ≥ 72",
+            "not A: hook 76 < 78"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "starliner-oft-2019",
+          "slug": "starliner-oft-2019",
+          "topic": "A Clock Set Wrong Sent Starliner Into the Wrong Orbit",
+          "cluster": "software-and-control-failures",
+          "bucket": "B",
+          "viralScore": 76,
+          "videoPotentialScore": 77,
+          "selectionScore": 76,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 31,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 25,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 81,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 50,
+              "basis": "neutral",
+              "note": "no same-cluster channel evidence yet"
+            },
+            "subscriber_conversion_potential": {
+              "value": 70,
+              "basis": "derived",
+              "note": "series-depth proxy; no measured conversion yet"
+            },
+            "audience_breadth": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 71,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "0 published / 18 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "0 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "BURNS FUEL TOO EARLY.",
+            "score": 79
+          },
+          "rejectionReasons": [
+            "VideoPotential 77 ≥ 72"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "qantas-72-2008",
+          "slug": "qantas-72-2008",
+          "topic": "The Airliner That Suddenly Dove Twice on Its Own",
+          "cluster": "software-and-control-failures",
+          "bucket": "B",
+          "viralScore": 75,
+          "videoPotentialScore": 77,
+          "selectionScore": 75,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 77,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 60,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 60,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 80,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 92,
+              "basis": "derived",
+              "note": "4 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 74,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 79,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 87,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 50,
+              "basis": "neutral",
+              "note": "no same-cluster channel evidence yet"
+            },
+            "subscriber_conversion_potential": {
+              "value": 70,
+              "basis": "derived",
+              "note": "series-depth proxy; no measured conversion yet"
+            },
+            "audience_breadth": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 72,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 85,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 78,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "0 published / 18 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "0 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -22,
+              "basis": "penalty",
+              "note": "78/100 source quality"
+            },
+            "weak_footage_risk": {
+              "value": -15,
+              "basis": "penalty",
+              "note": "archival stills available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "Qantas Flight 72 pitched down violently twice in cruise.",
+            "score": 80
+          },
+          "rejectionReasons": [
+            "VideoPotential 77 ≥ 72"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "apollo-1-1967",
+          "slug": "apollo-1-1967",
+          "topic": "Apollo 1: The Fire That Happened on the Ground",
+          "cluster": "spaceflight-disasters",
+          "bucket": "C",
+          "viralScore": 78,
+          "videoPotentialScore": 87,
+          "selectionScore": 80,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 78,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 100,
+              "basis": "derived",
+              "note": "5 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 87,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 100,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 58,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 84,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 41,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": -9,
+              "basis": "penalty",
+              "note": "published-title similarity 0.09"
+            },
+            "saturation_risk": {
+              "value": -19,
+              "basis": "penalty",
+              "note": "2 published / 31 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -59,
+              "basis": "penalty",
+              "note": "no primary/authoritative source; only tertiary or unclassified sources"
+            },
+            "weak_footage_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "archival film available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "Apollo 1 burned during a ground test, killing three astronauts.",
+            "score": 84
+          },
+          "rejectionReasons": [
+            "VideoPotential 87 in experimental band 58–71",
+            "sources 41 < 62"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "munich-1958",
+          "slug": "munich-1958",
+          "topic": "Munich 1958: The Slush That Brought Down Manchester United's Plane",
+          "cluster": "aviation-failures",
+          "bucket": "C",
+          "viralScore": 77,
+          "videoPotentialScore": 85,
+          "selectionScore": 79,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 70,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 100,
+              "basis": "derived",
+              "note": "5 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 88,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 68,
+              "basis": "learned",
+              "note": "3 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 79,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 41,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -17,
+              "basis": "penalty",
+              "note": "3 published / 53 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -66,
+              "basis": "penalty",
+              "note": "3 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -59,
+              "basis": "penalty",
+              "note": "no primary/authoritative source; only tertiary or unclassified sources"
+            },
+            "weak_footage_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "archival film available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "The Munich air disaster failed to take off, killing 23.",
+            "score": 79
+          },
+          "rejectionReasons": [
+            "VideoPotential 85 in experimental band 58–71",
+            "sources 41 < 62"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "skylab-1973",
+          "slug": "skylab-1973",
+          "topic": "How Skylab Lost Its Heat Shield 63 Seconds After Launch",
+          "cluster": "spaceflight-disasters",
+          "bucket": "C",
+          "viralScore": 76,
+          "videoPotentialScore": 84,
+          "selectionScore": 78,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 68,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 100,
+              "basis": "derived",
+              "note": "5 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 84,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 100,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 58,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 69,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 41,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": -18,
+              "basis": "penalty",
+              "note": "published-title similarity 0.18"
+            },
+            "saturation_risk": {
+              "value": -19,
+              "basis": "penalty",
+              "note": "2 published / 31 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -59,
+              "basis": "penalty",
+              "note": "no primary/authoritative source; only tertiary or unclassified sources"
+            },
+            "weak_footage_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "archival film available"
+            }
+          },
+          "selectedHook": {
+            "family": "impossible_sounding_fact",
+            "spoken": "Without it, the station baked at over 120 degrees inside.",
+            "score": 77
+          },
+          "rejectionReasons": [
+            "VideoPotential 84 in experimental band 58–71",
+            "sources 41 < 62"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "b2-guam-2008",
+          "slug": "b2-guam-2008",
+          "topic": "How Water Destroyed a $1.4 Billion Stealth Bomber",
+          "cluster": "aviation-failures",
+          "bucket": "C",
+          "viralScore": 75,
+          "videoPotentialScore": 83,
+          "selectionScore": 77,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 51,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 100,
+              "basis": "derived",
+              "note": "5 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 89,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 70,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 68,
+              "basis": "learned",
+              "note": "3 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 41,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -17,
+              "basis": "penalty",
+              "note": "3 published / 53 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -66,
+              "basis": "penalty",
+              "note": "3 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -59,
+              "basis": "penalty",
+              "note": "no primary/authoritative source; only tertiary or unclassified sources"
+            },
+            "weak_footage_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "archival film available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "The B-2 Spirit of Kansas crashed on takeoff.",
+            "score": 82
+          },
+          "rejectionReasons": [
+            "VideoPotential 83 in experimental band 58–71",
+            "sources 41 < 62"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "eastland-1915",
+          "slug": "eastland-1915",
+          "topic": "The Ship That Capsized at the Dock — Because of a Safety Rule",
+          "cluster": "maritime-disasters",
+          "bucket": "C",
+          "viralScore": 76,
+          "videoPotentialScore": 83,
+          "selectionScore": 77,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 91,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 62,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 80,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 100,
+              "basis": "derived",
+              "note": "5 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 86,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 53,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 74,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 41,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -14,
+              "basis": "penalty",
+              "note": "2 published / 42 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -59,
+              "basis": "penalty",
+              "note": "no primary/authoritative source; only tertiary or unclassified sources"
+            },
+            "weak_footage_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "archival film available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "The Eastland didn't sink at sea.",
+            "score": 82
+          },
+          "rejectionReasons": [
+            "VideoPotential 83 in experimental band 58–71",
+            "sources 41 < 62"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "new-london-school-1937",
+          "slug": "new-london-school-1937",
+          "topic": "The New London School Explosion That Gave Gas Its Smell",
+          "cluster": "fire-and-explosions",
+          "bucket": "C",
+          "viralScore": 75,
+          "videoPotentialScore": 83,
+          "selectionScore": 77,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 91,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 58,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 80,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 100,
+              "basis": "derived",
+              "note": "5 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 86,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 88,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 32,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 71,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 41,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "no published-title collision"
+            },
+            "saturation_risk": {
+              "value": -17,
+              "basis": "penalty",
+              "note": "2 published / 36 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -59,
+              "basis": "penalty",
+              "note": "no primary/authoritative source; only tertiary or unclassified sources"
+            },
+            "weak_footage_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "archival film available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "It collapsed with hundreds of children inside.",
+            "score": 79
+          },
+          "rejectionReasons": [
+            "VideoPotential 83 in experimental band 58–71",
+            "sources 41 < 62"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "uss-forrestal-1967",
+          "slug": "uss-forrestal-1967",
+          "topic": "The 94-Second Fuse That Burned the USS Forrestal",
+          "cluster": "maritime-disasters",
+          "bucket": "C",
+          "viralScore": 75,
+          "videoPotentialScore": 82,
+          "selectionScore": 76,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 93,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 59,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 87,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 100,
+              "basis": "derived",
+              "note": "5 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 81,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 93,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 53,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 73,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 41,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": -14,
+              "basis": "penalty",
+              "note": "published-title similarity 0.14"
+            },
+            "saturation_risk": {
+              "value": -14,
+              "basis": "penalty",
+              "note": "2 published / 42 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -59,
+              "basis": "penalty",
+              "note": "no primary/authoritative source; only tertiary or unclassified sources"
+            },
+            "weak_footage_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "archival film available"
+            }
+          },
+          "selectedHook": {
+            "family": "number_anomaly",
+            "spoken": "ROCKET RUPTURES A-4 FUEL TANK.",
+            "score": 81
+          },
+          "rejectionReasons": [
+            "VideoPotential 82 in experimental band 58–71",
+            "sources 41 < 62"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        },
+        {
+          "topicId": "vanguard-1957",
+          "slug": "vanguard-1957",
+          "topic": "Flopnik: Why America's Answer to Sputnik Failed Twice",
+          "cluster": "spaceflight-disasters",
+          "bucket": "C",
+          "viralScore": 75,
+          "videoPotentialScore": 82,
+          "selectionScore": 76,
+          "viralComponents": {
+            "curiosity_gap": {
+              "value": 98,
+              "basis": "derived"
+            },
+            "immediate_stakes": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "human_consequence": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "recognizability": {
+              "value": 40,
+              "basis": "measured"
+            },
+            "surprise": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "visual_potential": {
+              "value": 90,
+              "basis": "derived"
+            },
+            "archival_footage_potential": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "first_frame_potential": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "title_potential": {
+              "value": 100,
+              "basis": "derived",
+              "note": "5 source-backed title seeds"
+            },
+            "emotional_tension": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "contradiction": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "unexpected_cause": {
+              "value": 82,
+              "basis": "derived"
+            },
+            "numerical_anomaly": {
+              "value": 95,
+              "basis": "derived"
+            },
+            "didnt_know_factor": {
+              "value": 86,
+              "basis": "derived"
+            },
+            "shareability": {
+              "value": 97,
+              "basis": "derived"
+            },
+            "channel_fit": {
+              "value": 94,
+              "basis": "derived"
+            },
+            "historical_similarity": {
+              "value": 58,
+              "basis": "learned",
+              "note": "2 same-cluster upload(s), breakout rate 0"
+            },
+            "subscriber_conversion_potential": {
+              "value": 50,
+              "basis": "learned",
+              "note": "0.00 subscribers / 1,000 views in this topic family"
+            },
+            "audience_breadth": {
+              "value": 85,
+              "basis": "derived"
+            },
+            "hook_potential": {
+              "value": 76,
+              "basis": "derived"
+            },
+            "visual_availability": {
+              "value": 100,
+              "basis": "inventory-signal"
+            },
+            "research_confidence": {
+              "value": 41,
+              "basis": "derived"
+            },
+            "duplicate_risk": {
+              "value": -13,
+              "basis": "penalty",
+              "note": "published-title similarity 0.13"
+            },
+            "saturation_risk": {
+              "value": -19,
+              "basis": "penalty",
+              "note": "2 published / 31 inventory in cluster"
+            },
+            "recent_fatigue_risk": {
+              "value": -44,
+              "basis": "penalty",
+              "note": "2 same-family upload(s) in the last 30 days"
+            },
+            "source_confidence_risk": {
+              "value": -59,
+              "basis": "penalty",
+              "note": "no primary/authoritative source; only tertiary or unclassified sources"
+            },
+            "weak_footage_risk": {
+              "value": 0,
+              "basis": "penalty",
+              "note": "archival film available"
+            }
+          },
+          "selectedHook": {
+            "family": "shocking_consequence",
+            "spoken": "Vanguard wasn't a failed program.",
+            "score": 84
+          },
+          "rejectionReasons": [
+            "VideoPotential 82 in experimental band 58–71",
+            "sources 41 < 62"
+          ],
+          "competitor": {
+            "demand": null,
+            "saturation": null,
+            "adjustment": 0,
+            "snapshot": null
+          }
+        }
+      ]
+    },
+    "selected": {
+      "topicId": "colgan-3407-2009",
+      "slug": "colgan-3407-2009",
+      "topic": "The Stall Warning Pilots Pulled Against",
+      "cluster": "aviation-failures",
+      "bucket": "A",
+      "viralScore": 76,
+      "videoPotentialScore": 84,
+      "selectionScore": 78,
+      "viralComponents": {
+        "curiosity_gap": {
+          "value": 98,
+          "basis": "derived"
+        },
+        "immediate_stakes": {
+          "value": 94,
+          "basis": "derived"
+        },
+        "human_consequence": {
+          "value": 95,
+          "basis": "derived"
+        },
+        "recognizability": {
+          "value": 65,
+          "basis": "measured"
+        },
+        "surprise": {
+          "value": 90,
+          "basis": "derived"
+        },
+        "visual_potential": {
+          "value": 78,
+          "basis": "derived"
+        },
+        "archival_footage_potential": {
+          "value": 80,
+          "basis": "inventory-signal"
+        },
+        "first_frame_potential": {
+          "value": 82,
+          "basis": "derived"
+        },
+        "title_potential": {
+          "value": 92,
+          "basis": "derived",
+          "note": "4 source-backed title seeds"
+        },
+        "emotional_tension": {
+          "value": 97,
+          "basis": "derived"
+        },
+        "contradiction": {
+          "value": 85,
+          "basis": "derived"
+        },
+        "unexpected_cause": {
+          "value": 82,
+          "basis": "derived"
+        },
+        "numerical_anomaly": {
+          "value": 74,
+          "basis": "derived"
+        },
+        "didnt_know_factor": {
+          "value": 89,
+          "basis": "derived"
+        },
+        "shareability": {
+          "value": 97,
+          "basis": "derived"
+        },
+        "channel_fit": {
+          "value": 76,
+          "basis": "derived"
+        },
+        "historical_similarity": {
+          "value": 68,
+          "basis": "learned",
+          "note": "3 same-cluster upload(s), breakout rate 0"
+        },
+        "subscriber_conversion_potential": {
+          "value": 50,
+          "basis": "learned",
+          "note": "0.00 subscribers / 1,000 views in this topic family"
+        },
+        "audience_breadth": {
+          "value": 85,
+          "basis": "derived"
+        },
+        "hook_potential": {
+          "value": 71,
+          "basis": "derived"
+        },
+        "visual_availability": {
+          "value": 85,
+          "basis": "inventory-signal"
+        },
+        "research_confidence": {
+          "value": 78,
+          "basis": "derived"
+        },
+        "duplicate_risk": {
+          "value": 0,
+          "basis": "penalty",
+          "note": "no published-title collision"
+        },
+        "saturation_risk": {
+          "value": -17,
+          "basis": "penalty",
+          "note": "3 published / 53 inventory in cluster"
+        },
+        "recent_fatigue_risk": {
+          "value": -66,
+          "basis": "penalty",
+          "note": "3 same-family upload(s) in the last 30 days"
+        },
+        "source_confidence_risk": {
+          "value": -22,
+          "basis": "penalty",
+          "note": "78/100 source quality"
+        },
+        "weak_footage_risk": {
+          "value": -15,
+          "basis": "penalty",
+          "note": "archival stills available"
+        }
+      },
+      "selectedHook": {
+        "family": "shocking_consequence",
+        "spoken": "Everyone aboard was killed.",
+        "score": 79
+      },
+      "rejectionReasons": [
+        "VideoPotential 84 ≥ 80",
+        "hook 79",
+        "sources 78"
+      ],
+      "competitor": {
+        "demand": null,
+        "saturation": null,
+        "adjustment": 0,
+        "snapshot": null
+      }
+    },
+    "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
+  },
   "hooks": {
     "selected": {
       "family": "shocking_consequence",
@@ -1025,23 +4624,23 @@
   },
   "titles": {
     "selected": {
-      "title": "The Hidden Flaw Inside Colgan 3407",
-      "source": "hidden-flaw",
-      "pattern": "statement",
+      "title": "How Colgan 3407 Really Failed",
+      "source": "how-really",
+      "pattern": "how",
       "scores": {
         "clarity": 100,
-        "curiosity": 76,
+        "curiosity": 58,
         "specificity": 92,
         "truthfulness": 100,
-        "searchIntent": 75,
+        "searchIntent": 95,
         "channelIdentity": 62,
-        "ctrPotential": 89,
-        "novelty": 85,
+        "ctrPotential": 85,
+        "novelty": 68,
         "evergreenPotential": 85,
-        "consequence": 57,
+        "consequence": 95,
         "compactness": 100,
         "recognizability": 96,
-        "nonRedundancy": 85,
+        "nonRedundancy": 68,
         "factualIntegrity": 100,
         "historicalPerformanceSimilarity": 50,
         "patternFreshness": 100
@@ -1061,23 +4660,23 @@
     "meetsMinimum": true,
     "candidates": [
       {
-        "title": "The Hidden Flaw Inside Colgan 3407",
-        "source": "hidden-flaw",
-        "pattern": "statement",
+        "title": "How Colgan 3407 Really Failed",
+        "source": "how-really",
+        "pattern": "how",
         "scores": {
           "clarity": 100,
-          "curiosity": 76,
+          "curiosity": 58,
           "specificity": 92,
           "truthfulness": 100,
-          "searchIntent": 75,
+          "searchIntent": 95,
           "channelIdentity": 62,
-          "ctrPotential": 89,
-          "novelty": 85,
+          "ctrPotential": 85,
+          "novelty": 68,
           "evergreenPotential": 85,
-          "consequence": 57,
+          "consequence": 95,
           "compactness": 100,
           "recognizability": 96,
-          "nonRedundancy": 85,
+          "nonRedundancy": 68,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1087,70 +4686,6 @@
         "templateNaturalnessPenalty": 0,
         "genericTemplatePenalty": 0,
         "adjustedTotal": 86,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
-        "title": "Inside Colgan 3407: The Failure Chain",
-        "source": "inside-chain",
-        "pattern": "inside",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 92,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 74,
-          "ctrPotential": 85,
-          "novelty": 66,
-          "evergreenPotential": 85,
-          "consequence": 95,
-          "compactness": 100,
-          "recognizability": 96,
-          "nonRedundancy": 66,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 85,
-        "patternPenalty": 0,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 85,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
-        "title": "Colgan 3407: What Failed First",
-        "source": "failed-first",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 76,
-          "specificity": 92,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 97,
-          "novelty": 73,
-          "evergreenPotential": 85,
-          "consequence": 95,
-          "compactness": 100,
-          "recognizability": 96,
-          "nonRedundancy": 73,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 88,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 84,
         "unsupportedWords": [],
         "misleading": false,
         "grammar": [],
@@ -1174,6 +4709,38 @@
           "compactness": 100,
           "recognizability": 96,
           "nonRedundancy": 87,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 83,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 83,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "The Hidden Flaw Inside Colgan 3407",
+        "source": "hidden-flaw",
+        "pattern": "statement",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 76,
+          "specificity": 92,
+          "truthfulness": 100,
+          "searchIntent": 75,
+          "channelIdentity": 62,
+          "ctrPotential": 89,
+          "novelty": 66,
+          "evergreenPotential": 85,
+          "consequence": 57,
+          "compactness": 100,
+          "recognizability": 96,
+          "nonRedundancy": 66,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1255,38 +4822,6 @@
         "ungrammatical": false
       },
       {
-        "title": "How Colgan 3407 Really Failed",
-        "source": "how-really",
-        "pattern": "how",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 92,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 62,
-          "ctrPotential": 85,
-          "novelty": 68,
-          "evergreenPotential": 85,
-          "consequence": 95,
-          "compactness": 100,
-          "recognizability": 96,
-          "nonRedundancy": 68,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 86,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 82,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
         "title": "Colgan 3407 Explained in One Chain Reaction",
         "source": "one-chain",
         "pattern": "statement",
@@ -1298,12 +4833,12 @@
           "searchIntent": 83,
           "channelIdentity": 62,
           "ctrPotential": 65,
-          "novelty": 91,
+          "novelty": 90,
           "evergreenPotential": 85,
           "consequence": 57,
           "compactness": 100,
           "recognizability": 96,
-          "nonRedundancy": 91,
+          "nonRedundancy": 90,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 100
@@ -1313,6 +4848,102 @@
         "templateNaturalnessPenalty": 0,
         "genericTemplatePenalty": 0,
         "adjustedTotal": 82,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Why Colgan Air Flight 3407 Crashed",
+        "source": "editorial",
+        "pattern": "why",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 92,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 60,
+          "ctrPotential": 77,
+          "novelty": 91,
+          "evergreenPotential": 85,
+          "consequence": 57,
+          "compactness": 100,
+          "recognizability": 96,
+          "nonRedundancy": 91,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 85,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 81,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Colgan 3407: What Failed First",
+        "source": "failed-first",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 76,
+          "specificity": 92,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 97,
+          "novelty": 73,
+          "evergreenPotential": 85,
+          "consequence": 95,
+          "compactness": 100,
+          "recognizability": 96,
+          "nonRedundancy": 73,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 88,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 81,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Inside Colgan 3407: The Failure Chain",
+        "source": "inside-chain",
+        "pattern": "inside",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 92,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 74,
+          "ctrPotential": 85,
+          "novelty": 60,
+          "evergreenPotential": 85,
+          "consequence": 95,
+          "compactness": 100,
+          "recognizability": 96,
+          "nonRedundancy": 60,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 85,
+        "patternPenalty": 4,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 81,
         "unsupportedWords": [],
         "misleading": false,
         "grammar": [],
@@ -1353,99 +4984,33 @@
         "ungrammatical": false
       },
       {
-        "title": "Colgan 3407: The Failure Reconstructed",
-        "source": "brand",
-        "pattern": "label-colon",
+        "title": "Why Colgan 3407 Stalled and Crashed Into a House Near Buffalo",
+        "source": "why",
+        "pattern": "why",
         "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 92,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 73,
-          "novelty": 90,
-          "evergreenPotential": 85,
-          "consequence": 95,
-          "compactness": 100,
-          "recognizability": 96,
-          "nonRedundancy": 90,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 85,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 81,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
-        "title": "Colgan 3407: Cause, Chain, Consequence",
-        "source": "cause-chain-consequence",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 92,
-          "truthfulness": 100,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 65,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 95,
-          "compactness": 100,
-          "recognizability": 96,
-          "nonRedundancy": 91,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 84,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 80,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
-        "title": "Colgan 3407: The Engineering Behind the Disaster",
-        "source": "engineering-behind",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
+          "clarity": 99,
           "curiosity": 58,
           "specificity": 92,
-          "truthfulness": 85,
-          "searchIntent": 83,
-          "channelIdentity": 62,
-          "ctrPotential": 77,
-          "novelty": 90,
+          "truthfulness": 100,
+          "searchIntent": 95,
+          "channelIdentity": 50,
+          "ctrPotential": 67,
+          "novelty": 93,
           "evergreenPotential": 85,
-          "consequence": 95,
-          "compactness": 100,
+          "consequence": 57,
+          "compactness": 91,
           "recognizability": 96,
-          "nonRedundancy": 90,
-          "factualIntegrity": 85,
+          "nonRedundancy": 93,
+          "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
         },
-        "total": 84,
+        "total": 83,
         "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 80,
-        "unsupportedWords": [
-          "disaster"
-        ],
+        "adjustedTotal": 79,
+        "unsupportedWords": [],
         "misleading": false,
         "grammar": [],
         "ungrammatical": false
@@ -1486,72 +5051,6 @@
         "ungrammatical": false
       },
       {
-        "title": "Why Colgan Air Flight 3407 Crashed",
-        "source": "editorial",
-        "pattern": "why",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 58,
-          "specificity": 92,
-          "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 60,
-          "ctrPotential": 77,
-          "novelty": 91,
-          "evergreenPotential": 85,
-          "consequence": 57,
-          "compactness": 100,
-          "recognizability": 96,
-          "nonRedundancy": 91,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 85,
-        "patternPenalty": 7,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 78,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
-        "title": "STICK SHAKER: The Detail That Doomed Colgan 3407",
-        "source": "number-led",
-        "pattern": "label-colon",
-        "scores": {
-          "clarity": 100,
-          "curiosity": 40,
-          "specificity": 92,
-          "truthfulness": 85,
-          "searchIntent": 75,
-          "channelIdentity": 50,
-          "ctrPotential": 73,
-          "novelty": 100,
-          "evergreenPotential": 85,
-          "consequence": 95,
-          "compactness": 100,
-          "recognizability": 96,
-          "nonRedundancy": 100,
-          "factualIntegrity": 85,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
-        },
-        "total": 82,
-        "patternPenalty": 4,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 78,
-        "unsupportedWords": [
-          "doomed"
-        ],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
         "title": "The Seconds That Decided Colgan 3407",
         "source": "seconds",
         "pattern": "the-x-that",
@@ -1586,23 +5085,55 @@
         "ungrammatical": false
       },
       {
-        "title": "Why Colgan 3407 Stalled and Crashed Into a House Near Buffalo",
-        "source": "why",
-        "pattern": "why",
+        "title": "Colgan 3407: The Failure Reconstructed",
+        "source": "brand",
+        "pattern": "label-colon",
         "scores": {
-          "clarity": 99,
-          "curiosity": 58,
+          "clarity": 100,
+          "curiosity": 40,
           "specificity": 92,
           "truthfulness": 100,
-          "searchIntent": 95,
-          "channelIdentity": 50,
-          "ctrPotential": 67,
-          "novelty": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 73,
+          "novelty": 89,
           "evergreenPotential": 85,
-          "consequence": 57,
-          "compactness": 91,
+          "consequence": 95,
+          "compactness": 100,
           "recognizability": 96,
-          "nonRedundancy": 100,
+          "nonRedundancy": 89,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 85,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 78,
+        "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Colgan 3407: Cause, Chain, Consequence",
+        "source": "cause-chain-consequence",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 92,
+          "truthfulness": 100,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 65,
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 95,
+          "compactness": 100,
+          "recognizability": 96,
+          "nonRedundancy": 90,
           "factualIntegrity": 100,
           "historicalPerformanceSimilarity": 50,
           "patternFreshness": 70
@@ -1613,6 +5144,74 @@
         "genericTemplatePenalty": 0,
         "adjustedTotal": 77,
         "unsupportedWords": [],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "Colgan 3407: The Engineering Behind the Disaster",
+        "source": "engineering-behind",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 58,
+          "specificity": 92,
+          "truthfulness": 85,
+          "searchIntent": 83,
+          "channelIdentity": 62,
+          "ctrPotential": 77,
+          "novelty": 90,
+          "evergreenPotential": 85,
+          "consequence": 95,
+          "compactness": 100,
+          "recognizability": 96,
+          "nonRedundancy": 90,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 84,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 77,
+        "unsupportedWords": [
+          "disaster"
+        ],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "STICK SHAKER: The Detail That Doomed Colgan 3407",
+        "source": "number-led",
+        "pattern": "label-colon",
+        "scores": {
+          "clarity": 100,
+          "curiosity": 40,
+          "specificity": 92,
+          "truthfulness": 85,
+          "searchIntent": 75,
+          "channelIdentity": 50,
+          "ctrPotential": 73,
+          "novelty": 100,
+          "evergreenPotential": 85,
+          "consequence": 95,
+          "compactness": 100,
+          "recognizability": 96,
+          "nonRedundancy": 100,
+          "factualIntegrity": 85,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 70
+        },
+        "total": 82,
+        "patternPenalty": 7,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 75,
+        "unsupportedWords": [
+          "doomed"
+        ],
         "misleading": false,
         "grammar": [],
         "ungrammatical": false
@@ -1682,38 +5281,6 @@
         "ungrammatical": false
       },
       {
-        "title": "The Airliner That Stalled and Crashed Into a House Near Buffalo",
-        "source": "the-x-that",
-        "pattern": "the-x-that",
-        "scores": {
-          "clarity": 96,
-          "curiosity": 40,
-          "specificity": 47,
-          "truthfulness": 100,
-          "searchIntent": 30,
-          "channelIdentity": 50,
-          "ctrPotential": 35,
-          "novelty": 100,
-          "evergreenPotential": 75,
-          "consequence": 57,
-          "compactness": 87,
-          "recognizability": 54,
-          "nonRedundancy": 100,
-          "factualIntegrity": 100,
-          "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 100
-        },
-        "total": 69,
-        "patternPenalty": 0,
-        "templateNaturalnessPenalty": 0,
-        "genericTemplatePenalty": 0,
-        "adjustedTotal": 69,
-        "unsupportedWords": [],
-        "misleading": false,
-        "grammar": [],
-        "ungrammatical": false
-      },
-      {
         "title": "How a Pilot Pulling Back When the Stall Warning Shook the Controls Brought Down Colgan 3407",
         "source": "how-trigger",
         "pattern": "how",
@@ -1733,16 +5300,48 @@
           "nonRedundancy": 100,
           "factualIntegrity": 85,
           "historicalPerformanceSimilarity": 50,
-          "patternFreshness": 70
+          "patternFreshness": 100
         },
         "total": 70,
-        "patternPenalty": 4,
+        "patternPenalty": 0,
         "templateNaturalnessPenalty": 0,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 66,
+        "adjustedTotal": 70,
         "unsupportedWords": [
           "brought"
         ],
+        "misleading": false,
+        "grammar": [],
+        "ungrammatical": false
+      },
+      {
+        "title": "The Airliner That Stalled and Crashed Into a House Near Buffalo",
+        "source": "the-x-that",
+        "pattern": "the-x-that",
+        "scores": {
+          "clarity": 96,
+          "curiosity": 40,
+          "specificity": 47,
+          "truthfulness": 100,
+          "searchIntent": 30,
+          "channelIdentity": 50,
+          "ctrPotential": 35,
+          "novelty": 93,
+          "evergreenPotential": 75,
+          "consequence": 57,
+          "compactness": 87,
+          "recognizability": 54,
+          "nonRedundancy": 93,
+          "factualIntegrity": 100,
+          "historicalPerformanceSimilarity": 50,
+          "patternFreshness": 100
+        },
+        "total": 68,
+        "patternPenalty": 0,
+        "templateNaturalnessPenalty": 0,
+        "genericTemplatePenalty": 0,
+        "adjustedTotal": 68,
+        "unsupportedWords": [],
         "misleading": false,
         "grammar": [],
         "ungrammatical": false
@@ -1770,10 +5369,10 @@
           "patternFreshness": 70
         },
         "total": 75,
-        "patternPenalty": 4,
+        "patternPenalty": 7,
         "templateNaturalnessPenalty": 0,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 71,
+        "adjustedTotal": 68,
         "unsupportedWords": [
           "failures"
         ],
@@ -1804,10 +5403,10 @@
           "patternFreshness": 70
         },
         "total": 72,
-        "patternPenalty": 7,
+        "patternPenalty": 4,
         "templateNaturalnessPenalty": 0,
         "genericTemplatePenalty": 0,
-        "adjustedTotal": 65,
+        "adjustedTotal": 68,
         "unsupportedWords": [
           "nobody",
           "saw",
@@ -1931,12 +5530,12 @@
   "relatedLong": null,
   "experiment": null,
   "readiness": {
-    "ProductionReadinessScore": 88,
+    "ProductionReadinessScore": 91,
     "decision": "PUBLISH",
-    "stage": "pre",
+    "stage": "final",
     "dimensions": {
-      "topicPotential": 83,
-      "viralPotential": 77,
+      "topicPotential": 84,
+      "viralPotential": 76,
       "shareability": 97,
       "hook": 79,
       "title": 86,
@@ -1946,21 +5545,21 @@
       "visualRelevance": 90,
       "sources": 78,
       "metadata": 100,
-      "visualQuality": null,
-      "audio": null,
-      "captions": null,
-      "duration": null,
+      "visualQuality": 100,
+      "audio": 100,
+      "captions": 90,
+      "duration": 100,
       "pacing": 92,
-      "render": null
+      "render": 100
     },
-    "renderedVisualQuality": null,
-    "unmeasured": [
-      "visualQuality",
-      "audio",
-      "captions",
-      "duration",
-      "render"
-    ],
+    "renderedVisualQuality": {
+      "source": "externalGate.visual",
+      "score": 100,
+      "decision": null,
+      "reasons": [],
+      "metrics": null
+    },
+    "unmeasured": [],
     "hardFails": [],
     "notes": [
       "only 14 hook candidates",
@@ -1979,7 +5578,7 @@
     "firstSecondsScore": 97,
     "topicCluster": "aviation-failures",
     "bucket": "A",
-    "viralScore": 77,
+    "viralScore": 76,
     "viralComponents": {
       "curiosity_gap": {
         "value": 98,
@@ -2047,9 +5646,9 @@
         "basis": "derived"
       },
       "historical_similarity": {
-        "value": 58,
+        "value": 68,
         "basis": "learned",
-        "note": "2 same-cluster upload(s), breakout rate 0"
+        "note": "3 same-cluster upload(s), breakout rate 0"
       },
       "subscriber_conversion_potential": {
         "value": 50,
@@ -2078,14 +5677,14 @@
         "note": "no published-title collision"
       },
       "saturation_risk": {
-        "value": -11,
+        "value": -17,
         "basis": "penalty",
-        "note": "2 published / 53 inventory in cluster"
+        "note": "3 published / 53 inventory in cluster"
       },
       "recent_fatigue_risk": {
-        "value": -44,
+        "value": -66,
         "basis": "penalty",
-        "note": "2 same-family upload(s) in the last 30 days"
+        "note": "3 same-family upload(s) in the last 30 days"
       },
       "source_confidence_risk": {
         "value": -22,
@@ -2099,12 +5698,12 @@
       }
     },
     "storyStructure": "CONSEQUENCE>FAILURE>CAUSE>ESCALATION>ENGINEERING_REVEAL",
-    "titlePattern": "statement",
-    "selectedTitle": "The Hidden Flaw Inside Colgan 3407",
+    "titlePattern": "how",
+    "selectedTitle": "How Colgan 3407 Really Failed",
     "titleScore": 86,
     "titleCandidates": 23,
     "hookCandidates": 14,
-    "topicScore": 83,
+    "topicScore": 84,
     "popularityScore": 65,
     "ctaStyle": "NONE",
     "durationBucket": "18-25s",
@@ -2126,13 +5725,13 @@
       "SourceQualityScore": 78,
       "ChannelFitScore": 76
     },
-    "selectionMode": null
+    "selectionMode": "EXPLOIT"
   },
   "summary": {
     "Channel": "Failure Reconstructed",
     "Content Type": "SHORT",
     "Topic": "The Stall Warning Pilots Pulled Against",
-    "Topic Score": 83,
+    "Topic Score": 84,
     "Topic Bucket": "A",
     "Selected Hook": "Everyone aboard was killed.",
     "Hook Type": "shocking_consequence",
@@ -2140,7 +5739,7 @@
     "First-3-sec Score": 97,
     "Duration": "~22.1s (estimated)",
     "Scenes": 13,
-    "Production Score": "88 (pre) → PUBLISH",
+    "Production Score": "91 (final) → PUBLISH",
     "Experiment": "none",
     "Related Long Video": "none yet"
   }

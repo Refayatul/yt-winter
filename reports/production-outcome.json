@@ -1,70 +1,87 @@
 {
-  "at": "2026-10-19T21:11:43.226Z",
-  "runId": "39325338227",
+  "at": "2026-10-20T11:24:20.024Z",
+  "runId": "39413880046",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
-      "scheduled": false,
-      "publication": "NOT_SCHEDULED",
-      "publishAt": null,
-      "reason": "before production slot 09:00 Europe/Istanbul",
-      "slug": null,
-      "videoId": null,
-      "targetDay": null,
+      "outcome": "UPLOADED",
+      "category": "SCHEDULED",
+      "scheduled": true,
+      "publication": "SCHEDULED",
+      "publishAt": "2026-10-20T18:00:00.000Z",
+      "reason": null,
+      "slug": "colgan-3407-2009",
+      "videoId": "uuJwJwP-rzw",
+      "targetDay": "2026-10-20",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "growth queue selected colgan-3407-2009",
+          "at": "2026-10-20T11:18:32.504Z"
         },
         "SCRIPT": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "pre gate REVIEW 80",
+          "at": "2026-10-20T11:18:32.906Z"
         },
         "ASSETS": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-20T11:18:33.761Z"
         },
         "NARRATION": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-20T11:23:35.374Z"
         },
         "RENDER": {
-          "status": "not-reached"
+          "status": "done",
+          "at": "2026-10-20T11:23:35.375Z"
         },
         "QA": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "final gate PUBLISH 85",
+          "at": "2026-10-20T11:23:38.444Z"
         },
         "UPLOAD": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "uuJwJwP-rzw",
+          "at": "2026-10-20T11:23:44.658Z"
         },
         "SCHEDULE": {
-          "status": "not-reached"
+          "status": "done",
+          "detail": "2026-10-20T18:00:00.000Z",
+          "at": "2026-10-20T11:23:44.659Z"
         },
         "PUBLISH": {
-          "status": "not-reached"
+          "status": "scheduled",
+          "detail": "YouTube makes it public at 2026-10-20T18:00:00.000Z",
+          "at": "2026-10-20T11:23:44.659Z"
         }
       }
     },
     {
       "channel": "impossible-brief",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
+      "outcome": "NO_TOPIC",
+      "category": "CONTENT_BLOCKED",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "before production slot 09:30 Europe/Istanbul",
+      "reason": "NO_EXPLORE_CANDIDATE",
       "slug": null,
       "videoId": null,
-      "targetDay": null,
+      "targetDay": "2026-10-20",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "failed",
+          "detail": "NO_EXPLORE_CANDIDATE",
+          "at": "2026-10-20T11:23:51.467Z"
         },
         "SCRIPT": {
           "status": "not-reached"
@@ -94,22 +111,24 @@
     },
     {
       "channel": "critical-thread",
-      "outcome": "NOT_DUE",
-      "category": "NOT_DUE",
+      "outcome": "NO_TOPIC",
+      "category": "CONTENT_BLOCKED",
       "scheduled": false,
       "publication": "NOT_SCHEDULED",
       "publishAt": null,
-      "reason": "before production slot 10:00 Europe/Istanbul",
+      "reason": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
       "slug": null,
       "videoId": null,
-      "targetDay": null,
+      "targetDay": "2026-10-20",
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "not-reached"
+          "status": "failed",
+          "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
+          "at": "2026-10-20T11:23:57.434Z"
         },
         "SCRIPT": {
           "status": "not-reached"

@@ -1,6 +1,6 @@
 # Pronunciation validation — colgan-3407-2009
 
-Score: **84/100** (unresolved risky words: 2, AI-cliché phrases: 0)
+Score: **92/100** (unresolved risky words: 1, AI-cliché phrases: 0)
 
 ## Dictionary matches (handled automatically)
 
@@ -10,7 +10,6 @@ _none_
 
 | Word | Type | Why |
 |---|---|---|
-| Buffalo | proper-noun | name/place — confirm the voice pronounces it correctly |
 | US | abbreviation | TTS may read as a word or spell it — add to config/pronunciation.json |
 
 ## AI-cliché phrases
