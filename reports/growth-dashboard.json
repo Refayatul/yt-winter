@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-20T18:31:09.870Z",
+  "generatedAt": "2026-10-20T19:24:20.663Z",
   "note": "Per-channel baselines are computed separately and never blended.",
   "channels": [
     {
@@ -9,8 +9,8 @@
         "lastPublished": "2026-10-20T18:00:00.000Z",
         "published": 28,
         "inventory": {
-          "A": 104,
-          "B": 126,
+          "A": 98,
+          "B": 132,
           "C": 59,
           "D": 59
         },
@@ -26,7 +26,7 @@
           "reason": "EXPLOIT (0.75): best A topic by SelectionScore"
         },
         "baseline": {
-          "n": 27,
+          "n": 28,
           "views": 465,
           "averagePercentageViewed": 64.36,
           "subscribersPer1000Views": 1.46,
@@ -100,6 +100,12 @@
             "mode": "B_SHORT_PROVES_DEMAND"
           },
           {
+            "slug": "air-france-447-2009",
+            "LongFormPotentialScore": 85,
+            "bucket": "A",
+            "mode": "B_SHORT_PROVES_DEMAND"
+          },
+          {
             "slug": "challenger-1986",
             "LongFormPotentialScore": 85,
             "bucket": "A",
@@ -108,12 +114,6 @@
           {
             "slug": "columbia-2003",
             "LongFormPotentialScore": 85,
-            "bucket": "A",
-            "mode": "B_SHORT_PROVES_DEMAND"
-          },
-          {
-            "slug": "air-france-447-2009",
-            "LongFormPotentialScore": 84,
             "bucket": "A",
             "mode": "B_SHORT_PROVES_DEMAND"
           },
@@ -159,9 +159,9 @@
       "learning": {
         "shorts": {
           "status": "adaptive",
-          "sampleSize": 27,
+          "sampleSize": 28,
           "adopted": 0,
-          "hypotheses": 3
+          "hypotheses": 6
         },
         "longform": {
           "status": "heuristics-only",
@@ -184,7 +184,7 @@
         {
           "slug": "munich-1958",
           "bucket": "C",
-          "reason": "VideoPotential 85 in experimental band 58–71; sources 41 < 62"
+          "reason": "VideoPotential 86 in experimental band 58–71; sources 41 < 62"
         },
         {
           "slug": "eastland-1915",
