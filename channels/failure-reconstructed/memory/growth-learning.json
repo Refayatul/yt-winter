@@ -1,6 +1,6 @@
 {
   "channel": "failure-reconstructed",
-  "updatedAt": "2026-10-20T11:23:58.464Z",
+  "updatedAt": "2026-10-20T11:55:50.250Z",
   "caveat": "Associations within this channel only. Topic, timing and packaging confound each other; adopted learning nudges heuristics, it never proves causation.",
   "shorts": {
     "sampleSize": 27,
@@ -18,8 +18,8 @@
         "dimension": "hookType",
         "value": "shocking_consequence",
         "sample": 9,
-        "lift": 0.037,
-        "z": 0.26
+        "lift": 0.035,
+        "z": 0.25
       },
       {
         "stage": "OBSERVATION",
@@ -50,7 +50,7 @@
         "dimension": "hookType",
         "value": "mechanism_reveal",
         "sample": 1,
-        "lift": 0.256,
+        "lift": 0.271,
         "z": 0
       },
       {
@@ -66,8 +66,8 @@
         "dimension": "topicCluster",
         "value": "bridge-failures",
         "sample": 2,
-        "lift": 0.107,
-        "z": 0.24
+        "lift": 0.084,
+        "z": 0.2
       },
       {
         "stage": "OBSERVATION",
@@ -90,8 +90,8 @@
         "dimension": "topicCluster",
         "value": "nuclear-accidents",
         "sample": 2,
-        "lift": 0.224,
-        "z": 0.92
+        "lift": 0.24,
+        "z": 0.93
       },
       {
         "stage": "OBSERVATION",
@@ -138,8 +138,8 @@
         "dimension": "topicCluster",
         "value": "materials-failures",
         "sample": 2,
-        "lift": -0.197,
-        "z": -0.43
+        "lift": -0.189,
+        "z": -0.41
       },
       {
         "stage": "OBSERVATION",
@@ -154,16 +154,16 @@
         "dimension": "durationBucket",
         "value": "18-25s",
         "sample": 7,
-        "lift": -0.024,
-        "z": -0.14
+        "lift": -0.026,
+        "z": -0.15
       },
       {
         "stage": "OBSERVATION",
         "dimension": "durationBucket",
         "value": "26-35s",
         "sample": 9,
-        "lift": 0.02,
-        "z": 0.18
+        "lift": 0.021,
+        "z": 0.19
       },
       {
         "stage": "OBSERVATION",
@@ -178,8 +178,8 @@
         "dimension": "titlePattern",
         "value": "inside",
         "sample": 3,
-        "lift": -0.161,
-        "z": -0.51
+        "lift": -0.15,
+        "z": -0.46
       },
       {
         "stage": "OBSERVATION",
@@ -194,15 +194,15 @@
         "dimension": "titlePattern",
         "value": "label-colon",
         "sample": 5,
-        "lift": 0.16,
-        "z": 1.09
+        "lift": 0.151,
+        "z": 1.07
       },
       {
         "stage": "OBSERVATION",
         "dimension": "titlePattern",
         "value": "how",
         "sample": 2,
-        "lift": 0.133,
+        "lift": 0.141,
         "z": 1.08
       },
       {
@@ -218,16 +218,16 @@
         "dimension": "ctaStyle",
         "value": "COMMENT_PROMPT",
         "sample": 7,
-        "lift": -0.06,
-        "z": -0.38
+        "lift": -0.067,
+        "z": -0.44
       },
       {
         "stage": "OBSERVATION",
         "dimension": "ctaStyle",
         "value": "NONE",
         "sample": 9,
-        "lift": 0.048,
-        "z": 0.39
+        "lift": 0.053,
+        "z": 0.43
       },
       {
         "stage": "OBSERVATION",
@@ -316,23 +316,23 @@
         "dimension": "titlePattern",
         "value": "inside",
         "sample": 3,
-        "lift": -0.161,
-        "z": -0.51
+        "lift": -0.15,
+        "z": -0.46
       },
       {
         "stage": "HYPOTHESIS",
         "dimension": "titlePattern",
         "value": "label-colon",
         "sample": 5,
-        "lift": 0.16,
-        "z": 1.09
+        "lift": 0.151,
+        "z": 1.07
       }
     ],
     "adopted": [],
     "suppressed": [],
     "adoptedWeights": {
       "CuriosityScore": 1.137,
-      "HookPotentialScore": 0.8,
+      "HookPotentialScore": 0.801,
       "CommentPotentialScore": 1.189,
       "NoveltyScore": 1.2
     },

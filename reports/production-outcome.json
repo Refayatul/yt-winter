@@ -1,64 +1,49 @@
 {
-  "at": "2026-10-20T11:24:20.024Z",
-  "runId": "39413880046",
+  "at": "2026-10-20T11:56:00.834Z",
+  "runId": "39418306328",
   "rows": [
     {
       "channel": "failure-reconstructed",
-      "outcome": "UPLOADED",
-      "category": "SCHEDULED",
-      "scheduled": true,
-      "publication": "SCHEDULED",
-      "publishAt": "2026-10-20T18:00:00.000Z",
-      "reason": null,
-      "slug": "colgan-3407-2009",
-      "videoId": "uuJwJwP-rzw",
-      "targetDay": "2026-10-20",
+      "outcome": "NOT_DUE",
+      "category": "NOT_DUE",
+      "scheduled": false,
+      "publication": "NOT_SCHEDULED",
+      "publishAt": null,
+      "reason": "today's Short already exists (colgan-3407-2009)",
+      "slug": null,
+      "videoId": null,
+      "targetDay": null,
       "trigger": {
         "event": "schedule",
         "correlationId": null
       },
       "stages": {
         "RESEARCH": {
-          "status": "done",
-          "detail": "growth queue selected colgan-3407-2009",
-          "at": "2026-10-20T11:18:32.504Z"
+          "status": "not-reached"
         },
         "SCRIPT": {
-          "status": "done",
-          "detail": "pre gate REVIEW 80",
-          "at": "2026-10-20T11:18:32.906Z"
+          "status": "not-reached"
         },
         "ASSETS": {
-          "status": "done",
-          "at": "2026-10-20T11:18:33.761Z"
+          "status": "not-reached"
         },
         "NARRATION": {
-          "status": "done",
-          "at": "2026-10-20T11:23:35.374Z"
+          "status": "not-reached"
         },
         "RENDER": {
-          "status": "done",
-          "at": "2026-10-20T11:23:35.375Z"
+          "status": "not-reached"
         },
         "QA": {
-          "status": "done",
-          "detail": "final gate PUBLISH 85",
-          "at": "2026-10-20T11:23:38.444Z"
+          "status": "not-reached"
         },
         "UPLOAD": {
-          "status": "done",
-          "detail": "uuJwJwP-rzw",
-          "at": "2026-10-20T11:23:44.658Z"
+          "status": "not-reached"
         },
         "SCHEDULE": {
-          "status": "done",
-          "detail": "2026-10-20T18:00:00.000Z",
-          "at": "2026-10-20T11:23:44.659Z"
+          "status": "not-reached"
         },
         "PUBLISH": {
-          "status": "scheduled",
-          "detail": "YouTube makes it public at 2026-10-20T18:00:00.000Z",
-          "at": "2026-10-20T11:23:44.659Z"
+          "status": "not-reached"
         }
       }
     },
@@ -81,7 +66,7 @@
         "RESEARCH": {
           "status": "failed",
           "detail": "NO_EXPLORE_CANDIDATE",
-          "at": "2026-10-20T11:23:51.467Z"
+          "at": "2026-10-20T11:55:42.570Z"
         },
         "SCRIPT": {
           "status": "not-reached"
@@ -128,7 +113,7 @@
         "RESEARCH": {
           "status": "failed",
           "detail": "NO_QUALIFIED_TOPIC: 0 A/B, 0 C (C fallback disabled); skipping is better than publishing weak content [6 unused A topic(s), best viral score 73 < minimum 75; 2 topic(s) at the minimum are bucket B, not selectable]",
-          "at": "2026-10-20T11:23:57.434Z"
+          "at": "2026-10-20T11:55:49.101Z"
         },
         "SCRIPT": {
           "status": "not-reached"
